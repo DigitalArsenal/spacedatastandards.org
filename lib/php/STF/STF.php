@@ -346,22 +346,74 @@ class STF extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The one ratified `$CCT` category this listing is shelved under, using the
+    /// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+    /// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+    /// capability category at all — only DATA_TYPES and TAGS — so a storefront
+    /// shelf and a library shelf were grouped by two unrelated systems. A
+    /// consumer MUST group listings by this field and MUST NOT re-derive a
+    /// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+    /// vocabulary.
+    ///
+    /// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+    /// module artifact), and from ACCESS_TYPE, which is the commercial access
+    /// model. UNSPECIFIED means the provider did not classify the listing; a
+    /// consumer renders it ungrouped and never guesses.
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_CATEGORY()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /// Every ratified `$CCT` category this listing belongs to, for browse,
+    /// filter and per-category counting. A listing MAY carry several. If
+    /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCATEGORIES($j)
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCATEGORIESLength()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCATEGORIESBytes()
+    {
+        return $this->__vector_as_bytes(60);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSTF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return STF
      */
-    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE, $LISTING_KIND, $TAGS, $SAMPLE_RECORD_COUNT, $DELIVERY_METHODS, $PROTECTED_DELIVERY, $REPUTATION, $VERSION, $EXPIRES_AT, $TERMS_CID, $LICENSE, $SOURCE_PEER_ID)
+    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE, $LISTING_KIND, $TAGS, $SAMPLE_RECORD_COUNT, $DELIVERY_METHODS, $PROTECTED_DELIVERY, $REPUTATION, $VERSION, $EXPIRES_AT, $TERMS_CID, $LICENSE, $SOURCE_PEER_ID, $PRIMARY_CATEGORY, $CATEGORIES)
     {
-        $builder->startObject(27);
+        $builder->startObject(29);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_EPM_CID($builder, $PROVIDER_EPM_CID);
@@ -389,6 +441,8 @@ class STF extends Table
         self::addTERMS_CID($builder, $TERMS_CID);
         self::addLICENSE($builder, $LICENSE);
         self::addSOURCE_PEER_ID($builder, $SOURCE_PEER_ID);
+        self::addPRIMARY_CATEGORY($builder, $PRIMARY_CATEGORY);
+        self::addCATEGORIES($builder, $CATEGORIES);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LISTING_ID
         $builder->required($o, 6);  // PROVIDER_PEER_ID
@@ -808,6 +862,50 @@ class STF extends Table
     public static function addSOURCE_PEER_ID(FlatBufferBuilder $builder, $SOURCE_PEER_ID)
     {
         $builder->addOffsetX(26, $SOURCE_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_CATEGORY(FlatBufferBuilder $builder, $PRIMARY_CATEGORY)
+    {
+        $builder->addByteX(27, $PRIMARY_CATEGORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCATEGORIES(FlatBufferBuilder $builder, $CATEGORIES)
+    {
+        $builder->addOffsetX(28, $CATEGORIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCATEGORIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCATEGORIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

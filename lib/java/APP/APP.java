@@ -131,6 +131,28 @@ public final class APP extends com.google.flatbuffers.Table {
    * node-only assumption of manifests written before this field existed.
    */
   public int RUNTIME_CLASS() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The one ratified $CCT category this app is shelved under, using the same
+   * vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+   * or library shelf holds apps and modules together without translating
+   * between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+   * PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+   * and a PAGE-class app can share a category.
+   * UNSPECIFIED means the publisher did not classify the app; a consumer
+   * renders it ungrouped and never infers a class.
+   */
+  public int PRIMARY_CATEGORY() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Every ratified $CCT category this app belongs to, for browse, filter and
+   * per-category counting. An app MAY carry several. If nonempty it MUST
+   * include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+   */
+  public int CATEGORIES(int j) { int o = __offset(30); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CATEGORIESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector categoriesVector() { return categoriesVector(new ByteVector()); }
+  public ByteVector categoriesVector(ByteVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CATEGORIESAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer CATEGORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
 
   public static int createAPP(FlatBufferBuilder builder,
       int IDOffset,
@@ -144,8 +166,11 @@ public final class APP extends com.google.flatbuffers.Table {
       int CREATED_ATOffset,
       int UPDATED_ATOffset,
       int DATAFLOWOffset,
-      int RUNTIME_CLASS) {
-    builder.startTable(12);
+      int RUNTIME_CLASS,
+      int PRIMARY_CATEGORY,
+      int CATEGORIESOffset) {
+    builder.startTable(14);
+    APP.addCategories(builder, CATEGORIESOffset);
     APP.addDataflow(builder, DATAFLOWOffset);
     APP.addUpdatedAt(builder, UPDATED_ATOffset);
     APP.addCreatedAt(builder, CREATED_ATOffset);
@@ -157,11 +182,12 @@ public final class APP extends com.google.flatbuffers.Table {
     APP.addVersion(builder, VERSIONOffset);
     APP.addName(builder, NAMEOffset);
     APP.addId(builder, IDOffset);
+    APP.addPrimaryCategory(builder, PRIMARY_CATEGORY);
     APP.addRuntimeClass(builder, RUNTIME_CLASS);
     return APP.endAPP(builder);
   }
 
-  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -184,6 +210,11 @@ public final class APP extends com.google.flatbuffers.Table {
   public static int createDataflowVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDataflowVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addRuntimeClass(FlatBufferBuilder builder, int RUNTIME_CLASS) { builder.addByte(11, (byte) RUNTIME_CLASS, (byte) 0); }
+  public static void addPrimaryCategory(FlatBufferBuilder builder, int PRIMARY_CATEGORY) { builder.addByte(12, (byte) PRIMARY_CATEGORY, (byte) 0); }
+  public static void addCategories(FlatBufferBuilder builder, int CATEGORIESOffset) { builder.addOffset(13, CATEGORIESOffset, 0); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCategoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endAPP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

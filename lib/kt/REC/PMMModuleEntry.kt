@@ -366,6 +366,53 @@ class PMMModuleEntry : Table() {
             val o = __offset(52)
             return if(o != 0) bb.get(o + bb_pos) else 21
         }
+    /**
+     * The one ratified `$CCT` category this module is shelved under. Mirrors
+     * `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+     * sanctioned way to group an offering: `pluginCategory` is single-valued,
+     * holds a real family at ordinal 0, mixes capability families with
+     * node-internal plumbing, and carries a deprecated vendor-derived member.
+     * Present here, rather than only on the linked `$PLG`, so an anonymous
+     * client can section the catalogue at boot without fetching one `$PLG` per
+     * module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+     *
+     * SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+     * statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+     * `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+     * resting on a signed content hash. A consumer that shelves, filters or
+     * counts by this field MUST NOT present the resulting grouping as
+     * authenticated, and MUST keep the verified identity (`MODULE_ID`,
+     * `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+     * from provider-supplied presentation. Extending the canonical statement to
+     * cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+     * every verifier in lockstep and is not made implicitly by adopting this
+     * field.
+     */
+    val primaryCategory : UByte
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Every ratified `$CCT` category this module belongs to, for browse, filter
+     * and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+     * include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+     * PRIMARY_CATEGORY.
+     */
+    fun categories(j: Int) : UByte {
+        val o = __offset(56)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val categoriesLength : Int
+        get() {
+            val o = __offset(56); return if (o != 0) __vector_len(o) else 0
+        }
+    val categoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun categoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer) : Int {
          return compareStrings(__offset(4, o1, _bb), __offset(4, o2, _bb), _bb)
     }
@@ -376,10 +423,11 @@ class PMMModuleEntry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPMMModuleEntry(builder: FlatBufferBuilder, moduleIdOffset: Int, pluginIdOffset: Int, plgCidOffset: Int, nameOffset: Int, descriptionOffset: Int, versionOffset: Int, epoch: ULong, contentHashOffset: Int, artifactSizeBytes: ULong, artifactPathOffset: Int, artifactCidOffset: Int, artifactSignatureOffset: Int, trustTier: UByte, defaultEnabled: Boolean, accessPolicy: UByte, entryState: UByte, runtimeTargetsOffset: Int, requiredSchemasOffset: Int, minPermissionsOffset: Int, licenseOffset: Int, documentationUrlOffset: Int, iconUrlOffset: Int, supersedesContentHashOffset: Int, updatedAtOffset: Int, pluginType: Byte) : Int {
-            builder.startTable(25)
+        fun createPMMModuleEntry(builder: FlatBufferBuilder, moduleIdOffset: Int, pluginIdOffset: Int, plgCidOffset: Int, nameOffset: Int, descriptionOffset: Int, versionOffset: Int, epoch: ULong, contentHashOffset: Int, artifactSizeBytes: ULong, artifactPathOffset: Int, artifactCidOffset: Int, artifactSignatureOffset: Int, trustTier: UByte, defaultEnabled: Boolean, accessPolicy: UByte, entryState: UByte, runtimeTargetsOffset: Int, requiredSchemasOffset: Int, minPermissionsOffset: Int, licenseOffset: Int, documentationUrlOffset: Int, iconUrlOffset: Int, supersedesContentHashOffset: Int, updatedAtOffset: Int, pluginType: Byte, primaryCategory: UByte, categoriesOffset: Int) : Int {
+            builder.startTable(27)
             addARTIFACTSIZEBYTES(builder, artifactSizeBytes)
             addEPOCH(builder, epoch)
+            addCATEGORIES(builder, categoriesOffset)
             addUPDATEDAT(builder, updatedAtOffset)
             addSUPERSEDESCONTENTHASH(builder, supersedesContentHashOffset)
             addICONURL(builder, iconUrlOffset)
@@ -398,6 +446,7 @@ class PMMModuleEntry : Table() {
             addPLGCID(builder, plgCidOffset)
             addPLUGINID(builder, pluginIdOffset)
             addMODULEID(builder, moduleIdOffset)
+            addPRIMARYCATEGORY(builder, primaryCategory)
             addPLUGINTYPE(builder, pluginType)
             addENTRYSTATE(builder, entryState)
             addACCESSPOLICY(builder, accessPolicy)
@@ -405,7 +454,7 @@ class PMMModuleEntry : Table() {
             addTRUSTTIER(builder, trustTier)
             return endPMMModuleEntry(builder)
         }
-        fun startPMMModuleEntry(builder: FlatBufferBuilder) = builder.startTable(25)
+        fun startPMMModuleEntry(builder: FlatBufferBuilder) = builder.startTable(27)
         fun addMODULEID(builder: FlatBufferBuilder, moduleId: Int)  {
             builder.addOffset(moduleId)
             builder.slot(0)
@@ -467,6 +516,17 @@ class PMMModuleEntry : Table() {
         fun addSUPERSEDESCONTENTHASH(builder: FlatBufferBuilder, supersedesContentHash: Int) = builder.addOffset(22, supersedesContentHash, 0)
         fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(23, updatedAt, 0)
         fun addPLUGINTYPE(builder: FlatBufferBuilder, pluginType: Byte) = builder.addByte(24, pluginType, 21)
+        fun addPRIMARYCATEGORY(builder: FlatBufferBuilder, primaryCategory: UByte) = builder.addByte(25, primaryCategory.toByte(), 0)
+        fun addCATEGORIES(builder: FlatBufferBuilder, categories: Int) = builder.addOffset(26, categories, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCategoriesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCategoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPMMModuleEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

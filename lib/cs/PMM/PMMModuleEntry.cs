@@ -184,6 +184,39 @@ public struct PMMModuleEntry : IFlatbufferObject
   /// the linked `$PLG`, so an anonymous client can section the catalogue at
   /// boot without fetching one `$PLG` per module.
   public pluginCategory PLUGIN_TYPE { get { int o = __p.__offset(52); return o != 0 ? (pluginCategory)__p.bb.GetSbyte(o + __p.bb_pos) : pluginCategory.Unspecified; } }
+  /// The one ratified `$CCT` category this module is shelved under. Mirrors
+  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+  /// sanctioned way to group an offering: `pluginCategory` is single-valued,
+  /// holds a real family at ordinal 0, mixes capability families with
+  /// node-internal plumbing, and carries a deprecated vendor-derived member.
+  /// Present here, rather than only on the linked `$PLG`, so an anonymous
+  /// client can section the catalogue at boot without fetching one `$PLG` per
+  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+  ///
+  /// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+  /// resting on a signed content hash. A consumer that shelves, filters or
+  /// counts by this field MUST NOT present the resulting grouping as
+  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+  /// from provider-supplied presentation. Extending the canonical statement to
+  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+  /// every verifier in lockstep and is not made implicitly by adopting this
+  /// field.
+  public capabilityClass PRIMARY_CATEGORY { get { int o = __p.__offset(54); return o != 0 ? (capabilityClass)__p.bb.Get(o + __p.bb_pos) : capabilityClass.UNSPECIFIED; } }
+  /// Every ratified `$CCT` category this module belongs to, for browse, filter
+  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+  /// PRIMARY_CATEGORY.
+  public capabilityClass CATEGORIES(int j) { int o = __p.__offset(56); return o != 0 ? (capabilityClass)__p.bb.Get(__p.__vector(o) + j * 1) : (capabilityClass)0; }
+  public int CATEGORIESLength { get { int o = __p.__offset(56); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<capabilityClass> GetCATEGORIESBytes() { return __p.__vector_as_span<capabilityClass>(56, 1); }
+#else
+  public ArraySegment<byte>? GetCATEGORIESBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(56); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<PMMModuleEntry> CreatePMMModuleEntry(FlatBufferBuilder builder,
       StringOffset MODULE_IDOffset = default(StringOffset),
@@ -210,10 +243,13 @@ public struct PMMModuleEntry : IFlatbufferObject
       StringOffset ICON_URLOffset = default(StringOffset),
       StringOffset SUPERSEDES_CONTENT_HASHOffset = default(StringOffset),
       StringOffset UPDATED_ATOffset = default(StringOffset),
-      pluginCategory PLUGIN_TYPE = pluginCategory.Unspecified) {
-    builder.StartTable(25);
+      pluginCategory PLUGIN_TYPE = pluginCategory.Unspecified,
+      capabilityClass PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED,
+      VectorOffset CATEGORIESOffset = default(VectorOffset)) {
+    builder.StartTable(27);
     PMMModuleEntry.AddARTIFACT_SIZE_BYTES(builder, ARTIFACT_SIZE_BYTES);
     PMMModuleEntry.AddEPOCH(builder, EPOCH);
+    PMMModuleEntry.AddCATEGORIES(builder, CATEGORIESOffset);
     PMMModuleEntry.AddUPDATED_AT(builder, UPDATED_ATOffset);
     PMMModuleEntry.AddSUPERSEDES_CONTENT_HASH(builder, SUPERSEDES_CONTENT_HASHOffset);
     PMMModuleEntry.AddICON_URL(builder, ICON_URLOffset);
@@ -232,6 +268,7 @@ public struct PMMModuleEntry : IFlatbufferObject
     PMMModuleEntry.AddPLG_CID(builder, PLG_CIDOffset);
     PMMModuleEntry.AddPLUGIN_ID(builder, PLUGIN_IDOffset);
     PMMModuleEntry.AddMODULE_ID(builder, MODULE_IDOffset);
+    PMMModuleEntry.AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY);
     PMMModuleEntry.AddPLUGIN_TYPE(builder, PLUGIN_TYPE);
     PMMModuleEntry.AddENTRY_STATE(builder, ENTRY_STATE);
     PMMModuleEntry.AddACCESS_POLICY(builder, ACCESS_POLICY);
@@ -240,7 +277,7 @@ public struct PMMModuleEntry : IFlatbufferObject
     return PMMModuleEntry.EndPMMModuleEntry(builder);
   }
 
-  public static void StartPMMModuleEntry(FlatBufferBuilder builder) { builder.StartTable(25); }
+  public static void StartPMMModuleEntry(FlatBufferBuilder builder) { builder.StartTable(27); }
   public static void AddMODULE_ID(FlatBufferBuilder builder, StringOffset MODULE_IDOffset) { builder.AddOffset(0, MODULE_IDOffset.Value, 0); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(1, PLUGIN_IDOffset.Value, 0); }
   public static void AddPLG_CID(FlatBufferBuilder builder, StringOffset PLG_CIDOffset) { builder.AddOffset(2, PLG_CIDOffset.Value, 0); }
@@ -286,6 +323,13 @@ public struct PMMModuleEntry : IFlatbufferObject
   public static void AddSUPERSEDES_CONTENT_HASH(FlatBufferBuilder builder, StringOffset SUPERSEDES_CONTENT_HASHOffset) { builder.AddOffset(22, SUPERSEDES_CONTENT_HASHOffset.Value, 0); }
   public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(23, UPDATED_ATOffset.Value, 0); }
   public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginCategory PLUGIN_TYPE) { builder.AddSbyte(24, (sbyte)PLUGIN_TYPE, 21); }
+  public static void AddPRIMARY_CATEGORY(FlatBufferBuilder builder, capabilityClass PRIMARY_CATEGORY) { builder.AddByte(25, (byte)PRIMARY_CATEGORY, 0); }
+  public static void AddCATEGORIES(FlatBufferBuilder builder, VectorOffset CATEGORIESOffset) { builder.AddOffset(26, CATEGORIESOffset.Value, 0); }
+  public static VectorOffset CreateCATEGORIESVector(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<capabilityClass> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<capabilityClass>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCATEGORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PMMModuleEntry> EndPMMModuleEntry(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // MODULE_ID
@@ -355,6 +399,9 @@ public struct PMMModuleEntry : IFlatbufferObject
     _o.SUPERSEDES_CONTENT_HASH = this.SUPERSEDES_CONTENT_HASH;
     _o.UPDATED_AT = this.UPDATED_AT;
     _o.PLUGIN_TYPE = this.PLUGIN_TYPE;
+    _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY;
+    _o.CATEGORIES = new List<capabilityClass>();
+    for (var _j = 0; _j < this.CATEGORIESLength; ++_j) {_o.CATEGORIES.Add(this.CATEGORIES(_j));}
   }
   public static Offset<PMMModuleEntry> Pack(FlatBufferBuilder builder, PMMModuleEntryT _o) {
     if (_o == null) return default(Offset<PMMModuleEntry>);
@@ -395,6 +442,11 @@ public struct PMMModuleEntry : IFlatbufferObject
     var _ICON_URL = _o.ICON_URL == null ? default(StringOffset) : builder.CreateString(_o.ICON_URL);
     var _SUPERSEDES_CONTENT_HASH = _o.SUPERSEDES_CONTENT_HASH == null ? default(StringOffset) : builder.CreateString(_o.SUPERSEDES_CONTENT_HASH);
     var _UPDATED_AT = _o.UPDATED_AT == null ? default(StringOffset) : builder.CreateString(_o.UPDATED_AT);
+    var _CATEGORIES = default(VectorOffset);
+    if (_o.CATEGORIES != null) {
+      var __CATEGORIES = _o.CATEGORIES.ToArray();
+      _CATEGORIES = CreateCATEGORIESVector(builder, __CATEGORIES);
+    }
     return CreatePMMModuleEntry(
       builder,
       _MODULE_ID,
@@ -421,7 +473,9 @@ public struct PMMModuleEntry : IFlatbufferObject
       _ICON_URL,
       _SUPERSEDES_CONTENT_HASH,
       _UPDATED_AT,
-      _o.PLUGIN_TYPE);
+      _o.PLUGIN_TYPE,
+      _o.PRIMARY_CATEGORY,
+      _CATEGORIES);
   }
 }
 
@@ -452,6 +506,8 @@ public class PMMModuleEntryT
   public string SUPERSEDES_CONTENT_HASH { get; set; }
   public string UPDATED_AT { get; set; }
   public pluginCategory PLUGIN_TYPE { get; set; }
+  public capabilityClass PRIMARY_CATEGORY { get; set; }
+  public List<capabilityClass> CATEGORIES { get; set; }
 
   public PMMModuleEntryT() {
     this.MODULE_ID = null;
@@ -479,6 +535,8 @@ public class PMMModuleEntryT
     this.SUPERSEDES_CONTENT_HASH = null;
     this.UPDATED_AT = null;
     this.PLUGIN_TYPE = pluginCategory.Unspecified;
+    this.PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED;
+    this.CATEGORIES = null;
   }
 }
 
@@ -513,6 +571,8 @@ static public class PMMModuleEntryVerify
       && verifier.VerifyString(tablePos, 48 /*SUPERSEDES_CONTENT_HASH*/, false)
       && verifier.VerifyString(tablePos, 50 /*UPDATED_AT*/, false)
       && verifier.VerifyField(tablePos, 52 /*PLUGIN_TYPE*/, 1 /*pluginCategory*/, 1, false)
+      && verifier.VerifyField(tablePos, 54 /*PRIMARY_CATEGORY*/, 1 /*capabilityClass*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 56 /*CATEGORIES*/, 1 /*capabilityClass*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

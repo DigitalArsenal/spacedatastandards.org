@@ -1455,8 +1455,136 @@ func (rcv *PLG) FlowTriggerBindingsLength() int {
 }
 
 /// Bindings from triggers to the node + input port they deliver to.
+/// The one ratified $CCT category this module is shelved under. This is the
+/// category a storefront capsule, a library shelf and a breadcrumb show when
+/// exactly one must be chosen. UNSPECIFIED means the publisher did not
+/// classify the module; a consumer renders it ungrouped and never guesses.
+///
+/// This supersedes PLUGIN_TYPE for all storefront, library and search
+/// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+/// `pluginCategory` vocabulary mixes capability families with node-internal
+/// plumbing, carries a legacy vendor-derived member, holds a real family at
+/// ordinal 0, and admits only one value. Canonical migration, applied by a
+/// publisher rewriting an old manifest:
+///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+///   Renderer->VISUALIZATION_AND_RENDERING,
+///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+/// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+/// PLUGIN_TYPE.
+func (rcv *PLG) PRIMARY_CATEGORY() capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return capabilityClass(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PLG) PrimaryCategory() capabilityClass {
+	return rcv.PRIMARY_CATEGORY()
+}
+
+/// The one ratified $CCT category this module is shelved under. This is the
+/// category a storefront capsule, a library shelf and a breadcrumb show when
+/// exactly one must be chosen. UNSPECIFIED means the publisher did not
+/// classify the module; a consumer renders it ungrouped and never guesses.
+///
+/// This supersedes PLUGIN_TYPE for all storefront, library and search
+/// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+/// `pluginCategory` vocabulary mixes capability families with node-internal
+/// plumbing, carries a legacy vendor-derived member, holds a real family at
+/// ordinal 0, and admits only one value. Canonical migration, applied by a
+/// publisher rewriting an old manifest:
+///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+///   Renderer->VISUALIZATION_AND_RENDERING,
+///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+/// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+/// PLUGIN_TYPE.
+func (rcv *PLG) MutatePRIMARY_CATEGORY(n capabilityClass) bool {
+	return rcv._tab.MutateByteSlot(116, byte(n))
+}
+
+func (rcv *PLG) MutatePrimaryCategory(n capabilityClass) bool {
+	return rcv.MutatePRIMARY_CATEGORY(n)
+}
+
+/// Every ratified $CCT category this module belongs to, for browse, filter
+/// and per-category counting. A module MAY carry several. If nonempty it
+/// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+/// a set PRIMARY_CATEGORY means the module belongs to that one category.
+func (rcv *PLG) CATEGORIES(j int) capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return capabilityClass(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PLG) Categories(j int) capabilityClass {
+	return rcv.CATEGORIES(j)
+}
+
+func (rcv *PLG) CATEGORIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) CategoriesLength() int {
+	return rcv.CATEGORIESLength()
+}
+
+func (rcv *PLG) CATEGORIESBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PLG) CategoriesBytes() []byte {
+	return rcv.CATEGORIESBytes()
+}
+
+/// Every ratified $CCT category this module belongs to, for browse, filter
+/// and per-category counting. A module MAY carry several. If nonempty it
+/// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+/// a set PRIMARY_CATEGORY means the module belongs to that one category.
+func (rcv *PLG) MutateCATEGORIES(j int, n capabilityClass) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PLG) MutateCategories(j int, n capabilityClass) bool {
+	return rcv.MutateCATEGORIES(j, n)
+}
+
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(56)
+	builder.StartObject(58)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -1943,6 +2071,24 @@ func PLGStartFLOW_TRIGGER_BINDINGSVector(builder *flatbuffers.Builder, numElems 
 }
 func PLGStartFlowTriggerBindingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLGStartFLOW_TRIGGER_BINDINGSVector(builder, numElems)
+}
+func PLGAddPRIMARY_CATEGORY(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	builder.PrependByteSlot(56, byte(PRIMARY_CATEGORY), 0)
+}
+func PLGAddPrimaryCategory(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	PLGAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+}
+func PLGAddCATEGORIES(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(CATEGORIES), 0)
+}
+func PLGAddCategories(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	PLGAddCATEGORIES(builder, CATEGORIES)
+}
+func PLGStartCATEGORIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PLGStartCategoriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartCATEGORIESVector(builder, numElems)
 }
 func PLGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

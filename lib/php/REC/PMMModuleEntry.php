@@ -320,22 +320,82 @@ class PMMModuleEntry extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pluginCategory::Unspecified;
     }
 
+    /// The one ratified `$CCT` category this module is shelved under. Mirrors
+    /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+    /// sanctioned way to group an offering: `pluginCategory` is single-valued,
+    /// holds a real family at ordinal 0, mixes capability families with
+    /// node-internal plumbing, and carries a deprecated vendor-derived member.
+    /// Present here, rather than only on the linked `$PLG`, so an anonymous
+    /// client can section the catalogue at boot without fetching one `$PLG` per
+    /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+    ///
+    /// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+    /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+    /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+    /// resting on a signed content hash. A consumer that shelves, filters or
+    /// counts by this field MUST NOT present the resulting grouping as
+    /// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+    /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+    /// from provider-supplied presentation. Extending the canonical statement to
+    /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+    /// every verifier in lockstep and is not made implicitly by adopting this
+    /// field.
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_CATEGORY()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /// Every ratified `$CCT` category this module belongs to, for browse, filter
+    /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+    /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+    /// PRIMARY_CATEGORY.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCATEGORIES($j)
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCATEGORIESLength()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCATEGORIESBytes()
+    {
+        return $this->__vector_as_bytes(56);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPMMModuleEntry(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(25);
+        $builder->StartObject(27);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PMMModuleEntry
      */
-    public static function createPMMModuleEntry(FlatBufferBuilder $builder, $MODULE_ID, $PLUGIN_ID, $PLG_CID, $NAME, $DESCRIPTION, $VERSION, $EPOCH, $CONTENT_HASH, $ARTIFACT_SIZE_BYTES, $ARTIFACT_PATH, $ARTIFACT_CID, $ARTIFACT_SIGNATURE, $TRUST_TIER, $DEFAULT_ENABLED, $ACCESS_POLICY, $ENTRY_STATE, $RUNTIME_TARGETS, $REQUIRED_SCHEMAS, $MIN_PERMISSIONS, $LICENSE, $DOCUMENTATION_URL, $ICON_URL, $SUPERSEDES_CONTENT_HASH, $UPDATED_AT, $PLUGIN_TYPE)
+    public static function createPMMModuleEntry(FlatBufferBuilder $builder, $MODULE_ID, $PLUGIN_ID, $PLG_CID, $NAME, $DESCRIPTION, $VERSION, $EPOCH, $CONTENT_HASH, $ARTIFACT_SIZE_BYTES, $ARTIFACT_PATH, $ARTIFACT_CID, $ARTIFACT_SIGNATURE, $TRUST_TIER, $DEFAULT_ENABLED, $ACCESS_POLICY, $ENTRY_STATE, $RUNTIME_TARGETS, $REQUIRED_SCHEMAS, $MIN_PERMISSIONS, $LICENSE, $DOCUMENTATION_URL, $ICON_URL, $SUPERSEDES_CONTENT_HASH, $UPDATED_AT, $PLUGIN_TYPE, $PRIMARY_CATEGORY, $CATEGORIES)
     {
-        $builder->startObject(25);
+        $builder->startObject(27);
         self::addMODULE_ID($builder, $MODULE_ID);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addPLG_CID($builder, $PLG_CID);
@@ -361,6 +421,8 @@ class PMMModuleEntry extends Table
         self::addSUPERSEDES_CONTENT_HASH($builder, $SUPERSEDES_CONTENT_HASH);
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addPLUGIN_TYPE($builder, $PLUGIN_TYPE);
+        self::addPRIMARY_CATEGORY($builder, $PRIMARY_CATEGORY);
+        self::addCATEGORIES($builder, $CATEGORIES);
         $o = $builder->endObject();
         $builder->required($o, 4);  // MODULE_ID
         return $o;
@@ -710,6 +772,50 @@ class PMMModuleEntry extends Table
     public static function addPLUGIN_TYPE(FlatBufferBuilder $builder, $PLUGIN_TYPE)
     {
         $builder->addSbyteX(24, $PLUGIN_TYPE, 21);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_CATEGORY(FlatBufferBuilder $builder, $PRIMARY_CATEGORY)
+    {
+        $builder->addByteX(25, $PRIMARY_CATEGORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCATEGORIES(FlatBufferBuilder $builder, $CATEGORIES)
+    {
+        $builder->addOffsetX(26, $CATEGORIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCATEGORIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCATEGORIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

@@ -604,8 +604,126 @@ func (rcv *PMMModuleEntry) MutatePluginType(n pluginCategory) bool {
 	return rcv.MutatePLUGIN_TYPE(n)
 }
 
+/// The one ratified `$CCT` category this module is shelved under. Mirrors
+/// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+/// sanctioned way to group an offering: `pluginCategory` is single-valued,
+/// holds a real family at ordinal 0, mixes capability families with
+/// node-internal plumbing, and carries a deprecated vendor-derived member.
+/// Present here, rather than only on the linked `$PLG`, so an anonymous
+/// client can section the catalogue at boot without fetching one `$PLG` per
+/// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+///
+/// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+/// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+/// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+/// resting on a signed content hash. A consumer that shelves, filters or
+/// counts by this field MUST NOT present the resulting grouping as
+/// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+/// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+/// from provider-supplied presentation. Extending the canonical statement to
+/// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+/// every verifier in lockstep and is not made implicitly by adopting this
+/// field.
+func (rcv *PMMModuleEntry) PRIMARY_CATEGORY() capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return capabilityClass(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PMMModuleEntry) PrimaryCategory() capabilityClass {
+	return rcv.PRIMARY_CATEGORY()
+}
+
+/// The one ratified `$CCT` category this module is shelved under. Mirrors
+/// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+/// sanctioned way to group an offering: `pluginCategory` is single-valued,
+/// holds a real family at ordinal 0, mixes capability families with
+/// node-internal plumbing, and carries a deprecated vendor-derived member.
+/// Present here, rather than only on the linked `$PLG`, so an anonymous
+/// client can section the catalogue at boot without fetching one `$PLG` per
+/// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+///
+/// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+/// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+/// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+/// resting on a signed content hash. A consumer that shelves, filters or
+/// counts by this field MUST NOT present the resulting grouping as
+/// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+/// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+/// from provider-supplied presentation. Extending the canonical statement to
+/// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+/// every verifier in lockstep and is not made implicitly by adopting this
+/// field.
+func (rcv *PMMModuleEntry) MutatePRIMARY_CATEGORY(n capabilityClass) bool {
+	return rcv._tab.MutateByteSlot(54, byte(n))
+}
+
+func (rcv *PMMModuleEntry) MutatePrimaryCategory(n capabilityClass) bool {
+	return rcv.MutatePRIMARY_CATEGORY(n)
+}
+
+/// Every ratified `$CCT` category this module belongs to, for browse, filter
+/// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+/// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+/// PRIMARY_CATEGORY.
+func (rcv *PMMModuleEntry) CATEGORIES(j int) capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return capabilityClass(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PMMModuleEntry) Categories(j int) capabilityClass {
+	return rcv.CATEGORIES(j)
+}
+
+func (rcv *PMMModuleEntry) CATEGORIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PMMModuleEntry) CategoriesLength() int {
+	return rcv.CATEGORIESLength()
+}
+
+func (rcv *PMMModuleEntry) CATEGORIESBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PMMModuleEntry) CategoriesBytes() []byte {
+	return rcv.CATEGORIESBytes()
+}
+
+/// Every ratified `$CCT` category this module belongs to, for browse, filter
+/// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+/// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+/// PRIMARY_CATEGORY.
+func (rcv *PMMModuleEntry) MutateCATEGORIES(j int, n capabilityClass) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PMMModuleEntry) MutateCategories(j int, n capabilityClass) bool {
+	return rcv.MutateCATEGORIES(j, n)
+}
+
 func PMMModuleEntryStart(builder *flatbuffers.Builder) {
-	builder.StartObject(25)
+	builder.StartObject(27)
 }
 func PMMModuleEntryAddMODULE_ID(builder *flatbuffers.Builder, MODULE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MODULE_ID), 0)
@@ -780,6 +898,24 @@ func PMMModuleEntryAddPLUGIN_TYPE(builder *flatbuffers.Builder, PLUGIN_TYPE plug
 }
 func PMMModuleEntryAddPluginType(builder *flatbuffers.Builder, PLUGIN_TYPE pluginCategory) {
 	PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE)
+}
+func PMMModuleEntryAddPRIMARY_CATEGORY(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	builder.PrependByteSlot(25, byte(PRIMARY_CATEGORY), 0)
+}
+func PMMModuleEntryAddPrimaryCategory(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	PMMModuleEntryAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+}
+func PMMModuleEntryAddCATEGORIES(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(CATEGORIES), 0)
+}
+func PMMModuleEntryAddCategories(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	PMMModuleEntryAddCATEGORIES(builder, CATEGORIES)
+}
+func PMMModuleEntryStartCATEGORIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PMMModuleEntryStartCategoriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PMMModuleEntryStartCATEGORIESVector(builder, numElems)
 }
 func PMMModuleEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

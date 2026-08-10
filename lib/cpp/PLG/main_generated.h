@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct PluginCapability;
 struct PluginCapabilityBuilder;
@@ -63,7 +64,36 @@ struct PLGFlowTriggerBindingBuilder;
 struct PLG;
 struct PLGBuilder;
 
-/// Plugin type category
+/// Plugin type category.
+///
+/// DEPRECATED as a classification vocabulary — superseded by `$CCT`
+/// `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.
+/// The enum and the `PLUGIN_TYPE` field remain on the wire permanently
+/// (ordinals are wire values and published manifests decode against them);
+/// only their use as the grouping vocabulary is retired.
+///
+/// It cannot be repaired in place, which is why it is superseded rather than
+/// extended:
+///   - it is SINGLE-VALUED, and a storefront browse surface classifies one
+///     unit under several categories;
+///   - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value
+///     decodes as a category the publisher never stated — the reason
+///     `Unspecified` had to be appended at the tail instead of held at 0;
+///   - it mixes capability families with node-internal plumbing
+///     (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are
+///     not shelves a catalogue consumer browses;
+///   - it carries `Basilisk`, a vendor-derived member that owner law
+///     2026-08-06 (no vendor/site/org names in standards) forbids;
+///   - a `byte` enum cannot carry the display name, summary, route slug,
+///     ordering or icon a storefront must render, and `$CCT` publishes all of
+///     them alongside the code.
+///
+/// MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and
+/// SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the
+/// taxonomy existed. The per-member forward mapping is normative and is stated
+/// on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST
+/// prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is
+/// `UNSPECIFIED`.
 enum pluginCategory : int8_t {
   /// Sensor simulation and analysis
   pluginCategory_Sensor = 0,
@@ -101,9 +131,16 @@ enum pluginCategory : int8_t {
   pluginCategory_Storefront = 16,
   /// Publication: PNM signing + pub/sub announcement
   pluginCategory_Publisher = 17,
-  /// Astrodynamics simulation and dynamics-modelling module family. The member
-  /// identifier is a legacy vocabulary key retained for wire and manifest
-  /// compatibility; renaming it is an owner-gated breaking change.
+  /// DEPRECATED — owner law 2026-08-06 forbids vendor/org-derived names in a
+  /// standard's vocabulary, and this member is one. Its ordinal is wire data
+  /// and is therefore NEVER removed or reused, and renaming it in place would
+  /// still be a breaking change for every published manifest; the sanctioned
+  /// repair is to stop publishing it. Publishers MUST migrate to
+  /// `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and
+  /// dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new
+  /// manifests. Consumers MUST render an existing record carrying it as
+  /// `Propagation` and MUST NOT surface the member identifier in any user-
+  /// facing label.
   pluginCategory_Basilisk = 18,
   /// Maneuver planning, targeting and trajectory optimization
   pluginCategory_Maneuver = 19,
@@ -2363,7 +2400,9 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FLOW_NODES = 108,
     VT_FLOW_EDGES = 110,
     VT_FLOW_TRIGGERS = 112,
-    VT_FLOW_TRIGGER_BINDINGS = 114
+    VT_FLOW_TRIGGER_BINDINGS = 114,
+    VT_PRIMARY_CATEGORY = 116,
+    VT_CATEGORIES = 118
   };
   /// Unique identifier for the plugin
   const ::flatbuffers::String *PLUGIN_ID() const {
@@ -2598,6 +2637,41 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTriggerBinding>> *FLOW_TRIGGER_BINDINGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTriggerBinding>> *>(VT_FLOW_TRIGGER_BINDINGS);
   }
+  /// The one ratified $CCT category this module is shelved under. This is the
+  /// category a storefront capsule, a library shelf and a breadcrumb show when
+  /// exactly one must be chosen. UNSPECIFIED means the publisher did not
+  /// classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  /// This supersedes PLUGIN_TYPE for all storefront, library and search
+  /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  /// `pluginCategory` vocabulary mixes capability families with node-internal
+  /// plumbing, carries a legacy vendor-derived member, holds a real family at
+  /// ordinal 0, and admits only one value. Canonical migration, applied by a
+  /// publisher rewriting an old manifest:
+  ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///   Renderer->VISUALIZATION_AND_RENDERING,
+  ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  /// PLUGIN_TYPE.
+  capabilityClass PRIMARY_CATEGORY() const {
+    return static_cast<capabilityClass>(GetField<uint8_t>(VT_PRIMARY_CATEGORY, 0));
+  }
+  /// Every ratified $CCT category this module belongs to, for browse, filter
+  /// and per-category counting. A module MAY carry several. If nonempty it
+  /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  /// a set PRIMARY_CATEGORY means the module belongs to that one category.
+  const ::flatbuffers::Vector<uint8_t> *CATEGORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CATEGORIES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2722,6 +2796,9 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_FLOW_TRIGGER_BINDINGS) &&
            verifier.VerifyVector(FLOW_TRIGGER_BINDINGS()) &&
            verifier.VerifyVectorOfTables(FLOW_TRIGGER_BINDINGS()) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_CATEGORY, 1) &&
+           VerifyOffset(verifier, VT_CATEGORIES) &&
+           verifier.VerifyVector(CATEGORIES()) &&
            verifier.EndTable();
   }
 };
@@ -2898,6 +2975,12 @@ struct PLGBuilder {
   void add_FLOW_TRIGGER_BINDINGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTriggerBinding>>> FLOW_TRIGGER_BINDINGS) {
     fbb_.AddOffset(PLG::VT_FLOW_TRIGGER_BINDINGS, FLOW_TRIGGER_BINDINGS);
   }
+  void add_PRIMARY_CATEGORY(capabilityClass PRIMARY_CATEGORY) {
+    fbb_.AddElement<uint8_t>(PLG::VT_PRIMARY_CATEGORY, static_cast<uint8_t>(PRIMARY_CATEGORY), 0);
+  }
+  void add_CATEGORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES) {
+    fbb_.AddOffset(PLG::VT_CATEGORIES, CATEGORIES);
+  }
   explicit PLGBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2969,13 +3052,16 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowNode>>> FLOW_NODES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowEdge>>> FLOW_EDGES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTrigger>>> FLOW_TRIGGERS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTriggerBinding>>> FLOW_TRIGGER_BINDINGS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGFlowTriggerBinding>>> FLOW_TRIGGER_BINDINGS = 0,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0) {
   PLGBuilder builder_(_fbb);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_MAX_GRANT_TIMEOUT_MS(MAX_GRANT_TIMEOUT_MS);
   builder_.add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE);
   builder_.add_WASM_SIZE(WASM_SIZE);
+  builder_.add_CATEGORIES(CATEGORIES);
   builder_.add_FLOW_TRIGGER_BINDINGS(FLOW_TRIGGER_BINDINGS);
   builder_.add_FLOW_TRIGGERS(FLOW_TRIGGERS);
   builder_.add_FLOW_EDGES(FLOW_EDGES);
@@ -3023,6 +3109,7 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
   builder_.add_VERSION(VERSION);
   builder_.add_NAME(NAME);
   builder_.add_PLUGIN_ID(PLUGIN_ID);
+  builder_.add_PRIMARY_CATEGORY(PRIMARY_CATEGORY);
   builder_.add_LISTING_STATUS(LISTING_STATUS);
   builder_.add_PAYMENT_MODEL(PAYMENT_MODEL);
   builder_.add_ENCRYPTED(ENCRYPTED);
@@ -3087,7 +3174,9 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const std::vector<::flatbuffers::Offset<PLGFlowNode>> *FLOW_NODES = nullptr,
     const std::vector<::flatbuffers::Offset<PLGFlowEdge>> *FLOW_EDGES = nullptr,
     const std::vector<::flatbuffers::Offset<PLGFlowTrigger>> *FLOW_TRIGGERS = nullptr,
-    const std::vector<::flatbuffers::Offset<PLGFlowTriggerBinding>> *FLOW_TRIGGER_BINDINGS = nullptr) {
+    const std::vector<::flatbuffers::Offset<PLGFlowTriggerBinding>> *FLOW_TRIGGER_BINDINGS = nullptr,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    const std::vector<uint8_t> *CATEGORIES = nullptr) {
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
@@ -3132,6 +3221,7 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
   auto FLOW_EDGES__ = FLOW_EDGES ? _fbb.CreateVector<::flatbuffers::Offset<PLGFlowEdge>>(*FLOW_EDGES) : 0;
   auto FLOW_TRIGGERS__ = FLOW_TRIGGERS ? _fbb.CreateVector<::flatbuffers::Offset<PLGFlowTrigger>>(*FLOW_TRIGGERS) : 0;
   auto FLOW_TRIGGER_BINDINGS__ = FLOW_TRIGGER_BINDINGS ? _fbb.CreateVector<::flatbuffers::Offset<PLGFlowTriggerBinding>>(*FLOW_TRIGGER_BINDINGS) : 0;
+  auto CATEGORIES__ = CATEGORIES ? _fbb.CreateVector<uint8_t>(*CATEGORIES) : 0;
   return CreatePLG(
       _fbb,
       PLUGIN_ID__,
@@ -3189,7 +3279,9 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       FLOW_NODES__,
       FLOW_EDGES__,
       FLOW_TRIGGERS__,
-      FLOW_TRIGGER_BINDINGS__);
+      FLOW_TRIGGER_BINDINGS__,
+      PRIMARY_CATEGORY,
+      CATEGORIES__);
 }
 
 inline const PLG *GetPLG(const void *buf) {

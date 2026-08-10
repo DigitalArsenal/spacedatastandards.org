@@ -311,8 +311,66 @@ class PMMModuleEntry(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 21
 
+    # The one ratified `$CCT` category this module is shelved under. Mirrors
+    # `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+    # sanctioned way to group an offering: `pluginCategory` is single-valued,
+    # holds a real family at ordinal 0, mixes capability families with
+    # node-internal plumbing, and carries a deprecated vendor-derived member.
+    # Present here, rather than only on the linked `$PLG`, so an anonymous
+    # client can section the catalogue at boot without fetching one `$PLG` per
+    # module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+    #
+    # SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+    # statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+    # `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+    # resting on a signed content hash. A consumer that shelves, filters or
+    # counts by this field MUST NOT present the resulting grouping as
+    # authenticated, and MUST keep the verified identity (`MODULE_ID`,
+    # `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+    # from provider-supplied presentation. Extending the canonical statement to
+    # cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+    # every verifier in lockstep and is not made implicitly by adopting this
+    # field.
+    # PMMModuleEntry
+    def PRIMARY_CATEGORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Every ratified `$CCT` category this module belongs to, for browse, filter
+    # and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+    # include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+    # PRIMARY_CATEGORY.
+    # PMMModuleEntry
+    def CATEGORIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PMMModuleEntry
+    def CATEGORIESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PMMModuleEntry
+    def CATEGORIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PMMModuleEntry
+    def CATEGORIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        return o == 0
+
 def PMMModuleEntryStart(builder):
-    builder.StartObject(25)
+    builder.StartObject(27)
 
 def Start(builder):
     PMMModuleEntryStart(builder)
@@ -519,6 +577,34 @@ def PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE):
 def AddPLUGIN_TYPE(builder, PLUGIN_TYPE):
     PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE)
 
+def PMMModuleEntryAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    builder.PrependUint8Slot(25, PRIMARY_CATEGORY, 0)
+
+def AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    PMMModuleEntryAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+
+def PMMModuleEntryAddCATEGORIES(builder, CATEGORIES):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORIES), 0)
+
+def AddCATEGORIES(builder, CATEGORIES):
+    PMMModuleEntryAddCATEGORIES(builder, CATEGORIES)
+
+def PMMModuleEntryStartCATEGORIESVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCATEGORIESVector(builder, numElems):
+    return PMMModuleEntryStartCATEGORIESVector(builder, numElems)
+
+def PMMModuleEntryCreateCATEGORIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCATEGORIESVector(builder, data):
+    PMMModuleEntryCreateCATEGORIESVector(builder, data)
+
 def PMMModuleEntryEnd(builder):
     return builder.EndObject()
 
@@ -560,6 +646,8 @@ class PMMModuleEntryT(object):
         SUPERSEDES_CONTENT_HASH = None,
         UPDATED_AT = None,
         PLUGIN_TYPE = 21,
+        PRIMARY_CATEGORY = 0,
+        CATEGORIES = None,
     ):
         self.MODULE_ID = MODULE_ID  # type: Optional[str]
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
@@ -586,6 +674,8 @@ class PMMModuleEntryT(object):
         self.SUPERSEDES_CONTENT_HASH = SUPERSEDES_CONTENT_HASH  # type: Optional[str]
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
         self.PLUGIN_TYPE = PLUGIN_TYPE  # type: int
+        self.PRIMARY_CATEGORY = PRIMARY_CATEGORY  # type: int
+        self.CATEGORIES = CATEGORIES  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -648,6 +738,14 @@ class PMMModuleEntryT(object):
         self.SUPERSEDES_CONTENT_HASH = PMMModuleEntry.SUPERSEDES_CONTENT_HASH()
         self.UPDATED_AT = PMMModuleEntry.UPDATED_AT()
         self.PLUGIN_TYPE = PMMModuleEntry.PLUGIN_TYPE()
+        self.PRIMARY_CATEGORY = PMMModuleEntry.PRIMARY_CATEGORY()
+        if not PMMModuleEntry.CATEGORIESIsNone():
+            if np is None:
+                self.CATEGORIES = []
+                for i in range(PMMModuleEntry.CATEGORIESLength()):
+                    self.CATEGORIES.append(PMMModuleEntry.CATEGORIES(i))
+            else:
+                self.CATEGORIES = PMMModuleEntry.CATEGORIESAsNumpy()
 
     # PMMModuleEntryT
     def Pack(self, builder):
@@ -711,6 +809,14 @@ class PMMModuleEntryT(object):
             SUPERSEDES_CONTENT_HASH = builder.CreateString(self.SUPERSEDES_CONTENT_HASH)
         if self.UPDATED_AT is not None:
             UPDATED_AT = builder.CreateString(self.UPDATED_AT)
+        if self.CATEGORIES is not None:
+            if np is not None and type(self.CATEGORIES) is np.ndarray:
+                CATEGORIES = builder.CreateNumpyVector(self.CATEGORIES)
+            else:
+                PMMModuleEntryStartCATEGORIESVector(builder, len(self.CATEGORIES))
+                for i in reversed(range(len(self.CATEGORIES))):
+                    builder.PrependUint8(self.CATEGORIES[i])
+                CATEGORIES = builder.EndVector()
         PMMModuleEntryStart(builder)
         if self.MODULE_ID is not None:
             PMMModuleEntryAddMODULE_ID(builder, MODULE_ID)
@@ -755,5 +861,8 @@ class PMMModuleEntryT(object):
         if self.UPDATED_AT is not None:
             PMMModuleEntryAddUPDATED_AT(builder, UPDATED_AT)
         PMMModuleEntryAddPLUGIN_TYPE(builder, self.PLUGIN_TYPE)
+        PMMModuleEntryAddPRIMARY_CATEGORY(builder, self.PRIMARY_CATEGORY)
+        if self.CATEGORIES is not None:
+            PMMModuleEntryAddCATEGORIES(builder, CATEGORIES)
         PMMModuleEntry = PMMModuleEntryEnd(builder)
         return PMMModuleEntry

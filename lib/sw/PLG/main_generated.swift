@@ -8,257 +8,411 @@ import Common
 
 import FlatBuffers
 
-///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-///  through an arena-backed plugin stream. Carries enough identity for a
-///  receiver to dispatch on schema without inspecting the payload bytes.
-///  Logical payload wire format for a stream frame or an accepted port type.
-public enum payloadWireFormat: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Capability class of a distributable software unit (module, application, or
+///  composed flow).
+///
+///  This enum IS the ratified category vocabulary. A storefront, library, module
+///  manifest and search surface all classify against these members and nothing
+///  else; a category that is not a member here does not exist. Members name
+///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
+///  site, organization, product, protocol brand or algorithm implementation;
+///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
+///  the taxonomy.
+///
+///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
+///  reuse an ordinal. A reorder silently re-labels every published listing.
+///
+///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
+///  default-constructed classification can never decode as a real category. The
+///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
+///  ordinal 0 is a real family — and had to append an `Unspecified` member at
+///  the tail to recover. This enum does not repeat that.
+///
+///  Each member's canonical display name is stated in its doc comment and is
+///  part of the ratified contract: a consumer rendering a category label uses
+///  that string verbatim, so every surface spells a category identically. The
+///  canonical route slug is the member identifier lowercased with `_` replaced
+///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
+///  "rf-and-communications").
+public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  case flatbuffer = 0
-  ///  Body is a raw aligned binary chunk (for example zero-copy structs).
-  case alignedBinary = 1
+  ///  No capability class stated. The publisher did not classify the unit.
+  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
+  ///  infer a class from the unit's name, description or tags.
+  ///  Display name: "Unspecified".
+  case unspecified = 0
+  ///  Advancing an object's state forward or backward in time under a force
+  ///  model, and interpolating between computed states.
+  ///  Display name: "Propagation".
+  case propagation = 1
+  ///  Estimating an object's state or model parameters by fitting to
+  ///  observations or ephemerides.
+  ///  Display name: "Orbit Determination".
+  case orbitDetermination = 2
+  ///  Planning, targeting and optimizing trajectory changes, including
+  ///  station-keeping, transfers and collision-avoidance maneuvers.
+  ///  Display name: "Maneuver Planning".
+  case maneuverPlanning = 3
+  ///  Screening for close approaches between objects and quantifying collision
+  ///  probability and miss distance.
+  ///  Display name: "Conjunction Assessment".
+  case conjunctionAssessment = 4
+  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
+  ///  evolution.
+  ///  Display name: "Reentry & Breakup".
+  case reentryAndBreakup = 5
+  ///  Attitude determination and control, body orientation, and pointing or
+  ///  slew planning.
+  ///  Display name: "Attitude & Pointing".
+  case attitudeAndPointing = 6
+  ///  Coordinate frame realization and transformation, time scale conversion,
+  ///  and earth-orientation parameter handling.
+  ///  Display name: "Reference Frames & Time".
+  case referenceFramesAndTime = 7
+  ///  Sensor modelling and tasking, field-of-regard and access computation, and
+  ///  area or target coverage figures of merit.
+  ///  Display name: "Sensors & Coverage".
+  case sensorsAndCoverage = 8
+  ///  Producing, correlating or associating observations of tracked objects,
+  ///  and maintaining tracks from them.
+  ///  Display name: "Tracking & Observation".
+  case trackingAndObservation = 9
+  ///  Radio-frequency link modelling, emitter and band characterization, signal
+  ///  capture handling, and communications planning.
+  ///  Display name: "RF & Communications".
+  case rfAndCommunications = 10
+  ///  Interference, jamming, spoofing and countermeasure modelling.
+  ///  Display name: "Electronic Warfare".
+  case electronicWarfare = 11
+  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
+  ///  geomagnetic activity, and ionospheric modelling.
+  ///  Display name: "Space Environment".
+  case spaceEnvironment = 12
+  ///  Acquiring bytes from upstream providers and parsing or exporting them
+  ///  across canonical record formats.
+  ///  Display name: "Data Sources & Ingest".
+  case dataSourcesAndIngest = 13
+  ///  Validating records for integrity, physical plausibility, continuity and
+  ///  schema conformance, and scoring data quality.
+  ///  Display name: "Data Validation & Quality".
+  case dataValidationAndQuality = 14
+  ///  Object catalogue curation, cross-identifier resolution, bus and physical
+  ///  property association, and entity identity.
+  ///  Display name: "Catalog & Identity".
+  case catalogAndIdentity = 15
+  ///  Rendering, scene composition, shading and interactive display of space
+  ///  data.
+  ///  Display name: "Visualization & Rendering".
+  case visualizationAndRendering = 16
+  ///  Ground station operation and control of physical equipment, including
+  ///  antenna rotators, radios and other hardware interfaces.
+  ///  Display name: "Ground Segment & Hardware".
+  case groundSegmentAndHardware = 17
+  ///  Mission and constellation design, trade studies, performance analysis and
+  ///  report generation.
+  ///  Display name: "Mission Design & Analysis".
+  case missionDesignAndAnalysis = 18
+  ///  Composition of other units into a graph. The unit of distribution is a
+  ///  flow of modules, not a leaf algorithm.
+  ///  Display name: "Flows & Composition".
+  case flowAndComposition = 19
+  ///  Persisting, indexing and querying records; storage engines and query
+  ///  surfaces.
+  ///  Display name: "Data Storage & Query".
+  case dataStorageAndQuery = 20
+  ///  Key custody, signing and verification, authentication, authorization and
+  ///  access control.
+  ///  Display name: "Security & Identity".
+  case securityAndIdentity = 21
+  ///  Listing, purchase, subscription, entitlement and license enforcement for
+  ///  distributed units.
+  ///  Display name: "Commerce & Licensing".
+  case commerceAndLicensing = 22
+  ///  Node runtime, artifact delivery, registry, publication and peer transport
+  ///  plumbing.
+  ///  Display name: "Node Infrastructure".
+  case nodeInfrastructure = 23
+  ///  Foundational mathematics and general-purpose utility libraries consumed by
+  ///  other units rather than run on their own.
+  ///  Display name: "Foundation & Math".
+  case foundationAndMath = 24
 
-  public static var max: payloadWireFormat { return .alignedBinary }
-  public static var min: payloadWireFormat { return .flatbuffer }
+  public static var max: capabilityClass { return .foundationAndMath }
+  public static var min: capabilityClass { return .unspecified }
 }
 
 
-///  Buffer mutability contract advertised by a stream port.
-public enum bufferMutability: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Buffer is immutable after produce.
-  case immutable = 0
-  ///  Buffer may be written in place by the owner (single writer).
-  case singleWriterMutable = 1
-  ///  Buffer is append-only (rings / logs).
-  case appendOnly = 2
-
-  public static var max: bufferMutability { return .appendOnly }
-  public static var min: bufferMutability { return .immutable }
-}
-
-
-///  Buffer ownership contract advertised by a stream port.
-public enum bufferOwnership: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Arena / host owns the backing bytes; receiver must not free.
-  case hostOwned = 0
-  ///  Plugin owns the backing bytes; host must not free.
-  case pluginOwned = 1
-  ///  Ownership transfers with the frame (hand-off semantics).
-  case transferred = 2
-
-  public static var max: bufferOwnership { return .transferred }
-  public static var min: bufferOwnership { return .hostOwned }
-}
-
-
-///  Payload-schema identity for a stream frame or an accepted port type.
-public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  One ratified category in the taxonomy.
+///
+///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
+///  without the label a surface will render, the sentence a browse row will
+///  show, and the route a link will target. This is what stops each consumer
+///  from inventing its own wording for the same code.
+public struct CCTCategory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TAB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FlatBufferTypeRef.id, addPrefix: prefix) }
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SCHEMA_NAME: VOffset = 4
-    static let FILE_IDENTIFIER: VOffset = 6
-    static let SCHEMA_VERSION: VOffset = 8
-    static let ROOT_TYPE: VOffset = 10
-    static let SCHEMA_HASH: VOffset = 12
-    static let ACCEPTS_ANY_FLATBUFFER: VOffset = 14
-    static let WIRE_FORMAT: VOffset = 16
-    static let FIXED_STRING_LENGTH: VOffset = 18
-    static let BYTE_LENGTH: VOffset = 20
-    static let REQUIRED_ALIGNMENT: VOffset = 22
+    static let CODE: VOffset = 4
+    static let DISPLAY_NAME: VOffset = 6
+    static let SUMMARY: VOffset = 8
+    static let SLUG: VOffset = 10
+    static let DESCRIPTION: VOffset = 12
+    static let PARENT: VOffset = 14
+    static let SORT_ORDER: VOffset = 16
+    static let KEYWORDS: VOffset = 18
+    static let ICON_KEY: VOffset = 20
   }
 
-  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
-  ///  Optional 4-byte FlatBuffer file identifier.
-  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
-  ///  Optional semver or schema revision string.
-  public var SCHEMA_VERSION: String? { let o = _accessor.offset(VT.SCHEMA_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_VERSION) }
-  ///  Optional root type name within the schema.
-  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
-  ///  Optional schema hash bytes for stronger compatibility checks.
-  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
-  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
-  ///  True when this port/type set accepts any FlatBuffer frame.
-  public var ACCEPTS_ANY_FLATBUFFER: Bool { let o = _accessor.offset(VT.ACCEPTS_ANY_FLATBUFFER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Logical wire format for this accepted type.
-  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
-  ///  Fixed string length for aligned-binary string fields, when applicable.
-  public var FIXED_STRING_LENGTH: UInt16 { let o = _accessor.offset(VT.FIXED_STRING_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Byte length for fixed-size aligned-binary records, when applicable.
-  public var BYTE_LENGTH: UInt32 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Required start alignment for aligned-binary records, when applicable.
-  public var REQUIRED_ALIGNMENT: UInt16 { let o = _accessor.offset(VT.REQUIRED_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
-  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
-  public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VT.SCHEMA_VERSION) }
-  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
-  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
-  public static func add(ACCEPTS_ANY_FLATBUFFER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTS_ANY_FLATBUFFER, def: false,
-   at: VT.ACCEPTS_ANY_FLATBUFFER) }
-  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
-  public static func add(FIXED_STRING_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_STRING_LENGTH, def: 0, at: VT.FIXED_STRING_LENGTH) }
-  public static func add(BYTE_LENGTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
-  public static func add(REQUIRED_ALIGNMENT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ALIGNMENT, def: 0, at: VT.REQUIRED_ALIGNMENT) }
-  public static func endFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFlatBufferTypeRef(
+  ///  The ratified category code. This is the join key every consumer uses.
+  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
+  ///  name stated in the CODE member's doc comment.
+  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
+  ///  One-sentence description shown on browse rows and category headers.
+  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
+  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
+  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
+  ///  `-`. Published explicitly rather than derived so every surface routes
+  ///  identically.
+  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
+  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
+  ///  Longer editorial description for a category landing page.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
+  ///  top-level category. A category MUST NOT name itself as its parent.
+  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Presentation order within its parent, ascending. Ties break on
+  ///  DISPLAY_NAME.
+  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Search synonyms and alternate phrasings that resolve to this category.
+  ///  Feeds type-ahead; never rendered as the category label.
+  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
+  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
+  ///  URL: consuming node surfaces load zero external-origin bytes, so the
+  ///  consumer resolves this against its own local asset set.
+  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
+  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
+  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
+  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
+  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
+  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
+  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
+  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
+  public static func createCCTCategory(
     _ fbb: inout FlatBufferBuilder,
-    SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
-    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
-    SCHEMA_VERSIONOffset SCHEMA_VERSION: Offset = Offset(),
-    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
-    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
-    ACCEPTS_ANY_FLATBUFFER: Bool = false,
-    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
-    FIXED_STRING_LENGTH: UInt16 = 0,
-    BYTE_LENGTH: UInt32 = 0,
-    REQUIRED_ALIGNMENT: UInt16 = 0
+    CODE: capabilityClass = .unspecified,
+    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
+    SUMMARYOffset SUMMARY: Offset,
+    SLUGOffset SLUG: Offset,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    PARENT: capabilityClass = .unspecified,
+    SORT_ORDER: UInt16 = 0,
+    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
+    ICON_KEYOffset ICON_KEY: Offset = Offset()
   ) -> Offset {
-    let __start = FlatBufferTypeRef.startFlatBufferTypeRef(&fbb)
-    FlatBufferTypeRef.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
-    FlatBufferTypeRef.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
-    FlatBufferTypeRef.add(SCHEMA_VERSION: SCHEMA_VERSION, &fbb)
-    FlatBufferTypeRef.add(ROOT_TYPE: ROOT_TYPE, &fbb)
-    FlatBufferTypeRef.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
-    FlatBufferTypeRef.add(ACCEPTS_ANY_FLATBUFFER: ACCEPTS_ANY_FLATBUFFER, &fbb)
-    FlatBufferTypeRef.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
-    FlatBufferTypeRef.add(FIXED_STRING_LENGTH: FIXED_STRING_LENGTH, &fbb)
-    FlatBufferTypeRef.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
-    FlatBufferTypeRef.add(REQUIRED_ALIGNMENT: REQUIRED_ALIGNMENT, &fbb)
-    return FlatBufferTypeRef.endFlatBufferTypeRef(&fbb, start: __start)
+    let __start = CCTCategory.startCCTCategory(&fbb)
+    CCTCategory.add(CODE: CODE, &fbb)
+    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
+    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
+    CCTCategory.add(SLUG: SLUG, &fbb)
+    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
+    CCTCategory.add(PARENT: PARENT, &fbb)
+    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
+    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
+    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
+    return CCTCategory.endCCTCategory(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_VERSION, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.ACCEPTS_ANY_FLATBUFFER, fieldName: "ACCEPTS_ANY_FLATBUFFER", required: false, type: Bool.self)
-    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
-    try _v.visit(field: VT.FIXED_STRING_LENGTH, fieldName: "FIXED_STRING_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt32.self)
-    try _v.visit(field: VT.REQUIRED_ALIGNMENT, fieldName: "REQUIRED_ALIGNMENT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  An observed count of catalogue items in one category.
+///
+///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
+///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
+///  count can never omit when it was taken or what it was taken over. A consumer
+///  that needs a live number computes it from the items; a consumer rendering a
+///  published rollup MUST show it as of COUNTED_AT.
+public struct CCTCategoryRollup: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TAB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TAB.id, addPrefix: prefix) }
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OFFSET: VOffset = 4
-    static let SIZE: VOffset = 6
-    static let ALIGNMENT: VOffset = 8
-    static let WIRE_FORMAT: VOffset = 10
-    static let TYPE_REF: VOffset = 12
-    static let MUTABILITY: VOffset = 14
-    static let OWNERSHIP: VOffset = 16
-    static let FRAME_ID: VOffset = 18
-    static let PORT_ID: VOffset = 20
+    static let CODE: VOffset = 4
+    static let ITEM_COUNT: VOffset = 6
+    static let SOURCE_CATALOG_ID: VOffset = 8
+    static let COUNTED_AT: VOffset = 10
   }
 
-  ///  Byte offset of the payload body within the arena.
-  public var OFFSET: UInt32 { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Byte length of the payload body.
-  public var SIZE: UInt32 { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Required start alignment of the payload body (in bytes).
-  public var ALIGNMENT: UInt32 { let o = _accessor.offset(VT.ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Wire format for the body.
-  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
-  ///  Optional payload schema identity.
-  public var TYPE_REF: FlatBufferTypeRef? { let o = _accessor.offset(VT.TYPE_REF); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Mutability contract for the slot.
-  public var MUTABILITY: bufferMutability { let o = _accessor.offset(VT.MUTABILITY); return o == 0 ? .immutable : bufferMutability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .immutable }
-  ///  Ownership contract for the slot.
-  public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VT.OWNERSHIP); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
-  ///  Optional opaque frame identifier for stream bookkeeping.
-  public var FRAME_ID: UInt64 { let o = _accessor.offset(VT.FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Optional port identifier for frames that route to/from a named
-  ///  input or output port on a method (maps to
-  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  ///  no port routing hint.
-  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
-  public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VT.OFFSET) }
-  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VT.SIZE) }
-  public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VT.ALIGNMENT) }
-  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
-  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VT.TYPE_REF) }
-  public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VT.MUTABILITY) }
-  public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VT.OWNERSHIP) }
-  public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VT.FRAME_ID) }
-  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
-  public static func endTAB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTAB(
+  ///  Category being counted.
+  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
+  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
+  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Identifier of the catalogue the count was taken over.
+  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
+  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
+  ///  Unix seconds when the count was taken.
+  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
+  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
+  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
+  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
+  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
+  public static func createCCTCategoryRollup(
     _ fbb: inout FlatBufferBuilder,
-    OFFSET: UInt32 = 0,
-    SIZE: UInt32 = 0,
-    ALIGNMENT: UInt32 = 0,
-    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
-    TYPE_REFOffset TYPE_REF: Offset = Offset(),
-    MUTABILITY: bufferMutability = .immutable,
-    OWNERSHIP: bufferOwnership = .hostOwned,
-    FRAME_ID: UInt64 = 0,
-    PORT_IDOffset PORT_ID: Offset = Offset()
+    CODE: capabilityClass = .unspecified,
+    ITEM_COUNT: UInt32 = 0,
+    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
+    COUNTED_AT: UInt64 = 0
   ) -> Offset {
-    let __start = TAB.startTAB(&fbb)
-    TAB.add(OFFSET: OFFSET, &fbb)
-    TAB.add(SIZE: SIZE, &fbb)
-    TAB.add(ALIGNMENT: ALIGNMENT, &fbb)
-    TAB.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
-    TAB.add(TYPE_REF: TYPE_REF, &fbb)
-    TAB.add(MUTABILITY: MUTABILITY, &fbb)
-    TAB.add(OWNERSHIP: OWNERSHIP, &fbb)
-    TAB.add(FRAME_ID: FRAME_ID, &fbb)
-    TAB.add(PORT_ID: PORT_ID, &fbb)
-    return TAB.endTAB(&fbb, start: __start)
+    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
+    CCTCategoryRollup.add(CODE: CODE, &fbb)
+    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
+    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
+    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
+    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: UInt32.self)
-    try _v.visit(field: VT.ALIGNMENT, fieldName: "ALIGNMENT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
-    try _v.visit(field: VT.TYPE_REF, fieldName: "TYPE_REF", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
-    try _v.visit(field: VT.MUTABILITY, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
-    try _v.visit(field: VT.OWNERSHIP, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
-    try _v.visit(field: VT.FRAME_ID, fieldName: "FRAME_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  $CCT — Capability Category Taxonomy.
+///
+///  The ratified set of capability classes that distributable units (modules,
+///  applications, composed flows) are classified under, together with the labels
+///  and routes every consuming surface renders. One published $CCT is the single
+///  source of truth shared by a storefront, a library, a search index and the
+///  unit manifests themselves.
+///
+///  Division of labour: `$CCT` = the category vocabulary and its presentation;
+///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
+///  application's manifest, which cites categories by code; `$PMM` = which
+///  modules a provider serves; `$STO`/`$STF` = commerce.
+public struct CCT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TAXONOMY_ID: VOffset = 4
+    static let VERSION: VOffset = 6
+    static let ISSUED_AT: VOffset = 8
+    static let TITLE: VOffset = 10
+    static let CATEGORIES: VOffset = 12
+    static let ROLLUPS: VOffset = 14
+    static let SIGNATURE: VOffset = 16
+  }
+
+  ///  Stable identifier of this taxonomy publication.
+  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
+  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
+  ///  SemVer 2.0.0 version of the taxonomy content.
+  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
+  ///  Unix seconds when this taxonomy revision was issued.
+  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Human-readable title of the taxonomy.
+  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
+  ///  The ratified categories. Every capabilityClass member a consumer may
+  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
+  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
+  ///  Optional per-category item counts as observed over a named catalogue.
+  ///  Absent means counts are computed by the consumer.
+  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
+  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
+  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
+  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
+  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
+  public static func createCCT(
+    _ fbb: inout FlatBufferBuilder,
+    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
+    VERSIONOffset VERSION: Offset,
+    ISSUED_AT: UInt64 = 0,
+    TITLEOffset TITLE: Offset = Offset(),
+    CATEGORIESVectorOffset CATEGORIES: Offset,
+    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+  ) -> Offset {
+    let __start = CCT.startCCT(&fbb)
+    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
+    CCT.add(VERSION: VERSION, &fbb)
+    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
+    CCT.add(TITLE: TITLE, &fbb)
+    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
+    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
+    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    return CCT.endCCT(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
+    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

@@ -395,6 +395,46 @@ public final class PLG extends com.google.flatbuffers.Table {
   public int FLOW_TRIGGER_BINDINGSLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
   public PLGFlowTriggerBinding.Vector flowTriggerBindingsVector() { return flowTriggerBindingsVector(new PLGFlowTriggerBinding.Vector()); }
   public PLGFlowTriggerBinding.Vector flowTriggerBindingsVector(PLGFlowTriggerBinding.Vector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The one ratified $CCT category this module is shelved under. This is the
+   * category a storefront capsule, a library shelf and a breadcrumb show when
+   * exactly one must be chosen. UNSPECIFIED means the publisher did not
+   * classify the module; a consumer renders it ungrouped and never guesses.
+   *
+   * This supersedes PLUGIN_TYPE for all storefront, library and search
+   * surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+   * `pluginCategory` vocabulary mixes capability families with node-internal
+   * plumbing, carries a legacy vendor-derived member, holds a real family at
+   * ordinal 0, and admits only one value. Canonical migration, applied by a
+   * publisher rewriting an old manifest:
+   *   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+   *   Renderer->VISUALIZATION_AND_RENDERING,
+   *   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+   *   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+   *   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+   *   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+   *   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+   *   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+   *   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+   *   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+   *   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+   *   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+   * The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+   * PLUGIN_TYPE.
+   */
+  public int PRIMARY_CATEGORY() { int o = __offset(116); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Every ratified $CCT category this module belongs to, for browse, filter
+   * and per-category counting. A module MAY carry several. If nonempty it
+   * MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+   * a set PRIMARY_CATEGORY means the module belongs to that one category.
+   */
+  public int CATEGORIES(int j) { int o = __offset(118); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CATEGORIESLength() { int o = __offset(118); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector categoriesVector() { return categoriesVector(new ByteVector()); }
+  public ByteVector categoriesVector(ByteVector obj) { int o = __offset(118); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CATEGORIESAsByteBuffer() { return __vector_as_bytebuffer(118, 1); }
+  public ByteBuffer CATEGORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 1); }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
@@ -452,13 +492,16 @@ public final class PLG extends com.google.flatbuffers.Table {
       int FLOW_NODESOffset,
       int FLOW_EDGESOffset,
       int FLOW_TRIGGERSOffset,
-      int FLOW_TRIGGER_BINDINGSOffset) {
-    builder.startTable(56);
+      int FLOW_TRIGGER_BINDINGSOffset,
+      int PRIMARY_CATEGORY,
+      int CATEGORIESOffset) {
+    builder.startTable(58);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
     PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
+    PLG.addCategories(builder, CATEGORIESOffset);
     PLG.addFlowTriggerBindings(builder, FLOW_TRIGGER_BINDINGSOffset);
     PLG.addFlowTriggers(builder, FLOW_TRIGGERSOffset);
     PLG.addFlowEdges(builder, FLOW_EDGESOffset);
@@ -506,6 +549,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     PLG.addVersion(builder, VERSIONOffset);
     PLG.addName(builder, NAMEOffset);
     PLG.addPluginId(builder, PLUGIN_IDOffset);
+    PLG.addPrimaryCategory(builder, PRIMARY_CATEGORY);
     PLG.addListingStatus(builder, LISTING_STATUS);
     PLG.addPaymentModel(builder, PAYMENT_MODEL);
     PLG.addEncrypted(builder, ENCRYPTED);
@@ -513,7 +557,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(56); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(58); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -624,6 +668,11 @@ public final class PLG extends com.google.flatbuffers.Table {
   public static void addFlowTriggerBindings(FlatBufferBuilder builder, int FLOW_TRIGGER_BINDINGSOffset) { builder.addOffset(55, FLOW_TRIGGER_BINDINGSOffset, 0); }
   public static int createFlowTriggerBindingsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFlowTriggerBindingsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPrimaryCategory(FlatBufferBuilder builder, int PRIMARY_CATEGORY) { builder.addByte(56, (byte) PRIMARY_CATEGORY, (byte) 0); }
+  public static void addCategories(FlatBufferBuilder builder, int CATEGORIESOffset) { builder.addOffset(57, CATEGORIESOffset, 0); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCategoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPLG(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PLUGIN_ID

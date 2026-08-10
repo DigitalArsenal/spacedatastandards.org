@@ -206,22 +206,69 @@ class APP extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \appRuntimeTarget::NODE;
     }
 
+    /// The one ratified $CCT category this app is shelved under, using the same
+    /// vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+    /// or library shelf holds apps and modules together without translating
+    /// between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+    /// PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+    /// and a PAGE-class app can share a category.
+    /// UNSPECIFIED means the publisher did not classify the app; a consumer
+    /// renders it ungrouped and never infers a class.
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_CATEGORY()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /// Every ratified $CCT category this app belongs to, for browse, filter and
+    /// per-category counting. An app MAY carry several. If nonempty it MUST
+    /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCATEGORIES($j)
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCATEGORIESLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCATEGORIESBytes()
+    {
+        return $this->__vector_as_bytes(30);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAPP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return APP
      */
-    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT, $DATAFLOW, $RUNTIME_CLASS)
+    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT, $DATAFLOW, $RUNTIME_CLASS, $PRIMARY_CATEGORY, $CATEGORIES)
     {
-        $builder->startObject(12);
+        $builder->startObject(14);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -234,6 +281,8 @@ class APP extends Table
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addDATAFLOW($builder, $DATAFLOW);
         self::addRUNTIME_CLASS($builder, $RUNTIME_CLASS);
+        self::addPRIMARY_CATEGORY($builder, $PRIMARY_CATEGORY);
+        self::addCATEGORIES($builder, $CATEGORIES);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         return $o;
@@ -477,6 +526,50 @@ class APP extends Table
     public static function addRUNTIME_CLASS(FlatBufferBuilder $builder, $RUNTIME_CLASS)
     {
         $builder->addByteX(11, $RUNTIME_CLASS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_CATEGORY(FlatBufferBuilder $builder, $PRIMARY_CATEGORY)
+    {
+        $builder->addByteX(12, $PRIMARY_CATEGORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCATEGORIES(FlatBufferBuilder $builder, $CATEGORIES)
+    {
+        $builder->addOffsetX(13, $CATEGORIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCATEGORIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCATEGORIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

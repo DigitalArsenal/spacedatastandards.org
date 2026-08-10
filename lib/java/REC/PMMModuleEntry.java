@@ -192,6 +192,41 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
    * boot without fetching one `$PLG` per module.
    */
   public byte PLUGIN_TYPE() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) : 21; }
+  /**
+   * The one ratified `$CCT` category this module is shelved under. Mirrors
+   * `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+   * sanctioned way to group an offering: `pluginCategory` is single-valued,
+   * holds a real family at ordinal 0, mixes capability families with
+   * node-internal plumbing, and carries a deprecated vendor-derived member.
+   * Present here, rather than only on the linked `$PLG`, so an anonymous
+   * client can section the catalogue at boot without fetching one `$PLG` per
+   * module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+   *
+   * SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+   * statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+   * `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+   * resting on a signed content hash. A consumer that shelves, filters or
+   * counts by this field MUST NOT present the resulting grouping as
+   * authenticated, and MUST keep the verified identity (`MODULE_ID`,
+   * `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+   * from provider-supplied presentation. Extending the canonical statement to
+   * cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+   * every verifier in lockstep and is not made implicitly by adopting this
+   * field.
+   */
+  public int PRIMARY_CATEGORY() { int o = __offset(54); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Every ratified `$CCT` category this module belongs to, for browse, filter
+   * and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+   * include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+   * PRIMARY_CATEGORY.
+   */
+  public int CATEGORIES(int j) { int o = __offset(56); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CATEGORIESLength() { int o = __offset(56); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector categoriesVector() { return categoriesVector(new ByteVector()); }
+  public ByteVector categoriesVector(ByteVector obj) { int o = __offset(56); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CATEGORIESAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer CATEGORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
 
   public static int createPMMModuleEntry(FlatBufferBuilder builder,
       int MODULE_IDOffset,
@@ -218,10 +253,13 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
       int ICON_URLOffset,
       int SUPERSEDES_CONTENT_HASHOffset,
       int UPDATED_ATOffset,
-      byte PLUGIN_TYPE) {
-    builder.startTable(25);
+      byte PLUGIN_TYPE,
+      int PRIMARY_CATEGORY,
+      int CATEGORIESOffset) {
+    builder.startTable(27);
     PMMModuleEntry.addArtifactSizeBytes(builder, ARTIFACT_SIZE_BYTES);
     PMMModuleEntry.addEpoch(builder, EPOCH);
+    PMMModuleEntry.addCategories(builder, CATEGORIESOffset);
     PMMModuleEntry.addUpdatedAt(builder, UPDATED_ATOffset);
     PMMModuleEntry.addSupersedesContentHash(builder, SUPERSEDES_CONTENT_HASHOffset);
     PMMModuleEntry.addIconUrl(builder, ICON_URLOffset);
@@ -240,6 +278,7 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
     PMMModuleEntry.addPlgCid(builder, PLG_CIDOffset);
     PMMModuleEntry.addPluginId(builder, PLUGIN_IDOffset);
     PMMModuleEntry.addModuleId(builder, MODULE_IDOffset);
+    PMMModuleEntry.addPrimaryCategory(builder, PRIMARY_CATEGORY);
     PMMModuleEntry.addPluginType(builder, PLUGIN_TYPE);
     PMMModuleEntry.addEntryState(builder, ENTRY_STATE);
     PMMModuleEntry.addAccessPolicy(builder, ACCESS_POLICY);
@@ -248,7 +287,7 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
     return PMMModuleEntry.endPMMModuleEntry(builder);
   }
 
-  public static void startPMMModuleEntry(FlatBufferBuilder builder) { builder.startTable(25); }
+  public static void startPMMModuleEntry(FlatBufferBuilder builder) { builder.startTable(27); }
   public static void addModuleId(FlatBufferBuilder builder, int MODULE_IDOffset) { builder.addOffset(MODULE_IDOffset); builder.slot(0); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(1, PLUGIN_IDOffset, 0); }
   public static void addPlgCid(FlatBufferBuilder builder, int PLG_CIDOffset) { builder.addOffset(2, PLG_CIDOffset, 0); }
@@ -283,6 +322,11 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
   public static void addSupersedesContentHash(FlatBufferBuilder builder, int SUPERSEDES_CONTENT_HASHOffset) { builder.addOffset(22, SUPERSEDES_CONTENT_HASHOffset, 0); }
   public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(23, UPDATED_ATOffset, 0); }
   public static void addPluginType(FlatBufferBuilder builder, byte PLUGIN_TYPE) { builder.addByte(24, PLUGIN_TYPE, 21); }
+  public static void addPrimaryCategory(FlatBufferBuilder builder, int PRIMARY_CATEGORY) { builder.addByte(25, (byte) PRIMARY_CATEGORY, (byte) 0); }
+  public static void addCategories(FlatBufferBuilder builder, int CATEGORIESOffset) { builder.addOffset(26, CATEGORIESOffset, 0); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCategoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPMMModuleEntry(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // MODULE_ID

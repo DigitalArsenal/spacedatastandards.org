@@ -1,6 +1,8 @@
-// Hash: 9e962ca81276e2d0909c429355d20f29d7547cf55b69d47a857993e6e27d42b2
-// Version: 1.0.3
+// Hash: 6dc035193f559376c01f7756ab2e11d93834ee65754fca543c1a1b414ab6e366
+// Version: 1.0.4
 // -----------------------------------END_HEADER
+include "../CCT/main.fbs";
+
 /// Access type for data listings
 enum accessCategory : byte {
   /// One-time purchase
@@ -34,6 +36,12 @@ enum paymentMethod : byte {
 }
 
 /// Listing kind for marketplace entries.
+///
+/// This is the listing's DELIVERY KIND, not its capability category, and the
+/// two are not interchangeable. A storefront shelf, a browse row and a search
+/// facet are driven by `$CCT` `capabilityClass` via STF.PRIMARY_CATEGORY /
+/// STF.CATEGORIES; `listingCategory` only says whether the offering is
+/// delivered as a data stream or as a module artifact.
 enum listingCategory : byte {
   DataStream,
   WasmModule
@@ -197,6 +205,25 @@ table STF {
   LICENSE: string;
   /// Peer ID this listing was sourced from when discovered remotely
   SOURCE_PEER_ID: string;
+
+  /// The one ratified `$CCT` category this listing is shelved under, using the
+  /// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+  /// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+  /// capability category at all — only DATA_TYPES and TAGS — so a storefront
+  /// shelf and a library shelf were grouped by two unrelated systems. A
+  /// consumer MUST group listings by this field and MUST NOT re-derive a
+  /// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+  /// vocabulary.
+  ///
+  /// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+  /// module artifact), and from ACCESS_TYPE, which is the commercial access
+  /// model. UNSPECIFIED means the provider did not classify the listing; a
+  /// consumer renders it ungrouped and never guesses.
+  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;
+  /// Every ratified `$CCT` category this listing belongs to, for browse,
+  /// filter and per-category counting. A listing MAY carry several. If
+  /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  CATEGORIES: [capabilityClass];
 }
 
 root_type STF;

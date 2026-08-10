@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.184.0+1786183176432",
+  version: "1.186.0+1786375553611",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -1798,9 +1798,11 @@ file_identifier "$EPM";`,
       ]
     },
     APP: {
-      IDL: `// Hash: 69ad94651a445542e7b97ecaa4b6cf01cf51330fd6c13cd70ffd4b061555051f
-// Version: 1.151.2
+      IDL: `// Hash: 796e00b47708f9f5e8babf42046154bc0cea52f9a7b38f85fa81a5b5a445908f
+// Version: 1.151.3
 // -----------------------------------END_HEADER
+include "../CCT/main.fbs";
+
 /// Application Package Manifest
 ///
 /// An app is a launchable collection of WASM modules, the SDS data types it
@@ -2108,6 +2110,19 @@ table APP {
   /// with one PAGE-capable module). Defaults to NODE to preserve the prior
   /// node-only assumption of manifests written before this field existed.
   RUNTIME_CLASS:appRuntimeTarget = NODE;
+  /// The one ratified $CCT category this app is shelved under, using the same
+  /// vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+  /// or library shelf holds apps and modules together without translating
+  /// between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+  /// PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+  /// and a PAGE-class app can share a category.
+  /// UNSPECIFIED means the publisher did not classify the app; a consumer
+  /// renders it ungrouped and never infers a class.
+  PRIMARY_CATEGORY:capabilityClass = UNSPECIFIED;
+  /// Every ratified $CCT category this app belongs to, for browse, filter and
+  /// per-category counting. An app MAY carry several. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  CATEGORIES:[capabilityClass];
 }
 
 root_type APP;
@@ -4890,8 +4905,8 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 68ef8381e404f050837cd09076e68b6c5e70e49f7a60e937b907df29aa372eb2
-// Version: 1.44.50
+      IDL: `// Hash: 5a3f74390c77f4fb694c65f453e4197081b3a15166cd4b6996e214946d29e834
+// Version: 1.44.51
 // -----------------------------------END_HEADER
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
@@ -4914,6 +4929,7 @@ include "../BSP/main.fbs";
 include "../BUS/main.fbs";
 include "../CAQ/main.fbs";
 include "../CAT/main.fbs";
+include "../CCT/main.fbs";
 include "../CDM/main.fbs";
 include "../CES/main.fbs";
 include "../CFP/main.fbs";
@@ -5162,7 +5178,7 @@ union RecordType {
   FSO, GST, MDP, MDS,
   PNL, SHC, CES, QEM,
   SBM, PMM, OPP, IQC,
-  CNP, CMR, TBS
+  CNP, CMR, TBS, CCT
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type
@@ -6248,7 +6264,7 @@ file_identifier "$MDS";`,
       ]
     },
     PLG: {
-      IDL: '// Hash: 21ab7f73650ba93974e467e91256dda72cfa8dfaa84bef0360d8b4e4ed9ca019\n// Version: 1.0.15\n// -----------------------------------END_HEADER\ninclude "../TAB/main.fbs";\n\n/// Plugin type category\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader,\n  /// Parses raw upstream bytes into canonical SDS records\n  Parser,\n  /// Validates records (integrity, physical bounds, continuity)\n  Validator,\n  /// Interpolates ephemeris / state-vector records\n  Interpolator,\n  /// Exports records to external formats (CSV, etc.)\n  Exporter,\n  /// Foundational math / utility library module\n  Foundation,\n  /// Node infrastructure (runtime, delivery, registry)\n  Infrastructure,\n  /// Module-delivery licensing / key authority\n  Licensing,\n  /// Storefront listing / discovery\n  Storefront,\n  /// Publication: PNM signing + pub/sub announcement\n  Publisher,\n  /// Astrodynamics simulation and dynamics-modelling module family. The member\n  /// identifier is a legacy vocabulary key retained for wire and manifest\n  /// compatibility; renaming it is an owner-gated breaking change.\n  Basilisk,\n  /// Maneuver planning, targeting and trajectory optimization\n  Maneuver,\n  /// A composed flow published as a single loadable module. The unit is a\n  /// graph of other modules, not a leaf algorithm.\n  Flow,\n  /// No family stated. Sits at the end of the enum rather than at 0 because\n  /// this enum is append-only and `Sensor` already holds 0; it exists so a\n  /// record can distinguish "the provider did not say" from "Sensor". A\n  /// consumer MUST render an `Unspecified` module as ungrouped, never as a\n  /// member of any family.\n  Unspecified\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration\ntable PluginCapability {\n  /// Capability name, e.g., "gpu_compute", "wasm_simd"\n  NAME: string;\n  /// Capability version\n  VERSION: string;\n  /// Whether this capability is required\n  REQUIRED: bool;\n}\n\n/// Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON,\n  /// Batch record ingest with source provenance tags (provider id, source\n  /// name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a\n  /// single record without source attribution. Hosts gate\n  /// storage.ingest_with_source on this capability specifically.\n  STORAGE_INGEST\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.\ntable PLGAcceptedTypeSet {\n  /// Stable type-set identifier within the port.\n  SET_ID: string (required);\n  /// Specific FlatBuffer types accepted by the set.\n  ALLOWED_TYPES: [FlatBufferTypeRef];\n  /// Wire formats this set accepts. If ALIGNED_BINARY is present,\n  /// FLATBUFFER MUST also be present for the same schemas.\n  ALLOWED_WIRE_FORMATS: [payloadWireFormat];\n  /// Human-readable explanation of the accepted schema family.\n  DESCRIPTION: string;\n}\n\n/// One input or output port on a method.\ntable PLGPortManifest {\n  /// Stable port identifier within the method.\n  PORT_ID: string (required);\n  /// Human-readable name for UIs.\n  DISPLAY_NAME: string;\n  /// Type sets accepted on this port.\n  ACCEPTED_TYPE_SETS: [PLGAcceptedTypeSet];\n  /// Minimum number of streams that must be connected.\n  MIN_STREAMS: uint16 = 1;\n  /// Maximum number of streams that may be connected.\n  MAX_STREAMS: uint16 = 1;\n  /// Whether the port must be connected for invocation.\n  REQUIRED: bool = true;\n  /// Optional human-readable description.\n  DESCRIPTION: string;\n}\n\n/// One host capability dependency (richer form of PluginCapability).\ntable PLGHostCapability {\n  CAPABILITY: hostCapabilityKind;\n  SCOPE: string;\n  REQUIRED: bool = true;\n  DESCRIPTION: string;\n}\n\n/// Timer entry declared by a plugin.\ntable PLGTimerSpec {\n  TIMER_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  DEFAULT_INTERVAL_MS: uint64;\n  DESCRIPTION: string;\n}\n\n/// Protocol handler declared by a plugin.\ntable PLGProtocolSpec {\n  PROTOCOL_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  OUTPUT_PORT_ID: string;\n  DESCRIPTION: string;\n  WIRE_ID: string;\n  TRANSPORT_KIND: string;\n  ROLE: string;\n  SPEC_URI: string;\n  AUTO_INSTALL: bool = true;\n  ADVERTISE: bool = false;\n  DISCOVERY_KEY: string;\n  DEFAULT_PORT: uint16;\n  REQUIRE_SECURE_TRANSPORT: bool = false;\n}\n\n/// Build artifact emitted by the plugin toolchain.\ntable PLGBuildArtifact {\n  ARTIFACT_ID: string (required);\n  KIND: string;\n  PATH: string (required);\n  TARGET: string;\n  ENTRY_SYMBOL: string;\n}\n\n/// Canonical method declaration.\ntable PLGMethodManifest {\n  METHOD_ID: string (required);\n  DISPLAY_NAME: string;\n  INPUT_PORTS: [PLGPortManifest];\n  OUTPUT_PORTS: [PLGPortManifest];\n  MAX_BATCH: uint32 = 1;\n  DRAIN_POLICY: drainBehavior = DRAIN_UNTIL_YIELD;\n  DESCRIPTION: string;\n}\n\n/// Plugin dependency on another plugin\ntable PluginDependency {\n  /// Plugin ID of the dependency\n  PLUGIN_ID: string;\n  /// Minimum version required (semver)\n  MIN_VERSION: string;\n  /// Maximum version allowed (optional)\n  MAX_VERSION: string;\n}\n\n/// Plugin entry point function definition\ntable EntryFunction {\n  /// Function name as exported from WASM\n  NAME: string (required);\n  /// Human-readable description\n  DESCRIPTION: string;\n  /// Input parameter types (FlatBuffer schema names)\n  INPUT_SCHEMAS: [string];\n  /// Output type (FlatBuffer schema name)\n  OUTPUT_SCHEMA: string;\n}\n\n/// One node in a composed flow graph. A degenerate flow IS a module: a leaf\n/// module leaves the flow-graph fields on PLG empty; a composed flow populates\n/// them. This is how flows reuse the module schema rather than a separate one.\ntable PLGFlowNode {\n  /// Stable node identifier within this flow\n  NODE_ID: string (required);\n  /// Plugin id of the module this node invokes\n  PLUGIN_ID: string (required);\n  /// Method id invoked on the module\n  METHOD_ID: string;\n  /// Node kind, e.g. "transform", "trigger", "capability"\n  KIND: string;\n  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an\n  /// independently instantiated signed WASM node, and "host-capability" = a\n  /// generic host adapter.\n  DISPATCH_MODEL: string;\n  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)\n  CONFIG: [ubyte];\n  /// Editor layout X position\n  UI_X: float;\n  /// Editor layout Y position\n  UI_Y: float;\n}\n\n/// Compile-time routing decision for an edge. The aligned option is legal only\n/// when the producer and consumer share the declared arena and the runtime can\n/// prove bounds, alignment, ownership, mutability, and lifetime.\nenum flowEdgeRoutePolicy : ubyte {\n  CANONICAL_ONLY,\n  ALIGNED_SHARED_ARENA_OR_CANONICAL\n}\n\n/// Exact validated SDS and representation contract bound into a signed flow\n/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;\n/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.\ntable PLGFlowEdgeContract {\n  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may\n  /// be opaque by design (see OPAQUE), and a signer must never be forced to\n  /// invent an identity to satisfy the schema. A contract MUST carry exactly\n  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with\n  /// both, is invalid and MUST be rejected by the compiler that signs the flow.\n  CANONICAL_TYPE: FlatBufferTypeRef;\n  ALIGNED_TYPE: FlatBufferTypeRef;\n  CANONICAL_FALLBACK_AVAILABLE: bool = true;\n  ALIGNED_ELIGIBLE: bool = false;\n  ROUTE_POLICY: flowEdgeRoutePolicy = CANONICAL_ONLY;\n  /// The edge carries bytes with no SDS identity BY DESIGN \u2014 an\n  /// application-blind host-capability adapter (an HTTP body, a raw file\n  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate\n  /// signed assertion of opacity, which is why it is an explicit flag rather\n  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable\n  /// from a declared-opaque one. An opaque edge is ineligible for the aligned\n  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.\n  OPAQUE: bool = false;\n}\n\n/// One directed edge wiring a producer output port to a consumer input port.\ntable PLGFlowEdge {\n  /// Stable edge identifier\n  EDGE_ID: string;\n  /// Source node id\n  FROM_NODE_ID: string (required);\n  /// Source output port id\n  FROM_PORT_ID: string (required);\n  /// Destination node id\n  TO_NODE_ID: string (required);\n  /// Destination input port id\n  TO_PORT_ID: string (required);\n  /// Exact identity/layout and compile-time representation policy. NOT\n  /// `required`: marking a NEW field of an EXISTING table required makes the\n  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,\n  /// which is a breaking change to a ratified standard. Presence is enforced\n  /// where it belongs \u2014 the flow compiler MUST refuse to SIGN a flow whose\n  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge\n  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.\n  CONTRACT: PLGFlowEdgeContract;\n}\n\n/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.\ntable PLGFlowTrigger {\n  /// Stable trigger identifier\n  TRIGGER_ID: string (required);\n  /// Trigger kind, e.g. "timer", "http"\n  KIND: string;\n  /// Trigger source, e.g. "host-cron"\n  SOURCE: string;\n  /// Default firing interval in milliseconds (timer triggers)\n  DEFAULT_INTERVAL_MS: uint64;\n  /// Mounted HTTP path (http triggers)\n  HTTP_PATH: string;\n}\n\n/// Binds a trigger to the node + input port it delivers its frame to.\ntable PLGFlowTriggerBinding {\n  /// Trigger identifier\n  TRIGGER_ID: string (required);\n  /// Target node id\n  TARGET_NODE_ID: string (required);\n  /// Target input port id\n  TARGET_PORT_ID: string (required);\n}\n\n/// Plugin Manifest - canonical signed storefront and WASM distribution record\ntable PLG {\n  /// Unique identifier for the plugin\n  PLUGIN_ID: string (required);\n  /// Human-readable plugin name\n  NAME: string (required);\n  /// Plugin version (semver format)\n  VERSION: string (required);\n  /// Detailed description of plugin functionality\n  DESCRIPTION: string;\n  /// Short marketing summary shown in storefront listings\n  TAGLINE: string;\n  /// Type/category of the plugin\n  PLUGIN_TYPE: pluginCategory;\n  /// Human-readable publisher or organization name\n  PUBLISHER_NAME: string;\n  /// Publisher handle or username\n  PUBLISHER_HANDLE: string;\n  /// Canonical publisher website\n  PUBLISHER_URL: string;\n  /// Support or helpdesk URL for this plugin\n  SUPPORT_URL: string;\n  /// Search and categorization tags for discovery\n  TAGS: [string];\n  /// Short feature bullets highlighted in storefront listings\n  FEATURES: [string];\n  /// Screenshot URLs showing the plugin in use\n  SCREENSHOT_URLS: [string];\n  /// Optional hero/banner image URL for the listing\n  BANNER_URL: string;\n\n  /// ABI version for compatibility checking\n  ABI_VERSION: uint32 = 1;\n\n  /// SHA256 hash of the decrypted WASM binary\n  WASM_HASH: [ubyte];\n  /// Size of decrypted WASM binary in bytes\n  WASM_SIZE: uint64;\n  /// IPFS CID of the encrypted WASM binary\n  WASM_CID: string;\n  /// SHA256 hash of the encrypted delivery artifact bytes\n  ENCRYPTED_WASM_HASH: [ubyte];\n  /// Size of the encrypted delivery artifact in bytes\n  ENCRYPTED_WASM_SIZE: uint64;\n\n  /// Entry point functions exported by the plugin\n  ENTRY_FUNCTIONS: [EntryFunction];\n  /// FlatBuffer schemas required by this plugin\n  REQUIRED_SCHEMAS: [string];\n  /// Other plugins this depends on\n  DEPENDENCIES: [PluginDependency];\n  /// Capabilities provided by this plugin\n  CAPABILITIES: [PluginCapability];\n\n  /// Peer ID of the plugin provider\n  PROVIDER_PEER_ID: string;\n  /// IPFS CID of provider\'s EPM (Entity Profile Message)\n  PROVIDER_EPM_CID: string;\n\n  /// Whether the WASM binary is encrypted\n  ENCRYPTED: bool = true;\n  /// Canonical required scope for grant issuance\n  REQUIRED_SCOPE: string;\n  /// Provider-local identifier for the module content key\n  KEY_ID: string;\n  /// Maximum grant timeout allowed for this module publication\n  MAX_GRANT_TIMEOUT_MS: uint64;\n  /// Minimum permissions required to run\n  MIN_PERMISSIONS: [string];\n\n  /// Unix timestamp when plugin was created\n  CREATED_AT: uint64;\n  /// Unix timestamp when plugin was last updated\n  UPDATED_AT: uint64;\n  /// URL to plugin documentation\n  DOCUMENTATION_URL: string;\n  /// URL to plugin changelog or release notes\n  CHANGELOG_URL: string;\n  /// URL to plugin icon/logo\n  ICON_URL: string;\n  /// License identifier (SPDX format)\n  LICENSE: string;\n  /// Commercial model used for storefront purchase flows\n  PAYMENT_MODEL: purchaseTier = Free;\n  /// Price in USD cents for one-time purchase or subscription period\n  PRICE_USD_CENTS: uint32;\n  /// Subscription billing period length in days\n  SUBSCRIPTION_PERIOD_DAYS: uint32;\n  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"\n  ACCEPTED_PAYMENT_METHODS: [string];\n  /// Storefront publication state for this manifest version\n  LISTING_STATUS: publicationState = Public;\n\n  /// Ed25519 signature from provider over manifest\n  SIGNATURE: [ubyte];\n\n  /// Canonical invoke surfaces this artifact exposes. A single plugin\n  /// MAY list both DIRECT and COMMAND when it supports both.\n  INVOKE_SURFACES: [invokeSurfaceKind];\n  /// Rich per-method invoke manifests (port shape, drain semantics,\n  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim\n  /// name+input_schemas+output_schema summary; METHODS carries the full\n  /// invoke-surface detail including aligned-binary advertisement.\n  METHODS: [PLGMethodManifest];\n  /// Enum-typed host capability dependencies (richer than CAPABILITIES,\n  /// which is string-tagged metadata).\n  HOST_CAPABILITIES: [PLGHostCapability];\n  /// Timer declarations for scheduled invocations.\n  TIMERS: [PLGTimerSpec];\n  /// Protocol handler declarations.\n  PROTOCOLS: [PLGProtocolSpec];\n  /// FlatBuffer schemas this plugin depends on at the invoke surface.\n  SCHEMAS_USED: [FlatBufferTypeRef];\n  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).\n  BUILD_ARTIFACTS: [PLGBuildArtifact];\n  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").\n  RUNTIME_TARGETS: [string];\n  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:\n  /// a requester whose verified EPM binds an xpub in this list is granted (PKI\n  /// identity authorization). Empty list = no xpub allowlist gate.\n  ALLOWED_XPUBS: [string];\n\n  /// Composition graph (a degenerate flow is a module): the nodes this flow\n  /// invokes. Empty for a leaf module; populated for a composed flow. The flow\n  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.\n  FLOW_NODES: [PLGFlowNode];\n  /// Composition-graph edges wiring node output ports to input ports.\n  FLOW_EDGES: [PLGFlowEdge];\n  /// Flow triggers (timer/http) that start a drain.\n  FLOW_TRIGGERS: [PLGFlowTrigger];\n  /// Bindings from triggers to the node + input port they deliver to.\n  FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];\n}\n\nroot_type PLG;\nfile_identifier "$PLG";',
+      IDL: '// Hash: 21ec6c50cbe999dbfada38c8630ab0fd747cbde73b3ed6d1a3508da940a6054b\n// Version: 1.0.17\n// -----------------------------------END_HEADER\ninclude "../TAB/main.fbs";\ninclude "../CCT/main.fbs";\n\n/// Plugin type category.\n///\n/// DEPRECATED as a classification vocabulary \u2014 superseded by `$CCT`\n/// `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.\n/// The enum and the `PLUGIN_TYPE` field remain on the wire permanently\n/// (ordinals are wire values and published manifests decode against them);\n/// only their use as the grouping vocabulary is retired.\n///\n/// It cannot be repaired in place, which is why it is superseded rather than\n/// extended:\n///   - it is SINGLE-VALUED, and a storefront browse surface classifies one\n///     unit under several categories;\n///   - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value\n///     decodes as a category the publisher never stated \u2014 the reason\n///     `Unspecified` had to be appended at the tail instead of held at 0;\n///   - it mixes capability families with node-internal plumbing\n///     (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are\n///     not shelves a catalogue consumer browses;\n///   - it carries `Basilisk`, a vendor-derived member that owner law\n///     2026-08-06 (no vendor/site/org names in standards) forbids;\n///   - a `byte` enum cannot carry the display name, summary, route slug,\n///     ordering or icon a storefront must render, and `$CCT` publishes all of\n///     them alongside the code.\n///\n/// MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and\n/// SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the\n/// taxonomy existed. The per-member forward mapping is normative and is stated\n/// on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST\n/// prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is\n/// `UNSPECIFIED`.\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader,\n  /// Parses raw upstream bytes into canonical SDS records\n  Parser,\n  /// Validates records (integrity, physical bounds, continuity)\n  Validator,\n  /// Interpolates ephemeris / state-vector records\n  Interpolator,\n  /// Exports records to external formats (CSV, etc.)\n  Exporter,\n  /// Foundational math / utility library module\n  Foundation,\n  /// Node infrastructure (runtime, delivery, registry)\n  Infrastructure,\n  /// Module-delivery licensing / key authority\n  Licensing,\n  /// Storefront listing / discovery\n  Storefront,\n  /// Publication: PNM signing + pub/sub announcement\n  Publisher,\n  /// DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a\n  /// standard\'s vocabulary, and this member is one. Its ordinal is wire data\n  /// and is therefore NEVER removed or reused, and renaming it in place would\n  /// still be a breaking change for every published manifest; the sanctioned\n  /// repair is to stop publishing it. Publishers MUST migrate to\n  /// `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and\n  /// dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new\n  /// manifests. Consumers MUST render an existing record carrying it as\n  /// `Propagation` and MUST NOT surface the member identifier in any user-\n  /// facing label.\n  Basilisk,\n  /// Maneuver planning, targeting and trajectory optimization\n  Maneuver,\n  /// A composed flow published as a single loadable module. The unit is a\n  /// graph of other modules, not a leaf algorithm.\n  Flow,\n  /// No family stated. Sits at the end of the enum rather than at 0 because\n  /// this enum is append-only and `Sensor` already holds 0; it exists so a\n  /// record can distinguish "the provider did not say" from "Sensor". A\n  /// consumer MUST render an `Unspecified` module as ungrouped, never as a\n  /// member of any family.\n  Unspecified\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration\ntable PluginCapability {\n  /// Capability name, e.g., "gpu_compute", "wasm_simd"\n  NAME: string;\n  /// Capability version\n  VERSION: string;\n  /// Whether this capability is required\n  REQUIRED: bool;\n}\n\n/// Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON,\n  /// Batch record ingest with source provenance tags (provider id, source\n  /// name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a\n  /// single record without source attribution. Hosts gate\n  /// storage.ingest_with_source on this capability specifically.\n  STORAGE_INGEST\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.\ntable PLGAcceptedTypeSet {\n  /// Stable type-set identifier within the port.\n  SET_ID: string (required);\n  /// Specific FlatBuffer types accepted by the set.\n  ALLOWED_TYPES: [FlatBufferTypeRef];\n  /// Wire formats this set accepts. If ALIGNED_BINARY is present,\n  /// FLATBUFFER MUST also be present for the same schemas.\n  ALLOWED_WIRE_FORMATS: [payloadWireFormat];\n  /// Human-readable explanation of the accepted schema family.\n  DESCRIPTION: string;\n}\n\n/// One input or output port on a method.\ntable PLGPortManifest {\n  /// Stable port identifier within the method.\n  PORT_ID: string (required);\n  /// Human-readable name for UIs.\n  DISPLAY_NAME: string;\n  /// Type sets accepted on this port.\n  ACCEPTED_TYPE_SETS: [PLGAcceptedTypeSet];\n  /// Minimum number of streams that must be connected.\n  MIN_STREAMS: uint16 = 1;\n  /// Maximum number of streams that may be connected.\n  MAX_STREAMS: uint16 = 1;\n  /// Whether the port must be connected for invocation.\n  REQUIRED: bool = true;\n  /// Optional human-readable description.\n  DESCRIPTION: string;\n}\n\n/// One host capability dependency (richer form of PluginCapability).\ntable PLGHostCapability {\n  CAPABILITY: hostCapabilityKind;\n  SCOPE: string;\n  REQUIRED: bool = true;\n  DESCRIPTION: string;\n}\n\n/// Timer entry declared by a plugin.\ntable PLGTimerSpec {\n  TIMER_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  DEFAULT_INTERVAL_MS: uint64;\n  DESCRIPTION: string;\n}\n\n/// Protocol handler declared by a plugin.\ntable PLGProtocolSpec {\n  PROTOCOL_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  OUTPUT_PORT_ID: string;\n  DESCRIPTION: string;\n  WIRE_ID: string;\n  TRANSPORT_KIND: string;\n  ROLE: string;\n  SPEC_URI: string;\n  AUTO_INSTALL: bool = true;\n  ADVERTISE: bool = false;\n  DISCOVERY_KEY: string;\n  DEFAULT_PORT: uint16;\n  REQUIRE_SECURE_TRANSPORT: bool = false;\n}\n\n/// Build artifact emitted by the plugin toolchain.\ntable PLGBuildArtifact {\n  ARTIFACT_ID: string (required);\n  KIND: string;\n  PATH: string (required);\n  TARGET: string;\n  ENTRY_SYMBOL: string;\n}\n\n/// Canonical method declaration.\ntable PLGMethodManifest {\n  METHOD_ID: string (required);\n  DISPLAY_NAME: string;\n  INPUT_PORTS: [PLGPortManifest];\n  OUTPUT_PORTS: [PLGPortManifest];\n  MAX_BATCH: uint32 = 1;\n  DRAIN_POLICY: drainBehavior = DRAIN_UNTIL_YIELD;\n  DESCRIPTION: string;\n}\n\n/// Plugin dependency on another plugin\ntable PluginDependency {\n  /// Plugin ID of the dependency\n  PLUGIN_ID: string;\n  /// Minimum version required (semver)\n  MIN_VERSION: string;\n  /// Maximum version allowed (optional)\n  MAX_VERSION: string;\n}\n\n/// Plugin entry point function definition\ntable EntryFunction {\n  /// Function name as exported from WASM\n  NAME: string (required);\n  /// Human-readable description\n  DESCRIPTION: string;\n  /// Input parameter types (FlatBuffer schema names)\n  INPUT_SCHEMAS: [string];\n  /// Output type (FlatBuffer schema name)\n  OUTPUT_SCHEMA: string;\n}\n\n/// One node in a composed flow graph. A degenerate flow IS a module: a leaf\n/// module leaves the flow-graph fields on PLG empty; a composed flow populates\n/// them. This is how flows reuse the module schema rather than a separate one.\ntable PLGFlowNode {\n  /// Stable node identifier within this flow\n  NODE_ID: string (required);\n  /// Plugin id of the module this node invokes\n  PLUGIN_ID: string (required);\n  /// Method id invoked on the module\n  METHOD_ID: string;\n  /// Node kind, e.g. "transform", "trigger", "capability"\n  KIND: string;\n  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an\n  /// independently instantiated signed WASM node, and "host-capability" = a\n  /// generic host adapter.\n  DISPATCH_MODEL: string;\n  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)\n  CONFIG: [ubyte];\n  /// Editor layout X position\n  UI_X: float;\n  /// Editor layout Y position\n  UI_Y: float;\n}\n\n/// Compile-time routing decision for an edge. The aligned option is legal only\n/// when the producer and consumer share the declared arena and the runtime can\n/// prove bounds, alignment, ownership, mutability, and lifetime.\nenum flowEdgeRoutePolicy : ubyte {\n  CANONICAL_ONLY,\n  ALIGNED_SHARED_ARENA_OR_CANONICAL\n}\n\n/// Exact validated SDS and representation contract bound into a signed flow\n/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;\n/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.\ntable PLGFlowEdgeContract {\n  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may\n  /// be opaque by design (see OPAQUE), and a signer must never be forced to\n  /// invent an identity to satisfy the schema. A contract MUST carry exactly\n  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with\n  /// both, is invalid and MUST be rejected by the compiler that signs the flow.\n  CANONICAL_TYPE: FlatBufferTypeRef;\n  ALIGNED_TYPE: FlatBufferTypeRef;\n  CANONICAL_FALLBACK_AVAILABLE: bool = true;\n  ALIGNED_ELIGIBLE: bool = false;\n  ROUTE_POLICY: flowEdgeRoutePolicy = CANONICAL_ONLY;\n  /// The edge carries bytes with no SDS identity BY DESIGN \u2014 an\n  /// application-blind host-capability adapter (an HTTP body, a raw file\n  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate\n  /// signed assertion of opacity, which is why it is an explicit flag rather\n  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable\n  /// from a declared-opaque one. An opaque edge is ineligible for the aligned\n  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.\n  OPAQUE: bool = false;\n}\n\n/// One directed edge wiring a producer output port to a consumer input port.\ntable PLGFlowEdge {\n  /// Stable edge identifier\n  EDGE_ID: string;\n  /// Source node id\n  FROM_NODE_ID: string (required);\n  /// Source output port id\n  FROM_PORT_ID: string (required);\n  /// Destination node id\n  TO_NODE_ID: string (required);\n  /// Destination input port id\n  TO_PORT_ID: string (required);\n  /// Exact identity/layout and compile-time representation policy. NOT\n  /// `required`: marking a NEW field of an EXISTING table required makes the\n  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,\n  /// which is a breaking change to a ratified standard. Presence is enforced\n  /// where it belongs \u2014 the flow compiler MUST refuse to SIGN a flow whose\n  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge\n  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.\n  CONTRACT: PLGFlowEdgeContract;\n}\n\n/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.\ntable PLGFlowTrigger {\n  /// Stable trigger identifier\n  TRIGGER_ID: string (required);\n  /// Trigger kind, e.g. "timer", "http"\n  KIND: string;\n  /// Trigger source, e.g. "host-cron"\n  SOURCE: string;\n  /// Default firing interval in milliseconds (timer triggers)\n  DEFAULT_INTERVAL_MS: uint64;\n  /// Mounted HTTP path (http triggers)\n  HTTP_PATH: string;\n}\n\n/// Binds a trigger to the node + input port it delivers its frame to.\ntable PLGFlowTriggerBinding {\n  /// Trigger identifier\n  TRIGGER_ID: string (required);\n  /// Target node id\n  TARGET_NODE_ID: string (required);\n  /// Target input port id\n  TARGET_PORT_ID: string (required);\n}\n\n/// Plugin Manifest - canonical signed storefront and WASM distribution record\ntable PLG {\n  /// Unique identifier for the plugin\n  PLUGIN_ID: string (required);\n  /// Human-readable plugin name\n  NAME: string (required);\n  /// Plugin version (semver format)\n  VERSION: string (required);\n  /// Detailed description of plugin functionality\n  DESCRIPTION: string;\n  /// Short marketing summary shown in storefront listings\n  TAGLINE: string;\n  /// Type/category of the plugin\n  PLUGIN_TYPE: pluginCategory;\n  /// Human-readable publisher or organization name\n  PUBLISHER_NAME: string;\n  /// Publisher handle or username\n  PUBLISHER_HANDLE: string;\n  /// Canonical publisher website\n  PUBLISHER_URL: string;\n  /// Support or helpdesk URL for this plugin\n  SUPPORT_URL: string;\n  /// Search and categorization tags for discovery\n  TAGS: [string];\n  /// Short feature bullets highlighted in storefront listings\n  FEATURES: [string];\n  /// Screenshot URLs showing the plugin in use\n  SCREENSHOT_URLS: [string];\n  /// Optional hero/banner image URL for the listing\n  BANNER_URL: string;\n\n  /// ABI version for compatibility checking\n  ABI_VERSION: uint32 = 1;\n\n  /// SHA256 hash of the decrypted WASM binary\n  WASM_HASH: [ubyte];\n  /// Size of decrypted WASM binary in bytes\n  WASM_SIZE: uint64;\n  /// IPFS CID of the encrypted WASM binary\n  WASM_CID: string;\n  /// SHA256 hash of the encrypted delivery artifact bytes\n  ENCRYPTED_WASM_HASH: [ubyte];\n  /// Size of the encrypted delivery artifact in bytes\n  ENCRYPTED_WASM_SIZE: uint64;\n\n  /// Entry point functions exported by the plugin\n  ENTRY_FUNCTIONS: [EntryFunction];\n  /// FlatBuffer schemas required by this plugin\n  REQUIRED_SCHEMAS: [string];\n  /// Other plugins this depends on\n  DEPENDENCIES: [PluginDependency];\n  /// Capabilities provided by this plugin\n  CAPABILITIES: [PluginCapability];\n\n  /// Peer ID of the plugin provider\n  PROVIDER_PEER_ID: string;\n  /// IPFS CID of provider\'s EPM (Entity Profile Message)\n  PROVIDER_EPM_CID: string;\n\n  /// Whether the WASM binary is encrypted\n  ENCRYPTED: bool = true;\n  /// Canonical required scope for grant issuance\n  REQUIRED_SCOPE: string;\n  /// Provider-local identifier for the module content key\n  KEY_ID: string;\n  /// Maximum grant timeout allowed for this module publication\n  MAX_GRANT_TIMEOUT_MS: uint64;\n  /// Minimum permissions required to run\n  MIN_PERMISSIONS: [string];\n\n  /// Unix timestamp when plugin was created\n  CREATED_AT: uint64;\n  /// Unix timestamp when plugin was last updated\n  UPDATED_AT: uint64;\n  /// URL to plugin documentation\n  DOCUMENTATION_URL: string;\n  /// URL to plugin changelog or release notes\n  CHANGELOG_URL: string;\n  /// URL to plugin icon/logo\n  ICON_URL: string;\n  /// License identifier (SPDX format)\n  LICENSE: string;\n  /// Commercial model used for storefront purchase flows\n  PAYMENT_MODEL: purchaseTier = Free;\n  /// Price in USD cents for one-time purchase or subscription period\n  PRICE_USD_CENTS: uint32;\n  /// Subscription billing period length in days\n  SUBSCRIPTION_PERIOD_DAYS: uint32;\n  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"\n  ACCEPTED_PAYMENT_METHODS: [string];\n  /// Storefront publication state for this manifest version\n  LISTING_STATUS: publicationState = Public;\n\n  /// Ed25519 signature from provider over manifest\n  SIGNATURE: [ubyte];\n\n  /// Canonical invoke surfaces this artifact exposes. A single plugin\n  /// MAY list both DIRECT and COMMAND when it supports both.\n  INVOKE_SURFACES: [invokeSurfaceKind];\n  /// Rich per-method invoke manifests (port shape, drain semantics,\n  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim\n  /// name+input_schemas+output_schema summary; METHODS carries the full\n  /// invoke-surface detail including aligned-binary advertisement.\n  METHODS: [PLGMethodManifest];\n  /// Enum-typed host capability dependencies (richer than CAPABILITIES,\n  /// which is string-tagged metadata).\n  HOST_CAPABILITIES: [PLGHostCapability];\n  /// Timer declarations for scheduled invocations.\n  TIMERS: [PLGTimerSpec];\n  /// Protocol handler declarations.\n  PROTOCOLS: [PLGProtocolSpec];\n  /// FlatBuffer schemas this plugin depends on at the invoke surface.\n  SCHEMAS_USED: [FlatBufferTypeRef];\n  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).\n  BUILD_ARTIFACTS: [PLGBuildArtifact];\n  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").\n  RUNTIME_TARGETS: [string];\n  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:\n  /// a requester whose verified EPM binds an xpub in this list is granted (PKI\n  /// identity authorization). Empty list = no xpub allowlist gate.\n  ALLOWED_XPUBS: [string];\n\n  /// Composition graph (a degenerate flow is a module): the nodes this flow\n  /// invokes. Empty for a leaf module; populated for a composed flow. The flow\n  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.\n  FLOW_NODES: [PLGFlowNode];\n  /// Composition-graph edges wiring node output ports to input ports.\n  FLOW_EDGES: [PLGFlowEdge];\n  /// Flow triggers (timer/http) that start a drain.\n  FLOW_TRIGGERS: [PLGFlowTrigger];\n  /// Bindings from triggers to the node + input port they deliver to.\n  FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];\n\n  /// The one ratified $CCT category this module is shelved under. This is the\n  /// category a storefront capsule, a library shelf and a breadcrumb show when\n  /// exactly one must be chosen. UNSPECIFIED means the publisher did not\n  /// classify the module; a consumer renders it ungrouped and never guesses.\n  ///\n  /// This supersedes PLUGIN_TYPE for all storefront, library and search\n  /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n  /// `pluginCategory` vocabulary mixes capability families with node-internal\n  /// plumbing, carries a legacy vendor-derived member, holds a real family at\n  /// ordinal 0, and admits only one value. Canonical migration, applied by a\n  /// publisher rewriting an old manifest:\n  ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\n  ///   Renderer->VISUALIZATION_AND_RENDERING,\n  ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,\n  ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\n  ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\n  ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\n  ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\n  ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\n  ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\n  ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\n  ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\n  ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\n  /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into\n  /// PLUGIN_TYPE.\n  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;\n  /// Every ratified $CCT category this module belongs to, for browse, filter\n  /// and per-category counting. A module MAY carry several. If nonempty it\n  /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\n  /// a set PRIMARY_CATEGORY means the module belongs to that one category.\n  CATEGORIES: [capabilityClass];\n}\n\nroot_type PLG;\nfile_identifier "$PLG";',
       files: [
         "./dist/PLG/PLG.sw.tar.gz",
         "./dist/PLG/PLG.py.tar.gz",
@@ -9823,6 +9839,25 @@ file_identifier "$QEM";`,
         "./dist/SCX/SCX.ts.tar.gz"
       ]
     },
+    CCT: {
+      IDL: '// Hash: e55421c6fef3ac32b2713b697e65bd0f517a2f9d3309f319817b5eaa318bad91\n// Version: 1.184.1\n// -----------------------------------END_HEADER\n/// Capability class of a distributable software unit (module, application, or\n/// composed flow).\n///\n/// This enum IS the ratified category vocabulary. A storefront, library, module\n/// manifest and search surface all classify against these members and nothing\n/// else; a category that is not a member here does not exist. Members name\n/// CAPABILITY CLASSES only \u2014 what the unit DOES. No member names a vendor,\n/// site, organization, product, protocol brand or algorithm implementation;\n/// that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in\n/// the taxonomy.\n///\n/// Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never\n/// reuse an ordinal. A reorder silently re-labels every published listing.\n///\n/// UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or\n/// default-constructed classification can never decode as a real category. The\n/// pre-existing `pluginCategory` enum in $PLG made the opposite choice \u2014 its\n/// ordinal 0 is a real family \u2014 and had to append an `Unspecified` member at\n/// the tail to recover. This enum does not repeat that.\n///\n/// Each member\'s canonical display name is stated in its doc comment and is\n/// part of the ratified contract: a consumer rendering a category label uses\n/// that string verbatim, so every surface spells a category identically. The\n/// canonical route slug is the member identifier lowercased with `_` replaced\n/// by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->\n/// "rf-and-communications").\nenum capabilityClass : ubyte {\n  /// No capability class stated. The publisher did not classify the unit.\n  /// A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT\n  /// infer a class from the unit\'s name, description or tags.\n  /// Display name: "Unspecified".\n  UNSPECIFIED,\n\n  /// Advancing an object\'s state forward or backward in time under a force\n  /// model, and interpolating between computed states.\n  /// Display name: "Propagation".\n  PROPAGATION,\n\n  /// Estimating an object\'s state or model parameters by fitting to\n  /// observations or ephemerides.\n  /// Display name: "Orbit Determination".\n  ORBIT_DETERMINATION,\n\n  /// Planning, targeting and optimizing trajectory changes, including\n  /// station-keeping, transfers and collision-avoidance maneuvers.\n  /// Display name: "Maneuver Planning".\n  MANEUVER_PLANNING,\n\n  /// Screening for close approaches between objects and quantifying collision\n  /// probability and miss distance.\n  /// Display name: "Conjunction Assessment".\n  CONJUNCTION_ASSESSMENT,\n\n  /// Atmospheric reentry, decay prediction, fragmentation and debris-cloud\n  /// evolution.\n  /// Display name: "Reentry & Breakup".\n  REENTRY_AND_BREAKUP,\n\n  /// Attitude determination and control, body orientation, and pointing or\n  /// slew planning.\n  /// Display name: "Attitude & Pointing".\n  ATTITUDE_AND_POINTING,\n\n  /// Coordinate frame realization and transformation, time scale conversion,\n  /// and earth-orientation parameter handling.\n  /// Display name: "Reference Frames & Time".\n  REFERENCE_FRAMES_AND_TIME,\n\n  /// Sensor modelling and tasking, field-of-regard and access computation, and\n  /// area or target coverage figures of merit.\n  /// Display name: "Sensors & Coverage".\n  SENSORS_AND_COVERAGE,\n\n  /// Producing, correlating or associating observations of tracked objects,\n  /// and maintaining tracks from them.\n  /// Display name: "Tracking & Observation".\n  TRACKING_AND_OBSERVATION,\n\n  /// Radio-frequency link modelling, emitter and band characterization, signal\n  /// capture handling, and communications planning.\n  /// Display name: "RF & Communications".\n  RF_AND_COMMUNICATIONS,\n\n  /// Interference, jamming, spoofing and countermeasure modelling.\n  /// Display name: "Electronic Warfare".\n  ELECTRONIC_WARFARE,\n\n  /// Atmospheric density, gravity field, magnetic field, radiation, solar and\n  /// geomagnetic activity, and ionospheric modelling.\n  /// Display name: "Space Environment".\n  SPACE_ENVIRONMENT,\n\n  /// Acquiring bytes from upstream providers and parsing or exporting them\n  /// across canonical record formats.\n  /// Display name: "Data Sources & Ingest".\n  DATA_SOURCES_AND_INGEST,\n\n  /// Validating records for integrity, physical plausibility, continuity and\n  /// schema conformance, and scoring data quality.\n  /// Display name: "Data Validation & Quality".\n  DATA_VALIDATION_AND_QUALITY,\n\n  /// Object catalogue curation, cross-identifier resolution, bus and physical\n  /// property association, and entity identity.\n  /// Display name: "Catalog & Identity".\n  CATALOG_AND_IDENTITY,\n\n  /// Rendering, scene composition, shading and interactive display of space\n  /// data.\n  /// Display name: "Visualization & Rendering".\n  VISUALIZATION_AND_RENDERING,\n\n  /// Ground station operation and control of physical equipment, including\n  /// antenna rotators, radios and other hardware interfaces.\n  /// Display name: "Ground Segment & Hardware".\n  GROUND_SEGMENT_AND_HARDWARE,\n\n  /// Mission and constellation design, trade studies, performance analysis and\n  /// report generation.\n  /// Display name: "Mission Design & Analysis".\n  MISSION_DESIGN_AND_ANALYSIS,\n\n  /// Composition of other units into a graph. The unit of distribution is a\n  /// flow of modules, not a leaf algorithm.\n  /// Display name: "Flows & Composition".\n  FLOW_AND_COMPOSITION,\n\n  /// Persisting, indexing and querying records; storage engines and query\n  /// surfaces.\n  /// Display name: "Data Storage & Query".\n  DATA_STORAGE_AND_QUERY,\n\n  /// Key custody, signing and verification, authentication, authorization and\n  /// access control.\n  /// Display name: "Security & Identity".\n  SECURITY_AND_IDENTITY,\n\n  /// Listing, purchase, subscription, entitlement and license enforcement for\n  /// distributed units.\n  /// Display name: "Commerce & Licensing".\n  COMMERCE_AND_LICENSING,\n\n  /// Node runtime, artifact delivery, registry, publication and peer transport\n  /// plumbing.\n  /// Display name: "Node Infrastructure".\n  NODE_INFRASTRUCTURE,\n\n  /// Foundational mathematics and general-purpose utility libraries consumed by\n  /// other units rather than run on their own.\n  /// Display name: "Foundation & Math".\n  FOUNDATION_AND_MATH\n}\n\n/// One ratified category in the taxonomy.\n///\n/// DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\n/// without the label a surface will render, the sentence a browse row will\n/// show, and the route a link will target. This is what stops each consumer\n/// from inventing its own wording for the same code.\ntable CCTCategory {\n  /// The ratified category code. This is the join key every consumer uses.\n  CODE: capabilityClass = UNSPECIFIED;\n  /// Canonical human-readable label, rendered verbatim. MUST equal the display\n  /// name stated in the CODE member\'s doc comment.\n  DISPLAY_NAME: string (required);\n  /// One-sentence description shown on browse rows and category headers.\n  SUMMARY: string (required);\n  /// Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n  /// `-`. Published explicitly rather than derived so every surface routes\n  /// identically.\n  SLUG: string (required);\n  /// Longer editorial description for a category landing page.\n  DESCRIPTION: string;\n  /// Parent category for hierarchical browse. UNSPECIFIED means this is a\n  /// top-level category. A category MUST NOT name itself as its parent.\n  PARENT: capabilityClass = UNSPECIFIED;\n  /// Presentation order within its parent, ascending. Ties break on\n  /// DISPLAY_NAME.\n  SORT_ORDER: uint16;\n  /// Search synonyms and alternate phrasings that resolve to this category.\n  /// Feeds type-ahead; never rendered as the category label.\n  KEYWORDS: [string];\n  /// Key of a self-hosted icon or capsule asset for this category. A KEY, not a\n  /// URL: consuming node surfaces load zero external-origin bytes, so the\n  /// consumer resolves this against its own local asset set.\n  ICON_KEY: string;\n}\n\n/// An observed count of catalogue items in one category.\n///\n/// Counts are VOLATILE and are never part of the ratified taxonomy itself. A\n/// rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\n/// count can never omit when it was taken or what it was taken over. A consumer\n/// that needs a live number computes it from the items; a consumer rendering a\n/// published rollup MUST show it as of COUNTED_AT.\ntable CCTCategoryRollup {\n  /// Category being counted.\n  CODE: capabilityClass = UNSPECIFIED;\n  /// Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\n  /// CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.\n  ITEM_COUNT: uint32;\n  /// Identifier of the catalogue the count was taken over.\n  SOURCE_CATALOG_ID: string (required);\n  /// Unix seconds when the count was taken.\n  COUNTED_AT: uint64;\n}\n\n/// $CCT \u2014 Capability Category Taxonomy.\n///\n/// The ratified set of capability classes that distributable units (modules,\n/// applications, composed flows) are classified under, together with the labels\n/// and routes every consuming surface renders. One published $CCT is the single\n/// source of truth shared by a storefront, a library, a search index and the\n/// unit manifests themselves.\n///\n/// Division of labour: `$CCT` = the category vocabulary and its presentation;\n/// `$PLG` = one module\'s listing, which cites categories by code; `$APP` = one\n/// application\'s manifest, which cites categories by code; `$PMM` = which\n/// modules a provider serves; `$STO`/`$STF` = commerce.\ntable CCT {\n  /// Stable identifier of this taxonomy publication.\n  TAXONOMY_ID: string (required);\n  /// SemVer 2.0.0 version of the taxonomy content.\n  VERSION: string (required);\n  /// Unix seconds when this taxonomy revision was issued.\n  ISSUED_AT: uint64;\n  /// Human-readable title of the taxonomy.\n  TITLE: string;\n  /// The ratified categories. Every capabilityClass member a consumer may\n  /// encounter SHOULD appear exactly once; a code appearing twice is invalid.\n  CATEGORIES: [CCTCategory] (required);\n  /// Optional per-category item counts as observed over a named catalogue.\n  /// Absent means counts are computed by the consumer.\n  ROLLUPS: [CCTCategoryRollup];\n  /// Signature from the publishing node key over the canonical taxonomy bytes.\n  SIGNATURE: [ubyte];\n}\n\nroot_type CCT;\nfile_identifier "$CCT";',
+      files: [
+        "./dist/CCT/CCT.sw.tar.gz",
+        "./dist/CCT/CCT.py.tar.gz",
+        "./dist/CCT/CCT.lob.tar.gz",
+        "./dist/CCT/CCT.go.tar.gz",
+        "./dist/CCT/CCT.js.tar.gz",
+        "./dist/CCT/CCT.dart.tar.gz",
+        "./dist/CCT/CCT.cs.tar.gz",
+        "./dist/CCT/CCT.java.tar.gz",
+        "./dist/CCT/CCT.rs.tar.gz",
+        "./dist/CCT/CCT.php.tar.gz",
+        "./dist/CCT/CCT.json.tar.gz",
+        "./dist/CCT/CCT.cpp.tar.gz",
+        "./dist/CCT/CCT.kt.tar.gz",
+        "./dist/CCT/CCT.ts.tar.gz"
+      ]
+    },
     EOO: {
       IDL: `// Hash: a2aff2147d3766df49ebc109b37db2416df55e41405bc96482363392c85730d9
 // Version: 1.0.9
@@ -10565,7 +10600,7 @@ file_identifier "$TBS";`,
       ]
     },
     PMM: {
-      IDL: '// Hash: 6bd5253e4dda7dc9e69a13ec0cc30871b5f08357411f62ff43a75887c30b5e61\n// Version: 1.170.2\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
+      IDL: '// Hash: 744d3f6e56d5fcad680f066862ec3799bfa489734a3ecc79ef7b573b1fd04540\n// Version: 1.170.3\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n  /// The one ratified `$CCT` category this module is shelved under. Mirrors\n  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\n  /// sanctioned way to group an offering: `pluginCategory` is single-valued,\n  /// holds a real family at ordinal 0, mixes capability families with\n  /// node-internal plumbing, and carries a deprecated vendor-derived member.\n  /// Present here, rather than only on the linked `$PLG`, so an anonymous\n  /// client can section the catalogue at boot without fetching one `$PLG` per\n  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n  ///\n  /// SIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\n  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\n  /// resting on a signed content hash. A consumer that shelves, filters or\n  /// counts by this field MUST NOT present the resulting grouping as\n  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,\n  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\n  /// from provider-supplied presentation. Extending the canonical statement to\n  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\n  /// every verifier in lockstep and is not made implicitly by adopting this\n  /// field.\n  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;\n  /// Every ratified `$CCT` category this module belongs to, for browse, filter\n  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\n  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\n  /// PRIMARY_CATEGORY.\n  CATEGORIES: [capabilityClass];\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
       files: [
         "./dist/PMM/PMM.sw.tar.gz",
         "./dist/PMM/PMM.py.tar.gz",
@@ -12203,209 +12238,7 @@ file_identifier "$ACL";`,
       ]
     },
     STF: {
-      IDL: `// Hash: 9e962ca81276e2d0909c429355d20f29d7547cf55b69d47a857993e6e27d42b2
-// Version: 1.0.3
-// -----------------------------------END_HEADER
-/// Access type for data listings
-enum accessCategory : byte {
-  /// One-time purchase
-  OneTime,
-  /// Recurring subscription
-  Subscription,
-  /// Real-time streaming access
-  Streaming,
-  /// Query-based access
-  Query
-}
-
-/// Payment method accepted
-enum paymentMethod : byte {
-  /// Ethereum cryptocurrency
-  Crypto_ETH,
-  /// Solana cryptocurrency
-  Crypto_SOL,
-  /// Bitcoin cryptocurrency
-  Crypto_BTC,
-  /// Internal SDN credits system
-  SDN_Credits,
-  /// Fiat payment via Stripe
-  Fiat_Stripe,
-  /// Free/open data
-  Free,
-  /// Usage-based billing settled after metered delivery
-  UsageBased,
-  /// Enterprise/offline invoicing
-  Enterprise
-}
-
-/// Listing kind for marketplace entries.
-enum listingCategory : byte {
-  DataStream,
-  WasmModule
-}
-
-/// Field-level stream policy bound into protected delivery and grants.
-table GrantFieldStreamPolicy {
-  POLICY_ID: string;
-  POLICY_VERSION: uint32;
-  STREAM_ID: string;
-  SCHEMA_CODE: string;
-  ALLOWED_FIELD_PATHS: [string];
-  REDACTED_FIELD_PATHS: [string];
-  KEY_EPOCH: string;
-  GRANT_SCOPE: string;
-  ALLOWED_OPERATIONS: [string];
-}
-
-/// Immutable encrypted artifact/window metadata for protected delivery.
-table ProtectedDeliveryBinding {
-  ENCRYPTED_CID: string;
-  MANIFEST_CID: string;
-  CONTENT_HASH: string;
-  CONTENT_KEY_ID: string;
-  LICENSE_MODULE_ID: string;
-  MODULE_ID: string;
-  MODULE_VERSION: string;
-  REQUIRED_SCOPES: [string];
-  GRANT_SCOPE: string;
-  DELIVERY_PROTOCOL: string;
-  FIELD_STREAM_POLICY: GrantFieldStreamPolicy;
-}
-
-/// Provider reputation summary surfaced in marketplace listings.
-table ProviderReputation {
-  TOTAL_SALES: uint64;
-  AVERAGE_RATING_X10: uint16;
-  TOTAL_RATINGS: uint32;
-  UPTIME_PERCENTAGE_X100: uint16;
-  AVG_DELIVERY_LATENCY_MS: uint32;
-  DISPUTE_COUNT: uint32;
-  PROVIDER_SINCE: uint64;
-}
-
-/// Spatial coverage definition
-table SpatialCoverage {
-  /// Type of coverage: "global", "region", "object_list"
-  TYPE: string;
-  /// Regions covered, e.g., ["LEO", "GEO", "MEO"]
-  REGIONS: [string];
-  /// Specific NORAD IDs or catalog numbers
-  OBJECT_IDS: [string];
-  /// Minimum altitude in kilometers for altitude-bounded offerings
-  MIN_ALTITUDE_KM: double;
-  /// Maximum altitude in kilometers for altitude-bounded offerings
-  MAX_ALTITUDE_KM: double;
-  /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
-  GEO_BOUNDS: [double];
-}
-
-/// Temporal coverage definition
-table TemporalCoverage {
-  /// Start epoch in ISO 8601 format
-  START_EPOCH: string;
-  /// End epoch in ISO 8601 format
-  END_EPOCH: string;
-  /// Update frequency: "realtime", "hourly", "daily"
-  UPDATE_FREQUENCY: string;
-  /// Days of historical data available
-  HISTORICAL_DEPTH: uint32;
-  /// Typical provider latency in seconds
-  LATENCY_SECONDS: uint32;
-}
-
-/// Data coverage combining spatial and temporal
-table DataCoverage {
-  /// Spatial coverage definition
-  SPATIAL: SpatialCoverage;
-  /// Temporal coverage definition
-  TEMPORAL: TemporalCoverage;
-}
-
-/// Pricing tier for a listing
-table PricingTier {
-  /// Tier name, e.g., "Basic", "Pro", "Enterprise"
-  NAME: string;
-  /// Price in smallest unit (cents, satoshis, etc.)
-  PRICE_AMOUNT: uint64;
-  /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
-  PRICE_CURRENCY: string;
-  /// Duration in days (0 = one-time purchase)
-  DURATION_DAYS: uint32;
-  /// Rate limit in requests per hour
-  RATE_LIMIT: uint32;
-  /// List of features included in this tier
-  FEATURES: [string];
-  /// Maximum records returned per request
-  MAX_RECORDS_PER_REQUEST: uint32;
-  /// Human-readable tier description
-  DESCRIPTION: string;
-}
-
-/// Storefront Listing - Data marketplace listing
-table STF {
-  /// Unique identifier for the listing
-  LISTING_ID: string (required);
-  /// Peer ID of the data provider
-  PROVIDER_PEER_ID: string (required);
-  /// IPFS CID of provider's EPM (Entity Profile Message)
-  PROVIDER_EPM_CID: string;
-
-  /// Title of the data listing
-  TITLE: string (required);
-  /// Detailed description of the data offering
-  DESCRIPTION: string;
-  /// SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
-  DATA_TYPES: [string];
-  /// Coverage information (spatial and temporal)
-  COVERAGE: DataCoverage;
-  /// IPFS CID of sample data
-  SAMPLE_CID: string;
-
-  /// Type of access offered
-  ACCESS_TYPE: accessCategory;
-  /// Whether encryption is required for data delivery
-  ENCRYPTION_REQUIRED: bool;
-
-  /// Available pricing tiers
-  PRICING: [PricingTier];
-  /// Payment methods accepted
-  ACCEPTED_PAYMENTS: [paymentMethod];
-
-  /// Unix timestamp when listing was created
-  CREATED_AT: uint64;
-  /// Unix timestamp when listing was last updated
-  UPDATED_AT: uint64;
-  /// Whether the listing is currently active
-  ACTIVE: bool;
-
-  /// Ed25519 signature from provider
-  SIGNATURE: [ubyte];
-  /// Listing category: data stream or WASM module
-  LISTING_KIND: listingCategory;
-  /// Search tags
-  TAGS: [string];
-  /// Number of records in sample data, when available
-  SAMPLE_RECORD_COUNT: uint32;
-  /// Supported delivery methods
-  DELIVERY_METHODS: [string];
-  /// Protected delivery metadata for encrypted artifacts or streams
-  PROTECTED_DELIVERY: ProtectedDeliveryBinding;
-  /// Provider reputation summary
-  REPUTATION: ProviderReputation;
-  /// Listing version
-  VERSION: uint32;
-  /// Unix timestamp when the listing expires, or 0 for no expiry
-  EXPIRES_AT: uint64;
-  /// Terms document CID
-  TERMS_CID: string;
-  /// License label or SPDX-style identifier
-  LICENSE: string;
-  /// Peer ID this listing was sourced from when discovered remotely
-  SOURCE_PEER_ID: string;
-}
-
-root_type STF;
-file_identifier "$STF";`,
+      IDL: '// Hash: 6dc035193f559376c01f7756ab2e11d93834ee65754fca543c1a1b414ab6e366\n// Version: 1.0.4\n// -----------------------------------END_HEADER\ninclude "../CCT/main.fbs";\n\n/// Access type for data listings\nenum accessCategory : byte {\n  /// One-time purchase\n  OneTime,\n  /// Recurring subscription\n  Subscription,\n  /// Real-time streaming access\n  Streaming,\n  /// Query-based access\n  Query\n}\n\n/// Payment method accepted\nenum paymentMethod : byte {\n  /// Ethereum cryptocurrency\n  Crypto_ETH,\n  /// Solana cryptocurrency\n  Crypto_SOL,\n  /// Bitcoin cryptocurrency\n  Crypto_BTC,\n  /// Internal SDN credits system\n  SDN_Credits,\n  /// Fiat payment via Stripe\n  Fiat_Stripe,\n  /// Free/open data\n  Free,\n  /// Usage-based billing settled after metered delivery\n  UsageBased,\n  /// Enterprise/offline invoicing\n  Enterprise\n}\n\n/// Listing kind for marketplace entries.\n///\n/// This is the listing\'s DELIVERY KIND, not its capability category, and the\n/// two are not interchangeable. A storefront shelf, a browse row and a search\n/// facet are driven by `$CCT` `capabilityClass` via STF.PRIMARY_CATEGORY /\n/// STF.CATEGORIES; `listingCategory` only says whether the offering is\n/// delivered as a data stream or as a module artifact.\nenum listingCategory : byte {\n  DataStream,\n  WasmModule\n}\n\n/// Field-level stream policy bound into protected delivery and grants.\ntable GrantFieldStreamPolicy {\n  POLICY_ID: string;\n  POLICY_VERSION: uint32;\n  STREAM_ID: string;\n  SCHEMA_CODE: string;\n  ALLOWED_FIELD_PATHS: [string];\n  REDACTED_FIELD_PATHS: [string];\n  KEY_EPOCH: string;\n  GRANT_SCOPE: string;\n  ALLOWED_OPERATIONS: [string];\n}\n\n/// Immutable encrypted artifact/window metadata for protected delivery.\ntable ProtectedDeliveryBinding {\n  ENCRYPTED_CID: string;\n  MANIFEST_CID: string;\n  CONTENT_HASH: string;\n  CONTENT_KEY_ID: string;\n  LICENSE_MODULE_ID: string;\n  MODULE_ID: string;\n  MODULE_VERSION: string;\n  REQUIRED_SCOPES: [string];\n  GRANT_SCOPE: string;\n  DELIVERY_PROTOCOL: string;\n  FIELD_STREAM_POLICY: GrantFieldStreamPolicy;\n}\n\n/// Provider reputation summary surfaced in marketplace listings.\ntable ProviderReputation {\n  TOTAL_SALES: uint64;\n  AVERAGE_RATING_X10: uint16;\n  TOTAL_RATINGS: uint32;\n  UPTIME_PERCENTAGE_X100: uint16;\n  AVG_DELIVERY_LATENCY_MS: uint32;\n  DISPUTE_COUNT: uint32;\n  PROVIDER_SINCE: uint64;\n}\n\n/// Spatial coverage definition\ntable SpatialCoverage {\n  /// Type of coverage: "global", "region", "object_list"\n  TYPE: string;\n  /// Regions covered, e.g., ["LEO", "GEO", "MEO"]\n  REGIONS: [string];\n  /// Specific NORAD IDs or catalog numbers\n  OBJECT_IDS: [string];\n  /// Minimum altitude in kilometers for altitude-bounded offerings\n  MIN_ALTITUDE_KM: double;\n  /// Maximum altitude in kilometers for altitude-bounded offerings\n  MAX_ALTITUDE_KM: double;\n  /// Bounding box as [min_lat, min_lon, max_lat, max_lon]\n  GEO_BOUNDS: [double];\n}\n\n/// Temporal coverage definition\ntable TemporalCoverage {\n  /// Start epoch in ISO 8601 format\n  START_EPOCH: string;\n  /// End epoch in ISO 8601 format\n  END_EPOCH: string;\n  /// Update frequency: "realtime", "hourly", "daily"\n  UPDATE_FREQUENCY: string;\n  /// Days of historical data available\n  HISTORICAL_DEPTH: uint32;\n  /// Typical provider latency in seconds\n  LATENCY_SECONDS: uint32;\n}\n\n/// Data coverage combining spatial and temporal\ntable DataCoverage {\n  /// Spatial coverage definition\n  SPATIAL: SpatialCoverage;\n  /// Temporal coverage definition\n  TEMPORAL: TemporalCoverage;\n}\n\n/// Pricing tier for a listing\ntable PricingTier {\n  /// Tier name, e.g., "Basic", "Pro", "Enterprise"\n  NAME: string;\n  /// Price in smallest unit (cents, satoshis, etc.)\n  PRICE_AMOUNT: uint64;\n  /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"\n  PRICE_CURRENCY: string;\n  /// Duration in days (0 = one-time purchase)\n  DURATION_DAYS: uint32;\n  /// Rate limit in requests per hour\n  RATE_LIMIT: uint32;\n  /// List of features included in this tier\n  FEATURES: [string];\n  /// Maximum records returned per request\n  MAX_RECORDS_PER_REQUEST: uint32;\n  /// Human-readable tier description\n  DESCRIPTION: string;\n}\n\n/// Storefront Listing - Data marketplace listing\ntable STF {\n  /// Unique identifier for the listing\n  LISTING_ID: string (required);\n  /// Peer ID of the data provider\n  PROVIDER_PEER_ID: string (required);\n  /// IPFS CID of provider\'s EPM (Entity Profile Message)\n  PROVIDER_EPM_CID: string;\n\n  /// Title of the data listing\n  TITLE: string (required);\n  /// Detailed description of the data offering\n  DESCRIPTION: string;\n  /// SDS data types offered, e.g., ["OMM", "CDM", "TLE"]\n  DATA_TYPES: [string];\n  /// Coverage information (spatial and temporal)\n  COVERAGE: DataCoverage;\n  /// IPFS CID of sample data\n  SAMPLE_CID: string;\n\n  /// Type of access offered\n  ACCESS_TYPE: accessCategory;\n  /// Whether encryption is required for data delivery\n  ENCRYPTION_REQUIRED: bool;\n\n  /// Available pricing tiers\n  PRICING: [PricingTier];\n  /// Payment methods accepted\n  ACCEPTED_PAYMENTS: [paymentMethod];\n\n  /// Unix timestamp when listing was created\n  CREATED_AT: uint64;\n  /// Unix timestamp when listing was last updated\n  UPDATED_AT: uint64;\n  /// Whether the listing is currently active\n  ACTIVE: bool;\n\n  /// Ed25519 signature from provider\n  SIGNATURE: [ubyte];\n  /// Listing category: data stream or WASM module\n  LISTING_KIND: listingCategory;\n  /// Search tags\n  TAGS: [string];\n  /// Number of records in sample data, when available\n  SAMPLE_RECORD_COUNT: uint32;\n  /// Supported delivery methods\n  DELIVERY_METHODS: [string];\n  /// Protected delivery metadata for encrypted artifacts or streams\n  PROTECTED_DELIVERY: ProtectedDeliveryBinding;\n  /// Provider reputation summary\n  REPUTATION: ProviderReputation;\n  /// Listing version\n  VERSION: uint32;\n  /// Unix timestamp when the listing expires, or 0 for no expiry\n  EXPIRES_AT: uint64;\n  /// Terms document CID\n  TERMS_CID: string;\n  /// License label or SPDX-style identifier\n  LICENSE: string;\n  /// Peer ID this listing was sourced from when discovered remotely\n  SOURCE_PEER_ID: string;\n\n  /// The one ratified `$CCT` category this listing is shelved under, using the\n  /// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and\n  /// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no\n  /// capability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\n  /// shelf and a library shelf were grouped by two unrelated systems. A\n  /// consumer MUST group listings by this field and MUST NOT re-derive a\n  /// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled\n  /// vocabulary.\n  ///\n  /// Distinct from LISTING_KIND, which is the delivery kind (data stream vs\n  /// module artifact), and from ACCESS_TYPE, which is the commercial access\n  /// model. UNSPECIFIED means the provider did not classify the listing; a\n  /// consumer renders it ungrouped and never guesses.\n  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;\n  /// Every ratified `$CCT` category this listing belongs to, for browse,\n  /// filter and per-category counting. A listing MAY carry several. If\n  /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.\n  CATEGORIES: [capabilityClass];\n}\n\nroot_type STF;\nfile_identifier "$STF";',
       files: [
         "./dist/STF/STF.sw.tar.gz",
         "./dist/STF/STF.py.tar.gz",
@@ -20259,6 +20092,36 @@ ed25519 hardened)`
     APP: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         appContentEncoding: {
           type: "string",
           enum: [
@@ -20307,6 +20170,142 @@ ed25519 hardened)`
             "PAGE",
             "BOTH"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         APPModuleRef: {
           type: "object",
@@ -20601,6 +20600,17 @@ ed25519 hardened)`
             RUNTIME_CLASS: {
               $ref: "#/definitions/appRuntimeTarget",
               description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this app is shelved under, using the same\nvocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront\nor library shelf holds apps and modules together without translating\nbetween two classification schemes. RUNTIME_CLASS says WHERE an app runs;\nPRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app\nand a PAGE-class app can share a category.\nUNSPECIFIED means the publisher did not classify the app; a consumer\nrenders it ungrouped and never infers a class."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this app belongs to, for browse, filter and\nper-category counting. An app MAY carry several. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -33605,6 +33615,36 @@ ed25519 hardened)`
     PUR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -33647,6 +33687,142 @@ ed25519 hardened)`
             "Refunded",
             "Expired"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -34055,6 +34231,17 @@ ed25519 hardened)`
             SOURCE_PEER_ID: {
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -38242,6 +38429,36 @@ ed25519 hardened)`
             "TRANSFERRED"
           ]
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -38484,6 +38701,142 @@ ed25519 hardened)`
               description: "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint."
             }
           },
+          additionalProperties: false
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
           additionalProperties: false
         },
         PluginCapability: {
@@ -39289,6 +39642,17 @@ ed25519 hardened)`
                 $ref: "#/definitions/PLGFlowTriggerBinding"
               },
               description: "Bindings from triggers to the node + input port they deliver to."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category."
             }
           },
           required: [
@@ -49258,6 +49622,36 @@ ed25519 hardened)`
     REC: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -54458,8 +54852,145 @@ ed25519 hardened)`
             "IQC",
             "CNP",
             "CMR",
-            "TBS"
+            "TBS",
+            "CCT"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -54868,6 +55399,17 @@ ed25519 hardened)`
             SOURCE_PEER_ID: {
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -56250,6 +56792,17 @@ ed25519 hardened)`
             RUNTIME_CLASS: {
               $ref: "#/definitions/appRuntimeTarget",
               description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this app is shelved under, using the same\nvocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront\nor library shelf holds apps and modules together without translating\nbetween two classification schemes. RUNTIME_CLASS says WHERE an app runs;\nPRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app\nand a PAGE-class app can share a category.\nUNSPECIFIED means the publisher did not classify the app; a consumer\nrenders it ungrouped and never infers a class."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this app belongs to, for browse, filter and\nper-category counting. An app MAY carry several. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -73110,6 +73663,17 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 $ref: "#/definitions/PLGFlowTriggerBinding"
               },
               description: "Bindings from triggers to the node + input port they deliver to."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category."
             }
           },
           required: [
@@ -78392,6 +78956,17 @@ turned into a number.`
             PLUGIN_TYPE: {
               $ref: "#/definitions/pluginCategory",
               description: "Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\nis the ONLY sanctioned way to group an offering: a client grouping a\ncatalogue MUST read this field and MUST NOT infer family from the shape\nof `MODULE_ID`, which carries no normative structure. Defaults to\n`Unspecified`, which a client MUST render as ungrouped \u2014 never silently\nas `Sensor`. Present here, rather than only on\nthe linked `$PLG`, so an anonymous client can section the catalogue at\nboot without fetching one `$PLG` per module."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this module is shelved under. Mirrors\n`$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\nsanctioned way to group an offering: `pluginCategory` is single-valued,\nholds a real family at ordinal 0, mixes capability families with\nnode-internal plumbing, and carries a deprecated vendor-derived member.\nPresent here, rather than only on the linked `$PLG`, so an anonymous\nclient can section the catalogue at boot without fetching one `$PLG` per\nmodule. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n\nSIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\nstatement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n`NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\nresting on a signed content hash. A consumer that shelves, filters or\ncounts by this field MUST NOT present the resulting grouping as\nauthenticated, and MUST keep the verified identity (`MODULE_ID`,\n`CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\nfrom provider-supplied presentation. Extending the canonical statement to\ncover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\nevery verifier in lockstep and is not made implicitly by adopting this\nfield."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this module belongs to, for browse, filter\nand per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\nPRIMARY_CATEGORY."
             }
           },
           required: [
@@ -91641,6 +92216,9 @@ no provider, dataset, or site.`,
                 },
                 {
                   $ref: "#/definitions/TBS"
+                },
+                {
+                  $ref: "#/definitions/CCT"
                 }
               ],
               description: "The record data (union of all supported standards)"
@@ -97487,6 +98065,36 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "TRANSFERRED"
           ]
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -97701,6 +98309,142 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               description: "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint."
             }
           },
+          additionalProperties: false
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
           additionalProperties: false
         },
         PluginCapability: {
@@ -98506,6 +99250,17 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 $ref: "#/definitions/PLGFlowTriggerBinding"
               },
               description: "Bindings from triggers to the node + input port they deliver to."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category."
             }
           },
           required: [
@@ -105733,6 +106488,36 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "UNIT_QUATERNION"
           ]
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -107683,6 +108468,142 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
+        },
         GrantFieldStreamPolicy: {
           type: "object",
           description: "Field-level stream policy bound into protected delivery and grants.",
@@ -108090,6 +109011,17 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             SOURCE_PEER_ID: {
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -117863,6 +118795,178 @@ ed25519 hardened)`
       },
       $ref: "#/definitions/SCX"
     },
+    CCT: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CCT"
+    },
     EOO: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -119785,6 +120889,36 @@ no provider, dataset, or site.`,
             "TRANSFERRED"
           ]
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -120303,6 +121437,142 @@ ed25519 hardened)`
               description: "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint."
             }
           },
+          additionalProperties: false
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
           additionalProperties: false
         },
         PluginCapability: {
@@ -121108,6 +122378,17 @@ ed25519 hardened)`
                 $ref: "#/definitions/PLGFlowTriggerBinding"
               },
               description: "Bindings from triggers to the node + input port they deliver to."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category."
             }
           },
           required: [
@@ -121296,6 +122577,17 @@ ed25519 hardened)`
             PLUGIN_TYPE: {
               $ref: "#/definitions/pluginCategory",
               description: "Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\nis the ONLY sanctioned way to group an offering: a client grouping a\ncatalogue MUST read this field and MUST NOT infer family from the shape\nof `MODULE_ID`, which carries no normative structure. Defaults to\n`Unspecified`, which a client MUST render as ungrouped \u2014 never silently\nas `Sensor`. Present here, rather than only on\nthe linked `$PLG`, so an anonymous client can section the catalogue at\nboot without fetching one `$PLG` per module."
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this module is shelved under. Mirrors\n`$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\nsanctioned way to group an offering: `pluginCategory` is single-valued,\nholds a real family at ordinal 0, mixes capability families with\nnode-internal plumbing, and carries a deprecated vendor-derived member.\nPresent here, rather than only on the linked `$PLG`, so an anonymous\nclient can section the catalogue at boot without fetching one `$PLG` per\nmodule. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n\nSIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\nstatement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n`NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\nresting on a signed content hash. A consumer that shelves, filters or\ncounts by this field MUST NOT present the resulting grouping as\nauthenticated, and MUST keep the verified identity (`MODULE_ID`,\n`CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\nfrom provider-supplied presentation. Extending the canonical statement to\ncover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\nevery verifier in lockstep and is not made implicitly by adopting this\nfield."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this module belongs to, for browse, filter\nand per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\nPRIMARY_CATEGORY."
             }
           },
           required: [
@@ -125876,6 +127168,36 @@ ed25519 hardened)`
     ACL: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -125914,6 +127236,142 @@ ed25519 hardened)`
             "Suspended",
             "Pending"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -126322,6 +127780,17 @@ ed25519 hardened)`
             SOURCE_PEER_ID: {
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -128050,6 +129519,36 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
     STF: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ]
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -128078,6 +129577,142 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "DataStream",
             "WasmModule"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses."
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers."
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page."
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted."
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over."
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken."
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content."
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued."
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes."
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -128486,6 +130121,17 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             SOURCE_PEER_ID: {
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses."
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
             }
           },
           required: [
@@ -147993,6 +149639,140 @@ ed25519 hardened)`,
     APP: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         appContentEncoding: {
           type: "string",
           enum: [
@@ -148138,6 +149918,481 @@ ed25519 hardened)`,
               description: "Loads in both hosts from the same content-addressed bytes and ABI."
             }
           }
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         APPModuleRef: {
           type: "object",
@@ -148628,6 +150883,123 @@ ed25519 hardened)`,
                 }
               },
               "x-flatbuffer-default": "NODE"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this app is shelved under, using the same\nvocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront\nor library shelf holds apps and modules together without translating\nbetween two classification schemes. RUNTIME_CLASS says WHERE an app runs;\nPRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app\nand a PAGE-class app can share a category.\nUNSPECIFIED means the publisher did not classify the app; a consumer\nrenders it ungrouped and never infers a class.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this app belongs to, for browse, filter and\nper-category counting. An app MAY carry several. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -178983,6 +181355,140 @@ ed25519 hardened)`,
     PUR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -179122,6 +181628,481 @@ ed25519 hardened)`,
               value: 8
             }
           }
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -179636,6 +182617,123 @@ ed25519 hardened)`,
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely",
               "x-flatbuffer-type": "string"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -187562,6 +190660,140 @@ ed25519 hardened)`,
             }
           }
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -187665,7 +190897,7 @@ ed25519 hardened)`,
             },
             Basilisk: {
               value: 18,
-              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+              description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
             },
             Maneuver: {
               value: 19,
@@ -188189,6 +191421,481 @@ ed25519 hardened)`,
               "x-flatbuffer-type": "string"
             }
           },
+          additionalProperties: false
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
           additionalProperties: false
         },
         PluginCapability: {
@@ -189038,7 +192745,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -189434,6 +193141,123 @@ ed25519 hardened)`,
               },
               description: "Bindings from triggers to the node + input port they deliver to.",
               "x-flatbuffer-type": "[PLGFlowTriggerBinding]"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -211554,6 +215378,140 @@ ed25519 hardened)`,
     REC: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -220374,7 +224332,7 @@ ed25519 hardened)`,
             },
             Basilisk: {
               value: 18,
-              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+              description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
             },
             Maneuver: {
               value: 19,
@@ -227834,8 +231792,484 @@ ed25519 hardened)`,
             "IQC",
             "CNP",
             "CMR",
-            "TBS"
+            "TBS",
+            "CCT"
           ]
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -228350,6 +232784,123 @@ ed25519 hardened)`,
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely",
               "x-flatbuffer-type": "string"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -230328,6 +234879,123 @@ ed25519 hardened)`,
                 }
               },
               "x-flatbuffer-default": "NODE"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this app is shelved under, using the same\nvocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront\nor library shelf holds apps and modules together without translating\nbetween two classification schemes. RUNTIME_CLASS says WHERE an app runs;\nPRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app\nand a PAGE-class app can share a category.\nUNSPECIFIED means the publisher did not classify the app; a consumer\nrenders it ungrouped and never infers a class.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this app belongs to, for browse, filter and\nper-category counting. An app MAY carry several. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -256229,7 +260897,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -256625,6 +261293,123 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Bindings from triggers to the node + input port they deliver to.",
               "x-flatbuffer-type": "[PLGFlowTriggerBinding]"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -264197,7 +268982,7 @@ turned into a number.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -264213,6 +268998,123 @@ turned into a number.`,
                 }
               },
               "x-flatbuffer-default": "Unspecified"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this module is shelved under. Mirrors\n`$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\nsanctioned way to group an offering: `pluginCategory` is single-valued,\nholds a real family at ordinal 0, mixes capability families with\nnode-internal plumbing, and carries a deprecated vendor-derived member.\nPresent here, rather than only on the linked `$PLG`, so an anonymous\nclient can section the catalogue at boot without fetching one `$PLG` per\nmodule. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n\nSIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\nstatement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n`NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\nresting on a signed content hash. A consumer that shelves, filters or\ncounts by this field MUST NOT present the resulting grouping as\nauthenticated, and MUST keep the verified identity (`MODULE_ID`,\n`CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\nfrom provider-supplied presentation. Extending the canonical statement to\ncover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\nevery verifier in lockstep and is not made implicitly by adopting this\nfield.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this module belongs to, for browse, filter\nand per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\nPRIMARY_CATEGORY.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -283038,6 +287940,9 @@ no provider, dataset, or site.`,
                 },
                 {
                   $ref: "#/definitions/TBS"
+                },
+                {
+                  $ref: "#/definitions/CCT"
                 }
               ],
               description: "The record data (union of all supported standards)",
@@ -294407,6 +299312,140 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             }
           }
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -294510,7 +299549,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             Basilisk: {
               value: 18,
-              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+              description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
             },
             Maneuver: {
               value: 19,
@@ -294972,6 +300011,481 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               "x-flatbuffer-type": "string"
             }
           },
+          additionalProperties: false
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
           additionalProperties: false
         },
         PluginCapability: {
@@ -295821,7 +301335,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -296217,6 +301731,123 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Bindings from triggers to the node + input port they deliver to.",
               "x-flatbuffer-type": "[PLGFlowTriggerBinding]"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -309874,6 +315505,140 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             }
           }
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -312490,6 +318255,481 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
+        },
         GrantFieldStreamPolicy: {
           type: "object",
           description: "Field-level stream policy bound into protected delivery and grants.",
@@ -313003,6 +319243,123 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely",
               "x-flatbuffer-type": "string"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -332654,6 +339011,623 @@ ed25519 hardened)`,
       "x-flatbuffer-root-type": "SCX",
       "x-flatbuffer-file-identifier": "$SCX"
     },
+    CCT: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CCT",
+      "x-flatbuffer-root-type": "CCT",
+      "x-flatbuffer-file-identifier": "$CCT"
+    },
     EOO: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -337145,6 +344119,140 @@ no provider, dataset, or site.`,
             }
           }
         },
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         pluginCategory: {
           type: "string",
           enum: [
@@ -337248,7 +344356,7 @@ no provider, dataset, or site.`,
             },
             Basilisk: {
               value: 18,
-              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+              description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
             },
             Maneuver: {
               value: 19,
@@ -338143,6 +345251,481 @@ ed25519 hardened)`,
           },
           additionalProperties: false
         },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
+        },
         PluginCapability: {
           type: "object",
           description: "Plugin capability declaration",
@@ -338990,7 +346573,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -339386,6 +346969,123 @@ ed25519 hardened)`,
               },
               description: "Bindings from triggers to the node + input port they deliver to.",
               "x-flatbuffer-type": "[PLGFlowTriggerBinding]"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -339745,7 +347445,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
+                  description: "DEPRECATED \u2014 owner law 2026-08-06 forbids vendor/org-derived names in a standard's vocabulary, and this member is one. Its ordinal is wire data and is therefore NEVER removed or reused, and renaming it in place would still be a breaking change for every published manifest; the sanctioned repair is to stop publishing it. Publishers MUST migrate to `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new manifests. Consumers MUST render an existing record carrying it as `Propagation` and MUST NOT surface the member identifier in any user- facing label."
                 },
                 Maneuver: {
                   value: 19,
@@ -339761,6 +347461,123 @@ ed25519 hardened)`,
                 }
               },
               "x-flatbuffer-default": "Unspecified"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this module is shelved under. Mirrors\n`$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\nsanctioned way to group an offering: `pluginCategory` is single-valued,\nholds a real family at ordinal 0, mixes capability families with\nnode-internal plumbing, and carries a deprecated vendor-derived member.\nPresent here, rather than only on the linked `$PLG`, so an anonymous\nclient can section the catalogue at boot without fetching one `$PLG` per\nmodule. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n\nSIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\nstatement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n`NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\nresting on a signed content hash. A consumer that shelves, filters or\ncounts by this field MUST NOT present the resulting grouping as\nauthenticated, and MUST keep the verified identity (`MODULE_ID`,\n`CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\nfrom provider-supplied presentation. Extending the canonical statement to\ncover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\nevery verifier in lockstep and is not made implicitly by adopting this\nfield.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this module belongs to, for browse, filter\nand per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\nPRIMARY_CATEGORY.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -350009,6 +357826,140 @@ ed25519 hardened)`,
     ACL: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -350132,6 +358083,481 @@ ed25519 hardened)`,
               value: 4
             }
           }
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -350646,6 +359072,123 @@ ed25519 hardened)`,
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely",
               "x-flatbuffer-type": "string"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -353970,6 +362513,140 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
     STF: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        capabilityClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PROPAGATION",
+            "ORBIT_DETERMINATION",
+            "MANEUVER_PLANNING",
+            "CONJUNCTION_ASSESSMENT",
+            "REENTRY_AND_BREAKUP",
+            "ATTITUDE_AND_POINTING",
+            "REFERENCE_FRAMES_AND_TIME",
+            "SENSORS_AND_COVERAGE",
+            "TRACKING_AND_OBSERVATION",
+            "RF_AND_COMMUNICATIONS",
+            "ELECTRONIC_WARFARE",
+            "SPACE_ENVIRONMENT",
+            "DATA_SOURCES_AND_INGEST",
+            "DATA_VALIDATION_AND_QUALITY",
+            "CATALOG_AND_IDENTITY",
+            "VISUALIZATION_AND_RENDERING",
+            "GROUND_SEGMENT_AND_HARDWARE",
+            "MISSION_DESIGN_AND_ANALYSIS",
+            "FLOW_AND_COMPOSITION",
+            "DATA_STORAGE_AND_QUERY",
+            "SECURITY_AND_IDENTITY",
+            "COMMERCE_AND_LICENSING",
+            "NODE_INFRASTRUCTURE",
+            "FOUNDATION_AND_MATH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+            },
+            PROPAGATION: {
+              value: 1,
+              description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+            },
+            ORBIT_DETERMINATION: {
+              value: 2,
+              description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+            },
+            MANEUVER_PLANNING: {
+              value: 3,
+              description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+            },
+            CONJUNCTION_ASSESSMENT: {
+              value: 4,
+              description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+            },
+            REENTRY_AND_BREAKUP: {
+              value: 5,
+              description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+            },
+            ATTITUDE_AND_POINTING: {
+              value: 6,
+              description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+            },
+            REFERENCE_FRAMES_AND_TIME: {
+              value: 7,
+              description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+            },
+            SENSORS_AND_COVERAGE: {
+              value: 8,
+              description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+            },
+            TRACKING_AND_OBSERVATION: {
+              value: 9,
+              description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+            },
+            RF_AND_COMMUNICATIONS: {
+              value: 10,
+              description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+            },
+            ELECTRONIC_WARFARE: {
+              value: 11,
+              description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+            },
+            SPACE_ENVIRONMENT: {
+              value: 12,
+              description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+            },
+            DATA_SOURCES_AND_INGEST: {
+              value: 13,
+              description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+            },
+            DATA_VALIDATION_AND_QUALITY: {
+              value: 14,
+              description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+            },
+            CATALOG_AND_IDENTITY: {
+              value: 15,
+              description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+            },
+            VISUALIZATION_AND_RENDERING: {
+              value: 16,
+              description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+            },
+            GROUND_SEGMENT_AND_HARDWARE: {
+              value: 17,
+              description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+            },
+            MISSION_DESIGN_AND_ANALYSIS: {
+              value: 18,
+              description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+            },
+            FLOW_AND_COMPOSITION: {
+              value: 19,
+              description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+            },
+            DATA_STORAGE_AND_QUERY: {
+              value: 20,
+              description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+            },
+            SECURITY_AND_IDENTITY: {
+              value: 21,
+              description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+            },
+            COMMERCE_AND_LICENSING: {
+              value: 22,
+              description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+            },
+            NODE_INFRASTRUCTURE: {
+              value: 23,
+              description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+            },
+            FOUNDATION_AND_MATH: {
+              value: 24,
+              description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+            }
+          }
+        },
         accessCategory: {
           type: "string",
           enum: [
@@ -354064,6 +362741,481 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               value: 1
             }
           }
+        },
+        CCTCategory: {
+          type: "object",
+          description: "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The ratified category code. This is the join key every consumer uses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISPLAY_NAME: {
+              type: "string",
+              description: "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SUMMARY: {
+              type: "string",
+              description: "One-sentence description shown on browse rows and category headers.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SLUG: {
+              type: "string",
+              description: "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Longer editorial description for a category landing page.",
+              "x-flatbuffer-type": "string"
+            },
+            PARENT: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SORT_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+              "x-flatbuffer-type": "uint16"
+            },
+            KEYWORDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+              "x-flatbuffer-type": "[string]"
+            },
+            ICON_KEY: {
+              type: "string",
+              description: "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DISPLAY_NAME",
+            "SUMMARY",
+            "SLUG"
+          ],
+          additionalProperties: false
+        },
+        CCTCategoryRollup: {
+          type: "object",
+          description: "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+          properties: {
+            CODE: {
+              $ref: "#/definitions/capabilityClass",
+              description: "Category being counted.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ITEM_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CATALOG_ID: {
+              type: "string",
+              description: "Identifier of the catalogue the count was taken over.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COUNTED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when the count was taken.",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          required: [
+            "SOURCE_CATALOG_ID"
+          ],
+          additionalProperties: false
+        },
+        CCT: {
+          type: "object",
+          description: "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+          properties: {
+            TAXONOMY_ID: {
+              type: "string",
+              description: "Stable identifier of this taxonomy publication.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the taxonomy content.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ISSUED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix seconds when this taxonomy revision was issued.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TITLE: {
+              type: "string",
+              description: "Human-readable title of the taxonomy.",
+              "x-flatbuffer-type": "string"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategory"
+              },
+              description: "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+              "x-flatbuffer-type": "[CCTCategory]",
+              "x-flatbuffer-required": true
+            },
+            ROLLUPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CCTCategoryRollup"
+              },
+              description: "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+              "x-flatbuffer-type": "[CCTCategoryRollup]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "Signature from the publishing node key over the canonical taxonomy bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          required: [
+            "TAXONOMY_ID",
+            "VERSION",
+            "CATEGORIES"
+          ],
+          additionalProperties: false
         },
         GrantFieldStreamPolicy: {
           type: "object",
@@ -354578,6 +363730,123 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "string",
               description: "Peer ID this listing was sourced from when discovered remotely",
               "x-flatbuffer-type": "string"
+            },
+            PRIMARY_CATEGORY: {
+              $ref: "#/definitions/capabilityClass",
+              description: "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: `No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: "Unspecified".`
+                },
+                PROPAGATION: {
+                  value: 1,
+                  description: `Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: "Propagation".`
+                },
+                ORBIT_DETERMINATION: {
+                  value: 2,
+                  description: `Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: "Orbit Determination".`
+                },
+                MANEUVER_PLANNING: {
+                  value: 3,
+                  description: 'Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: "Maneuver Planning".'
+                },
+                CONJUNCTION_ASSESSMENT: {
+                  value: 4,
+                  description: 'Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: "Conjunction Assessment".'
+                },
+                REENTRY_AND_BREAKUP: {
+                  value: 5,
+                  description: 'Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: "Reentry & Breakup".'
+                },
+                ATTITUDE_AND_POINTING: {
+                  value: 6,
+                  description: 'Attitude determination and control, body orientation, and pointing or slew planning. Display name: "Attitude & Pointing".'
+                },
+                REFERENCE_FRAMES_AND_TIME: {
+                  value: 7,
+                  description: 'Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: "Reference Frames & Time".'
+                },
+                SENSORS_AND_COVERAGE: {
+                  value: 8,
+                  description: 'Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: "Sensors & Coverage".'
+                },
+                TRACKING_AND_OBSERVATION: {
+                  value: 9,
+                  description: 'Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: "Tracking & Observation".'
+                },
+                RF_AND_COMMUNICATIONS: {
+                  value: 10,
+                  description: 'Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: "RF & Communications".'
+                },
+                ELECTRONIC_WARFARE: {
+                  value: 11,
+                  description: 'Interference, jamming, spoofing and countermeasure modelling. Display name: "Electronic Warfare".'
+                },
+                SPACE_ENVIRONMENT: {
+                  value: 12,
+                  description: 'Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: "Space Environment".'
+                },
+                DATA_SOURCES_AND_INGEST: {
+                  value: 13,
+                  description: 'Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: "Data Sources & Ingest".'
+                },
+                DATA_VALIDATION_AND_QUALITY: {
+                  value: 14,
+                  description: 'Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: "Data Validation & Quality".'
+                },
+                CATALOG_AND_IDENTITY: {
+                  value: 15,
+                  description: 'Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: "Catalog & Identity".'
+                },
+                VISUALIZATION_AND_RENDERING: {
+                  value: 16,
+                  description: 'Rendering, scene composition, shading and interactive display of space data. Display name: "Visualization & Rendering".'
+                },
+                GROUND_SEGMENT_AND_HARDWARE: {
+                  value: 17,
+                  description: 'Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: "Ground Segment & Hardware".'
+                },
+                MISSION_DESIGN_AND_ANALYSIS: {
+                  value: 18,
+                  description: 'Mission and constellation design, trade studies, performance analysis and report generation. Display name: "Mission Design & Analysis".'
+                },
+                FLOW_AND_COMPOSITION: {
+                  value: 19,
+                  description: 'Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: "Flows & Composition".'
+                },
+                DATA_STORAGE_AND_QUERY: {
+                  value: 20,
+                  description: 'Persisting, indexing and querying records; storage engines and query surfaces. Display name: "Data Storage & Query".'
+                },
+                SECURITY_AND_IDENTITY: {
+                  value: 21,
+                  description: 'Key custody, signing and verification, authentication, authorization and access control. Display name: "Security & Identity".'
+                },
+                COMMERCE_AND_LICENSING: {
+                  value: 22,
+                  description: 'Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: "Commerce & Licensing".'
+                },
+                NODE_INFRASTRUCTURE: {
+                  value: 23,
+                  description: 'Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: "Node Infrastructure".'
+                },
+                FOUNDATION_AND_MATH: {
+                  value: 24,
+                  description: 'Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: "Foundation & Math".'
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CATEGORIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/capabilityClass"
+              },
+              description: "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+              "x-flatbuffer-type": "[capabilityClass]"
             }
           },
           required: [
@@ -355886,7 +365155,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
   }
 };
 
-// ../../../../spacedatanetwork-stack/repos/main-packages/spacedatastandards.org/node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

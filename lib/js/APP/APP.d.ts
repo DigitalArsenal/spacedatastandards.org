@@ -5,6 +5,7 @@ import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
 import { appRuntimeTarget } from './appRuntimeTarget.js';
+import { capabilityClass } from './capabilityClass.js';
 /**
  * Application Package Manifest — one launchable app.
  */
@@ -87,6 +88,25 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
      * node-only assumption of manifests written before this field existed.
      */
     RUNTIME_CLASS(): appRuntimeTarget;
+    /**
+     * The one ratified $CCT category this app is shelved under, using the same
+     * vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+     * or library shelf holds apps and modules together without translating
+     * between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+     * PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+     * and a PAGE-class app can share a category.
+     * UNSPECIFIED means the publisher did not classify the app; a consumer
+     * renders it ungrouped and never infers a class.
+     */
+    PRIMARY_CATEGORY(): capabilityClass;
+    /**
+     * Every ratified $CCT category this app belongs to, for browse, filter and
+     * per-category counting. An app MAY carry several. If nonempty it MUST
+     * include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+     */
+    CATEGORIES(index: number): capabilityClass | null;
+    categoriesLength(): number;
+    categoriesArray(): Uint8Array | null;
     static startAPP(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -110,10 +130,14 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
     static createDataflowVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startDataflowVector(builder: flatbuffers.Builder, numElems: number): void;
     static addRuntimeClass(builder: flatbuffers.Builder, RUNTIME_CLASS: appRuntimeTarget): void;
+    static addPrimaryCategory(builder: flatbuffers.Builder, PRIMARY_CATEGORY: capabilityClass): void;
+    static addCategories(builder: flatbuffers.Builder, CATEGORIESOffset: flatbuffers.Offset): void;
+    static createCategoriesVector(builder: flatbuffers.Builder, data: capabilityClass[]): flatbuffers.Offset;
+    static startCategoriesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endAPP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, DATAFLOWOffset: flatbuffers.Offset, RUNTIME_CLASS: appRuntimeTarget): flatbuffers.Offset;
+    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, DATAFLOWOffset: flatbuffers.Offset, RUNTIME_CLASS: appRuntimeTarget, PRIMARY_CATEGORY: capabilityClass, CATEGORIESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): APPT;
     unpackTo(_o: APPT): void;
 }
@@ -130,7 +154,9 @@ export declare class APPT implements flatbuffers.IGeneratedObject {
     UPDATED_AT: string | Uint8Array | null;
     DATAFLOW: (APPDataflowT)[];
     RUNTIME_CLASS: appRuntimeTarget;
-    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, DATAFLOW?: (APPDataflowT)[], RUNTIME_CLASS?: appRuntimeTarget);
+    PRIMARY_CATEGORY: capabilityClass;
+    CATEGORIES: (capabilityClass)[];
+    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, DATAFLOW?: (APPDataflowT)[], RUNTIME_CLASS?: appRuntimeTarget, PRIMARY_CATEGORY?: capabilityClass, CATEGORIES?: (capabilityClass)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=APP.d.ts.map

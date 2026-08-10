@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { capabilityClass } from './capabilityClass.js';
 import { pluginCategory } from './pluginCategory.js';
 import { pmmAccessPolicy } from './pmmAccessPolicy.js';
 import { pmmEntryState } from './pmmEntryState.js';
@@ -313,8 +314,56 @@ PLUGIN_TYPE():pluginCategory {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : pluginCategory.Unspecified;
 }
 
+/**
+ * The one ratified `$CCT` category this module is shelved under. Mirrors
+ * `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+ * sanctioned way to group an offering: `pluginCategory` is single-valued,
+ * holds a real family at ordinal 0, mixes capability families with
+ * node-internal plumbing, and carries a deprecated vendor-derived member.
+ * Present here, rather than only on the linked `$PLG`, so an anonymous
+ * client can section the catalogue at boot without fetching one `$PLG` per
+ * module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+ *
+ * SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+ * statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+ * `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+ * resting on a signed content hash. A consumer that shelves, filters or
+ * counts by this field MUST NOT present the resulting grouping as
+ * authenticated, and MUST keep the verified identity (`MODULE_ID`,
+ * `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+ * from provider-supplied presentation. Extending the canonical statement to
+ * cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+ * every verifier in lockstep and is not made implicitly by adopting this
+ * field.
+ */
+PRIMARY_CATEGORY():capabilityClass {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : capabilityClass.UNSPECIFIED;
+}
+
+/**
+ * Every ratified `$CCT` category this module belongs to, for browse, filter
+ * and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+ * include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+ * PRIMARY_CATEGORY.
+ */
+CATEGORIES(index: number):capabilityClass|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+categoriesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+categoriesArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPMMModuleEntry(builder:flatbuffers.Builder) {
-  builder.startObject(25);
+  builder.startObject(27);
 }
 
 static addModuleId(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset) {
@@ -465,13 +514,33 @@ static addPluginType(builder:flatbuffers.Builder, PLUGIN_TYPE:pluginCategory) {
   builder.addFieldInt8(24, PLUGIN_TYPE, pluginCategory.Unspecified);
 }
 
+static addPrimaryCategory(builder:flatbuffers.Builder, PRIMARY_CATEGORY:capabilityClass) {
+  builder.addFieldInt8(25, PRIMARY_CATEGORY, capabilityClass.UNSPECIFIED);
+}
+
+static addCategories(builder:flatbuffers.Builder, CATEGORIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, CATEGORIESOffset, 0);
+}
+
+static createCategoriesVector(builder:flatbuffers.Builder, data:capabilityClass[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCategoriesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPMMModuleEntry(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // MODULE_ID
   return offset;
 }
 
-static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLG_CIDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, EPOCH:bigint, CONTENT_HASHOffset:flatbuffers.Offset, ARTIFACT_SIZE_BYTES:bigint, ARTIFACT_PATHOffset:flatbuffers.Offset, ARTIFACT_CIDOffset:flatbuffers.Offset, ARTIFACT_SIGNATUREOffset:flatbuffers.Offset, TRUST_TIER:pmmTrustTier, DEFAULT_ENABLED:boolean, ACCESS_POLICY:pmmAccessPolicy, ENTRY_STATE:pmmEntryState, RUNTIME_TARGETSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, MIN_PERMISSIONSOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, DOCUMENTATION_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory):flatbuffers.Offset {
+static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLG_CIDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, EPOCH:bigint, CONTENT_HASHOffset:flatbuffers.Offset, ARTIFACT_SIZE_BYTES:bigint, ARTIFACT_PATHOffset:flatbuffers.Offset, ARTIFACT_CIDOffset:flatbuffers.Offset, ARTIFACT_SIGNATUREOffset:flatbuffers.Offset, TRUST_TIER:pmmTrustTier, DEFAULT_ENABLED:boolean, ACCESS_POLICY:pmmAccessPolicy, ENTRY_STATE:pmmEntryState, RUNTIME_TARGETSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, MIN_PERMISSIONSOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, DOCUMENTATION_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PRIMARY_CATEGORY:capabilityClass, CATEGORIESOffset:flatbuffers.Offset):flatbuffers.Offset {
   PMMModuleEntry.startPMMModuleEntry(builder);
   PMMModuleEntry.addModuleId(builder, MODULE_IDOffset);
   PMMModuleEntry.addPluginId(builder, PLUGIN_IDOffset);
@@ -498,6 +567,8 @@ static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuf
   PMMModuleEntry.addSupersedesContentHash(builder, SUPERSEDES_CONTENT_HASHOffset);
   PMMModuleEntry.addUpdatedAt(builder, UPDATED_ATOffset);
   PMMModuleEntry.addPluginType(builder, PLUGIN_TYPE);
+  PMMModuleEntry.addPrimaryCategory(builder, PRIMARY_CATEGORY);
+  PMMModuleEntry.addCategories(builder, CATEGORIESOffset);
   return PMMModuleEntry.endPMMModuleEntry(builder);
 }
 
@@ -527,7 +598,9 @@ unpack(): PMMModuleEntryT {
     this.ICON_URL(),
     this.SUPERSEDES_CONTENT_HASH(),
     this.UPDATED_AT(),
-    this.PLUGIN_TYPE()
+    this.PLUGIN_TYPE(),
+    this.PRIMARY_CATEGORY(),
+    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength())
   );
 }
 
@@ -558,6 +631,8 @@ unpackTo(_o: PMMModuleEntryT): void {
   _o.SUPERSEDES_CONTENT_HASH = this.SUPERSEDES_CONTENT_HASH();
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.PLUGIN_TYPE = this.PLUGIN_TYPE();
+  _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY();
+  _o.CATEGORIES = this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength());
 }
 }
 
@@ -587,7 +662,9 @@ constructor(
   public ICON_URL: string|Uint8Array|null = null,
   public SUPERSEDES_CONTENT_HASH: string|Uint8Array|null = null,
   public UPDATED_AT: string|Uint8Array|null = null,
-  public PLUGIN_TYPE: pluginCategory = pluginCategory.Unspecified
+  public PLUGIN_TYPE: pluginCategory = pluginCategory.Unspecified,
+  public PRIMARY_CATEGORY: capabilityClass = capabilityClass.UNSPECIFIED,
+  public CATEGORIES: (capabilityClass)[] = []
 ){}
 
 
@@ -610,6 +687,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ICON_URL = (this.ICON_URL !== null ? builder.createString(this.ICON_URL!) : 0);
   const SUPERSEDES_CONTENT_HASH = (this.SUPERSEDES_CONTENT_HASH !== null ? builder.createString(this.SUPERSEDES_CONTENT_HASH!) : 0);
   const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
+  const CATEGORIES = PMMModuleEntry.createCategoriesVector(builder, this.CATEGORIES);
 
   return PMMModuleEntry.createPMMModuleEntry(builder,
     MODULE_ID,
@@ -636,7 +714,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ICON_URL,
     SUPERSEDES_CONTENT_HASH,
     UPDATED_AT,
-    this.PLUGIN_TYPE
+    this.PLUGIN_TYPE,
+    this.PRIMARY_CATEGORY,
+    CATEGORIES
   );
 }
 }

@@ -9,6 +9,7 @@ import { PricingTier, PricingTierT } from './PricingTier.js';
 import { ProtectedDeliveryBinding, ProtectedDeliveryBindingT } from './ProtectedDeliveryBinding.js';
 import { ProviderReputation, ProviderReputationT } from './ProviderReputation.js';
 import { accessCategory } from './accessCategory.js';
+import { capabilityClass } from './capabilityClass.js';
 import { listingCategory } from './listingCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 
@@ -318,8 +319,48 @@ SOURCE_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The one ratified `$CCT` category this listing is shelved under, using the
+ * same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+ * APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+ * capability category at all — only DATA_TYPES and TAGS — so a storefront
+ * shelf and a library shelf were grouped by two unrelated systems. A
+ * consumer MUST group listings by this field and MUST NOT re-derive a
+ * category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+ * vocabulary.
+ *
+ * Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+ * module artifact), and from ACCESS_TYPE, which is the commercial access
+ * model. UNSPECIFIED means the provider did not classify the listing; a
+ * consumer renders it ungrouped and never guesses.
+ */
+PRIMARY_CATEGORY():capabilityClass {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : capabilityClass.UNSPECIFIED;
+}
+
+/**
+ * Every ratified `$CCT` category this listing belongs to, for browse,
+ * filter and per-category counting. A listing MAY carry several. If
+ * nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+ */
+CATEGORIES(index: number):capabilityClass|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+categoriesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+categoriesArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startSTF(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(29);
 }
 
 static addListingId(builder:flatbuffers.Builder, LISTING_IDOffset:flatbuffers.Offset) {
@@ -502,6 +543,26 @@ static addSourcePeerId(builder:flatbuffers.Builder, SOURCE_PEER_IDOffset:flatbuf
   builder.addFieldOffset(26, SOURCE_PEER_IDOffset, 0);
 }
 
+static addPrimaryCategory(builder:flatbuffers.Builder, PRIMARY_CATEGORY:capabilityClass) {
+  builder.addFieldInt8(27, PRIMARY_CATEGORY, capabilityClass.UNSPECIFIED);
+}
+
+static addCategories(builder:flatbuffers.Builder, CATEGORIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, CATEGORIESOffset, 0);
+}
+
+static createCategoriesVector(builder:flatbuffers.Builder, data:capabilityClass[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCategoriesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endSTF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LISTING_ID
@@ -547,7 +608,9 @@ unpack(): STFT {
     this.EXPIRES_AT(),
     this.TERMS_CID(),
     this.LICENSE(),
-    this.SOURCE_PEER_ID()
+    this.SOURCE_PEER_ID(),
+    this.PRIMARY_CATEGORY(),
+    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength())
   );
 }
 
@@ -580,6 +643,8 @@ unpackTo(_o: STFT): void {
   _o.TERMS_CID = this.TERMS_CID();
   _o.LICENSE = this.LICENSE();
   _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID();
+  _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY();
+  _o.CATEGORIES = this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength());
 }
 }
 
@@ -611,7 +676,9 @@ constructor(
   public EXPIRES_AT: bigint = BigInt('0'),
   public TERMS_CID: string|Uint8Array|null = null,
   public LICENSE: string|Uint8Array|null = null,
-  public SOURCE_PEER_ID: string|Uint8Array|null = null
+  public SOURCE_PEER_ID: string|Uint8Array|null = null,
+  public PRIMARY_CATEGORY: capabilityClass = capabilityClass.UNSPECIFIED,
+  public CATEGORIES: (capabilityClass)[] = []
 ){}
 
 
@@ -634,6 +701,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TERMS_CID = (this.TERMS_CID !== null ? builder.createString(this.TERMS_CID!) : 0);
   const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
   const SOURCE_PEER_ID = (this.SOURCE_PEER_ID !== null ? builder.createString(this.SOURCE_PEER_ID!) : 0);
+  const CATEGORIES = STF.createCategoriesVector(builder, this.CATEGORIES);
 
   STF.startSTF(builder);
   STF.addListingId(builder, LISTING_ID);
@@ -663,6 +731,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   STF.addTermsCid(builder, TERMS_CID);
   STF.addLicense(builder, LICENSE);
   STF.addSourcePeerId(builder, SOURCE_PEER_ID);
+  STF.addPrimaryCategory(builder, this.PRIMARY_CATEGORY);
+  STF.addCategories(builder, CATEGORIES);
 
   return STF.endSTF(builder);
 }

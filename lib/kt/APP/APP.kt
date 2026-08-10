@@ -294,6 +294,40 @@ class APP : Table() {
             val o = __offset(26)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * The one ratified $CCT category this app is shelved under, using the same
+     * vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+     * or library shelf holds apps and modules together without translating
+     * between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+     * PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+     * and a PAGE-class app can share a category.
+     * UNSPECIFIED means the publisher did not classify the app; a consumer
+     * renders it ungrouped and never infers a class.
+     */
+    val primaryCategory : UByte
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Every ratified $CCT category this app belongs to, for browse, filter and
+     * per-category counting. An app MAY carry several. If nonempty it MUST
+     * include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+     */
+    fun categories(j: Int) : UByte {
+        val o = __offset(30)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val categoriesLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
+    val categoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun categoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAPP(_bb: ByteBuffer): APP = getRootAsAPP(_bb, APP())
@@ -302,8 +336,9 @@ class APP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun APPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APP")
-        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int, runtimeClass: UByte) : Int {
-            builder.startTable(12)
+        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int, runtimeClass: UByte, primaryCategory: UByte, categoriesOffset: Int) : Int {
+            builder.startTable(14)
+            addCATEGORIES(builder, categoriesOffset)
             addDATAFLOW(builder, dataflowOffset)
             addUPDATEDAT(builder, updatedAtOffset)
             addCREATEDAT(builder, createdAtOffset)
@@ -315,10 +350,11 @@ class APP : Table() {
             addVERSION(builder, versionOffset)
             addNAME(builder, nameOffset)
             addID(builder, idOffset)
+            addPRIMARYCATEGORY(builder, primaryCategory)
             addRUNTIMECLASS(builder, runtimeClass)
             return endAPP(builder)
         }
-        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -371,6 +407,17 @@ class APP : Table() {
         }
         fun startDataflowVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addRUNTIMECLASS(builder: FlatBufferBuilder, runtimeClass: UByte) = builder.addByte(11, runtimeClass.toByte(), 0)
+        fun addPRIMARYCATEGORY(builder: FlatBufferBuilder, primaryCategory: UByte) = builder.addByte(12, primaryCategory.toByte(), 0)
+        fun addCATEGORIES(builder: FlatBufferBuilder, categories: Int) = builder.addOffset(13, categories, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCategoriesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCategoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endAPP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

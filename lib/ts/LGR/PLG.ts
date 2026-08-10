@@ -17,6 +17,7 @@ import { PLGProtocolSpec, PLGProtocolSpecT } from './PLGProtocolSpec.js';
 import { PLGTimerSpec, PLGTimerSpecT } from './PLGTimerSpec.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
+import { capabilityClass } from './capabilityClass.js';
 import { invokeSurfaceKind } from './invokeSurfaceKind.js';
 import { pluginCategory } from './pluginCategory.js';
 import { publicationState } from './publicationState.js';
@@ -704,8 +705,61 @@ flowTriggerBindingsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * The one ratified $CCT category this module is shelved under. This is the
+ * category a storefront capsule, a library shelf and a breadcrumb show when
+ * exactly one must be chosen. UNSPECIFIED means the publisher did not
+ * classify the module; a consumer renders it ungrouped and never guesses.
+ *
+ * This supersedes PLUGIN_TYPE for all storefront, library and search
+ * surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+ * `pluginCategory` vocabulary mixes capability families with node-internal
+ * plumbing, carries a legacy vendor-derived member, holds a real family at
+ * ordinal 0, and admits only one value. Canonical migration, applied by a
+ * publisher rewriting an old manifest:
+ *   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+ *   Renderer->VISUALIZATION_AND_RENDERING,
+ *   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+ *   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+ *   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+ *   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+ *   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+ *   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+ *   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+ *   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+ *   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+ *   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+ * The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+ * PLUGIN_TYPE.
+ */
+PRIMARY_CATEGORY():capabilityClass {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : capabilityClass.UNSPECIFIED;
+}
+
+/**
+ * Every ratified $CCT category this module belongs to, for browse, filter
+ * and per-category counting. A module MAY carry several. If nonempty it
+ * MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+ * a set PRIMARY_CATEGORY means the module belongs to that one category.
+ */
+CATEGORIES(index: number):capabilityClass|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+categoriesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+categoriesArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(56);
+  builder.startObject(58);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -1232,6 +1286,26 @@ static startFlowTriggerBindingsVector(builder:flatbuffers.Builder, numElems:numb
   builder.startVector(4, numElems, 4);
 }
 
+static addPrimaryCategory(builder:flatbuffers.Builder, PRIMARY_CATEGORY:capabilityClass) {
+  builder.addFieldInt8(56, PRIMARY_CATEGORY, capabilityClass.UNSPECIFIED);
+}
+
+static addCategories(builder:flatbuffers.Builder, CATEGORIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(57, CATEGORIESOffset, 0);
+}
+
+static createCategoriesVector(builder:flatbuffers.Builder, data:capabilityClass[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCategoriesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPLG(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PLUGIN_ID
@@ -1248,7 +1322,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset, FLOW_NODESOffset:flatbuffers.Offset, FLOW_EDGESOffset:flatbuffers.Offset, FLOW_TRIGGERSOffset:flatbuffers.Offset, FLOW_TRIGGER_BINDINGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset, FLOW_NODESOffset:flatbuffers.Offset, FLOW_EDGESOffset:flatbuffers.Offset, FLOW_TRIGGERSOffset:flatbuffers.Offset, FLOW_TRIGGER_BINDINGSOffset:flatbuffers.Offset, PRIMARY_CATEGORY:capabilityClass, CATEGORIESOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -1306,6 +1380,8 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addFlowEdges(builder, FLOW_EDGESOffset);
   PLG.addFlowTriggers(builder, FLOW_TRIGGERSOffset);
   PLG.addFlowTriggerBindings(builder, FLOW_TRIGGER_BINDINGSOffset);
+  PLG.addPrimaryCategory(builder, PRIMARY_CATEGORY);
+  PLG.addCategories(builder, CATEGORIESOffset);
   return PLG.endPLG(builder);
 }
 
@@ -1366,7 +1442,9 @@ unpack(): PLGT {
     this.bb!.createObjList<PLGFlowNode, PLGFlowNodeT>(this.FLOW_NODES.bind(this), this.flowNodesLength()),
     this.bb!.createObjList<PLGFlowEdge, PLGFlowEdgeT>(this.FLOW_EDGES.bind(this), this.flowEdgesLength()),
     this.bb!.createObjList<PLGFlowTrigger, PLGFlowTriggerT>(this.FLOW_TRIGGERS.bind(this), this.flowTriggersLength()),
-    this.bb!.createObjList<PLGFlowTriggerBinding, PLGFlowTriggerBindingT>(this.FLOW_TRIGGER_BINDINGS.bind(this), this.flowTriggerBindingsLength())
+    this.bb!.createObjList<PLGFlowTriggerBinding, PLGFlowTriggerBindingT>(this.FLOW_TRIGGER_BINDINGS.bind(this), this.flowTriggerBindingsLength()),
+    this.PRIMARY_CATEGORY(),
+    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength())
   );
 }
 
@@ -1428,6 +1506,8 @@ unpackTo(_o: PLGT): void {
   _o.FLOW_EDGES = this.bb!.createObjList<PLGFlowEdge, PLGFlowEdgeT>(this.FLOW_EDGES.bind(this), this.flowEdgesLength());
   _o.FLOW_TRIGGERS = this.bb!.createObjList<PLGFlowTrigger, PLGFlowTriggerT>(this.FLOW_TRIGGERS.bind(this), this.flowTriggersLength());
   _o.FLOW_TRIGGER_BINDINGS = this.bb!.createObjList<PLGFlowTriggerBinding, PLGFlowTriggerBindingT>(this.FLOW_TRIGGER_BINDINGS.bind(this), this.flowTriggerBindingsLength());
+  _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY();
+  _o.CATEGORIES = this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength());
 }
 }
 
@@ -1488,7 +1568,9 @@ constructor(
   public FLOW_NODES: (PLGFlowNodeT)[] = [],
   public FLOW_EDGES: (PLGFlowEdgeT)[] = [],
   public FLOW_TRIGGERS: (PLGFlowTriggerT)[] = [],
-  public FLOW_TRIGGER_BINDINGS: (PLGFlowTriggerBindingT)[] = []
+  public FLOW_TRIGGER_BINDINGS: (PLGFlowTriggerBindingT)[] = [],
+  public PRIMARY_CATEGORY: capabilityClass = capabilityClass.UNSPECIFIED,
+  public CATEGORIES: (capabilityClass)[] = []
 ){}
 
 
@@ -1537,6 +1619,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FLOW_EDGES = PLG.createFlowEdgesVector(builder, builder.createObjectOffsetList(this.FLOW_EDGES));
   const FLOW_TRIGGERS = PLG.createFlowTriggersVector(builder, builder.createObjectOffsetList(this.FLOW_TRIGGERS));
   const FLOW_TRIGGER_BINDINGS = PLG.createFlowTriggerBindingsVector(builder, builder.createObjectOffsetList(this.FLOW_TRIGGER_BINDINGS));
+  const CATEGORIES = PLG.createCategoriesVector(builder, this.CATEGORIES);
 
   return PLG.createPLG(builder,
     PLUGIN_ID,
@@ -1594,7 +1677,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     FLOW_NODES,
     FLOW_EDGES,
     FLOW_TRIGGERS,
-    FLOW_TRIGGER_BINDINGS
+    FLOW_TRIGGER_BINDINGS,
+    this.PRIMARY_CATEGORY,
+    CATEGORIES
   );
 }
 }

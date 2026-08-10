@@ -641,8 +641,110 @@ func (rcv *STF) SourcePeerId() []byte {
 }
 
 /// Peer ID this listing was sourced from when discovered remotely
+/// The one ratified `$CCT` category this listing is shelved under, using the
+/// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+/// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+/// capability category at all — only DATA_TYPES and TAGS — so a storefront
+/// shelf and a library shelf were grouped by two unrelated systems. A
+/// consumer MUST group listings by this field and MUST NOT re-derive a
+/// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+/// vocabulary.
+///
+/// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+/// module artifact), and from ACCESS_TYPE, which is the commercial access
+/// model. UNSPECIFIED means the provider did not classify the listing; a
+/// consumer renders it ungrouped and never guesses.
+func (rcv *STF) PRIMARY_CATEGORY() capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return capabilityClass(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *STF) PrimaryCategory() capabilityClass {
+	return rcv.PRIMARY_CATEGORY()
+}
+
+/// The one ratified `$CCT` category this listing is shelved under, using the
+/// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+/// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+/// capability category at all — only DATA_TYPES and TAGS — so a storefront
+/// shelf and a library shelf were grouped by two unrelated systems. A
+/// consumer MUST group listings by this field and MUST NOT re-derive a
+/// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+/// vocabulary.
+///
+/// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+/// module artifact), and from ACCESS_TYPE, which is the commercial access
+/// model. UNSPECIFIED means the provider did not classify the listing; a
+/// consumer renders it ungrouped and never guesses.
+func (rcv *STF) MutatePRIMARY_CATEGORY(n capabilityClass) bool {
+	return rcv._tab.MutateByteSlot(58, byte(n))
+}
+
+func (rcv *STF) MutatePrimaryCategory(n capabilityClass) bool {
+	return rcv.MutatePRIMARY_CATEGORY(n)
+}
+
+/// Every ratified `$CCT` category this listing belongs to, for browse,
+/// filter and per-category counting. A listing MAY carry several. If
+/// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+func (rcv *STF) CATEGORIES(j int) capabilityClass {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return capabilityClass(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *STF) Categories(j int) capabilityClass {
+	return rcv.CATEGORIES(j)
+}
+
+func (rcv *STF) CATEGORIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *STF) CategoriesLength() int {
+	return rcv.CATEGORIESLength()
+}
+
+func (rcv *STF) CATEGORIESBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STF) CategoriesBytes() []byte {
+	return rcv.CATEGORIESBytes()
+}
+
+/// Every ratified `$CCT` category this listing belongs to, for browse,
+/// filter and per-category counting. A listing MAY carry several. If
+/// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+func (rcv *STF) MutateCATEGORIES(j int, n capabilityClass) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *STF) MutateCategories(j int, n capabilityClass) bool {
+	return rcv.MutateCATEGORIES(j, n)
+}
+
 func STFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(29)
 }
 func STFAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LISTING_ID), 0)
@@ -841,6 +943,24 @@ func STFAddSOURCE_PEER_ID(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffe
 }
 func STFAddSourcePeerId(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffers.UOffsetT) {
 	STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+}
+func STFAddPRIMARY_CATEGORY(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	builder.PrependByteSlot(27, byte(PRIMARY_CATEGORY), 0)
+}
+func STFAddPrimaryCategory(builder *flatbuffers.Builder, PRIMARY_CATEGORY capabilityClass) {
+	STFAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+}
+func STFAddCATEGORIES(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(CATEGORIES), 0)
+}
+func STFAddCategories(builder *flatbuffers.Builder, CATEGORIES flatbuffers.UOffsetT) {
+	STFAddCATEGORIES(builder, CATEGORIES)
+}
+func STFStartCATEGORIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func STFStartCategoriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartCATEGORIESVector(builder, numElems)
 }
 func STFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

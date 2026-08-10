@@ -56,6 +56,8 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **CMR** — Constellation Membership Record for provenance-backed, per-NORAD constellation and operator membership
 
+**CCT** — Capability Category Taxonomy: the ratified category vocabulary, display labels and routes that modules, apps and flows are classified under across storefront, library and search
+
 ### Tracking
 
 **TDM, RFM** — Tracking data and reference frame messages for observation data

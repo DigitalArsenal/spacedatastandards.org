@@ -354,8 +354,58 @@ class STF(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The one ratified `$CCT` category this listing is shelved under, using the
+    # same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+    # APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+    # capability category at all — only DATA_TYPES and TAGS — so a storefront
+    # shelf and a library shelf were grouped by two unrelated systems. A
+    # consumer MUST group listings by this field and MUST NOT re-derive a
+    # category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+    # vocabulary.
+    #
+    # Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+    # module artifact), and from ACCESS_TYPE, which is the commercial access
+    # model. UNSPECIFIED means the provider did not classify the listing; a
+    # consumer renders it ungrouped and never guesses.
+    # STF
+    def PRIMARY_CATEGORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Every ratified `$CCT` category this listing belongs to, for browse,
+    # filter and per-category counting. A listing MAY carry several. If
+    # nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+    # STF
+    def CATEGORIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # STF
+    def CATEGORIESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # STF
+    def CATEGORIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # STF
+    def CATEGORIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
 def STFStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(29)
 
 def Start(builder):
     STFStart(builder)
@@ -602,6 +652,34 @@ def STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
 def AddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
     STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
 
+def STFAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    builder.PrependUint8Slot(27, PRIMARY_CATEGORY, 0)
+
+def AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    STFAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+
+def STFAddCATEGORIES(builder, CATEGORIES):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORIES), 0)
+
+def AddCATEGORIES(builder, CATEGORIES):
+    STFAddCATEGORIES(builder, CATEGORIES)
+
+def STFStartCATEGORIESVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCATEGORIESVector(builder, numElems):
+    return STFStartCATEGORIESVector(builder, numElems)
+
+def STFCreateCATEGORIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCATEGORIESVector(builder, data):
+    STFCreateCATEGORIESVector(builder, data)
+
 def STFEnd(builder):
     return builder.EndObject()
 
@@ -649,6 +727,8 @@ class STFT(object):
         TERMS_CID = None,
         LICENSE = None,
         SOURCE_PEER_ID = None,
+        PRIMARY_CATEGORY = 0,
+        CATEGORIES = None,
     ):
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
@@ -677,6 +757,8 @@ class STFT(object):
         self.TERMS_CID = TERMS_CID  # type: Optional[str]
         self.LICENSE = LICENSE  # type: Optional[str]
         self.SOURCE_PEER_ID = SOURCE_PEER_ID  # type: Optional[str]
+        self.PRIMARY_CATEGORY = PRIMARY_CATEGORY  # type: int
+        self.CATEGORIES = CATEGORIES  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -757,6 +839,14 @@ class STFT(object):
         self.TERMS_CID = STF.TERMS_CID()
         self.LICENSE = STF.LICENSE()
         self.SOURCE_PEER_ID = STF.SOURCE_PEER_ID()
+        self.PRIMARY_CATEGORY = STF.PRIMARY_CATEGORY()
+        if not STF.CATEGORIESIsNone():
+            if np is None:
+                self.CATEGORIES = []
+                for i in range(STF.CATEGORIESLength()):
+                    self.CATEGORIES.append(STF.CATEGORIES(i))
+            else:
+                self.CATEGORIES = STF.CATEGORIESAsNumpy()
 
     # STFT
     def Pack(self, builder):
@@ -832,6 +922,14 @@ class STFT(object):
             LICENSE = builder.CreateString(self.LICENSE)
         if self.SOURCE_PEER_ID is not None:
             SOURCE_PEER_ID = builder.CreateString(self.SOURCE_PEER_ID)
+        if self.CATEGORIES is not None:
+            if np is not None and type(self.CATEGORIES) is np.ndarray:
+                CATEGORIES = builder.CreateNumpyVector(self.CATEGORIES)
+            else:
+                STFStartCATEGORIESVector(builder, len(self.CATEGORIES))
+                for i in reversed(range(len(self.CATEGORIES))):
+                    builder.PrependUint8(self.CATEGORIES[i])
+                CATEGORIES = builder.EndVector()
         STFStart(builder)
         if self.LISTING_ID is not None:
             STFAddLISTING_ID(builder, LISTING_ID)
@@ -878,5 +976,8 @@ class STFT(object):
             STFAddLICENSE(builder, LICENSE)
         if self.SOURCE_PEER_ID is not None:
             STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+        STFAddPRIMARY_CATEGORY(builder, self.PRIMARY_CATEGORY)
+        if self.CATEGORIES is not None:
+            STFAddCATEGORIES(builder, CATEGORIES)
         STF = STFEnd(builder)
         return STF

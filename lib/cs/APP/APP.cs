@@ -102,6 +102,26 @@ public struct APP : IFlatbufferObject
   /// with one PAGE-capable module). Defaults to NODE to preserve the prior
   /// node-only assumption of manifests written before this field existed.
   public appRuntimeTarget RUNTIME_CLASS { get { int o = __p.__offset(26); return o != 0 ? (appRuntimeTarget)__p.bb.Get(o + __p.bb_pos) : appRuntimeTarget.NODE; } }
+  /// The one ratified $CCT category this app is shelved under, using the same
+  /// vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+  /// or library shelf holds apps and modules together without translating
+  /// between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+  /// PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+  /// and a PAGE-class app can share a category.
+  /// UNSPECIFIED means the publisher did not classify the app; a consumer
+  /// renders it ungrouped and never infers a class.
+  public capabilityClass PRIMARY_CATEGORY { get { int o = __p.__offset(28); return o != 0 ? (capabilityClass)__p.bb.Get(o + __p.bb_pos) : capabilityClass.UNSPECIFIED; } }
+  /// Every ratified $CCT category this app belongs to, for browse, filter and
+  /// per-category counting. An app MAY carry several. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  public capabilityClass CATEGORIES(int j) { int o = __p.__offset(30); return o != 0 ? (capabilityClass)__p.bb.Get(__p.__vector(o) + j * 1) : (capabilityClass)0; }
+  public int CATEGORIESLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<capabilityClass> GetCATEGORIESBytes() { return __p.__vector_as_span<capabilityClass>(30, 1); }
+#else
+  public ArraySegment<byte>? GetCATEGORIESBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(30); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<APP> CreateAPP(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -115,8 +135,11 @@ public struct APP : IFlatbufferObject
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset UPDATED_ATOffset = default(StringOffset),
       VectorOffset DATAFLOWOffset = default(VectorOffset),
-      appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget.NODE) {
-    builder.StartTable(12);
+      appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget.NODE,
+      capabilityClass PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED,
+      VectorOffset CATEGORIESOffset = default(VectorOffset)) {
+    builder.StartTable(14);
+    APP.AddCATEGORIES(builder, CATEGORIESOffset);
     APP.AddDATAFLOW(builder, DATAFLOWOffset);
     APP.AddUPDATED_AT(builder, UPDATED_ATOffset);
     APP.AddCREATED_AT(builder, CREATED_ATOffset);
@@ -128,11 +151,12 @@ public struct APP : IFlatbufferObject
     APP.AddVERSION(builder, VERSIONOffset);
     APP.AddNAME(builder, NAMEOffset);
     APP.AddID(builder, IDOffset);
+    APP.AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY);
     APP.AddRUNTIME_CLASS(builder, RUNTIME_CLASS);
     return APP.EndAPP(builder);
   }
 
-  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -170,6 +194,13 @@ public struct APP : IFlatbufferObject
   public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APPDataflow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDATAFLOWVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddRUNTIME_CLASS(FlatBufferBuilder builder, appRuntimeTarget RUNTIME_CLASS) { builder.AddByte(11, (byte)RUNTIME_CLASS, 0); }
+  public static void AddPRIMARY_CATEGORY(FlatBufferBuilder builder, capabilityClass PRIMARY_CATEGORY) { builder.AddByte(12, (byte)PRIMARY_CATEGORY, 0); }
+  public static void AddCATEGORIES(FlatBufferBuilder builder, VectorOffset CATEGORIESOffset) { builder.AddOffset(13, CATEGORIESOffset.Value, 0); }
+  public static VectorOffset CreateCATEGORIESVector(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<capabilityClass> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<capabilityClass>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCATEGORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<APP> EndAPP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -200,6 +231,9 @@ public struct APP : IFlatbufferObject
     _o.DATAFLOW = new List<APPDataflowT>();
     for (var _j = 0; _j < this.DATAFLOWLength; ++_j) {_o.DATAFLOW.Add(this.DATAFLOW(_j).HasValue ? this.DATAFLOW(_j).Value.UnPack() : null);}
     _o.RUNTIME_CLASS = this.RUNTIME_CLASS;
+    _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY;
+    _o.CATEGORIES = new List<capabilityClass>();
+    for (var _j = 0; _j < this.CATEGORIESLength; ++_j) {_o.CATEGORIES.Add(this.CATEGORIES(_j));}
   }
   public static Offset<APP> Pack(FlatBufferBuilder builder, APPT _o) {
     if (_o == null) return default(Offset<APP>);
@@ -239,6 +273,11 @@ public struct APP : IFlatbufferObject
       for (var _j = 0; _j < __DATAFLOW.Length; ++_j) { __DATAFLOW[_j] = APPDataflow.Pack(builder, _o.DATAFLOW[_j]); }
       _DATAFLOW = CreateDATAFLOWVector(builder, __DATAFLOW);
     }
+    var _CATEGORIES = default(VectorOffset);
+    if (_o.CATEGORIES != null) {
+      var __CATEGORIES = _o.CATEGORIES.ToArray();
+      _CATEGORIES = CreateCATEGORIESVector(builder, __CATEGORIES);
+    }
     return CreateAPP(
       builder,
       _ID,
@@ -252,7 +291,9 @@ public struct APP : IFlatbufferObject
       _CREATED_AT,
       _UPDATED_AT,
       _DATAFLOW,
-      _o.RUNTIME_CLASS);
+      _o.RUNTIME_CLASS,
+      _o.PRIMARY_CATEGORY,
+      _CATEGORIES);
   }
 }
 
@@ -270,6 +311,8 @@ public class APPT
   public string UPDATED_AT { get; set; }
   public List<APPDataflowT> DATAFLOW { get; set; }
   public appRuntimeTarget RUNTIME_CLASS { get; set; }
+  public capabilityClass PRIMARY_CATEGORY { get; set; }
+  public List<capabilityClass> CATEGORIES { get; set; }
 
   public APPT() {
     this.ID = null;
@@ -284,6 +327,8 @@ public class APPT
     this.UPDATED_AT = null;
     this.DATAFLOW = null;
     this.RUNTIME_CLASS = appRuntimeTarget.NODE;
+    this.PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED;
+    this.CATEGORIES = null;
   }
   public static APPT DeserializeFromBinary(byte[] fbBuffer) {
     return APP.GetRootAsAPP(new ByteBuffer(fbBuffer)).UnPack();
@@ -313,6 +358,8 @@ static public class APPVerify
       && verifier.VerifyString(tablePos, 22 /*UPDATED_AT*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 24 /*DATAFLOW*/, APPDataflowVerify.Verify, false)
       && verifier.VerifyField(tablePos, 26 /*RUNTIME_CLASS*/, 1 /*appRuntimeTarget*/, 1, false)
+      && verifier.VerifyField(tablePos, 28 /*PRIMARY_CATEGORY*/, 1 /*capabilityClass*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 30 /*CATEGORIES*/, 1 /*capabilityClass*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

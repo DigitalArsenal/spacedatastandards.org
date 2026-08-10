@@ -145,6 +145,31 @@ public struct STF : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_PEER_IDBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
   public byte[] GetSOURCE_PEER_IDArray() { return __p.__vector_as_array<byte>(56); }
+  /// The one ratified `$CCT` category this listing is shelved under, using the
+  /// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+  /// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+  /// capability category at all — only DATA_TYPES and TAGS — so a storefront
+  /// shelf and a library shelf were grouped by two unrelated systems. A
+  /// consumer MUST group listings by this field and MUST NOT re-derive a
+  /// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+  /// vocabulary.
+  ///
+  /// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+  /// module artifact), and from ACCESS_TYPE, which is the commercial access
+  /// model. UNSPECIFIED means the provider did not classify the listing; a
+  /// consumer renders it ungrouped and never guesses.
+  public capabilityClass PRIMARY_CATEGORY { get { int o = __p.__offset(58); return o != 0 ? (capabilityClass)__p.bb.Get(o + __p.bb_pos) : capabilityClass.UNSPECIFIED; } }
+  /// Every ratified `$CCT` category this listing belongs to, for browse,
+  /// filter and per-category counting. A listing MAY carry several. If
+  /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  public capabilityClass CATEGORIES(int j) { int o = __p.__offset(60); return o != 0 ? (capabilityClass)__p.bb.Get(__p.__vector(o) + j * 1) : (capabilityClass)0; }
+  public int CATEGORIESLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<capabilityClass> GetCATEGORIESBytes() { return __p.__vector_as_span<capabilityClass>(60, 1); }
+#else
+  public ArraySegment<byte>? GetCATEGORIESBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(60); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<STF> CreateSTF(FlatBufferBuilder builder,
       StringOffset LISTING_IDOffset = default(StringOffset),
@@ -173,11 +198,14 @@ public struct STF : IFlatbufferObject
       ulong EXPIRES_AT = 0,
       StringOffset TERMS_CIDOffset = default(StringOffset),
       StringOffset LICENSEOffset = default(StringOffset),
-      StringOffset SOURCE_PEER_IDOffset = default(StringOffset)) {
-    builder.StartTable(27);
+      StringOffset SOURCE_PEER_IDOffset = default(StringOffset),
+      capabilityClass PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED,
+      VectorOffset CATEGORIESOffset = default(VectorOffset)) {
+    builder.StartTable(29);
     STF.AddEXPIRES_AT(builder, EXPIRES_AT);
     STF.AddUPDATED_AT(builder, UPDATED_AT);
     STF.AddCREATED_AT(builder, CREATED_AT);
+    STF.AddCATEGORIES(builder, CATEGORIESOffset);
     STF.AddSOURCE_PEER_ID(builder, SOURCE_PEER_IDOffset);
     STF.AddLICENSE(builder, LICENSEOffset);
     STF.AddTERMS_CID(builder, TERMS_CIDOffset);
@@ -198,6 +226,7 @@ public struct STF : IFlatbufferObject
     STF.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
     STF.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
     STF.AddLISTING_ID(builder, LISTING_IDOffset);
+    STF.AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY);
     STF.AddLISTING_KIND(builder, LISTING_KIND);
     STF.AddACTIVE(builder, ACTIVE);
     STF.AddENCRYPTION_REQUIRED(builder, ENCRYPTION_REQUIRED);
@@ -205,7 +234,7 @@ public struct STF : IFlatbufferObject
     return STF.EndSTF(builder);
   }
 
-  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(0, LISTING_IDOffset.Value, 0); }
   public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(1, PROVIDER_PEER_IDOffset.Value, 0); }
   public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(2, PROVIDER_EPM_CIDOffset.Value, 0); }
@@ -263,6 +292,13 @@ public struct STF : IFlatbufferObject
   public static void AddTERMS_CID(FlatBufferBuilder builder, StringOffset TERMS_CIDOffset) { builder.AddOffset(24, TERMS_CIDOffset.Value, 0); }
   public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(25, LICENSEOffset.Value, 0); }
   public static void AddSOURCE_PEER_ID(FlatBufferBuilder builder, StringOffset SOURCE_PEER_IDOffset) { builder.AddOffset(26, SOURCE_PEER_IDOffset.Value, 0); }
+  public static void AddPRIMARY_CATEGORY(FlatBufferBuilder builder, capabilityClass PRIMARY_CATEGORY) { builder.AddByte(27, (byte)PRIMARY_CATEGORY, 0); }
+  public static void AddCATEGORIES(FlatBufferBuilder builder, VectorOffset CATEGORIESOffset) { builder.AddOffset(28, CATEGORIESOffset.Value, 0); }
+  public static VectorOffset CreateCATEGORIESVector(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<capabilityClass> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<capabilityClass>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCATEGORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<STF> EndSTF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LISTING_ID
@@ -311,6 +347,9 @@ public struct STF : IFlatbufferObject
     _o.TERMS_CID = this.TERMS_CID;
     _o.LICENSE = this.LICENSE;
     _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID;
+    _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY;
+    _o.CATEGORIES = new List<capabilityClass>();
+    for (var _j = 0; _j < this.CATEGORIESLength; ++_j) {_o.CATEGORIES.Add(this.CATEGORIES(_j));}
   }
   public static Offset<STF> Pack(FlatBufferBuilder builder, STFT _o) {
     if (_o == null) return default(Offset<STF>);
@@ -360,6 +399,11 @@ public struct STF : IFlatbufferObject
     var _TERMS_CID = _o.TERMS_CID == null ? default(StringOffset) : builder.CreateString(_o.TERMS_CID);
     var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
     var _SOURCE_PEER_ID = _o.SOURCE_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_PEER_ID);
+    var _CATEGORIES = default(VectorOffset);
+    if (_o.CATEGORIES != null) {
+      var __CATEGORIES = _o.CATEGORIES.ToArray();
+      _CATEGORIES = CreateCATEGORIESVector(builder, __CATEGORIES);
+    }
     return CreateSTF(
       builder,
       _LISTING_ID,
@@ -388,7 +432,9 @@ public struct STF : IFlatbufferObject
       _o.EXPIRES_AT,
       _TERMS_CID,
       _LICENSE,
-      _SOURCE_PEER_ID);
+      _SOURCE_PEER_ID,
+      _o.PRIMARY_CATEGORY,
+      _CATEGORIES);
   }
 }
 
@@ -421,6 +467,8 @@ public class STFT
   public string TERMS_CID { get; set; }
   public string LICENSE { get; set; }
   public string SOURCE_PEER_ID { get; set; }
+  public capabilityClass PRIMARY_CATEGORY { get; set; }
+  public List<capabilityClass> CATEGORIES { get; set; }
 
   public STFT() {
     this.LISTING_ID = null;
@@ -450,6 +498,8 @@ public class STFT
     this.TERMS_CID = null;
     this.LICENSE = null;
     this.SOURCE_PEER_ID = null;
+    this.PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED;
+    this.CATEGORIES = null;
   }
   public static STFT DeserializeFromBinary(byte[] fbBuffer) {
     return STF.GetRootAsSTF(new ByteBuffer(fbBuffer)).UnPack();
@@ -494,6 +544,8 @@ static public class STFVerify
       && verifier.VerifyString(tablePos, 52 /*TERMS_CID*/, false)
       && verifier.VerifyString(tablePos, 54 /*LICENSE*/, false)
       && verifier.VerifyString(tablePos, 56 /*SOURCE_PEER_ID*/, false)
+      && verifier.VerifyField(tablePos, 58 /*PRIMARY_CATEGORY*/, 1 /*capabilityClass*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 60 /*CATEGORIES*/, 1 /*capabilityClass*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct GrantFieldStreamPolicy;
 struct GrantFieldStreamPolicyBuilder;
 
@@ -136,6 +138,12 @@ inline const char *EnumNamepaymentMethod(paymentMethod e) {
 }
 
 /// Listing kind for marketplace entries.
+///
+/// This is the listing's DELIVERY KIND, not its capability category, and the
+/// two are not interchangeable. A storefront shelf, a browse row and a search
+/// facet are driven by `$CCT` `capabilityClass` via STF.PRIMARY_CATEGORY /
+/// STF.CATEGORIES; `listingCategory` only says whether the offering is
+/// delivered as a data stream or as a module artifact.
 enum listingCategory : int8_t {
   listingCategory_DataStream = 0,
   listingCategory_WasmModule = 1,
@@ -1104,7 +1112,9 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EXPIRES_AT = 50,
     VT_TERMS_CID = 52,
     VT_LICENSE = 54,
-    VT_SOURCE_PEER_ID = 56
+    VT_SOURCE_PEER_ID = 56,
+    VT_PRIMARY_CATEGORY = 58,
+    VT_CATEGORIES = 60
   };
   /// Unique identifier for the listing
   const ::flatbuffers::String *LISTING_ID() const {
@@ -1214,6 +1224,28 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SOURCE_PEER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_PEER_ID);
   }
+  /// The one ratified `$CCT` category this listing is shelved under, using the
+  /// same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+  /// APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+  /// capability category at all — only DATA_TYPES and TAGS — so a storefront
+  /// shelf and a library shelf were grouped by two unrelated systems. A
+  /// consumer MUST group listings by this field and MUST NOT re-derive a
+  /// category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+  /// vocabulary.
+  ///
+  /// Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+  /// module artifact), and from ACCESS_TYPE, which is the commercial access
+  /// model. UNSPECIFIED means the provider did not classify the listing; a
+  /// consumer renders it ungrouped and never guesses.
+  capabilityClass PRIMARY_CATEGORY() const {
+    return static_cast<capabilityClass>(GetField<uint8_t>(VT_PRIMARY_CATEGORY, 0));
+  }
+  /// Every ratified `$CCT` category this listing belongs to, for browse,
+  /// filter and per-category counting. A listing MAY carry several. If
+  /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  const ::flatbuffers::Vector<uint8_t> *CATEGORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CATEGORIES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1266,6 +1298,9 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(LICENSE()) &&
            VerifyOffset(verifier, VT_SOURCE_PEER_ID) &&
            verifier.VerifyString(SOURCE_PEER_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_CATEGORY, 1) &&
+           VerifyOffset(verifier, VT_CATEGORIES) &&
+           verifier.VerifyVector(CATEGORIES()) &&
            verifier.EndTable();
   }
 };
@@ -1355,6 +1390,12 @@ struct STFBuilder {
   void add_SOURCE_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> SOURCE_PEER_ID) {
     fbb_.AddOffset(STF::VT_SOURCE_PEER_ID, SOURCE_PEER_ID);
   }
+  void add_PRIMARY_CATEGORY(capabilityClass PRIMARY_CATEGORY) {
+    fbb_.AddElement<uint8_t>(STF::VT_PRIMARY_CATEGORY, static_cast<uint8_t>(PRIMARY_CATEGORY), 0);
+  }
+  void add_CATEGORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES) {
+    fbb_.AddOffset(STF::VT_CATEGORIES, CATEGORIES);
+  }
   explicit STFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1397,11 +1438,14 @@ inline ::flatbuffers::Offset<STF> CreateSTF(
     uint64_t EXPIRES_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TERMS_CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_PEER_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_PEER_ID = 0,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0) {
   STFBuilder builder_(_fbb);
   builder_.add_EXPIRES_AT(EXPIRES_AT);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
+  builder_.add_CATEGORIES(CATEGORIES);
   builder_.add_SOURCE_PEER_ID(SOURCE_PEER_ID);
   builder_.add_LICENSE(LICENSE);
   builder_.add_TERMS_CID(TERMS_CID);
@@ -1422,6 +1466,7 @@ inline ::flatbuffers::Offset<STF> CreateSTF(
   builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
   builder_.add_LISTING_ID(LISTING_ID);
+  builder_.add_PRIMARY_CATEGORY(PRIMARY_CATEGORY);
   builder_.add_LISTING_KIND(LISTING_KIND);
   builder_.add_ACTIVE(ACTIVE);
   builder_.add_ENCRYPTION_REQUIRED(ENCRYPTION_REQUIRED);
@@ -1457,7 +1502,9 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
     uint64_t EXPIRES_AT = 0,
     const char *TERMS_CID = nullptr,
     const char *LICENSE = nullptr,
-    const char *SOURCE_PEER_ID = nullptr) {
+    const char *SOURCE_PEER_ID = nullptr,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    const std::vector<uint8_t> *CATEGORIES = nullptr) {
   auto LISTING_ID__ = LISTING_ID ? _fbb.CreateString(LISTING_ID) : 0;
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
@@ -1473,6 +1520,7 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
   auto TERMS_CID__ = TERMS_CID ? _fbb.CreateString(TERMS_CID) : 0;
   auto LICENSE__ = LICENSE ? _fbb.CreateString(LICENSE) : 0;
   auto SOURCE_PEER_ID__ = SOURCE_PEER_ID ? _fbb.CreateString(SOURCE_PEER_ID) : 0;
+  auto CATEGORIES__ = CATEGORIES ? _fbb.CreateVector<uint8_t>(*CATEGORIES) : 0;
   return CreateSTF(
       _fbb,
       LISTING_ID__,
@@ -1501,7 +1549,9 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
       EXPIRES_AT,
       TERMS_CID__,
       LICENSE__,
-      SOURCE_PEER_ID__);
+      SOURCE_PEER_ID__,
+      PRIMARY_CATEGORY,
+      CATEGORIES__);
 }
 
 inline const STF *GetSTF(const void *buf) {

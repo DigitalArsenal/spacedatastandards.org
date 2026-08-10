@@ -180,6 +180,33 @@ public final class STF extends com.google.flatbuffers.Table {
   public String SOURCE_PEER_ID() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer SOURCE_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * The one ratified `$CCT` category this listing is shelved under, using the
+   * same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+   * APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+   * capability category at all — only DATA_TYPES and TAGS — so a storefront
+   * shelf and a library shelf were grouped by two unrelated systems. A
+   * consumer MUST group listings by this field and MUST NOT re-derive a
+   * category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+   * vocabulary.
+   *
+   * Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+   * module artifact), and from ACCESS_TYPE, which is the commercial access
+   * model. UNSPECIFIED means the provider did not classify the listing; a
+   * consumer renders it ungrouped and never guesses.
+   */
+  public int PRIMARY_CATEGORY() { int o = __offset(58); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Every ratified `$CCT` category this listing belongs to, for browse,
+   * filter and per-category counting. A listing MAY carry several. If
+   * nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+   */
+  public int CATEGORIES(int j) { int o = __offset(60); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CATEGORIESLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector categoriesVector() { return categoriesVector(new ByteVector()); }
+  public ByteVector categoriesVector(ByteVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CATEGORIESAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer CATEGORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
 
   public static int createSTF(FlatBufferBuilder builder,
       int LISTING_IDOffset,
@@ -208,11 +235,14 @@ public final class STF extends com.google.flatbuffers.Table {
       long EXPIRES_AT,
       int TERMS_CIDOffset,
       int LICENSEOffset,
-      int SOURCE_PEER_IDOffset) {
-    builder.startTable(27);
+      int SOURCE_PEER_IDOffset,
+      int PRIMARY_CATEGORY,
+      int CATEGORIESOffset) {
+    builder.startTable(29);
     STF.addExpiresAt(builder, EXPIRES_AT);
     STF.addUpdatedAt(builder, UPDATED_AT);
     STF.addCreatedAt(builder, CREATED_AT);
+    STF.addCategories(builder, CATEGORIESOffset);
     STF.addSourcePeerId(builder, SOURCE_PEER_IDOffset);
     STF.addLicense(builder, LICENSEOffset);
     STF.addTermsCid(builder, TERMS_CIDOffset);
@@ -233,6 +263,7 @@ public final class STF extends com.google.flatbuffers.Table {
     STF.addProviderEpmCid(builder, PROVIDER_EPM_CIDOffset);
     STF.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
     STF.addListingId(builder, LISTING_IDOffset);
+    STF.addPrimaryCategory(builder, PRIMARY_CATEGORY);
     STF.addListingKind(builder, LISTING_KIND);
     STF.addActive(builder, ACTIVE);
     STF.addEncryptionRequired(builder, ENCRYPTION_REQUIRED);
@@ -240,7 +271,7 @@ public final class STF extends com.google.flatbuffers.Table {
     return STF.endSTF(builder);
   }
 
-  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(0, LISTING_IDOffset, 0); }
   public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(1, PROVIDER_PEER_IDOffset, 0); }
   public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(2, PROVIDER_EPM_CIDOffset, 0); }
@@ -282,6 +313,11 @@ public final class STF extends com.google.flatbuffers.Table {
   public static void addTermsCid(FlatBufferBuilder builder, int TERMS_CIDOffset) { builder.addOffset(24, TERMS_CIDOffset, 0); }
   public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(25, LICENSEOffset, 0); }
   public static void addSourcePeerId(FlatBufferBuilder builder, int SOURCE_PEER_IDOffset) { builder.addOffset(26, SOURCE_PEER_IDOffset, 0); }
+  public static void addPrimaryCategory(FlatBufferBuilder builder, int PRIMARY_CATEGORY) { builder.addByte(27, (byte) PRIMARY_CATEGORY, (byte) 0); }
+  public static void addCategories(FlatBufferBuilder builder, int CATEGORIESOffset) { builder.addOffset(28, CATEGORIESOffset, 0); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCategoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCategoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endSTF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LISTING_ID

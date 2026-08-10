@@ -222,6 +222,7 @@ public enum RecordType : byte
   CNP = 201,
   CMR = 202,
   TBS = 203,
+  CCT = 204,
 };
 
 public class RecordTypeUnion {
@@ -640,6 +641,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromCMR(CMRT _cmr) { return new RecordTypeUnion{ Type = RecordType.CMR, Value = _cmr }; }
   public TBST AsTBS() { return this.As<TBST>(); }
   public static RecordTypeUnion FromTBS(TBST _tbs) { return new RecordTypeUnion{ Type = RecordType.TBS, Value = _tbs }; }
+  public CCTT AsCCT() { return this.As<CCTT>(); }
+  public static RecordTypeUnion FromCCT(CCTT _cct) { return new RecordTypeUnion{ Type = RecordType.CCT, Value = _cct }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -847,6 +850,7 @@ public class RecordTypeUnion {
       case RecordType.CNP: return CNP.Pack(builder, _o.AsCNP()).Value;
       case RecordType.CMR: return CMR.Pack(builder, _o.AsCMR()).Value;
       case RecordType.TBS: return TBS.Pack(builder, _o.AsTBS()).Value;
+      case RecordType.CCT: return CCT.Pack(builder, _o.AsCCT()).Value;
     }
   }
 }
@@ -1468,6 +1472,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.TBS:
         result = TBSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CCT:
+        result = CCTVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

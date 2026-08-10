@@ -4,6 +4,10 @@
 
 export * from './bufferMutability.js';
 export * from './bufferOwnership.js';
+export * from './capabilityClass.js';
+export * from './CCT.js';
+export * from './CCTCategory.js';
+export * from './CCTCategoryRollup.js';
 export * from './drainBehavior.js';
 export * from './EntryFunction.js';
 export * from './FlatBufferTypeRef.js';

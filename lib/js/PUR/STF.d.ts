@@ -4,6 +4,7 @@ import { PricingTier, PricingTierT } from './PricingTier.js';
 import { ProtectedDeliveryBinding, ProtectedDeliveryBindingT } from './ProtectedDeliveryBinding.js';
 import { ProviderReputation, ProviderReputationT } from './ProviderReputation.js';
 import { accessCategory } from './accessCategory.js';
+import { capabilityClass } from './capabilityClass.js';
 import { listingCategory } from './listingCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 /**
@@ -144,6 +145,30 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
      */
     SOURCE_PEER_ID(): string | null;
     SOURCE_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The one ratified `$CCT` category this listing is shelved under, using the
+     * same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+     * APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+     * capability category at all — only DATA_TYPES and TAGS — so a storefront
+     * shelf and a library shelf were grouped by two unrelated systems. A
+     * consumer MUST group listings by this field and MUST NOT re-derive a
+     * category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+     * vocabulary.
+     *
+     * Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+     * module artifact), and from ACCESS_TYPE, which is the commercial access
+     * model. UNSPECIFIED means the provider did not classify the listing; a
+     * consumer renders it ungrouped and never guesses.
+     */
+    PRIMARY_CATEGORY(): capabilityClass;
+    /**
+     * Every ratified `$CCT` category this listing belongs to, for browse,
+     * filter and per-category counting. A listing MAY carry several. If
+     * nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+     */
+    CATEGORIES(index: number): capabilityClass | null;
+    categoriesLength(): number;
+    categoriesArray(): Uint8Array | null;
     static startSTF(builder: flatbuffers.Builder): void;
     static addListingId(builder: flatbuffers.Builder, LISTING_IDOffset: flatbuffers.Offset): void;
     static addProviderPeerId(builder: flatbuffers.Builder, PROVIDER_PEER_IDOffset: flatbuffers.Offset): void;
@@ -184,6 +209,10 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
     static addTermsCid(builder: flatbuffers.Builder, TERMS_CIDOffset: flatbuffers.Offset): void;
     static addLicense(builder: flatbuffers.Builder, LICENSEOffset: flatbuffers.Offset): void;
     static addSourcePeerId(builder: flatbuffers.Builder, SOURCE_PEER_IDOffset: flatbuffers.Offset): void;
+    static addPrimaryCategory(builder: flatbuffers.Builder, PRIMARY_CATEGORY: capabilityClass): void;
+    static addCategories(builder: flatbuffers.Builder, CATEGORIESOffset: flatbuffers.Offset): void;
+    static createCategoriesVector(builder: flatbuffers.Builder, data: capabilityClass[]): flatbuffers.Offset;
+    static startCategoriesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSTF(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSTFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSTFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -218,7 +247,9 @@ export declare class STFT implements flatbuffers.IGeneratedObject {
     TERMS_CID: string | Uint8Array | null;
     LICENSE: string | Uint8Array | null;
     SOURCE_PEER_ID: string | Uint8Array | null;
-    constructor(LISTING_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, TITLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, DATA_TYPES?: (string)[], COVERAGE?: DataCoverageT | null, SAMPLE_CID?: string | Uint8Array | null, ACCESS_TYPE?: accessCategory, ENCRYPTION_REQUIRED?: boolean, PRICING?: (PricingTierT)[], ACCEPTED_PAYMENTS?: (paymentMethod)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, ACTIVE?: boolean, SIGNATURE?: (number)[], LISTING_KIND?: listingCategory, TAGS?: (string)[], SAMPLE_RECORD_COUNT?: number, DELIVERY_METHODS?: (string)[], PROTECTED_DELIVERY?: ProtectedDeliveryBindingT | null, REPUTATION?: ProviderReputationT | null, VERSION?: number, EXPIRES_AT?: bigint, TERMS_CID?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, SOURCE_PEER_ID?: string | Uint8Array | null);
+    PRIMARY_CATEGORY: capabilityClass;
+    CATEGORIES: (capabilityClass)[];
+    constructor(LISTING_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, TITLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, DATA_TYPES?: (string)[], COVERAGE?: DataCoverageT | null, SAMPLE_CID?: string | Uint8Array | null, ACCESS_TYPE?: accessCategory, ENCRYPTION_REQUIRED?: boolean, PRICING?: (PricingTierT)[], ACCEPTED_PAYMENTS?: (paymentMethod)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, ACTIVE?: boolean, SIGNATURE?: (number)[], LISTING_KIND?: listingCategory, TAGS?: (string)[], SAMPLE_RECORD_COUNT?: number, DELIVERY_METHODS?: (string)[], PROTECTED_DELIVERY?: ProtectedDeliveryBindingT | null, REPUTATION?: ProviderReputationT | null, VERSION?: number, EXPIRES_AT?: bigint, TERMS_CID?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, SOURCE_PEER_ID?: string | Uint8Array | null, PRIMARY_CATEGORY?: capabilityClass, CATEGORIES?: (capabilityClass)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=STF.d.ts.map

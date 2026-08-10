@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["HOST_OWNED", "PLUGIN_OWNED", "TRANSFERRED"]
     },
+    "capabilityClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PROPAGATION", "ORBIT_DETERMINATION", "MANEUVER_PLANNING", "CONJUNCTION_ASSESSMENT", "REENTRY_AND_BREAKUP", "ATTITUDE_AND_POINTING", "REFERENCE_FRAMES_AND_TIME", "SENSORS_AND_COVERAGE", "TRACKING_AND_OBSERVATION", "RF_AND_COMMUNICATIONS", "ELECTRONIC_WARFARE", "SPACE_ENVIRONMENT", "DATA_SOURCES_AND_INGEST", "DATA_VALIDATION_AND_QUALITY", "CATALOG_AND_IDENTITY", "VISUALIZATION_AND_RENDERING", "GROUND_SEGMENT_AND_HARDWARE", "MISSION_DESIGN_AND_ANALYSIS", "FLOW_AND_COMPOSITION", "DATA_STORAGE_AND_QUERY", "SECURITY_AND_IDENTITY", "COMMERCE_AND_LICENSING", "NODE_INFRASTRUCTURE", "FOUNDATION_AND_MATH"]
+    },
     "pluginCategory" : {
       "type" : "string",
       "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", "Parser", "Validator", "Interpolator", "Exporter", "Foundation", "Infrastructure", "Licensing", "Storefront", "Publisher", "Basilisk", "Maneuver", "Flow", "Unspecified"]
@@ -392,6 +396,110 @@
                 "description" : "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint."
               }
       },
+      "additionalProperties" : false
+    },
+    "CCTCategory" : {
+      "type" : "object",
+      "description" : "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+      "properties" : {
+        "CODE" : {
+                "$ref" : "#/definitions/capabilityClass",
+                "description" : "The ratified category code. This is the join key every consumer uses."
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string",
+                "description" : "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment."
+              },
+        "SUMMARY" : {
+                "type" : "string",
+                "description" : "One-sentence description shown on browse rows and category headers."
+              },
+        "SLUG" : {
+                "type" : "string",
+                "description" : "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Longer editorial description for a category landing page."
+              },
+        "PARENT" : {
+                "$ref" : "#/definitions/capabilityClass",
+                "description" : "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent."
+              },
+        "SORT_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME."
+              },
+        "KEYWORDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label."
+              },
+        "ICON_KEY" : {
+                "type" : "string",
+                "description" : "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set."
+              }
+      },
+      "required" : ["DISPLAY_NAME", "SUMMARY", "SLUG"],
+      "additionalProperties" : false
+    },
+    "CCTCategoryRollup" : {
+      "type" : "object",
+      "description" : "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+      "properties" : {
+        "CODE" : {
+                "$ref" : "#/definitions/capabilityClass",
+                "description" : "Category being counted."
+              },
+        "ITEM_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT."
+              },
+        "SOURCE_CATALOG_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the catalogue the count was taken over."
+              },
+        "COUNTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix seconds when the count was taken."
+              }
+      },
+      "required" : ["SOURCE_CATALOG_ID"],
+      "additionalProperties" : false
+    },
+    "CCT" : {
+      "type" : "object",
+      "description" : "$CCT — Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+      "properties" : {
+        "TAXONOMY_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this taxonomy publication."
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "SemVer 2.0.0 version of the taxonomy content."
+              },
+        "ISSUED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix seconds when this taxonomy revision was issued."
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Human-readable title of the taxonomy."
+              },
+        "CATEGORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CCTCategory"},
+                "description" : "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid."
+              },
+        "ROLLUPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CCTCategoryRollup"},
+                "description" : "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Signature from the publishing node key over the canonical taxonomy bytes."
+              }
+      },
+      "required" : ["TAXONOMY_ID", "VERSION", "CATEGORIES"],
       "additionalProperties" : false
     },
     "PluginCapability" : {
@@ -1034,6 +1142,14 @@
         "FLOW_TRIGGER_BINDINGS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PLGFlowTriggerBinding"},
                 "description" : "Bindings from triggers to the node + input port they deliver to."
+              },
+        "PRIMARY_CATEGORY" : {
+                "$ref" : "#/definitions/capabilityClass",
+                "description" : "The one ratified $CCT category this module is shelved under. This is the\ncategory a storefront capsule, a library shelf and a breadcrumb show when\nexactly one must be chosen. UNSPECIFIED means the publisher did not\nclassify the module; a consumer renders it ungrouped and never guesses.\n\nThis supersedes PLUGIN_TYPE for all storefront, library and search\nsurfaces. PLUGIN_TYPE remains on the wire and is not removed, but its\n`pluginCategory` vocabulary mixes capability families with node-internal\nplumbing, carries a legacy vendor-derived member, holds a real family at\nordinal 0, and admits only one value. Canonical migration, applied by a\npublisher rewriting an old manifest:\nSensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,\nRenderer->VISUALIZATION_AND_RENDERING,\nAnalysis->MISSION_DESIGN_AND_ANALYSIS,\nDataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,\nComms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,\nShader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,\nValidator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,\nExporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,\nInfrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,\nStorefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,\nBasilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,\nFlow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.\nThe mapping is one-way: PRIMARY_CATEGORY is never back-derived into\nPLUGIN_TYPE."
+              },
+        "CATEGORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/capabilityClass"},
+                "description" : "Every ratified $CCT category this module belongs to, for browse, filter\nand per-category counting. A module MAY carry several. If nonempty it\nMUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with\na set PRIMARY_CATEGORY means the module belongs to that one category."
               }
       },
       "required" : ["PLUGIN_ID", "NAME", "VERSION"],
@@ -1197,6 +1313,14 @@
         "PLUGIN_TYPE" : {
                 "$ref" : "#/definitions/pluginCategory",
                 "description" : "Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\nis the ONLY sanctioned way to group an offering: a client grouping a\ncatalogue MUST read this field and MUST NOT infer family from the shape\nof `MODULE_ID`, which carries no normative structure. Defaults to\n`Unspecified`, which a client MUST render as ungrouped — never silently\nas `Sensor`. Present here, rather than only on\nthe linked `$PLG`, so an anonymous client can section the catalogue at\nboot without fetching one `$PLG` per module."
+              },
+        "PRIMARY_CATEGORY" : {
+                "$ref" : "#/definitions/capabilityClass",
+                "description" : "The one ratified `$CCT` category this module is shelved under. Mirrors\n`$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\nsanctioned way to group an offering: `pluginCategory` is single-valued,\nholds a real family at ordinal 0, mixes capability families with\nnode-internal plumbing, and carries a deprecated vendor-derived member.\nPresent here, rather than only on the linked `$PLG`, so an anonymous\nclient can section the catalogue at boot without fetching one `$PLG` per\nmodule. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n\nSIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\nstatement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n`NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\nresting on a signed content hash. A consumer that shelves, filters or\ncounts by this field MUST NOT present the resulting grouping as\nauthenticated, and MUST keep the verified identity (`MODULE_ID`,\n`CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\nfrom provider-supplied presentation. Extending the canonical statement to\ncover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\nevery verifier in lockstep and is not made implicitly by adopting this\nfield."
+              },
+        "CATEGORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/capabilityClass"},
+                "description" : "Every ratified `$CCT` category this module belongs to, for browse, filter\nand per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\ninclude PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\nPRIMARY_CATEGORY."
               }
       },
       "required" : ["MODULE_ID"],

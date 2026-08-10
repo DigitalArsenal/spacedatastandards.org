@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { capabilityClass } from './capabilityClass.js';
 import { pluginCategory } from './pluginCategory.js';
 import { pmmAccessPolicy } from './pmmAccessPolicy.js';
 import { pmmEntryState } from './pmmEntryState.js';
@@ -157,6 +158,38 @@ export declare class PMMModuleEntry implements flatbuffers.IUnpackableObject<PMM
      * boot without fetching one `$PLG` per module.
      */
     PLUGIN_TYPE(): pluginCategory;
+    /**
+     * The one ratified `$CCT` category this module is shelved under. Mirrors
+     * `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+     * sanctioned way to group an offering: `pluginCategory` is single-valued,
+     * holds a real family at ordinal 0, mixes capability families with
+     * node-internal plumbing, and carries a deprecated vendor-derived member.
+     * Present here, rather than only on the linked `$PLG`, so an anonymous
+     * client can section the catalogue at boot without fetching one `$PLG` per
+     * module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+     *
+     * SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+     * statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+     * `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+     * resting on a signed content hash. A consumer that shelves, filters or
+     * counts by this field MUST NOT present the resulting grouping as
+     * authenticated, and MUST keep the verified identity (`MODULE_ID`,
+     * `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+     * from provider-supplied presentation. Extending the canonical statement to
+     * cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+     * every verifier in lockstep and is not made implicitly by adopting this
+     * field.
+     */
+    PRIMARY_CATEGORY(): capabilityClass;
+    /**
+     * Every ratified `$CCT` category this module belongs to, for browse, filter
+     * and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+     * include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+     * PRIMARY_CATEGORY.
+     */
+    CATEGORIES(index: number): capabilityClass | null;
+    categoriesLength(): number;
+    categoriesArray(): Uint8Array | null;
     static startPMMModuleEntry(builder: flatbuffers.Builder): void;
     static addModuleId(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset): void;
     static addPluginId(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset): void;
@@ -191,8 +224,12 @@ export declare class PMMModuleEntry implements flatbuffers.IUnpackableObject<PMM
     static addSupersedesContentHash(builder: flatbuffers.Builder, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset): void;
     static addUpdatedAt(builder: flatbuffers.Builder, UPDATED_ATOffset: flatbuffers.Offset): void;
     static addPluginType(builder: flatbuffers.Builder, PLUGIN_TYPE: pluginCategory): void;
+    static addPrimaryCategory(builder: flatbuffers.Builder, PRIMARY_CATEGORY: capabilityClass): void;
+    static addCategories(builder: flatbuffers.Builder, CATEGORIESOffset: flatbuffers.Offset): void;
+    static createCategoriesVector(builder: flatbuffers.Builder, data: capabilityClass[]): flatbuffers.Offset;
+    static startCategoriesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPMMModuleEntry(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPMMModuleEntry(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLG_CIDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, EPOCH: bigint, CONTENT_HASHOffset: flatbuffers.Offset, ARTIFACT_SIZE_BYTES: bigint, ARTIFACT_PATHOffset: flatbuffers.Offset, ARTIFACT_CIDOffset: flatbuffers.Offset, ARTIFACT_SIGNATUREOffset: flatbuffers.Offset, TRUST_TIER: pmmTrustTier, DEFAULT_ENABLED: boolean, ACCESS_POLICY: pmmAccessPolicy, ENTRY_STATE: pmmEntryState, RUNTIME_TARGETSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, MIN_PERMISSIONSOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginCategory): flatbuffers.Offset;
+    static createPMMModuleEntry(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLG_CIDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, EPOCH: bigint, CONTENT_HASHOffset: flatbuffers.Offset, ARTIFACT_SIZE_BYTES: bigint, ARTIFACT_PATHOffset: flatbuffers.Offset, ARTIFACT_CIDOffset: flatbuffers.Offset, ARTIFACT_SIGNATUREOffset: flatbuffers.Offset, TRUST_TIER: pmmTrustTier, DEFAULT_ENABLED: boolean, ACCESS_POLICY: pmmAccessPolicy, ENTRY_STATE: pmmEntryState, RUNTIME_TARGETSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, MIN_PERMISSIONSOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginCategory, PRIMARY_CATEGORY: capabilityClass, CATEGORIESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PMMModuleEntryT;
     unpackTo(_o: PMMModuleEntryT): void;
 }
@@ -222,7 +259,9 @@ export declare class PMMModuleEntryT implements flatbuffers.IGeneratedObject {
     SUPERSEDES_CONTENT_HASH: string | Uint8Array | null;
     UPDATED_AT: string | Uint8Array | null;
     PLUGIN_TYPE: pluginCategory;
-    constructor(MODULE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLG_CID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, EPOCH?: bigint, CONTENT_HASH?: string | Uint8Array | null, ARTIFACT_SIZE_BYTES?: bigint, ARTIFACT_PATH?: string | Uint8Array | null, ARTIFACT_CID?: string | Uint8Array | null, ARTIFACT_SIGNATURE?: (number)[], TRUST_TIER?: pmmTrustTier, DEFAULT_ENABLED?: boolean, ACCESS_POLICY?: pmmAccessPolicy, ENTRY_STATE?: pmmEntryState, RUNTIME_TARGETS?: (string)[], REQUIRED_SCHEMAS?: (string)[], MIN_PERMISSIONS?: (string)[], LICENSE?: string | Uint8Array | null, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, SUPERSEDES_CONTENT_HASH?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, PLUGIN_TYPE?: pluginCategory);
+    PRIMARY_CATEGORY: capabilityClass;
+    CATEGORIES: (capabilityClass)[];
+    constructor(MODULE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLG_CID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, EPOCH?: bigint, CONTENT_HASH?: string | Uint8Array | null, ARTIFACT_SIZE_BYTES?: bigint, ARTIFACT_PATH?: string | Uint8Array | null, ARTIFACT_CID?: string | Uint8Array | null, ARTIFACT_SIGNATURE?: (number)[], TRUST_TIER?: pmmTrustTier, DEFAULT_ENABLED?: boolean, ACCESS_POLICY?: pmmAccessPolicy, ENTRY_STATE?: pmmEntryState, RUNTIME_TARGETS?: (string)[], REQUIRED_SCHEMAS?: (string)[], MIN_PERMISSIONS?: (string)[], LICENSE?: string | Uint8Array | null, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, SUPERSEDES_CONTENT_HASH?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, PLUGIN_TYPE?: pluginCategory, PRIMARY_CATEGORY?: capabilityClass, CATEGORIES?: (capabilityClass)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PMMModuleEntry.d.ts.map

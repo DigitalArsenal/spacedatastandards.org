@@ -4,7 +4,36 @@ package PLG
 
 import "strconv"
 
-/// Plugin type category
+/// Plugin type category.
+///
+/// DEPRECATED as a classification vocabulary — superseded by `$CCT`
+/// `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.
+/// The enum and the `PLUGIN_TYPE` field remain on the wire permanently
+/// (ordinals are wire values and published manifests decode against them);
+/// only their use as the grouping vocabulary is retired.
+///
+/// It cannot be repaired in place, which is why it is superseded rather than
+/// extended:
+///   - it is SINGLE-VALUED, and a storefront browse surface classifies one
+///     unit under several categories;
+///   - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value
+///     decodes as a category the publisher never stated — the reason
+///     `Unspecified` had to be appended at the tail instead of held at 0;
+///   - it mixes capability families with node-internal plumbing
+///     (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are
+///     not shelves a catalogue consumer browses;
+///   - it carries `Basilisk`, a vendor-derived member that owner law
+///     2026-08-06 (no vendor/site/org names in standards) forbids;
+///   - a `byte` enum cannot carry the display name, summary, route slug,
+///     ordering or icon a storefront must render, and `$CCT` publishes all of
+///     them alongside the code.
+///
+/// MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and
+/// SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the
+/// taxonomy existed. The per-member forward mapping is normative and is stated
+/// on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST
+/// prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is
+/// `UNSPECIFIED`.
 type pluginCategory int8
 
 const (
@@ -44,9 +73,16 @@ const (
 	pluginCategoryStorefront     pluginCategory = 16
 	/// Publication: PNM signing + pub/sub announcement
 	pluginCategoryPublisher      pluginCategory = 17
-	/// Astrodynamics simulation and dynamics-modelling module family. The member
-	/// identifier is a legacy vocabulary key retained for wire and manifest
-	/// compatibility; renaming it is an owner-gated breaking change.
+	/// DEPRECATED — owner law 2026-08-06 forbids vendor/org-derived names in a
+	/// standard's vocabulary, and this member is one. Its ordinal is wire data
+	/// and is therefore NEVER removed or reused, and renaming it in place would
+	/// still be a breaking change for every published manifest; the sanctioned
+	/// repair is to stop publishing it. Publishers MUST migrate to
+	/// `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and
+	/// dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new
+	/// manifests. Consumers MUST render an existing record carrying it as
+	/// `Propagation` and MUST NOT surface the member identifier in any user-
+	/// facing label.
 	pluginCategoryBasilisk       pluginCategory = 18
 	/// Maneuver planning, targeting and trajectory optimization
 	pluginCategoryManeuver       pluginCategory = 19

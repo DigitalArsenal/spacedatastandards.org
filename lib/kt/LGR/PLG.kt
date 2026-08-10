@@ -796,6 +796,58 @@ class PLG : Table() {
         get() {
             val o = __offset(114); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * The one ratified $CCT category this module is shelved under. This is the
+     * category a storefront capsule, a library shelf and a breadcrumb show when
+     * exactly one must be chosen. UNSPECIFIED means the publisher did not
+     * classify the module; a consumer renders it ungrouped and never guesses.
+     *
+     * This supersedes PLUGIN_TYPE for all storefront, library and search
+     * surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+     * `pluginCategory` vocabulary mixes capability families with node-internal
+     * plumbing, carries a legacy vendor-derived member, holds a real family at
+     * ordinal 0, and admits only one value. Canonical migration, applied by a
+     * publisher rewriting an old manifest:
+     *   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+     *   Renderer->VISUALIZATION_AND_RENDERING,
+     *   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+     *   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+     *   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+     *   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+     *   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+     *   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+     *   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+     *   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+     *   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+     *   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+     * The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+     * PLUGIN_TYPE.
+     */
+    val primaryCategory : UByte
+        get() {
+            val o = __offset(116)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Every ratified $CCT category this module belongs to, for browse, filter
+     * and per-category counting. A module MAY carry several. If nonempty it
+     * MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+     * a set PRIMARY_CATEGORY means the module belongs to that one category.
+     */
+    fun categories(j: Int) : UByte {
+        val o = __offset(118)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val categoriesLength : Int
+        get() {
+            val o = __offset(118); return if (o != 0) __vector_len(o) else 0
+        }
+    val categoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(118, 1)
+    fun categoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 118, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLG(_bb: ByteBuffer): PLG = getRootAsPLG(_bb, PLG())
@@ -804,13 +856,14 @@ class PLG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
-        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int, flowNodesOffset: Int, flowEdgesOffset: Int, flowTriggersOffset: Int, flowTriggerBindingsOffset: Int) : Int {
-            builder.startTable(56)
+        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int, flowNodesOffset: Int, flowEdgesOffset: Int, flowTriggersOffset: Int, flowTriggerBindingsOffset: Int, primaryCategory: UByte, categoriesOffset: Int) : Int {
+            builder.startTable(58)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addMAXGRANTTIMEOUTMS(builder, maxGrantTimeoutMs)
             addENCRYPTEDWASMSIZE(builder, encryptedWasmSize)
             addWASMSIZE(builder, wasmSize)
+            addCATEGORIES(builder, categoriesOffset)
             addFLOWTRIGGERBINDINGS(builder, flowTriggerBindingsOffset)
             addFLOWTRIGGERS(builder, flowTriggersOffset)
             addFLOWEDGES(builder, flowEdgesOffset)
@@ -858,13 +911,14 @@ class PLG : Table() {
             addVERSION(builder, versionOffset)
             addNAME(builder, nameOffset)
             addPLUGINID(builder, pluginIdOffset)
+            addPRIMARYCATEGORY(builder, primaryCategory)
             addLISTINGSTATUS(builder, listingStatus)
             addPAYMENTMODEL(builder, paymentModel)
             addENCRYPTED(builder, encrypted)
             addPLUGINTYPE(builder, pluginType)
             return endPLG(builder)
         }
-        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(56)
+        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(58)
         fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -1125,6 +1179,17 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startFlowTriggerBindingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPRIMARYCATEGORY(builder: FlatBufferBuilder, primaryCategory: UByte) = builder.addByte(56, primaryCategory.toByte(), 0)
+        fun addCATEGORIES(builder: FlatBufferBuilder, categories: Int) = builder.addOffset(57, categories, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCategoriesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCategoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPLG(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -4,6 +4,7 @@
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -796,6 +797,8 @@ impl<'a> PMMModuleEntry<'a> {
   pub const VT_SUPERSEDES_CONTENT_HASH: ::flatbuffers::VOffsetT = 48;
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 50;
   pub const VT_PLUGIN_TYPE: ::flatbuffers::VOffsetT = 52;
+  pub const VT_PRIMARY_CATEGORY: ::flatbuffers::VOffsetT = 54;
+  pub const VT_CATEGORIES: ::flatbuffers::VOffsetT = 56;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -809,6 +812,7 @@ impl<'a> PMMModuleEntry<'a> {
     let mut builder = PMMModuleEntryBuilder::new(_fbb);
     builder.add_ARTIFACT_SIZE_BYTES(args.ARTIFACT_SIZE_BYTES);
     builder.add_EPOCH(args.EPOCH);
+    if let Some(x) = args.CATEGORIES { builder.add_CATEGORIES(x); }
     if let Some(x) = args.UPDATED_AT { builder.add_UPDATED_AT(x); }
     if let Some(x) = args.SUPERSEDES_CONTENT_HASH { builder.add_SUPERSEDES_CONTENT_HASH(x); }
     if let Some(x) = args.ICON_URL { builder.add_ICON_URL(x); }
@@ -827,6 +831,7 @@ impl<'a> PMMModuleEntry<'a> {
     if let Some(x) = args.PLG_CID { builder.add_PLG_CID(x); }
     if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
     if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    builder.add_PRIMARY_CATEGORY(args.PRIMARY_CATEGORY);
     builder.add_PLUGIN_TYPE(args.PLUGIN_TYPE);
     builder.add_ENTRY_STATE(args.ENTRY_STATE);
     builder.add_ACCESS_POLICY(args.ACCESS_POLICY);
@@ -898,6 +903,10 @@ impl<'a> PMMModuleEntry<'a> {
       alloc::string::ToString::to_string(x)
     });
     let PLUGIN_TYPE = self.PLUGIN_TYPE();
+    let PRIMARY_CATEGORY = self.PRIMARY_CATEGORY();
+    let CATEGORIES = self.CATEGORIES().map(|x| {
+      x.into_iter().collect()
+    });
     PMMModuleEntryT {
       MODULE_ID,
       PLUGIN_ID,
@@ -924,6 +933,8 @@ impl<'a> PMMModuleEntry<'a> {
       SUPERSEDES_CONTENT_HASH,
       UPDATED_AT,
       PLUGIN_TYPE,
+      PRIMARY_CATEGORY,
+      CATEGORIES,
     }
   }
 
@@ -1160,6 +1171,44 @@ impl<'a> PMMModuleEntry<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<pluginCategory>(PMMModuleEntry::VT_PLUGIN_TYPE, Some(pluginCategory::Unspecified)).unwrap()}
   }
+  /// The one ratified `$CCT` category this module is shelved under. Mirrors
+  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+  /// sanctioned way to group an offering: `pluginCategory` is single-valued,
+  /// holds a real family at ordinal 0, mixes capability families with
+  /// node-internal plumbing, and carries a deprecated vendor-derived member.
+  /// Present here, rather than only on the linked `$PLG`, so an anonymous
+  /// client can section the catalogue at boot without fetching one `$PLG` per
+  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+  ///
+  /// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+  /// resting on a signed content hash. A consumer that shelves, filters or
+  /// counts by this field MUST NOT present the resulting grouping as
+  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+  /// from provider-supplied presentation. Extending the canonical statement to
+  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+  /// every verifier in lockstep and is not made implicitly by adopting this
+  /// field.
+  #[inline]
+  pub fn PRIMARY_CATEGORY(&self) -> capabilityClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<capabilityClass>(PMMModuleEntry::VT_PRIMARY_CATEGORY, Some(capabilityClass::UNSPECIFIED)).unwrap()}
+  }
+  /// Every ratified `$CCT` category this module belongs to, for browse, filter
+  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+  /// PRIMARY_CATEGORY.
+  #[inline]
+  pub fn CATEGORIES(&self) -> Option<::flatbuffers::Vector<'a, capabilityClass>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, capabilityClass>>>(PMMModuleEntry::VT_CATEGORIES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PMMModuleEntry<'_> {
@@ -1193,6 +1242,8 @@ impl ::flatbuffers::Verifiable for PMMModuleEntry<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPERSEDES_CONTENT_HASH", Self::VT_SUPERSEDES_CONTENT_HASH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<pluginCategory>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
+     .visit_field::<capabilityClass>("PRIMARY_CATEGORY", Self::VT_PRIMARY_CATEGORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, capabilityClass>>>("CATEGORIES", Self::VT_CATEGORIES, false)?
      .finish();
     Ok(())
   }
@@ -1223,6 +1274,8 @@ pub struct PMMModuleEntryArgs<'a> {
     pub SUPERSEDES_CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PLUGIN_TYPE: pluginCategory,
+    pub PRIMARY_CATEGORY: capabilityClass,
+    pub CATEGORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, capabilityClass>>>,
 }
 impl<'a> Default for PMMModuleEntryArgs<'a> {
   #[inline]
@@ -1253,6 +1306,8 @@ impl<'a> Default for PMMModuleEntryArgs<'a> {
       SUPERSEDES_CONTENT_HASH: None,
       UPDATED_AT: None,
       PLUGIN_TYPE: pluginCategory::Unspecified,
+      PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
+      CATEGORIES: None,
     }
   }
 }
@@ -1363,6 +1418,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PMMModuleEntryBuilder<'a, 'b,
     self.fbb_.push_slot::<pluginCategory>(PMMModuleEntry::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginCategory::Unspecified);
   }
   #[inline]
+  pub fn add_PRIMARY_CATEGORY(&mut self, PRIMARY_CATEGORY: capabilityClass) {
+    self.fbb_.push_slot::<capabilityClass>(PMMModuleEntry::VT_PRIMARY_CATEGORY, PRIMARY_CATEGORY, capabilityClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_CATEGORIES(&mut self, CATEGORIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , capabilityClass>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PMMModuleEntry::VT_CATEGORIES, CATEGORIES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PMMModuleEntryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PMMModuleEntryBuilder {
@@ -1406,6 +1469,8 @@ impl ::core::fmt::Debug for PMMModuleEntry<'_> {
       ds.field("SUPERSEDES_CONTENT_HASH", &self.SUPERSEDES_CONTENT_HASH());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("PLUGIN_TYPE", &self.PLUGIN_TYPE());
+      ds.field("PRIMARY_CATEGORY", &self.PRIMARY_CATEGORY());
+      ds.field("CATEGORIES", &self.CATEGORIES());
       ds.finish()
   }
 }
@@ -1437,6 +1502,8 @@ pub struct PMMModuleEntryT {
   pub SUPERSEDES_CONTENT_HASH: Option<alloc::string::String>,
   pub UPDATED_AT: Option<alloc::string::String>,
   pub PLUGIN_TYPE: pluginCategory,
+  pub PRIMARY_CATEGORY: capabilityClass,
+  pub CATEGORIES: Option<alloc::vec::Vec<capabilityClass>>,
 }
 impl Default for PMMModuleEntryT {
   fn default() -> Self {
@@ -1466,6 +1533,8 @@ impl Default for PMMModuleEntryT {
       SUPERSEDES_CONTENT_HASH: None,
       UPDATED_AT: None,
       PLUGIN_TYPE: pluginCategory::Unspecified,
+      PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
+      CATEGORIES: None,
     }
   }
 }
@@ -1536,6 +1605,10 @@ impl PMMModuleEntryT {
       _fbb.create_string(x)
     });
     let PLUGIN_TYPE = self.PLUGIN_TYPE;
+    let PRIMARY_CATEGORY = self.PRIMARY_CATEGORY;
+    let CATEGORIES = self.CATEGORIES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     PMMModuleEntry::create(_fbb, &PMMModuleEntryArgs{
       MODULE_ID,
       PLUGIN_ID,
@@ -1562,6 +1635,8 @@ impl PMMModuleEntryT {
       SUPERSEDES_CONTENT_HASH,
       UPDATED_AT,
       PLUGIN_TYPE,
+      PRIMARY_CATEGORY,
+      CATEGORIES,
     })
   }
 }

@@ -10,6 +10,7 @@ import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
 import { appRuntimeTarget } from './appRuntimeTarget.js';
+import { capabilityClass } from './capabilityClass.js';
 
 
 /**
@@ -183,8 +184,43 @@ RUNTIME_CLASS():appRuntimeTarget {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : appRuntimeTarget.NODE;
 }
 
+/**
+ * The one ratified $CCT category this app is shelved under, using the same
+ * vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+ * or library shelf holds apps and modules together without translating
+ * between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+ * PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+ * and a PAGE-class app can share a category.
+ * UNSPECIFIED means the publisher did not classify the app; a consumer
+ * renders it ungrouped and never infers a class.
+ */
+PRIMARY_CATEGORY():capabilityClass {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : capabilityClass.UNSPECIFIED;
+}
+
+/**
+ * Every ratified $CCT category this app belongs to, for browse, filter and
+ * per-category counting. An app MAY carry several. If nonempty it MUST
+ * include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+ */
+CATEGORIES(index: number):capabilityClass|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+categoriesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+categoriesArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startAPP(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(14);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -295,6 +331,26 @@ static addRuntimeClass(builder:flatbuffers.Builder, RUNTIME_CLASS:appRuntimeTarg
   builder.addFieldInt8(11, RUNTIME_CLASS, appRuntimeTarget.NODE);
 }
 
+static addPrimaryCategory(builder:flatbuffers.Builder, PRIMARY_CATEGORY:capabilityClass) {
+  builder.addFieldInt8(12, PRIMARY_CATEGORY, capabilityClass.UNSPECIFIED);
+}
+
+static addCategories(builder:flatbuffers.Builder, CATEGORIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, CATEGORIESOffset, 0);
+}
+
+static createCategoriesVector(builder:flatbuffers.Builder, data:capabilityClass[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCategoriesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endAPP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
@@ -309,7 +365,7 @@ static finishSizePrefixedAPPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$APP', true);
 }
 
-static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, DATAFLOWOffset:flatbuffers.Offset, RUNTIME_CLASS:appRuntimeTarget):flatbuffers.Offset {
+static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, DATAFLOWOffset:flatbuffers.Offset, RUNTIME_CLASS:appRuntimeTarget, PRIMARY_CATEGORY:capabilityClass, CATEGORIESOffset:flatbuffers.Offset):flatbuffers.Offset {
   APP.startAPP(builder);
   APP.addId(builder, IDOffset);
   APP.addName(builder, NAMEOffset);
@@ -323,6 +379,8 @@ static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEO
   APP.addUpdatedAt(builder, UPDATED_ATOffset);
   APP.addDataflow(builder, DATAFLOWOffset);
   APP.addRuntimeClass(builder, RUNTIME_CLASS);
+  APP.addPrimaryCategory(builder, PRIMARY_CATEGORY);
+  APP.addCategories(builder, CATEGORIESOffset);
   return APP.endAPP(builder);
 }
 
@@ -339,7 +397,9 @@ unpack(): APPT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength()),
-    this.RUNTIME_CLASS()
+    this.RUNTIME_CLASS(),
+    this.PRIMARY_CATEGORY(),
+    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength())
   );
 }
 
@@ -357,6 +417,8 @@ unpackTo(_o: APPT): void {
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.DATAFLOW = this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength());
   _o.RUNTIME_CLASS = this.RUNTIME_CLASS();
+  _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY();
+  _o.CATEGORIES = this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength());
 }
 }
 
@@ -373,7 +435,9 @@ constructor(
   public CREATED_AT: string|Uint8Array|null = null,
   public UPDATED_AT: string|Uint8Array|null = null,
   public DATAFLOW: (APPDataflowT)[] = [],
-  public RUNTIME_CLASS: appRuntimeTarget = appRuntimeTarget.NODE
+  public RUNTIME_CLASS: appRuntimeTarget = appRuntimeTarget.NODE,
+  public PRIMARY_CATEGORY: capabilityClass = capabilityClass.UNSPECIFIED,
+  public CATEGORIES: (capabilityClass)[] = []
 ){}
 
 
@@ -389,6 +453,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CREATED_AT = (this.CREATED_AT !== null ? builder.createString(this.CREATED_AT!) : 0);
   const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
   const DATAFLOW = APP.createDataflowVector(builder, builder.createObjectOffsetList(this.DATAFLOW));
+  const CATEGORIES = APP.createCategoriesVector(builder, this.CATEGORIES);
 
   return APP.createAPP(builder,
     ID,
@@ -402,7 +467,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CREATED_AT,
     UPDATED_AT,
     DATAFLOW,
-    this.RUNTIME_CLASS
+    this.RUNTIME_CLASS,
+    this.PRIMARY_CATEGORY,
+    CATEGORIES
   );
 }
 }

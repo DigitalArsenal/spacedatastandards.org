@@ -2,6 +2,7 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -35,7 +36,36 @@ pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 22] = [
   pluginCategory::Unspecified,
 ];
 
-/// Plugin type category
+/// Plugin type category.
+///
+/// DEPRECATED as a classification vocabulary — superseded by `$CCT`
+/// `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.
+/// The enum and the `PLUGIN_TYPE` field remain on the wire permanently
+/// (ordinals are wire values and published manifests decode against them);
+/// only their use as the grouping vocabulary is retired.
+///
+/// It cannot be repaired in place, which is why it is superseded rather than
+/// extended:
+///   - it is SINGLE-VALUED, and a storefront browse surface classifies one
+///     unit under several categories;
+///   - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value
+///     decodes as a category the publisher never stated — the reason
+///     `Unspecified` had to be appended at the tail instead of held at 0;
+///   - it mixes capability families with node-internal plumbing
+///     (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are
+///     not shelves a catalogue consumer browses;
+///   - it carries `Basilisk`, a vendor-derived member that owner law
+///     2026-08-06 (no vendor/site/org names in standards) forbids;
+///   - a `byte` enum cannot carry the display name, summary, route slug,
+///     ordering or icon a storefront must render, and `$CCT` publishes all of
+///     them alongside the code.
+///
+/// MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and
+/// SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the
+/// taxonomy existed. The per-member forward mapping is normative and is stated
+/// on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST
+/// prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is
+/// `UNSPECIFIED`.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct pluginCategory(pub i8);
@@ -77,9 +107,16 @@ impl pluginCategory {
   pub const Storefront: Self = Self(16);
   /// Publication: PNM signing + pub/sub announcement
   pub const Publisher: Self = Self(17);
-  /// Astrodynamics simulation and dynamics-modelling module family. The member
-  /// identifier is a legacy vocabulary key retained for wire and manifest
-  /// compatibility; renaming it is an owner-gated breaking change.
+  /// DEPRECATED — owner law 2026-08-06 forbids vendor/org-derived names in a
+  /// standard's vocabulary, and this member is one. Its ordinal is wire data
+  /// and is therefore NEVER removed or reused, and renaming it in place would
+  /// still be a breaking change for every published manifest; the sanctioned
+  /// repair is to stop publishing it. Publishers MUST migrate to
+  /// `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and
+  /// dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new
+  /// manifests. Consumers MUST render an existing record carrying it as
+  /// `Propagation` and MUST NOT surface the member identifier in any user-
+  /// facing label.
   pub const Basilisk: Self = Self(18);
   /// Maneuver planning, targeting and trajectory optimization
   pub const Maneuver: Self = Self(19);
@@ -4822,6 +4859,8 @@ impl<'a> PLG<'a> {
   pub const VT_FLOW_EDGES: ::flatbuffers::VOffsetT = 110;
   pub const VT_FLOW_TRIGGERS: ::flatbuffers::VOffsetT = 112;
   pub const VT_FLOW_TRIGGER_BINDINGS: ::flatbuffers::VOffsetT = 114;
+  pub const VT_PRIMARY_CATEGORY: ::flatbuffers::VOffsetT = 116;
+  pub const VT_CATEGORIES: ::flatbuffers::VOffsetT = 118;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4838,6 +4877,7 @@ impl<'a> PLG<'a> {
     builder.add_MAX_GRANT_TIMEOUT_MS(args.MAX_GRANT_TIMEOUT_MS);
     builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
     builder.add_WASM_SIZE(args.WASM_SIZE);
+    if let Some(x) = args.CATEGORIES { builder.add_CATEGORIES(x); }
     if let Some(x) = args.FLOW_TRIGGER_BINDINGS { builder.add_FLOW_TRIGGER_BINDINGS(x); }
     if let Some(x) = args.FLOW_TRIGGERS { builder.add_FLOW_TRIGGERS(x); }
     if let Some(x) = args.FLOW_EDGES { builder.add_FLOW_EDGES(x); }
@@ -4885,6 +4925,7 @@ impl<'a> PLG<'a> {
     if let Some(x) = args.VERSION { builder.add_VERSION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
+    builder.add_PRIMARY_CATEGORY(args.PRIMARY_CATEGORY);
     builder.add_LISTING_STATUS(args.LISTING_STATUS);
     builder.add_PAYMENT_MODEL(args.PAYMENT_MODEL);
     builder.add_ENCRYPTED(args.ENCRYPTED);
@@ -5040,6 +5081,10 @@ impl<'a> PLG<'a> {
     let FLOW_TRIGGER_BINDINGS = self.FLOW_TRIGGER_BINDINGS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let PRIMARY_CATEGORY = self.PRIMARY_CATEGORY();
+    let CATEGORIES = self.CATEGORIES().map(|x| {
+      x.into_iter().collect()
+    });
     PLGT {
       PLUGIN_ID,
       NAME,
@@ -5097,6 +5142,8 @@ impl<'a> PLG<'a> {
       FLOW_EDGES,
       FLOW_TRIGGERS,
       FLOW_TRIGGER_BINDINGS,
+      PRIMARY_CATEGORY,
+      CATEGORIES,
     }
   }
 
@@ -5557,6 +5604,49 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding>>>>(PLG::VT_FLOW_TRIGGER_BINDINGS, None)}
   }
+  /// The one ratified $CCT category this module is shelved under. This is the
+  /// category a storefront capsule, a library shelf and a breadcrumb show when
+  /// exactly one must be chosen. UNSPECIFIED means the publisher did not
+  /// classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  /// This supersedes PLUGIN_TYPE for all storefront, library and search
+  /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  /// `pluginCategory` vocabulary mixes capability families with node-internal
+  /// plumbing, carries a legacy vendor-derived member, holds a real family at
+  /// ordinal 0, and admits only one value. Canonical migration, applied by a
+  /// publisher rewriting an old manifest:
+  ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///   Renderer->VISUALIZATION_AND_RENDERING,
+  ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  /// PLUGIN_TYPE.
+  #[inline]
+  pub fn PRIMARY_CATEGORY(&self) -> capabilityClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<capabilityClass>(PLG::VT_PRIMARY_CATEGORY, Some(capabilityClass::UNSPECIFIED)).unwrap()}
+  }
+  /// Every ratified $CCT category this module belongs to, for browse, filter
+  /// and per-category counting. A module MAY carry several. If nonempty it
+  /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  /// a set PRIMARY_CATEGORY means the module belongs to that one category.
+  #[inline]
+  pub fn CATEGORIES(&self) -> Option<::flatbuffers::Vector<'a, capabilityClass>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, capabilityClass>>>(PLG::VT_CATEGORIES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PLG<'_> {
@@ -5621,6 +5711,8 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowEdge>>>>("FLOW_EDGES", Self::VT_FLOW_EDGES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger>>>>("FLOW_TRIGGERS", Self::VT_FLOW_TRIGGERS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding>>>>("FLOW_TRIGGER_BINDINGS", Self::VT_FLOW_TRIGGER_BINDINGS, false)?
+     .visit_field::<capabilityClass>("PRIMARY_CATEGORY", Self::VT_PRIMARY_CATEGORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, capabilityClass>>>("CATEGORIES", Self::VT_CATEGORIES, false)?
      .finish();
     Ok(())
   }
@@ -5682,6 +5774,8 @@ pub struct PLGArgs<'a> {
     pub FLOW_EDGES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowEdge<'a>>>>>,
     pub FLOW_TRIGGERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger<'a>>>>>,
     pub FLOW_TRIGGER_BINDINGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding<'a>>>>>,
+    pub PRIMARY_CATEGORY: capabilityClass,
+    pub CATEGORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, capabilityClass>>>,
 }
 impl<'a> Default for PLGArgs<'a> {
   #[inline]
@@ -5743,6 +5837,8 @@ impl<'a> Default for PLGArgs<'a> {
       FLOW_EDGES: None,
       FLOW_TRIGGERS: None,
       FLOW_TRIGGER_BINDINGS: None,
+      PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
+      CATEGORIES: None,
     }
   }
 }
@@ -5977,6 +6073,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FLOW_TRIGGER_BINDINGS, FLOW_TRIGGER_BINDINGS);
   }
   #[inline]
+  pub fn add_PRIMARY_CATEGORY(&mut self, PRIMARY_CATEGORY: capabilityClass) {
+    self.fbb_.push_slot::<capabilityClass>(PLG::VT_PRIMARY_CATEGORY, PRIMARY_CATEGORY, capabilityClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_CATEGORIES(&mut self, CATEGORIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , capabilityClass>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_CATEGORIES, CATEGORIES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLGBuilder {
@@ -6053,6 +6157,8 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("FLOW_EDGES", &self.FLOW_EDGES());
       ds.field("FLOW_TRIGGERS", &self.FLOW_TRIGGERS());
       ds.field("FLOW_TRIGGER_BINDINGS", &self.FLOW_TRIGGER_BINDINGS());
+      ds.field("PRIMARY_CATEGORY", &self.PRIMARY_CATEGORY());
+      ds.field("CATEGORIES", &self.CATEGORIES());
       ds.finish()
   }
 }
@@ -6115,6 +6221,8 @@ pub struct PLGT {
   pub FLOW_EDGES: Option<alloc::vec::Vec<PLGFlowEdgeT>>,
   pub FLOW_TRIGGERS: Option<alloc::vec::Vec<PLGFlowTriggerT>>,
   pub FLOW_TRIGGER_BINDINGS: Option<alloc::vec::Vec<PLGFlowTriggerBindingT>>,
+  pub PRIMARY_CATEGORY: capabilityClass,
+  pub CATEGORIES: Option<alloc::vec::Vec<capabilityClass>>,
 }
 impl Default for PLGT {
   fn default() -> Self {
@@ -6175,6 +6283,8 @@ impl Default for PLGT {
       FLOW_EDGES: None,
       FLOW_TRIGGERS: None,
       FLOW_TRIGGER_BINDINGS: None,
+      PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
+      CATEGORIES: None,
     }
   }
 }
@@ -6330,6 +6440,10 @@ impl PLGT {
     let FLOW_TRIGGER_BINDINGS = self.FLOW_TRIGGER_BINDINGS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let PRIMARY_CATEGORY = self.PRIMARY_CATEGORY;
+    let CATEGORIES = self.CATEGORIES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     PLG::create(_fbb, &PLGArgs{
       PLUGIN_ID,
       NAME,
@@ -6387,6 +6501,8 @@ impl PLGT {
       FLOW_EDGES,
       FLOW_TRIGGERS,
       FLOW_TRIGGER_BINDINGS,
+      PRIMARY_CATEGORY,
+      CATEGORIES,
     })
   }
 }

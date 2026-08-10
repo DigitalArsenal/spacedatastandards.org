@@ -228,8 +228,53 @@ class APP(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # The one ratified $CCT category this app is shelved under, using the same
+    # vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+    # or library shelf holds apps and modules together without translating
+    # between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+    # PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+    # and a PAGE-class app can share a category.
+    # UNSPECIFIED means the publisher did not classify the app; a consumer
+    # renders it ungrouped and never infers a class.
+    # APP
+    def PRIMARY_CATEGORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Every ratified $CCT category this app belongs to, for browse, filter and
+    # per-category counting. An app MAY carry several. If nonempty it MUST
+    # include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+    # APP
+    def CATEGORIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # APP
+    def CATEGORIESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # APP
+    def CATEGORIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APP
+    def CATEGORIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
 def APPStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(14)
 
 def Start(builder):
     APPStart(builder)
@@ -366,6 +411,34 @@ def APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS):
 def AddRUNTIME_CLASS(builder, RUNTIME_CLASS):
     APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS)
 
+def APPAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    builder.PrependUint8Slot(12, PRIMARY_CATEGORY, 0)
+
+def AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
+    APPAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY)
+
+def APPAddCATEGORIES(builder, CATEGORIES):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORIES), 0)
+
+def AddCATEGORIES(builder, CATEGORIES):
+    APPAddCATEGORIES(builder, CATEGORIES)
+
+def APPStartCATEGORIESVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCATEGORIESVector(builder, numElems):
+    return APPStartCATEGORIESVector(builder, numElems)
+
+def APPCreateCATEGORIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCATEGORIESVector(builder, data):
+    APPCreateCATEGORIESVector(builder, data)
+
 def APPEnd(builder):
     return builder.EndObject()
 
@@ -399,6 +472,8 @@ class APPT(object):
         UPDATED_AT = None,
         DATAFLOW = None,
         RUNTIME_CLASS = 0,
+        PRIMARY_CATEGORY = 0,
+        CATEGORIES = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -412,6 +487,8 @@ class APPT(object):
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
         self.DATAFLOW = DATAFLOW  # type: Optional[List[APPDataflow.APPDataflowT]]
         self.RUNTIME_CLASS = RUNTIME_CLASS  # type: int
+        self.PRIMARY_CATEGORY = PRIMARY_CATEGORY  # type: int
+        self.CATEGORIES = CATEGORIES  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -481,6 +558,14 @@ class APPT(object):
                     aPPDataflow_ = APPDataflow.APPDataflowT.InitFromObj(APP.DATAFLOW(i))
                     self.DATAFLOW.append(aPPDataflow_)
         self.RUNTIME_CLASS = APP.RUNTIME_CLASS()
+        self.PRIMARY_CATEGORY = APP.PRIMARY_CATEGORY()
+        if not APP.CATEGORIESIsNone():
+            if np is None:
+                self.CATEGORIES = []
+                for i in range(APP.CATEGORIESLength()):
+                    self.CATEGORIES.append(APP.CATEGORIES(i))
+            else:
+                self.CATEGORIES = APP.CATEGORIESAsNumpy()
 
     # APPT
     def Pack(self, builder):
@@ -536,6 +621,14 @@ class APPT(object):
             for i in reversed(range(len(self.DATAFLOW))):
                 builder.PrependUOffsetTRelative(DATAFLOWlist[i])
             DATAFLOW = builder.EndVector()
+        if self.CATEGORIES is not None:
+            if np is not None and type(self.CATEGORIES) is np.ndarray:
+                CATEGORIES = builder.CreateNumpyVector(self.CATEGORIES)
+            else:
+                APPStartCATEGORIESVector(builder, len(self.CATEGORIES))
+                for i in reversed(range(len(self.CATEGORIES))):
+                    builder.PrependUint8(self.CATEGORIES[i])
+                CATEGORIES = builder.EndVector()
         APPStart(builder)
         if self.ID is not None:
             APPAddID(builder, ID)
@@ -560,5 +653,8 @@ class APPT(object):
         if self.DATAFLOW is not None:
             APPAddDATAFLOW(builder, DATAFLOW)
         APPAddRUNTIME_CLASS(builder, self.RUNTIME_CLASS)
+        APPAddPRIMARY_CATEGORY(builder, self.PRIMARY_CATEGORY)
+        if self.CATEGORIES is not None:
+            APPAddCATEGORIES(builder, CATEGORIES)
         APP = APPEnd(builder)
         return APP

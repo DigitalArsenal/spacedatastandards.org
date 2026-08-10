@@ -6,845 +6,506 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Application Package Manifest
+///  Capability class of a distributable software unit (module, application, or
+///  composed flow).
 ///
-///  An app is a launchable collection of WASM modules, the SDS data types it
-///  produces and consumes, the upstream sources it depends on, and its user
-///  interface, grouped under one stable identity. Apps run isomorphically in
-///  the desktop runtime and the browser; the manifest is the single record a
-///  launcher needs to list, verify, and start the app.
+///  This enum IS the ratified category vocabulary. A storefront, library, module
+///  manifest and search surface all classify against these members and nothing
+///  else; a category that is not a member here does not exist. Members name
+///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
+///  site, organization, product, protocol brand or algorithm implementation;
+///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
+///  the taxonomy.
 ///
-///  The UI is carried inline: a fully self-contained HTML page (CSS and JS
-///  inlined, no external requests) inside a string field, with an explicit
-///  content-encoding parameter so the page may be stored as literal UTF-8
-///  text, base64, or a compressed base64 form. A page may instead be served
-///  by a member module; exactly one of the two mechanisms must be populated
-///  per page.
+///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
+///  reuse an ordinal. A reorder silently re-labels every published listing.
 ///
-///  The page's data contract is described declaratively by DATAFLOW: every
-///  unit of data that enters or leaves the running page, the SDS standard it
-///  carries, the transport that moves it, and — when applicable — the loaded
-///  module method port that produces or consumes it. Standards-only rule:
-///  every page payload is an SDS record (a canonical size-prefixed
-///  FlatBuffer) or a content identifier pointing at one; the app manifest
-///  carries no bespoke page-only data shapes. Locators are content-addressed
-///  and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
-///  node's IPFS gateway wherever the payload can be published as an immutable
-///  object, falling back to a live gossip topic or a same-origin gateway
-///  route only for streaming or request-scoped delivery.
+///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
+///  default-constructed classification can never decode as a real category. The
+///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
+///  ordinal 0 is a real family — and had to append an `Unspecified` member at
+///  the tail to recover. This enum does not repeat that.
 ///
-///  Member modules run isomorphically. A module ref may declare, via
-///  RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
-///  the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
-///  over IPFS and instantiates them in the shared isomorphic JS harness
-///  (manifest + plugin_invoke_stream), exactly as a server-side node would.
-///  There is no bespoke browser loader; the browser and the node are two
-///  hosts of one harness ABI.
-///  Content encoding applied to APPUIPage.CONTENT. Append new values only;
-///  never reorder or reuse existing values. Decoders must reject an encoding
-///  value they do not recognize rather than guessing.
-enum appContentEncoding {
-  UTF8(0),
-  BASE64(1),
-  BASE64_GZIP(2),
-  BASE64_BROTLI(3);
+///  Each member's canonical display name is stated in its doc comment and is
+///  part of the ratified contract: a consumer rendering a category label uses
+///  that string verbatim, so every surface spells a category identically. The
+///  canonical route slug is the member identifier lowercased with `_` replaced
+///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
+///  "rf-and-communications").
+enum capabilityClass {
+  UNSPECIFIED(0),
+  PROPAGATION(1),
+  ORBIT_DETERMINATION(2),
+  MANEUVER_PLANNING(3),
+  CONJUNCTION_ASSESSMENT(4),
+  REENTRY_AND_BREAKUP(5),
+  ATTITUDE_AND_POINTING(6),
+  REFERENCE_FRAMES_AND_TIME(7),
+  SENSORS_AND_COVERAGE(8),
+  TRACKING_AND_OBSERVATION(9),
+  RF_AND_COMMUNICATIONS(10),
+  ELECTRONIC_WARFARE(11),
+  SPACE_ENVIRONMENT(12),
+  DATA_SOURCES_AND_INGEST(13),
+  DATA_VALIDATION_AND_QUALITY(14),
+  CATALOG_AND_IDENTITY(15),
+  VISUALIZATION_AND_RENDERING(16),
+  GROUND_SEGMENT_AND_HARDWARE(17),
+  MISSION_DESIGN_AND_ANALYSIS(18),
+  FLOW_AND_COMPOSITION(19),
+  DATA_STORAGE_AND_QUERY(20),
+  SECURITY_AND_IDENTITY(21),
+  COMMERCE_AND_LICENSING(22),
+  NODE_INFRASTRUCTURE(23),
+  FOUNDATION_AND_MATH(24);
 
   final int value;
-  const appContentEncoding(this.value);
+  const capabilityClass(this.value);
 
-  factory appContentEncoding.fromValue(int value) {
+  factory capabilityClass.fromValue(int value) {
     switch (value) {
-      case 0: return appContentEncoding.UTF8;
-      case 1: return appContentEncoding.BASE64;
-      case 2: return appContentEncoding.BASE64_GZIP;
-      case 3: return appContentEncoding.BASE64_BROTLI;
+      case 0: return capabilityClass.UNSPECIFIED;
+      case 1: return capabilityClass.PROPAGATION;
+      case 2: return capabilityClass.ORBIT_DETERMINATION;
+      case 3: return capabilityClass.MANEUVER_PLANNING;
+      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
+      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
+      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
+      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
+      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
+      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
+      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
+      case 11: return capabilityClass.ELECTRONIC_WARFARE;
+      case 12: return capabilityClass.SPACE_ENVIRONMENT;
+      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
+      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
+      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
+      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
+      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
+      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
+      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
+      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
+      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
+      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
+      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
+      case 24: return capabilityClass.FOUNDATION_AND_MATH;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static appContentEncoding? _createOrNull(int? value) =>
-      value == null ? null : appContentEncoding.fromValue(value);
+  static capabilityClass? _createOrNull(int? value) =>
+      value == null ? null : capabilityClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<appContentEncoding> reader = _appContentEncodingReader();
+  static const int maxValue = 24;
+  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
 }
 
-class _appContentEncodingReader extends fb.Reader<appContentEncoding> {
-  const _appContentEncodingReader();
+class _capabilityClassReader extends fb.Reader<capabilityClass> {
+  const _capabilityClassReader();
 
   @override
   int get size => 1;
 
   @override
-  appContentEncoding read(fb.BufferContext bc, int offset) =>
-      appContentEncoding.fromValue(const fb.Uint8Reader().read(bc, offset));
+  capabilityClass read(fb.BufferContext bc, int offset) =>
+      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Data flow of a referenced SDS record type relative to the app.
-enum appDataDirection {
-  PRODUCES(0),
-  CONSUMES(1),
-  BOTH(2);
-
-  final int value;
-  const appDataDirection(this.value);
-
-  factory appDataDirection.fromValue(int value) {
-    switch (value) {
-      case 0: return appDataDirection.PRODUCES;
-      case 1: return appDataDirection.CONSUMES;
-      case 2: return appDataDirection.BOTH;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static appDataDirection? _createOrNull(int? value) =>
-      value == null ? null : appDataDirection.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<appDataDirection> reader = _appDataDirectionReader();
-}
-
-class _appDataDirectionReader extends fb.Reader<appDataDirection> {
-  const _appDataDirectionReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  appDataDirection read(fb.BufferContext bc, int offset) =>
-      appDataDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Kind of upstream source an APPSourceRef names.
-enum appSourceKind {
-  MODULE(0),
-  EXTERNAL_API(1),
-  DATASET(2);
-
-  final int value;
-  const appSourceKind(this.value);
-
-  factory appSourceKind.fromValue(int value) {
-    switch (value) {
-      case 0: return appSourceKind.MODULE;
-      case 1: return appSourceKind.EXTERNAL_API;
-      case 2: return appSourceKind.DATASET;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static appSourceKind? _createOrNull(int? value) =>
-      value == null ? null : appSourceKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<appSourceKind> reader = _appSourceKindReader();
-}
-
-class _appSourceKindReader extends fb.Reader<appSourceKind> {
-  const _appSourceKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  appSourceKind read(fb.BufferContext bc, int offset) =>
-      appSourceKind.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Direction of an APPDataflow entry relative to the running page. Distinct
-///  from appDataDirection, which is producer/consumer relative to the app as
-///  a whole; this enum is page-relative — which way bytes cross the page
-///  boundary at runtime. Append new values only; never reorder or reuse
-///  existing values.
-enum appFlowDirection {
-  TO_PAGE(0),
-  FROM_PAGE(1),
-  BIDIRECTIONAL(2);
-
-  final int value;
-  const appFlowDirection(this.value);
-
-  factory appFlowDirection.fromValue(int value) {
-    switch (value) {
-      case 0: return appFlowDirection.TO_PAGE;
-      case 1: return appFlowDirection.FROM_PAGE;
-      case 2: return appFlowDirection.BIDIRECTIONAL;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static appFlowDirection? _createOrNull(int? value) =>
-      value == null ? null : appFlowDirection.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<appFlowDirection> reader = _appFlowDirectionReader();
-}
-
-class _appFlowDirectionReader extends fb.Reader<appFlowDirection> {
-  const _appFlowDirectionReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  appFlowDirection read(fb.BufferContext bc, int offset) =>
-      appFlowDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Transport that moves an APPDataflow payload. Locators are content-
-///  addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
-///  immutable published object, and use the live or request-scoped transports
-///  only for streaming or same-origin request/response delivery. Append new
-///  values only; never reorder or reuse existing values.
-enum appFlowTransport {
-  IPFS_CID(0),
-  PUBSUB_TOPIC(1),
-  GATEWAY_ROUTE(2);
-
-  final int value;
-  const appFlowTransport(this.value);
-
-  factory appFlowTransport.fromValue(int value) {
-    switch (value) {
-      case 0: return appFlowTransport.IPFS_CID;
-      case 1: return appFlowTransport.PUBSUB_TOPIC;
-      case 2: return appFlowTransport.GATEWAY_ROUTE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static appFlowTransport? _createOrNull(int? value) =>
-      value == null ? null : appFlowTransport.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<appFlowTransport> reader = _appFlowTransportReader();
-}
-
-class _appFlowTransportReader extends fb.Reader<appFlowTransport> {
-  const _appFlowTransportReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  appFlowTransport read(fb.BufferContext bc, int offset) =>
-      appFlowTransport.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Where a member module is instantiated. PAGE and BOTH assert the module
-///  loads in the browser through the SAME module-sdk harness ABI the SDN
-///  nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
-///  IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
-///  page loader. Append new values only; never reorder or reuse existing
-///  values.
-enum appRuntimeTarget {
-  NODE(0),
-  PAGE(1),
-  BOTH(2);
-
-  final int value;
-  const appRuntimeTarget(this.value);
-
-  factory appRuntimeTarget.fromValue(int value) {
-    switch (value) {
-      case 0: return appRuntimeTarget.NODE;
-      case 1: return appRuntimeTarget.PAGE;
-      case 2: return appRuntimeTarget.BOTH;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static appRuntimeTarget? _createOrNull(int? value) =>
-      value == null ? null : appRuntimeTarget.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<appRuntimeTarget> reader = _appRuntimeTargetReader();
-}
-
-class _appRuntimeTargetReader extends fb.Reader<appRuntimeTarget> {
-  const _appRuntimeTargetReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  appRuntimeTarget read(fb.BufferContext bc, int offset) =>
-      appRuntimeTarget.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  One member WASM module of the app. References module identity; never
-///  embeds the module artifact itself (delivery is the module-bundle lane).
-class APPModuleRef {
-  APPModuleRef._(this._bc, this._bcOffset);
-  factory APPModuleRef(List<int> bytes) {
+///  One ratified category in the taxonomy.
+///
+///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
+///  without the label a surface will render, the sentence a browse row will
+///  show, and the route a link will target. This is what stops each consumer
+///  from inventing its own wording for the same code.
+class CCTCategory {
+  CCTCategory._(this._bc, this._bcOffset);
+  factory CCTCategory(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<APPModuleRef> reader = _APPModuleRefReader();
+  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  App-local stable reference for this module. Required, unique within
-  ///  the manifest.
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Plugin identifier of the module as published in its plugin listing.
-  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get pluginId => PLUGIN_ID;
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
-  ///  portable (pre-AOT, publication-trailer-stripped) WASM bytes. This is
-  ///  the identity capability policies and signature policies key on.
-  String? get CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get contentHash => CONTENT_HASH;
-  ///  Module version expected by the app.
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Free-text launcher hint, for example primary, worker, or ui-host.
-  String? get ROLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Human-readable summary.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Per-invocation wall-clock budget override in milliseconds. Zero means
-  ///  the host runtime default applies.
-  int get MAX_WALL_CLOCK_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get maxWallClockMs => MAX_WALL_CLOCK_MS;
-  ///  Per-invocation execution-cost (fuel) budget override. Zero means the
-  ///  host runtime default applies.
-  int get MAX_COST_UNITS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get maxCostUnits => MAX_COST_UNITS;
-  ///  Linear-memory ceiling override in 64 KiB WASM pages. Zero means the
-  ///  host runtime default applies.
-  int get MAX_MEMORY_PAGES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get maxMemoryPages => MAX_MEMORY_PAGES;
-  ///  Where this module is instantiated. PAGE or BOTH means the module also
-  ///  loads in the browser: the page resolves its bytes by CONTENT_HASH over
-  ///  IPFS and instantiates it through the SAME isomorphic module-sdk harness
-  ///  ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
-  ///  a bespoke page-only loader. Defaults to NODE to preserve the prior
-  ///  node-only behavior of manifests written before this field existed.
-  appRuntimeTarget get RUNTIME_TARGET => appRuntimeTarget.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 0));
-  appRuntimeTarget get runtimeTarget => RUNTIME_TARGET;
+  ///  The ratified category code. This is the join key every consumer uses.
+  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
+  ///  name stated in the CODE member's doc comment.
+  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get displayName => DISPLAY_NAME;
+  ///  One-sentence description shown on browse rows and category headers.
+  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
+  ///  `-`. Published explicitly rather than derived so every surface routes
+  ///  identically.
+  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Longer editorial description for a category landing page.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
+  ///  top-level category. A category MUST NOT name itself as its parent.
+  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Presentation order within its parent, ascending. Ties break on
+  ///  DISPLAY_NAME.
+  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get sortOrder => SORT_ORDER;
+  ///  Search synonyms and alternate phrasings that resolve to this category.
+  ///  Feeds type-ahead; never rendered as the category label.
+  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
+  ///  URL: consuming node surfaces load zero external-origin bytes, so the
+  ///  consumer resolves this against its own local asset set.
+  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get iconKey => ICON_KEY;
 
   @override
   String toString() {
-    return 'APPModuleRef{ID: ${ID}, pluginId: ${pluginId}, contentHash: ${contentHash}, VERSION: ${VERSION}, ROLE: ${ROLE}, DESCRIPTION: ${DESCRIPTION}, maxWallClockMs: ${maxWallClockMs}, maxCostUnits: ${maxCostUnits}, maxMemoryPages: ${maxMemoryPages}, runtimeTarget: ${runtimeTarget}}';
+    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
   }
 }
 
-class _APPModuleRefReader extends fb.TableReader<APPModuleRef> {
-  const _APPModuleRefReader();
+class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
+  const _CCTCategoryReader();
 
   @override
-  APPModuleRef createObject(fb.BufferContext bc, int offset) =>
-    APPModuleRef._(bc, offset);
+  CCTCategory createObject(fb.BufferContext bc, int offset) =>
+    CCTCategory._(bc, offset);
 }
 
-class APPModuleRefBuilder {
-  APPModuleRefBuilder(this.fbBuilder);
+class CCTCategoryBuilder {
+  CCTCategoryBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(9);
   }
 
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addCode(capabilityClass? CODE) {
+    fbBuilder.addUint8(0, CODE?.value);
     return fbBuilder.offset;
   }
-  int addPluginIdOffset(int? offset) {
+  int addDisplayNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addContentHashOffset(int? offset) {
+  int addSummaryOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSlugOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addParent(capabilityClass? PARENT) {
+    fbBuilder.addUint8(5, PARENT?.value);
+    return fbBuilder.offset;
+  }
+  int addSortOrder(int? SORT_ORDER) {
+    fbBuilder.addUint16(6, SORT_ORDER);
+    return fbBuilder.offset;
+  }
+  int addKeywordsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addIconKeyOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
+  final capabilityClass? _CODE;
+  final String? _DISPLAY_NAME;
+  final String? _SUMMARY;
+  final String? _SLUG;
+  final String? _DESCRIPTION;
+  final capabilityClass? _PARENT;
+  final int? _SORT_ORDER;
+  final List<String>? _KEYWORDS;
+  final String? _ICON_KEY;
+
+  CCTCategoryObjectBuilder({
+    capabilityClass? CODE,
+    String? DISPLAY_NAME,
+    String? displayName,
+    String? SUMMARY,
+    String? SLUG,
+    String? DESCRIPTION,
+    capabilityClass? PARENT,
+    int? SORT_ORDER,
+    int? sortOrder,
+    List<String>? KEYWORDS,
+    String? ICON_KEY,
+    String? iconKey,
+  })
+      : _CODE = CODE,
+        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
+        _SUMMARY = SUMMARY,
+        _SLUG = SLUG,
+        _DESCRIPTION = DESCRIPTION,
+        _PARENT = PARENT,
+        _SORT_ORDER = sortOrder ?? SORT_ORDER,
+        _KEYWORDS = KEYWORDS,
+        _ICON_KEY = iconKey ?? ICON_KEY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
+        : fbBuilder.writeString(_DISPLAY_NAME!);
+    final int? SUMMARYOffset = _SUMMARY == null ? null
+        : fbBuilder.writeString(_SUMMARY!);
+    final int? SLUGOffset = _SLUG == null ? null
+        : fbBuilder.writeString(_SLUG!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? KEYWORDSOffset = _KEYWORDS == null ? null
+        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
+    final int? ICON_KEYOffset = _ICON_KEY == null ? null
+        : fbBuilder.writeString(_ICON_KEY!);
+    fbBuilder.startTable(9);
+    fbBuilder.addUint8(0, _CODE?.value);
+    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
+    fbBuilder.addOffset(2, SUMMARYOffset);
+    fbBuilder.addOffset(3, SLUGOffset);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    fbBuilder.addUint8(5, _PARENT?.value);
+    fbBuilder.addUint16(6, _SORT_ORDER);
+    fbBuilder.addOffset(7, KEYWORDSOffset);
+    fbBuilder.addOffset(8, ICON_KEYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  An observed count of catalogue items in one category.
+///
+///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
+///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
+///  count can never omit when it was taken or what it was taken over. A consumer
+///  that needs a live number computes it from the items; a consumer rendering a
+///  published rollup MUST show it as of COUNTED_AT.
+class CCTCategoryRollup {
+  CCTCategoryRollup._(this._bc, this._bcOffset);
+  factory CCTCategoryRollup(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Category being counted.
+  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
+  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
+  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get itemCount => ITEM_COUNT;
+  ///  Identifier of the catalogue the count was taken over.
+  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceCatalogId => SOURCE_CATALOG_ID;
+  ///  Unix seconds when the count was taken.
+  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get countedAt => COUNTED_AT;
+
+  @override
+  String toString() {
+    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
+  }
+}
+
+class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
+  const _CCTCategoryRollupReader();
+
+  @override
+  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
+    CCTCategoryRollup._(bc, offset);
+}
+
+class CCTCategoryRollupBuilder {
+  CCTCategoryRollupBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addCode(capabilityClass? CODE) {
+    fbBuilder.addUint8(0, CODE?.value);
+    return fbBuilder.offset;
+  }
+  int addItemCount(int? ITEM_COUNT) {
+    fbBuilder.addUint32(1, ITEM_COUNT);
+    return fbBuilder.offset;
+  }
+  int addSourceCatalogIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCountedAt(int? COUNTED_AT) {
+    fbBuilder.addUint64(3, COUNTED_AT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
+  final capabilityClass? _CODE;
+  final int? _ITEM_COUNT;
+  final String? _SOURCE_CATALOG_ID;
+  final int? _COUNTED_AT;
+
+  CCTCategoryRollupObjectBuilder({
+    capabilityClass? CODE,
+    int? ITEM_COUNT,
+    int? itemCount,
+    String? SOURCE_CATALOG_ID,
+    String? sourceCatalogId,
+    int? COUNTED_AT,
+    int? countedAt,
+  })
+      : _CODE = CODE,
+        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
+        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
+        _COUNTED_AT = countedAt ?? COUNTED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint8(0, _CODE?.value);
+    fbBuilder.addUint32(1, _ITEM_COUNT);
+    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
+    fbBuilder.addUint64(3, _COUNTED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  $CCT — Capability Category Taxonomy.
+///
+///  The ratified set of capability classes that distributable units (modules,
+///  applications, composed flows) are classified under, together with the labels
+///  and routes every consuming surface renders. One published $CCT is the single
+///  source of truth shared by a storefront, a library, a search index and the
+///  unit manifests themselves.
+///
+///  Division of labour: `$CCT` = the category vocabulary and its presentation;
+///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
+///  application's manifest, which cites categories by code; `$PMM` = which
+///  modules a provider serves; `$STO`/`$STF` = commerce.
+class CCT {
+  CCT._(this._bc, this._bcOffset);
+  factory CCT(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CCT> reader = _CCTReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier of this taxonomy publication.
+  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get taxonomyId => TAXONOMY_ID;
+  ///  SemVer 2.0.0 version of the taxonomy content.
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Unix seconds when this taxonomy revision was issued.
+  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get issuedAt => ISSUED_AT;
+  ///  Human-readable title of the taxonomy.
+  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  The ratified categories. Every capabilityClass member a consumer may
+  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
+  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Optional per-category item counts as observed over a named catalogue.
+  ///  Absent means counts are computed by the consumer.
+  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
+  }
+}
+
+class _CCTReader extends fb.TableReader<CCT> {
+  const _CCTReader();
+
+  @override
+  CCT createObject(fb.BufferContext bc, int offset) =>
+    CCT._(bc, offset);
+}
+
+class CCTBuilder {
+  CCTBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addTaxonomyIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
   int addVersionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addRoleOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addMaxWallClockMs(int? MAX_WALL_CLOCK_MS) {
-    fbBuilder.addUint64(6, MAX_WALL_CLOCK_MS);
-    return fbBuilder.offset;
-  }
-  int addMaxCostUnits(int? MAX_COST_UNITS) {
-    fbBuilder.addUint64(7, MAX_COST_UNITS);
-    return fbBuilder.offset;
-  }
-  int addMaxMemoryPages(int? MAX_MEMORY_PAGES) {
-    fbBuilder.addUint32(8, MAX_MEMORY_PAGES);
-    return fbBuilder.offset;
-  }
-  int addRuntimeTarget(appRuntimeTarget? RUNTIME_TARGET) {
-    fbBuilder.addUint8(9, RUNTIME_TARGET?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _PLUGIN_ID;
-  final String? _CONTENT_HASH;
-  final String? _VERSION;
-  final String? _ROLE;
-  final String? _DESCRIPTION;
-  final int? _MAX_WALL_CLOCK_MS;
-  final int? _MAX_COST_UNITS;
-  final int? _MAX_MEMORY_PAGES;
-  final appRuntimeTarget? _RUNTIME_TARGET;
-
-  APPModuleRefObjectBuilder({
-    String? ID,
-    String? PLUGIN_ID,
-    String? pluginId,
-    String? CONTENT_HASH,
-    String? contentHash,
-    String? VERSION,
-    String? ROLE,
-    String? DESCRIPTION,
-    int? MAX_WALL_CLOCK_MS,
-    int? maxWallClockMs,
-    int? MAX_COST_UNITS,
-    int? maxCostUnits,
-    int? MAX_MEMORY_PAGES,
-    int? maxMemoryPages,
-    appRuntimeTarget? RUNTIME_TARGET,
-    appRuntimeTarget? runtimeTarget,
-  })
-      : _ID = ID,
-        _PLUGIN_ID = pluginId ?? PLUGIN_ID,
-        _CONTENT_HASH = contentHash ?? CONTENT_HASH,
-        _VERSION = VERSION,
-        _ROLE = ROLE,
-        _DESCRIPTION = DESCRIPTION,
-        _MAX_WALL_CLOCK_MS = maxWallClockMs ?? MAX_WALL_CLOCK_MS,
-        _MAX_COST_UNITS = maxCostUnits ?? MAX_COST_UNITS,
-        _MAX_MEMORY_PAGES = maxMemoryPages ?? MAX_MEMORY_PAGES,
-        _RUNTIME_TARGET = runtimeTarget ?? RUNTIME_TARGET;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
-        : fbBuilder.writeString(_PLUGIN_ID!);
-    final int? CONTENT_HASHOffset = _CONTENT_HASH == null ? null
-        : fbBuilder.writeString(_CONTENT_HASH!);
-    final int? VERSIONOffset = _VERSION == null ? null
-        : fbBuilder.writeString(_VERSION!);
-    final int? ROLEOffset = _ROLE == null ? null
-        : fbBuilder.writeString(_ROLE!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, PLUGIN_IDOffset);
-    fbBuilder.addOffset(2, CONTENT_HASHOffset);
-    fbBuilder.addOffset(3, VERSIONOffset);
-    fbBuilder.addOffset(4, ROLEOffset);
-    fbBuilder.addOffset(5, DESCRIPTIONOffset);
-    fbBuilder.addUint64(6, _MAX_WALL_CLOCK_MS);
-    fbBuilder.addUint64(7, _MAX_COST_UNITS);
-    fbBuilder.addUint32(8, _MAX_MEMORY_PAGES);
-    fbBuilder.addUint8(9, _RUNTIME_TARGET?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One SDS record type the app produces and/or consumes. Names an existing
-///  spacedatastandards.org schema by its established code; the app manifest
-///  defines no data schemas of its own.
-class APPDataRef {
-  APPDataRef._(this._bc, this._bcOffset);
-  factory APPDataRef(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<APPDataRef> reader = _APPDataRefReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  App-local stable reference for this data binding. Required, unique
-  ///  within the manifest.
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Existing SDS schema code, for example OMM, CDM, or EPM. Required.
-  String? get SDS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get sdsType => SDS_TYPE;
-  ///  Data flow relative to the app.
-  appDataDirection get DIRECTION => appDataDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
-  ///  member module responsible for this data binding.
-  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get moduleId => MODULE_ID;
-  ///  Human-readable summary.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-
-  @override
-  String toString() {
-    return 'APPDataRef{ID: ${ID}, sdsType: ${sdsType}, DIRECTION: ${DIRECTION}, moduleId: ${moduleId}, DESCRIPTION: ${DESCRIPTION}}';
-  }
-}
-
-class _APPDataRefReader extends fb.TableReader<APPDataRef> {
-  const _APPDataRefReader();
-
-  @override
-  APPDataRef createObject(fb.BufferContext bc, int offset) =>
-    APPDataRef._(bc, offset);
-}
-
-class APPDataRefBuilder {
-  APPDataRefBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSdsTypeOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDirection(appDataDirection? DIRECTION) {
-    fbBuilder.addUint8(2, DIRECTION?.value);
-    return fbBuilder.offset;
-  }
-  int addModuleIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class APPDataRefObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _SDS_TYPE;
-  final appDataDirection? _DIRECTION;
-  final String? _MODULE_ID;
-  final String? _DESCRIPTION;
-
-  APPDataRefObjectBuilder({
-    String? ID,
-    String? SDS_TYPE,
-    String? sdsType,
-    appDataDirection? DIRECTION,
-    String? MODULE_ID,
-    String? moduleId,
-    String? DESCRIPTION,
-  })
-      : _ID = ID,
-        _SDS_TYPE = sdsType ?? SDS_TYPE,
-        _DIRECTION = DIRECTION,
-        _MODULE_ID = moduleId ?? MODULE_ID,
-        _DESCRIPTION = DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? SDS_TYPEOffset = _SDS_TYPE == null ? null
-        : fbBuilder.writeString(_SDS_TYPE!);
-    final int? MODULE_IDOffset = _MODULE_ID == null ? null
-        : fbBuilder.writeString(_MODULE_ID!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, SDS_TYPEOffset);
-    fbBuilder.addUint8(2, _DIRECTION?.value);
-    fbBuilder.addOffset(3, MODULE_IDOffset);
-    fbBuilder.addOffset(4, DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One upstream data source the app depends on.
-class APPSourceRef {
-  APPSourceRef._(this._bc, this._bcOffset);
-  factory APPSourceRef(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<APPSourceRef> reader = _APPSourceRefReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  App-local stable reference for this source. Required, unique within
-  ///  the manifest.
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Classifies REF.
-  appSourceKind get KIND => appSourceKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Source identifier: an APPModuleRef.ID when KIND is MODULE, otherwise a
-  ///  URL or dataset identifier. Required.
-  String? get REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Human-readable summary.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'APPSourceRef{ID: ${ID}, KIND: ${KIND}, REF: ${REF}, DESCRIPTION: ${DESCRIPTION}}';
-  }
-}
-
-class _APPSourceRefReader extends fb.TableReader<APPSourceRef> {
-  const _APPSourceRefReader();
-
-  @override
-  APPSourceRef createObject(fb.BufferContext bc, int offset) =>
-    APPSourceRef._(bc, offset);
-}
-
-class APPSourceRefBuilder {
-  APPSourceRefBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addKind(appSourceKind? KIND) {
-    fbBuilder.addUint8(1, KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addRefOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class APPSourceRefObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final appSourceKind? _KIND;
-  final String? _REF;
-  final String? _DESCRIPTION;
-
-  APPSourceRefObjectBuilder({
-    String? ID,
-    appSourceKind? KIND,
-    String? REF,
-    String? DESCRIPTION,
-  })
-      : _ID = ID,
-        _KIND = KIND,
-        _REF = REF,
-        _DESCRIPTION = DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? REFOffset = _REF == null ? null
-        : fbBuilder.writeString(_REF!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addUint8(1, _KIND?.value);
-    fbBuilder.addOffset(2, REFOffset);
-    fbBuilder.addOffset(3, DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One UI page of the app. Exactly one of the two delivery mechanisms must
-///  be populated: inline CONTENT (with ENCODING describing its string form),
-///  or MODULE_ID plus URL for a page served by a member module. Inline pages
-///  must be fully self-contained — CSS and JS inlined, all assets embedded
-///  as data URIs, zero external requests.
-class APPUIPage {
-  APPUIPage._(this._bc, this._bcOffset);
-  factory APPUIPage(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<APPUIPage> reader = _APPUIPageReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  App-local stable reference for this page. Required, unique within the
-  ///  manifest.
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Display title. Falls back to the app NAME when empty.
-  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Human-readable summary. Falls back to the app DESCRIPTION when empty.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Launcher icon identifier or inline data URI.
-  String? get ICON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Launcher accent color, CSS color syntax.
-  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Launcher text color, CSS color syntax.
-  String? get TEXT_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get textColor => TEXT_COLOR;
-  ///  Inlined, self-contained page in the string form declared by ENCODING.
-  ///  Empty when the page is module-served via MODULE_ID and URL.
-  String? get CONTENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  ///  String form of CONTENT.
-  appContentEncoding get ENCODING => appContentEncoding.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  ///  IANA media type of the decoded page bytes, for example text/html.
-  String? get MEDIA_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get mediaType => MEDIA_TYPE;
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the decoded
-  ///  page bytes, so a launcher can verify inline content after decoding.
-  String? get CONTENT_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get contentSha256 => CONTENT_SHA256;
-  ///  True for the page the launcher opens first. Exactly one page in an
-  ///  app must set this when UI is present.
-  bool get ENTRY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  ///  When module-served, must equal an APPModuleRef.ID in the same
-  ///  manifest — the member module that serves this page.
-  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get moduleId => MODULE_ID;
-  ///  When module-served, the path or entrypoint the module serves the page
-  ///  at.
-  String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-
-  @override
-  String toString() {
-    return 'APPUIPage{ID: ${ID}, TITLE: ${TITLE}, DESCRIPTION: ${DESCRIPTION}, ICON: ${ICON}, COLOR: ${COLOR}, textColor: ${textColor}, CONTENT: ${CONTENT}, ENCODING: ${ENCODING}, mediaType: ${mediaType}, contentSha256: ${contentSha256}, ENTRY: ${ENTRY}, moduleId: ${moduleId}, URL: ${URL}}';
-  }
-}
-
-class _APPUIPageReader extends fb.TableReader<APPUIPage> {
-  const _APPUIPageReader();
-
-  @override
-  APPUIPage createObject(fb.BufferContext bc, int offset) =>
-    APPUIPage._(bc, offset);
-}
-
-class APPUIPageBuilder {
-  APPUIPageBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(13);
-  }
-
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addIssuedAt(int? ISSUED_AT) {
+    fbBuilder.addUint64(2, ISSUED_AT);
     return fbBuilder.offset;
   }
   int addTitleOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addIconOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addColorOffset(int? offset) {
+  int addCategoriesOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addTextColorOffset(int? offset) {
+  int addRollupsOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addContentOffset(int? offset) {
+  int addSignatureOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addEncoding(appContentEncoding? ENCODING) {
-    fbBuilder.addUint8(7, ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addMediaTypeOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addContentSha256Offset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addEntry(bool? ENTRY) {
-    fbBuilder.addBool(10, ENTRY);
-    return fbBuilder.offset;
-  }
-  int addModuleIdOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addUrlOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
 
@@ -853,526 +514,57 @@ class APPUIPageBuilder {
   }
 }
 
-class APPUIPageObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _TITLE;
-  final String? _DESCRIPTION;
-  final String? _ICON;
-  final String? _COLOR;
-  final String? _TEXT_COLOR;
-  final String? _CONTENT;
-  final appContentEncoding? _ENCODING;
-  final String? _MEDIA_TYPE;
-  final String? _CONTENT_SHA256;
-  final bool? _ENTRY;
-  final String? _MODULE_ID;
-  final String? _URL;
-
-  APPUIPageObjectBuilder({
-    String? ID,
-    String? TITLE,
-    String? DESCRIPTION,
-    String? ICON,
-    String? COLOR,
-    String? TEXT_COLOR,
-    String? textColor,
-    String? CONTENT,
-    appContentEncoding? ENCODING,
-    String? MEDIA_TYPE,
-    String? mediaType,
-    String? CONTENT_SHA256,
-    String? contentSha256,
-    bool? ENTRY,
-    String? MODULE_ID,
-    String? moduleId,
-    String? URL,
-  })
-      : _ID = ID,
-        _TITLE = TITLE,
-        _DESCRIPTION = DESCRIPTION,
-        _ICON = ICON,
-        _COLOR = COLOR,
-        _TEXT_COLOR = textColor ?? TEXT_COLOR,
-        _CONTENT = CONTENT,
-        _ENCODING = ENCODING,
-        _MEDIA_TYPE = mediaType ?? MEDIA_TYPE,
-        _CONTENT_SHA256 = contentSha256 ?? CONTENT_SHA256,
-        _ENTRY = ENTRY,
-        _MODULE_ID = moduleId ?? MODULE_ID,
-        _URL = URL;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? TITLEOffset = _TITLE == null ? null
-        : fbBuilder.writeString(_TITLE!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? ICONOffset = _ICON == null ? null
-        : fbBuilder.writeString(_ICON!);
-    final int? COLOROffset = _COLOR == null ? null
-        : fbBuilder.writeString(_COLOR!);
-    final int? TEXT_COLOROffset = _TEXT_COLOR == null ? null
-        : fbBuilder.writeString(_TEXT_COLOR!);
-    final int? CONTENTOffset = _CONTENT == null ? null
-        : fbBuilder.writeString(_CONTENT!);
-    final int? MEDIA_TYPEOffset = _MEDIA_TYPE == null ? null
-        : fbBuilder.writeString(_MEDIA_TYPE!);
-    final int? CONTENT_SHA256Offset = _CONTENT_SHA256 == null ? null
-        : fbBuilder.writeString(_CONTENT_SHA256!);
-    final int? MODULE_IDOffset = _MODULE_ID == null ? null
-        : fbBuilder.writeString(_MODULE_ID!);
-    final int? URLOffset = _URL == null ? null
-        : fbBuilder.writeString(_URL!);
-    fbBuilder.startTable(13);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, TITLEOffset);
-    fbBuilder.addOffset(2, DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, ICONOffset);
-    fbBuilder.addOffset(4, COLOROffset);
-    fbBuilder.addOffset(5, TEXT_COLOROffset);
-    fbBuilder.addOffset(6, CONTENTOffset);
-    fbBuilder.addUint8(7, _ENCODING?.value);
-    fbBuilder.addOffset(8, MEDIA_TYPEOffset);
-    fbBuilder.addOffset(9, CONTENT_SHA256Offset);
-    fbBuilder.addBool(10, _ENTRY);
-    fbBuilder.addOffset(11, MODULE_IDOffset);
-    fbBuilder.addOffset(12, URLOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One unit of the page's data contract: a named flow describing what data
-///  enters or leaves the running page, the SDS standard it carries, how it is
-///  transported, and — when applicable — the loaded module method port bound
-///  to it. Standards-only rule: every flow payload is an SDS record (a
-///  canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
-///  defines no data shapes of its own, it only references an existing
-///  spacedatastandards.org schema by its established code. Locators are
-///  content-addressed and IPFS-first.
-class APPDataflow {
-  APPDataflow._(this._bc, this._bcOffset);
-  factory APPDataflow(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<APPDataflow> reader = _APPDataflowReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  App-local stable name for this flow. Required, unique within the
-  ///  manifest.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Which way the payload crosses the page boundary at runtime.
-  appFlowDirection get DIRECTION => appFlowDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Existing SDS schema code carried by this flow, for example OMM, OEM, or
-  ///  PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
-  ///  the flow carries; the app defines no schema of its own.
-  String? get SDS_SCHEMA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get sdsSchema => SDS_SCHEMA;
-  ///  Transport that moves the payload. Defaults to IPFS_CID per the
-  ///  content-addressed, IPFS-first rule.
-  appFlowTransport get TRANSPORT => appFlowTransport.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
-  ///  for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
-  ///  route template for GATEWAY_ROUTE.
-  String? get LOCATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
-  ///  loaded module that produces or consumes this flow. Binds the flow to a
-  ///  specific module method port together with METHOD_ID and PORT_ID.
-  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get moduleId => MODULE_ID;
-  ///  When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
-  ///  this flow is bound to.
-  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get methodId => METHOD_ID;
-  ///  When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
-  ///  flow is bound to.
-  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get portId => PORT_ID;
-  ///  String/compression form of the payload as it crosses the channel,
-  ///  reusing the page content-encoding vocabulary. For flows carrying
-  ///  canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
-  ///  bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
-  ///  BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
-  ///  applied when the channel is text-only.
-  appContentEncoding get CONTENT_ENCODING => appContentEncoding.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  appContentEncoding get contentEncoding => CONTENT_ENCODING;
-  ///  Human-readable summary.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-
-  @override
-  String toString() {
-    return 'APPDataflow{NAME: ${NAME}, DIRECTION: ${DIRECTION}, sdsSchema: ${sdsSchema}, TRANSPORT: ${TRANSPORT}, LOCATOR: ${LOCATOR}, moduleId: ${moduleId}, methodId: ${methodId}, portId: ${portId}, contentEncoding: ${contentEncoding}, DESCRIPTION: ${DESCRIPTION}}';
-  }
-}
-
-class _APPDataflowReader extends fb.TableReader<APPDataflow> {
-  const _APPDataflowReader();
-
-  @override
-  APPDataflow createObject(fb.BufferContext bc, int offset) =>
-    APPDataflow._(bc, offset);
-}
-
-class APPDataflowBuilder {
-  APPDataflowBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addDirection(appFlowDirection? DIRECTION) {
-    fbBuilder.addUint8(1, DIRECTION?.value);
-    return fbBuilder.offset;
-  }
-  int addSdsSchemaOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addTransport(appFlowTransport? TRANSPORT) {
-    fbBuilder.addUint8(3, TRANSPORT?.value);
-    return fbBuilder.offset;
-  }
-  int addLocatorOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addModuleIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addMethodIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addPortIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addContentEncoding(appContentEncoding? CONTENT_ENCODING) {
-    fbBuilder.addUint8(8, CONTENT_ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class APPDataflowObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final appFlowDirection? _DIRECTION;
-  final String? _SDS_SCHEMA;
-  final appFlowTransport? _TRANSPORT;
-  final String? _LOCATOR;
-  final String? _MODULE_ID;
-  final String? _METHOD_ID;
-  final String? _PORT_ID;
-  final appContentEncoding? _CONTENT_ENCODING;
-  final String? _DESCRIPTION;
-
-  APPDataflowObjectBuilder({
-    String? NAME,
-    appFlowDirection? DIRECTION,
-    String? SDS_SCHEMA,
-    String? sdsSchema,
-    appFlowTransport? TRANSPORT,
-    String? LOCATOR,
-    String? MODULE_ID,
-    String? moduleId,
-    String? METHOD_ID,
-    String? methodId,
-    String? PORT_ID,
-    String? portId,
-    appContentEncoding? CONTENT_ENCODING,
-    appContentEncoding? contentEncoding,
-    String? DESCRIPTION,
-  })
-      : _NAME = NAME,
-        _DIRECTION = DIRECTION,
-        _SDS_SCHEMA = sdsSchema ?? SDS_SCHEMA,
-        _TRANSPORT = TRANSPORT,
-        _LOCATOR = LOCATOR,
-        _MODULE_ID = moduleId ?? MODULE_ID,
-        _METHOD_ID = methodId ?? METHOD_ID,
-        _PORT_ID = portId ?? PORT_ID,
-        _CONTENT_ENCODING = contentEncoding ?? CONTENT_ENCODING,
-        _DESCRIPTION = DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SDS_SCHEMAOffset = _SDS_SCHEMA == null ? null
-        : fbBuilder.writeString(_SDS_SCHEMA!);
-    final int? LOCATOROffset = _LOCATOR == null ? null
-        : fbBuilder.writeString(_LOCATOR!);
-    final int? MODULE_IDOffset = _MODULE_ID == null ? null
-        : fbBuilder.writeString(_MODULE_ID!);
-    final int? METHOD_IDOffset = _METHOD_ID == null ? null
-        : fbBuilder.writeString(_METHOD_ID!);
-    final int? PORT_IDOffset = _PORT_ID == null ? null
-        : fbBuilder.writeString(_PORT_ID!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addUint8(1, _DIRECTION?.value);
-    fbBuilder.addOffset(2, SDS_SCHEMAOffset);
-    fbBuilder.addUint8(3, _TRANSPORT?.value);
-    fbBuilder.addOffset(4, LOCATOROffset);
-    fbBuilder.addOffset(5, MODULE_IDOffset);
-    fbBuilder.addOffset(6, METHOD_IDOffset);
-    fbBuilder.addOffset(7, PORT_IDOffset);
-    fbBuilder.addUint8(8, _CONTENT_ENCODING?.value);
-    fbBuilder.addOffset(9, DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Application Package Manifest — one launchable app.
-class APP {
-  APP._(this._bc, this._bcOffset);
-  factory APP(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<APP> reader = _APPReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable app identity, unique per publisher. Required.
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Display name.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  SemVer 2.0.0 app version.
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Human-readable summary.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Member WASM modules. Referential integrity: every MODULE_ID and every
-  ///  MODULE-kind REF elsewhere in the manifest must resolve into this list.
-  List<APPModuleRef>? get MODULES => const fb.ListReader<APPModuleRef>(APPModuleRef.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  SDS record types produced and consumed.
-  List<APPDataRef>? get DATA => const fb.ListReader<APPDataRef>(APPDataRef.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Upstream sources depended on.
-  List<APPSourceRef>? get SOURCES => const fb.ListReader<APPSourceRef>(APPSourceRef.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  ///  UI pages. Exactly one entry page when nonempty.
-  List<APPUIPage>? get UI => const fb.ListReader<APPUIPage>(APPUIPage.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
-  ///  when the manifest was created.
-  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get createdAt => CREATED_AT;
-  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
-  ///  when the manifest was last updated.
-  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get updatedAt => UPDATED_AT;
-  ///  The page's declarative data contract: what data enters and leaves the
-  ///  running page and how. Referential integrity: every MODULE_ID here must
-  ///  resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
-  ///  name a method port advertised by that module's PLG manifest.
-  List<APPDataflow>? get DATAFLOW => const fb.ListReader<APPDataflow>(APPDataflow.reader).vTableGetNullable(_bc, _bcOffset, 24);
-  ///  App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
-  ///  self-describe where the app as a whole is meant to run, instead of that
-  ///  classification being supplied externally at install time. This is the
-  ///  app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
-  ///  RUNTIME_TARGET still governs where that specific member module loads and
-  ///  may specialize away from RUNTIME_CLASS (for example a NODE-class app
-  ///  with one PAGE-capable module). Defaults to NODE to preserve the prior
-  ///  node-only assumption of manifests written before this field existed.
-  appRuntimeTarget get RUNTIME_CLASS => appRuntimeTarget.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 26, 0));
-  appRuntimeTarget get runtimeClass => RUNTIME_CLASS;
-
-  @override
-  String toString() {
-    return 'APP{ID: ${ID}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, MODULES: ${MODULES}, DATA: ${DATA}, SOURCES: ${SOURCES}, UI: ${UI}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, DATAFLOW: ${DATAFLOW}, runtimeClass: ${runtimeClass}}';
-  }
-}
-
-class _APPReader extends fb.TableReader<APP> {
-  const _APPReader();
-
-  @override
-  APP createObject(fb.BufferContext bc, int offset) =>
-    APP._(bc, offset);
-}
-
-class APPBuilder {
-  APPBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(12);
-  }
-
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addVersionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addModulesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDataOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addSourcesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addUiOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addCreatedAtOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addUpdatedAtOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addDataflowOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addRuntimeClass(appRuntimeTarget? RUNTIME_CLASS) {
-    fbBuilder.addUint8(11, RUNTIME_CLASS?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class APPObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _NAME;
+class CCTObjectBuilder extends fb.ObjectBuilder {
+  final String? _TAXONOMY_ID;
   final String? _VERSION;
-  final String? _DESCRIPTION;
-  final List<APPModuleRefObjectBuilder>? _MODULES;
-  final List<APPDataRefObjectBuilder>? _DATA;
-  final List<APPSourceRefObjectBuilder>? _SOURCES;
-  final List<APPUIPageObjectBuilder>? _UI;
-  final String? _CREATED_AT;
-  final String? _UPDATED_AT;
-  final List<APPDataflowObjectBuilder>? _DATAFLOW;
-  final appRuntimeTarget? _RUNTIME_CLASS;
+  final int? _ISSUED_AT;
+  final String? _TITLE;
+  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
+  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
+  final List<int>? _SIGNATURE;
 
-  APPObjectBuilder({
-    String? ID,
-    String? NAME,
+  CCTObjectBuilder({
+    String? TAXONOMY_ID,
+    String? taxonomyId,
     String? VERSION,
-    String? DESCRIPTION,
-    List<APPModuleRefObjectBuilder>? MODULES,
-    List<APPDataRefObjectBuilder>? DATA,
-    List<APPSourceRefObjectBuilder>? SOURCES,
-    List<APPUIPageObjectBuilder>? UI,
-    String? CREATED_AT,
-    String? createdAt,
-    String? UPDATED_AT,
-    String? updatedAt,
-    List<APPDataflowObjectBuilder>? DATAFLOW,
-    appRuntimeTarget? RUNTIME_CLASS,
-    appRuntimeTarget? runtimeClass,
+    int? ISSUED_AT,
+    int? issuedAt,
+    String? TITLE,
+    List<CCTCategoryObjectBuilder>? CATEGORIES,
+    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
+    List<int>? SIGNATURE,
   })
-      : _ID = ID,
-        _NAME = NAME,
+      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
         _VERSION = VERSION,
-        _DESCRIPTION = DESCRIPTION,
-        _MODULES = MODULES,
-        _DATA = DATA,
-        _SOURCES = SOURCES,
-        _UI = UI,
-        _CREATED_AT = createdAt ?? CREATED_AT,
-        _UPDATED_AT = updatedAt ?? UPDATED_AT,
-        _DATAFLOW = DATAFLOW,
-        _RUNTIME_CLASS = runtimeClass ?? RUNTIME_CLASS;
+        _ISSUED_AT = issuedAt ?? ISSUED_AT,
+        _TITLE = TITLE,
+        _CATEGORIES = CATEGORIES,
+        _ROLLUPS = ROLLUPS,
+        _SIGNATURE = SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
+    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
+        : fbBuilder.writeString(_TAXONOMY_ID!);
     final int? VERSIONOffset = _VERSION == null ? null
         : fbBuilder.writeString(_VERSION!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? MODULESOffset = _MODULES == null ? null
-        : fbBuilder.writeList(_MODULES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATAOffset = _DATA == null ? null
-        : fbBuilder.writeList(_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SOURCESOffset = _SOURCES == null ? null
-        : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? UIOffset = _UI == null ? null
-        : fbBuilder.writeList(_UI!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? CREATED_ATOffset = _CREATED_AT == null ? null
-        : fbBuilder.writeString(_CREATED_AT!);
-    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
-        : fbBuilder.writeString(_UPDATED_AT!);
-    final int? DATAFLOWOffset = _DATAFLOW == null ? null
-        : fbBuilder.writeList(_DATAFLOW!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, VERSIONOffset);
-    fbBuilder.addOffset(3, DESCRIPTIONOffset);
-    fbBuilder.addOffset(4, MODULESOffset);
-    fbBuilder.addOffset(5, DATAOffset);
-    fbBuilder.addOffset(6, SOURCESOffset);
-    fbBuilder.addOffset(7, UIOffset);
-    fbBuilder.addOffset(8, CREATED_ATOffset);
-    fbBuilder.addOffset(9, UPDATED_ATOffset);
-    fbBuilder.addOffset(10, DATAFLOWOffset);
-    fbBuilder.addUint8(11, _RUNTIME_CLASS?.value);
+    final int? TITLEOffset = _TITLE == null ? null
+        : fbBuilder.writeString(_TITLE!);
+    final int? CATEGORIESOffset = _CATEGORIES == null ? null
+        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ROLLUPSOffset = _ROLLUPS == null ? null
+        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
+    fbBuilder.addOffset(1, VERSIONOffset);
+    fbBuilder.addUint64(2, _ISSUED_AT);
+    fbBuilder.addOffset(3, TITLEOffset);
+    fbBuilder.addOffset(4, CATEGORIESOffset);
+    fbBuilder.addOffset(5, ROLLUPSOffset);
+    fbBuilder.addOffset(6, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

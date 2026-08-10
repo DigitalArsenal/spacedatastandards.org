@@ -3,6 +3,12 @@
 // </auto-generated>
 
 /// Listing kind for marketplace entries.
+///
+/// This is the listing's DELIVERY KIND, not its capability category, and the
+/// two are not interchangeable. A storefront shelf, a browse row and a search
+/// facet are driven by `$CCT` `capabilityClass` via STF.PRIMARY_CATEGORY /
+/// STF.CATEGORIES; `listingCategory` only says whether the offering is
+/// delivered as a data stream or as a module artifact.
 public enum listingCategory : sbyte
 {
   DataStream = 0,

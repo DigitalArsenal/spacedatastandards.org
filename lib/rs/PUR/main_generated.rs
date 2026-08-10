@@ -2,6 +2,7 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]

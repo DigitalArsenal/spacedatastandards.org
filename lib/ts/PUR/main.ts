@@ -3,6 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './accessCategory.js';
+export * from './capabilityClass.js';
+export * from './CCT.js';
+export * from './CCTCategory.js';
+export * from './CCTCategoryRollup.js';
 export * from './DataCoverage.js';
 export * from './GrantFieldStreamPolicy.js';
 export * from './listingCategory.js';

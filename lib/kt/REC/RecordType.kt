@@ -223,5 +223,6 @@ class RecordType private constructor() {
         const val CNP: UByte = 201u
         const val CMR: UByte = 202u
         const val TBS: UByte = 203u
+        const val CCT: UByte = 204u
     }
 }

@@ -415,7 +415,9 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ICON_URL = 46,
     VT_SUPERSEDES_CONTENT_HASH = 48,
     VT_UPDATED_AT = 50,
-    VT_PLUGIN_TYPE = 52
+    VT_PLUGIN_TYPE = 52,
+    VT_PRIMARY_CATEGORY = 54,
+    VT_CATEGORIES = 56
   };
   /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable
   /// across versions. Required and unique within the manifest.
@@ -552,6 +554,36 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   pluginCategory PLUGIN_TYPE() const {
     return static_cast<pluginCategory>(GetField<int8_t>(VT_PLUGIN_TYPE, 21));
   }
+  /// The one ratified `$CCT` category this module is shelved under. Mirrors
+  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+  /// sanctioned way to group an offering: `pluginCategory` is single-valued,
+  /// holds a real family at ordinal 0, mixes capability families with
+  /// node-internal plumbing, and carries a deprecated vendor-derived member.
+  /// Present here, rather than only on the linked `$PLG`, so an anonymous
+  /// client can section the catalogue at boot without fetching one `$PLG` per
+  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+  ///
+  /// SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+  /// resting on a signed content hash. A consumer that shelves, filters or
+  /// counts by this field MUST NOT present the resulting grouping as
+  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,
+  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+  /// from provider-supplied presentation. Extending the canonical statement to
+  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+  /// every verifier in lockstep and is not made implicitly by adopting this
+  /// field.
+  capabilityClass PRIMARY_CATEGORY() const {
+    return static_cast<capabilityClass>(GetField<uint8_t>(VT_PRIMARY_CATEGORY, 0));
+  }
+  /// Every ratified `$CCT` category this module belongs to, for browse, filter
+  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+  /// PRIMARY_CATEGORY.
+  const ::flatbuffers::Vector<uint8_t> *CATEGORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CATEGORIES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -601,6 +633,9 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_UPDATED_AT) &&
            verifier.VerifyString(UPDATED_AT()) &&
            VerifyField<int8_t>(verifier, VT_PLUGIN_TYPE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_CATEGORY, 1) &&
+           VerifyOffset(verifier, VT_CATEGORIES) &&
+           verifier.VerifyVector(CATEGORIES()) &&
            verifier.EndTable();
   }
 };
@@ -684,6 +719,12 @@ struct PMMModuleEntryBuilder {
   void add_PLUGIN_TYPE(pluginCategory PLUGIN_TYPE) {
     fbb_.AddElement<int8_t>(PMMModuleEntry::VT_PLUGIN_TYPE, static_cast<int8_t>(PLUGIN_TYPE), 21);
   }
+  void add_PRIMARY_CATEGORY(capabilityClass PRIMARY_CATEGORY) {
+    fbb_.AddElement<uint8_t>(PMMModuleEntry::VT_PRIMARY_CATEGORY, static_cast<uint8_t>(PRIMARY_CATEGORY), 0);
+  }
+  void add_CATEGORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES) {
+    fbb_.AddOffset(PMMModuleEntry::VT_CATEGORIES, CATEGORIES);
+  }
   explicit PMMModuleEntryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -722,10 +763,13 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntry(
     ::flatbuffers::Offset<::flatbuffers::String> ICON_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_CONTENT_HASH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
-    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified) {
+    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0) {
   PMMModuleEntryBuilder builder_(_fbb);
   builder_.add_ARTIFACT_SIZE_BYTES(ARTIFACT_SIZE_BYTES);
   builder_.add_EPOCH(EPOCH);
+  builder_.add_CATEGORIES(CATEGORIES);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_SUPERSEDES_CONTENT_HASH(SUPERSEDES_CONTENT_HASH);
   builder_.add_ICON_URL(ICON_URL);
@@ -744,6 +788,7 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntry(
   builder_.add_PLG_CID(PLG_CID);
   builder_.add_PLUGIN_ID(PLUGIN_ID);
   builder_.add_MODULE_ID(MODULE_ID);
+  builder_.add_PRIMARY_CATEGORY(PRIMARY_CATEGORY);
   builder_.add_PLUGIN_TYPE(PLUGIN_TYPE);
   builder_.add_ENTRY_STATE(ENTRY_STATE);
   builder_.add_ACCESS_POLICY(ACCESS_POLICY);
@@ -778,7 +823,9 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntryDirect(
     const char *ICON_URL = nullptr,
     const char *SUPERSEDES_CONTENT_HASH = nullptr,
     const char *UPDATED_AT = nullptr,
-    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified) {
+    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    const std::vector<uint8_t> *CATEGORIES = nullptr) {
   auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto PLG_CID__ = PLG_CID ? _fbb.CreateString(PLG_CID) : 0;
@@ -797,6 +844,7 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntryDirect(
   auto ICON_URL__ = ICON_URL ? _fbb.CreateString(ICON_URL) : 0;
   auto SUPERSEDES_CONTENT_HASH__ = SUPERSEDES_CONTENT_HASH ? _fbb.CreateString(SUPERSEDES_CONTENT_HASH) : 0;
   auto UPDATED_AT__ = UPDATED_AT ? _fbb.CreateString(UPDATED_AT) : 0;
+  auto CATEGORIES__ = CATEGORIES ? _fbb.CreateVector<uint8_t>(*CATEGORIES) : 0;
   return CreatePMMModuleEntry(
       _fbb,
       MODULE_ID__,
@@ -823,7 +871,9 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntryDirect(
       ICON_URL__,
       SUPERSEDES_CONTENT_HASH__,
       UPDATED_AT__,
-      PLUGIN_TYPE);
+      PLUGIN_TYPE,
+      PRIMARY_CATEGORY,
+      CATEGORIES__);
 }
 
 /// Provider Module Manifest — what one provider node offers, signed by that

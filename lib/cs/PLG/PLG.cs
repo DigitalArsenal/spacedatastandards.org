@@ -303,6 +303,44 @@ public struct PLG : IFlatbufferObject
   /// Bindings from triggers to the node + input port they deliver to.
   public PLGFlowTriggerBinding? FLOW_TRIGGER_BINDINGS(int j) { int o = __p.__offset(114); return o != 0 ? (PLGFlowTriggerBinding?)(new PLGFlowTriggerBinding()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int FLOW_TRIGGER_BINDINGSLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The one ratified $CCT category this module is shelved under. This is the
+  /// category a storefront capsule, a library shelf and a breadcrumb show when
+  /// exactly one must be chosen. UNSPECIFIED means the publisher did not
+  /// classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  /// This supersedes PLUGIN_TYPE for all storefront, library and search
+  /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  /// `pluginCategory` vocabulary mixes capability families with node-internal
+  /// plumbing, carries a legacy vendor-derived member, holds a real family at
+  /// ordinal 0, and admits only one value. Canonical migration, applied by a
+  /// publisher rewriting an old manifest:
+  ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///   Renderer->VISUALIZATION_AND_RENDERING,
+  ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  /// PLUGIN_TYPE.
+  public capabilityClass PRIMARY_CATEGORY { get { int o = __p.__offset(116); return o != 0 ? (capabilityClass)__p.bb.Get(o + __p.bb_pos) : capabilityClass.UNSPECIFIED; } }
+  /// Every ratified $CCT category this module belongs to, for browse, filter
+  /// and per-category counting. A module MAY carry several. If nonempty it
+  /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  /// a set PRIMARY_CATEGORY means the module belongs to that one category.
+  public capabilityClass CATEGORIES(int j) { int o = __p.__offset(118); return o != 0 ? (capabilityClass)__p.bb.Get(__p.__vector(o) + j * 1) : (capabilityClass)0; }
+  public int CATEGORIESLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<capabilityClass> GetCATEGORIESBytes() { return __p.__vector_as_span<capabilityClass>(118, 1); }
+#else
+  public ArraySegment<byte>? GetCATEGORIESBytes() { return __p.__vector_as_arraysegment(118); }
+#endif
+  public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(118); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -360,13 +398,16 @@ public struct PLG : IFlatbufferObject
       VectorOffset FLOW_NODESOffset = default(VectorOffset),
       VectorOffset FLOW_EDGESOffset = default(VectorOffset),
       VectorOffset FLOW_TRIGGERSOffset = default(VectorOffset),
-      VectorOffset FLOW_TRIGGER_BINDINGSOffset = default(VectorOffset)) {
-    builder.StartTable(56);
+      VectorOffset FLOW_TRIGGER_BINDINGSOffset = default(VectorOffset),
+      capabilityClass PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED,
+      VectorOffset CATEGORIESOffset = default(VectorOffset)) {
+    builder.StartTable(58);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
+    PLG.AddCATEGORIES(builder, CATEGORIESOffset);
     PLG.AddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGSOffset);
     PLG.AddFLOW_TRIGGERS(builder, FLOW_TRIGGERSOffset);
     PLG.AddFLOW_EDGES(builder, FLOW_EDGESOffset);
@@ -414,6 +455,7 @@ public struct PLG : IFlatbufferObject
     PLG.AddVERSION(builder, VERSIONOffset);
     PLG.AddNAME(builder, NAMEOffset);
     PLG.AddPLUGIN_ID(builder, PLUGIN_IDOffset);
+    PLG.AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY);
     PLG.AddLISTING_STATUS(builder, LISTING_STATUS);
     PLG.AddPAYMENT_MODEL(builder, PAYMENT_MODEL);
     PLG.AddENCRYPTED(builder, ENCRYPTED);
@@ -421,7 +463,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(56); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(58); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -603,6 +645,13 @@ public struct PLG : IFlatbufferObject
   public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGFlowTriggerBinding>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGFlowTriggerBinding>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPRIMARY_CATEGORY(FlatBufferBuilder builder, capabilityClass PRIMARY_CATEGORY) { builder.AddByte(56, (byte)PRIMARY_CATEGORY, 0); }
+  public static void AddCATEGORIES(FlatBufferBuilder builder, VectorOffset CATEGORIESOffset) { builder.AddOffset(57, CATEGORIESOffset.Value, 0); }
+  public static VectorOffset CreateCATEGORIESVector(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, capabilityClass[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<capabilityClass> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<capabilityClass>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCATEGORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PLG> EndPLG(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PLUGIN_ID
@@ -699,6 +748,9 @@ public struct PLG : IFlatbufferObject
     for (var _j = 0; _j < this.FLOW_TRIGGERSLength; ++_j) {_o.FLOW_TRIGGERS.Add(this.FLOW_TRIGGERS(_j).HasValue ? this.FLOW_TRIGGERS(_j).Value.UnPack() : null);}
     _o.FLOW_TRIGGER_BINDINGS = new List<PLGFlowTriggerBindingT>();
     for (var _j = 0; _j < this.FLOW_TRIGGER_BINDINGSLength; ++_j) {_o.FLOW_TRIGGER_BINDINGS.Add(this.FLOW_TRIGGER_BINDINGS(_j).HasValue ? this.FLOW_TRIGGER_BINDINGS(_j).Value.UnPack() : null);}
+    _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY;
+    _o.CATEGORIES = new List<capabilityClass>();
+    for (var _j = 0; _j < this.CATEGORIESLength; ++_j) {_o.CATEGORIES.Add(this.CATEGORIES(_j));}
   }
   public static Offset<PLG> Pack(FlatBufferBuilder builder, PLGT _o) {
     if (_o == null) return default(Offset<PLG>);
@@ -867,6 +919,11 @@ public struct PLG : IFlatbufferObject
       for (var _j = 0; _j < __FLOW_TRIGGER_BINDINGS.Length; ++_j) { __FLOW_TRIGGER_BINDINGS[_j] = PLGFlowTriggerBinding.Pack(builder, _o.FLOW_TRIGGER_BINDINGS[_j]); }
       _FLOW_TRIGGER_BINDINGS = CreateFLOW_TRIGGER_BINDINGSVector(builder, __FLOW_TRIGGER_BINDINGS);
     }
+    var _CATEGORIES = default(VectorOffset);
+    if (_o.CATEGORIES != null) {
+      var __CATEGORIES = _o.CATEGORIES.ToArray();
+      _CATEGORIES = CreateCATEGORIESVector(builder, __CATEGORIES);
+    }
     return CreatePLG(
       builder,
       _PLUGIN_ID,
@@ -924,7 +981,9 @@ public struct PLG : IFlatbufferObject
       _FLOW_NODES,
       _FLOW_EDGES,
       _FLOW_TRIGGERS,
-      _FLOW_TRIGGER_BINDINGS);
+      _FLOW_TRIGGER_BINDINGS,
+      _o.PRIMARY_CATEGORY,
+      _CATEGORIES);
   }
 }
 
@@ -986,6 +1045,8 @@ public class PLGT
   public List<PLGFlowEdgeT> FLOW_EDGES { get; set; }
   public List<PLGFlowTriggerT> FLOW_TRIGGERS { get; set; }
   public List<PLGFlowTriggerBindingT> FLOW_TRIGGER_BINDINGS { get; set; }
+  public capabilityClass PRIMARY_CATEGORY { get; set; }
+  public List<capabilityClass> CATEGORIES { get; set; }
 
   public PLGT() {
     this.PLUGIN_ID = null;
@@ -1044,6 +1105,8 @@ public class PLGT
     this.FLOW_EDGES = null;
     this.FLOW_TRIGGERS = null;
     this.FLOW_TRIGGER_BINDINGS = null;
+    this.PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED;
+    this.CATEGORIES = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
     return PLG.GetRootAsPLG(new ByteBuffer(fbBuffer)).UnPack();
@@ -1117,6 +1180,8 @@ static public class PLGVerify
       && verifier.VerifyVectorOfTables(tablePos, 110 /*FLOW_EDGES*/, PLGFlowEdgeVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 112 /*FLOW_TRIGGERS*/, PLGFlowTriggerVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 114 /*FLOW_TRIGGER_BINDINGS*/, PLGFlowTriggerBindingVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 116 /*PRIMARY_CATEGORY*/, 1 /*capabilityClass*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 118 /*CATEGORIES*/, 1 /*capabilityClass*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

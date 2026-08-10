@@ -8,946 +8,411 @@ import Common
 
 import FlatBuffers
 
-///  Application Package Manifest
+///  Capability class of a distributable software unit (module, application, or
+///  composed flow).
 ///
-///  An app is a launchable collection of WASM modules, the SDS data types it
-///  produces and consumes, the upstream sources it depends on, and its user
-///  interface, grouped under one stable identity. Apps run isomorphically in
-///  the desktop runtime and the browser; the manifest is the single record a
-///  launcher needs to list, verify, and start the app.
+///  This enum IS the ratified category vocabulary. A storefront, library, module
+///  manifest and search surface all classify against these members and nothing
+///  else; a category that is not a member here does not exist. Members name
+///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
+///  site, organization, product, protocol brand or algorithm implementation;
+///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
+///  the taxonomy.
 ///
-///  The UI is carried inline: a fully self-contained HTML page (CSS and JS
-///  inlined, no external requests) inside a string field, with an explicit
-///  content-encoding parameter so the page may be stored as literal UTF-8
-///  text, base64, or a compressed base64 form. A page may instead be served
-///  by a member module; exactly one of the two mechanisms must be populated
-///  per page.
+///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
+///  reuse an ordinal. A reorder silently re-labels every published listing.
 ///
-///  The page's data contract is described declaratively by DATAFLOW: every
-///  unit of data that enters or leaves the running page, the SDS standard it
-///  carries, the transport that moves it, and — when applicable — the loaded
-///  module method port that produces or consumes it. Standards-only rule:
-///  every page payload is an SDS record (a canonical size-prefixed
-///  FlatBuffer) or a content identifier pointing at one; the app manifest
-///  carries no bespoke page-only data shapes. Locators are content-addressed
-///  and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
-///  node's IPFS gateway wherever the payload can be published as an immutable
-///  object, falling back to a live gossip topic or a same-origin gateway
-///  route only for streaming or request-scoped delivery.
+///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
+///  default-constructed classification can never decode as a real category. The
+///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
+///  ordinal 0 is a real family — and had to append an `Unspecified` member at
+///  the tail to recover. This enum does not repeat that.
 ///
-///  Member modules run isomorphically. A module ref may declare, via
-///  RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
-///  the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
-///  over IPFS and instantiates them in the shared isomorphic JS harness
-///  (manifest + plugin_invoke_stream), exactly as a server-side node would.
-///  There is no bespoke browser loader; the browser and the node are two
-///  hosts of one harness ABI.
-///  Content encoding applied to APPUIPage.CONTENT. Append new values only;
-///  never reorder or reuse existing values. Decoders must reject an encoding
-///  value they do not recognize rather than guessing.
-public enum appContentEncoding: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Each member's canonical display name is stated in its doc comment and is
+///  part of the ratified contract: a consumer rendering a category label uses
+///  that string verbatim, so every surface spells a category identically. The
+///  canonical route slug is the member identifier lowercased with `_` replaced
+///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
+///  "rf-and-communications").
+public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  CONTENT is the literal page text, UTF-8.
-  case utf8 = 0
-  ///  CONTENT is RFC 4648 standard base64 (with padding) of the page bytes.
-  case base64 = 1
-  ///  CONTENT is base64 of the gzip-compressed page bytes.
-  case base64Gzip = 2
-  ///  CONTENT is base64 of the Brotli-compressed page bytes.
-  case base64Brotli = 3
+  ///  No capability class stated. The publisher did not classify the unit.
+  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
+  ///  infer a class from the unit's name, description or tags.
+  ///  Display name: "Unspecified".
+  case unspecified = 0
+  ///  Advancing an object's state forward or backward in time under a force
+  ///  model, and interpolating between computed states.
+  ///  Display name: "Propagation".
+  case propagation = 1
+  ///  Estimating an object's state or model parameters by fitting to
+  ///  observations or ephemerides.
+  ///  Display name: "Orbit Determination".
+  case orbitDetermination = 2
+  ///  Planning, targeting and optimizing trajectory changes, including
+  ///  station-keeping, transfers and collision-avoidance maneuvers.
+  ///  Display name: "Maneuver Planning".
+  case maneuverPlanning = 3
+  ///  Screening for close approaches between objects and quantifying collision
+  ///  probability and miss distance.
+  ///  Display name: "Conjunction Assessment".
+  case conjunctionAssessment = 4
+  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
+  ///  evolution.
+  ///  Display name: "Reentry & Breakup".
+  case reentryAndBreakup = 5
+  ///  Attitude determination and control, body orientation, and pointing or
+  ///  slew planning.
+  ///  Display name: "Attitude & Pointing".
+  case attitudeAndPointing = 6
+  ///  Coordinate frame realization and transformation, time scale conversion,
+  ///  and earth-orientation parameter handling.
+  ///  Display name: "Reference Frames & Time".
+  case referenceFramesAndTime = 7
+  ///  Sensor modelling and tasking, field-of-regard and access computation, and
+  ///  area or target coverage figures of merit.
+  ///  Display name: "Sensors & Coverage".
+  case sensorsAndCoverage = 8
+  ///  Producing, correlating or associating observations of tracked objects,
+  ///  and maintaining tracks from them.
+  ///  Display name: "Tracking & Observation".
+  case trackingAndObservation = 9
+  ///  Radio-frequency link modelling, emitter and band characterization, signal
+  ///  capture handling, and communications planning.
+  ///  Display name: "RF & Communications".
+  case rfAndCommunications = 10
+  ///  Interference, jamming, spoofing and countermeasure modelling.
+  ///  Display name: "Electronic Warfare".
+  case electronicWarfare = 11
+  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
+  ///  geomagnetic activity, and ionospheric modelling.
+  ///  Display name: "Space Environment".
+  case spaceEnvironment = 12
+  ///  Acquiring bytes from upstream providers and parsing or exporting them
+  ///  across canonical record formats.
+  ///  Display name: "Data Sources & Ingest".
+  case dataSourcesAndIngest = 13
+  ///  Validating records for integrity, physical plausibility, continuity and
+  ///  schema conformance, and scoring data quality.
+  ///  Display name: "Data Validation & Quality".
+  case dataValidationAndQuality = 14
+  ///  Object catalogue curation, cross-identifier resolution, bus and physical
+  ///  property association, and entity identity.
+  ///  Display name: "Catalog & Identity".
+  case catalogAndIdentity = 15
+  ///  Rendering, scene composition, shading and interactive display of space
+  ///  data.
+  ///  Display name: "Visualization & Rendering".
+  case visualizationAndRendering = 16
+  ///  Ground station operation and control of physical equipment, including
+  ///  antenna rotators, radios and other hardware interfaces.
+  ///  Display name: "Ground Segment & Hardware".
+  case groundSegmentAndHardware = 17
+  ///  Mission and constellation design, trade studies, performance analysis and
+  ///  report generation.
+  ///  Display name: "Mission Design & Analysis".
+  case missionDesignAndAnalysis = 18
+  ///  Composition of other units into a graph. The unit of distribution is a
+  ///  flow of modules, not a leaf algorithm.
+  ///  Display name: "Flows & Composition".
+  case flowAndComposition = 19
+  ///  Persisting, indexing and querying records; storage engines and query
+  ///  surfaces.
+  ///  Display name: "Data Storage & Query".
+  case dataStorageAndQuery = 20
+  ///  Key custody, signing and verification, authentication, authorization and
+  ///  access control.
+  ///  Display name: "Security & Identity".
+  case securityAndIdentity = 21
+  ///  Listing, purchase, subscription, entitlement and license enforcement for
+  ///  distributed units.
+  ///  Display name: "Commerce & Licensing".
+  case commerceAndLicensing = 22
+  ///  Node runtime, artifact delivery, registry, publication and peer transport
+  ///  plumbing.
+  ///  Display name: "Node Infrastructure".
+  case nodeInfrastructure = 23
+  ///  Foundational mathematics and general-purpose utility libraries consumed by
+  ///  other units rather than run on their own.
+  ///  Display name: "Foundation & Math".
+  case foundationAndMath = 24
 
-  public static var max: appContentEncoding { return .base64Brotli }
-  public static var min: appContentEncoding { return .utf8 }
+  public static var max: capabilityClass { return .foundationAndMath }
+  public static var min: capabilityClass { return .unspecified }
 }
 
 
-///  Data flow of a referenced SDS record type relative to the app.
-public enum appDataDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case produces = 0
-  case consumes = 1
-  case both = 2
-
-  public static var max: appDataDirection { return .both }
-  public static var min: appDataDirection { return .produces }
-}
-
-
-///  Kind of upstream source an APPSourceRef names.
-public enum appSourceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  REF is an APPModuleRef.ID in the same manifest — one member module is
-  ///  itself the source for another.
-  case module = 0
-  ///  REF is a URL or endpoint identifier outside the app.
-  case externalApi = 1
-  ///  REF is a dataset or catalog identifier.
-  case dataset = 2
-
-  public static var max: appSourceKind { return .dataset }
-  public static var min: appSourceKind { return .module }
-}
-
-
-///  Direction of an APPDataflow entry relative to the running page. Distinct
-///  from appDataDirection, which is producer/consumer relative to the app as
-///  a whole; this enum is page-relative — which way bytes cross the page
-///  boundary at runtime. Append new values only; never reorder or reuse
-///  existing values.
-public enum appFlowDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Data is delivered into the page for display or module input.
-  case toPage = 0
-  ///  Data is emitted by the page (a module output or user action) for
-  ///  publication or upstream consumption.
-  case fromPage = 1
-  ///  Data crosses in both directions over the same channel.
-  case bidirectional = 2
-
-  public static var max: appFlowDirection { return .bidirectional }
-  public static var min: appFlowDirection { return .toPage }
-}
-
-
-///  Transport that moves an APPDataflow payload. Locators are content-
-///  addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
-///  immutable published object, and use the live or request-scoped transports
-///  only for streaming or same-origin request/response delivery. Append new
-///  values only; never reorder or reuse existing values.
-public enum appFlowTransport: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  LOCATOR is a CID; the page fetches the SDS record bytes by content
-  ///  through the serving node's IPFS gateway.
-  case ipfsCid = 0
-  ///  LOCATOR is a gossip topic name; live SDS records arrive on the topic
-  ///  via the node's pubsub bus.
-  case pubsubTopic = 1
-  ///  LOCATOR is a same-origin HTTP route template served by the node that
-  ///  serves the page (used for request-scoped queries and streaming).
-  case gatewayRoute = 2
-
-  public static var max: appFlowTransport { return .gatewayRoute }
-  public static var min: appFlowTransport { return .ipfsCid }
-}
-
-
-///  Where a member module is instantiated. PAGE and BOTH assert the module
-///  loads in the browser through the SAME module-sdk harness ABI the SDN
-///  nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
-///  IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
-///  page loader. Append new values only; never reorder or reuse existing
-///  values.
-public enum appRuntimeTarget: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Loads only in the desktop/server node runtime.
-  case node = 0
-  ///  Loads in the page through the isomorphic JS harness.
-  case page = 1
-  ///  Loads in both hosts from the same content-addressed bytes and ABI.
-  case both = 2
-
-  public static var max: appRuntimeTarget { return .both }
-  public static var min: appRuntimeTarget { return .node }
-}
-
-
-///  One member WASM module of the app. References module identity; never
-///  embeds the module artifact itself (delivery is the module-bundle lane).
-public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  One ratified category in the taxonomy.
+///
+///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
+///  without the label a surface will render, the sentence a browse row will
+///  show, and the route a link will target. This is what stops each consumer
+///  from inventing its own wording for the same code.
+public struct CCTCategory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPModuleRef.id, addPrefix: prefix) }
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ID: VOffset = 4
-    static let PLUGIN_ID: VOffset = 6
-    static let CONTENT_HASH: VOffset = 8
-    static let VERSION: VOffset = 10
-    static let ROLE: VOffset = 12
-    static let DESCRIPTION: VOffset = 14
-    static let MAX_WALL_CLOCK_MS: VOffset = 16
-    static let MAX_COST_UNITS: VOffset = 18
-    static let MAX_MEMORY_PAGES: VOffset = 20
-    static let RUNTIME_TARGET: VOffset = 22
-  }
-
-  ///  App-local stable reference for this module. Required, unique within
-  ///  the manifest.
-  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
-  ///  Plugin identifier of the module as published in its plugin listing.
-  public var PLUGIN_ID: String? { let o = _accessor.offset(VT.PLUGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLUGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLUGIN_ID) }
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
-  ///  portable (pre-AOT, publication-trailer-stripped) WASM bytes. This is
-  ///  the identity capability policies and signature policies key on.
-  public var CONTENT_HASH: String? { let o = _accessor.offset(VT.CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_HASH) }
-  ///  Module version expected by the app.
-  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
-  ///  Free-text launcher hint, for example primary, worker, or ui-host.
-  public var ROLE: String? { let o = _accessor.offset(VT.ROLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROLE) }
-  ///  Human-readable summary.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Per-invocation wall-clock budget override in milliseconds. Zero means
-  ///  the host runtime default applies.
-  public var MAX_WALL_CLOCK_MS: UInt64 { let o = _accessor.offset(VT.MAX_WALL_CLOCK_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Per-invocation execution-cost (fuel) budget override. Zero means the
-  ///  host runtime default applies.
-  public var MAX_COST_UNITS: UInt64 { let o = _accessor.offset(VT.MAX_COST_UNITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Linear-memory ceiling override in 64 KiB WASM pages. Zero means the
-  ///  host runtime default applies.
-  public var MAX_MEMORY_PAGES: UInt32 { let o = _accessor.offset(VT.MAX_MEMORY_PAGES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Where this module is instantiated. PAGE or BOTH means the module also
-  ///  loads in the browser: the page resolves its bytes by CONTENT_HASH over
-  ///  IPFS and instantiates it through the SAME isomorphic module-sdk harness
-  ///  ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
-  ///  a bespoke page-only loader. Defaults to NODE to preserve the prior
-  ///  node-only behavior of manifests written before this field existed.
-  public var RUNTIME_TARGET: appRuntimeTarget { let o = _accessor.offset(VT.RUNTIME_TARGET); return o == 0 ? .node : appRuntimeTarget(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .node }
-  public static func startAPPModuleRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
-  public static func add(CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_HASH, at: VT.CONTENT_HASH) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLE, at: VT.ROLE) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(MAX_WALL_CLOCK_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_WALL_CLOCK_MS, def: 0, at: VT.MAX_WALL_CLOCK_MS) }
-  public static func add(MAX_COST_UNITS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_COST_UNITS, def: 0, at: VT.MAX_COST_UNITS) }
-  public static func add(MAX_MEMORY_PAGES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_MEMORY_PAGES, def: 0, at: VT.MAX_MEMORY_PAGES) }
-  public static func add(RUNTIME_TARGET: appRuntimeTarget, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUNTIME_TARGET.rawValue, def: 0, at: VT.RUNTIME_TARGET) }
-  public static func endAPPModuleRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createAPPModuleRef(
-    _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset,
-    PLUGIN_IDOffset PLUGIN_ID: Offset = Offset(),
-    CONTENT_HASHOffset CONTENT_HASH: Offset = Offset(),
-    VERSIONOffset VERSION: Offset = Offset(),
-    ROLEOffset ROLE: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    MAX_WALL_CLOCK_MS: UInt64 = 0,
-    MAX_COST_UNITS: UInt64 = 0,
-    MAX_MEMORY_PAGES: UInt32 = 0,
-    RUNTIME_TARGET: appRuntimeTarget = .node
-  ) -> Offset {
-    let __start = APPModuleRef.startAPPModuleRef(&fbb)
-    APPModuleRef.add(ID: ID, &fbb)
-    APPModuleRef.add(PLUGIN_ID: PLUGIN_ID, &fbb)
-    APPModuleRef.add(CONTENT_HASH: CONTENT_HASH, &fbb)
-    APPModuleRef.add(VERSION: VERSION, &fbb)
-    APPModuleRef.add(ROLE: ROLE, &fbb)
-    APPModuleRef.add(DESCRIPTION: DESCRIPTION, &fbb)
-    APPModuleRef.add(MAX_WALL_CLOCK_MS: MAX_WALL_CLOCK_MS, &fbb)
-    APPModuleRef.add(MAX_COST_UNITS: MAX_COST_UNITS, &fbb)
-    APPModuleRef.add(MAX_MEMORY_PAGES: MAX_MEMORY_PAGES, &fbb)
-    APPModuleRef.add(RUNTIME_TARGET: RUNTIME_TARGET, &fbb)
-    return APPModuleRef.endAPPModuleRef(&fbb, start: __start)
-  }
-  public static func sortVectorOfAppmoduleRef(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
-    var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
-    return fbb.createVector(ofOffsets: off)
-  }
-  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPModuleRef? {
-    let key = key.utf8.map { $0 }
-    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
-    var start: Int32 = 0
-    while span != 0 {
-      var middle = span / 2
-      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
-      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
-      if comp > 0 {
-        span = middle
-      } else if comp < 0 {
-        middle += 1
-        start += middle
-        span -= middle
-      } else {
-        return APPModuleRef(fbb, o: tableOffset)
-      }
-    }
-    return nil
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CONTENT_HASH, fieldName: "CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MAX_WALL_CLOCK_MS, fieldName: "MAX_WALL_CLOCK_MS", required: false, type: UInt64.self)
-    try _v.visit(field: VT.MAX_COST_UNITS, fieldName: "MAX_COST_UNITS", required: false, type: UInt64.self)
-    try _v.visit(field: VT.MAX_MEMORY_PAGES, fieldName: "MAX_MEMORY_PAGES", required: false, type: UInt32.self)
-    try _v.visit(field: VT.RUNTIME_TARGET, fieldName: "RUNTIME_TARGET", required: false, type: appRuntimeTarget.self)
-    _v.finish()
-  }
-}
-
-///  One SDS record type the app produces and/or consumes. Names an existing
-///  spacedatastandards.org schema by its established code; the app manifest
-///  defines no data schemas of its own.
-public struct APPDataRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPDataRef.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let ID: VOffset = 4
-    static let SDS_TYPE: VOffset = 6
-    static let DIRECTION: VOffset = 8
-    static let MODULE_ID: VOffset = 10
+    static let CODE: VOffset = 4
+    static let DISPLAY_NAME: VOffset = 6
+    static let SUMMARY: VOffset = 8
+    static let SLUG: VOffset = 10
     static let DESCRIPTION: VOffset = 12
+    static let PARENT: VOffset = 14
+    static let SORT_ORDER: VOffset = 16
+    static let KEYWORDS: VOffset = 18
+    static let ICON_KEY: VOffset = 20
   }
 
-  ///  App-local stable reference for this data binding. Required, unique
-  ///  within the manifest.
-  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
-  ///  Existing SDS schema code, for example OMM, CDM, or EPM. Required.
-  public var SDS_TYPE: String! { let o = _accessor.offset(VT.SDS_TYPE); return _accessor.string(at: o) }
-  public var SDS_TYPESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SDS_TYPE) }
-  ///  Data flow relative to the app.
-  public var DIRECTION: appDataDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .produces : appDataDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .produces }
-  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
-  ///  member module responsible for this data binding.
-  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
-  ///  Human-readable summary.
+  ///  The ratified category code. This is the join key every consumer uses.
+  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
+  ///  name stated in the CODE member's doc comment.
+  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
+  ///  One-sentence description shown on browse rows and category headers.
+  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
+  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
+  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
+  ///  `-`. Published explicitly rather than derived so every surface routes
+  ///  identically.
+  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
+  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
+  ///  Longer editorial description for a category landing page.
   public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  public static func startAPPDataRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(SDS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SDS_TYPE, at: VT.SDS_TYPE) }
-  public static func add(DIRECTION: appDataDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
+  ///  top-level category. A category MUST NOT name itself as its parent.
+  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Presentation order within its parent, ascending. Ties break on
+  ///  DISPLAY_NAME.
+  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Search synonyms and alternate phrasings that resolve to this category.
+  ///  Feeds type-ahead; never rendered as the category label.
+  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
+  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
+  ///  URL: consuming node surfaces load zero external-origin bytes, so the
+  ///  consumer resolves this against its own local asset set.
+  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
+  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
+  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
+  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func endAPPDataRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
-  public static func createAPPDataRef(
+  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
+  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
+  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
+  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
+  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
+  public static func createCCTCategory(
     _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset,
-    SDS_TYPEOffset SDS_TYPE: Offset,
-    DIRECTION: appDataDirection = .produces,
-    MODULE_IDOffset MODULE_ID: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+    CODE: capabilityClass = .unspecified,
+    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
+    SUMMARYOffset SUMMARY: Offset,
+    SLUGOffset SLUG: Offset,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    PARENT: capabilityClass = .unspecified,
+    SORT_ORDER: UInt16 = 0,
+    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
+    ICON_KEYOffset ICON_KEY: Offset = Offset()
   ) -> Offset {
-    let __start = APPDataRef.startAPPDataRef(&fbb)
-    APPDataRef.add(ID: ID, &fbb)
-    APPDataRef.add(SDS_TYPE: SDS_TYPE, &fbb)
-    APPDataRef.add(DIRECTION: DIRECTION, &fbb)
-    APPDataRef.add(MODULE_ID: MODULE_ID, &fbb)
-    APPDataRef.add(DESCRIPTION: DESCRIPTION, &fbb)
-    return APPDataRef.endAPPDataRef(&fbb, start: __start)
-  }
-  public static func sortVectorOfAppdataRef(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
-    var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
-    return fbb.createVector(ofOffsets: off)
-  }
-  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPDataRef? {
-    let key = key.utf8.map { $0 }
-    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
-    var start: Int32 = 0
-    while span != 0 {
-      var middle = span / 2
-      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
-      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
-      if comp > 0 {
-        span = middle
-      } else if comp < 0 {
-        middle += 1
-        start += middle
-        span -= middle
-      } else {
-        return APPDataRef(fbb, o: tableOffset)
-      }
-    }
-    return nil
+    let __start = CCTCategory.startCCTCategory(&fbb)
+    CCTCategory.add(CODE: CODE, &fbb)
+    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
+    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
+    CCTCategory.add(SLUG: SLUG, &fbb)
+    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
+    CCTCategory.add(PARENT: PARENT, &fbb)
+    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
+    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
+    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
+    return CCTCategory.endCCTCategory(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SDS_TYPE, fieldName: "SDS_TYPE", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: appDataDirection.self)
-    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  One upstream data source the app depends on.
-public struct APPSourceRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  An observed count of catalogue items in one category.
+///
+///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
+///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
+///  count can never omit when it was taken or what it was taken over. A consumer
+///  that needs a live number computes it from the items; a consumer rendering a
+///  published rollup MUST show it as of COUNTED_AT.
+public struct CCTCategoryRollup: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPSourceRef.id, addPrefix: prefix) }
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ID: VOffset = 4
-    static let KIND: VOffset = 6
-    static let REF: VOffset = 8
-    static let DESCRIPTION: VOffset = 10
+    static let CODE: VOffset = 4
+    static let ITEM_COUNT: VOffset = 6
+    static let SOURCE_CATALOG_ID: VOffset = 8
+    static let COUNTED_AT: VOffset = 10
   }
 
-  ///  App-local stable reference for this source. Required, unique within
-  ///  the manifest.
-  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
-  ///  Classifies REF.
-  public var KIND: appSourceKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .module : appSourceKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .module }
-  ///  Source identifier: an APPModuleRef.ID when KIND is MODULE, otherwise a
-  ///  URL or dataset identifier. Required.
-  public var REF: String! { let o = _accessor.offset(VT.REF); return _accessor.string(at: o) }
-  public var REFSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REF) }
-  ///  Human-readable summary.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  public static func startAPPSourceRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(KIND: appSourceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF, at: VT.REF) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func endAPPSourceRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
-  public static func createAPPSourceRef(
+  ///  Category being counted.
+  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
+  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
+  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Identifier of the catalogue the count was taken over.
+  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
+  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
+  ///  Unix seconds when the count was taken.
+  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
+  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
+  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
+  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
+  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
+  public static func createCCTCategoryRollup(
     _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset,
-    KIND: appSourceKind = .module,
-    REFOffset REF: Offset,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+    CODE: capabilityClass = .unspecified,
+    ITEM_COUNT: UInt32 = 0,
+    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
+    COUNTED_AT: UInt64 = 0
   ) -> Offset {
-    let __start = APPSourceRef.startAPPSourceRef(&fbb)
-    APPSourceRef.add(ID: ID, &fbb)
-    APPSourceRef.add(KIND: KIND, &fbb)
-    APPSourceRef.add(REF: REF, &fbb)
-    APPSourceRef.add(DESCRIPTION: DESCRIPTION, &fbb)
-    return APPSourceRef.endAPPSourceRef(&fbb, start: __start)
-  }
-  public static func sortVectorOfAppsourceRef(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
-    var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
-    return fbb.createVector(ofOffsets: off)
-  }
-  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPSourceRef? {
-    let key = key.utf8.map { $0 }
-    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
-    var start: Int32 = 0
-    while span != 0 {
-      var middle = span / 2
-      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
-      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
-      if comp > 0 {
-        span = middle
-      } else if comp < 0 {
-        middle += 1
-        start += middle
-        span -= middle
-      } else {
-        return APPSourceRef(fbb, o: tableOffset)
-      }
-    }
-    return nil
+    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
+    CCTCategoryRollup.add(CODE: CODE, &fbb)
+    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
+    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
+    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
+    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: appSourceKind.self)
-    try _v.visit(field: VT.REF, fieldName: "REF", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
     _v.finish()
   }
 }
 
-///  One UI page of the app. Exactly one of the two delivery mechanisms must
-///  be populated: inline CONTENT (with ENCODING describing its string form),
-///  or MODULE_ID plus URL for a page served by a member module. Inline pages
-///  must be fully self-contained — CSS and JS inlined, all assets embedded
-///  as data URIs, zero external requests.
-public struct APPUIPage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  $CCT — Capability Category Taxonomy.
+///
+///  The ratified set of capability classes that distributable units (modules,
+///  applications, composed flows) are classified under, together with the labels
+///  and routes every consuming surface renders. One published $CCT is the single
+///  source of truth shared by a storefront, a library, a search index and the
+///  unit manifests themselves.
+///
+///  Division of labour: `$CCT` = the category vocabulary and its presentation;
+///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
+///  application's manifest, which cites categories by code; `$PMM` = which
+///  modules a provider serves; `$STO`/`$STF` = commerce.
+public struct CCT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPUIPage.id, addPrefix: prefix) }
+  public static var id: String { "$CCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ID: VOffset = 4
-    static let TITLE: VOffset = 6
-    static let DESCRIPTION: VOffset = 8
-    static let ICON: VOffset = 10
-    static let COLOR: VOffset = 12
-    static let TEXT_COLOR: VOffset = 14
-    static let CONTENT: VOffset = 16
-    static let ENCODING: VOffset = 18
-    static let MEDIA_TYPE: VOffset = 20
-    static let CONTENT_SHA256: VOffset = 22
-    static let ENTRY: VOffset = 24
-    static let MODULE_ID: VOffset = 26
-    static let URL: VOffset = 28
+    static let TAXONOMY_ID: VOffset = 4
+    static let VERSION: VOffset = 6
+    static let ISSUED_AT: VOffset = 8
+    static let TITLE: VOffset = 10
+    static let CATEGORIES: VOffset = 12
+    static let ROLLUPS: VOffset = 14
+    static let SIGNATURE: VOffset = 16
   }
 
-  ///  App-local stable reference for this page. Required, unique within the
-  ///  manifest.
-  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
-  ///  Display title. Falls back to the app NAME when empty.
+  ///  Stable identifier of this taxonomy publication.
+  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
+  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
+  ///  SemVer 2.0.0 version of the taxonomy content.
+  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
+  ///  Unix seconds when this taxonomy revision was issued.
+  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Human-readable title of the taxonomy.
   public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
   public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
-  ///  Human-readable summary. Falls back to the app DESCRIPTION when empty.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Launcher icon identifier or inline data URI.
-  public var ICON: String? { let o = _accessor.offset(VT.ICON); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON) }
-  ///  Launcher accent color, CSS color syntax.
-  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
-  ///  Launcher text color, CSS color syntax.
-  public var TEXT_COLOR: String? { let o = _accessor.offset(VT.TEXT_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TEXT_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT_COLOR) }
-  ///  Inlined, self-contained page in the string form declared by ENCODING.
-  ///  Empty when the page is module-served via MODULE_ID and URL.
-  public var CONTENT: String? { let o = _accessor.offset(VT.CONTENT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT) }
-  ///  String form of CONTENT.
-  public var ENCODING: appContentEncoding { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .utf8 : appContentEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .utf8 }
-  ///  IANA media type of the decoded page bytes, for example text/html.
-  public var MEDIA_TYPE: String? { let o = _accessor.offset(VT.MEDIA_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MEDIA_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MEDIA_TYPE) }
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the decoded
-  ///  page bytes, so a launcher can verify inline content after decoding.
-  public var CONTENT_SHA256: String? { let o = _accessor.offset(VT.CONTENT_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTENT_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_SHA256) }
-  ///  True for the page the launcher opens first. Exactly one page in an
-  ///  app must set this when UI is present.
-  public var ENTRY: Bool { let o = _accessor.offset(VT.ENTRY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  When module-served, must equal an APPModuleRef.ID in the same
-  ///  manifest — the member module that serves this page.
-  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
-  ///  When module-served, the path or entrypoint the module serves the page
-  ///  at.
-  public var URL: String? { let o = _accessor.offset(VT.URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URL) }
-  public static func startAPPUIPage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(ICON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON, at: VT.ICON) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
-  public static func add(TEXT_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT_COLOR, at: VT.TEXT_COLOR) }
-  public static func add(CONTENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT, at: VT.CONTENT) }
-  public static func add(ENCODING: appContentEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
-  public static func add(MEDIA_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEDIA_TYPE, at: VT.MEDIA_TYPE) }
-  public static func add(CONTENT_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_SHA256, at: VT.CONTENT_SHA256) }
-  public static func add(ENTRY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTRY, def: false,
-   at: VT.ENTRY) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
-  public static func add(URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URL, at: VT.URL) }
-  public static func endAPPUIPage(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createAPPUIPage(
-    _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset,
-    TITLEOffset TITLE: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    ICONOffset ICON: Offset = Offset(),
-    COLOROffset COLOR: Offset = Offset(),
-    TEXT_COLOROffset TEXT_COLOR: Offset = Offset(),
-    CONTENTOffset CONTENT: Offset = Offset(),
-    ENCODING: appContentEncoding = .utf8,
-    MEDIA_TYPEOffset MEDIA_TYPE: Offset = Offset(),
-    CONTENT_SHA256Offset CONTENT_SHA256: Offset = Offset(),
-    ENTRY: Bool = false,
-    MODULE_IDOffset MODULE_ID: Offset = Offset(),
-    URLOffset URL: Offset = Offset()
-  ) -> Offset {
-    let __start = APPUIPage.startAPPUIPage(&fbb)
-    APPUIPage.add(ID: ID, &fbb)
-    APPUIPage.add(TITLE: TITLE, &fbb)
-    APPUIPage.add(DESCRIPTION: DESCRIPTION, &fbb)
-    APPUIPage.add(ICON: ICON, &fbb)
-    APPUIPage.add(COLOR: COLOR, &fbb)
-    APPUIPage.add(TEXT_COLOR: TEXT_COLOR, &fbb)
-    APPUIPage.add(CONTENT: CONTENT, &fbb)
-    APPUIPage.add(ENCODING: ENCODING, &fbb)
-    APPUIPage.add(MEDIA_TYPE: MEDIA_TYPE, &fbb)
-    APPUIPage.add(CONTENT_SHA256: CONTENT_SHA256, &fbb)
-    APPUIPage.add(ENTRY: ENTRY, &fbb)
-    APPUIPage.add(MODULE_ID: MODULE_ID, &fbb)
-    APPUIPage.add(URL: URL, &fbb)
-    return APPUIPage.endAPPUIPage(&fbb, start: __start)
-  }
-  public static func sortVectorOfAppuipage(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
-    var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
-    return fbb.createVector(ofOffsets: off)
-  }
-  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPUIPage? {
-    let key = key.utf8.map { $0 }
-    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
-    var start: Int32 = 0
-    while span != 0 {
-      var middle = span / 2
-      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
-      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
-      if comp > 0 {
-        span = middle
-      } else if comp < 0 {
-        middle += 1
-        start += middle
-        span -= middle
-      } else {
-        return APPUIPage(fbb, o: tableOffset)
-      }
-    }
-    return nil
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ICON, fieldName: "ICON", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TEXT_COLOR, fieldName: "TEXT_COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CONTENT, fieldName: "CONTENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: appContentEncoding.self)
-    try _v.visit(field: VT.MEDIA_TYPE, fieldName: "MEDIA_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CONTENT_SHA256, fieldName: "CONTENT_SHA256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ENTRY, fieldName: "ENTRY", required: false, type: Bool.self)
-    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.URL, fieldName: "URL", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  One unit of the page's data contract: a named flow describing what data
-///  enters or leaves the running page, the SDS standard it carries, how it is
-///  transported, and — when applicable — the loaded module method port bound
-///  to it. Standards-only rule: every flow payload is an SDS record (a
-///  canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
-///  defines no data shapes of its own, it only references an existing
-///  spacedatastandards.org schema by its established code. Locators are
-///  content-addressed and IPFS-first.
-public struct APPDataflow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPDataflow.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let NAME: VOffset = 4
-    static let DIRECTION: VOffset = 6
-    static let SDS_SCHEMA: VOffset = 8
-    static let TRANSPORT: VOffset = 10
-    static let LOCATOR: VOffset = 12
-    static let MODULE_ID: VOffset = 14
-    static let METHOD_ID: VOffset = 16
-    static let PORT_ID: VOffset = 18
-    static let CONTENT_ENCODING: VOffset = 20
-    static let DESCRIPTION: VOffset = 22
-  }
-
-  ///  App-local stable name for this flow. Required, unique within the
-  ///  manifest.
-  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
-  ///  Which way the payload crosses the page boundary at runtime.
-  public var DIRECTION: appFlowDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .toPage : appFlowDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .toPage }
-  ///  Existing SDS schema code carried by this flow, for example OMM, OEM, or
-  ///  PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
-  ///  the flow carries; the app defines no schema of its own.
-  public var SDS_SCHEMA: String! { let o = _accessor.offset(VT.SDS_SCHEMA); return _accessor.string(at: o) }
-  public var SDS_SCHEMASegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SDS_SCHEMA) }
-  ///  Transport that moves the payload. Defaults to IPFS_CID per the
-  ///  content-addressed, IPFS-first rule.
-  public var TRANSPORT: appFlowTransport { let o = _accessor.offset(VT.TRANSPORT); return o == 0 ? .ipfsCid : appFlowTransport(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .ipfsCid }
-  ///  Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
-  ///  for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
-  ///  route template for GATEWAY_ROUTE.
-  public var LOCATOR: String? { let o = _accessor.offset(VT.LOCATOR); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LOCATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LOCATOR) }
-  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
-  ///  loaded module that produces or consumes this flow. Binds the flow to a
-  ///  specific module method port together with METHOD_ID and PORT_ID.
-  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
-  ///  When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
-  ///  this flow is bound to.
-  public var METHOD_ID: String? { let o = _accessor.offset(VT.METHOD_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var METHOD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD_ID) }
-  ///  When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
-  ///  flow is bound to.
-  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
-  ///  String/compression form of the payload as it crosses the channel,
-  ///  reusing the page content-encoding vocabulary. For flows carrying
-  ///  canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
-  ///  bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
-  ///  BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
-  ///  applied when the channel is text-only.
-  public var CONTENT_ENCODING: appContentEncoding { let o = _accessor.offset(VT.CONTENT_ENCODING); return o == 0 ? .utf8 : appContentEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .utf8 }
-  ///  Human-readable summary.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  public static func startAPPDataflow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(DIRECTION: appFlowDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
-  public static func add(SDS_SCHEMA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SDS_SCHEMA, at: VT.SDS_SCHEMA) }
-  public static func add(TRANSPORT: appFlowTransport, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT.rawValue, def: 0, at: VT.TRANSPORT) }
-  public static func add(LOCATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATOR, at: VT.LOCATOR) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
-  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
-  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
-  public static func add(CONTENT_ENCODING: appContentEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTENT_ENCODING.rawValue, def: 0, at: VT.CONTENT_ENCODING) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func endAPPDataflow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
-  public static func createAPPDataflow(
-    _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset,
-    DIRECTION: appFlowDirection = .toPage,
-    SDS_SCHEMAOffset SDS_SCHEMA: Offset,
-    TRANSPORT: appFlowTransport = .ipfsCid,
-    LOCATOROffset LOCATOR: Offset = Offset(),
-    MODULE_IDOffset MODULE_ID: Offset = Offset(),
-    METHOD_IDOffset METHOD_ID: Offset = Offset(),
-    PORT_IDOffset PORT_ID: Offset = Offset(),
-    CONTENT_ENCODING: appContentEncoding = .utf8,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
-  ) -> Offset {
-    let __start = APPDataflow.startAPPDataflow(&fbb)
-    APPDataflow.add(NAME: NAME, &fbb)
-    APPDataflow.add(DIRECTION: DIRECTION, &fbb)
-    APPDataflow.add(SDS_SCHEMA: SDS_SCHEMA, &fbb)
-    APPDataflow.add(TRANSPORT: TRANSPORT, &fbb)
-    APPDataflow.add(LOCATOR: LOCATOR, &fbb)
-    APPDataflow.add(MODULE_ID: MODULE_ID, &fbb)
-    APPDataflow.add(METHOD_ID: METHOD_ID, &fbb)
-    APPDataflow.add(PORT_ID: PORT_ID, &fbb)
-    APPDataflow.add(CONTENT_ENCODING: CONTENT_ENCODING, &fbb)
-    APPDataflow.add(DESCRIPTION: DESCRIPTION, &fbb)
-    return APPDataflow.endAPPDataflow(&fbb, start: __start)
-  }
-  public static func sortVectorOfAppdataflow(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
-    var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
-    return fbb.createVector(ofOffsets: off)
-  }
-  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPDataflow? {
-    let key = key.utf8.map { $0 }
-    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
-    var start: Int32 = 0
-    while span != 0 {
-      var middle = span / 2
-      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
-      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
-      if comp > 0 {
-        span = middle
-      } else if comp < 0 {
-        middle += 1
-        start += middle
-        span -= middle
-      } else {
-        return APPDataflow(fbb, o: tableOffset)
-      }
-    }
-    return nil
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: appFlowDirection.self)
-    try _v.visit(field: VT.SDS_SCHEMA, fieldName: "SDS_SCHEMA", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRANSPORT, fieldName: "TRANSPORT", required: false, type: appFlowTransport.self)
-    try _v.visit(field: VT.LOCATOR, fieldName: "LOCATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CONTENT_ENCODING, fieldName: "CONTENT_ENCODING", required: false, type: appContentEncoding.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Application Package Manifest — one launchable app.
-public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$APP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APP.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let VERSION: VOffset = 8
-    static let DESCRIPTION: VOffset = 10
-    static let MODULES: VOffset = 12
-    static let DATA: VOffset = 14
-    static let SOURCES: VOffset = 16
-    static let UI: VOffset = 18
-    static let CREATED_AT: VOffset = 20
-    static let UPDATED_AT: VOffset = 22
-    static let DATAFLOW: VOffset = 24
-    static let RUNTIME_CLASS: VOffset = 26
-  }
-
-  ///  Stable app identity, unique per publisher. Required.
-  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
-  ///  Display name.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  SemVer 2.0.0 app version.
-  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
-  ///  Human-readable summary.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Member WASM modules. Referential integrity: every MODULE_ID and every
-  ///  MODULE-kind REF elsewhere in the manifest must resolve into this list.
-  public var MODULES: FlatbufferVector<APPModuleRef> { return _accessor.vector(at: VT.MODULES, byteSize: 4) }
-  public func MODULESBy(key: String) -> APPModuleRef? { let o = _accessor.offset(VT.MODULES); return o == 0 ? nil : APPModuleRef.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  ///  SDS record types produced and consumed.
-  public var DATA: FlatbufferVector<APPDataRef> { return _accessor.vector(at: VT.DATA, byteSize: 4) }
-  public func DATABy(key: String) -> APPDataRef? { let o = _accessor.offset(VT.DATA); return o == 0 ? nil : APPDataRef.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  ///  Upstream sources depended on.
-  public var SOURCES: FlatbufferVector<APPSourceRef> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
-  public func SOURCESBy(key: String) -> APPSourceRef? { let o = _accessor.offset(VT.SOURCES); return o == 0 ? nil : APPSourceRef.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  ///  UI pages. Exactly one entry page when nonempty.
-  public var UI: FlatbufferVector<APPUIPage> { return _accessor.vector(at: VT.UI, byteSize: 4) }
-  public func UIBy(key: String) -> APPUIPage? { let o = _accessor.offset(VT.UI); return o == 0 ? nil : APPUIPage.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
-  ///  when the manifest was created.
-  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
-  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
-  ///  when the manifest was last updated.
-  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
-  ///  The page's declarative data contract: what data enters and leaves the
-  ///  running page and how. Referential integrity: every MODULE_ID here must
-  ///  resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
-  ///  name a method port advertised by that module's PLG manifest.
-  public var DATAFLOW: FlatbufferVector<APPDataflow> { return _accessor.vector(at: VT.DATAFLOW, byteSize: 4) }
-  public func DATAFLOWBy(key: String) -> APPDataflow? { let o = _accessor.offset(VT.DATAFLOW); return o == 0 ? nil : APPDataflow.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  ///  App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
-  ///  self-describe where the app as a whole is meant to run, instead of that
-  ///  classification being supplied externally at install time. This is the
-  ///  app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
-  ///  RUNTIME_TARGET still governs where that specific member module loads and
-  ///  may specialize away from RUNTIME_CLASS (for example a NODE-class app
-  ///  with one PAGE-capable module). Defaults to NODE to preserve the prior
-  ///  node-only assumption of manifests written before this field existed.
-  public var RUNTIME_CLASS: appRuntimeTarget { let o = _accessor.offset(VT.RUNTIME_CLASS); return o == 0 ? .node : appRuntimeTarget(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .node }
-  public static func startAPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  ///  The ratified categories. Every capabilityClass member a consumer may
+  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
+  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
+  ///  Optional per-category item counts as observed over a named catalogue.
+  ///  Absent means counts are computed by the consumer.
+  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
+  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func addVectorOf(MODULES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULES, at: VT.MODULES) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
-  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
-  public static func addVectorOf(UI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UI, at: VT.UI) }
-  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
-  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
-  public static func addVectorOf(DATAFLOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATAFLOW, at: VT.DATAFLOW) }
-  public static func add(RUNTIME_CLASS: appRuntimeTarget, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUNTIME_CLASS.rawValue, def: 0, at: VT.RUNTIME_CLASS) }
-  public static func endAPP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createAPP(
+  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
+  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
+  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
+  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
+  public static func createCCT(
     _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset,
-    NAMEOffset NAME: Offset = Offset(),
-    VERSIONOffset VERSION: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    MODULESVectorOffset MODULES: Offset = Offset(),
-    DATAVectorOffset DATA: Offset = Offset(),
-    SOURCESVectorOffset SOURCES: Offset = Offset(),
-    UIVectorOffset UI: Offset = Offset(),
-    CREATED_ATOffset CREATED_AT: Offset = Offset(),
-    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
-    DATAFLOWVectorOffset DATAFLOW: Offset = Offset(),
-    RUNTIME_CLASS: appRuntimeTarget = .node
+    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
+    VERSIONOffset VERSION: Offset,
+    ISSUED_AT: UInt64 = 0,
+    TITLEOffset TITLE: Offset = Offset(),
+    CATEGORIESVectorOffset CATEGORIES: Offset,
+    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = APP.startAPP(&fbb)
-    APP.add(ID: ID, &fbb)
-    APP.add(NAME: NAME, &fbb)
-    APP.add(VERSION: VERSION, &fbb)
-    APP.add(DESCRIPTION: DESCRIPTION, &fbb)
-    APP.addVectorOf(MODULES: MODULES, &fbb)
-    APP.addVectorOf(DATA: DATA, &fbb)
-    APP.addVectorOf(SOURCES: SOURCES, &fbb)
-    APP.addVectorOf(UI: UI, &fbb)
-    APP.add(CREATED_AT: CREATED_AT, &fbb)
-    APP.add(UPDATED_AT: UPDATED_AT, &fbb)
-    APP.addVectorOf(DATAFLOW: DATAFLOW, &fbb)
-    APP.add(RUNTIME_CLASS: RUNTIME_CLASS, &fbb)
-    return APP.endAPP(&fbb, start: __start)
+    let __start = CCT.startCCT(&fbb)
+    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
+    CCT.add(VERSION: VERSION, &fbb)
+    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
+    CCT.add(TITLE: TITLE, &fbb)
+    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
+    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
+    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    return CCT.endCCT(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODULES, fieldName: "MODULES", required: false, type: ForwardOffset<Vector<ForwardOffset<APPModuleRef>, APPModuleRef>>.self)
-    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<APPDataRef>, APPDataRef>>.self)
-    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<APPSourceRef>, APPSourceRef>>.self)
-    try _v.visit(field: VT.UI, fieldName: "UI", required: false, type: ForwardOffset<Vector<ForwardOffset<APPUIPage>, APPUIPage>>.self)
-    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DATAFLOW, fieldName: "DATAFLOW", required: false, type: ForwardOffset<Vector<ForwardOffset<APPDataflow>, APPDataflow>>.self)
-    try _v.visit(field: VT.RUNTIME_CLASS, fieldName: "RUNTIME_CLASS", required: false, type: appRuntimeTarget.self)
+    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
+    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

@@ -146,15 +146,22 @@ describe("CCT capability category taxonomy schema", () => {
     }
   });
 
-  it("is cited by both manifests that a storefront shelves", async () => {
-    const [plg, app] = await Promise.all([
+  it("is cited by every manifest a storefront or library shelves", async () => {
+    const [plg, app, stf, pmm] = await Promise.all([
       readFile("schema/PLG/main.fbs", "utf8"),
       readFile("schema/APP/main.fbs", "utf8"),
+      readFile("schema/STF/main.fbs", "utf8"),
+      readFile("schema/PMM/main.fbs", "utf8"),
     ]);
+
+    // PMM reaches capabilityClass transitively through its PLG include.
+    assert.match(pmm, /PRIMARY_CATEGORY:\s*capabilityClass = UNSPECIFIED;/);
+    assert.match(pmm, /CATEGORIES:\s*\[capabilityClass\];/);
 
     for (const [name, source] of [
       ["PLG", plg],
       ["APP", app],
+      ["STF", stf],
     ]) {
       assert.match(
         source,
@@ -199,6 +206,50 @@ describe("CCT capability category taxonomy schema", () => {
         `pluginCategory.${member} must have a documented forward mapping`
       );
     }
+  });
+
+  it("gives the vendor-named legacy member a deprecation path without moving its ordinal", async () => {
+    const plg = await readFile("schema/PLG/main.fbs", "utf8");
+
+    const legacy = plg.match(/enum pluginCategory : byte \{([\s\S]*?)\n\}/);
+    const members = legacy[1]
+      .replace(/^\s*\/\/\/.*$/gm, "")
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+
+    // Ordinal is wire data: the member is never removed, reordered or renamed.
+    assert.equal(
+      members.indexOf("Basilisk"),
+      18,
+      "Basilisk ordinal is wire data and must not move"
+    );
+
+    const block = legacy.input.slice(0, legacy.index + legacy[0].length);
+    const doc = block.match(/([\s\S]{0,900})\n\s*Basilisk,/)[1];
+    assert.match(doc, /DEPRECATED/, "Basilisk must be marked deprecated");
+    assert.match(
+      doc,
+      /PRIMARY_CATEGORY:\s*PROPAGATION/,
+      "Basilisk must name its successor category"
+    );
+
+    assert.match(
+      plg,
+      /DEPRECATED as a classification vocabulary/,
+      "pluginCategory must be marked superseded by the ratified taxonomy"
+    );
+  });
+
+  it("keeps the storefront listing's delivery kind distinct from its category", async () => {
+    const stf = await readFile("schema/STF/main.fbs", "utf8");
+
+    assert.match(stf, /LISTING_KIND:\s*listingCategory;/);
+    assert.match(
+      stf,
+      /delivery kind, not its capability category/i,
+      "listingCategory must state that it is not the capability taxonomy"
+    );
   });
 
   it("holds RecordType ordinal 204 in the frozen contract", async () => {

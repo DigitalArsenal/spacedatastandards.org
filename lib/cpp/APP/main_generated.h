@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct APPModuleRef;
 struct APPModuleRefBuilder;
 
@@ -1244,7 +1246,9 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CREATED_AT = 20,
     VT_UPDATED_AT = 22,
     VT_DATAFLOW = 24,
-    VT_RUNTIME_CLASS = 26
+    VT_RUNTIME_CLASS = 26,
+    VT_PRIMARY_CATEGORY = 28,
+    VT_CATEGORIES = 30
   };
   /// Stable app identity, unique per publisher. Required.
   const ::flatbuffers::String *ID() const {
@@ -1307,6 +1311,23 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   appRuntimeTarget RUNTIME_CLASS() const {
     return static_cast<appRuntimeTarget>(GetField<uint8_t>(VT_RUNTIME_CLASS, 0));
   }
+  /// The one ratified $CCT category this app is shelved under, using the same
+  /// vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+  /// or library shelf holds apps and modules together without translating
+  /// between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+  /// PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+  /// and a PAGE-class app can share a category.
+  /// UNSPECIFIED means the publisher did not classify the app; a consumer
+  /// renders it ungrouped and never infers a class.
+  capabilityClass PRIMARY_CATEGORY() const {
+    return static_cast<capabilityClass>(GetField<uint8_t>(VT_PRIMARY_CATEGORY, 0));
+  }
+  /// Every ratified $CCT category this app belongs to, for browse, filter and
+  /// per-category counting. An app MAY carry several. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  const ::flatbuffers::Vector<uint8_t> *CATEGORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CATEGORIES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1338,6 +1359,9 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(DATAFLOW()) &&
            verifier.VerifyVectorOfTables(DATAFLOW()) &&
            VerifyField<uint8_t>(verifier, VT_RUNTIME_CLASS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_CATEGORY, 1) &&
+           VerifyOffset(verifier, VT_CATEGORIES) &&
+           verifier.VerifyVector(CATEGORIES()) &&
            verifier.EndTable();
   }
 };
@@ -1382,6 +1406,12 @@ struct APPBuilder {
   void add_RUNTIME_CLASS(appRuntimeTarget RUNTIME_CLASS) {
     fbb_.AddElement<uint8_t>(APP::VT_RUNTIME_CLASS, static_cast<uint8_t>(RUNTIME_CLASS), 0);
   }
+  void add_PRIMARY_CATEGORY(capabilityClass PRIMARY_CATEGORY) {
+    fbb_.AddElement<uint8_t>(APP::VT_PRIMARY_CATEGORY, static_cast<uint8_t>(PRIMARY_CATEGORY), 0);
+  }
+  void add_CATEGORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES) {
+    fbb_.AddOffset(APP::VT_CATEGORIES, CATEGORIES);
+  }
   explicit APPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1407,8 +1437,11 @@ inline ::flatbuffers::Offset<APP> CreateAPP(
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW = 0,
-    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE) {
+    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0) {
   APPBuilder builder_(_fbb);
+  builder_.add_CATEGORIES(CATEGORIES);
   builder_.add_DATAFLOW(DATAFLOW);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
@@ -1420,6 +1453,7 @@ inline ::flatbuffers::Offset<APP> CreateAPP(
   builder_.add_VERSION(VERSION);
   builder_.add_NAME(NAME);
   builder_.add_ID(ID);
+  builder_.add_PRIMARY_CATEGORY(PRIMARY_CATEGORY);
   builder_.add_RUNTIME_CLASS(RUNTIME_CLASS);
   return builder_.Finish();
 }
@@ -1437,7 +1471,9 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
     const char *CREATED_AT = nullptr,
     const char *UPDATED_AT = nullptr,
     std::vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW = nullptr,
-    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE) {
+    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE,
+    capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
+    const std::vector<uint8_t> *CATEGORIES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
@@ -1449,6 +1485,7 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
   auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
   auto UPDATED_AT__ = UPDATED_AT ? _fbb.CreateString(UPDATED_AT) : 0;
   auto DATAFLOW__ = DATAFLOW ? _fbb.CreateVectorOfSortedTables<APPDataflow>(DATAFLOW) : 0;
+  auto CATEGORIES__ = CATEGORIES ? _fbb.CreateVector<uint8_t>(*CATEGORIES) : 0;
   return CreateAPP(
       _fbb,
       ID__,
@@ -1462,7 +1499,9 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
       CREATED_AT__,
       UPDATED_AT__,
       DATAFLOW__,
-      RUNTIME_CLASS);
+      RUNTIME_CLASS,
+      PRIMARY_CATEGORY,
+      CATEGORIES__);
 }
 
 inline const APP *GetAPP(const void *buf) {

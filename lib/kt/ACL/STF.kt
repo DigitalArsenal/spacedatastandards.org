@@ -358,6 +358,45 @@ class STF : Table() {
         }
     val sourcePeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
     fun sourcePeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * The one ratified `$CCT` category this listing is shelved under, using the
+     * same vocabulary and semantics as PLG.PRIMARY_CATEGORY and
+     * APP.PRIMARY_CATEGORY. Before this field existed a listing carried no
+     * capability category at all — only DATA_TYPES and TAGS — so a storefront
+     * shelf and a library shelf were grouped by two unrelated systems. A
+     * consumer MUST group listings by this field and MUST NOT re-derive a
+     * category from DATA_TYPES, TAGS or TITLE, none of which are a controlled
+     * vocabulary.
+     *
+     * Distinct from LISTING_KIND, which is the delivery kind (data stream vs
+     * module artifact), and from ACCESS_TYPE, which is the commercial access
+     * model. UNSPECIFIED means the provider did not classify the listing; a
+     * consumer renders it ungrouped and never guesses.
+     */
+    val primaryCategory : UByte
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Every ratified `$CCT` category this listing belongs to, for browse,
+     * filter and per-category counting. A listing MAY carry several. If
+     * nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+     */
+    fun categories(j: Int) : UByte {
+        val o = __offset(60)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val categoriesLength : Int
+        get() {
+            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+        }
+    val categoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun categoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTF(_bb: ByteBuffer): STF = getRootAsSTF(_bb, STF())
@@ -366,11 +405,12 @@ class STF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STF")
-        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int) : Int {
-            builder.startTable(27)
+        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int, primaryCategory: UByte, categoriesOffset: Int) : Int {
+            builder.startTable(29)
             addEXPIRESAT(builder, expiresAt)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
+            addCATEGORIES(builder, categoriesOffset)
             addSOURCEPEERID(builder, sourcePeerIdOffset)
             addLICENSE(builder, licenseOffset)
             addTERMSCID(builder, termsCidOffset)
@@ -391,13 +431,14 @@ class STF : Table() {
             addPROVIDEREPMCID(builder, providerEpmCidOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
             addLISTINGID(builder, listingIdOffset)
+            addPRIMARYCATEGORY(builder, primaryCategory)
             addLISTINGKIND(builder, listingKind)
             addACTIVE(builder, active)
             addENCRYPTIONREQUIRED(builder, encryptionRequired)
             addACCESSTYPE(builder, accessType)
             return endSTF(builder)
         }
-        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(29)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(0, listingId, 0)
         fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(1, providerPeerId, 0)
         fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(2, providerEpmCid, 0)
@@ -474,6 +515,17 @@ class STF : Table() {
         fun addTERMSCID(builder: FlatBufferBuilder, termsCid: Int) = builder.addOffset(24, termsCid, 0)
         fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(25, license, 0)
         fun addSOURCEPEERID(builder: FlatBufferBuilder, sourcePeerId: Int) = builder.addOffset(26, sourcePeerId, 0)
+        fun addPRIMARYCATEGORY(builder: FlatBufferBuilder, primaryCategory: UByte) = builder.addByte(27, primaryCategory.toByte(), 0)
+        fun addCATEGORIES(builder: FlatBufferBuilder, categories: Int) = builder.addOffset(28, categories, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCategoriesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCategoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endSTF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

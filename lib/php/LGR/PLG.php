@@ -835,22 +835,87 @@ class PLG extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// The one ratified $CCT category this module is shelved under. This is the
+    /// category a storefront capsule, a library shelf and a breadcrumb show when
+    /// exactly one must be chosen. UNSPECIFIED means the publisher did not
+    /// classify the module; a consumer renders it ungrouped and never guesses.
+    ///
+    /// This supersedes PLUGIN_TYPE for all storefront, library and search
+    /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+    /// `pluginCategory` vocabulary mixes capability families with node-internal
+    /// plumbing, carries a legacy vendor-derived member, holds a real family at
+    /// ordinal 0, and admits only one value. Canonical migration, applied by a
+    /// publisher rewriting an old manifest:
+    ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+    ///   Renderer->VISUALIZATION_AND_RENDERING,
+    ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+    ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+    ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+    ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+    ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+    ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+    ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+    ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+    ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+    ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+    /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+    /// PLUGIN_TYPE.
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_CATEGORY()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /// Every ratified $CCT category this module belongs to, for browse, filter
+    /// and per-category counting. A module MAY carry several. If nonempty it
+    /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+    /// a set PRIMARY_CATEGORY means the module belongs to that one category.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCATEGORIES($j)
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \capabilityClass::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCATEGORIESLength()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCATEGORIESBytes()
+    {
+        return $this->__vector_as_bytes(118);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(56);
+        $builder->StartObject(58);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS, $FLOW_NODES, $FLOW_EDGES, $FLOW_TRIGGERS, $FLOW_TRIGGER_BINDINGS)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS, $FLOW_NODES, $FLOW_EDGES, $FLOW_TRIGGERS, $FLOW_TRIGGER_BINDINGS, $PRIMARY_CATEGORY, $CATEGORIES)
     {
-        $builder->startObject(56);
+        $builder->startObject(58);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -907,6 +972,8 @@ class PLG extends Table
         self::addFLOW_EDGES($builder, $FLOW_EDGES);
         self::addFLOW_TRIGGERS($builder, $FLOW_TRIGGERS);
         self::addFLOW_TRIGGER_BINDINGS($builder, $FLOW_TRIGGER_BINDINGS);
+        self::addPRIMARY_CATEGORY($builder, $PRIMARY_CATEGORY);
+        self::addCATEGORIES($builder, $CATEGORIES);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PLUGIN_ID
         $builder->required($o, 6);  // NAME
@@ -2072,6 +2139,50 @@ class PLG extends Table
     public static function startFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_CATEGORY(FlatBufferBuilder $builder, $PRIMARY_CATEGORY)
+    {
+        $builder->addByteX(56, $PRIMARY_CATEGORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCATEGORIES(FlatBufferBuilder $builder, $CATEGORIES)
+    {
+        $builder->addOffsetX(57, $CATEGORIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCATEGORIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCATEGORIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

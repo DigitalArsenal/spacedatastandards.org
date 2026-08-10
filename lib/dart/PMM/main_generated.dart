@@ -6,223 +6,217 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-///  through an arena-backed plugin stream. Carries enough identity for a
-///  receiver to dispatch on schema without inspecting the payload bytes.
-///  Logical payload wire format for a stream frame or an accepted port type.
-enum payloadWireFormat {
-  FLATBUFFER(0),
-  ALIGNED_BINARY(1);
+///  Capability class of a distributable software unit (module, application, or
+///  composed flow).
+///
+///  This enum IS the ratified category vocabulary. A storefront, library, module
+///  manifest and search surface all classify against these members and nothing
+///  else; a category that is not a member here does not exist. Members name
+///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
+///  site, organization, product, protocol brand or algorithm implementation;
+///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
+///  the taxonomy.
+///
+///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
+///  reuse an ordinal. A reorder silently re-labels every published listing.
+///
+///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
+///  default-constructed classification can never decode as a real category. The
+///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
+///  ordinal 0 is a real family — and had to append an `Unspecified` member at
+///  the tail to recover. This enum does not repeat that.
+///
+///  Each member's canonical display name is stated in its doc comment and is
+///  part of the ratified contract: a consumer rendering a category label uses
+///  that string verbatim, so every surface spells a category identically. The
+///  canonical route slug is the member identifier lowercased with `_` replaced
+///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
+///  "rf-and-communications").
+enum capabilityClass {
+  UNSPECIFIED(0),
+  PROPAGATION(1),
+  ORBIT_DETERMINATION(2),
+  MANEUVER_PLANNING(3),
+  CONJUNCTION_ASSESSMENT(4),
+  REENTRY_AND_BREAKUP(5),
+  ATTITUDE_AND_POINTING(6),
+  REFERENCE_FRAMES_AND_TIME(7),
+  SENSORS_AND_COVERAGE(8),
+  TRACKING_AND_OBSERVATION(9),
+  RF_AND_COMMUNICATIONS(10),
+  ELECTRONIC_WARFARE(11),
+  SPACE_ENVIRONMENT(12),
+  DATA_SOURCES_AND_INGEST(13),
+  DATA_VALIDATION_AND_QUALITY(14),
+  CATALOG_AND_IDENTITY(15),
+  VISUALIZATION_AND_RENDERING(16),
+  GROUND_SEGMENT_AND_HARDWARE(17),
+  MISSION_DESIGN_AND_ANALYSIS(18),
+  FLOW_AND_COMPOSITION(19),
+  DATA_STORAGE_AND_QUERY(20),
+  SECURITY_AND_IDENTITY(21),
+  COMMERCE_AND_LICENSING(22),
+  NODE_INFRASTRUCTURE(23),
+  FOUNDATION_AND_MATH(24);
 
   final int value;
-  const payloadWireFormat(this.value);
+  const capabilityClass(this.value);
 
-  factory payloadWireFormat.fromValue(int value) {
+  factory capabilityClass.fromValue(int value) {
     switch (value) {
-      case 0: return payloadWireFormat.FLATBUFFER;
-      case 1: return payloadWireFormat.ALIGNED_BINARY;
+      case 0: return capabilityClass.UNSPECIFIED;
+      case 1: return capabilityClass.PROPAGATION;
+      case 2: return capabilityClass.ORBIT_DETERMINATION;
+      case 3: return capabilityClass.MANEUVER_PLANNING;
+      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
+      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
+      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
+      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
+      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
+      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
+      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
+      case 11: return capabilityClass.ELECTRONIC_WARFARE;
+      case 12: return capabilityClass.SPACE_ENVIRONMENT;
+      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
+      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
+      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
+      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
+      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
+      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
+      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
+      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
+      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
+      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
+      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
+      case 24: return capabilityClass.FOUNDATION_AND_MATH;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static payloadWireFormat? _createOrNull(int? value) =>
-      value == null ? null : payloadWireFormat.fromValue(value);
+  static capabilityClass? _createOrNull(int? value) =>
+      value == null ? null : capabilityClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<payloadWireFormat> reader = _payloadWireFormatReader();
+  static const int maxValue = 24;
+  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
 }
 
-class _payloadWireFormatReader extends fb.Reader<payloadWireFormat> {
-  const _payloadWireFormatReader();
+class _capabilityClassReader extends fb.Reader<capabilityClass> {
+  const _capabilityClassReader();
 
   @override
   int get size => 1;
 
   @override
-  payloadWireFormat read(fb.BufferContext bc, int offset) =>
-      payloadWireFormat.fromValue(const fb.Uint8Reader().read(bc, offset));
+  capabilityClass read(fb.BufferContext bc, int offset) =>
+      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Buffer mutability contract advertised by a stream port.
-enum bufferMutability {
-  IMMUTABLE(0),
-  SINGLE_WRITER_MUTABLE(1),
-  APPEND_ONLY(2);
-
-  final int value;
-  const bufferMutability(this.value);
-
-  factory bufferMutability.fromValue(int value) {
-    switch (value) {
-      case 0: return bufferMutability.IMMUTABLE;
-      case 1: return bufferMutability.SINGLE_WRITER_MUTABLE;
-      case 2: return bufferMutability.APPEND_ONLY;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static bufferMutability? _createOrNull(int? value) =>
-      value == null ? null : bufferMutability.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<bufferMutability> reader = _bufferMutabilityReader();
-}
-
-class _bufferMutabilityReader extends fb.Reader<bufferMutability> {
-  const _bufferMutabilityReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  bufferMutability read(fb.BufferContext bc, int offset) =>
-      bufferMutability.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Buffer ownership contract advertised by a stream port.
-enum bufferOwnership {
-  HOST_OWNED(0),
-  PLUGIN_OWNED(1),
-  TRANSFERRED(2);
-
-  final int value;
-  const bufferOwnership(this.value);
-
-  factory bufferOwnership.fromValue(int value) {
-    switch (value) {
-      case 0: return bufferOwnership.HOST_OWNED;
-      case 1: return bufferOwnership.PLUGIN_OWNED;
-      case 2: return bufferOwnership.TRANSFERRED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static bufferOwnership? _createOrNull(int? value) =>
-      value == null ? null : bufferOwnership.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<bufferOwnership> reader = _bufferOwnershipReader();
-}
-
-class _bufferOwnershipReader extends fb.Reader<bufferOwnership> {
-  const _bufferOwnershipReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  bufferOwnership read(fb.BufferContext bc, int offset) =>
-      bufferOwnership.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Payload-schema identity for a stream frame or an accepted port type.
-class FlatBufferTypeRef {
-  FlatBufferTypeRef._(this._bc, this._bcOffset);
-  factory FlatBufferTypeRef(List<int> bytes) {
+///  One ratified category in the taxonomy.
+///
+///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
+///  without the label a surface will render, the sentence a browse row will
+///  show, and the route a link will target. This is what stops each consumer
+///  from inventing its own wording for the same code.
+class CCTCategory {
+  CCTCategory._(this._bc, this._bcOffset);
+  factory CCTCategory(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<FlatBufferTypeRef> reader = _FlatBufferTypeRefReader();
+  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get schemaName => SCHEMA_NAME;
-  ///  Optional 4-byte FlatBuffer file identifier.
-  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get fileIdentifier => FILE_IDENTIFIER;
-  ///  Optional semver or schema revision string.
-  String? get SCHEMA_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get schemaVersion => SCHEMA_VERSION;
-  ///  Optional root type name within the schema.
-  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get rootType => ROOT_TYPE;
-  ///  Optional schema hash bytes for stronger compatibility checks.
-  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get schemaHash => SCHEMA_HASH;
-  ///  True when this port/type set accepts any FlatBuffer frame.
-  bool get ACCEPTS_ANY_FLATBUFFER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
-  bool get acceptsAnyFlatbuffer => ACCEPTS_ANY_FLATBUFFER;
-  ///  Logical wire format for this accepted type.
-  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  payloadWireFormat get wireFormat => WIRE_FORMAT;
-  ///  Fixed string length for aligned-binary string fields, when applicable.
-  int get FIXED_STRING_LENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get fixedStringLength => FIXED_STRING_LENGTH;
-  ///  Byte length for fixed-size aligned-binary records, when applicable.
-  int get BYTE_LENGTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get byteLength => BYTE_LENGTH;
-  ///  Required start alignment for aligned-binary records, when applicable.
-  int get REQUIRED_ALIGNMENT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get requiredAlignment => REQUIRED_ALIGNMENT;
+  ///  The ratified category code. This is the join key every consumer uses.
+  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
+  ///  name stated in the CODE member's doc comment.
+  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get displayName => DISPLAY_NAME;
+  ///  One-sentence description shown on browse rows and category headers.
+  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
+  ///  `-`. Published explicitly rather than derived so every surface routes
+  ///  identically.
+  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Longer editorial description for a category landing page.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
+  ///  top-level category. A category MUST NOT name itself as its parent.
+  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Presentation order within its parent, ascending. Ties break on
+  ///  DISPLAY_NAME.
+  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get sortOrder => SORT_ORDER;
+  ///  Search synonyms and alternate phrasings that resolve to this category.
+  ///  Feeds type-ahead; never rendered as the category label.
+  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
+  ///  URL: consuming node surfaces load zero external-origin bytes, so the
+  ///  consumer resolves this against its own local asset set.
+  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get iconKey => ICON_KEY;
 
   @override
   String toString() {
-    return 'FlatBufferTypeRef{schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, schemaVersion: ${schemaVersion}, rootType: ${rootType}, schemaHash: ${schemaHash}, acceptsAnyFlatbuffer: ${acceptsAnyFlatbuffer}, wireFormat: ${wireFormat}, fixedStringLength: ${fixedStringLength}, byteLength: ${byteLength}, requiredAlignment: ${requiredAlignment}}';
+    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
   }
 }
 
-class _FlatBufferTypeRefReader extends fb.TableReader<FlatBufferTypeRef> {
-  const _FlatBufferTypeRefReader();
+class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
+  const _CCTCategoryReader();
 
   @override
-  FlatBufferTypeRef createObject(fb.BufferContext bc, int offset) =>
-    FlatBufferTypeRef._(bc, offset);
+  CCTCategory createObject(fb.BufferContext bc, int offset) =>
+    CCTCategory._(bc, offset);
 }
 
-class FlatBufferTypeRefBuilder {
-  FlatBufferTypeRefBuilder(this.fbBuilder);
+class CCTCategoryBuilder {
+  CCTCategoryBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(9);
   }
 
-  int addSchemaNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addCode(capabilityClass? CODE) {
+    fbBuilder.addUint8(0, CODE?.value);
     return fbBuilder.offset;
   }
-  int addFileIdentifierOffset(int? offset) {
+  int addDisplayNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSchemaVersionOffset(int? offset) {
+  int addSummaryOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addRootTypeOffset(int? offset) {
+  int addSlugOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSchemaHashOffset(int? offset) {
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAcceptsAnyFlatbuffer(bool? ACCEPTS_ANY_FLATBUFFER) {
-    fbBuilder.addBool(5, ACCEPTS_ANY_FLATBUFFER);
+  int addParent(capabilityClass? PARENT) {
+    fbBuilder.addUint8(5, PARENT?.value);
     return fbBuilder.offset;
   }
-  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
-    fbBuilder.addUint8(6, WIRE_FORMAT?.value);
+  int addSortOrder(int? SORT_ORDER) {
+    fbBuilder.addUint16(6, SORT_ORDER);
     return fbBuilder.offset;
   }
-  int addFixedStringLength(int? FIXED_STRING_LENGTH) {
-    fbBuilder.addUint16(7, FIXED_STRING_LENGTH);
+  int addKeywordsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addByteLength(int? BYTE_LENGTH) {
-    fbBuilder.addUint32(8, BYTE_LENGTH);
-    return fbBuilder.offset;
-  }
-  int addRequiredAlignment(int? REQUIRED_ALIGNMENT) {
-    fbBuilder.addUint16(9, REQUIRED_ALIGNMENT);
+  int addIconKeyOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -231,75 +225,66 @@ class FlatBufferTypeRefBuilder {
   }
 }
 
-class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
-  final String? _SCHEMA_NAME;
-  final String? _FILE_IDENTIFIER;
-  final String? _SCHEMA_VERSION;
-  final String? _ROOT_TYPE;
-  final List<int>? _SCHEMA_HASH;
-  final bool? _ACCEPTS_ANY_FLATBUFFER;
-  final payloadWireFormat? _WIRE_FORMAT;
-  final int? _FIXED_STRING_LENGTH;
-  final int? _BYTE_LENGTH;
-  final int? _REQUIRED_ALIGNMENT;
+class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
+  final capabilityClass? _CODE;
+  final String? _DISPLAY_NAME;
+  final String? _SUMMARY;
+  final String? _SLUG;
+  final String? _DESCRIPTION;
+  final capabilityClass? _PARENT;
+  final int? _SORT_ORDER;
+  final List<String>? _KEYWORDS;
+  final String? _ICON_KEY;
 
-  FlatBufferTypeRefObjectBuilder({
-    String? SCHEMA_NAME,
-    String? schemaName,
-    String? FILE_IDENTIFIER,
-    String? fileIdentifier,
-    String? SCHEMA_VERSION,
-    String? schemaVersion,
-    String? ROOT_TYPE,
-    String? rootType,
-    List<int>? SCHEMA_HASH,
-    List<int>? schemaHash,
-    bool? ACCEPTS_ANY_FLATBUFFER,
-    bool? acceptsAnyFlatbuffer,
-    payloadWireFormat? WIRE_FORMAT,
-    payloadWireFormat? wireFormat,
-    int? FIXED_STRING_LENGTH,
-    int? fixedStringLength,
-    int? BYTE_LENGTH,
-    int? byteLength,
-    int? REQUIRED_ALIGNMENT,
-    int? requiredAlignment,
+  CCTCategoryObjectBuilder({
+    capabilityClass? CODE,
+    String? DISPLAY_NAME,
+    String? displayName,
+    String? SUMMARY,
+    String? SLUG,
+    String? DESCRIPTION,
+    capabilityClass? PARENT,
+    int? SORT_ORDER,
+    int? sortOrder,
+    List<String>? KEYWORDS,
+    String? ICON_KEY,
+    String? iconKey,
   })
-      : _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
-        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
-        _SCHEMA_VERSION = schemaVersion ?? SCHEMA_VERSION,
-        _ROOT_TYPE = rootType ?? ROOT_TYPE,
-        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
-        _ACCEPTS_ANY_FLATBUFFER = acceptsAnyFlatbuffer ?? ACCEPTS_ANY_FLATBUFFER,
-        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
-        _FIXED_STRING_LENGTH = fixedStringLength ?? FIXED_STRING_LENGTH,
-        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
-        _REQUIRED_ALIGNMENT = requiredAlignment ?? REQUIRED_ALIGNMENT;
+      : _CODE = CODE,
+        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
+        _SUMMARY = SUMMARY,
+        _SLUG = SLUG,
+        _DESCRIPTION = DESCRIPTION,
+        _PARENT = PARENT,
+        _SORT_ORDER = sortOrder ?? SORT_ORDER,
+        _KEYWORDS = KEYWORDS,
+        _ICON_KEY = iconKey ?? ICON_KEY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
-        : fbBuilder.writeString(_SCHEMA_NAME!);
-    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
-        : fbBuilder.writeString(_FILE_IDENTIFIER!);
-    final int? SCHEMA_VERSIONOffset = _SCHEMA_VERSION == null ? null
-        : fbBuilder.writeString(_SCHEMA_VERSION!);
-    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
-        : fbBuilder.writeString(_ROOT_TYPE!);
-    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
-        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, SCHEMA_NAMEOffset);
-    fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
-    fbBuilder.addOffset(2, SCHEMA_VERSIONOffset);
-    fbBuilder.addOffset(3, ROOT_TYPEOffset);
-    fbBuilder.addOffset(4, SCHEMA_HASHOffset);
-    fbBuilder.addBool(5, _ACCEPTS_ANY_FLATBUFFER);
-    fbBuilder.addUint8(6, _WIRE_FORMAT?.value);
-    fbBuilder.addUint16(7, _FIXED_STRING_LENGTH);
-    fbBuilder.addUint32(8, _BYTE_LENGTH);
-    fbBuilder.addUint16(9, _REQUIRED_ALIGNMENT);
+    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
+        : fbBuilder.writeString(_DISPLAY_NAME!);
+    final int? SUMMARYOffset = _SUMMARY == null ? null
+        : fbBuilder.writeString(_SUMMARY!);
+    final int? SLUGOffset = _SLUG == null ? null
+        : fbBuilder.writeString(_SLUG!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? KEYWORDSOffset = _KEYWORDS == null ? null
+        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
+    final int? ICON_KEYOffset = _ICON_KEY == null ? null
+        : fbBuilder.writeString(_ICON_KEY!);
+    fbBuilder.startTable(9);
+    fbBuilder.addUint8(0, _CODE?.value);
+    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
+    fbBuilder.addOffset(2, SUMMARYOffset);
+    fbBuilder.addOffset(3, SLUGOffset);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    fbBuilder.addUint8(5, _PARENT?.value);
+    fbBuilder.addUint16(6, _SORT_ORDER);
+    fbBuilder.addOffset(7, KEYWORDSOffset);
+    fbBuilder.addOffset(8, ICON_KEYOffset);
     return fbBuilder.endTable();
   }
 
@@ -311,102 +296,75 @@ class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-class TAB {
-  TAB._(this._bc, this._bcOffset);
-  factory TAB(List<int> bytes) {
+///  An observed count of catalogue items in one category.
+///
+///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
+///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
+///  count can never omit when it was taken or what it was taken over. A consumer
+///  that needs a live number computes it from the items; a consumer rendering a
+///  published rollup MUST show it as of COUNTED_AT.
+class CCTCategoryRollup {
+  CCTCategoryRollup._(this._bc, this._bcOffset);
+  factory CCTCategoryRollup(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TAB> reader = _TABReader();
+  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Byte offset of the payload body within the arena.
-  int get OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  ///  Byte length of the payload body.
-  int get SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  ///  Required start alignment of the payload body (in bytes).
-  int get ALIGNMENT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  ///  Wire format for the body.
-  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  payloadWireFormat get wireFormat => WIRE_FORMAT;
-  ///  Optional payload schema identity.
-  FlatBufferTypeRef? get TYPE_REF => FlatBufferTypeRef.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  FlatBufferTypeRef? get typeRef => TYPE_REF;
-  ///  Mutability contract for the slot.
-  bufferMutability get MUTABILITY => bufferMutability.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Ownership contract for the slot.
-  bufferOwnership get OWNERSHIP => bufferOwnership.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  ///  Optional opaque frame identifier for stream bookkeeping.
-  int get FRAME_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get frameId => FRAME_ID;
-  ///  Optional port identifier for frames that route to/from a named
-  ///  input or output port on a method (maps to
-  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  ///  no port routing hint.
-  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get portId => PORT_ID;
+  ///  Category being counted.
+  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
+  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
+  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get itemCount => ITEM_COUNT;
+  ///  Identifier of the catalogue the count was taken over.
+  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceCatalogId => SOURCE_CATALOG_ID;
+  ///  Unix seconds when the count was taken.
+  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get countedAt => COUNTED_AT;
 
   @override
   String toString() {
-    return 'TAB{OFFSET: ${OFFSET}, SIZE: ${SIZE}, ALIGNMENT: ${ALIGNMENT}, wireFormat: ${wireFormat}, typeRef: ${typeRef}, MUTABILITY: ${MUTABILITY}, OWNERSHIP: ${OWNERSHIP}, frameId: ${frameId}, portId: ${portId}}';
+    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
   }
 }
 
-class _TABReader extends fb.TableReader<TAB> {
-  const _TABReader();
+class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
+  const _CCTCategoryRollupReader();
 
   @override
-  TAB createObject(fb.BufferContext bc, int offset) =>
-    TAB._(bc, offset);
+  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
+    CCTCategoryRollup._(bc, offset);
 }
 
-class TABBuilder {
-  TABBuilder(this.fbBuilder);
+class CCTCategoryRollupBuilder {
+  CCTCategoryRollupBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(4);
   }
 
-  int addOffset(int? OFFSET) {
-    fbBuilder.addUint32(0, OFFSET);
+  int addCode(capabilityClass? CODE) {
+    fbBuilder.addUint8(0, CODE?.value);
     return fbBuilder.offset;
   }
-  int addSize(int? SIZE) {
-    fbBuilder.addUint32(1, SIZE);
+  int addItemCount(int? ITEM_COUNT) {
+    fbBuilder.addUint32(1, ITEM_COUNT);
     return fbBuilder.offset;
   }
-  int addAlignment(int? ALIGNMENT) {
-    fbBuilder.addUint32(2, ALIGNMENT);
+  int addSourceCatalogIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
-    fbBuilder.addUint8(3, WIRE_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addTypeRefOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addMutability(bufferMutability? MUTABILITY) {
-    fbBuilder.addUint8(5, MUTABILITY?.value);
-    return fbBuilder.offset;
-  }
-  int addOwnership(bufferOwnership? OWNERSHIP) {
-    fbBuilder.addUint8(6, OWNERSHIP?.value);
-    return fbBuilder.offset;
-  }
-  int addFrameId(int? FRAME_ID) {
-    fbBuilder.addUint64(7, FRAME_ID);
-    return fbBuilder.offset;
-  }
-  int addPortIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addCountedAt(int? COUNTED_AT) {
+    fbBuilder.addUint64(3, COUNTED_AT);
     return fbBuilder.offset;
   }
 
@@ -415,58 +373,198 @@ class TABBuilder {
   }
 }
 
-class TABObjectBuilder extends fb.ObjectBuilder {
-  final int? _OFFSET;
-  final int? _SIZE;
-  final int? _ALIGNMENT;
-  final payloadWireFormat? _WIRE_FORMAT;
-  final FlatBufferTypeRefObjectBuilder? _TYPE_REF;
-  final bufferMutability? _MUTABILITY;
-  final bufferOwnership? _OWNERSHIP;
-  final int? _FRAME_ID;
-  final String? _PORT_ID;
+class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
+  final capabilityClass? _CODE;
+  final int? _ITEM_COUNT;
+  final String? _SOURCE_CATALOG_ID;
+  final int? _COUNTED_AT;
 
-  TABObjectBuilder({
-    int? OFFSET,
-    int? SIZE,
-    int? ALIGNMENT,
-    payloadWireFormat? WIRE_FORMAT,
-    payloadWireFormat? wireFormat,
-    FlatBufferTypeRefObjectBuilder? TYPE_REF,
-    FlatBufferTypeRefObjectBuilder? typeRef,
-    bufferMutability? MUTABILITY,
-    bufferOwnership? OWNERSHIP,
-    int? FRAME_ID,
-    int? frameId,
-    String? PORT_ID,
-    String? portId,
+  CCTCategoryRollupObjectBuilder({
+    capabilityClass? CODE,
+    int? ITEM_COUNT,
+    int? itemCount,
+    String? SOURCE_CATALOG_ID,
+    String? sourceCatalogId,
+    int? COUNTED_AT,
+    int? countedAt,
   })
-      : _OFFSET = OFFSET,
-        _SIZE = SIZE,
-        _ALIGNMENT = ALIGNMENT,
-        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
-        _TYPE_REF = typeRef ?? TYPE_REF,
-        _MUTABILITY = MUTABILITY,
-        _OWNERSHIP = OWNERSHIP,
-        _FRAME_ID = frameId ?? FRAME_ID,
-        _PORT_ID = portId ?? PORT_ID;
+      : _CODE = CODE,
+        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
+        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
+        _COUNTED_AT = countedAt ?? COUNTED_AT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TYPE_REFOffset = _TYPE_REF?.getOrCreateOffset(fbBuilder);
-    final int? PORT_IDOffset = _PORT_ID == null ? null
-        : fbBuilder.writeString(_PORT_ID!);
-    fbBuilder.startTable(9);
-    fbBuilder.addUint32(0, _OFFSET);
-    fbBuilder.addUint32(1, _SIZE);
-    fbBuilder.addUint32(2, _ALIGNMENT);
-    fbBuilder.addUint8(3, _WIRE_FORMAT?.value);
-    fbBuilder.addOffset(4, TYPE_REFOffset);
-    fbBuilder.addUint8(5, _MUTABILITY?.value);
-    fbBuilder.addUint8(6, _OWNERSHIP?.value);
-    fbBuilder.addUint64(7, _FRAME_ID);
-    fbBuilder.addOffset(8, PORT_IDOffset);
+    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint8(0, _CODE?.value);
+    fbBuilder.addUint32(1, _ITEM_COUNT);
+    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
+    fbBuilder.addUint64(3, _COUNTED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  $CCT — Capability Category Taxonomy.
+///
+///  The ratified set of capability classes that distributable units (modules,
+///  applications, composed flows) are classified under, together with the labels
+///  and routes every consuming surface renders. One published $CCT is the single
+///  source of truth shared by a storefront, a library, a search index and the
+///  unit manifests themselves.
+///
+///  Division of labour: `$CCT` = the category vocabulary and its presentation;
+///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
+///  application's manifest, which cites categories by code; `$PMM` = which
+///  modules a provider serves; `$STO`/`$STF` = commerce.
+class CCT {
+  CCT._(this._bc, this._bcOffset);
+  factory CCT(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CCT> reader = _CCTReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier of this taxonomy publication.
+  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get taxonomyId => TAXONOMY_ID;
+  ///  SemVer 2.0.0 version of the taxonomy content.
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Unix seconds when this taxonomy revision was issued.
+  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get issuedAt => ISSUED_AT;
+  ///  Human-readable title of the taxonomy.
+  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  The ratified categories. Every capabilityClass member a consumer may
+  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
+  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Optional per-category item counts as observed over a named catalogue.
+  ///  Absent means counts are computed by the consumer.
+  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
+  }
+}
+
+class _CCTReader extends fb.TableReader<CCT> {
+  const _CCTReader();
+
+  @override
+  CCT createObject(fb.BufferContext bc, int offset) =>
+    CCT._(bc, offset);
+}
+
+class CCTBuilder {
+  CCTBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addTaxonomyIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIssuedAt(int? ISSUED_AT) {
+    fbBuilder.addUint64(2, ISSUED_AT);
+    return fbBuilder.offset;
+  }
+  int addTitleOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCategoriesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRollupsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CCTObjectBuilder extends fb.ObjectBuilder {
+  final String? _TAXONOMY_ID;
+  final String? _VERSION;
+  final int? _ISSUED_AT;
+  final String? _TITLE;
+  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
+  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
+  final List<int>? _SIGNATURE;
+
+  CCTObjectBuilder({
+    String? TAXONOMY_ID,
+    String? taxonomyId,
+    String? VERSION,
+    int? ISSUED_AT,
+    int? issuedAt,
+    String? TITLE,
+    List<CCTCategoryObjectBuilder>? CATEGORIES,
+    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
+    List<int>? SIGNATURE,
+  })
+      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
+        _VERSION = VERSION,
+        _ISSUED_AT = issuedAt ?? ISSUED_AT,
+        _TITLE = TITLE,
+        _CATEGORIES = CATEGORIES,
+        _ROLLUPS = ROLLUPS,
+        _SIGNATURE = SIGNATURE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
+        : fbBuilder.writeString(_TAXONOMY_ID!);
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    final int? TITLEOffset = _TITLE == null ? null
+        : fbBuilder.writeString(_TITLE!);
+    final int? CATEGORIESOffset = _CATEGORIES == null ? null
+        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ROLLUPSOffset = _ROLLUPS == null ? null
+        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
+    fbBuilder.addOffset(1, VERSIONOffset);
+    fbBuilder.addUint64(2, _ISSUED_AT);
+    fbBuilder.addOffset(3, TITLEOffset);
+    fbBuilder.addOffset(4, CATEGORIESOffset);
+    fbBuilder.addOffset(5, ROLLUPSOffset);
+    fbBuilder.addOffset(6, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 
