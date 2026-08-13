@@ -1,0 +1,21 @@
+/**
+ * How the solve ended. Ordinals are wire values; REFUSED deliberately holds
+ * ordinal 2 so the aligned-binary twin's status byte pairs one-to-one.
+ */
+export declare enum trsResultStatus {
+    /**
+     * Solve completed; every layer is present for every cell.
+     */
+    OK = 0,
+    /**
+     * Request fields are missing, non-finite where a value is required, or
+     * dimensionally inconsistent.
+     */
+    INVALID_INPUT = 1,
+    /**
+     * The solver does not implement the requested physics. ERROR_MESSAGE
+     * names the gap; NO layers are carried. A refusal is never a fallback.
+     */
+    REFUSED = 2
+}
+//# sourceMappingURL=trsResultStatus.d.ts.map

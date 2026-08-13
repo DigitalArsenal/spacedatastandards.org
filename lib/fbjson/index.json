@@ -37338,6 +37338,598 @@
             "x-flatbuffer-root-type": "FCS",
             "x-flatbuffer-file-identifier": "$FCS"
         },
+        "TRS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "trsSolverTier": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LOS_OCCLUSION",
+                        "DIFFRACTION_ASSISTED",
+                        "SPECULAR_SINGLE_BOUNCE"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LOS_OCCLUSION": {
+                            "value": 1,
+                            "description": "Geometric line-of-sight occlusion only; propagation on visible cells."
+                        },
+                        "DIFFRACTION_ASSISTED": {
+                            "value": 2,
+                            "description": "Knife-edge diffraction assists shadowed cells (ITU-R P.526-15)."
+                        },
+                        "SPECULAR_SINGLE_BOUNCE": {
+                            "value": 3,
+                            "description": "Adds a single specular ground-bounce contribution."
+                        }
+                    }
+                },
+                "trsPropagationModel": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_SPACE",
+                        "TWO_RAY_GROUND",
+                        "HATA_URBAN",
+                        "HATA_SUBURBAN",
+                        "HATA_RURAL",
+                        "COST231",
+                        "ITU_TERRAIN",
+                        "KNIFE_EDGE",
+                        "MULTI_KNIFE_EDGE",
+                        "BULLINGTON",
+                        "LONGLEY_RICE",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "FREE_SPACE": {
+                            "value": 0,
+                            "description": "Free-space path loss. Holds ordinal 0 and is the default."
+                        },
+                        "TWO_RAY_GROUND": {
+                            "value": 1,
+                            "description": "Two-ray ground-reflection model."
+                        },
+                        "HATA_URBAN": {
+                            "value": 2,
+                            "description": "Okumura-Hata, urban."
+                        },
+                        "HATA_SUBURBAN": {
+                            "value": 3,
+                            "description": "Okumura-Hata, suburban."
+                        },
+                        "HATA_RURAL": {
+                            "value": 4,
+                            "description": "Okumura-Hata, rural/open."
+                        },
+                        "COST231": {
+                            "value": 5,
+                            "description": "COST 231 extension of Hata."
+                        },
+                        "ITU_TERRAIN": {
+                            "value": 6,
+                            "description": "ITU-R P.1812-class terrain-aware path loss."
+                        },
+                        "KNIFE_EDGE": {
+                            "value": 7,
+                            "description": "Single knife-edge diffraction (ITU-R P.526)."
+                        },
+                        "MULTI_KNIFE_EDGE": {
+                            "value": 8,
+                            "description": "Multiple knife-edge diffraction (ITU-R P.526)."
+                        },
+                        "BULLINGTON": {
+                            "value": 9,
+                            "description": "Bullington equivalent-edge diffraction (ITU-R P.526)."
+                        },
+                        "LONGLEY_RICE": {
+                            "value": 10,
+                            "description": "Longley-Rice / ITM irregular-terrain model."
+                        },
+                        "CUSTOM": {
+                            "value": 99,
+                            "description": "A model this enum cannot express; the solver names it out of band."
+                        }
+                    }
+                },
+                "trsResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "REFUSED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "OK": {
+                            "value": 0,
+                            "description": "Solve completed; every layer is present for every cell."
+                        },
+                        "INVALID_INPUT": {
+                            "value": 1,
+                            "description": "Request fields are missing, non-finite where a value is required, or dimensionally inconsistent."
+                        },
+                        "REFUSED": {
+                            "value": 2,
+                            "description": "The solver does not implement the requested physics. ERROR_MESSAGE names the gap; NO layers are carried. A refusal is never a fallback."
+                        }
+                    }
+                },
+                "trsPathClass": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "GRAZING",
+                        "DIFFRACTED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "OPEN": {
+                            "value": 0
+                        },
+                        "GRAZING": {
+                            "value": 1
+                        },
+                        "DIFFRACTED": {
+                            "value": 2
+                        }
+                    }
+                },
+                "TRSRequest": {
+                    "type": "object",
+                    "description": "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
+                    "properties": {
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster width, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster height, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "PROFILE_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field width, cells. The profile is a FINER field\nthan the output raster; the line-of-sight march samples it.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "PROFILE_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field height, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SOLVER_TIER": {
+                            "$ref": "#/definitions/trsSolverTier",
+                            "description": "Fidelity tier requested. A solver that does not implement the tier\nREFUSES; it never silently downgrades.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LOS_OCCLUSION": {
+                                    "value": 1,
+                                    "description": "Geometric line-of-sight occlusion only; propagation on visible cells."
+                                },
+                                "DIFFRACTION_ASSISTED": {
+                                    "value": 2,
+                                    "description": "Knife-edge diffraction assists shadowed cells (ITU-R P.526-15)."
+                                },
+                                "SPECULAR_SINGLE_BOUNCE": {
+                                    "value": 3,
+                                    "description": "Adds a single specular ground-bounce contribution."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PROPAGATION_MODEL": {
+                            "$ref": "#/definitions/trsPropagationModel",
+                            "description": "Propagation model requested for the per-cell loss term. A solver that\ndoes not implement the model REFUSES; it never silently substitutes.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "FREE_SPACE": {
+                                    "value": 0,
+                                    "description": "Free-space path loss. Holds ordinal 0 and is the default."
+                                },
+                                "TWO_RAY_GROUND": {
+                                    "value": 1,
+                                    "description": "Two-ray ground-reflection model."
+                                },
+                                "HATA_URBAN": {
+                                    "value": 2,
+                                    "description": "Okumura-Hata, urban."
+                                },
+                                "HATA_SUBURBAN": {
+                                    "value": 3,
+                                    "description": "Okumura-Hata, suburban."
+                                },
+                                "HATA_RURAL": {
+                                    "value": 4,
+                                    "description": "Okumura-Hata, rural/open."
+                                },
+                                "COST231": {
+                                    "value": 5,
+                                    "description": "COST 231 extension of Hata."
+                                },
+                                "ITU_TERRAIN": {
+                                    "value": 6,
+                                    "description": "ITU-R P.1812-class terrain-aware path loss."
+                                },
+                                "KNIFE_EDGE": {
+                                    "value": 7,
+                                    "description": "Single knife-edge diffraction (ITU-R P.526)."
+                                },
+                                "MULTI_KNIFE_EDGE": {
+                                    "value": 8,
+                                    "description": "Multiple knife-edge diffraction (ITU-R P.526)."
+                                },
+                                "BULLINGTON": {
+                                    "value": 9,
+                                    "description": "Bullington equivalent-edge diffraction (ITU-R P.526)."
+                                },
+                                "LONGLEY_RICE": {
+                                    "value": 10,
+                                    "description": "Longley-Rice / ITM irregular-terrain model."
+                                },
+                                "CUSTOM": {
+                                    "value": 99,
+                                    "description": "A model this enum cannot express; the solver names it out of band."
+                                }
+                            },
+                            "x-flatbuffer-default": "FREE_SPACE"
+                        },
+                        "ATMOSPHERIC_MODEL_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Atmospheric attenuation terms requested, as a bitmask: 0 none,\nbit 0 (1) gaseous absorption, bit 1 (2) rain attenuation, bit 2 (4)\ncloud/fog attenuation. A solver that does not implement a requested\nterm REFUSES.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "THREAD_COUNT_HINT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Parallelism hint. 0 or 1 means sequential. A solver MUST produce\nbyte-identical layers at any value \u2014 cells are independent and a thread\nwrites only its own indices; determinism is part of this contract.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "MIN_EAST_M": {
+                            "type": "number",
+                            "description": "Analysis-frame east coordinate of the shared grid origin, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_NORTH_M": {
+                            "type": "number",
+                            "description": "Analysis-frame north coordinate of the shared grid origin, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_CELL_WIDTH_M": {
+                            "type": "number",
+                            "description": "Profile cell width, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_CELL_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Profile cell height, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_SPACING_M": {
+                            "type": "number",
+                            "description": "Profile sample spacing, meters; sets the line-of-sight march stride.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MINIMUM_STEP_M": {
+                            "type": "number",
+                            "description": "Minimum march step, meters. NaN means caller left it unset and the\nsolver applies its own documented default.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_X_M": {
+                            "type": "number",
+                            "description": "Emitter position in the analysis ENU frame, meters (X east, Y north,\nZ up).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_Y_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_Z_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_X_M": {
+                            "type": "number",
+                            "description": "Emitter Earth-centered Earth-fixed position, meters \u2014 carried so the\nsolver computes exact per-cell range rather than a small-angle\napproximation.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_Y_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_Z_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ABSOLUTE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Emitter height above the reference ellipsoid, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_SURFACE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Terrain surface height under the emitter, meters above the ellipsoid.\nEmitter height above ground = TX_ABSOLUTE_HEIGHT_M \u2212\nTX_SURFACE_HEIGHT_M.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INVERSE_ENU_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Column-major 4x4 inverse of the analysis ENU frame transform (the\nmatrix that takes Earth-fixed points INTO the analysis frame). Exactly\n16 entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "TARGET_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Receiver height above ground at every cell, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Carrier frequency, hertz.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Noise bandwidth, hertz. NaN means caller left it unset and the solver\napplies its own documented default.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_POWER_W": {
+                            "type": "number",
+                            "description": "Transmit power, watts. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Transmit antenna gain, dBi. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Transmit line loss, dB (positive). NaN means unset; solver default\napplies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Receive antenna gain, dBi. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Receive line loss, dB (positive). NaN means unset; solver default\napplies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_NOISE_FIGURE_DB": {
+                            "type": "number",
+                            "description": "Receiver noise figure, dB. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "EFFECTIVE_EARTH_RADIUS_FACTOR": {
+                            "type": "number",
+                            "description": "Effective Earth radius factor (k-factor) for curvature correction.\nNaN means no curvature term is applied \u2014 NOT a default of 4/3.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "GRID_LONGITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic longitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "GRID_LATITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic latitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "GROUND_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Terrain height at every output cell, meters above the ellipsoid,\nrow-major, GRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "PROFILE_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "COMPOSITE obstruction surface (terrain plus structures) at every\nprofile cell, meters above the ellipsoid, row-major,\nPROFILE_WIDTH * PROFILE_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "PROFILE_SURFACE_Z_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "The same composite surface expressed as analysis-frame Z, meters \u2014\nthe frame the line-of-sight test runs in. PROFILE_WIDTH *\nPROFILE_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRSResult": {
+                    "type": "object",
+                    "description": "One terrain raster solve result. On STATUS = OK every layer below is\npresent with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any\nother STATUS the result carries NO layers \u2014 never a partial raster.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/trsResultStatus",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "OK": {
+                                    "value": 0,
+                                    "description": "Solve completed; every layer is present for every cell."
+                                },
+                                "INVALID_INPUT": {
+                                    "value": 1,
+                                    "description": "Request fields are missing, non-finite where a value is required, or dimensionally inconsistent."
+                                },
+                                "REFUSED": {
+                                    "value": 2,
+                                    "description": "The solver does not implement the requested physics. ERROR_MESSAGE names the gap; NO layers are carried. A refusal is never a fallback."
+                                }
+                            },
+                            "x-flatbuffer-default": "OK"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "On REFUSED or INVALID_INPUT: names the exact gap or defect. Empty on\nOK.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster dimensions the layers are stated for, echoed from the\nrequest.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "VISIBLE_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where the geometric ray from the emitter clears the obstruction\nsurface, else 0.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "OCCLUDED_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Complement of VISIBLE_MASK.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "POSITIVE_LINK_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where LINK_MARGIN_DB > 0, else 0.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "PATH_CLASS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/trsPathClass"
+                            },
+                            "description": "Path classification of every cell from the dominant-edge diffraction\nparameter \u2014 see trsPathClass.",
+                            "x-flatbuffer-type": "[trsPathClass]"
+                        },
+                        "PATH_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Total path loss including every applied term, dB (positive).",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "EXCESS_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Loss above free space \u2014 what the terrain cost the cell, dB.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "LINK_MARGIN_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Link budget margin, dB.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "DIFFRACTION_PARAMETER": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ITU-R P.526-15 eq. (29) diffraction parameter v of the dominant edge.\nExactly -10.0 where no finite v exists (an unobstructed, Fresnel-clear\npath) \u2014 the layer's stated no-finite-v encoding, carried verbatim so\nthe FlatBuffer and aligned-binary forms stay byte-comparable.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "REFLECTION_CONTRIBUTION_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Specular ground-bounce contribution, dB. All zeros outside the\nSPECULAR_SINGLE_BOUNCE tier.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when\npresent.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRS": {
+                    "type": "object",
+                    "description": "Terrain raster solve envelope.",
+                    "properties": {
+                        "REQUEST": {
+                            "$ref": "#/definitions/TRSRequest",
+                            "x-flatbuffer-type": "TRSRequest"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/TRSResult",
+                            "x-flatbuffer-type": "TRSResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TRS",
+            "x-flatbuffer-root-type": "TRS",
+            "x-flatbuffer-file-identifier": "$TRS"
+        },
         "OSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -114471,6 +115063,148 @@
                         }
                     }
                 },
+                "trsSolverTier": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LOS_OCCLUSION",
+                        "DIFFRACTION_ASSISTED",
+                        "SPECULAR_SINGLE_BOUNCE"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LOS_OCCLUSION": {
+                            "value": 1,
+                            "description": "Geometric line-of-sight occlusion only; propagation on visible cells."
+                        },
+                        "DIFFRACTION_ASSISTED": {
+                            "value": 2,
+                            "description": "Knife-edge diffraction assists shadowed cells (ITU-R P.526-15)."
+                        },
+                        "SPECULAR_SINGLE_BOUNCE": {
+                            "value": 3,
+                            "description": "Adds a single specular ground-bounce contribution."
+                        }
+                    }
+                },
+                "trsPropagationModel": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_SPACE",
+                        "TWO_RAY_GROUND",
+                        "HATA_URBAN",
+                        "HATA_SUBURBAN",
+                        "HATA_RURAL",
+                        "COST231",
+                        "ITU_TERRAIN",
+                        "KNIFE_EDGE",
+                        "MULTI_KNIFE_EDGE",
+                        "BULLINGTON",
+                        "LONGLEY_RICE",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "FREE_SPACE": {
+                            "value": 0,
+                            "description": "Free-space path loss. Holds ordinal 0 and is the default."
+                        },
+                        "TWO_RAY_GROUND": {
+                            "value": 1,
+                            "description": "Two-ray ground-reflection model."
+                        },
+                        "HATA_URBAN": {
+                            "value": 2,
+                            "description": "Okumura-Hata, urban."
+                        },
+                        "HATA_SUBURBAN": {
+                            "value": 3,
+                            "description": "Okumura-Hata, suburban."
+                        },
+                        "HATA_RURAL": {
+                            "value": 4,
+                            "description": "Okumura-Hata, rural/open."
+                        },
+                        "COST231": {
+                            "value": 5,
+                            "description": "COST 231 extension of Hata."
+                        },
+                        "ITU_TERRAIN": {
+                            "value": 6,
+                            "description": "ITU-R P.1812-class terrain-aware path loss."
+                        },
+                        "KNIFE_EDGE": {
+                            "value": 7,
+                            "description": "Single knife-edge diffraction (ITU-R P.526)."
+                        },
+                        "MULTI_KNIFE_EDGE": {
+                            "value": 8,
+                            "description": "Multiple knife-edge diffraction (ITU-R P.526)."
+                        },
+                        "BULLINGTON": {
+                            "value": 9,
+                            "description": "Bullington equivalent-edge diffraction (ITU-R P.526)."
+                        },
+                        "LONGLEY_RICE": {
+                            "value": 10,
+                            "description": "Longley-Rice / ITM irregular-terrain model."
+                        },
+                        "CUSTOM": {
+                            "value": 99,
+                            "description": "A model this enum cannot express; the solver names it out of band."
+                        }
+                    }
+                },
+                "trsResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "REFUSED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "OK": {
+                            "value": 0,
+                            "description": "Solve completed; every layer is present for every cell."
+                        },
+                        "INVALID_INPUT": {
+                            "value": 1,
+                            "description": "Request fields are missing, non-finite where a value is required, or dimensionally inconsistent."
+                        },
+                        "REFUSED": {
+                            "value": 2,
+                            "description": "The solver does not implement the requested physics. ERROR_MESSAGE names the gap; NO layers are carried. A refusal is never a fallback."
+                        }
+                    }
+                },
+                "trsPathClass": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "GRAZING",
+                        "DIFFRACTED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "OPEN": {
+                            "value": 0
+                        },
+                        "GRAZING": {
+                            "value": 1
+                        },
+                        "DIFFRACTED": {
+                            "value": 2
+                        }
+                    }
+                },
                 "visualAssetVariantKind": {
                     "type": "string",
                     "enum": [
@@ -115836,7 +116570,8 @@
                         "ACI",
                         "CVP",
                         "RFL",
-                        "RFS"
+                        "RFS",
+                        "TRS"
                     ]
                 },
                 "LKS": {
@@ -170529,6 +171264,448 @@
                     },
                     "additionalProperties": false
                 },
+                "TRSRequest": {
+                    "type": "object",
+                    "description": "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
+                    "properties": {
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster width, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster height, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "PROFILE_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field width, cells. The profile is a FINER field\nthan the output raster; the line-of-sight march samples it.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "PROFILE_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field height, cells.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SOLVER_TIER": {
+                            "$ref": "#/definitions/trsSolverTier",
+                            "description": "Fidelity tier requested. A solver that does not implement the tier\nREFUSES; it never silently downgrades.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LOS_OCCLUSION": {
+                                    "value": 1,
+                                    "description": "Geometric line-of-sight occlusion only; propagation on visible cells."
+                                },
+                                "DIFFRACTION_ASSISTED": {
+                                    "value": 2,
+                                    "description": "Knife-edge diffraction assists shadowed cells (ITU-R P.526-15)."
+                                },
+                                "SPECULAR_SINGLE_BOUNCE": {
+                                    "value": 3,
+                                    "description": "Adds a single specular ground-bounce contribution."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PROPAGATION_MODEL": {
+                            "$ref": "#/definitions/trsPropagationModel",
+                            "description": "Propagation model requested for the per-cell loss term. A solver that\ndoes not implement the model REFUSES; it never silently substitutes.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "FREE_SPACE": {
+                                    "value": 0,
+                                    "description": "Free-space path loss. Holds ordinal 0 and is the default."
+                                },
+                                "TWO_RAY_GROUND": {
+                                    "value": 1,
+                                    "description": "Two-ray ground-reflection model."
+                                },
+                                "HATA_URBAN": {
+                                    "value": 2,
+                                    "description": "Okumura-Hata, urban."
+                                },
+                                "HATA_SUBURBAN": {
+                                    "value": 3,
+                                    "description": "Okumura-Hata, suburban."
+                                },
+                                "HATA_RURAL": {
+                                    "value": 4,
+                                    "description": "Okumura-Hata, rural/open."
+                                },
+                                "COST231": {
+                                    "value": 5,
+                                    "description": "COST 231 extension of Hata."
+                                },
+                                "ITU_TERRAIN": {
+                                    "value": 6,
+                                    "description": "ITU-R P.1812-class terrain-aware path loss."
+                                },
+                                "KNIFE_EDGE": {
+                                    "value": 7,
+                                    "description": "Single knife-edge diffraction (ITU-R P.526)."
+                                },
+                                "MULTI_KNIFE_EDGE": {
+                                    "value": 8,
+                                    "description": "Multiple knife-edge diffraction (ITU-R P.526)."
+                                },
+                                "BULLINGTON": {
+                                    "value": 9,
+                                    "description": "Bullington equivalent-edge diffraction (ITU-R P.526)."
+                                },
+                                "LONGLEY_RICE": {
+                                    "value": 10,
+                                    "description": "Longley-Rice / ITM irregular-terrain model."
+                                },
+                                "CUSTOM": {
+                                    "value": 99,
+                                    "description": "A model this enum cannot express; the solver names it out of band."
+                                }
+                            },
+                            "x-flatbuffer-default": "FREE_SPACE"
+                        },
+                        "ATMOSPHERIC_MODEL_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Atmospheric attenuation terms requested, as a bitmask: 0 none,\nbit 0 (1) gaseous absorption, bit 1 (2) rain attenuation, bit 2 (4)\ncloud/fog attenuation. A solver that does not implement a requested\nterm REFUSES.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "THREAD_COUNT_HINT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Parallelism hint. 0 or 1 means sequential. A solver MUST produce\nbyte-identical layers at any value \u2014 cells are independent and a thread\nwrites only its own indices; determinism is part of this contract.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "MIN_EAST_M": {
+                            "type": "number",
+                            "description": "Analysis-frame east coordinate of the shared grid origin, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_NORTH_M": {
+                            "type": "number",
+                            "description": "Analysis-frame north coordinate of the shared grid origin, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_CELL_WIDTH_M": {
+                            "type": "number",
+                            "description": "Profile cell width, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_CELL_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Profile cell height, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PROFILE_SPACING_M": {
+                            "type": "number",
+                            "description": "Profile sample spacing, meters; sets the line-of-sight march stride.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MINIMUM_STEP_M": {
+                            "type": "number",
+                            "description": "Minimum march step, meters. NaN means caller left it unset and the\nsolver applies its own documented default.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_X_M": {
+                            "type": "number",
+                            "description": "Emitter position in the analysis ENU frame, meters (X east, Y north,\nZ up).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_Y_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LOCAL_Z_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_X_M": {
+                            "type": "number",
+                            "description": "Emitter Earth-centered Earth-fixed position, meters \u2014 carried so the\nsolver computes exact per-cell range rather than a small-angle\napproximation.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_Y_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ECEF_Z_M": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_ABSOLUTE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Emitter height above the reference ellipsoid, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_SURFACE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Terrain surface height under the emitter, meters above the ellipsoid.\nEmitter height above ground = TX_ABSOLUTE_HEIGHT_M \u2212\nTX_SURFACE_HEIGHT_M.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INVERSE_ENU_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Column-major 4x4 inverse of the analysis ENU frame transform (the\nmatrix that takes Earth-fixed points INTO the analysis frame). Exactly\n16 entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "TARGET_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Receiver height above ground at every cell, meters.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Carrier frequency, hertz.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Noise bandwidth, hertz. NaN means caller left it unset and the solver\napplies its own documented default.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_POWER_W": {
+                            "type": "number",
+                            "description": "Transmit power, watts. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Transmit antenna gain, dBi. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Transmit line loss, dB (positive). NaN means unset; solver default\napplies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Receive antenna gain, dBi. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Receive line loss, dB (positive). NaN means unset; solver default\napplies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RX_NOISE_FIGURE_DB": {
+                            "type": "number",
+                            "description": "Receiver noise figure, dB. NaN means unset; solver default applies.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "EFFECTIVE_EARTH_RADIUS_FACTOR": {
+                            "type": "number",
+                            "description": "Effective Earth radius factor (k-factor) for curvature correction.\nNaN means no curvature term is applied \u2014 NOT a default of 4/3.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "GRID_LONGITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic longitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "GRID_LATITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic latitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "GROUND_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Terrain height at every output cell, meters above the ellipsoid,\nrow-major, GRID_WIDTH * GRID_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "PROFILE_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "COMPOSITE obstruction surface (terrain plus structures) at every\nprofile cell, meters above the ellipsoid, row-major,\nPROFILE_WIDTH * PROFILE_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "PROFILE_SURFACE_Z_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "The same composite surface expressed as analysis-frame Z, meters \u2014\nthe frame the line-of-sight test runs in. PROFILE_WIDTH *\nPROFILE_HEIGHT entries.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRSResult": {
+                    "type": "object",
+                    "description": "One terrain raster solve result. On STATUS = OK every layer below is\npresent with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any\nother STATUS the result carries NO layers \u2014 never a partial raster.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/trsResultStatus",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "OK": {
+                                    "value": 0,
+                                    "description": "Solve completed; every layer is present for every cell."
+                                },
+                                "INVALID_INPUT": {
+                                    "value": 1,
+                                    "description": "Request fields are missing, non-finite where a value is required, or dimensionally inconsistent."
+                                },
+                                "REFUSED": {
+                                    "value": 2,
+                                    "description": "The solver does not implement the requested physics. ERROR_MESSAGE names the gap; NO layers are carried. A refusal is never a fallback."
+                                }
+                            },
+                            "x-flatbuffer-default": "OK"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "On REFUSED or INVALID_INPUT: names the exact gap or defect. Empty on\nOK.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster dimensions the layers are stated for, echoed from the\nrequest.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "VISIBLE_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where the geometric ray from the emitter clears the obstruction\nsurface, else 0.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "OCCLUDED_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Complement of VISIBLE_MASK.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "POSITIVE_LINK_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where LINK_MARGIN_DB > 0, else 0.",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "PATH_CLASS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/trsPathClass"
+                            },
+                            "description": "Path classification of every cell from the dominant-edge diffraction\nparameter \u2014 see trsPathClass.",
+                            "x-flatbuffer-type": "[trsPathClass]"
+                        },
+                        "PATH_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Total path loss including every applied term, dB (positive).",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "EXCESS_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Loss above free space \u2014 what the terrain cost the cell, dB.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "LINK_MARGIN_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Link budget margin, dB.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "DIFFRACTION_PARAMETER": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ITU-R P.526-15 eq. (29) diffraction parameter v of the dominant edge.\nExactly -10.0 where no finite v exists (an unobstructed, Fresnel-clear\npath) \u2014 the layer's stated no-finite-v encoding, carried verbatim so\nthe FlatBuffer and aligned-binary forms stay byte-comparable.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "REFLECTION_CONTRIBUTION_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Specular ground-bounce contribution, dB. All zeros outside the\nSPECULAR_SINGLE_BOUNCE tier.",
+                            "x-flatbuffer-type": "[float32]"
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when\npresent.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRS": {
+                    "type": "object",
+                    "description": "Terrain raster solve envelope.",
+                    "properties": {
+                        "REQUEST": {
+                            "$ref": "#/definitions/TRSRequest",
+                            "x-flatbuffer-type": "TRSRequest"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/TRSResult",
+                            "x-flatbuffer-type": "TRSResult"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "VAMVector3": {
                     "type": "object",
                     "description": "Three-dimensional vector.",
@@ -176327,6 +177504,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/RFS"
+                                },
+                                {
+                                    "$ref": "#/definitions/TRS"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)",

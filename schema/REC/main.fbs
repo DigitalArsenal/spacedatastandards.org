@@ -1,5 +1,5 @@
-// Hash: fd54b94105c0fe07661d276a8c9f938fcb3f839368b8f75ef8290f6c696dae47
-// Version: 1.44.53
+// Hash: c640ed4876ca1648e6936c3f7d77f5c93ae7959c4aa98486b33f7bc2a93a4c8b
+// Version: 1.44.54
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -202,6 +202,7 @@ include "../TPN/main.fbs";
 include "../TRE/main.fbs";
 include "../TRK/main.fbs";
 include "../TRN/main.fbs";
+include "../TRS/main.fbs";
 include "../VAM/main.fbs";
 include "../VCM/main.fbs";
 include "../VST/main.fbs";
@@ -276,7 +277,8 @@ union RecordType {
   PNL, SHC, CES, QEM,
   SBM, PMM, OPP, IQC,
   CNP, CMR, TBS, CCT,
-  ACI, CVP, RFL, RFS
+  ACI, CVP, RFL, RFS,
+  TRS
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

@@ -16126,6 +16126,354 @@
             },
             "$ref": "#/definitions/FCS"
         },
+        "TRS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "trsSolverTier": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LOS_OCCLUSION",
+                        "DIFFRACTION_ASSISTED",
+                        "SPECULAR_SINGLE_BOUNCE"
+                    ]
+                },
+                "trsPropagationModel": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_SPACE",
+                        "TWO_RAY_GROUND",
+                        "HATA_URBAN",
+                        "HATA_SUBURBAN",
+                        "HATA_RURAL",
+                        "COST231",
+                        "ITU_TERRAIN",
+                        "KNIFE_EDGE",
+                        "MULTI_KNIFE_EDGE",
+                        "BULLINGTON",
+                        "LONGLEY_RICE",
+                        "CUSTOM"
+                    ]
+                },
+                "trsResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "REFUSED"
+                    ]
+                },
+                "trsPathClass": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "GRAZING",
+                        "DIFFRACTED"
+                    ]
+                },
+                "TRSRequest": {
+                    "type": "object",
+                    "description": "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
+                    "properties": {
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster width, cells."
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster height, cells."
+                        },
+                        "PROFILE_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field width, cells. The profile is a FINER field\nthan the output raster; the line-of-sight march samples it."
+                        },
+                        "PROFILE_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field height, cells."
+                        },
+                        "SOLVER_TIER": {
+                            "$ref": "#/definitions/trsSolverTier",
+                            "description": "Fidelity tier requested. A solver that does not implement the tier\nREFUSES; it never silently downgrades."
+                        },
+                        "PROPAGATION_MODEL": {
+                            "$ref": "#/definitions/trsPropagationModel",
+                            "description": "Propagation model requested for the per-cell loss term. A solver that\ndoes not implement the model REFUSES; it never silently substitutes."
+                        },
+                        "ATMOSPHERIC_MODEL_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Atmospheric attenuation terms requested, as a bitmask: 0 none,\nbit 0 (1) gaseous absorption, bit 1 (2) rain attenuation, bit 2 (4)\ncloud/fog attenuation. A solver that does not implement a requested\nterm REFUSES."
+                        },
+                        "THREAD_COUNT_HINT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Parallelism hint. 0 or 1 means sequential. A solver MUST produce\nbyte-identical layers at any value \u2014 cells are independent and a thread\nwrites only its own indices; determinism is part of this contract."
+                        },
+                        "MIN_EAST_M": {
+                            "type": "number",
+                            "description": "Analysis-frame east coordinate of the shared grid origin, meters."
+                        },
+                        "MIN_NORTH_M": {
+                            "type": "number",
+                            "description": "Analysis-frame north coordinate of the shared grid origin, meters."
+                        },
+                        "PROFILE_CELL_WIDTH_M": {
+                            "type": "number",
+                            "description": "Profile cell width, meters."
+                        },
+                        "PROFILE_CELL_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Profile cell height, meters."
+                        },
+                        "PROFILE_SPACING_M": {
+                            "type": "number",
+                            "description": "Profile sample spacing, meters; sets the line-of-sight march stride."
+                        },
+                        "MINIMUM_STEP_M": {
+                            "type": "number",
+                            "description": "Minimum march step, meters. NaN means caller left it unset and the\nsolver applies its own documented default."
+                        },
+                        "TX_LOCAL_X_M": {
+                            "type": "number",
+                            "description": "Emitter position in the analysis ENU frame, meters (X east, Y north,\nZ up)."
+                        },
+                        "TX_LOCAL_Y_M": {
+                            "type": "number"
+                        },
+                        "TX_LOCAL_Z_M": {
+                            "type": "number"
+                        },
+                        "TX_ECEF_X_M": {
+                            "type": "number",
+                            "description": "Emitter Earth-centered Earth-fixed position, meters \u2014 carried so the\nsolver computes exact per-cell range rather than a small-angle\napproximation."
+                        },
+                        "TX_ECEF_Y_M": {
+                            "type": "number"
+                        },
+                        "TX_ECEF_Z_M": {
+                            "type": "number"
+                        },
+                        "TX_ABSOLUTE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Emitter height above the reference ellipsoid, meters."
+                        },
+                        "TX_SURFACE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Terrain surface height under the emitter, meters above the ellipsoid.\nEmitter height above ground = TX_ABSOLUTE_HEIGHT_M \u2212\nTX_SURFACE_HEIGHT_M."
+                        },
+                        "INVERSE_ENU_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Column-major 4x4 inverse of the analysis ENU frame transform (the\nmatrix that takes Earth-fixed points INTO the analysis frame). Exactly\n16 entries."
+                        },
+                        "TARGET_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Receiver height above ground at every cell, meters."
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Carrier frequency, hertz."
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Noise bandwidth, hertz. NaN means caller left it unset and the solver\napplies its own documented default."
+                        },
+                        "TX_POWER_W": {
+                            "type": "number",
+                            "description": "Transmit power, watts. NaN means unset; solver default applies."
+                        },
+                        "TX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Transmit antenna gain, dBi. NaN means unset; solver default applies."
+                        },
+                        "TX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Transmit line loss, dB (positive). NaN means unset; solver default\napplies."
+                        },
+                        "RX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Receive antenna gain, dBi. NaN means unset; solver default applies."
+                        },
+                        "RX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Receive line loss, dB (positive). NaN means unset; solver default\napplies."
+                        },
+                        "RX_NOISE_FIGURE_DB": {
+                            "type": "number",
+                            "description": "Receiver noise figure, dB. NaN means unset; solver default applies."
+                        },
+                        "EFFECTIVE_EARTH_RADIUS_FACTOR": {
+                            "type": "number",
+                            "description": "Effective Earth radius factor (k-factor) for curvature correction.\nNaN means no curvature term is applied \u2014 NOT a default of 4/3."
+                        },
+                        "GRID_LONGITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic longitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "GRID_LATITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic latitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "GROUND_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Terrain height at every output cell, meters above the ellipsoid,\nrow-major, GRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "PROFILE_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "COMPOSITE obstruction surface (terrain plus structures) at every\nprofile cell, meters above the ellipsoid, row-major,\nPROFILE_WIDTH * PROFILE_HEIGHT entries."
+                        },
+                        "PROFILE_SURFACE_Z_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "The same composite surface expressed as analysis-frame Z, meters \u2014\nthe frame the line-of-sight test runs in. PROFILE_WIDTH *\nPROFILE_HEIGHT entries."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRSResult": {
+                    "type": "object",
+                    "description": "One terrain raster solve result. On STATUS = OK every layer below is\npresent with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any\nother STATUS the result carries NO layers \u2014 never a partial raster.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/trsResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "On REFUSED or INVALID_INPUT: names the exact gap or defect. Empty on\nOK."
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster dimensions the layers are stated for, echoed from the\nrequest."
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VISIBLE_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where the geometric ray from the emitter clears the obstruction\nsurface, else 0."
+                        },
+                        "OCCLUDED_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Complement of VISIBLE_MASK."
+                        },
+                        "POSITIVE_LINK_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where LINK_MARGIN_DB > 0, else 0."
+                        },
+                        "PATH_CLASS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/trsPathClass"
+                            },
+                            "description": "Path classification of every cell from the dominant-edge diffraction\nparameter \u2014 see trsPathClass."
+                        },
+                        "PATH_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Total path loss including every applied term, dB (positive)."
+                        },
+                        "EXCESS_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Loss above free space \u2014 what the terrain cost the cell, dB."
+                        },
+                        "LINK_MARGIN_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Link budget margin, dB."
+                        },
+                        "DIFFRACTION_PARAMETER": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ITU-R P.526-15 eq. (29) diffraction parameter v of the dominant edge.\nExactly -10.0 where no finite v exists (an unobstructed, Fresnel-clear\npath) \u2014 the layer's stated no-finite-v encoding, carried verbatim so\nthe FlatBuffer and aligned-binary forms stay byte-comparable."
+                        },
+                        "REFLECTION_CONTRIBUTION_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Specular ground-bounce contribution, dB. All zeros outside the\nSPECULAR_SINGLE_BOUNCE tier."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when\npresent."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRS": {
+                    "type": "object",
+                    "description": "Terrain raster solve envelope.",
+                    "properties": {
+                        "REQUEST": {
+                            "$ref": "#/definitions/TRSRequest"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/TRSResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TRS"
+        },
         "OSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -48280,6 +48628,48 @@
                         "KRIGING"
                     ]
                 },
+                "trsSolverTier": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LOS_OCCLUSION",
+                        "DIFFRACTION_ASSISTED",
+                        "SPECULAR_SINGLE_BOUNCE"
+                    ]
+                },
+                "trsPropagationModel": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_SPACE",
+                        "TWO_RAY_GROUND",
+                        "HATA_URBAN",
+                        "HATA_SUBURBAN",
+                        "HATA_RURAL",
+                        "COST231",
+                        "ITU_TERRAIN",
+                        "KNIFE_EDGE",
+                        "MULTI_KNIFE_EDGE",
+                        "BULLINGTON",
+                        "LONGLEY_RICE",
+                        "CUSTOM"
+                    ]
+                },
+                "trsResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "REFUSED"
+                    ]
+                },
+                "trsPathClass": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "GRAZING",
+                        "DIFFRACTED"
+                    ]
+                },
                 "visualAssetVariantKind": {
                     "type": "string",
                     "enum": [
@@ -48861,7 +49251,8 @@
                         "ACI",
                         "CVP",
                         "RFL",
-                        "RFS"
+                        "RFS",
+                        "TRS"
                     ]
                 },
                 "LKS": {
@@ -84052,6 +84443,306 @@
                     },
                     "additionalProperties": false
                 },
+                "TRSRequest": {
+                    "type": "object",
+                    "description": "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
+                    "properties": {
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster width, cells."
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster height, cells."
+                        },
+                        "PROFILE_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field width, cells. The profile is a FINER field\nthan the output raster; the line-of-sight march samples it."
+                        },
+                        "PROFILE_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Obstruction profile field height, cells."
+                        },
+                        "SOLVER_TIER": {
+                            "$ref": "#/definitions/trsSolverTier",
+                            "description": "Fidelity tier requested. A solver that does not implement the tier\nREFUSES; it never silently downgrades."
+                        },
+                        "PROPAGATION_MODEL": {
+                            "$ref": "#/definitions/trsPropagationModel",
+                            "description": "Propagation model requested for the per-cell loss term. A solver that\ndoes not implement the model REFUSES; it never silently substitutes."
+                        },
+                        "ATMOSPHERIC_MODEL_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Atmospheric attenuation terms requested, as a bitmask: 0 none,\nbit 0 (1) gaseous absorption, bit 1 (2) rain attenuation, bit 2 (4)\ncloud/fog attenuation. A solver that does not implement a requested\nterm REFUSES."
+                        },
+                        "THREAD_COUNT_HINT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Parallelism hint. 0 or 1 means sequential. A solver MUST produce\nbyte-identical layers at any value \u2014 cells are independent and a thread\nwrites only its own indices; determinism is part of this contract."
+                        },
+                        "MIN_EAST_M": {
+                            "type": "number",
+                            "description": "Analysis-frame east coordinate of the shared grid origin, meters."
+                        },
+                        "MIN_NORTH_M": {
+                            "type": "number",
+                            "description": "Analysis-frame north coordinate of the shared grid origin, meters."
+                        },
+                        "PROFILE_CELL_WIDTH_M": {
+                            "type": "number",
+                            "description": "Profile cell width, meters."
+                        },
+                        "PROFILE_CELL_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Profile cell height, meters."
+                        },
+                        "PROFILE_SPACING_M": {
+                            "type": "number",
+                            "description": "Profile sample spacing, meters; sets the line-of-sight march stride."
+                        },
+                        "MINIMUM_STEP_M": {
+                            "type": "number",
+                            "description": "Minimum march step, meters. NaN means caller left it unset and the\nsolver applies its own documented default."
+                        },
+                        "TX_LOCAL_X_M": {
+                            "type": "number",
+                            "description": "Emitter position in the analysis ENU frame, meters (X east, Y north,\nZ up)."
+                        },
+                        "TX_LOCAL_Y_M": {
+                            "type": "number"
+                        },
+                        "TX_LOCAL_Z_M": {
+                            "type": "number"
+                        },
+                        "TX_ECEF_X_M": {
+                            "type": "number",
+                            "description": "Emitter Earth-centered Earth-fixed position, meters \u2014 carried so the\nsolver computes exact per-cell range rather than a small-angle\napproximation."
+                        },
+                        "TX_ECEF_Y_M": {
+                            "type": "number"
+                        },
+                        "TX_ECEF_Z_M": {
+                            "type": "number"
+                        },
+                        "TX_ABSOLUTE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Emitter height above the reference ellipsoid, meters."
+                        },
+                        "TX_SURFACE_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Terrain surface height under the emitter, meters above the ellipsoid.\nEmitter height above ground = TX_ABSOLUTE_HEIGHT_M \u2212\nTX_SURFACE_HEIGHT_M."
+                        },
+                        "INVERSE_ENU_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Column-major 4x4 inverse of the analysis ENU frame transform (the\nmatrix that takes Earth-fixed points INTO the analysis frame). Exactly\n16 entries."
+                        },
+                        "TARGET_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Receiver height above ground at every cell, meters."
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Carrier frequency, hertz."
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Noise bandwidth, hertz. NaN means caller left it unset and the solver\napplies its own documented default."
+                        },
+                        "TX_POWER_W": {
+                            "type": "number",
+                            "description": "Transmit power, watts. NaN means unset; solver default applies."
+                        },
+                        "TX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Transmit antenna gain, dBi. NaN means unset; solver default applies."
+                        },
+                        "TX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Transmit line loss, dB (positive). NaN means unset; solver default\napplies."
+                        },
+                        "RX_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Receive antenna gain, dBi. NaN means unset; solver default applies."
+                        },
+                        "RX_LINE_LOSS_DB": {
+                            "type": "number",
+                            "description": "Receive line loss, dB (positive). NaN means unset; solver default\napplies."
+                        },
+                        "RX_NOISE_FIGURE_DB": {
+                            "type": "number",
+                            "description": "Receiver noise figure, dB. NaN means unset; solver default applies."
+                        },
+                        "EFFECTIVE_EARTH_RADIUS_FACTOR": {
+                            "type": "number",
+                            "description": "Effective Earth radius factor (k-factor) for curvature correction.\nNaN means no curvature term is applied \u2014 NOT a default of 4/3."
+                        },
+                        "GRID_LONGITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic longitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "GRID_LATITUDE_RAD": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Geodetic latitude of every output cell, radians, row-major,\nGRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "GROUND_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Terrain height at every output cell, meters above the ellipsoid,\nrow-major, GRID_WIDTH * GRID_HEIGHT entries."
+                        },
+                        "PROFILE_HEIGHTS_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "COMPOSITE obstruction surface (terrain plus structures) at every\nprofile cell, meters above the ellipsoid, row-major,\nPROFILE_WIDTH * PROFILE_HEIGHT entries."
+                        },
+                        "PROFILE_SURFACE_Z_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "The same composite surface expressed as analysis-frame Z, meters \u2014\nthe frame the line-of-sight test runs in. PROFILE_WIDTH *\nPROFILE_HEIGHT entries."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRSResult": {
+                    "type": "object",
+                    "description": "One terrain raster solve result. On STATUS = OK every layer below is\npresent with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any\nother STATUS the result carries NO layers \u2014 never a partial raster.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/trsResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "On REFUSED or INVALID_INPUT: names the exact gap or defect. Empty on\nOK."
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output raster dimensions the layers are stated for, echoed from the\nrequest."
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VISIBLE_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where the geometric ray from the emitter clears the obstruction\nsurface, else 0."
+                        },
+                        "OCCLUDED_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Complement of VISIBLE_MASK."
+                        },
+                        "POSITIVE_LINK_MASK": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "1 where LINK_MARGIN_DB > 0, else 0."
+                        },
+                        "PATH_CLASS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/trsPathClass"
+                            },
+                            "description": "Path classification of every cell from the dominant-edge diffraction\nparameter \u2014 see trsPathClass."
+                        },
+                        "PATH_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Total path loss including every applied term, dB (positive)."
+                        },
+                        "EXCESS_LOSS_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Loss above free space \u2014 what the terrain cost the cell, dB."
+                        },
+                        "LINK_MARGIN_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Link budget margin, dB."
+                        },
+                        "DIFFRACTION_PARAMETER": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ITU-R P.526-15 eq. (29) diffraction parameter v of the dominant edge.\nExactly -10.0 where no finite v exists (an unobstructed, Fresnel-clear\npath) \u2014 the layer's stated no-finite-v encoding, carried verbatim so\nthe FlatBuffer and aligned-binary forms stay byte-comparable."
+                        },
+                        "REFLECTION_CONTRIBUTION_DB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Specular ground-bounce contribution, dB. All zeros outside the\nSPECULAR_SINGLE_BOUNCE tier."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when\npresent."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TRS": {
+                    "type": "object",
+                    "description": "Terrain raster solve envelope.",
+                    "properties": {
+                        "REQUEST": {
+                            "$ref": "#/definitions/TRSRequest"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/TRSResult"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "VAMVector3": {
                     "type": "object",
                     "description": "Three-dimensional vector.",
@@ -88350,6 +89041,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/RFS"
+                                },
+                                {
+                                    "$ref": "#/definitions/TRS"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)"

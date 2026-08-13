@@ -200,6 +200,7 @@ export * as TPN from './TPN/main.js';
 export * as TRE from './TRE/main.js';
 export * as TRK from './TRK/main.js';
 export * as TRN from './TRN/main.js';
+export * as TRS from './TRS/main.js';
 export * as VAM from './VAM/main.js';
 export * as VCM from './VCM/main.js';
 export * as VST from './VST/main.js';

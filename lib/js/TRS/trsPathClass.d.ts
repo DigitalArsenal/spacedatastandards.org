@@ -1,0 +1,15 @@
+/**
+ * How a cell's signal reached it, classified from the ITU-R P.526-15
+ * eq. (29) diffraction parameter v of the dominant terrain edge on its path:
+ * OPEN v <= -0.78 (first Fresnel zone effectively clear), GRAZING
+ * -0.78 < v <= 0 (geometrically clear but Fresnel-intruded), DIFFRACTED
+ * v > 0 (geometrically obstructed; signal arrived by diffraction).
+ *
+ * ORDINALS ARE WIRE VALUES. New classes are APPENDED ONLY.
+ */
+export declare enum trsPathClass {
+    OPEN = 0,
+    GRAZING = 1,
+    DIFFRACTED = 2
+}
+//# sourceMappingURL=trsPathClass.d.ts.map
