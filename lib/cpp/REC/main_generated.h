@@ -217,6 +217,10 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -444,11 +448,15 @@ enum RecordType : uint8_t {
   RecordType_CMR = 202,
   RecordType_TBS = 203,
   RecordType_CCT = 204,
+  RecordType_ACI = 205,
+  RecordType_CVP = 206,
+  RecordType_RFL = 207,
+  RecordType_RFS = 208,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_CCT
+  RecordType_MAX = RecordType_RFS
 };
 
-inline const RecordType (&EnumValuesRecordType())[205] {
+inline const RecordType (&EnumValuesRecordType())[209] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -654,13 +662,17 @@ inline const RecordType (&EnumValuesRecordType())[205] {
     RecordType_CNP,
     RecordType_CMR,
     RecordType_TBS,
-    RecordType_CCT
+    RecordType_CCT,
+    RecordType_ACI,
+    RecordType_CVP,
+    RecordType_RFL,
+    RecordType_RFS
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[206] = {
+  static const char * const names[210] = {
     "NONE",
     "ACL",
     "ACM",
@@ -866,13 +878,17 @@ inline const char * const *EnumNamesRecordType() {
     "CMR",
     "TBS",
     "CCT",
+    "ACI",
+    "CVP",
+    "RFL",
+    "RFS",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_CCT)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_RFS)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1697,6 +1713,22 @@ template<> struct RecordTypeTraits<CCT> {
   static const RecordType enum_value = RecordType_CCT;
 };
 
+template<> struct RecordTypeTraits<ACI> {
+  static const RecordType enum_value = RecordType_ACI;
+};
+
+template<> struct RecordTypeTraits<CVP> {
+  static const RecordType enum_value = RecordType_CVP;
+};
+
+template<> struct RecordTypeTraits<RFL> {
+  static const RecordType enum_value = RecordType_RFL;
+};
+
+template<> struct RecordTypeTraits<RFS> {
+  static const RecordType enum_value = RecordType_RFS;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2329,6 +2361,18 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const CCT *value_as_CCT() const {
     return value_type() == RecordType_CCT ? static_cast<const CCT *>(value()) : nullptr;
+  }
+  const ACI *value_as_ACI() const {
+    return value_type() == RecordType_ACI ? static_cast<const ACI *>(value()) : nullptr;
+  }
+  const CVP *value_as_CVP() const {
+    return value_type() == RecordType_CVP ? static_cast<const CVP *>(value()) : nullptr;
+  }
+  const RFL *value_as_RFL() const {
+    return value_type() == RecordType_RFL ? static_cast<const RFL *>(value()) : nullptr;
+  }
+  const RFS *value_as_RFS() const {
+    return value_type() == RecordType_RFS ? static_cast<const RFS *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3160,6 +3204,22 @@ template<> inline const TBS *Record::value_as<TBS>() const {
 
 template<> inline const CCT *Record::value_as<CCT>() const {
   return value_as_CCT();
+}
+
+template<> inline const ACI *Record::value_as<ACI>() const {
+  return value_as_ACI();
+}
+
+template<> inline const CVP *Record::value_as<CVP>() const {
+  return value_as_CVP();
+}
+
+template<> inline const RFL *Record::value_as<RFL>() const {
+  return value_as_RFL();
+}
+
+template<> inline const RFS *Record::value_as<RFS>() const {
+  return value_as_RFS();
 }
 
 struct RecordBuilder {
@@ -4101,6 +4161,22 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_CCT: {
       auto ptr = reinterpret_cast<const CCT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ACI: {
+      auto ptr = reinterpret_cast<const ACI *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_CVP: {
+      auto ptr = reinterpret_cast<const CVP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_RFL: {
+      auto ptr = reinterpret_cast<const RFL *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_RFS: {
+      auto ptr = reinterpret_cast<const RFS *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -64,6 +64,16 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **TBS** — Terrestrial Base Station Site with required multi-provider provenance and an explicit position-consensus record
 
+### RF Analysis
+
+**RFL** — RF Link Sample: the durable per-link, per-epoch link-budget vector — geometry, gains, path losses, noise, interference, margin, capacity and the constraint that bound the link
+
+**ACI** — Access Interval: published acquisition/loss, threshold-satisfied, outage and handover intervals with margin statistics, data volume, best server and boundary-resolution provenance
+
+**CVP** — Coverage Geometry: packed polygon rings for footprints, threshold contours, interference zones and gaps, with metric, threshold, epoch or interval, generation, contributing emitters, receiver set, source grid and uncertainty
+
+**RFS** — RF Surface Material: frequency-dependent permittivity, conductivity, reflection, penetration and roughness for arbitrary 3D obstacles, attachable to a mesh, panel, site structure or catalogued object
+
 ### Maneuver
 
 **MET, MPE** — Maneuver planning and execution messages for operations

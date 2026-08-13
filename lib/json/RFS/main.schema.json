@@ -1,0 +1,657 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "linkCategory" : {
+      "type" : "string",
+      "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
+    },
+    "linkCondition" : {
+      "type" : "string",
+      "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
+    },
+    "rfBandDesignation" : {
+      "type" : "string",
+      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER", "VHF", "HF", "MF", "LF", "VLF", "SHF"]
+    },
+    "rfPolarization" : {
+      "type" : "string",
+      "enum": ["LHCP", "RHCP", "LINEAR_H", "LINEAR_V", "DUAL", "CROSS", "UNKNOWN"]
+    },
+    "rfTransmitterState" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "ACTIVE", "INACTIVE", "INVALID"]
+    },
+    "rfsMaterialClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CONCRETE", "BRICK", "PLASTERBOARD", "WOOD", "GLASS", "COATED_GLASS", "CEILING_BOARD", "CHIPBOARD", "FLOORBOARD", "METAL", "STONE", "ASPHALT", "ROOFING_TILE", "VERY_DRY_GROUND", "MEDIUM_DRY_GROUND", "WET_GROUND", "SOIL", "SAND", "VEGETATION", "FRESH_WATER", "SEA_WATER", "ICE", "SNOW", "COMPOSITE", "CARBON_FIBER_COMPOSITE", "MULTI_LAYER_INSULATION", "SOLAR_CELL", "COATING", "ABSORBER", "ENGINEERED_SURFACE", "OTHER"]
+    },
+    "rfsScatteringClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPECULAR", "DIFFUSE", "MIXED", "LAMBERTIAN", "ANISOTROPIC"]
+    },
+    "rfsIncidencePolarization" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TRANSVERSE_ELECTRIC", "TRANSVERSE_MAGNETIC", "CIRCULAR_LEFT", "CIRCULAR_RIGHT", "UNPOLARIZED"]
+    },
+    "rfsPropertyMethod" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEASURED", "MODELED", "CLASS_DEFAULT", "INFERRED_FROM_FAMILY"]
+    },
+    "rfsGeometryKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ASSET_MESH", "OBJECT_SURFACE", "PANEL", "CATALOG_OBJECT", "SITE_STRUCTURE", "BUILDING_FACE", "TERRAIN_SURFACE", "ANALYTIC_SHAPE"]
+    },
+    "rfsAnalyticShape" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PLANE", "DISK", "BOX", "SPHERE", "ELLIPSOID", "CYLINDER", "CONE", "PARABOLOID", "CONVEX_HULL"]
+    },
+    "LKS" : {
+      "type" : "object",
+      "description" : "Link Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT1" : {
+                "type" : "string",
+                "description" : "First endpoint on-orbit identifier"
+              },
+        "SAT_NO1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First endpoint satellite catalog number"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string",
+                "description" : "Second endpoint on-orbit identifier"
+              },
+        "SAT_NO2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Second endpoint satellite catalog number"
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation name"
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Link name or identifier"
+              },
+        "LINK_TYPE" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Link type"
+              },
+        "LINK_STATE" : {
+                "$ref" : "#/definitions/linkCondition",
+                "description" : "Link state"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "RF band"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string",
+                "description" : "Link start time (ISO 8601)"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Link stop time (ISO 8601)"
+              },
+        "ID_BEAM1" : {
+                "type" : "string",
+                "description" : "First endpoint beam identifier"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string",
+                "description" : "First endpoint name"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number",
+                "description" : "First endpoint latitude (degrees)"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number",
+                "description" : "First endpoint longitude (degrees)"
+              },
+        "ID_BEAM2" : {
+                "type" : "string",
+                "description" : "Second endpoint beam identifier"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string",
+                "description" : "Second endpoint name"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number",
+                "description" : "Second endpoint latitude (degrees)"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number",
+                "description" : "Second endpoint longitude (degrees)"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 1 to 2 (Mbps)"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 2 to 1 (Mbps)"
+              },
+        "SYS_CAP" : {
+                "type" : "string",
+                "description" : "System capability status"
+              },
+        "OPS_CAP" : {
+                "type" : "string",
+                "description" : "Operational capability status"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFB" : {
+      "type" : "object",
+      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ENTITY" : {
+                "type" : "string",
+                "description" : "Parent entity identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Band name or designation"
+              },
+        "BAND" : {
+                "$ref" : "#/definitions/rfBandDesignation",
+                "description" : "RF band designation"
+              },
+        "MODE" : {
+                "type" : "string",
+                "description" : "Operating mode"
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Minimum frequency (MHz)"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Maximum frequency (MHz)"
+              },
+        "CENTER_FREQ" : {
+                "type" : "number",
+                "description" : "Center frequency (MHz)"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Bandwidth (MHz)"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number",
+                "description" : "Peak antenna gain (dBi)"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number",
+                "description" : "Edge-of-coverage gain (dBi)"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "Antenna beamwidth (degrees)"
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfPolarization",
+                "description" : "Polarization"
+              },
+        "ERP" : {
+                "type" : "number",
+                "description" : "Effective radiated power (dBW)"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "Effective isotropic radiated power (dBW)"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
+              },
+        "ID_TRANSMITTER" : {
+                "type" : "string",
+                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
+              },
+        "LINK_DIRECTION" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Direction of this emission relative to the spacecraft."
+              },
+        "BAUD" : {
+                "type" : "number",
+                "description" : "Symbol rate in baud (symbols per second), NOT kilobaud."
+              },
+        "SERVICE" : {
+                "type" : "string",
+                "description" : "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
+              },
+        "XMT_STATUS" : {
+                "$ref" : "#/definitions/rfTransmitterState",
+                "description" : "Operational state of this emitter."
+              },
+        "INVERT" : {
+                "type" : "boolean",
+                "description" : "True when the modulation sideband is inverted."
+              },
+        "IARU_COORDINATION" : {
+                "type" : "string",
+                "description" : "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Attribution/citation string the source license requires this record to\ncarry downstream."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFSFrequencySample" : {
+      "type" : "object",
+      "description" : "The material's electromagnetic properties at ONE frequency. A table of\nthese beats the power-law fit wherever it covers the frequency.",
+      "properties" : {
+        "FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency this sample is stated at, megahertz — the `$RFB` MHz\nconvention. A join to `$IQC` (hertz) converts explicitly at the join."
+              },
+        "RELATIVE_PERMITTIVITY_REAL" : {
+                "type" : "number",
+                "description" : "Real part of the relative permittivity."
+              },
+        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
+                "type" : "number",
+                "description" : "Imaginary part of the relative permittivity (loss term), stated as a\nPOSITIVE magnitude."
+              },
+        "CONDUCTIVITY_S_PER_M" : {
+                "type" : "number",
+                "description" : "Conductivity, siemens per metre."
+              },
+        "LOSS_TANGENT" : {
+                "type" : "number",
+                "description" : "Loss tangent, dimensionless."
+              },
+        "RELATIVE_PERMEABILITY_REAL" : {
+                "type" : "number",
+                "description" : "Real and imaginary relative permeability. 1.0 and 0.0 for non-magnetic\nmaterials — stated, not assumed."
+              },
+        "RELATIVE_PERMEABILITY_IMAGINARY" : {
+                "type" : "number"
+              },
+        "REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Power reflected at normal incidence as a ratio [0-1]."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss at normal incidence, dB (positive)."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through the material at THICKNESS_M, dB (positive)."
+              },
+        "ATTENUATION_DB_PER_M" : {
+                "type" : "number",
+                "description" : "Attenuation inside the material, dB per metre."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFSReflectionEntry" : {
+      "type" : "object",
+      "description" : "Reflection and transmission at one incidence angle and polarization. The\nangular dependence of a real surface cannot be carried by a single\nnormal-incidence number.",
+      "properties" : {
+        "FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency this entry is stated at, megahertz."
+              },
+        "INCIDENCE_ANGLE_DEG" : {
+                "type" : "number",
+                "description" : "Angle from the surface normal, degrees [0-90)."
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfsIncidencePolarization"
+              },
+        "REFLECTION_COEFFICIENT_MAGNITUDE" : {
+                "type" : "number",
+                "description" : "Magnitude of the field reflection coefficient [0-1]."
+              },
+        "REFLECTION_COEFFICIENT_PHASE_DEG" : {
+                "type" : "number",
+                "description" : "Phase of the field reflection coefficient, degrees."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss, dB (positive)."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through the material at this angle, dB (positive)."
+              },
+        "SCATTERING_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Power removed from the specular direction by surface roughness, dB."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFSGeometryRef" : {
+      "type" : "object",
+      "description" : "Where and what this material is attached to. A material record with no\ngeometry describes a substance; a material record WITH geometry describes\nan obstacle a solver can intersect.",
+      "properties" : {
+        "GEOMETRY_REF_ID" : {
+                "type" : "string",
+                "description" : "Producer-stable identifier of this attachment."
+              },
+        "GEOMETRY_KIND" : {
+                "$ref" : "#/definitions/rfsGeometryKind"
+              },
+        "VAM_ID" : {
+                "type" : "string",
+                "description" : "`$VAM` asset identity, copied VERBATIM including the byte hash so the\nmaterial can never drift onto a different revision of the mesh."
+              },
+        "VARIANT_ID" : {
+                "type" : "string"
+              },
+        "ASSET_SHA256" : {
+                "type" : "string"
+              },
+        "MESH_NAME" : {
+                "type" : "string",
+                "description" : "Mesh and primitive inside the asset."
+              },
+        "PRIMITIVE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GLTF_MATERIAL_NAME" : {
+                "type" : "string",
+                "description" : "glTF material slot the properties apply to, matching the\n`$OPP.OPPSurface` join fields."
+              },
+        "GLTF_MATERIAL_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FACE_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Explicit face indexes, when the material covers part of a mesh."
+              },
+        "OPP_SURFACE_ID" : {
+                "type" : "string",
+                "description" : "`$OPP.OPPSurface` surface identifier."
+              },
+        "PANEL_ID" : {
+                "type" : "string",
+                "description" : "`$PNL` panel identifier."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "`$CAT` identity, when the obstacle is a catalogued object. 0 when\nunbound."
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TBS_SITE_ID" : {
+                "type" : "string",
+                "description" : "`$TBS.SITE_ID`, when the obstacle is a structure at a terrestrial site."
+              },
+        "FEATURE_ID" : {
+                "type" : "string",
+                "description" : "Producer's own feature identifier for a building, wall or terrain patch."
+              },
+        "ANALYTIC_SHAPE" : {
+                "$ref" : "#/definitions/rfsAnalyticShape",
+                "description" : "Primitive and its dimensions in metres, when GEOMETRY_KIND is\nANALYTIC_SHAPE. The dimension order is the primitive's own convention and\nMUST be stated in SHAPE_DIMENSION_NAMES."
+              },
+        "SHAPE_DIMENSIONS_M" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SHAPE_DIMENSION_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Geodetic placement of a fixed obstacle, degrees and metres. Absent for\nan obstacle whose position is joined from `$CAT`, `$TBS` or `$VAM`."
+              },
+        "LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "ALTITUDE_M" : {
+                "type" : "number"
+              },
+        "HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Height above ground of a fixed structure, metres."
+              },
+        "NORMAL_AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Orientation of the surface normal, degrees east of north and above the\nhorizon. A wall that faces the wrong way blocks the wrong link."
+              },
+        "NORMAL_ELEVATION_DEG" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["GEOMETRY_REF_ID"],
+      "additionalProperties" : false
+    },
+    "RFSProvenance" : {
+      "type" : "object",
+      "description" : "Where these properties came from.",
+      "properties" : {
+        "METHOD" : {
+                "$ref" : "#/definitions/rfsPropertyMethod"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "The measurement campaign, published table or model. Required: an\nunattributed permittivity is not publishable."
+              },
+        "SOURCE_REFERENCE" : {
+                "type" : "string",
+                "description" : "The specific table, recommendation or dataset entry within SOURCE."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "Replayable query that retrieves the source value."
+              },
+        "MEASUREMENT_TECHNIQUE" : {
+                "type" : "string",
+                "description" : "How it was measured (e.g. \"free-space transmission\", \"coaxial probe\",\n\"resonant cavity\")."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced modelled values."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "MEASURED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms measured and retrieved."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "RELATIVE_PERMITTIVITY_SIGMA" : {
+                "type" : "number",
+                "description" : "1-sigma uncertainty of the permittivity and conductivity values, in the\nunits of the quantity they qualify."
+              },
+        "CONDUCTIVITY_SIGMA_S_PER_M" : {
+                "type" : "number"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean"
+              },
+        "CITATION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "RFS" : {
+      "type" : "object",
+      "description" : "RF Surface Material",
+      "properties" : {
+        "MATERIAL_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this material. Joined by\n`$RFL.RFLObstruction.MATERIAL_ID` and `$CVP.CVPObstacleRef.MATERIAL_ID`."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name as its source states it, verbatim."
+              },
+        "MATERIAL_CLASS" : {
+                "$ref" : "#/definitions/rfsMaterialClass"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Free-text description of the surface, not of its vendor."
+              },
+        "FREQUENCY_MIN_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency range over which this record's parameters are valid,\nmegahertz. A solver MUST refuse to evaluate outside it rather than\nextrapolate."
+              },
+        "FREQUENCY_MAX_MHZ" : {
+                "type" : "number"
+              },
+        "PERMITTIVITY_COEFFICIENT_A" : {
+                "type" : "number",
+                "description" : "relative permittivity = PERMITTIVITY_COEFFICIENT_A * f^PERMITTIVITY_EXPONENT_B"
+              },
+        "PERMITTIVITY_EXPONENT_B" : {
+                "type" : "number"
+              },
+        "CONDUCTIVITY_COEFFICIENT_C" : {
+                "type" : "number",
+                "description" : "conductivity [S/m] = CONDUCTIVITY_COEFFICIENT_C * f^CONDUCTIVITY_EXPONENT_D"
+              },
+        "CONDUCTIVITY_EXPONENT_D" : {
+                "type" : "number"
+              },
+        "REFERENCE_FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency the scalar values below are stated at, megahertz. Without it\nthey are uninterpretable."
+              },
+        "RELATIVE_PERMITTIVITY_REAL" : {
+                "type" : "number"
+              },
+        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
+                "type" : "number",
+                "description" : "Loss term, stated as a POSITIVE magnitude."
+              },
+        "CONDUCTIVITY_S_PER_M" : {
+                "type" : "number"
+              },
+        "LOSS_TANGENT" : {
+                "type" : "number"
+              },
+        "RELATIVE_PERMEABILITY_REAL" : {
+                "type" : "number",
+                "description" : "1.0 and 0.0 for non-magnetic materials — stated, not assumed."
+              },
+        "RELATIVE_PERMEABILITY_IMAGINARY" : {
+                "type" : "number"
+              },
+        "REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Power reflected at normal incidence as a ratio [0-1]."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss at normal incidence, dB (positive)."
+              },
+        "THICKNESS_M" : {
+                "type" : "number",
+                "description" : "Thickness the transmission and penetration losses are stated for, metres.\nA transmission loss without a thickness cannot be rescaled."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through THICKNESS_M at normal incidence, dB (positive)."
+              },
+        "ATTENUATION_DB_PER_M" : {
+                "type" : "number",
+                "description" : "Attenuation inside the material, dB per metre."
+              },
+        "ABSORPTION_COEFFICIENT" : {
+                "type" : "number",
+                "description" : "Fraction of incident power absorbed at normal incidence [0-1]."
+              },
+        "SURFACE_ROUGHNESS_RMS_M" : {
+                "type" : "number",
+                "description" : "RMS surface roughness, metres. Roughness is what decides whether a\nsurface is a mirror or a scatterer at a given wavelength."
+              },
+        "ROUGHNESS_CORRELATION_LENGTH_M" : {
+                "type" : "number",
+                "description" : "Correlation length of the roughness, metres."
+              },
+        "SCATTERING_CLASS" : {
+                "$ref" : "#/definitions/rfsScatteringClass"
+              },
+        "DIFFUSE_SCATTERING_COEFFICIENT" : {
+                "type" : "number",
+                "description" : "Fraction of non-absorbed power leaving diffusely [0-1]."
+              },
+        "BACKSCATTER_COEFFICIENT_DB" : {
+                "type" : "number",
+                "description" : "Backscatter coefficient, dB."
+              },
+        "TEMPERATURE_K" : {
+                "type" : "number",
+                "description" : "Temperature the properties were evaluated at, kelvin."
+              },
+        "MOISTURE_CONTENT_FRACTION" : {
+                "type" : "number",
+                "description" : "Volumetric moisture content [0-1]. Wet concrete and dry concrete are\ndifferent materials at RF."
+              },
+        "SALINITY_PSU" : {
+                "type" : "number",
+                "description" : "Salinity, practical salinity units, for water surfaces."
+              },
+        "FREQUENCY_SAMPLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSFrequencySample"},
+                "description" : "Per-frequency samples. Where present and covering the frequency, these\ntake precedence over the power law."
+              },
+        "REFLECTION_TABLE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSReflectionEntry"},
+                "description" : "Angular and polarization dependence."
+              },
+        "GEOMETRY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSGeometryRef"},
+                "description" : "Geometry this material is attached to. A record may attach one material\nto several obstacles."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFSProvenance",
+                "description" : "Provenance. Required."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM`."
+              }
+      },
+      "required" : ["MATERIAL_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RFS"
+}

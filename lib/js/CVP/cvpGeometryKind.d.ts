@@ -1,0 +1,44 @@
+/**
+ * What the polygons of this record represent.
+ */
+export declare enum cvpGeometryKind {
+    UNSPECIFIED = 0,
+    /**
+     * The boundary where the metric meets THRESHOLD_VALUE.
+     */
+    THRESHOLD_CONTOUR = 1,
+    /**
+     * A set of iso-level contours; POLYGON_LEVEL_VALUES carries each level.
+     */
+    ISO_METRIC_CONTOUR = 2,
+    /**
+     * The instantaneous beam or antenna footprint on the surface.
+     */
+    FOOTPRINT = 3,
+    /**
+     * The horizon or terrain mask boundary for one endpoint.
+     */
+    HORIZON_MASK = 4,
+    /**
+     * The region in which a stated interference criterion is exceeded.
+     */
+    INTERFERENCE_ZONE = 5,
+    /**
+     * The union of many contributing footprints or contours.
+     */
+    UNION_COVERAGE = 6,
+    /**
+     * The intersection of many contributing footprints or contours.
+     */
+    INTERSECTION_COVERAGE = 7,
+    /**
+     * The region NOT covered — a gap, stated as geometry rather than left to
+     * be inferred by subtracting a coverage polygon from the globe.
+     */
+    GAP_REGION = 8,
+    /**
+     * A region a transmitter is prohibited from illuminating.
+     */
+    KEEP_OUT_ZONE = 9
+}
+//# sourceMappingURL=cvpGeometryKind.d.ts.map

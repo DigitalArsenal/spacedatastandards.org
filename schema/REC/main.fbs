@@ -1,6 +1,7 @@
-// Hash: 5a3f74390c77f4fb694c65f453e4197081b3a15166cd4b6996e214946d29e834
-// Version: 1.44.51
+// Hash: fd54b94105c0fe07661d276a8c9f938fcb3f839368b8f75ef8290f6c696dae47
+// Version: 1.44.53
 // -----------------------------------END_HEADER
+include "../ACI/main.fbs";
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
 include "../ACR/main.fbs";
@@ -40,6 +41,7 @@ include "../CRM/main.fbs";
 include "../CSM/main.fbs";
 include "../CTR/main.fbs";
 include "../CVG/main.fbs";
+include "../CVP/main.fbs";
 include "../CZM/main.fbs";
 include "../DFH/main.fbs";
 include "../DMG/main.fbs";
@@ -151,8 +153,10 @@ include "../REM/main.fbs";
 include "../REV/main.fbs";
 include "../RFB/main.fbs";
 include "../RFE/main.fbs";
+include "../RFL/main.fbs";
 include "../RFM/main.fbs";
 include "../RFO/main.fbs";
+include "../RFS/main.fbs";
 include "../ROC/main.fbs";
 include "../RPT/main.fbs";
 include "../SAR/main.fbs";
@@ -271,7 +275,8 @@ union RecordType {
   FSO, GST, MDP, MDS,
   PNL, SHC, CES, QEM,
   SBM, PMM, OPP, IQC,
-  CNP, CMR, TBS, CCT
+  CNP, CMR, TBS, CCT,
+  ACI, CVP, RFL, RFS
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

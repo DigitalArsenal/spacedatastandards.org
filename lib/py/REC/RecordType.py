@@ -222,6 +222,10 @@ class RecordType(object):
     CMR = 202
     TBS = 203
     CCT = 204
+    ACI = 205
+    CVP = 206
+    RFL = 207
+    RFS = 208
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -839,4 +843,16 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CCT:
         import CCT
         return CCT.CCTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ACI:
+        import ACI
+        return ACI.ACIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CVP:
+        import CVP
+        return CVP.CVPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RFL:
+        import RFL
+        return RFL.RFLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RFS:
+        import RFS
+        return RFS.RFST.InitFromBuf(table.Bytes, table.Pos)
     return None

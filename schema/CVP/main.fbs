@@ -1,0 +1,386 @@
+// Hash: 76bc173a3d96aa6393a878867cf101a86b3f63d78690dc10ff6104a69d94a204
+// Version: 1.186.0
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Coverage Geometry (CVP)
+// Description
+// The durable coverage POLYGON: the packed ring geometry of a footprint,
+// threshold contour, interference zone, union or gap region, stated with the
+// metric and threshold that defines it, the epoch or interval it holds over,
+// the generation it belongs to, the emitters that contributed, the receiver
+// set it was evaluated for, the grid it was extracted from, and the
+// uncertainty of both the level and the boundary.
+//
+// Division of labour: `$CVG` is an H3-indexed grid of figures of merit — it
+// has cells and statistics and NO geometry, so a contour drawn from it cannot
+// be published, only recomputed. `$CVP` is the geometry: rings a consumer can
+// render, intersect, or serve without re-running the analysis. `$RFL` holds
+// the per-link samples the field was built from; `$ACI` holds the intervals.
+// A `$CVP` record MAY name the `$CVG` grid it was contoured from, and names
+// the 3D obstacles that clipped it through `$RFS` materials rather than
+// leaving a bitten-out footprint unexplained.
+//
+// PACKED RINGS. Vertices live in three parallel arrays; RING_OFFSETS carves
+// them into rings; RING_POLYGON_INDEXES groups rings into polygons; RING_ROLES
+// says which ring is an outer boundary and which is a hole. One record can
+// therefore carry a whole multi-polygon coverage field in four small arrays
+// instead of a tree of tables.
+//
+// GEOMETRY RULES, at the IDL and not left to the renderer:
+//   - RING_OFFSETS has exactly RING_COUNT + 1 entries; ring r spans vertex
+//     indexes [RING_OFFSETS[r], RING_OFFSETS[r+1]). The last entry equals the
+//     vertex count.
+//   - Rings are IMPLICITLY CLOSED. The first vertex is NOT repeated at the
+//     end; a producer that repeats it publishes a degenerate edge.
+//   - A ring has at least 3 vertices.
+//   - OUTER rings wind counter-clockwise, INNER (hole) rings clockwise, seen
+//     from outside the ellipsoid.
+//   - A ring MUST NOT cross the ±180° meridian. A coverage region that spans
+//     it is split into two rings of the same polygon, each terminating at the
+//     meridian. Longitudes are in [-180, 180].
+//   - Vertices are geodetic degrees on the ellipsoid named by
+//     ALTITUDE_REFERENCE, never projected coordinates.
+//
+// ABSENT IS NOT ZERO, and a numeric field whose value is unknown is written
+// NaN — the same rule the `$RFL` and `$ACI` records carry. A zero-area
+// polygon, a 0 dB level and a 0 m uncertainty are all real claims.
+
+/// Whether a ring bounds coverage or punches a hole in it.
+///
+/// `UNSPECIFIED` holds ordinal 0 deliberately, and a consumer MUST refuse a
+/// ring that does not state its role rather than assume OUTER: assuming turns
+/// a keep-out hole into a coverage claim.
+enum cvpRingRole : byte {
+  UNSPECIFIED = 0,
+  OUTER,
+  INNER
+}
+
+/// What the polygons of this record represent.
+enum cvpGeometryKind : byte {
+  UNSPECIFIED = 0,
+  /// The boundary where the metric meets THRESHOLD_VALUE.
+  THRESHOLD_CONTOUR,
+  /// A set of iso-level contours; POLYGON_LEVEL_VALUES carries each level.
+  ISO_METRIC_CONTOUR,
+  /// The instantaneous beam or antenna footprint on the surface.
+  FOOTPRINT,
+  /// The horizon or terrain mask boundary for one endpoint.
+  HORIZON_MASK,
+  /// The region in which a stated interference criterion is exceeded.
+  INTERFERENCE_ZONE,
+  /// The union of many contributing footprints or contours.
+  UNION_COVERAGE,
+  /// The intersection of many contributing footprints or contours.
+  INTERSECTION_COVERAGE,
+  /// The region NOT covered — a gap, stated as geometry rather than left to
+  /// be inferred by subtracting a coverage polygon from the globe.
+  GAP_REGION,
+  /// A region a transmitter is prohibited from illuminating.
+  KEEP_OUT_ZONE
+}
+
+/// The surface the vertex altitudes are referenced to.
+enum cvpAltitudeReference : byte {
+  UNSPECIFIED = 0,
+  WGS84_ELLIPSOID,
+  MEAN_SEA_LEVEL,
+  /// Draped on terrain from the dataset named in
+  /// CVPProvenance.TERRAIN_DATASET.
+  TERRAIN,
+  /// A constant altitude plane; the value is in FIXED_ALTITUDE_M.
+  FIXED_ALTITUDE
+}
+
+/// The part an emitter played in producing this geometry.
+enum cvpEmitterRole : byte {
+  UNSPECIFIED = 0,
+  /// The wanted signal.
+  WANTED,
+  /// An interferer degrading the wanted signal.
+  INTERFERER,
+  /// An intermediate relay in a multi-hop chain.
+  RELAY
+}
+
+/// An emitter that contributed to this geometry. Identity and the few
+/// parameters that determine the boundary; everything else is joined from
+/// `$RFB` and `$RFE`.
+table CVPEmitterRef {
+  /// Producer-stable emitter identifier within this record.
+  EMITTER_ID: string (required);
+  EMITTER_ROLE: cvpEmitterRole = UNSPECIFIED;
+  /// `$RFE.ID` — the parametric emitter description.
+  RFE_ID: string;
+  /// `$RFB.ID` — the band specification.
+  RFB_ID: string;
+  /// `$CAT.NORAD_CAT_ID` when the emitter is on orbit. 0 when unbound.
+  NORAD_CAT_ID: uint;
+  /// `$CAT.OBJECT_ID` international designator.
+  OBJECT_ID: string;
+  /// `$TBS.SITE_ID` when the emitter is a terrestrial site.
+  TBS_SITE_ID: string;
+  /// Beam and channel within the emitter.
+  ID_BEAM: string;
+  CHANNEL_ID: string;
+  /// Carrier centre frequency, megahertz — the `$RFB` convention.
+  CENTER_FREQUENCY_MHZ: double;
+  /// EIRP toward boresight used in the evaluation, dBW.
+  EIRP_DBW: double;
+  /// Polarization, defaulted to UNKNOWN explicitly because `rfPolarization`
+  /// ordinal 0 is LHCP.
+  POLARIZATION: rfPolarization = UNKNOWN;
+  /// Emitter position at EPOCH, when the geometry is instantaneous. Geodetic
+  /// degrees and metres. Absent means "join it from the source record" — a
+  /// stale copied position is worse than none.
+  LATITUDE_DEG: double;
+  LONGITUDE_DEG: double;
+  ALTITUDE_M: double;
+  /// Weight of this emitter's contribution to a union or aggregate [0-1].
+  CONTRIBUTION_WEIGHT: double;
+}
+
+/// A receiver the coverage was evaluated FOR. Coverage is never absolute: a
+/// -110 dBW contour means one thing for a 60 cm terminal and another for a
+/// 12 m dish, so the assumed receiver is part of the record.
+table CVPReceiverRef {
+  RECEIVER_ID: string (required);
+  ENDPOINT_KIND: rflEndpointKind = UNSPECIFIED;
+  /// `$GST.STATION_ID`, `$SIT` or `$TBS.SITE_ID`, per ENDPOINT_KIND.
+  GST_STATION_ID: string;
+  SIT_ID: string;
+  TBS_SITE_ID: string;
+  /// Receive antenna gain assumed, dBi.
+  ANTENNA_GAIN_DBI: double;
+  /// System noise temperature assumed, kelvin.
+  SYSTEM_NOISE_TEMPERATURE_K: double;
+  /// Figure of merit assumed, dB/K.
+  GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: double;
+  /// Minimum elevation the receiver can work at, degrees.
+  MIN_ELEVATION_DEG: double;
+  /// Polarization, defaulted to UNKNOWN explicitly.
+  POLARIZATION: rfPolarization = UNKNOWN;
+  /// Receiver group this receiver belongs to, matching
+  /// `$RFL.RFLLink.RECEIVER_GROUP_ID`.
+  RECEIVER_GROUP_ID: string;
+}
+
+/// A 3D obstacle that shaped this coverage boundary. A footprint clipped by
+/// buildings, a spacecraft structure or terrain is a claim about those
+/// objects; publishing the obstacle set with its `$RFS` materials is what
+/// makes the clipped boundary reproducible.
+table CVPObstacleRef {
+  /// Producer's identifier for the obstacle instance.
+  OBSTACLE_ID: string (required);
+  /// `$RFS.MATERIAL_ID` of the surface. Absent means the obstacle was treated
+  /// as an opaque blocker with no material physics — which a consumer is
+  /// entitled to know.
+  MATERIAL_ID: string;
+  /// `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry used.
+  GEOMETRY_REF_ID: string;
+  /// `$VAM` asset identity of the obstacle mesh.
+  VAM_ID: string;
+  VARIANT_ID: string;
+  /// `$CAT` identity when the obstacle is a catalogued object. 0 when unbound.
+  NORAD_CAT_ID: uint;
+  OBJECT_ID: string;
+  /// `$TBS.SITE_ID` when the obstacle is a structure at a terrestrial site.
+  TBS_SITE_ID: string;
+  /// How the obstacle acted on the field.
+  INTERACTION: rflObstacleInteraction = UNSPECIFIED;
+  /// Geodetic placement of a fixed obstacle, degrees and metres.
+  LATITUDE_DEG: double;
+  LONGITUDE_DEG: double;
+  ALTITUDE_M: double;
+  HEIGHT_M: double;
+}
+
+/// How wrong this geometry can be. A contour with no uncertainty is a drawing,
+/// not a measurement.
+table CVPUncertainty {
+  /// 1-sigma horizontal position uncertainty of the boundary, metres. Applies
+  /// to every vertex unless VERTEX_POSITION_UNCERTAINTY_M is present.
+  HORIZONTAL_POSITION_M: double;
+  /// 1-sigma uncertainty of the level the contour was drawn at, in
+  /// LEVEL_UNCERTAINTY_UNITS.
+  LEVEL_UNCERTAINTY: double;
+  LEVEL_UNCERTAINTY_UNITS: string;
+  /// Confidence the stated uncertainties correspond to [0-1], e.g. 0.68.
+  CONFIDENCE: double;
+  /// Tolerance the contour extractor converged to, in the metric's units.
+  EXTRACTION_TOLERANCE: double;
+  /// Simplification tolerance applied to the rings, metres. A simplified ring
+  /// is not the computed boundary and MUST say so.
+  SIMPLIFICATION_TOLERANCE_M: double;
+  /// How the uncertainty was established (e.g. "grid resolution bound",
+  /// "Monte Carlo over emitter state covariance").
+  METHOD: string;
+}
+
+/// Where this geometry came from.
+table CVPProvenance {
+  METHOD: rflMethod = UNSPECIFIED;
+  /// Producing system, dataset or campaign. Required.
+  SOURCE: string (required);
+  /// Replayable query or scenario reference.
+  SOURCE_QUERY: string;
+  /// Propagator that produced the emitter geometry. A MODELED or HYBRID
+  /// product MUST name it.
+  PROPAGATOR_ID: string;
+  PROPAGATOR_VERSION: string;
+  PROPAGATOR_CONFIGURATION: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced the rings.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  /// Per-term model bindings for the metric that was contoured, reusing the
+  /// `$RFL` binding so a footprint and the samples behind it cite the same
+  /// models.
+  MODELS: [RFLModelBinding];
+  /// Algorithm that turned the sampled field into rings (e.g. "marching
+  /// squares", "alpha shape", "H3 cell union").
+  CONTOUR_ALGORITHM: string;
+  /// Environment and terrain datasets the evaluation used.
+  ENVIRONMENT_DATASET: string;
+  TERRAIN_DATASET: string;
+  /// Dataset the 3D obstacles and their materials were drawn from.
+  OBSTACLE_DATASET: string;
+  /// Unix ms computed and retrieved.
+  COMPUTED_AT: uint64;
+  RETRIEVED_AT: uint64;
+  /// Licence terms. Empty means UNKNOWN TERMS.
+  LICENSE: string;
+  NON_COMMERCIAL_ONLY: bool;
+  CITATION: string;
+}
+
+/// Coverage Geometry
+table CVP {
+  /// Stable identifier of this geometry product.
+  COVERAGE_ID: string (required);
+  /// Display name.
+  NAME: string;
+  /// Analysis or scenario grouping identifier shared with the `$RFL` samples
+  /// and `$ACI` intervals of the same study.
+  SCENARIO_ID: string;
+  GEOMETRY_KIND: cvpGeometryKind = UNSPECIFIED;
+
+  /// The metric the rings contour.
+  METRIC: rflBudgetTerm = UNSPECIFIED;
+  /// Units of the metric and of POLYGON_LEVEL_VALUES.
+  METRIC_UNITS: string;
+  /// The threshold the boundary was drawn at, for a THRESHOLD_CONTOUR.
+  THRESHOLD_VALUE: double;
+  THRESHOLD_UNITS: string;
+  THRESHOLD_COMPARISON: rflComparison = UNSPECIFIED;
+
+  /// Instantaneous epoch, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM.
+  /// Set for FOOTPRINT and other instantaneous products; NaN for aggregates.
+  EPOCH: double;
+  /// Interval this geometry holds over, same encoding. Set for aggregated
+  /// products (union over a window, availability contour); NaN for
+  /// instantaneous ones. A product that states neither EPOCH nor an interval
+  /// is untethered in time and MUST be refused.
+  INTERVAL_START: double;
+  INTERVAL_STOP: double;
+  /// Time scale all epochs in this record are expressed in. Defaults to UTC
+  /// explicitly: `timingStandard` ordinal 0 is GMST.
+  TIME_SYSTEM: timingStandard = UTC;
+
+  /// Monotonic generation of this coverage product within its COVERAGE_ID
+  /// lineage. A streaming producer increments it per emission; a consumer
+  /// holding a higher generation MUST NOT be overwritten by a lower one.
+  GENERATION: uint64;
+  /// COVERAGE_ID this record replaces, when the lineage was re-identified.
+  SUPERSEDES_COVERAGE_ID: string;
+
+  // ---- Packed rings ----
+  /// Vertex longitudes, geodetic degrees in [-180, 180].
+  VERTEX_LONGITUDE_DEG: [double] (required);
+  /// Vertex latitudes, geodetic degrees in [-90, 90]. Same length as
+  /// VERTEX_LONGITUDE_DEG.
+  VERTEX_LATITUDE_DEG: [double] (required);
+  /// Vertex altitudes, metres above ALTITUDE_REFERENCE. Absent when the
+  /// geometry lies on the reference surface.
+  VERTEX_ALTITUDE_M: [double];
+  ALTITUDE_REFERENCE: cvpAltitudeReference = UNSPECIFIED;
+  /// The constant altitude, metres, when ALTITUDE_REFERENCE is FIXED_ALTITUDE.
+  FIXED_ALTITUDE_M: double;
+  /// Ring start indexes; RING_COUNT + 1 entries, last equals the vertex count.
+  RING_OFFSETS: [uint32] (required);
+  /// Polygon each ring belongs to. Same length as RING_COUNT.
+  RING_POLYGON_INDEXES: [uint32] (required);
+  /// Role of each ring. Same length as RING_COUNT.
+  RING_ROLES: [cvpRingRole] (required);
+  /// Number of polygons; equals max(RING_POLYGON_INDEXES) + 1 and is published
+  /// so an empty coverage field (zero polygons, zero rings) is representable
+  /// and distinguishable from an unpopulated record.
+  POLYGON_COUNT: uint32;
+  /// Metric value each polygon is drawn at, in METRIC_UNITS. Same length as
+  /// POLYGON_COUNT. Carried for ISO_METRIC_CONTOUR; for a THRESHOLD_CONTOUR
+  /// every entry equals THRESHOLD_VALUE.
+  POLYGON_LEVEL_VALUES: [double];
+  /// 1-sigma uncertainty of each polygon's level, same units and length.
+  POLYGON_LEVEL_UNCERTAINTIES: [double];
+  /// Surface area enclosed by each polygon, square kilometres.
+  POLYGON_AREA_KM2: [double];
+  /// Per-vertex 1-sigma horizontal uncertainty, metres. Same length as the
+  /// vertex arrays. Absent means CVPUncertainty.HORIZONTAL_POSITION_M governs
+  /// the whole boundary.
+  VERTEX_POSITION_UNCERTAINTY_M: [double];
+
+  // ---- Source grid ----
+  /// Grid the field was sampled on before contouring, e.g. "H3" or
+  /// "GEODETIC_LATLON". A contour is never finer than the grid behind it.
+  GRID_SCHEME: string;
+  /// Grid resolution in the scheme's own convention (H3 resolution 0-15).
+  GRID_RESOLUTION: uint8;
+  /// Grid spacing in degrees, for a geodetic lat/lon grid.
+  GRID_SPACING_DEG: double;
+  /// Number of grid cells evaluated.
+  GRID_CELL_COUNT: uint64;
+  /// `$CVG.COVERAGE_ID` of the figure-of-merit grid this geometry was
+  /// contoured from, when one was published.
+  CVG_COVERAGE_ID: string;
+  /// `$RFL.RFL_ID` of the sample set the field was evaluated from, when one
+  /// was published.
+  RFL_ID: string;
+  /// `$ACI.ACI_ID` of the interval set an availability or gap product was
+  /// aggregated from, when one was published.
+  ACI_ID: string;
+
+  // ---- Participants ----
+  /// Emitters that contributed. Required: coverage with no stated emitter is
+  /// an unattributable claim about the sky.
+  CONTRIBUTING_EMITTERS: [CVPEmitterRef] (required);
+  /// Identifier of the receiver set this coverage is stated for.
+  RECEIVER_SET_ID: string;
+  /// The receivers themselves, when the set is enumerable.
+  RECEIVERS: [CVPReceiverRef];
+  /// 3D obstacles that clipped or shaped the boundary, each naming the `$RFS`
+  /// material that produced its effect.
+  CONTRIBUTING_OBSTACLES: [CVPObstacleRef];
+  /// Identifier of the obstacle set used, when it is published as a set rather
+  /// than enumerated here.
+  OBSTACLE_SET_ID: string;
+
+  /// The condition that bounds the boundary — why the contour is where it is.
+  LIMITING_CONSTRAINT: rflConstraint = UNSPECIFIED;
+  /// Verbatim description, required when LIMITING_CONSTRAINT is OTHER.
+  LIMITING_CONSTRAINT_NOTE: string;
+
+  /// Uncertainty of level and boundary.
+  UNCERTAINTY: CVPUncertainty;
+  /// Provenance. Required.
+  PROVENANCE: CVPProvenance (required);
+  /// Unix ms this record was serialized.
+  COMPUTED_AT: uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID: string;
+  /// Ed25519 signature by the producing `$EPM`.
+  SIGNATURE: [ubyte];
+}
+
+root_type CVP;
+file_identifier "$CVP";

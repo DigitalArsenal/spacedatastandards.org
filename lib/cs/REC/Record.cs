@@ -224,6 +224,10 @@ public struct Record : IFlatbufferObject
   public CMR valueAsCMR() { return value<CMR>().Value; }
   public TBS valueAsTBS() { return value<TBS>().Value; }
   public CCT valueAsCCT() { return value<CCT>().Value; }
+  public ACI valueAsACI() { return value<ACI>().Value; }
+  public CVP valueAsCVP() { return value<CVP>().Value; }
+  public RFL valueAsRFL() { return value<RFL>().Value; }
+  public RFS valueAsRFS() { return value<RFS>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -873,6 +877,18 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.CCT:
         _o.value.Value = this.value<CCT>().HasValue ? this.value<CCT>().Value.UnPack() : null;
+        break;
+      case RecordType.ACI:
+        _o.value.Value = this.value<ACI>().HasValue ? this.value<ACI>().Value.UnPack() : null;
+        break;
+      case RecordType.CVP:
+        _o.value.Value = this.value<CVP>().HasValue ? this.value<CVP>().Value.UnPack() : null;
+        break;
+      case RecordType.RFL:
+        _o.value.Value = this.value<RFL>().HasValue ? this.value<RFL>().Value.UnPack() : null;
+        break;
+      case RecordType.RFS:
+        _o.value.Value = this.value<RFS>().HasValue ? this.value<RFS>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

@@ -1,0 +1,271 @@
+// Hash: a0e358f5258d76c8dc2b237b7c78f711cef6c2e87e086a879bd92f84afb82acf
+// Version: 1.186.0
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Access Interval (ACI)
+// Description
+// The durable interval record: when a link was acquired and lost, when it
+// actually met its requirement, when it went out, when it handed over, what
+// the margin did across the pass, how much data the pass could carry, what
+// bound it, and which server served it best.
+//
+// Division of labour: `$ACW` is an EPHEMERAL compute envelope — a request and
+// its result, carrying Julian Dates in TT and no provenance, meant to be
+// handed to a module and thrown away. `$ACI` is the PUBLISHED product: it
+// survives the computation, names the propagator and sampling that produced
+// its boundaries, states the threshold its intervals are defined against, and
+// joins back to the `$RFL` samples it was derived from. `$LKS` reports what a
+// link is doing NOW; `$ACI` reports what it did, and when.
+//
+// BOUNDARIES CARRY THEIR OWN HONESTY. An interval computed from a 60-second
+// sampling grid is not accurate to the second. ACIProvenance.SAMPLING_STEP_S
+// and BOUNDARY_TOLERANCE_S state the resolution of every boundary in the
+// record, so a consumer can never mistake a gridded edge for a refined one.
+//
+// ABSENT IS NOT ZERO. Zero decibels of margin, zero bits of volume and zero
+// degrees of elevation are all real, meaningful values. A numeric field whose
+// value is UNKNOWN or UNCOMPUTED is therefore written NaN — never 0, never a
+// sentinel like -999. NaN is a non-default value, so it survives serialization
+// where an omitted field would silently read back as 0. Readers MUST treat NaN
+// as "not published" and 0 as a measurement. This is the same rule the `$RFL`
+// sample columns carry.
+
+/// What kind of interval an entry describes.
+///
+/// `UNSPECIFIED` holds ordinal 0 so an unset field can never decode as a claim
+/// of geometric access.
+enum aciIntervalKind : byte {
+  UNSPECIFIED = 0,
+  /// Geometry alone permitted the link (mask, range, occultation, beam).
+  GEOMETRIC_ACCESS,
+  /// The link budget met the stated threshold for the whole interval.
+  THRESHOLD_SATISFIED,
+  /// The link had geometric access but did not meet the threshold.
+  OUTAGE,
+  /// Service moved from one link or server to another.
+  HANDOVER,
+  /// A contact booked on a schedule, whether or not it was executed.
+  SCHEDULED_CONTACT,
+  /// An interval during which transmission was prohibited.
+  KEEP_OUT,
+  /// An interval during which interference exceeded a stated criterion.
+  INTERFERENCE_EVENT
+}
+
+/// How service moved between links at a handover.
+enum aciHandoverKind : byte {
+  UNSPECIFIED = 0,
+  /// The successor link was established before the predecessor was released.
+  MAKE_BEFORE_BREAK,
+  /// The predecessor was released before the successor was established.
+  BREAK_BEFORE_MAKE,
+  /// Instantaneous switch with no modelled overlap or gap.
+  HARD,
+  /// Both links carried traffic simultaneously for the overlap.
+  SOFT,
+  /// Executed from a schedule rather than triggered by a measured condition.
+  SCHEDULED
+}
+
+/// The server that served an interval best, and what it beat. Publishing the
+/// runner-up is what makes a best-server claim auditable rather than an
+/// assertion.
+table ACIBestServer {
+  /// `$RFL.RFLEndpoint.ENDPOINT_ID` of the winning server.
+  ENDPOINT_ID: string (required);
+  /// `$RFL.RFLLink.LINK_ID` of the winning link.
+  LINK_ID: string;
+  /// The metric the selection was made on.
+  SELECTION_TERM: rflBudgetTerm = UNSPECIFIED;
+  /// Winning value of SELECTION_TERM.
+  SELECTION_VALUE: double;
+  /// Units of SELECTION_VALUE. Required whenever a value is published: a
+  /// selection metric with no unit cannot be re-derived or compared.
+  SELECTION_UNITS: string;
+  /// Endpoint that placed second.
+  RUNNER_UP_ENDPOINT_ID: string;
+  /// Runner-up value of SELECTION_TERM, same units.
+  RUNNER_UP_VALUE: double;
+  /// Rule applied when the metric tied (e.g. "lowest slant range").
+  TIE_BROKEN_BY: string;
+  /// Number of candidate servers evaluated, including the winner.
+  CANDIDATES_EVALUATED: uint32;
+}
+
+/// A transition of service between two links.
+table ACIHandover {
+  HANDOVER_KIND: aciHandoverKind = UNSPECIFIED;
+  /// Link service moved FROM.
+  PREDECESSOR_LINK_ID: string;
+  /// Link service moved TO.
+  SUCCESSOR_LINK_ID: string;
+  PREDECESSOR_ENDPOINT_ID: string;
+  SUCCESSOR_ENDPOINT_ID: string;
+  /// Seconds both links were usable together. Meaningful for
+  /// MAKE_BEFORE_BREAK and SOFT.
+  OVERLAP_S: double;
+  /// Seconds neither link was usable. Meaningful for BREAK_BEFORE_MAKE.
+  GAP_S: double;
+  /// Condition that triggered the handover.
+  TRIGGER: rflConstraint = UNSPECIFIED;
+  /// Epoch of the transition, seconds since 1970-01-01T00:00:00 in the
+  /// record's TIME_SYSTEM.
+  EXECUTED_AT: double;
+}
+
+/// One interval.
+table ACIInterval {
+  /// Producer-stable identifier of this interval.
+  INTERVAL_ID: string (required);
+  INTERVAL_KIND: aciIntervalKind = UNSPECIFIED;
+  /// `$RFL.RFLLink.LINK_ID` this interval belongs to.
+  LINK_ID: string;
+  /// Endpoints, joined from the same `$RFL` set.
+  TRANSMIT_ENDPOINT_ID: string;
+  RECEIVE_ENDPOINT_ID: string;
+
+  /// Acquisition of signal, seconds since 1970-01-01T00:00:00 in the record's
+  /// TIME_SYSTEM. An interval with no start is not an interval: a producer that
+  /// cannot state it MUST NOT emit the entry. FlatBuffers cannot mark a scalar
+  /// required, so this is enforced by the producer, not by the wire.
+  ACQUISITION_TIME: double;
+  /// Loss of signal, same encoding. NaN means the interval was still open at
+  /// WINDOW_STOP and was NOT truncated to the window — a consumer must be able
+  /// to tell an open pass from one that ended exactly at the boundary.
+  LOSS_TIME: double;
+  /// Duration in seconds. Published rather than derived so a truncated or
+  /// open-ended interval still states the span it actually covers.
+  DURATION_S: double;
+
+  /// Sub-interval over which the threshold was met, when it is narrower than
+  /// ACQUISITION_TIME..LOSS_TIME. Absent when the whole interval met it or
+  /// when no threshold was evaluated.
+  THRESHOLD_SATISFIED_START: double;
+  THRESHOLD_SATISFIED_STOP: double;
+  /// The requirement this interval is stated against. A margin without these
+  /// is a margin against nothing.
+  THRESHOLD_TERM: rflBudgetTerm = UNSPECIFIED;
+  THRESHOLD_VALUE: double;
+  THRESHOLD_UNITS: string;
+  THRESHOLD_COMPARISON: rflComparison = UNSPECIFIED;
+
+  /// Margin statistics across the interval, dB.
+  MARGIN_MINIMUM_DB: double;
+  MARGIN_MEAN_DB: double;
+  MARGIN_MAXIMUM_DB: double;
+  /// Epoch of MARGIN_MINIMUM_DB, same encoding as ACQUISITION_TIME. The worst
+  /// instant of a pass is an operational fact, not a statistic.
+  MARGIN_MINIMUM_AT: double;
+
+  /// Geometry extremes across the interval.
+  ELEVATION_MAXIMUM_DEG: double;
+  ELEVATION_AT_ACQUISITION_DEG: double;
+  ELEVATION_AT_LOSS_DEG: double;
+  RANGE_MINIMUM_M: double;
+
+  /// Data the interval could carry, bits. Bits, not bytes and not megabits:
+  /// the rate columns of `$RFL` are bits per second.
+  DATA_VOLUME_BITS: double;
+  MEAN_DATA_RATE_BPS: double;
+  PEAK_DATA_RATE_BPS: double;
+
+  /// The condition that bound this interval.
+  LIMITING_CONSTRAINT: rflConstraint = UNSPECIFIED;
+  /// Verbatim description, required when LIMITING_CONSTRAINT is OTHER.
+  LIMITING_CONSTRAINT_NOTE: string;
+  /// Epoch at which LIMITING_CONSTRAINT bound, same encoding as
+  /// ACQUISITION_TIME.
+  LIMITING_CONSTRAINT_AT: double;
+
+  /// Outages nested inside this interval.
+  OUTAGE_COUNT: uint32;
+  OUTAGE_TOTAL_S: double;
+  OUTAGE_LONGEST_S: double;
+  /// Fraction of the interval during which the threshold was met [0-1].
+  AVAILABILITY_FRACTION: double;
+
+  /// Best server across this interval.
+  BEST_SERVER: ACIBestServer;
+  /// Handover detail, when INTERVAL_KIND is HANDOVER.
+  HANDOVER: ACIHandover;
+
+  /// Join back to the samples this interval was derived from: the inclusive
+  /// index range into the `$RFL` sample arrays named by ACI.RFL_ID.
+  RFL_SAMPLE_FIRST_INDEX: uint32;
+  RFL_SAMPLE_LAST_INDEX: uint32;
+  /// Number of samples that contributed.
+  SAMPLE_COUNT: uint32;
+}
+
+/// Where this interval set came from.
+table ACIProvenance {
+  METHOD: rflMethod = UNSPECIFIED;
+  /// Producing system, dataset or campaign. Required.
+  SOURCE: string (required);
+  /// Replayable query or scenario reference.
+  SOURCE_QUERY: string;
+  /// Propagator that produced the geometry the boundaries were found in. A
+  /// MODELED or HYBRID interval set MUST name it: the propagator is a
+  /// pluggable choice and never an assumed default.
+  PROPAGATOR_ID: string;
+  PROPAGATOR_VERSION: string;
+  PROPAGATOR_CONFIGURATION: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that computed the intervals.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  /// Sampling step of the underlying grid, seconds.
+  SAMPLING_STEP_S: double;
+  /// How a boundary between two samples was refined (e.g. "none", "linear",
+  /// "bisection", "brent"). "none" means the boundary IS a grid epoch.
+  BOUNDARY_REFINEMENT: string;
+  /// Worst-case uncertainty of every boundary in this record, seconds. With
+  /// no refinement this equals SAMPLING_STEP_S.
+  BOUNDARY_TOLERANCE_S: double;
+  /// Minimum elevation applied, degrees, when a single mask governed the set.
+  MIN_ELEVATION_DEG: double;
+  /// Unix ms computed and retrieved.
+  COMPUTED_AT: uint64;
+  RETRIEVED_AT: uint64;
+  /// Licence terms. Empty means UNKNOWN TERMS — never a grant to
+  /// redistribute.
+  LICENSE: string;
+  NON_COMMERCIAL_ONLY: bool;
+  CITATION: string;
+}
+
+/// Access Interval
+table ACI {
+  /// Stable identifier of this interval set.
+  ACI_ID: string (required);
+  /// Display name.
+  NAME: string;
+  /// Analysis or scenario grouping identifier shared with the `$RFL` samples
+  /// and `$CVP` geometry of the same study.
+  SCENARIO_ID: string;
+  /// `$RFL.RFL_ID` these intervals were derived from, when they were derived
+  /// from a published sample set. Absent for measured or scheduled intervals.
+  RFL_ID: string;
+  /// The intervals.
+  INTERVALS: [ACIInterval] (required);
+  /// Analysis window, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. An
+  /// interval set states its window so "no intervals" can be distinguished
+  /// from "not analysed".
+  WINDOW_START: double;
+  WINDOW_STOP: double;
+  /// Time scale all epochs in this record are expressed in. Defaults to UTC
+  /// explicitly: `timingStandard` ordinal 0 is GMST.
+  TIME_SYSTEM: timingStandard = UTC;
+  /// Provenance. Required.
+  PROVENANCE: ACIProvenance (required);
+  /// Unix ms this record was serialized.
+  COMPUTED_AT: uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID: string;
+  /// Ed25519 signature by the producing `$EPM`.
+  SIGNATURE: [ubyte];
+}
+
+root_type ACI;
+file_identifier "$ACI";

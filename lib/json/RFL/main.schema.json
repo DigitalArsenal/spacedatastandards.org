@@ -1,0 +1,1045 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "linkCategory" : {
+      "type" : "string",
+      "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
+    },
+    "linkCondition" : {
+      "type" : "string",
+      "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
+    },
+    "rfBandDesignation" : {
+      "type" : "string",
+      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER", "VHF", "HF", "MF", "LF", "VLF", "SHF"]
+    },
+    "rfPolarization" : {
+      "type" : "string",
+      "enum": ["LHCP", "RHCP", "LINEAR_H", "LINEAR_V", "DUAL", "CROSS", "UNKNOWN"]
+    },
+    "rfTransmitterState" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "ACTIVE", "INACTIVE", "INVALID"]
+    },
+    "timingStandard" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS"]
+    },
+    "timEpochRepresentation" : {
+      "type" : "string",
+      "enum": ["JULIAN_DATE", "MODIFIED_JULIAN_DATE", "UNIX_SECONDS", "ISO8601", "GPS_SECONDS", "GNSS_WEEK_SECONDS", "CCSDS_TIME_CODE", "MISSION_ELAPSED_SECONDS"]
+    },
+    "timCcsdsTimeCodeKind" : {
+      "type" : "string",
+      "enum": ["NONE", "UNSEGMENTED", "DAY_SEGMENTED", "CALENDAR_SEGMENTED"]
+    },
+    "timConversionStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_TIME_SYSTEM", "LEAP_SECOND_DATA_REQUIRED", "EOP_DATA_REQUIRED", "OUT_OF_RANGE"]
+    },
+    "rflAccessState" : {
+      "type" : "string",
+      "enum": ["NOT_EVALUATED", "NO_ACCESS", "GEOMETRIC_ACCESS", "BELOW_THRESHOLD", "THRESHOLD_SATISFIED", "OUTAGE", "SUPPRESSED"]
+    },
+    "rflBudgetTerm" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE"]
+    },
+    "rflConstraint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELEVATION_MASK", "TERRAIN_BLOCKAGE", "OBSTACLE_BLOCKAGE", "MATERIAL_PENETRATION", "RANGE_LIMIT", "BEAM_EDGE", "SLEW_RATE", "ANTENNA_KEYHOLE", "TRANSMIT_POWER_LIMIT", "REGULATORY_POWER_LIMIT", "GASEOUS_ABSORPTION", "RAIN_ATTENUATION", "CLOUD_FOG_ATTENUATION", "SCINTILLATION", "POLARIZATION_MISMATCH", "POINTING_ERROR", "RECEIVER_SENSITIVITY", "NOISE_TEMPERATURE", "INTERFERENCE", "SUN_OUTAGE", "BANDWIDTH_LIMIT", "MODULATION_THRESHOLD", "CODING_THRESHOLD", "SCHEDULE_CONFLICT", "CHANNEL_CAPACITY_LIMIT", "EMITTER_UNAVAILABLE", "OTHER"]
+    },
+    "rflComparison" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GREATER_THAN_OR_EQUAL", "GREATER_THAN", "LESS_THAN_OR_EQUAL", "LESS_THAN"]
+    },
+    "rflEndpointKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPACECRAFT", "GEODETIC_TRACKING_STATION", "SATELLITE_GROUND_STATION", "TERRESTRIAL_SITE", "USER_TERMINAL", "AIRBORNE", "MARITIME", "RELAY_PAYLOAD"]
+    },
+    "rflLinkKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY", "USER_BEAM", "FEEDER"]
+    },
+    "rflMethod" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEASURED", "MODELED", "HYBRID"]
+    },
+    "rflObstacleInteraction" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "LINE_OF_SIGHT_BLOCKAGE", "TRANSMISSION", "REFLECTION", "DIFFRACTION", "SCATTERING", "FRESNEL_INTRUSION"]
+    },
+    "LKS" : {
+      "type" : "object",
+      "description" : "Link Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT1" : {
+                "type" : "string",
+                "description" : "First endpoint on-orbit identifier"
+              },
+        "SAT_NO1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First endpoint satellite catalog number"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string",
+                "description" : "Second endpoint on-orbit identifier"
+              },
+        "SAT_NO2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Second endpoint satellite catalog number"
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation name"
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Link name or identifier"
+              },
+        "LINK_TYPE" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Link type"
+              },
+        "LINK_STATE" : {
+                "$ref" : "#/definitions/linkCondition",
+                "description" : "Link state"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "RF band"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string",
+                "description" : "Link start time (ISO 8601)"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Link stop time (ISO 8601)"
+              },
+        "ID_BEAM1" : {
+                "type" : "string",
+                "description" : "First endpoint beam identifier"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string",
+                "description" : "First endpoint name"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number",
+                "description" : "First endpoint latitude (degrees)"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number",
+                "description" : "First endpoint longitude (degrees)"
+              },
+        "ID_BEAM2" : {
+                "type" : "string",
+                "description" : "Second endpoint beam identifier"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string",
+                "description" : "Second endpoint name"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number",
+                "description" : "Second endpoint latitude (degrees)"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number",
+                "description" : "Second endpoint longitude (degrees)"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 1 to 2 (Mbps)"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 2 to 1 (Mbps)"
+              },
+        "SYS_CAP" : {
+                "type" : "string",
+                "description" : "System capability status"
+              },
+        "OPS_CAP" : {
+                "type" : "string",
+                "description" : "Operational capability status"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFB" : {
+      "type" : "object",
+      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ENTITY" : {
+                "type" : "string",
+                "description" : "Parent entity identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Band name or designation"
+              },
+        "BAND" : {
+                "$ref" : "#/definitions/rfBandDesignation",
+                "description" : "RF band designation"
+              },
+        "MODE" : {
+                "type" : "string",
+                "description" : "Operating mode"
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Minimum frequency (MHz)"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Maximum frequency (MHz)"
+              },
+        "CENTER_FREQ" : {
+                "type" : "number",
+                "description" : "Center frequency (MHz)"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Bandwidth (MHz)"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number",
+                "description" : "Peak antenna gain (dBi)"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number",
+                "description" : "Edge-of-coverage gain (dBi)"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "Antenna beamwidth (degrees)"
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfPolarization",
+                "description" : "Polarization"
+              },
+        "ERP" : {
+                "type" : "number",
+                "description" : "Effective radiated power (dBW)"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "Effective isotropic radiated power (dBW)"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
+              },
+        "ID_TRANSMITTER" : {
+                "type" : "string",
+                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
+              },
+        "LINK_DIRECTION" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Direction of this emission relative to the spacecraft."
+              },
+        "BAUD" : {
+                "type" : "number",
+                "description" : "Symbol rate in baud (symbols per second), NOT kilobaud."
+              },
+        "SERVICE" : {
+                "type" : "string",
+                "description" : "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
+              },
+        "XMT_STATUS" : {
+                "$ref" : "#/definitions/rfTransmitterState",
+                "description" : "Operational state of this emitter."
+              },
+        "INVERT" : {
+                "type" : "boolean",
+                "description" : "True when the modulation sideband is inverted."
+              },
+        "IARU_COORDINATION" : {
+                "type" : "string",
+                "description" : "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Attribution/citation string the source license requires this record to\ncarry downstream."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCcsdsTimeCode" : {
+      "type" : "object",
+      "description" : "CCSDS time-code payload and preamble metadata.",
+      "properties" : {
+        "CODE_KIND" : {
+                "$ref" : "#/definitions/timCcsdsTimeCodeKind",
+                "description" : "CCSDS time-code family."
+              },
+        "PREAMBLE_FIELD1" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "First CCSDS preamble field octet."
+              },
+        "PREAMBLE_FIELD2" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+              },
+        "TIME_FIELD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Raw CCSDS time field octets."
+              },
+        "AGENCY_DEFINED_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional agency-defined epoch timestamp for agency epoch time codes."
+              },
+        "CCSDS_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMInstant" : {
+      "type" : "object",
+      "description" : "Numeric or textual instant tagged with its time system and representation.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system for this instant."
+              },
+        "EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+              },
+        "SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+              },
+        "ISO8601" : {
+                "type" : "string",
+                "description" : "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+              },
+        "SUBSECOND_NANOS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Additional nanoseconds beyond the fractional scalar/text value."
+              },
+        "EPOCH_LABEL" : {
+                "type" : "string",
+                "description" : "Optional application-defined epoch label for MET, MRT, or SCLK values."
+              },
+        "GNSS_WEEK" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+              },
+        "HAS_GNSS_ROLLOVER_REFERENCE" : {
+                "type" : "boolean",
+                "description" : "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+              },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional Orekit-style GNSS week rollover reference timestamp."
+              },
+        "CCSDS_TIME_CODE" : {
+                "$ref" : "#/definitions/TIMCcsdsTimeCode",
+                "description" : "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionRequest" : {
+      "type" : "object",
+      "description" : "Request to convert one instant into another time system/representation.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Source instant to convert."
+              },
+        "TARGET_TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Target time system."
+              },
+        "TARGET_EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Preferred target representation."
+              },
+        "TAI_MINUS_UTC_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional TAI-UTC override in seconds for the source instant."
+              },
+        "HAS_TAI_MINUS_UTC" : {
+                "type" : "boolean",
+                "description" : "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+              },
+        "DUT1_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional UT1-UTC override in seconds for UT1 conversions."
+              },
+        "HAS_DUT1" : {
+                "type" : "boolean",
+                "description" : "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional caller trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionResult" : {
+      "type" : "object",
+      "description" : "Result of a time conversion request.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Original source instant."
+              },
+        "TARGET" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Converted target instant."
+              },
+        "DELTA_SECONDS" : {
+                "type" : "number",
+                "description" : "Target minus source offset in SI seconds for the requested conversion."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/timConversionStatus",
+                "description" : "Conversion status."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error detail when STATUS is not OK."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System and time-conversion envelope.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Legacy time-system selector retained for existing TIM consumers."
+              },
+        "INSTANT" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "A single tagged instant."
+              },
+        "CONVERSION_REQUEST" : {
+                "$ref" : "#/definitions/TIMConversionRequest",
+                "description" : "Time conversion request."
+              },
+        "CONVERSION_RESULT" : {
+                "$ref" : "#/definitions/TIMConversionResult",
+                "description" : "Time conversion result."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFLObstruction" : {
+      "type" : "object",
+      "description" : "One obstacle interaction on one sample's path. SPARSE: entries exist only\nwhere an interaction was computed, so a clear path is never encoded as a\nrow of zeroes.\n\nThis is the join that makes an arbitrary 3D object a first-class part of\nthe link budget: MATERIAL_ID names the `$RFS` record whose permittivity,\nconductivity, penetration loss and roughness produced LOSS_DB, and\nGEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape\ninside it that was hit.",
+      "properties" : {
+        "SAMPLE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into the sample arrays this interaction applies to."
+              },
+        "OBSTACLE_ID" : {
+                "type" : "string",
+                "description" : "Producer's identifier for the obstacle instance."
+              },
+        "MATERIAL_ID" : {
+                "type" : "string",
+                "description" : "`$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with\nno material is an unattributed number: a metal panel and a plasterboard\nwall of the same size do entirely different things to a link."
+              },
+        "GEOMETRY_REF_ID" : {
+                "type" : "string",
+                "description" : "`$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit."
+              },
+        "VAM_ID" : {
+                "type" : "string",
+                "description" : "`$VAM` asset identity of the obstacle mesh, when the obstacle is a\nreviewed 3D asset."
+              },
+        "VARIANT_ID" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "`$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an\nocculting spacecraft, a structure on another vehicle). 0 when unbound."
+              },
+        "INTERACTION" : {
+                "$ref" : "#/definitions/rflObstacleInteraction"
+              },
+        "INCIDENCE_ANGLE_DEG" : {
+                "type" : "number",
+                "description" : "Angle between the incident ray and the surface normal, degrees [0-90)."
+              },
+        "PATH_LENGTH_IN_MATERIAL_M" : {
+                "type" : "number",
+                "description" : "Path length travelled INSIDE the material, metres. With\n`$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss\nreproducible instead of a stated constant."
+              },
+        "LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss this interaction contributed, dB (positive)."
+              },
+        "EXCESS_DELAY_S" : {
+                "type" : "number",
+                "description" : "Extra propagation delay of a reflected or scattered component, seconds."
+              },
+        "FRESNEL_CLEARANCE_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is\nuntouched."
+              },
+        "DISTANCE_FROM_TRANSMITTER_M" : {
+                "type" : "number",
+                "description" : "Distance from the transmitter to the interaction point, metres."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFLEndpoint" : {
+      "type" : "object",
+      "description" : "One endpoint of a link. Identity ONLY — position, antenna geometry and band\ncapability are NOT copied here; they are joined from the standard named by\nENDPOINT_KIND. A copied position silently goes stale against its source.",
+      "properties" : {
+        "ENDPOINT_ID" : {
+                "type" : "string",
+                "description" : "Producer-stable identifier for this endpoint within the record."
+              },
+        "ENDPOINT_KIND" : {
+                "$ref" : "#/definitions/rflEndpointKind"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name."
+              },
+        "GST_STATION_ID" : {
+                "type" : "string",
+                "description" : "`$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION."
+              },
+        "SIT_ID" : {
+                "type" : "string",
+                "description" : "`$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION."
+              },
+        "TBS_SITE_ID" : {
+                "type" : "string",
+                "description" : "`$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "`$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when\nunbound — never a placeholder catalogue number."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator, `$CAT.OBJECT_ID`."
+              },
+        "RFB_ID" : {
+                "type" : "string",
+                "description" : "`$RFB.ID` — the band specification (frequency, bandwidth, EIRP, gains,\npolarization) this endpoint transmits or receives on."
+              },
+        "RFE_ID" : {
+                "type" : "string",
+                "description" : "`$RFE.ID` — the parametric emitter description, when one exists."
+              },
+        "IQC_ID" : {
+                "type" : "string",
+                "description" : "`$IQC` capture identifier, when the samples were derived from a recording."
+              },
+        "ID_BEAM" : {
+                "type" : "string",
+                "description" : "Beam identifier within the emitter."
+              },
+        "CHANNEL_ID" : {
+                "type" : "string",
+                "description" : "Channel or carrier identifier within the beam."
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfPolarization",
+                "description" : "Polarization actually used on this link. Defaults to UNKNOWN explicitly:\n`rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise\ndecode as a real polarization."
+              }
+      },
+      "required" : ["ENDPOINT_ID"],
+      "additionalProperties" : false
+    },
+    "RFLLink" : {
+      "type" : "object",
+      "description" : "One link whose budget is sampled by this record.",
+      "properties" : {
+        "LINK_ID" : {
+                "type" : "string",
+                "description" : "Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and\n`$LKS.ID` when the same link also has an operational-state record."
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable link name."
+              },
+        "LINK_KIND" : {
+                "$ref" : "#/definitions/rflLinkKind"
+              },
+        "TRANSMIT_ENDPOINT" : {
+                "$ref" : "#/definitions/RFLEndpoint",
+                "description" : "Transmitting endpoint."
+              },
+        "RECEIVE_ENDPOINT" : {
+                "$ref" : "#/definitions/RFLEndpoint",
+                "description" : "Receiving endpoint."
+              },
+        "CENTER_FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Carrier centre frequency actually used, megahertz — the `$RFB` MHz\nconvention, NOT the `$IQC` hertz convention. A consumer joining the two\nconverts explicitly at the join. Band designation is NOT duplicated here:\nit is joined from `$RFB.BAND`."
+              },
+        "BANDWIDTH_MHZ" : {
+                "type" : "number",
+                "description" : "Occupied bandwidth, megahertz."
+              },
+        "MODULATION" : {
+                "type" : "string",
+                "description" : "Modulation as the producer states it (e.g. \"QPSK\", \"8PSK\", \"16APSK\")."
+              },
+        "CODING" : {
+                "type" : "string",
+                "description" : "Forward error correction scheme as the producer states it."
+              },
+        "CODE_RATE" : {
+                "type" : "number",
+                "description" : "Code rate as a fraction (0-1]."
+              },
+        "SYMBOL_RATE_BAUD" : {
+                "type" : "number",
+                "description" : "Symbol rate in baud (symbols per second), NOT kilobaud — the `$RFB.BAUD`\nconvention."
+              },
+        "DATA_RATE_BPS" : {
+                "type" : "number",
+                "description" : "Information bit rate the budget is stated for, bits per second."
+              },
+        "THRESHOLD_TERM" : {
+                "$ref" : "#/definitions/rflBudgetTerm",
+                "description" : "Required threshold this link is evaluated against. THRESHOLD_TERM,\nTHRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful\nonly together; a LINK_MARGIN_DB column without them states a margin\nagainst an unstated requirement and MUST be refused."
+              },
+        "THRESHOLD_VALUE" : {
+                "type" : "number"
+              },
+        "THRESHOLD_UNITS" : {
+                "type" : "string"
+              },
+        "THRESHOLD_COMPARISON" : {
+                "$ref" : "#/definitions/rflComparison"
+              },
+        "RECEIVER_GROUP_ID" : {
+                "type" : "string",
+                "description" : "Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID\nand CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated\ntogether; a producer that shards a link matrix MUST keep a group intact\nwithin one shard."
+              },
+        "CHANNEL_GROUP_ID" : {
+                "type" : "string"
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation or network this link belongs to."
+              },
+        "SERVICE" : {
+                "type" : "string",
+                "description" : "Operator-facing service or mission designation."
+              }
+      },
+      "required" : ["LINK_ID", "TRANSMIT_ENDPOINT", "RECEIVE_ENDPOINT"],
+      "additionalProperties" : false
+    },
+    "RFLInterferenceContribution" : {
+      "type" : "object",
+      "description" : "One interfering contribution to one sample. SPARSE: entries exist only\nwhere a contribution was computed, so a dense matrix is never forced into\nexistence to say \"no interference computed\".",
+      "properties" : {
+        "SAMPLE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into the sample arrays this contribution applies to."
+              },
+        "SOURCE_ENDPOINT_ID" : {
+                "type" : "string",
+                "description" : "Endpoint identifier of the interfering emitter, when it is an endpoint of\nthis record."
+              },
+        "RFE_ID" : {
+                "type" : "string",
+                "description" : "`$RFE.ID` of the interfering emitter."
+              },
+        "RFB_ID" : {
+                "type" : "string",
+                "description" : "`$RFB.ID` of the interfering emission."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interfering object's catalogue number, 0 when unbound."
+              },
+        "INTERFERENCE_POWER_DBW" : {
+                "type" : "number",
+                "description" : "Received interfering power at the victim receiver, dBW."
+              },
+        "TOPOCENTRIC_SEPARATION_DEG" : {
+                "type" : "number",
+                "description" : "Angular separation between the wanted and interfering paths at the\nvictim receiver, degrees."
+              },
+        "SPECTRAL_OVERLAP_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of the victim's bandwidth overlapped by this emission [0-1]."
+              },
+        "POLARIZATION_ISOLATION_DB" : {
+                "type" : "number",
+                "description" : "Polarization isolation applied to this contribution, dB."
+              },
+        "ANTENNA_DISCRIMINATION_DB" : {
+                "type" : "number",
+                "description" : "Discrimination applied from the victim antenna pattern, dB."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFLModelParameter" : {
+      "type" : "object",
+      "description" : "A named parameter of a model binding, with its unit stated. There is no\nencoding for a parameter value without a unit.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "VALUE" : {
+                "type" : "number"
+              },
+        "UNITS" : {
+                "type" : "string"
+              },
+        "TEXT_VALUE" : {
+                "type" : "string",
+                "description" : "Non-numeric parameter value, when the parameter is categorical."
+              }
+      },
+      "required" : ["NAME", "UNITS"],
+      "additionalProperties" : false
+    },
+    "RFLModelBinding" : {
+      "type" : "object",
+      "description" : "Which model produced one term of the budget. A loss term without a model\nbinding is an unattributed number: rain attenuation from two different\nrecommendations differs by decibels, and a consumer must be able to tell\nwhich one it is holding.",
+      "properties" : {
+        "TERM" : {
+                "$ref" : "#/definitions/rflBudgetTerm",
+                "description" : "The budget term this binding produced."
+              },
+        "MODEL_NAME" : {
+                "type" : "string",
+                "description" : "Model or recommendation identifier as its publisher states it (e.g. an\nITU-R recommendation number with its revision)."
+              },
+        "MODEL_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "Content hash of the exact artifact that produced the values."
+              },
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLModelParameter"}
+              }
+      },
+      "required" : ["MODEL_NAME"],
+      "additionalProperties" : false
+    },
+    "RFLProvenance" : {
+      "type" : "object",
+      "description" : "Where this sample set came from, stated once for the record.",
+      "properties" : {
+        "METHOD" : {
+                "$ref" : "#/definitions/rflMethod"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "The producing system, dataset or measurement campaign. Required: a\nbudget time series with no stated source is not publishable."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "Replayable query or scenario reference that regenerates this set."
+              },
+        "PROPAGATOR_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the propagator that produced the geometry columns. A record\nwhose METHOD is MODELED or HYBRID and which carries geometry columns MUST\nname it: geometry is only as good as the propagator, and the propagator is\na pluggable choice, never an assumed default."
+              },
+        "PROPAGATOR_VERSION" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_CONFIGURATION" : {
+                "type" : "string",
+                "description" : "Force model or configuration identifier handed to the propagator."
+              },
+        "SAMPLING_STEP_S" : {
+                "type" : "number",
+                "description" : "Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular."
+              },
+        "MODELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLModelBinding"},
+                "description" : "Per-term model bindings."
+              },
+        "ENVIRONMENT_DATASET" : {
+                "type" : "string",
+                "description" : "Weather or environment dataset the atmospheric terms were evaluated\nagainst, when they were not evaluated against a statistical model."
+              },
+        "TERRAIN_DATASET" : {
+                "type" : "string",
+                "description" : "Terrain or surface dataset the blockage terms were evaluated against."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this set was computed or recorded."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms the upstream inputs were retrieved."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence the source imposes on redistribution. An empty LICENSE means\nUNKNOWN TERMS — never public domain, never a grant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "True when the licence forbids commercial use of this set."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Attribution the licence requires this record to carry downstream."
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "RFL" : {
+      "type" : "object",
+      "description" : "RF Link Sample",
+      "properties" : {
+        "RFL_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this sample set."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name."
+              },
+        "SCENARIO_ID" : {
+                "type" : "string",
+                "description" : "Analysis or scenario grouping identifier shared with the `$ACI` and\n`$CVP` products derived from this set."
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLLink"},
+                "description" : "Link definitions. SAMPLE_LINK_INDEXES index into this vector."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of samples. Every present metric array MUST have exactly this\nmany entries."
+              },
+        "SAMPLE_LINK_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Index into LINKS for each sample."
+              },
+        "SAMPLE_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples\nneed not be uniformly spaced and need not be grouped by link, but MUST be\nnon-decreasing within each link."
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:\n`timingStandard` ordinal 0 is GMST, so an unset field would otherwise\ndecode as sidereal time."
+              },
+        "ACCESS_STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/rflAccessState"},
+                "description" : "Access state per sample."
+              },
+        "RANGE_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Slant range, metres."
+              },
+        "RANGE_RATE_M_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Range rate, metres per second; positive is opening."
+              },
+        "AZIMUTH_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Azimuth at the receiving endpoint, degrees east of north [0-360)."
+              },
+        "ELEVATION_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Elevation at the receiving endpoint, degrees above the local horizon."
+              },
+        "TRANSMIT_AZIMUTH_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Azimuth at the transmitting endpoint, degrees east of north [0-360)."
+              },
+        "TRANSMIT_ELEVATION_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Elevation at the transmitting endpoint, degrees."
+              },
+        "DOPPLER_SHIFT_HZ" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record — a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+              },
+        "DOPPLER_RATE_HZ_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Doppler rate, hertz per second."
+              },
+        "EIRP_DBW" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Effective isotropic radiated power toward the receiver, dBW."
+              },
+        "TRANSMIT_ANTENNA_GAIN_DBI" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Transmit antenna gain in the direction of the receiver, dBi."
+              },
+        "RECEIVE_ANTENNA_GAIN_DBI" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Receive antenna gain in the direction of the transmitter, dBi."
+              },
+        "FREE_SPACE_PATH_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Free-space path loss, dB."
+              },
+        "GASEOUS_ABSORPTION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Gaseous (oxygen and water vapour) absorption, dB."
+              },
+        "RAIN_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Rain attenuation, dB."
+              },
+        "CLOUD_FOG_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Cloud and fog attenuation, dB."
+              },
+        "SCINTILLATION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Tropospheric or ionospheric scintillation, dB."
+              },
+        "TERRAIN_DIFFRACTION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Terrain diffraction and blockage, dB."
+              },
+        "OBSTRUCTION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total loss from 3D obstacles on the path, dB. The per-obstacle detail —\nwhich object, which material, at what angle, through how much of it — is\nin OBSTRUCTIONS."
+              },
+        "POLARIZATION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Polarization mismatch, dB."
+              },
+        "POINTING_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Antenna pointing error, dB."
+              },
+        "IMPLEMENTATION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Implementation and hardware losses, dB."
+              },
+        "TOTAL_PATH_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total of all path terms actually applied, dB. Published as its own column\nrather than left to the consumer to sum: a producer that applied a term\nthis schema has no column for MUST still report an honest total, and the\ndiscrepancy against the itemised columns is then visible."
+              },
+        "RECEIVED_POWER_DBW" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Received carrier power at the receiver input, dBW."
+              },
+        "SYSTEM_NOISE_TEMPERATURE_K" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Receiving system noise temperature, kelvin."
+              },
+        "GAIN_TO_NOISE_TEMPERATURE_DB_PER_K" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Receiving system figure of merit G/T, dB/K."
+              },
+        "CARRIER_TO_NOISE_DENSITY_DBHZ" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Carrier-to-noise-density ratio C/N0, dB-Hz."
+              },
+        "CARRIER_TO_NOISE_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Carrier-to-noise ratio C/N in the occupied bandwidth, dB."
+              },
+        "ENERGY_PER_BIT_TO_NOISE_DENSITY_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Energy per bit to noise density Eb/N0, dB."
+              },
+        "BIT_ERROR_RATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Bit error rate as a probability [0-1], NOT an exponent and NOT a\npercentage. 1e-6 is encoded 1e-6."
+              },
+        "LINK_MARGIN_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Link margin against the link's stated threshold, dB. Meaningless without\nRFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON."
+              },
+        "CHANNEL_CAPACITY_BPS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Achievable channel capacity, bits per second."
+              },
+        "INTERFERENCE_POWER_DBW" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Aggregate received interfering power, dBW."
+              },
+        "CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Carrier to noise-plus-interference ratio C/(N+I), dB."
+              },
+        "SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Signal to interference-plus-noise ratio, dB."
+              },
+        "INTERFERENCE_CONTRIBUTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLInterferenceContribution"},
+                "description" : "Per-contribution interference detail, sparse."
+              },
+        "OBSTRUCTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLObstruction"},
+                "description" : "Per-interaction obstacle detail, sparse. Each entry names the `$RFS`\nmaterial it went through, reflected off or was blocked by."
+              },
+        "LIMITING_CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/rflConstraint"},
+                "description" : "The single condition that bound the link at each sample."
+              },
+        "LIMITING_CONSTRAINT_NOTE" : {
+                "type" : "string",
+                "description" : "Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance",
+                "description" : "Provenance of the whole set. Required: an unattributed budget is not\npublishable."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM`."
+              }
+      },
+      "required" : ["RFL_ID", "LINKS", "SAMPLE_LINK_INDEXES", "SAMPLE_EPOCHS", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RFL"
+}

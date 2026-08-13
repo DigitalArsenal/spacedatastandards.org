@@ -1,0 +1,25 @@
+/**
+ * Polarization of the incident field, in the plane-of-incidence convention
+ * reflection coefficients require. Deliberately NOT `rfPolarization`: that
+ * enum describes an emitter's transmitted polarization (LHCP, LINEAR_V),
+ * while a reflection coefficient is stated per transverse mode, and conflating
+ * the two silently applies the wrong Fresnel coefficient.
+ */
+export declare enum rfsIncidencePolarization {
+    UNSPECIFIED = 0,
+    /**
+     * Electric field perpendicular to the plane of incidence.
+     */
+    TRANSVERSE_ELECTRIC = 1,
+    /**
+     * Electric field parallel to the plane of incidence.
+     */
+    TRANSVERSE_MAGNETIC = 2,
+    CIRCULAR_LEFT = 3,
+    CIRCULAR_RIGHT = 4,
+    /**
+     * Averaged over polarization.
+     */
+    UNPOLARIZED = 5
+}
+//# sourceMappingURL=rfsIncidencePolarization.d.ts.map

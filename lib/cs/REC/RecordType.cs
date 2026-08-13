@@ -223,6 +223,10 @@ public enum RecordType : byte
   CMR = 202,
   TBS = 203,
   CCT = 204,
+  ACI = 205,
+  CVP = 206,
+  RFL = 207,
+  RFS = 208,
 };
 
 public class RecordTypeUnion {
@@ -643,6 +647,14 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTBS(TBST _tbs) { return new RecordTypeUnion{ Type = RecordType.TBS, Value = _tbs }; }
   public CCTT AsCCT() { return this.As<CCTT>(); }
   public static RecordTypeUnion FromCCT(CCTT _cct) { return new RecordTypeUnion{ Type = RecordType.CCT, Value = _cct }; }
+  public ACIT AsACI() { return this.As<ACIT>(); }
+  public static RecordTypeUnion FromACI(ACIT _aci) { return new RecordTypeUnion{ Type = RecordType.ACI, Value = _aci }; }
+  public CVPT AsCVP() { return this.As<CVPT>(); }
+  public static RecordTypeUnion FromCVP(CVPT _cvp) { return new RecordTypeUnion{ Type = RecordType.CVP, Value = _cvp }; }
+  public RFLT AsRFL() { return this.As<RFLT>(); }
+  public static RecordTypeUnion FromRFL(RFLT _rfl) { return new RecordTypeUnion{ Type = RecordType.RFL, Value = _rfl }; }
+  public RFST AsRFS() { return this.As<RFST>(); }
+  public static RecordTypeUnion FromRFS(RFST _rfs) { return new RecordTypeUnion{ Type = RecordType.RFS, Value = _rfs }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -851,6 +863,10 @@ public class RecordTypeUnion {
       case RecordType.CMR: return CMR.Pack(builder, _o.AsCMR()).Value;
       case RecordType.TBS: return TBS.Pack(builder, _o.AsTBS()).Value;
       case RecordType.CCT: return CCT.Pack(builder, _o.AsCCT()).Value;
+      case RecordType.ACI: return ACI.Pack(builder, _o.AsACI()).Value;
+      case RecordType.CVP: return CVP.Pack(builder, _o.AsCVP()).Value;
+      case RecordType.RFL: return RFL.Pack(builder, _o.AsRFL()).Value;
+      case RecordType.RFS: return RFS.Pack(builder, _o.AsRFS()).Value;
     }
   }
 }
@@ -1475,6 +1491,18 @@ static public class RecordTypeVerify
         break;
       case RecordType.CCT:
         result = CCTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ACI:
+        result = ACIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CVP:
+        result = CVPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RFL:
+        result = RFLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RFS:
+        result = RFSVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

@@ -1,0 +1,606 @@
+// Hash: 7589bc146450023bc45e474dcb42fd2f271861a5fc26b0396335e2227efe00c4
+// Version: 1.186.0
+// -----------------------------------END_HEADER
+include "../RFB/main.fbs";
+include "../TIM/main.fbs";
+
+// RF Link Sample (RFL)
+// Description
+// The durable per-link, per-epoch RF link-budget vector: geometry, every gain
+// and loss term that produced the received power, the noise and interference
+// terms that produced the carrier-to-noise ratios, the resulting margin and
+// capacity, and the single constraint that bound the link at that instant.
+//
+// Division of labour: `$RFB` is an emitter's STATIC band capability (EIRP,
+// peak gain, bandwidth) and carries no epoch; `$LKS` is the INSTANTANEOUS
+// operational state of one named link (established/degraded, current data
+// rate) and carries no budget terms; `$RFO` is a sensor's astrometric
+// observation of an object; `$IQC` is the archived baseband recording. `$RFL`
+// is the computed or measured BUDGET TIME SERIES that none of them can hold.
+// Intervals derived from these samples are `$ACI`; geometry contoured from
+// them is `$CVP`; the electromagnetic properties of any 3D obstacle on the
+// path are `$RFS`.
+//
+// OBSTACLES ARE MATERIALS, NOT BOOLEANS. A blocked path is not a fact about
+// geometry alone. OBSTRUCTIONS names, per interaction, the `$RFS` material
+// that was hit, the geometry inside it, the incidence angle and the distance
+// travelled through it, so an obstruction loss can be reproduced rather than
+// taken on faith.
+//
+// COMPACT FORMAT: samples are parallel arrays aligned index-for-index (the
+// same columnar philosophy as `$CVG` and the OCM v2 state layout) so a matrix
+// of many links across many epochs stays cheap to store, shard and stream.
+// `SAMPLE_LINK_INDEXES[i]` selects the link definition in `LINKS`, so one
+// record carries a full link matrix without repeating link identity per
+// sample.
+//
+// ABSENT IS NOT ZERO. A metric array that is not published is ABSENT — never
+// a zero-filled array. 0 dBW of EIRP, 0 dB of margin and 0 K of noise
+// temperature are all real, meaningful values that a consumer must be able to
+// distinguish from "not computed". Every array that IS present MUST have
+// exactly `SAMPLE_COUNT` entries, and a per-sample unknown inside a present
+// array is encoded NaN, never 0 and never a sentinel like -999. The same rule
+// governs the scalar numeric fields of this record: NaN is a non-default value
+// and survives serialization, where an omitted field silently reads back as 0.
+// Readers MUST treat NaN as "not published" and 0 as a real value.
+
+/// Whether the link existed at a sample epoch, and how far the evaluation got.
+///
+/// `NOT_EVALUATED` holds ordinal 0 so an unset field can never decode as a
+/// claim that the link was up or down.
+enum rflAccessState : byte {
+  /// The sample epoch was not evaluated for this link.
+  NOT_EVALUATED = 0,
+  /// Geometry denies the link (below the elevation mask, occulted, out of
+  /// range, outside the beam).
+  NO_ACCESS,
+  /// Geometry permits the link; the budget was not evaluated at this sample.
+  GEOMETRIC_ACCESS,
+  /// Geometry permits the link, the budget was evaluated, and the stated
+  /// threshold is NOT met.
+  BELOW_THRESHOLD,
+  /// Geometry permits the link and the budget meets the stated threshold.
+  THRESHOLD_SATISFIED,
+  /// The link had access and lost it to the stated LIMITING_CONSTRAINT (rain
+  /// fade, sun outage, blockage) rather than to geometry.
+  OUTAGE,
+  /// The emitter was deliberately not radiating (scheduled off, regulatory
+  /// keep-out, power-safe mode). Distinct from NO_ACCESS: the geometry may be
+  /// perfectly good.
+  SUPPRESSED
+}
+
+/// A named term of the link budget. Used to declare which quantity a
+/// threshold, a contour or a best-server selection is stated against, so a
+/// consumer never has to infer it from a units string.
+///
+/// ORDINALS ARE WIRE VALUES. New terms are APPENDED ONLY.
+enum rflBudgetTerm : byte {
+  UNSPECIFIED = 0,
+  RANGE,
+  RANGE_RATE,
+  AZIMUTH,
+  ELEVATION,
+  DOPPLER_SHIFT,
+  EIRP,
+  TRANSMIT_ANTENNA_GAIN,
+  RECEIVE_ANTENNA_GAIN,
+  FREE_SPACE_PATH_LOSS,
+  GASEOUS_ABSORPTION_LOSS,
+  RAIN_LOSS,
+  CLOUD_FOG_LOSS,
+  SCINTILLATION_LOSS,
+  TERRAIN_DIFFRACTION_LOSS,
+  /// Loss caused by an obstacle with stated `$RFS` material properties.
+  OBSTRUCTION_LOSS,
+  POLARIZATION_LOSS,
+  POINTING_LOSS,
+  IMPLEMENTATION_LOSS,
+  RECEIVED_POWER,
+  SYSTEM_NOISE_TEMPERATURE,
+  GAIN_TO_NOISE_TEMPERATURE,
+  CARRIER_TO_NOISE_DENSITY,
+  CARRIER_TO_NOISE,
+  ENERGY_PER_BIT_TO_NOISE_DENSITY,
+  BIT_ERROR_RATE,
+  LINK_MARGIN,
+  CHANNEL_CAPACITY,
+  INTERFERENCE_POWER,
+  CARRIER_TO_NOISE_PLUS_INTERFERENCE,
+  SIGNAL_TO_INTERFERENCE_PLUS_NOISE
+}
+
+/// The single condition that bound the link at a sample epoch — the answer to
+/// "why is this link not better than it is". Shared by `$ACI` intervals and
+/// `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.
+///
+/// ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.
+enum rflConstraint : byte {
+  UNSPECIFIED = 0,
+  ELEVATION_MASK,
+  TERRAIN_BLOCKAGE,
+  /// A 3D obstacle intersected the path. The material that did it is named in
+  /// RFLObstruction.MATERIAL_ID (`$RFS`).
+  OBSTACLE_BLOCKAGE,
+  /// The path passed THROUGH an obstacle and paid its penetration loss.
+  MATERIAL_PENETRATION,
+  RANGE_LIMIT,
+  BEAM_EDGE,
+  SLEW_RATE,
+  ANTENNA_KEYHOLE,
+  TRANSMIT_POWER_LIMIT,
+  REGULATORY_POWER_LIMIT,
+  GASEOUS_ABSORPTION,
+  RAIN_ATTENUATION,
+  CLOUD_FOG_ATTENUATION,
+  SCINTILLATION,
+  POLARIZATION_MISMATCH,
+  POINTING_ERROR,
+  RECEIVER_SENSITIVITY,
+  NOISE_TEMPERATURE,
+  INTERFERENCE,
+  SUN_OUTAGE,
+  BANDWIDTH_LIMIT,
+  MODULATION_THRESHOLD,
+  CODING_THRESHOLD,
+  SCHEDULE_CONFLICT,
+  CHANNEL_CAPACITY_LIMIT,
+  EMITTER_UNAVAILABLE,
+  /// The producer states a binding condition this enum cannot express. The
+  /// verbatim description MUST be preserved in LIMITING_CONSTRAINT_NOTE.
+  OTHER
+}
+
+/// How a stated threshold is compared against the metric it is stated for.
+///
+/// `UNSPECIFIED` holds ordinal 0: a threshold whose sense is unstated is
+/// unusable, and MUST NOT be silently read as "greater than or equal".
+enum rflComparison : byte {
+  UNSPECIFIED = 0,
+  GREATER_THAN_OR_EQUAL,
+  GREATER_THAN,
+  LESS_THAN_OR_EQUAL,
+  LESS_THAN
+}
+
+/// What kind of thing an endpoint is, which selects the standard it joins to.
+enum rflEndpointKind : byte {
+  UNSPECIFIED = 0,
+  /// On-orbit object; joins `$CAT` by NORAD_CAT_ID / OBJECT_ID.
+  SPACECRAFT,
+  /// Geodetic tracking station; joins `$GST` by STATION_ID.
+  GEODETIC_TRACKING_STATION,
+  /// Satellite ground station / teleport; joins `$SIT`.
+  SATELLITE_GROUND_STATION,
+  /// Terrestrial base-station site; joins `$TBS`.
+  TERRESTRIAL_SITE,
+  /// User terminal, fixed or mobile.
+  USER_TERMINAL,
+  AIRBORNE,
+  MARITIME,
+  /// A relay payload acting as an intermediate endpoint of a multi-hop chain.
+  RELAY_PAYLOAD
+}
+
+/// Direction of a link relative to its endpoints.
+///
+/// This enum deliberately mirrors `$LKS.linkCategory` member-for-member with
+/// an added `UNSPECIFIED` at ordinal 0. `linkCategory` places `UPLINK` at
+/// ordinal 0, so an unset field there silently decodes as a real direction;
+/// a durable analytical record may not carry that hazard.
+enum rflLinkKind : byte {
+  UNSPECIFIED = 0,
+  UPLINK,
+  DOWNLINK,
+  CROSSLINK,
+  INTER_SATELLITE,
+  GROUND_TO_GROUND,
+  RELAY,
+  /// Service link to an end-user terminal.
+  USER_BEAM,
+  /// Gateway link carrying aggregated traffic to the network core.
+  FEEDER
+}
+
+/// How the values in this record came to exist.
+///
+/// `MODELED` exists so a modelled number can be REFUSED where a measurement
+/// is required.
+enum rflMethod : byte {
+  UNSPECIFIED = 0,
+  /// Values recorded by instrumentation on a real link.
+  MEASURED,
+  /// Values produced by propagation and RF models.
+  MODELED,
+  /// Modelled geometry reconciled against measured RF terms, or vice versa.
+  HYBRID
+}
+
+/// How the path interacted with an obstacle. A solver that only ever reports
+/// blockage cannot express a reflected multipath component or a wall the
+/// signal went through, so the interaction is named per contribution.
+enum rflObstacleInteraction : byte {
+  UNSPECIFIED = 0,
+  /// The obstacle blocked line of sight; no energy was propagated through it.
+  LINE_OF_SIGHT_BLOCKAGE,
+  /// Energy passed through the obstacle and paid its penetration loss.
+  TRANSMISSION,
+  /// Energy reached the receiver by reflecting off the obstacle.
+  REFLECTION,
+  /// Energy reached the receiver by diffracting around an edge.
+  DIFFRACTION,
+  /// Energy reached the receiver by rough-surface scattering.
+  SCATTERING,
+  /// The obstacle intruded into the Fresnel zone without blocking the direct
+  /// ray.
+  FRESNEL_INTRUSION
+}
+
+/// One obstacle interaction on one sample's path. SPARSE: entries exist only
+/// where an interaction was computed, so a clear path is never encoded as a
+/// row of zeroes.
+///
+/// This is the join that makes an arbitrary 3D object a first-class part of
+/// the link budget: MATERIAL_ID names the `$RFS` record whose permittivity,
+/// conductivity, penetration loss and roughness produced LOSS_DB, and
+/// GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape
+/// inside it that was hit.
+table RFLObstruction {
+  /// Index into the sample arrays this interaction applies to.
+  SAMPLE_INDEX: uint32;
+  /// Producer's identifier for the obstacle instance.
+  OBSTACLE_ID: string;
+  /// `$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with
+  /// no material is an unattributed number: a metal panel and a plasterboard
+  /// wall of the same size do entirely different things to a link.
+  MATERIAL_ID: string;
+  /// `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit.
+  GEOMETRY_REF_ID: string;
+  /// `$VAM` asset identity of the obstacle mesh, when the obstacle is a
+  /// reviewed 3D asset.
+  VAM_ID: string;
+  VARIANT_ID: string;
+  /// `$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an
+  /// occulting spacecraft, a structure on another vehicle). 0 when unbound.
+  NORAD_CAT_ID: uint;
+  INTERACTION: rflObstacleInteraction = UNSPECIFIED;
+  /// Angle between the incident ray and the surface normal, degrees [0-90).
+  INCIDENCE_ANGLE_DEG: double;
+  /// Path length travelled INSIDE the material, metres. With
+  /// `$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss
+  /// reproducible instead of a stated constant.
+  PATH_LENGTH_IN_MATERIAL_M: double;
+  /// Loss this interaction contributed, dB (positive).
+  LOSS_DB: double;
+  /// Extra propagation delay of a reflected or scattered component, seconds.
+  EXCESS_DELAY_S: double;
+  /// Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is
+  /// untouched.
+  FRESNEL_CLEARANCE_FRACTION: double;
+  /// Distance from the transmitter to the interaction point, metres.
+  DISTANCE_FROM_TRANSMITTER_M: double;
+}
+
+/// One endpoint of a link. Identity ONLY — position, antenna geometry and band
+/// capability are NOT copied here; they are joined from the standard named by
+/// ENDPOINT_KIND. A copied position silently goes stale against its source.
+table RFLEndpoint {
+  /// Producer-stable identifier for this endpoint within the record.
+  ENDPOINT_ID: string (required);
+  ENDPOINT_KIND: rflEndpointKind = UNSPECIFIED;
+  /// Human-readable name.
+  NAME: string;
+  /// `$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION.
+  GST_STATION_ID: string;
+  /// `$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION.
+  SIT_ID: string;
+  /// `$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE.
+  TBS_SITE_ID: string;
+  /// `$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when
+  /// unbound — never a placeholder catalogue number.
+  NORAD_CAT_ID: uint;
+  /// International designator, `$CAT.OBJECT_ID`.
+  OBJECT_ID: string;
+  /// `$RFB.ID` — the band specification (frequency, bandwidth, EIRP, gains,
+  /// polarization) this endpoint transmits or receives on.
+  RFB_ID: string;
+  /// `$RFE.ID` — the parametric emitter description, when one exists.
+  RFE_ID: string;
+  /// `$IQC` capture identifier, when the samples were derived from a recording.
+  IQC_ID: string;
+  /// Beam identifier within the emitter.
+  ID_BEAM: string;
+  /// Channel or carrier identifier within the beam.
+  CHANNEL_ID: string;
+  /// Polarization actually used on this link. Defaults to UNKNOWN explicitly:
+  /// `rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise
+  /// decode as a real polarization.
+  POLARIZATION: rfPolarization = UNKNOWN;
+}
+
+/// One link whose budget is sampled by this record.
+table RFLLink {
+  /// Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and
+  /// `$LKS.ID` when the same link also has an operational-state record.
+  LINK_ID: string (required);
+  /// Human-readable link name.
+  LINK_NAME: string;
+  LINK_KIND: rflLinkKind = UNSPECIFIED;
+  /// Transmitting endpoint.
+  TRANSMIT_ENDPOINT: RFLEndpoint (required);
+  /// Receiving endpoint.
+  RECEIVE_ENDPOINT: RFLEndpoint (required);
+  /// Carrier centre frequency actually used, megahertz — the `$RFB` MHz
+  /// convention, NOT the `$IQC` hertz convention. A consumer joining the two
+  /// converts explicitly at the join. Band designation is NOT duplicated here:
+  /// it is joined from `$RFB.BAND`.
+  CENTER_FREQUENCY_MHZ: double;
+  /// Occupied bandwidth, megahertz.
+  BANDWIDTH_MHZ: double;
+  /// Modulation as the producer states it (e.g. "QPSK", "8PSK", "16APSK").
+  MODULATION: string;
+  /// Forward error correction scheme as the producer states it.
+  CODING: string;
+  /// Code rate as a fraction (0-1].
+  CODE_RATE: double;
+  /// Symbol rate in baud (symbols per second), NOT kilobaud — the `$RFB.BAUD`
+  /// convention.
+  SYMBOL_RATE_BAUD: double;
+  /// Information bit rate the budget is stated for, bits per second.
+  DATA_RATE_BPS: double;
+  /// Required threshold this link is evaluated against. THRESHOLD_TERM,
+  /// THRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful
+  /// only together; a LINK_MARGIN_DB column without them states a margin
+  /// against an unstated requirement and MUST be refused.
+  THRESHOLD_TERM: rflBudgetTerm = UNSPECIFIED;
+  THRESHOLD_VALUE: double;
+  THRESHOLD_UNITS: string;
+  THRESHOLD_COMPARISON: rflComparison = UNSPECIFIED;
+  /// Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID
+  /// and CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated
+  /// together; a producer that shards a link matrix MUST keep a group intact
+  /// within one shard.
+  RECEIVER_GROUP_ID: string;
+  CHANNEL_GROUP_ID: string;
+  /// Constellation or network this link belongs to.
+  CONSTELLATION: string;
+  /// Operator-facing service or mission designation.
+  SERVICE: string;
+}
+
+/// One interfering contribution to one sample. SPARSE: entries exist only
+/// where a contribution was computed, so a dense matrix is never forced into
+/// existence to say "no interference computed".
+table RFLInterferenceContribution {
+  /// Index into the sample arrays this contribution applies to.
+  SAMPLE_INDEX: uint32;
+  /// Endpoint identifier of the interfering emitter, when it is an endpoint of
+  /// this record.
+  SOURCE_ENDPOINT_ID: string;
+  /// `$RFE.ID` of the interfering emitter.
+  RFE_ID: string;
+  /// `$RFB.ID` of the interfering emission.
+  RFB_ID: string;
+  /// Interfering object's catalogue number, 0 when unbound.
+  NORAD_CAT_ID: uint;
+  /// Received interfering power at the victim receiver, dBW.
+  INTERFERENCE_POWER_DBW: double;
+  /// Angular separation between the wanted and interfering paths at the
+  /// victim receiver, degrees.
+  TOPOCENTRIC_SEPARATION_DEG: double;
+  /// Fraction of the victim's bandwidth overlapped by this emission [0-1].
+  SPECTRAL_OVERLAP_FRACTION: double;
+  /// Polarization isolation applied to this contribution, dB.
+  POLARIZATION_ISOLATION_DB: double;
+  /// Discrimination applied from the victim antenna pattern, dB.
+  ANTENNA_DISCRIMINATION_DB: double;
+}
+
+/// A named parameter of a model binding, with its unit stated. There is no
+/// encoding for a parameter value without a unit.
+table RFLModelParameter {
+  NAME: string (required);
+  VALUE: double;
+  UNITS: string (required);
+  /// Non-numeric parameter value, when the parameter is categorical.
+  TEXT_VALUE: string;
+}
+
+/// Which model produced one term of the budget. A loss term without a model
+/// binding is an unattributed number: rain attenuation from two different
+/// recommendations differs by decibels, and a consumer must be able to tell
+/// which one it is holding.
+table RFLModelBinding {
+  /// The budget term this binding produced.
+  TERM: rflBudgetTerm = UNSPECIFIED;
+  /// Model or recommendation identifier as its publisher states it (e.g. an
+  /// ITU-R recommendation number with its revision).
+  MODEL_NAME: string (required);
+  MODEL_VERSION: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  /// Content hash of the exact artifact that produced the values.
+  MODULE_CONTENT_HASH: string;
+  PARAMETERS: [RFLModelParameter];
+}
+
+/// Where this sample set came from, stated once for the record.
+table RFLProvenance {
+  METHOD: rflMethod = UNSPECIFIED;
+  /// The producing system, dataset or measurement campaign. Required: a
+  /// budget time series with no stated source is not publishable.
+  SOURCE: string (required);
+  /// Replayable query or scenario reference that regenerates this set.
+  SOURCE_QUERY: string;
+  /// Identifier of the propagator that produced the geometry columns. A record
+  /// whose METHOD is MODELED or HYBRID and which carries geometry columns MUST
+  /// name it: geometry is only as good as the propagator, and the propagator is
+  /// a pluggable choice, never an assumed default.
+  PROPAGATOR_ID: string;
+  PROPAGATOR_VERSION: string;
+  /// Force model or configuration identifier handed to the propagator.
+  PROPAGATOR_CONFIGURATION: string;
+  /// Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular.
+  SAMPLING_STEP_S: double;
+  /// Per-term model bindings.
+  MODELS: [RFLModelBinding];
+  /// Weather or environment dataset the atmospheric terms were evaluated
+  /// against, when they were not evaluated against a statistical model.
+  ENVIRONMENT_DATASET: string;
+  /// Terrain or surface dataset the blockage terms were evaluated against.
+  TERRAIN_DATASET: string;
+  /// Unix ms this set was computed or recorded.
+  COMPUTED_AT: uint64;
+  /// Unix ms the upstream inputs were retrieved.
+  RETRIEVED_AT: uint64;
+  /// Licence the source imposes on redistribution. An empty LICENSE means
+  /// UNKNOWN TERMS — never public domain, never a grant to redistribute.
+  LICENSE: string;
+  /// True when the licence forbids commercial use of this set.
+  NON_COMMERCIAL_ONLY: bool;
+  /// Attribution the licence requires this record to carry downstream.
+  CITATION: string;
+}
+
+/// RF Link Sample
+table RFL {
+  /// Stable identifier of this sample set.
+  RFL_ID: string (required);
+  /// Display name.
+  NAME: string;
+  /// Analysis or scenario grouping identifier shared with the `$ACI` and
+  /// `$CVP` products derived from this set.
+  SCENARIO_ID: string;
+  /// Link definitions. SAMPLE_LINK_INDEXES index into this vector.
+  LINKS: [RFLLink] (required);
+  /// Number of samples. Every present metric array MUST have exactly this
+  /// many entries.
+  SAMPLE_COUNT: uint32;
+  /// Index into LINKS for each sample.
+  SAMPLE_LINK_INDEXES: [uint32] (required);
+  /// Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples
+  /// need not be uniformly spaced and need not be grouped by link, but MUST be
+  /// non-decreasing within each link.
+  SAMPLE_EPOCHS: [double] (required);
+  /// Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:
+  /// `timingStandard` ordinal 0 is GMST, so an unset field would otherwise
+  /// decode as sidereal time.
+  TIME_SYSTEM: timingStandard = UTC;
+
+  /// Access state per sample.
+  ACCESS_STATES: [rflAccessState];
+
+  // ---- Geometry ----
+  /// Slant range, metres.
+  RANGE_M: [double];
+  /// Range rate, metres per second; positive is opening.
+  RANGE_RATE_M_S: [double];
+  /// Azimuth at the receiving endpoint, degrees east of north [0-360).
+  AZIMUTH_DEG: [double];
+  /// Elevation at the receiving endpoint, degrees above the local horizon.
+  ELEVATION_DEG: [double];
+  /// Azimuth at the transmitting endpoint, degrees east of north [0-360).
+  TRANSMIT_AZIMUTH_DEG: [double];
+  /// Elevation at the transmitting endpoint, degrees.
+  TRANSMIT_ELEVATION_DEG: [double];
+  /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
+  /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
+  /// on a GHz carrier is destroyed by an MHz encoding.
+  DOPPLER_SHIFT_HZ: [double];
+  /// Doppler rate, hertz per second.
+  DOPPLER_RATE_HZ_S: [double];
+
+  // ---- Transmit side ----
+  /// Effective isotropic radiated power toward the receiver, dBW.
+  EIRP_DBW: [double];
+  /// Transmit antenna gain in the direction of the receiver, dBi.
+  TRANSMIT_ANTENNA_GAIN_DBI: [double];
+  /// Receive antenna gain in the direction of the transmitter, dBi.
+  RECEIVE_ANTENNA_GAIN_DBI: [double];
+
+  // ---- Path terms (each a positive loss in dB) ----
+  /// Free-space path loss, dB.
+  FREE_SPACE_PATH_LOSS_DB: [double];
+  /// Gaseous (oxygen and water vapour) absorption, dB.
+  GASEOUS_ABSORPTION_LOSS_DB: [double];
+  /// Rain attenuation, dB.
+  RAIN_LOSS_DB: [double];
+  /// Cloud and fog attenuation, dB.
+  CLOUD_FOG_LOSS_DB: [double];
+  /// Tropospheric or ionospheric scintillation, dB.
+  SCINTILLATION_LOSS_DB: [double];
+  /// Terrain diffraction and blockage, dB.
+  TERRAIN_DIFFRACTION_LOSS_DB: [double];
+  /// Total loss from 3D obstacles on the path, dB. The per-obstacle detail —
+  /// which object, which material, at what angle, through how much of it — is
+  /// in OBSTRUCTIONS.
+  OBSTRUCTION_LOSS_DB: [double];
+  /// Polarization mismatch, dB.
+  POLARIZATION_LOSS_DB: [double];
+  /// Antenna pointing error, dB.
+  POINTING_LOSS_DB: [double];
+  /// Implementation and hardware losses, dB.
+  IMPLEMENTATION_LOSS_DB: [double];
+  /// Total of all path terms actually applied, dB. Published as its own column
+  /// rather than left to the consumer to sum: a producer that applied a term
+  /// this schema has no column for MUST still report an honest total, and the
+  /// discrepancy against the itemised columns is then visible.
+  TOTAL_PATH_LOSS_DB: [double];
+
+  // ---- Receive side ----
+  /// Received carrier power at the receiver input, dBW.
+  RECEIVED_POWER_DBW: [double];
+  /// Receiving system noise temperature, kelvin.
+  SYSTEM_NOISE_TEMPERATURE_K: [double];
+  /// Receiving system figure of merit G/T, dB/K.
+  GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: [double];
+  /// Carrier-to-noise-density ratio C/N0, dB-Hz.
+  CARRIER_TO_NOISE_DENSITY_DBHZ: [double];
+  /// Carrier-to-noise ratio C/N in the occupied bandwidth, dB.
+  CARRIER_TO_NOISE_DB: [double];
+  /// Energy per bit to noise density Eb/N0, dB.
+  ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: [double];
+  /// Bit error rate as a probability [0-1], NOT an exponent and NOT a
+  /// percentage. 1e-6 is encoded 1e-6.
+  BIT_ERROR_RATE: [double];
+  /// Link margin against the link's stated threshold, dB. Meaningless without
+  /// RFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON.
+  LINK_MARGIN_DB: [double];
+  /// Achievable channel capacity, bits per second.
+  CHANNEL_CAPACITY_BPS: [double];
+
+  // ---- Interference ----
+  /// Aggregate received interfering power, dBW.
+  INTERFERENCE_POWER_DBW: [double];
+  /// Carrier to noise-plus-interference ratio C/(N+I), dB.
+  CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: [double];
+  /// Signal to interference-plus-noise ratio, dB.
+  SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: [double];
+  /// Per-contribution interference detail, sparse.
+  INTERFERENCE_CONTRIBUTIONS: [RFLInterferenceContribution];
+
+  // ---- Obstacles ----
+  /// Per-interaction obstacle detail, sparse. Each entry names the `$RFS`
+  /// material it went through, reflected off or was blocked by.
+  OBSTRUCTIONS: [RFLObstruction];
+
+  // ---- Verdict ----
+  /// The single condition that bound the link at each sample.
+  LIMITING_CONSTRAINTS: [rflConstraint];
+  /// Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.
+  LIMITING_CONSTRAINT_NOTE: string;
+
+  /// Provenance of the whole set. Required: an unattributed budget is not
+  /// publishable.
+  PROVENANCE: RFLProvenance (required);
+  /// Unix ms this record was serialized.
+  COMPUTED_AT: uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID: string;
+  /// Ed25519 signature by the producing `$EPM`.
+  SIGNATURE: [ubyte];
+}
+
+root_type RFL;
+file_identifier "$RFL";

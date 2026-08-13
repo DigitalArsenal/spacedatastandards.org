@@ -1,0 +1,412 @@
+// Hash: 60c5afbb891a311fa59cfd7c609aade71c4c622e08313a8feecca0694a18d5dd
+// Version: 1.186.0
+// -----------------------------------END_HEADER
+include "../RFB/main.fbs";
+
+// RF Surface Material (RFS)
+// Description
+// The electromagnetic properties of a surface at radio frequencies, attachable
+// to arbitrary geometry, so an RF solver can treat a 3D object as an OBSTACLE
+// with real material behaviour instead of an opaque blocker.
+//
+// Division of labour: `$VAM` holds the asset BYTES (glTF mesh, licence,
+// review); `$OPP` holds per-object physical truth including OPTICAL specular
+// and diffuse reflectivity for solar-radiation-pressure work; `$PNL` holds the
+// articulated panel model with the same optical terms. NONE of them carries a
+// permittivity, a conductivity, or a frequency-dependent penetration loss —
+// optical reflectivity and RF constitutive parameters are different physics
+// and cannot be substituted for one another. `$RFS` is that missing surface,
+// and it is consumed by the obstruction, reflection, diffraction and
+// scattering terms of `$RFL` and by the obstacle set of `$CVP`.
+//
+// REFERENCE PHYSICS. The parameterisation follows the ITU-R P.2040 treatment
+// of building and natural materials: relative permittivity and conductivity
+// are frequency dependent and are stated either as a power law
+//
+//     relative permittivity = A * f^B      conductivity [S/m] = C * f^D
+//
+// with f in GIGAHERTZ, or as an explicit table of per-frequency samples. Both
+// forms may be present; the table wins where it covers the frequency, because
+// a measurement beats a fit.
+//
+// EXTRAPOLATION IS FORBIDDEN. FREQUENCY_MIN_MHZ and FREQUENCY_MAX_MHZ bound
+// where this record's parameters mean anything. A solver evaluating outside
+// that range MUST refuse the material rather than extrapolate: the power-law
+// fits diverge, and a silently extrapolated concrete wall is how a link budget
+// becomes fiction.
+//
+// A SCALAR NEEDS ITS FREQUENCY. The single-value fields are meaningless
+// without REFERENCE_FREQUENCY_MHZ, which states the frequency they were
+// evaluated or measured at. A permittivity with no frequency is not a
+// material property, it is a number.
+//
+// ABSENT IS NOT ZERO, and an unknown numeric is written NaN — the same rule
+// the `$RFL`, `$ACI` and `$CVP` records carry. Zero conductivity is a real
+// claim (a perfect dielectric); an omitted field reading back as 0 would make
+// every unstated material a perfect dielectric.
+
+/// Material class, in the generic building-and-natural-material vocabulary of
+/// the reference physics. Capability classes only: a class is what the surface
+/// IS, never who made it. A branded product name belongs in NAME or in
+/// RFSProvenance.SOURCE as data, never in this enum.
+///
+/// ORDINALS ARE WIRE VALUES. New classes are APPENDED ONLY.
+enum rfsMaterialClass : byte {
+  UNSPECIFIED = 0,
+  CONCRETE,
+  BRICK,
+  PLASTERBOARD,
+  WOOD,
+  GLASS,
+  /// Glass treated to reflect infrared, which also attenuates RF strongly.
+  COATED_GLASS,
+  CEILING_BOARD,
+  CHIPBOARD,
+  FLOORBOARD,
+  METAL,
+  STONE,
+  ASPHALT,
+  ROOFING_TILE,
+  VERY_DRY_GROUND,
+  MEDIUM_DRY_GROUND,
+  WET_GROUND,
+  SOIL,
+  SAND,
+  VEGETATION,
+  FRESH_WATER,
+  SEA_WATER,
+  ICE,
+  SNOW,
+  /// Fibre-reinforced polymer structure.
+  COMPOSITE,
+  /// Carbon-fibre structure, electrically conductive along the fibres.
+  CARBON_FIBER_COMPOSITE,
+  /// Multi-layer insulation blanket.
+  MULTI_LAYER_INSULATION,
+  SOLAR_CELL,
+  /// Conductive or lossy surface coating.
+  COATING,
+  /// Surface engineered to absorb incident RF energy.
+  ABSORBER,
+  /// Frequency-selective or periodic structure whose response is not a bulk
+  /// material property.
+  ENGINEERED_SURFACE,
+  /// The source states a material this enum cannot express. The verbatim name
+  /// MUST be preserved in NAME.
+  OTHER
+}
+
+/// How the surface redistributes energy it does not absorb or transmit.
+enum rfsScatteringClass : byte {
+  UNSPECIFIED = 0,
+  /// Mirror-like; energy leaves at the reflection angle.
+  SPECULAR,
+  /// Energy is spread across angles.
+  DIFFUSE,
+  /// A specular lobe over a diffuse background.
+  MIXED,
+  /// Diffuse with a cosine angular distribution.
+  LAMBERTIAN,
+  /// Direction-dependent scattering that a single coefficient cannot describe.
+  ANISOTROPIC
+}
+
+/// Polarization of the incident field, in the plane-of-incidence convention
+/// reflection coefficients require. Deliberately NOT `rfPolarization`: that
+/// enum describes an emitter's transmitted polarization (LHCP, LINEAR_V),
+/// while a reflection coefficient is stated per transverse mode, and conflating
+/// the two silently applies the wrong Fresnel coefficient.
+enum rfsIncidencePolarization : byte {
+  UNSPECIFIED = 0,
+  /// Electric field perpendicular to the plane of incidence.
+  TRANSVERSE_ELECTRIC,
+  /// Electric field parallel to the plane of incidence.
+  TRANSVERSE_MAGNETIC,
+  CIRCULAR_LEFT,
+  CIRCULAR_RIGHT,
+  /// Averaged over polarization.
+  UNPOLARIZED
+}
+
+/// How a property value came to exist. `CLASS_DEFAULT` exists so a value taken
+/// from a published class table can be REFUSED where a measurement of THIS
+/// surface is required.
+enum rfsPropertyMethod : byte {
+  UNSPECIFIED = 0,
+  /// Measured on this surface or a coupon of its material.
+  MEASURED,
+  /// Computed from a physical model of the material's composition.
+  MODELED,
+  /// Taken from a published table for the material class, not this surface.
+  CLASS_DEFAULT,
+  /// Borrowed from a similar structure or bus family; visibly an
+  /// approximation.
+  INFERRED_FROM_FAMILY
+}
+
+/// What the material is attached to, which selects the standard it joins.
+enum rfsGeometryKind : byte {
+  UNSPECIFIED = 0,
+  /// A mesh or material slot inside a reviewed 3D asset; joins `$VAM`.
+  ASSET_MESH,
+  /// A named surface of a catalogued object; joins `$OPP.OPPSurface`.
+  OBJECT_SURFACE,
+  /// An articulated panel; joins `$PNL`.
+  PANEL,
+  /// A whole catalogued object; joins `$CAT`.
+  CATALOG_OBJECT,
+  /// A structure at a terrestrial site; joins `$TBS`.
+  SITE_STRUCTURE,
+  /// A face of a building or other fixed structure.
+  BUILDING_FACE,
+  /// The ground or sea surface itself.
+  TERRAIN_SURFACE,
+  /// A primitive solved analytically rather than as a mesh.
+  ANALYTIC_SHAPE
+}
+
+/// Analytic obstacle primitive, when the obstacle is not a mesh.
+enum rfsAnalyticShape : byte {
+  UNSPECIFIED = 0,
+  PLANE,
+  DISK,
+  BOX,
+  SPHERE,
+  ELLIPSOID,
+  CYLINDER,
+  CONE,
+  PARABOLOID,
+  /// Convex hull of a point set carried by the geometry it references.
+  CONVEX_HULL
+}
+
+/// The material's electromagnetic properties at ONE frequency. A table of
+/// these beats the power-law fit wherever it covers the frequency.
+table RFSFrequencySample {
+  /// Frequency this sample is stated at, megahertz — the `$RFB` MHz
+  /// convention. A join to `$IQC` (hertz) converts explicitly at the join.
+  FREQUENCY_MHZ: double;
+  /// Real part of the relative permittivity.
+  RELATIVE_PERMITTIVITY_REAL: double;
+  /// Imaginary part of the relative permittivity (loss term), stated as a
+  /// POSITIVE magnitude.
+  RELATIVE_PERMITTIVITY_IMAGINARY: double;
+  /// Conductivity, siemens per metre.
+  CONDUCTIVITY_S_PER_M: double;
+  /// Loss tangent, dimensionless.
+  LOSS_TANGENT: double;
+  /// Real and imaginary relative permeability. 1.0 and 0.0 for non-magnetic
+  /// materials — stated, not assumed.
+  RELATIVE_PERMEABILITY_REAL: double;
+  RELATIVE_PERMEABILITY_IMAGINARY: double;
+  /// Power reflected at normal incidence as a ratio [0-1].
+  REFLECTIVITY: double;
+  /// Reflection loss at normal incidence, dB (positive).
+  REFLECTION_LOSS_DB: double;
+  /// Loss through the material at THICKNESS_M, dB (positive).
+  TRANSMISSION_LOSS_DB: double;
+  /// Attenuation inside the material, dB per metre.
+  ATTENUATION_DB_PER_M: double;
+}
+
+/// Reflection and transmission at one incidence angle and polarization. The
+/// angular dependence of a real surface cannot be carried by a single
+/// normal-incidence number.
+table RFSReflectionEntry {
+  /// Frequency this entry is stated at, megahertz.
+  FREQUENCY_MHZ: double;
+  /// Angle from the surface normal, degrees [0-90).
+  INCIDENCE_ANGLE_DEG: double;
+  POLARIZATION: rfsIncidencePolarization = UNSPECIFIED;
+  /// Magnitude of the field reflection coefficient [0-1].
+  REFLECTION_COEFFICIENT_MAGNITUDE: double;
+  /// Phase of the field reflection coefficient, degrees.
+  REFLECTION_COEFFICIENT_PHASE_DEG: double;
+  /// Reflection loss, dB (positive).
+  REFLECTION_LOSS_DB: double;
+  /// Loss through the material at this angle, dB (positive).
+  TRANSMISSION_LOSS_DB: double;
+  /// Power removed from the specular direction by surface roughness, dB.
+  SCATTERING_LOSS_DB: double;
+}
+
+/// Where and what this material is attached to. A material record with no
+/// geometry describes a substance; a material record WITH geometry describes
+/// an obstacle a solver can intersect.
+table RFSGeometryRef {
+  /// Producer-stable identifier of this attachment.
+  GEOMETRY_REF_ID: string (required);
+  GEOMETRY_KIND: rfsGeometryKind = UNSPECIFIED;
+  /// `$VAM` asset identity, copied VERBATIM including the byte hash so the
+  /// material can never drift onto a different revision of the mesh.
+  VAM_ID: string;
+  VARIANT_ID: string;
+  ASSET_SHA256: string;
+  /// Mesh and primitive inside the asset.
+  MESH_NAME: string;
+  PRIMITIVE_INDEX: int = -1;
+  /// glTF material slot the properties apply to, matching the
+  /// `$OPP.OPPSurface` join fields.
+  GLTF_MATERIAL_NAME: string;
+  GLTF_MATERIAL_INDEX: int = -1;
+  /// Explicit face indexes, when the material covers part of a mesh.
+  FACE_INDEXES: [uint32];
+  /// `$OPP.OPPSurface` surface identifier.
+  OPP_SURFACE_ID: string;
+  /// `$PNL` panel identifier.
+  PANEL_ID: string;
+  /// `$CAT` identity, when the obstacle is a catalogued object. 0 when
+  /// unbound.
+  NORAD_CAT_ID: uint;
+  OBJECT_ID: string;
+  /// `$TBS.SITE_ID`, when the obstacle is a structure at a terrestrial site.
+  TBS_SITE_ID: string;
+  /// Producer's own feature identifier for a building, wall or terrain patch.
+  FEATURE_ID: string;
+  /// Primitive and its dimensions in metres, when GEOMETRY_KIND is
+  /// ANALYTIC_SHAPE. The dimension order is the primitive's own convention and
+  /// MUST be stated in SHAPE_DIMENSION_NAMES.
+  ANALYTIC_SHAPE: rfsAnalyticShape = UNSPECIFIED;
+  SHAPE_DIMENSIONS_M: [double];
+  SHAPE_DIMENSION_NAMES: [string];
+  /// Geodetic placement of a fixed obstacle, degrees and metres. Absent for
+  /// an obstacle whose position is joined from `$CAT`, `$TBS` or `$VAM`.
+  LATITUDE_DEG: double;
+  LONGITUDE_DEG: double;
+  ALTITUDE_M: double;
+  /// Height above ground of a fixed structure, metres.
+  HEIGHT_M: double;
+  /// Orientation of the surface normal, degrees east of north and above the
+  /// horizon. A wall that faces the wrong way blocks the wrong link.
+  NORMAL_AZIMUTH_DEG: double;
+  NORMAL_ELEVATION_DEG: double;
+}
+
+/// Where these properties came from.
+table RFSProvenance {
+  METHOD: rfsPropertyMethod = UNSPECIFIED;
+  /// The measurement campaign, published table or model. Required: an
+  /// unattributed permittivity is not publishable.
+  SOURCE: string (required);
+  /// The specific table, recommendation or dataset entry within SOURCE.
+  SOURCE_REFERENCE: string;
+  /// Replayable query that retrieves the source value.
+  SOURCE_QUERY: string;
+  /// How it was measured (e.g. "free-space transmission", "coaxial probe",
+  /// "resonant cavity").
+  MEASUREMENT_TECHNIQUE: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced modelled values.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  /// Unix ms measured and retrieved.
+  MEASURED_AT: uint64;
+  RETRIEVED_AT: uint64;
+  /// 1-sigma uncertainty of the permittivity and conductivity values, in the
+  /// units of the quantity they qualify.
+  RELATIVE_PERMITTIVITY_SIGMA: double;
+  CONDUCTIVITY_SIGMA_S_PER_M: double;
+  /// Licence terms. Empty means UNKNOWN TERMS — never public domain, never a
+  /// grant to redistribute.
+  LICENSE: string;
+  NON_COMMERCIAL_ONLY: bool;
+  CITATION: string;
+}
+
+/// RF Surface Material
+table RFS {
+  /// Stable identifier of this material. Joined by
+  /// `$RFL.RFLObstruction.MATERIAL_ID` and `$CVP.CVPObstacleRef.MATERIAL_ID`.
+  MATERIAL_ID: string (required);
+  /// Name as its source states it, verbatim.
+  NAME: string;
+  MATERIAL_CLASS: rfsMaterialClass = UNSPECIFIED;
+  /// Free-text description of the surface, not of its vendor.
+  DESCRIPTION: string;
+
+  /// Frequency range over which this record's parameters are valid,
+  /// megahertz. A solver MUST refuse to evaluate outside it rather than
+  /// extrapolate.
+  FREQUENCY_MIN_MHZ: double;
+  FREQUENCY_MAX_MHZ: double;
+
+  // ---- Power-law parameterisation, f in GIGAHERTZ ----
+  /// relative permittivity = PERMITTIVITY_COEFFICIENT_A * f^PERMITTIVITY_EXPONENT_B
+  PERMITTIVITY_COEFFICIENT_A: double;
+  PERMITTIVITY_EXPONENT_B: double;
+  /// conductivity [S/m] = CONDUCTIVITY_COEFFICIENT_C * f^CONDUCTIVITY_EXPONENT_D
+  CONDUCTIVITY_COEFFICIENT_C: double;
+  CONDUCTIVITY_EXPONENT_D: double;
+
+  // ---- Single-frequency values ----
+  /// Frequency the scalar values below are stated at, megahertz. Without it
+  /// they are uninterpretable.
+  REFERENCE_FREQUENCY_MHZ: double;
+  RELATIVE_PERMITTIVITY_REAL: double;
+  /// Loss term, stated as a POSITIVE magnitude.
+  RELATIVE_PERMITTIVITY_IMAGINARY: double;
+  CONDUCTIVITY_S_PER_M: double;
+  LOSS_TANGENT: double;
+  /// 1.0 and 0.0 for non-magnetic materials — stated, not assumed.
+  RELATIVE_PERMEABILITY_REAL: double;
+  RELATIVE_PERMEABILITY_IMAGINARY: double;
+
+  // ---- Bulk response ----
+  /// Power reflected at normal incidence as a ratio [0-1].
+  REFLECTIVITY: double;
+  /// Reflection loss at normal incidence, dB (positive).
+  REFLECTION_LOSS_DB: double;
+  /// Thickness the transmission and penetration losses are stated for, metres.
+  /// A transmission loss without a thickness cannot be rescaled.
+  THICKNESS_M: double;
+  /// Loss through THICKNESS_M at normal incidence, dB (positive).
+  TRANSMISSION_LOSS_DB: double;
+  /// Attenuation inside the material, dB per metre.
+  ATTENUATION_DB_PER_M: double;
+  /// Fraction of incident power absorbed at normal incidence [0-1].
+  ABSORPTION_COEFFICIENT: double;
+
+  // ---- Surface ----
+  /// RMS surface roughness, metres. Roughness is what decides whether a
+  /// surface is a mirror or a scatterer at a given wavelength.
+  SURFACE_ROUGHNESS_RMS_M: double;
+  /// Correlation length of the roughness, metres.
+  ROUGHNESS_CORRELATION_LENGTH_M: double;
+  SCATTERING_CLASS: rfsScatteringClass = UNSPECIFIED;
+  /// Fraction of non-absorbed power leaving diffusely [0-1].
+  DIFFUSE_SCATTERING_COEFFICIENT: double;
+  /// Backscatter coefficient, dB.
+  BACKSCATTER_COEFFICIENT_DB: double;
+
+  // ---- Conditions the values hold at ----
+  /// Temperature the properties were evaluated at, kelvin.
+  TEMPERATURE_K: double;
+  /// Volumetric moisture content [0-1]. Wet concrete and dry concrete are
+  /// different materials at RF.
+  MOISTURE_CONTENT_FRACTION: double;
+  /// Salinity, practical salinity units, for water surfaces.
+  SALINITY_PSU: double;
+
+  // ---- Tabulated detail ----
+  /// Per-frequency samples. Where present and covering the frequency, these
+  /// take precedence over the power law.
+  FREQUENCY_SAMPLES: [RFSFrequencySample];
+  /// Angular and polarization dependence.
+  REFLECTION_TABLE: [RFSReflectionEntry];
+
+  /// Geometry this material is attached to. A record may attach one material
+  /// to several obstacles.
+  GEOMETRY: [RFSGeometryRef];
+
+  /// Provenance. Required.
+  PROVENANCE: RFSProvenance (required);
+  /// Unix ms this record was serialized.
+  COMPUTED_AT: uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID: string;
+  /// Ed25519 signature by the producing `$EPM`.
+  SIGNATURE: [ubyte];
+}
+
+root_type RFS;
+file_identifier "$RFS";

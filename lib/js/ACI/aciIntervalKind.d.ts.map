@@ -1,0 +1,1 @@
+{"version":3,"file":"aciIntervalKind.d.ts","sourceRoot":"","sources":["../../../ts/ACI/aciIntervalKind.ts"],"names":[],"mappings":"AAIA;;;;;GAKG;AACH,oBAAY,eAAe;IACzB,WAAW,IAAI;IAEf;;OAEG;IACH,gBAAgB,IAAI;IAEpB;;OAEG;IACH,mBAAmB,IAAI;IAEvB;;OAEG;IACH,MAAM,IAAI;IAEV;;OAEG;IACH,QAAQ,IAAI;IAEZ;;OAEG;IACH,iBAAiB,IAAI;IAErB;;OAEG;IACH,QAAQ,IAAI;IAEZ;;OAEG;IACH,kBAAkB,IAAI;CACvB"}
