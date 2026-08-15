@@ -1,0 +1,16 @@
+/**
+ * Memory layout of the packed volume. Declared as an enumeration rather than
+ * assumed, so the one legal layout is on the wire and a future layout cannot
+ * be introduced by silent reinterpretation.
+ *
+ * ORDINALS ARE WIRE VALUES. New layouts are APPENDED ONLY.
+ */
+export declare enum agvArrayLayout {
+    UNSPECIFIED = 0,
+    /**
+     * NZ contiguous z-slabs, each a complete row-major NX * NY field. Index of
+     * (i, j, k) is k * NX * NY + j * NX + i. The ONLY legal layout.
+     */
+    LEVEL_MAJOR = 1
+}
+//# sourceMappingURL=agvArrayLayout.d.ts.map

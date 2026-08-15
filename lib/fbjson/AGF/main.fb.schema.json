@@ -1,0 +1,730 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "agfSourceClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GEO_IMAGER",
+        "LEO_IMAGER",
+        "NWP_MODEL",
+        "REANALYSIS",
+        "GROUND_RADAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "GEO_IMAGER": {
+          "value": 1,
+          "description": "Imaging radiometer on a geostationary platform."
+        },
+        "LEO_IMAGER": {
+          "value": 2,
+          "description": "Imaging radiometer on a low-Earth-orbiting platform."
+        },
+        "NWP_MODEL": {
+          "value": 3,
+          "description": "Numerical weather prediction model field."
+        },
+        "REANALYSIS": {
+          "value": 4,
+          "description": "Retrospective analysis of a fixed model and assimilation system."
+        },
+        "GROUND_RADAR": {
+          "value": 5,
+          "description": "Ground-based weather radar."
+        }
+      }
+    },
+    "agfVariable": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CLOUD_OPTICAL_DEPTH",
+        "CLOUD_TOP_HEIGHT",
+        "CLOUD_TOP_PRESSURE",
+        "CLOUD_TOP_TEMPERATURE",
+        "CLOUD_MASK",
+        "CLOUD_FRACTION",
+        "CLOUD_LIQUID_MIXING_RATIO",
+        "CLOUD_ICE_MIXING_RATIO"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CLOUD_OPTICAL_DEPTH": {
+          "value": 1,
+          "description": "Dimensionless vertical optical depth of the cloud column."
+        },
+        "CLOUD_TOP_HEIGHT": {
+          "value": 2,
+          "description": "Height of the cloud top above a stated reference."
+        },
+        "CLOUD_TOP_PRESSURE": {
+          "value": 3,
+          "description": "Atmospheric pressure at the cloud top."
+        },
+        "CLOUD_TOP_TEMPERATURE": {
+          "value": 4,
+          "description": "Brightness or thermodynamic temperature at the cloud top."
+        },
+        "CLOUD_MASK": {
+          "value": 5,
+          "description": "Categorical cloudy / clear classification. Category meanings are stated in CATEGORY_LABELS; an unlabelled mask is uninterpretable."
+        },
+        "CLOUD_FRACTION": {
+          "value": 6,
+          "description": "Fraction of the cell covered by cloud."
+        },
+        "CLOUD_LIQUID_MIXING_RATIO": {
+          "value": 7,
+          "description": "Mass mixing ratio of cloud liquid water."
+        },
+        "CLOUD_ICE_MIXING_RATIO": {
+          "value": 8,
+          "description": "Mass mixing ratio of cloud ice."
+        }
+      }
+    },
+    "agfDType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "UINT8",
+        "INT8",
+        "UINT16",
+        "INT16",
+        "UINT32",
+        "INT32",
+        "FLOAT32",
+        "FLOAT64"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "UINT8": {
+          "value": 1
+        },
+        "INT8": {
+          "value": 2
+        },
+        "UINT16": {
+          "value": 3
+        },
+        "INT16": {
+          "value": 4
+        },
+        "UINT32": {
+          "value": 5
+        },
+        "INT32": {
+          "value": 6
+        },
+        "FLOAT32": {
+          "value": 7,
+          "description": "IEEE 754 binary32, little-endian."
+        },
+        "FLOAT64": {
+          "value": 8,
+          "description": "IEEE 754 binary64, little-endian."
+        }
+      }
+    },
+    "agfPayloadCodec": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RAW",
+        "ZSTD",
+        "DEFLATE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RAW": {
+          "value": 1,
+          "description": "No compression; transmitted bytes are the packed array."
+        },
+        "ZSTD": {
+          "value": 2
+        },
+        "DEFLATE": {
+          "value": 3,
+          "description": "RFC 1951 DEFLATE."
+        }
+      }
+    },
+    "agfProjection": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GEOSTATIONARY",
+        "LATLON_REGULAR",
+        "LAMBERT_CONFORMAL",
+        "POLAR_STEREOGRAPHIC",
+        "MERCATOR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "GEOSTATIONARY": {
+          "value": 1,
+          "description": "Perspective view from a fixed sub-satellite longitude, addressed in scan angles. Requires SUB_SATELLITE_LON_DEG and PERSPECTIVE_HEIGHT_M."
+        },
+        "LATLON_REGULAR": {
+          "value": 2,
+          "description": "Regular latitude/longitude (plate carree) grid."
+        },
+        "LAMBERT_CONFORMAL": {
+          "value": 3
+        },
+        "POLAR_STEREOGRAPHIC": {
+          "value": 4
+        },
+        "MERCATOR": {
+          "value": 5
+        }
+      }
+    },
+    "agfRowOrder": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FIRST_ROW_NORTH",
+        "FIRST_ROW_SOUTH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FIRST_ROW_NORTH": {
+          "value": 1,
+          "description": "Row 0 is the northernmost (or largest-Y) row."
+        },
+        "FIRST_ROW_SOUTH": {
+          "value": 2,
+          "description": "Row 0 is the southernmost (or smallest-Y) row."
+        }
+      }
+    },
+    "AGFProjectionParameters": {
+      "type": "object",
+      "description": "Explicit georeferencing parameters. Which members are meaningful is fixed\nby AGF.PROJECTION. Members that do not apply to the stated projection are\nwritten NaN, never 0 \u2014 a zero standard parallel is a real parallel.\n\nTHIS TABLE IS AUTHORITATIVE. PROJ4_STRING and WKT2_STRING never override it.",
+      "properties": {
+        "SEMI_MAJOR_AXIS_M": {
+          "type": "number",
+          "description": "Semi-major axis of the reference ellipsoid, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MINOR_AXIS_M": {
+          "type": "number",
+          "description": "Semi-minor axis of the reference ellipsoid, metres. Equal to the\nsemi-major axis for a spherical Earth.",
+          "x-flatbuffer-type": "double"
+        },
+        "INVERSE_FLATTENING": {
+          "type": "number",
+          "description": "Inverse flattening, when the figure is stated that way. NaN if the\nsemi-axes are the stated form.",
+          "x-flatbuffer-type": "double"
+        },
+        "DX": {
+          "type": "number",
+          "description": "Cell spacing along the X and Y axes, in the units named by\nGRID_SPACING_UNITS.",
+          "x-flatbuffer-type": "double"
+        },
+        "DY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GRID_SPACING_UNITS": {
+          "type": "string",
+          "description": "UDUNITS units of DX, DY, X_ORIGIN and Y_ORIGIN. Metres for the projected\nforms; radians for GEOSTATIONARY scan angles; degrees for\nLATLON_REGULAR.",
+          "x-flatbuffer-type": "string"
+        },
+        "X_ORIGIN": {
+          "type": "number",
+          "description": "Projection coordinate of the CENTRE of cell (0, 0), in\nGRID_SPACING_UNITS. The centre, not a corner: a half-cell offset is the\nclassic silent georeferencing error.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_ORIGIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTRAL_MERIDIAN_DEG": {
+          "type": "number",
+          "description": "Longitude of the projection origin or central meridian, degrees east.",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIGIN_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Latitude of the projection origin, degrees north.",
+          "x-flatbuffer-type": "double"
+        },
+        "STANDARD_PARALLEL_1_DEG": {
+          "type": "number",
+          "description": "Latitude at which the projection is true to scale.",
+          "x-flatbuffer-type": "double"
+        },
+        "STANDARD_PARALLEL_2_DEG": {
+          "type": "number",
+          "description": "Second standard parallel, LAMBERT_CONFORMAL only.",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE_FACTOR_AT_ORIGIN": {
+          "type": "number",
+          "description": "Scale factor at the origin or central meridian.",
+          "x-flatbuffer-type": "double"
+        },
+        "FALSE_EASTING_M": {
+          "type": "number",
+          "description": "False easting and northing applied to projected coordinates, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "FALSE_NORTHING_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SUB_SATELLITE_LON_DEG": {
+          "type": "number",
+          "description": "Longitude of the sub-satellite point, degrees east.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERSPECTIVE_HEIGHT_M": {
+          "type": "number",
+          "description": "Height of the perspective point above the ellipsoid, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "SWEEP_ANGLE_AXIS_IS_X": {
+          "type": "boolean",
+          "description": "True when the scan angles are swept along the Earth's sweep axis rather\nthan the instrument's. The two conventions differ by a rotation and\nmis-georeference the whole disc.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROJ4_STRING": {
+          "type": "string",
+          "description": "Convenience rendering of this projection. ADVISORY, NEVER AUTHORITATIVE:\nwhere it disagrees with the explicit parameters above, the explicit\nparameters win.",
+          "x-flatbuffer-type": "string"
+        },
+        "WKT2_STRING": {
+          "type": "string",
+          "description": "Convenience WKT2 rendering. ADVISORY, NEVER AUTHORITATIVE, same rule.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AGFProvenance": {
+      "type": "object",
+      "description": "Where this field came from and how it was produced. Provenance is DATA:\nspecific instruments, products and producers are named here as strings, not\nin an enumeration.",
+      "properties": {
+        "SOURCE_CLASS": {
+          "$ref": "#/definitions/agfSourceClass",
+          "description": "What kind of system produced the field.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GEO_IMAGER": {
+              "value": 1,
+              "description": "Imaging radiometer on a geostationary platform."
+            },
+            "LEO_IMAGER": {
+              "value": 2,
+              "description": "Imaging radiometer on a low-Earth-orbiting platform."
+            },
+            "NWP_MODEL": {
+              "value": 3,
+              "description": "Numerical weather prediction model field."
+            },
+            "REANALYSIS": {
+              "value": 4,
+              "description": "Retrospective analysis of a fixed model and assimilation system."
+            },
+            "GROUND_RADAR": {
+              "value": 5,
+              "description": "Ground-based weather radar."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Identity of the specific platform, instrument or model instance, as its\noperator states it. Required: an unattributed field is not publishable.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PRODUCT_ID": {
+          "type": "string",
+          "description": "Identity of the specific product or algorithm output within SOURCE_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Organisation that produced and published the field.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URI": {
+          "type": "string",
+          "description": "Replayable location the field was retrieved from.",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM_VERSION": {
+          "type": "string",
+          "description": "Version of the retrieval or model configuration.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "description": "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_CONTENT_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix milliseconds produced and retrieved.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "RETRIEVED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Licence terms. Empty means UNKNOWN TERMS \u2014 never public domain, never a\ngrant to redistribute.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "CITATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SOURCE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "AGF": {
+      "type": "object",
+      "description": "Atmospheric Gridded Field",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier of this field record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Nominal time the field represents, ISO 8601 UTC. For an observation this\nis the observation time; for a forecast it is the validity time.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALID_START": {
+          "type": "string",
+          "description": "Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC. A\nfield is a sample of a continuous atmosphere and is not valid forever.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_END": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORECAST_REFERENCE_TIME": {
+          "type": "string",
+          "description": "Model initialisation time, ISO 8601 UTC. ABSENT for an observation \u2014 an\nobservation has no forecast reference time, and an empty string here is\nwhat distinguishes the two cases.",
+          "x-flatbuffer-type": "string"
+        },
+        "FORECAST_LEAD_S": {
+          "type": "number",
+          "description": "Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when\nFORECAST_REFERENCE_TIME is present; NaN otherwise. It is never inferred\nto be zero for an observation.",
+          "x-flatbuffer-type": "double"
+        },
+        "VARIABLE": {
+          "$ref": "#/definitions/agfVariable",
+          "description": "The physical quantity. It does NOT imply units.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CLOUD_OPTICAL_DEPTH": {
+              "value": 1,
+              "description": "Dimensionless vertical optical depth of the cloud column."
+            },
+            "CLOUD_TOP_HEIGHT": {
+              "value": 2,
+              "description": "Height of the cloud top above a stated reference."
+            },
+            "CLOUD_TOP_PRESSURE": {
+              "value": 3,
+              "description": "Atmospheric pressure at the cloud top."
+            },
+            "CLOUD_TOP_TEMPERATURE": {
+              "value": 4,
+              "description": "Brightness or thermodynamic temperature at the cloud top."
+            },
+            "CLOUD_MASK": {
+              "value": 5,
+              "description": "Categorical cloudy / clear classification. Category meanings are stated in CATEGORY_LABELS; an unlabelled mask is uninterpretable."
+            },
+            "CLOUD_FRACTION": {
+              "value": 6,
+              "description": "Fraction of the cell covered by cloud."
+            },
+            "CLOUD_LIQUID_MIXING_RATIO": {
+              "value": 7,
+              "description": "Mass mixing ratio of cloud liquid water."
+            },
+            "CLOUD_ICE_MIXING_RATIO": {
+              "value": 8,
+              "description": "Mass mixing ratio of cloud ice."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "UDUNITS-compatible units of the SCALED physical value. Required: the\nenum names a quantity, this names its scale, and a field without it is\nuninterpretable.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CATEGORY_LABELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Category meanings for a categorical VARIABLE such as CLOUD_MASK, indexed\nby raw value. Empty for continuous variables.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "DTYPE": {
+          "$ref": "#/definitions/agfDType",
+          "description": "Element type of the packed array.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "UINT8": {
+              "value": 1
+            },
+            "INT8": {
+              "value": 2
+            },
+            "UINT16": {
+              "value": 3
+            },
+            "INT16": {
+              "value": 4
+            },
+            "UINT32": {
+              "value": 5
+            },
+            "INT32": {
+              "value": 6
+            },
+            "FLOAT32": {
+              "value": 7,
+              "description": "IEEE 754 binary32, little-endian."
+            },
+            "FLOAT64": {
+              "value": 8,
+              "description": "IEEE 754 binary64, little-endian."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "FILL_VALUE": {
+          "type": "number",
+          "description": "Sentinel marking a cell with no data, in RAW units, before scaling.",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill\ncells. Defaults are the identity packing.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "ADD_OFFSET": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.0"
+        },
+        "NX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of columns and rows. The payload holds exactly NX * NY elements.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROW_ORDER": {
+          "$ref": "#/definitions/agfRowOrder",
+          "description": "Order of the NY rows within the payload.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FIRST_ROW_NORTH": {
+              "value": 1,
+              "description": "Row 0 is the northernmost (or largest-Y) row."
+            },
+            "FIRST_ROW_SOUTH": {
+              "value": 2,
+              "description": "Row 0 is the southernmost (or smallest-Y) row."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROJECTION": {
+          "$ref": "#/definitions/agfProjection",
+          "description": "Projection family of the grid.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GEOSTATIONARY": {
+              "value": 1,
+              "description": "Perspective view from a fixed sub-satellite longitude, addressed in scan angles. Requires SUB_SATELLITE_LON_DEG and PERSPECTIVE_HEIGHT_M."
+            },
+            "LATLON_REGULAR": {
+              "value": 2,
+              "description": "Regular latitude/longitude (plate carree) grid."
+            },
+            "LAMBERT_CONFORMAL": {
+              "value": 3
+            },
+            "POLAR_STEREOGRAPHIC": {
+              "value": 4
+            },
+            "MERCATOR": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROJECTION_PARAMETERS": {
+          "$ref": "#/definitions/AGFProjectionParameters",
+          "description": "Explicit, authoritative georeferencing parameters.",
+          "x-flatbuffer-type": "AGFProjectionParameters",
+          "x-flatbuffer-required": true
+        },
+        "PAYLOAD_CODEC": {
+          "$ref": "#/definitions/agfPayloadCodec",
+          "description": "Codec applied to the packed array.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RAW": {
+              "value": 1,
+              "description": "No compression; transmitted bytes are the packed array."
+            },
+            "ZSTD": {
+              "value": 2
+            },
+            "DEFLATE": {
+              "value": 3,
+              "description": "RFC 1951 DEFLATE."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PAYLOAD": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most\n1048576. MUST be absent when PAYLOAD_CID is present.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PAYLOAD_CID": {
+          "type": "string",
+          "description": "Content-addressed reference to the identical post-codec byte string.\nMUST be absent when PAYLOAD is present, and MUST be used when the\npost-codec size exceeds 1048576 bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAYLOAD_SHA256": {
+          "type": "string",
+          "description": "Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH\npayload modes \u2014 it is what proves an inline and a fetched payload are\nthe same object.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PAYLOAD_SIZE_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Length of the post-codec byte string, bytes. REQUIRED in BOTH payload\nmodes; it is what makes the 1 MiB inline rule checkable without\ndecoding. Zero is never valid for a populated field.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/AGFProvenance",
+          "description": "Where the field came from. Required.",
+          "x-flatbuffer-type": "AGFProvenance",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Free-text description of the field, not of its vendor.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID",
+        "EPOCH",
+        "UNITS",
+        "PROJECTION_PARAMETERS",
+        "PAYLOAD_SHA256",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AGF",
+  "x-flatbuffer-root-type": "AGF",
+  "x-flatbuffer-file-identifier": "$AGF"
+}

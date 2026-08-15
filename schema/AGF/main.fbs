@@ -1,0 +1,359 @@
+// Hash: 7d571323f3b1451eaa45a93e5c220da0119bb2591e9f390c7bcd63abb1b112e7
+// Version: 1.187.0
+// -----------------------------------END_HEADER
+// Atmospheric Gridded Field (AGF)
+// Description
+// ONE two-dimensional atmospheric field, on ONE explicitly parameterised
+// projection grid, for ONE variable at ONE valid time. The archetype is a
+// level-2 cloud product retrieved from an imaging radiometer: a NX by NY array
+// of cloud optical depth, cloud top height or a cloud mask, delivered on the
+// instrument's native projection.
+//
+// WHY THIS RECORD EXISTS. Nothing in SDS could hold a gridded atmospheric
+// field. `$WTH` is a POINT observation — a station, a time, a scalar — and a
+// grid is not a bag of points: the geometry that relates cell (i, j) to a
+// location on the Earth is the payload's meaning, and `$WTH` has nowhere to
+// put it. `$ENV` and `$ATM` are MODEL REGISTRIES: they name and parameterise a
+// model, they do not carry its output samples. `$CVG` is the nearest
+// structural prior art — a grid of figures of merit — but its cells are
+// analysis products over a coverage geometry, not physical field values with
+// units, a fill value and a packing rule.
+//
+// `$AGF` is the 2D observation-shaped member of the pair. Its three-dimensional
+// sibling `$AGV` carries model volumes and REUSES the enumerations declared
+// here, so the two records speak one vocabulary: a variable, a data type, a
+// codec or a source class means the same thing in both.
+//
+// PROVENANCE IS DATA, NEVER VOCABULARY. The enumerations below classify what a
+// source IS — a geostationary imager, a numerical weather prediction model —
+// and never who operates it. The identity of a specific instrument, product or
+// producer is carried as data in SOURCE_ID, PRODUCT_ID, PRODUCER and
+// SOURCE_URI, where it can be corrected without a wire change.
+//
+// UNITS ARE NEVER IMPLIED. VARIABLE says which physical quantity this is; it
+// does NOT say what it is measured in. UNITS is a required UDUNITS-compatible
+// string and it is the only authority on scale. Cloud top height in metres and
+// cloud top height in kilometres are the same VARIABLE and different fields;
+// a consumer that assumes a unit from the enum will be wrong by a factor of a
+// thousand.
+//
+// THE GRID IS EXPLICIT, THE STRING IS ADVISORY. PROJECTION plus
+// AGFProjectionParameters carry every number needed to place a cell on the
+// Earth. PROJ4_STRING and WKT2_STRING are ADVISORY CONVENIENCE ONLY and are
+// never authoritative: they are lossy, they are dialect-dependent, and a
+// consumer that georeferences from them instead of from the explicit
+// parameters is reading a comment, not a contract. Where they disagree with
+// the explicit parameters, the explicit parameters win.
+//
+// DUAL PAYLOAD, EXACTLY ONE POPULATED. A field is either small enough to
+// travel inline or it is not, and a record must never be ambiguous about
+// which. EXACTLY ONE of PAYLOAD and PAYLOAD_CID is populated:
+//
+//   * PAYLOAD is legal ONLY when the post-codec byte count is at most
+//     1048576 (1 MiB). Above that the record MUST use PAYLOAD_CID.
+//   * PAYLOAD_CID is a content-addressed reference to the identical
+//     post-codec byte string.
+//
+// Both are absent = an empty record. Both present = INVALID, and a reader MUST
+// reject it rather than guess which one is current.
+//
+// PAYLOAD_SHA256 AND PAYLOAD_SIZE_BYTES ARE REQUIRED IN BOTH MODES. They describe
+// the post-codec byte string, whichever way it travelled. The hash is what
+// makes an inline payload and a fetched payload provably the same object, and
+// what makes a truncated fetch detectable; the byte count is what makes the
+// 1 MiB rule checkable without decoding.
+//
+// PACKING. The payload is a dense NX * NY array of DTYPE values in row-major
+// order, rows ordered by ROW_ORDER, with no padding between rows. Physical
+// value = raw * SCALE_FACTOR + ADD_OFFSET, applied ONLY to cells whose raw
+// value is not FILL_VALUE. FILL_VALUE is stated in RAW units, before scaling —
+// scaling a sentinel produces a plausible-looking number and silently turns a
+// gap into data.
+//
+// ABSENT IS NOT ZERO, and an unknown numeric is written NaN. A zero
+// SCALE_FACTOR is a real claim (a constant field); an omitted one reading back
+// as 0 would zero every value in the grid, so SCALE_FACTOR defaults to 1.0 and
+// ADD_OFFSET to 0.0 — the identity packing.
+
+/// What KIND of system produced this field. A capability class, never an
+/// operator, a programme or a product name: those are data, and they live in
+/// SOURCE_ID, PRODUCT_ID and PRODUCER.
+///
+/// ORDINALS ARE WIRE VALUES. New classes are APPENDED ONLY.
+enum agfSourceClass : byte {
+  UNSPECIFIED = 0,
+  /// Imaging radiometer on a geostationary platform.
+  GEO_IMAGER,
+  /// Imaging radiometer on a low-Earth-orbiting platform.
+  LEO_IMAGER,
+  /// Numerical weather prediction model field.
+  NWP_MODEL,
+  /// Retrospective analysis of a fixed model and assimilation system.
+  REANALYSIS,
+  /// Ground-based weather radar.
+  GROUND_RADAR,
+}
+
+/// The physical quantity carried in the payload. It says WHICH quantity, never
+/// in what units — UNITS is the sole authority on scale.
+///
+/// ORDINALS ARE WIRE VALUES. New variables are APPENDED ONLY.
+enum agfVariable : byte {
+  UNSPECIFIED = 0,
+  /// Dimensionless vertical optical depth of the cloud column.
+  CLOUD_OPTICAL_DEPTH,
+  /// Height of the cloud top above a stated reference.
+  CLOUD_TOP_HEIGHT,
+  /// Atmospheric pressure at the cloud top.
+  CLOUD_TOP_PRESSURE,
+  /// Brightness or thermodynamic temperature at the cloud top.
+  CLOUD_TOP_TEMPERATURE,
+  /// Categorical cloudy / clear classification. Category meanings are stated
+  /// in CATEGORY_LABELS; an unlabelled mask is uninterpretable.
+  CLOUD_MASK,
+  /// Fraction of the cell covered by cloud.
+  CLOUD_FRACTION,
+  /// Mass mixing ratio of cloud liquid water.
+  CLOUD_LIQUID_MIXING_RATIO,
+  /// Mass mixing ratio of cloud ice.
+  CLOUD_ICE_MIXING_RATIO,
+}
+
+/// Element type of the packed payload array. The width and signedness here
+/// are the only way to parse the bytes; there is no self-describing header.
+///
+/// ORDINALS ARE WIRE VALUES. New types are APPENDED ONLY.
+enum agfDType : byte {
+  UNSPECIFIED = 0,
+  UINT8,
+  INT8,
+  UINT16,
+  INT16,
+  UINT32,
+  INT32,
+  /// IEEE 754 binary32, little-endian.
+  FLOAT32,
+  /// IEEE 754 binary64, little-endian.
+  FLOAT64,
+}
+
+/// Compression applied to the packed array to produce the transmitted byte
+/// string. PAYLOAD_SHA256 and PAYLOAD_SIZE_BYTES describe the POST-codec bytes.
+///
+/// ORDINALS ARE WIRE VALUES. New codecs are APPENDED ONLY.
+enum agfPayloadCodec : byte {
+  UNSPECIFIED = 0,
+  /// No compression; transmitted bytes are the packed array.
+  RAW,
+  ZSTD,
+  /// RFC 1951 DEFLATE.
+  DEFLATE,
+}
+
+/// Map projection of the grid. Each member fixes which members of
+/// AGFProjectionParameters are meaningful; the parameters themselves are
+/// always explicit.
+///
+/// ORDINALS ARE WIRE VALUES. New projections are APPENDED ONLY.
+enum agfProjection : byte {
+  UNSPECIFIED = 0,
+  /// Perspective view from a fixed sub-satellite longitude, addressed in
+  /// scan angles. Requires SUB_SATELLITE_LON_DEG and PERSPECTIVE_HEIGHT_M.
+  GEOSTATIONARY,
+  /// Regular latitude/longitude (plate carree) grid.
+  LATLON_REGULAR,
+  LAMBERT_CONFORMAL,
+  POLAR_STEREOGRAPHIC,
+  MERCATOR,
+}
+
+/// Order in which the NY rows appear in the payload. Without it a field can be
+/// decoded upside down and still look plausible.
+///
+/// ORDINALS ARE WIRE VALUES. New orders are APPENDED ONLY.
+enum agfRowOrder : byte {
+  UNSPECIFIED = 0,
+  /// Row 0 is the northernmost (or largest-Y) row.
+  FIRST_ROW_NORTH,
+  /// Row 0 is the southernmost (or smallest-Y) row.
+  FIRST_ROW_SOUTH,
+}
+
+/// Explicit georeferencing parameters. Which members are meaningful is fixed
+/// by AGF.PROJECTION. Members that do not apply to the stated projection are
+/// written NaN, never 0 — a zero standard parallel is a real parallel.
+///
+/// THIS TABLE IS AUTHORITATIVE. PROJ4_STRING and WKT2_STRING never override it.
+table AGFProjectionParameters {
+  // ---- Earth figure. Required for every projection. ----
+  /// Semi-major axis of the reference ellipsoid, metres.
+  SEMI_MAJOR_AXIS_M: double;
+  /// Semi-minor axis of the reference ellipsoid, metres. Equal to the
+  /// semi-major axis for a spherical Earth.
+  SEMI_MINOR_AXIS_M: double;
+  /// Inverse flattening, when the figure is stated that way. NaN if the
+  /// semi-axes are the stated form.
+  INVERSE_FLATTENING: double;
+
+  // ---- Grid spacing and origin, in projection coordinates ----
+  /// Cell spacing along the X and Y axes, in the units named by
+  /// GRID_SPACING_UNITS.
+  DX: double;
+  DY: double;
+  /// UDUNITS units of DX, DY, X_ORIGIN and Y_ORIGIN. Metres for the projected
+  /// forms; radians for GEOSTATIONARY scan angles; degrees for
+  /// LATLON_REGULAR.
+  GRID_SPACING_UNITS: string;
+  /// Projection coordinate of the CENTRE of cell (0, 0), in
+  /// GRID_SPACING_UNITS. The centre, not a corner: a half-cell offset is the
+  /// classic silent georeferencing error.
+  X_ORIGIN: double;
+  Y_ORIGIN: double;
+
+  // ---- Projection-defining angles ----
+  /// Longitude of the projection origin or central meridian, degrees east.
+  CENTRAL_MERIDIAN_DEG: double;
+  /// Latitude of the projection origin, degrees north.
+  ORIGIN_LATITUDE_DEG: double;
+  /// Latitude at which the projection is true to scale.
+  STANDARD_PARALLEL_1_DEG: double;
+  /// Second standard parallel, LAMBERT_CONFORMAL only.
+  STANDARD_PARALLEL_2_DEG: double;
+  /// Scale factor at the origin or central meridian.
+  SCALE_FACTOR_AT_ORIGIN: double;
+  /// False easting and northing applied to projected coordinates, metres.
+  FALSE_EASTING_M: double;
+  FALSE_NORTHING_M: double;
+
+  // ---- GEOSTATIONARY only ----
+  /// Longitude of the sub-satellite point, degrees east.
+  SUB_SATELLITE_LON_DEG: double;
+  /// Height of the perspective point above the ellipsoid, metres.
+  PERSPECTIVE_HEIGHT_M: double;
+  /// True when the scan angles are swept along the Earth's sweep axis rather
+  /// than the instrument's. The two conventions differ by a rotation and
+  /// mis-georeference the whole disc.
+  SWEEP_ANGLE_AXIS_IS_X: bool;
+
+  // ---- Advisory only ----
+  /// Convenience rendering of this projection. ADVISORY, NEVER AUTHORITATIVE:
+  /// where it disagrees with the explicit parameters above, the explicit
+  /// parameters win.
+  PROJ4_STRING: string;
+  /// Convenience WKT2 rendering. ADVISORY, NEVER AUTHORITATIVE, same rule.
+  WKT2_STRING: string;
+}
+
+/// Where this field came from and how it was produced. Provenance is DATA:
+/// specific instruments, products and producers are named here as strings, not
+/// in an enumeration.
+table AGFProvenance {
+  /// What kind of system produced the field.
+  SOURCE_CLASS: agfSourceClass = UNSPECIFIED;
+  /// Identity of the specific platform, instrument or model instance, as its
+  /// operator states it. Required: an unattributed field is not publishable.
+  SOURCE_ID: string (required);
+  /// Identity of the specific product or algorithm output within SOURCE_ID.
+  PRODUCT_ID: string;
+  /// Organisation that produced and published the field.
+  PRODUCER: string;
+  /// Replayable location the field was retrieved from.
+  SOURCE_URI: string;
+  /// Version of the retrieval or model configuration.
+  ALGORITHM_VERSION: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  /// Unix milliseconds produced and retrieved.
+  PRODUCED_AT: uint64;
+  RETRIEVED_AT: uint64;
+  /// Licence terms. Empty means UNKNOWN TERMS — never public domain, never a
+  /// grant to redistribute.
+  LICENSE: string;
+  NON_COMMERCIAL_ONLY: bool;
+  CITATION: string;
+}
+
+/// Atmospheric Gridded Field
+table AGF {
+  /// Stable identifier of this field record.
+  ID: string (required);
+
+  // ---- Time ----
+  /// Nominal time the field represents, ISO 8601 UTC. For an observation this
+  /// is the observation time; for a forecast it is the validity time.
+  EPOCH: string (required);
+  /// Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC. A
+  /// field is a sample of a continuous atmosphere and is not valid forever.
+  VALID_START: string;
+  VALID_END: string;
+  /// Model initialisation time, ISO 8601 UTC. ABSENT for an observation — an
+  /// observation has no forecast reference time, and an empty string here is
+  /// what distinguishes the two cases.
+  FORECAST_REFERENCE_TIME: string;
+  /// Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when
+  /// FORECAST_REFERENCE_TIME is present; NaN otherwise. It is never inferred
+  /// to be zero for an observation.
+  FORECAST_LEAD_S: double;
+
+  // ---- What the numbers are ----
+  /// The physical quantity. It does NOT imply units.
+  VARIABLE: agfVariable = UNSPECIFIED;
+  /// UDUNITS-compatible units of the SCALED physical value. Required: the
+  /// enum names a quantity, this names its scale, and a field without it is
+  /// uninterpretable.
+  UNITS: string (required);
+  /// Category meanings for a categorical VARIABLE such as CLOUD_MASK, indexed
+  /// by raw value. Empty for continuous variables.
+  CATEGORY_LABELS: [string];
+
+  // ---- Packing ----
+  /// Element type of the packed array.
+  DTYPE: agfDType = UNSPECIFIED;
+  /// Sentinel marking a cell with no data, in RAW units, before scaling.
+  FILL_VALUE: double;
+  /// physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill
+  /// cells. Defaults are the identity packing.
+  SCALE_FACTOR: double = 1.0;
+  ADD_OFFSET: double = 0.0;
+
+  // ---- Grid shape and geometry ----
+  /// Number of columns and rows. The payload holds exactly NX * NY elements.
+  NX: uint32;
+  NY: uint32;
+  /// Order of the NY rows within the payload.
+  ROW_ORDER: agfRowOrder = UNSPECIFIED;
+  /// Projection family of the grid.
+  PROJECTION: agfProjection = UNSPECIFIED;
+  /// Explicit, authoritative georeferencing parameters.
+  PROJECTION_PARAMETERS: AGFProjectionParameters (required);
+
+  // ---- Dual payload: EXACTLY ONE of PAYLOAD and PAYLOAD_CID ----
+  /// Codec applied to the packed array.
+  PAYLOAD_CODEC: agfPayloadCodec = UNSPECIFIED;
+  /// Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most
+  /// 1048576. MUST be absent when PAYLOAD_CID is present.
+  PAYLOAD: [ubyte];
+  /// Content-addressed reference to the identical post-codec byte string.
+  /// MUST be absent when PAYLOAD is present, and MUST be used when the
+  /// post-codec size exceeds 1048576 bytes.
+  PAYLOAD_CID: string;
+  /// Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH
+  /// payload modes — it is what proves an inline and a fetched payload are
+  /// the same object.
+  PAYLOAD_SHA256: string (required);
+  /// Length of the post-codec byte string, bytes. REQUIRED in BOTH payload
+  /// modes; it is what makes the 1 MiB inline rule checkable without
+  /// decoding. Zero is never valid for a populated field.
+  PAYLOAD_SIZE_BYTES: uint64;
+
+  // ---- Provenance ----
+  /// Where the field came from. Required.
+  PROVENANCE: AGFProvenance (required);
+  /// Free-text description of the field, not of its vendor.
+  DESCRIPTION: string;
+}
+
+root_type AGF;
+file_identifier "$AGF";

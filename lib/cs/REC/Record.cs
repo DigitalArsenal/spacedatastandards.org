@@ -228,6 +228,8 @@ public struct Record : IFlatbufferObject
   public CVP valueAsCVP() { return value<CVP>().Value; }
   public RFL valueAsRFL() { return value<RFL>().Value; }
   public RFS valueAsRFS() { return value<RFS>().Value; }
+  public AGF valueAsAGF() { return value<AGF>().Value; }
+  public AGV valueAsAGV() { return value<AGV>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -889,6 +891,12 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.RFS:
         _o.value.Value = this.value<RFS>().HasValue ? this.value<RFS>().Value.UnPack() : null;
+        break;
+      case RecordType.AGF:
+        _o.value.Value = this.value<AGF>().HasValue ? this.value<AGF>().Value.UnPack() : null;
+        break;
+      case RecordType.AGV:
+        _o.value.Value = this.value<AGV>().HasValue ? this.value<AGV>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "agfSourceClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEO_IMAGER", "LEO_IMAGER", "NWP_MODEL", "REANALYSIS", "GROUND_RADAR"]
+    },
+    "agfVariable" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CLOUD_OPTICAL_DEPTH", "CLOUD_TOP_HEIGHT", "CLOUD_TOP_PRESSURE", "CLOUD_TOP_TEMPERATURE", "CLOUD_MASK", "CLOUD_FRACTION", "CLOUD_LIQUID_MIXING_RATIO", "CLOUD_ICE_MIXING_RATIO"]
+    },
+    "agfDType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "UINT8", "INT8", "UINT16", "INT16", "UINT32", "INT32", "FLOAT32", "FLOAT64"]
+    },
+    "agfPayloadCodec" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RAW", "ZSTD", "DEFLATE"]
+    },
+    "agfProjection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEOSTATIONARY", "LATLON_REGULAR", "LAMBERT_CONFORMAL", "POLAR_STEREOGRAPHIC", "MERCATOR"]
+    },
+    "agfRowOrder" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FIRST_ROW_NORTH", "FIRST_ROW_SOUTH"]
+    },
+    "AGFProjectionParameters" : {
+      "type" : "object",
+      "description" : "Explicit georeferencing parameters. Which members are meaningful is fixed\nby AGF.PROJECTION. Members that do not apply to the stated projection are\nwritten NaN, never 0 — a zero standard parallel is a real parallel.\n\nTHIS TABLE IS AUTHORITATIVE. PROJ4_STRING and WKT2_STRING never override it.",
+      "properties" : {
+        "SEMI_MAJOR_AXIS_M" : {
+                "type" : "number",
+                "description" : "Semi-major axis of the reference ellipsoid, metres."
+              },
+        "SEMI_MINOR_AXIS_M" : {
+                "type" : "number",
+                "description" : "Semi-minor axis of the reference ellipsoid, metres. Equal to the\nsemi-major axis for a spherical Earth."
+              },
+        "INVERSE_FLATTENING" : {
+                "type" : "number",
+                "description" : "Inverse flattening, when the figure is stated that way. NaN if the\nsemi-axes are the stated form."
+              },
+        "DX" : {
+                "type" : "number",
+                "description" : "Cell spacing along the X and Y axes, in the units named by\nGRID_SPACING_UNITS."
+              },
+        "DY" : {
+                "type" : "number"
+              },
+        "GRID_SPACING_UNITS" : {
+                "type" : "string",
+                "description" : "UDUNITS units of DX, DY, X_ORIGIN and Y_ORIGIN. Metres for the projected\nforms; radians for GEOSTATIONARY scan angles; degrees for\nLATLON_REGULAR."
+              },
+        "X_ORIGIN" : {
+                "type" : "number",
+                "description" : "Projection coordinate of the CENTRE of cell (0, 0), in\nGRID_SPACING_UNITS. The centre, not a corner: a half-cell offset is the\nclassic silent georeferencing error."
+              },
+        "Y_ORIGIN" : {
+                "type" : "number"
+              },
+        "CENTRAL_MERIDIAN_DEG" : {
+                "type" : "number",
+                "description" : "Longitude of the projection origin or central meridian, degrees east."
+              },
+        "ORIGIN_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Latitude of the projection origin, degrees north."
+              },
+        "STANDARD_PARALLEL_1_DEG" : {
+                "type" : "number",
+                "description" : "Latitude at which the projection is true to scale."
+              },
+        "STANDARD_PARALLEL_2_DEG" : {
+                "type" : "number",
+                "description" : "Second standard parallel, LAMBERT_CONFORMAL only."
+              },
+        "SCALE_FACTOR_AT_ORIGIN" : {
+                "type" : "number",
+                "description" : "Scale factor at the origin or central meridian."
+              },
+        "FALSE_EASTING_M" : {
+                "type" : "number",
+                "description" : "False easting and northing applied to projected coordinates, metres."
+              },
+        "FALSE_NORTHING_M" : {
+                "type" : "number"
+              },
+        "SUB_SATELLITE_LON_DEG" : {
+                "type" : "number",
+                "description" : "Longitude of the sub-satellite point, degrees east."
+              },
+        "PERSPECTIVE_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Height of the perspective point above the ellipsoid, metres."
+              },
+        "SWEEP_ANGLE_AXIS_IS_X" : {
+                "type" : "boolean",
+                "description" : "True when the scan angles are swept along the Earth's sweep axis rather\nthan the instrument's. The two conventions differ by a rotation and\nmis-georeference the whole disc."
+              },
+        "PROJ4_STRING" : {
+                "type" : "string",
+                "description" : "Convenience rendering of this projection. ADVISORY, NEVER AUTHORITATIVE:\nwhere it disagrees with the explicit parameters above, the explicit\nparameters win."
+              },
+        "WKT2_STRING" : {
+                "type" : "string",
+                "description" : "Convenience WKT2 rendering. ADVISORY, NEVER AUTHORITATIVE, same rule."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGFProvenance" : {
+      "type" : "object",
+      "description" : "Where this field came from and how it was produced. Provenance is DATA:\nspecific instruments, products and producers are named here as strings, not\nin an enumeration.",
+      "properties" : {
+        "SOURCE_CLASS" : {
+                "$ref" : "#/definitions/agfSourceClass",
+                "description" : "What kind of system produced the field."
+              },
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific platform, instrument or model instance, as its\noperator states it. Required: an unattributed field is not publishable."
+              },
+        "PRODUCT_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific product or algorithm output within SOURCE_ID."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Organisation that produced and published the field."
+              },
+        "SOURCE_URI" : {
+                "type" : "string",
+                "description" : "Replayable location the field was retrieved from."
+              },
+        "ALGORITHM_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the retrieval or model configuration."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "PRODUCED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds produced and retrieved."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean"
+              },
+        "CITATION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE_ID"],
+      "additionalProperties" : false
+    },
+    "AGF" : {
+      "type" : "object",
+      "description" : "Atmospheric Gridded Field",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this field record."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Nominal time the field represents, ISO 8601 UTC. For an observation this\nis the observation time; for a forecast it is the validity time."
+              },
+        "VALID_START" : {
+                "type" : "string",
+                "description" : "Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC. A\nfield is a sample of a continuous atmosphere and is not valid forever."
+              },
+        "VALID_END" : {
+                "type" : "string"
+              },
+        "FORECAST_REFERENCE_TIME" : {
+                "type" : "string",
+                "description" : "Model initialisation time, ISO 8601 UTC. ABSENT for an observation — an\nobservation has no forecast reference time, and an empty string here is\nwhat distinguishes the two cases."
+              },
+        "FORECAST_LEAD_S" : {
+                "type" : "number",
+                "description" : "Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when\nFORECAST_REFERENCE_TIME is present; NaN otherwise. It is never inferred\nto be zero for an observation."
+              },
+        "VARIABLE" : {
+                "$ref" : "#/definitions/agfVariable",
+                "description" : "The physical quantity. It does NOT imply units."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "UDUNITS-compatible units of the SCALED physical value. Required: the\nenum names a quantity, this names its scale, and a field without it is\nuninterpretable."
+              },
+        "CATEGORY_LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Category meanings for a categorical VARIABLE such as CLOUD_MASK, indexed\nby raw value. Empty for continuous variables."
+              },
+        "DTYPE" : {
+                "$ref" : "#/definitions/agfDType",
+                "description" : "Element type of the packed array."
+              },
+        "FILL_VALUE" : {
+                "type" : "number",
+                "description" : "Sentinel marking a cell with no data, in RAW units, before scaling."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill\ncells. Defaults are the identity packing."
+              },
+        "ADD_OFFSET" : {
+                "type" : "number"
+              },
+        "NX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns and rows. The payload holds exactly NX * NY elements."
+              },
+        "NY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ROW_ORDER" : {
+                "$ref" : "#/definitions/agfRowOrder",
+                "description" : "Order of the NY rows within the payload."
+              },
+        "PROJECTION" : {
+                "$ref" : "#/definitions/agfProjection",
+                "description" : "Projection family of the grid."
+              },
+        "PROJECTION_PARAMETERS" : {
+                "$ref" : "#/definitions/AGFProjectionParameters",
+                "description" : "Explicit, authoritative georeferencing parameters."
+              },
+        "PAYLOAD_CODEC" : {
+                "$ref" : "#/definitions/agfPayloadCodec",
+                "description" : "Codec applied to the packed array."
+              },
+        "PAYLOAD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most\n1048576. MUST be absent when PAYLOAD_CID is present."
+              },
+        "PAYLOAD_CID" : {
+                "type" : "string",
+                "description" : "Content-addressed reference to the identical post-codec byte string.\nMUST be absent when PAYLOAD is present, and MUST be used when the\npost-codec size exceeds 1048576 bytes."
+              },
+        "PAYLOAD_SHA256" : {
+                "type" : "string",
+                "description" : "Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH\npayload modes — it is what proves an inline and a fetched payload are\nthe same object."
+              },
+        "PAYLOAD_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the post-codec byte string, bytes. REQUIRED in BOTH payload\nmodes; it is what makes the 1 MiB inline rule checkable without\ndecoding. Zero is never valid for a populated field."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/AGFProvenance",
+                "description" : "Where the field came from. Required."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Free-text description of the field, not of its vendor."
+              }
+      },
+      "required" : ["ID", "EPOCH", "UNITS", "PROJECTION_PARAMETERS", "PAYLOAD_SHA256", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AGF"
+}

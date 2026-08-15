@@ -1,0 +1,246 @@
+// Hash: c7407265bc5d88e1dda3ed31c7e2a58c2306d170f4c69ae537b45745d5e9d219
+// Version: 1.187.0
+// -----------------------------------END_HEADER
+include "../AGF/main.fbs";
+
+// Atmospheric Gridded Volume (AGV)
+// Description
+// ONE three-dimensional atmospheric field — a NX by NY by NZ volume — for ONE
+// variable at ONE valid time, on ONE explicitly parameterised horizontal grid
+// and ONE explicitly enumerated vertical coordinate. The archetype is a
+// numerical weather prediction model field: cloud ice mixing ratio on model
+// levels, over a forecast domain, at a single validity time.
+//
+// WHY THIS RECORD EXISTS. `$AGV` is the three-dimensional half of the pair
+// ratified with `$AGF`. `$AGF` carries an imager-derived 2D field; a model
+// volume is not a stack of `$AGF` records, because the vertical coordinate is
+// a first-class part of the geometry and because splitting a volume across
+// records destroys the atomicity of a single valid time.
+//
+// ONE RECORD PER (VARIABLE, VALID TIME) — NEVER PER-LEVEL. The whole
+// NX * NY * NZ payload travels in one record. Per-level records were
+// considered and REFUSED: they multiply the geometry, the provenance and the
+// packing rule by NZ, they make a partially-delivered volume indistinguishable
+// from a complete one, and they let two levels of the same volume disagree
+// about their units. A volume is one object.
+//
+// LEVEL-MAJOR, ALWAYS. The payload is a dense array of DTYPE values ordered as
+// NZ contiguous z-slabs, each slab a complete NX * NY horizontal field in
+// row-major order with rows ordered by ROW_ORDER. Slab k holds level
+// LEVELS[k]. The element at (i, j, k) is at index
+//
+//     k * (NX * NY) + j * NX + i
+//
+// This is stated as LEVEL_MAJOR and it is the ONLY legal layout: a volume that
+// interleaved the vertical axis would decode as noise while remaining exactly
+// the right size, which is the failure mode no checksum catches.
+//
+// THE VERTICAL AXIS IS EXPLICIT. VERTICAL_COORDINATE names the kind of level
+// and LEVELS carries the NZ level values themselves — never a formula, never a
+// start-and-step. LEVEL_ORDER states whether LEVELS ascends or descends, so an
+// inverted profile is detectable rather than plausible. For the hybrid forms
+// the level value alone is not a height: HYBRID_A_COEFFICIENTS and
+// HYBRID_B_COEFFICIENTS plus SURFACE_PRESSURE_REFERENCE_PA are required to
+// reconstruct pressure, and a consumer that lacks them MUST refuse the volume
+// rather than treat a model level index as an altitude.
+//
+// ONE VOCABULARY WITH `$AGF`. The source class, variable, data type, codec,
+// projection and row-order enumerations are the ones declared in `$AGF` and
+// are reused verbatim. A variable means the same thing in an observed field
+// and in a model volume, or the two records cannot be compared at all.
+//
+// SAME DUAL-PAYLOAD RULE AS `$AGF`. EXACTLY ONE of PAYLOAD and PAYLOAD_CID is
+// populated; inline is legal only at or below 1048576 (1 MiB) post-codec;
+// PAYLOAD_SHA256 and PAYLOAD_SIZE_BYTES are REQUIRED in both modes. A volume will
+// almost always exceed the inline limit — that is expected, and the limit is
+// not negotiable per-record.
+//
+// SAME PROVENANCE RULE AS `$AGF`. Capability classes in the enumeration,
+// identities in the data: SOURCE_ID, PRODUCT_ID, PRODUCER, SOURCE_URI.
+//
+// ABSENT IS NOT ZERO, and an unknown numeric is written NaN. SCALE_FACTOR
+// defaults to 1.0 and ADD_OFFSET to 0.0 — the identity packing.
+
+/// The kind of vertical level LEVELS enumerates. It fixes the units of LEVELS
+/// and whether the hybrid coefficients are required.
+///
+/// ORDINALS ARE WIRE VALUES. New coordinates are APPENDED ONLY.
+enum agvVerticalCoordinate : byte {
+  UNSPECIFIED = 0,
+  /// Isobaric levels; LEVELS values are pascals.
+  PRESSURE_PA,
+  /// Geometric altitude above the reference ellipsoid; LEVELS values are
+  /// metres.
+  GEOMETRIC_HEIGHT_M,
+  /// Geopotential height; LEVELS values are metres.
+  GEOPOTENTIAL_HEIGHT_M,
+  /// Hybrid sigma-pressure levels. LEVELS carries the level values, and the
+  /// hybrid coefficients plus a surface pressure are REQUIRED to turn them
+  /// into pressures.
+  HYBRID_SIGMA,
+  /// Native model level indices. Meaningless as a height without the hybrid
+  /// coefficients; a consumer MUST NOT treat the index as an altitude.
+  MODEL_LEVEL,
+}
+
+/// Direction of the LEVELS sequence. Without it an inverted profile decodes
+/// silently.
+///
+/// ORDINALS ARE WIRE VALUES. New orders are APPENDED ONLY.
+enum agvLevelOrder : byte {
+  UNSPECIFIED = 0,
+  /// LEVELS strictly increases with index.
+  ASCENDING,
+  /// LEVELS strictly decreases with index.
+  DESCENDING,
+}
+
+/// Memory layout of the packed volume. Declared as an enumeration rather than
+/// assumed, so the one legal layout is on the wire and a future layout cannot
+/// be introduced by silent reinterpretation.
+///
+/// ORDINALS ARE WIRE VALUES. New layouts are APPENDED ONLY.
+enum agvArrayLayout : byte {
+  UNSPECIFIED = 0,
+  /// NZ contiguous z-slabs, each a complete row-major NX * NY field. Index of
+  /// (i, j, k) is k * NX * NY + j * NX + i. The ONLY legal layout.
+  LEVEL_MAJOR,
+}
+
+/// Where this volume came from and how it was produced. Provenance is DATA:
+/// specific models, products and producers are named here as strings, not in
+/// an enumeration.
+table AGVProvenance {
+  /// What kind of system produced the volume. Reuses the `$AGF` vocabulary.
+  SOURCE_CLASS: agfSourceClass = UNSPECIFIED;
+  /// Identity of the specific model instance or platform, as its operator
+  /// states it. Required: an unattributed volume is not publishable.
+  SOURCE_ID: string (required);
+  /// Identity of the specific product or configuration within SOURCE_ID.
+  PRODUCT_ID: string;
+  /// Organisation that produced and published the volume.
+  PRODUCER: string;
+  /// Replayable location the volume was retrieved from.
+  SOURCE_URI: string;
+  /// Version of the model or assimilation configuration.
+  ALGORITHM_VERSION: string;
+  /// Horizontal resolution as the producer states it, for the record; the
+  /// authoritative geometry is PROJECTION_PARAMETERS.
+  NOMINAL_RESOLUTION: string;
+  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  /// Unix milliseconds produced and retrieved.
+  PRODUCED_AT: uint64;
+  RETRIEVED_AT: uint64;
+  /// Licence terms. Empty means UNKNOWN TERMS — never public domain, never a
+  /// grant to redistribute.
+  LICENSE: string;
+  NON_COMMERCIAL_ONLY: bool;
+  CITATION: string;
+}
+
+/// Atmospheric Gridded Volume
+table AGV {
+  /// Stable identifier of this volume record.
+  ID: string (required);
+
+  // ---- Time ----
+  /// Nominal time the volume represents, ISO 8601 UTC. For a forecast this is
+  /// the validity time.
+  EPOCH: string (required);
+  /// Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC.
+  VALID_START: string;
+  VALID_END: string;
+  /// Model initialisation time, ISO 8601 UTC. ABSENT for an analysis or an
+  /// observation-derived volume.
+  FORECAST_REFERENCE_TIME: string;
+  /// Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when
+  /// FORECAST_REFERENCE_TIME is present; NaN otherwise.
+  FORECAST_LEAD_S: double;
+
+  // ---- What the numbers are ----
+  /// The physical quantity, from the `$AGF` vocabulary. It does NOT imply
+  /// units.
+  VARIABLE: agfVariable = UNSPECIFIED;
+  /// UDUNITS-compatible units of the SCALED physical value. Required.
+  UNITS: string (required);
+  /// Category meanings for a categorical VARIABLE, indexed by raw value.
+  CATEGORY_LABELS: [string];
+
+  // ---- Packing ----
+  /// Element type of the packed array, from the `$AGF` vocabulary.
+  DTYPE: agfDType = UNSPECIFIED;
+  /// Sentinel marking a cell with no data, in RAW units, before scaling.
+  FILL_VALUE: double;
+  /// physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill
+  /// cells.
+  SCALE_FACTOR: double = 1.0;
+  ADD_OFFSET: double = 0.0;
+
+  // ---- Horizontal geometry, identical in kind to `$AGF` ----
+  /// Number of columns and rows per level.
+  NX: uint32;
+  NY: uint32;
+  /// Order of the NY rows within each z-slab.
+  ROW_ORDER: agfRowOrder = UNSPECIFIED;
+  /// Projection family of the horizontal grid.
+  PROJECTION: agfProjection = UNSPECIFIED;
+  /// Explicit, authoritative georeferencing parameters. PROJ4 and WKT2
+  /// strings within remain advisory only.
+  PROJECTION_PARAMETERS: AGFProjectionParameters (required);
+
+  // ---- Vertical geometry ----
+  /// Number of levels. The payload holds exactly NX * NY * NZ elements.
+  NZ: uint32;
+  /// Kind of vertical level, which fixes the units of LEVELS.
+  VERTICAL_COORDINATE: agvVerticalCoordinate = UNSPECIFIED;
+  /// The NZ level values themselves, in payload slab order. Required and
+  /// explicit: never a start-and-step, never a formula. Length MUST equal NZ.
+  LEVELS: [double] (required);
+  /// Direction of the LEVELS sequence.
+  LEVEL_ORDER: agvLevelOrder = UNSPECIFIED;
+  /// Hybrid sigma-pressure A coefficients, pascals, one per level (or per
+  /// level interface, when INTERFACE_COEFFICIENTS is true). REQUIRED for
+  /// HYBRID_SIGMA and MODEL_LEVEL; without them a level is not a pressure.
+  HYBRID_A_COEFFICIENTS: [double];
+  /// Hybrid sigma-pressure B coefficients, dimensionless, same length rule.
+  HYBRID_B_COEFFICIENTS: [double];
+  /// True when the hybrid coefficients are stated at level INTERFACES
+  /// (NZ + 1 values) rather than at level centres (NZ values).
+  INTERFACE_COEFFICIENTS: bool;
+  /// Reference surface pressure used with the hybrid coefficients, pascals.
+  /// NaN when not applicable.
+  SURFACE_PRESSURE_REFERENCE_PA: double;
+
+  // ---- Layout ----
+  /// Memory layout of the packed volume. LEVEL_MAJOR is the only legal value.
+  ARRAY_LAYOUT: agvArrayLayout = UNSPECIFIED;
+
+  // ---- Dual payload: EXACTLY ONE of PAYLOAD and PAYLOAD_CID ----
+  /// Codec applied to the packed array, from the `$AGF` vocabulary.
+  PAYLOAD_CODEC: agfPayloadCodec = UNSPECIFIED;
+  /// Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most
+  /// 1048576. MUST be absent when PAYLOAD_CID is present.
+  PAYLOAD: [ubyte];
+  /// Content-addressed reference to the identical post-codec byte string.
+  /// MUST be absent when PAYLOAD is present, and MUST be used above 1048576
+  /// post-codec bytes — which is the normal case for a volume.
+  PAYLOAD_CID: string;
+  /// Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH
+  /// payload modes.
+  PAYLOAD_SHA256: string (required);
+  /// Length of the post-codec byte string, bytes. REQUIRED in BOTH payload
+  /// modes.
+  PAYLOAD_SIZE_BYTES: uint64;
+
+  // ---- Provenance ----
+  /// Where the volume came from. Required.
+  PROVENANCE: AGVProvenance (required);
+  /// Free-text description of the volume, not of its vendor.
+  DESCRIPTION: string;
+}
+
+root_type AGV;
+file_identifier "$AGV";

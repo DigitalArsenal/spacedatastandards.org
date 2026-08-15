@@ -226,6 +226,8 @@ class RecordType
     const CVP = 206;
     const RFL = 207;
     const RFS = 208;
+    const AGF = 209;
+    const AGV = 210;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -437,6 +439,8 @@ class RecordType
         RecordType::CVP=>"CVP",
         RecordType::RFL=>"RFL",
         RecordType::RFS=>"RFS",
+        RecordType::AGF=>"AGF",
+        RecordType::AGV=>"AGV",
     );
 
     public static function Name($e)

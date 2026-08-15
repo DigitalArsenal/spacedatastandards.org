@@ -227,6 +227,8 @@ public enum RecordType : byte
   CVP = 206,
   RFL = 207,
   RFS = 208,
+  AGF = 209,
+  AGV = 210,
 };
 
 public class RecordTypeUnion {
@@ -655,6 +657,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromRFL(RFLT _rfl) { return new RecordTypeUnion{ Type = RecordType.RFL, Value = _rfl }; }
   public RFST AsRFS() { return this.As<RFST>(); }
   public static RecordTypeUnion FromRFS(RFST _rfs) { return new RecordTypeUnion{ Type = RecordType.RFS, Value = _rfs }; }
+  public AGFT AsAGF() { return this.As<AGFT>(); }
+  public static RecordTypeUnion FromAGF(AGFT _agf) { return new RecordTypeUnion{ Type = RecordType.AGF, Value = _agf }; }
+  public AGVT AsAGV() { return this.As<AGVT>(); }
+  public static RecordTypeUnion FromAGV(AGVT _agv) { return new RecordTypeUnion{ Type = RecordType.AGV, Value = _agv }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -867,6 +873,8 @@ public class RecordTypeUnion {
       case RecordType.CVP: return CVP.Pack(builder, _o.AsCVP()).Value;
       case RecordType.RFL: return RFL.Pack(builder, _o.AsRFL()).Value;
       case RecordType.RFS: return RFS.Pack(builder, _o.AsRFS()).Value;
+      case RecordType.AGF: return AGF.Pack(builder, _o.AsAGF()).Value;
+      case RecordType.AGV: return AGV.Pack(builder, _o.AsAGV()).Value;
     }
   }
 }
@@ -1503,6 +1511,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.RFS:
         result = RFSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AGF:
+        result = AGFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AGV:
+        result = AGVVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

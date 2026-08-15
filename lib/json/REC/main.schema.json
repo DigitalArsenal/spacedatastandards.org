@@ -137,6 +137,42 @@
       "type" : "string",
       "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE"]
     },
+    "agfSourceClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEO_IMAGER", "LEO_IMAGER", "NWP_MODEL", "REANALYSIS", "GROUND_RADAR"]
+    },
+    "agfVariable" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CLOUD_OPTICAL_DEPTH", "CLOUD_TOP_HEIGHT", "CLOUD_TOP_PRESSURE", "CLOUD_TOP_TEMPERATURE", "CLOUD_MASK", "CLOUD_FRACTION", "CLOUD_LIQUID_MIXING_RATIO", "CLOUD_ICE_MIXING_RATIO"]
+    },
+    "agfDType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "UINT8", "INT8", "UINT16", "INT16", "UINT32", "INT32", "FLOAT32", "FLOAT64"]
+    },
+    "agfPayloadCodec" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RAW", "ZSTD", "DEFLATE"]
+    },
+    "agfProjection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEOSTATIONARY", "LATLON_REGULAR", "LAMBERT_CONFORMAL", "POLAR_STEREOGRAPHIC", "MERCATOR"]
+    },
+    "agfRowOrder" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FIRST_ROW_NORTH", "FIRST_ROW_SOUTH"]
+    },
+    "agvVerticalCoordinate" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PRESSURE_PA", "GEOMETRIC_HEIGHT_M", "GEOPOTENTIAL_HEIGHT_M", "HYBRID_SIGMA", "MODEL_LEVEL"]
+    },
+    "agvLevelOrder" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ASCENDING", "DESCENDING"]
+    },
+    "agvArrayLayout" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "LEVEL_MAJOR"]
+    },
     "analyticProfile" : {
       "type" : "string",
       "enum": ["SPECTRAL", "PHOTOMETRIC", "ASTROMETRIC", "RADIOMETRIC", "SIGNATURE", "FEATURE_EXTRACTION", "CHANGE_DETECTION", "CLASSIFICATION", "FUSION"]
@@ -1759,7 +1795,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "AGF", "AGV"]
     },
     "LKS" : {
       "type" : "object",
@@ -4291,6 +4327,458 @@
                 "type" : "array", "items" : {"$ref" : "#/definitions/AEMSegment"}
               }
       },
+      "additionalProperties" : false
+    },
+    "AGFProjectionParameters" : {
+      "type" : "object",
+      "description" : "Explicit georeferencing parameters. Which members are meaningful is fixed\nby AGF.PROJECTION. Members that do not apply to the stated projection are\nwritten NaN, never 0 — a zero standard parallel is a real parallel.\n\nTHIS TABLE IS AUTHORITATIVE. PROJ4_STRING and WKT2_STRING never override it.",
+      "properties" : {
+        "SEMI_MAJOR_AXIS_M" : {
+                "type" : "number",
+                "description" : "Semi-major axis of the reference ellipsoid, metres."
+              },
+        "SEMI_MINOR_AXIS_M" : {
+                "type" : "number",
+                "description" : "Semi-minor axis of the reference ellipsoid, metres. Equal to the\nsemi-major axis for a spherical Earth."
+              },
+        "INVERSE_FLATTENING" : {
+                "type" : "number",
+                "description" : "Inverse flattening, when the figure is stated that way. NaN if the\nsemi-axes are the stated form."
+              },
+        "DX" : {
+                "type" : "number",
+                "description" : "Cell spacing along the X and Y axes, in the units named by\nGRID_SPACING_UNITS."
+              },
+        "DY" : {
+                "type" : "number"
+              },
+        "GRID_SPACING_UNITS" : {
+                "type" : "string",
+                "description" : "UDUNITS units of DX, DY, X_ORIGIN and Y_ORIGIN. Metres for the projected\nforms; radians for GEOSTATIONARY scan angles; degrees for\nLATLON_REGULAR."
+              },
+        "X_ORIGIN" : {
+                "type" : "number",
+                "description" : "Projection coordinate of the CENTRE of cell (0, 0), in\nGRID_SPACING_UNITS. The centre, not a corner: a half-cell offset is the\nclassic silent georeferencing error."
+              },
+        "Y_ORIGIN" : {
+                "type" : "number"
+              },
+        "CENTRAL_MERIDIAN_DEG" : {
+                "type" : "number",
+                "description" : "Longitude of the projection origin or central meridian, degrees east."
+              },
+        "ORIGIN_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Latitude of the projection origin, degrees north."
+              },
+        "STANDARD_PARALLEL_1_DEG" : {
+                "type" : "number",
+                "description" : "Latitude at which the projection is true to scale."
+              },
+        "STANDARD_PARALLEL_2_DEG" : {
+                "type" : "number",
+                "description" : "Second standard parallel, LAMBERT_CONFORMAL only."
+              },
+        "SCALE_FACTOR_AT_ORIGIN" : {
+                "type" : "number",
+                "description" : "Scale factor at the origin or central meridian."
+              },
+        "FALSE_EASTING_M" : {
+                "type" : "number",
+                "description" : "False easting and northing applied to projected coordinates, metres."
+              },
+        "FALSE_NORTHING_M" : {
+                "type" : "number"
+              },
+        "SUB_SATELLITE_LON_DEG" : {
+                "type" : "number",
+                "description" : "Longitude of the sub-satellite point, degrees east."
+              },
+        "PERSPECTIVE_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Height of the perspective point above the ellipsoid, metres."
+              },
+        "SWEEP_ANGLE_AXIS_IS_X" : {
+                "type" : "boolean",
+                "description" : "True when the scan angles are swept along the Earth's sweep axis rather\nthan the instrument's. The two conventions differ by a rotation and\nmis-georeference the whole disc."
+              },
+        "PROJ4_STRING" : {
+                "type" : "string",
+                "description" : "Convenience rendering of this projection. ADVISORY, NEVER AUTHORITATIVE:\nwhere it disagrees with the explicit parameters above, the explicit\nparameters win."
+              },
+        "WKT2_STRING" : {
+                "type" : "string",
+                "description" : "Convenience WKT2 rendering. ADVISORY, NEVER AUTHORITATIVE, same rule."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGFProvenance" : {
+      "type" : "object",
+      "description" : "Where this field came from and how it was produced. Provenance is DATA:\nspecific instruments, products and producers are named here as strings, not\nin an enumeration.",
+      "properties" : {
+        "SOURCE_CLASS" : {
+                "$ref" : "#/definitions/agfSourceClass",
+                "description" : "What kind of system produced the field."
+              },
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific platform, instrument or model instance, as its\noperator states it. Required: an unattributed field is not publishable."
+              },
+        "PRODUCT_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific product or algorithm output within SOURCE_ID."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Organisation that produced and published the field."
+              },
+        "SOURCE_URI" : {
+                "type" : "string",
+                "description" : "Replayable location the field was retrieved from."
+              },
+        "ALGORITHM_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the retrieval or model configuration."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "PRODUCED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds produced and retrieved."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean"
+              },
+        "CITATION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE_ID"],
+      "additionalProperties" : false
+    },
+    "AGF" : {
+      "type" : "object",
+      "description" : "Atmospheric Gridded Field",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this field record."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Nominal time the field represents, ISO 8601 UTC. For an observation this\nis the observation time; for a forecast it is the validity time."
+              },
+        "VALID_START" : {
+                "type" : "string",
+                "description" : "Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC. A\nfield is a sample of a continuous atmosphere and is not valid forever."
+              },
+        "VALID_END" : {
+                "type" : "string"
+              },
+        "FORECAST_REFERENCE_TIME" : {
+                "type" : "string",
+                "description" : "Model initialisation time, ISO 8601 UTC. ABSENT for an observation — an\nobservation has no forecast reference time, and an empty string here is\nwhat distinguishes the two cases."
+              },
+        "FORECAST_LEAD_S" : {
+                "type" : "number",
+                "description" : "Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when\nFORECAST_REFERENCE_TIME is present; NaN otherwise. It is never inferred\nto be zero for an observation."
+              },
+        "VARIABLE" : {
+                "$ref" : "#/definitions/agfVariable",
+                "description" : "The physical quantity. It does NOT imply units."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "UDUNITS-compatible units of the SCALED physical value. Required: the\nenum names a quantity, this names its scale, and a field without it is\nuninterpretable."
+              },
+        "CATEGORY_LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Category meanings for a categorical VARIABLE such as CLOUD_MASK, indexed\nby raw value. Empty for continuous variables."
+              },
+        "DTYPE" : {
+                "$ref" : "#/definitions/agfDType",
+                "description" : "Element type of the packed array."
+              },
+        "FILL_VALUE" : {
+                "type" : "number",
+                "description" : "Sentinel marking a cell with no data, in RAW units, before scaling."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill\ncells. Defaults are the identity packing."
+              },
+        "ADD_OFFSET" : {
+                "type" : "number"
+              },
+        "NX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns and rows. The payload holds exactly NX * NY elements."
+              },
+        "NY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ROW_ORDER" : {
+                "$ref" : "#/definitions/agfRowOrder",
+                "description" : "Order of the NY rows within the payload."
+              },
+        "PROJECTION" : {
+                "$ref" : "#/definitions/agfProjection",
+                "description" : "Projection family of the grid."
+              },
+        "PROJECTION_PARAMETERS" : {
+                "$ref" : "#/definitions/AGFProjectionParameters",
+                "description" : "Explicit, authoritative georeferencing parameters."
+              },
+        "PAYLOAD_CODEC" : {
+                "$ref" : "#/definitions/agfPayloadCodec",
+                "description" : "Codec applied to the packed array."
+              },
+        "PAYLOAD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most\n1048576. MUST be absent when PAYLOAD_CID is present."
+              },
+        "PAYLOAD_CID" : {
+                "type" : "string",
+                "description" : "Content-addressed reference to the identical post-codec byte string.\nMUST be absent when PAYLOAD is present, and MUST be used when the\npost-codec size exceeds 1048576 bytes."
+              },
+        "PAYLOAD_SHA256" : {
+                "type" : "string",
+                "description" : "Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH\npayload modes — it is what proves an inline and a fetched payload are\nthe same object."
+              },
+        "PAYLOAD_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the post-codec byte string, bytes. REQUIRED in BOTH payload\nmodes; it is what makes the 1 MiB inline rule checkable without\ndecoding. Zero is never valid for a populated field."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/AGFProvenance",
+                "description" : "Where the field came from. Required."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Free-text description of the field, not of its vendor."
+              }
+      },
+      "required" : ["ID", "EPOCH", "UNITS", "PROJECTION_PARAMETERS", "PAYLOAD_SHA256", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "AGVProvenance" : {
+      "type" : "object",
+      "description" : "Where this volume came from and how it was produced. Provenance is DATA:\nspecific models, products and producers are named here as strings, not in\nan enumeration.",
+      "properties" : {
+        "SOURCE_CLASS" : {
+                "$ref" : "#/definitions/agfSourceClass",
+                "description" : "What kind of system produced the volume. Reuses the `$AGF` vocabulary."
+              },
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific model instance or platform, as its operator\nstates it. Required: an unattributed volume is not publishable."
+              },
+        "PRODUCT_ID" : {
+                "type" : "string",
+                "description" : "Identity of the specific product or configuration within SOURCE_ID."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Organisation that produced and published the volume."
+              },
+        "SOURCE_URI" : {
+                "type" : "string",
+                "description" : "Replayable location the volume was retrieved from."
+              },
+        "ALGORITHM_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the model or assimilation configuration."
+              },
+        "NOMINAL_RESOLUTION" : {
+                "type" : "string",
+                "description" : "Horizontal resolution as the producer states it, for the record; the\nauthoritative geometry is PROJECTION_PARAMETERS."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced or transformed it."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "PRODUCED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds produced and retrieved."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean"
+              },
+        "CITATION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE_ID"],
+      "additionalProperties" : false
+    },
+    "AGV" : {
+      "type" : "object",
+      "description" : "Atmospheric Gridded Volume",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this volume record."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Nominal time the volume represents, ISO 8601 UTC. For a forecast this is\nthe validity time."
+              },
+        "VALID_START" : {
+                "type" : "string",
+                "description" : "Half-open validity window [VALID_START, VALID_END), ISO 8601 UTC."
+              },
+        "VALID_END" : {
+                "type" : "string"
+              },
+        "FORECAST_REFERENCE_TIME" : {
+                "type" : "string",
+                "description" : "Model initialisation time, ISO 8601 UTC. ABSENT for an analysis or an\nobservation-derived volume."
+              },
+        "FORECAST_LEAD_S" : {
+                "type" : "number",
+                "description" : "Seconds from FORECAST_REFERENCE_TIME to EPOCH. Meaningful ONLY when\nFORECAST_REFERENCE_TIME is present; NaN otherwise."
+              },
+        "VARIABLE" : {
+                "$ref" : "#/definitions/agfVariable",
+                "description" : "The physical quantity, from the `$AGF` vocabulary. It does NOT imply\nunits."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "UDUNITS-compatible units of the SCALED physical value. Required."
+              },
+        "CATEGORY_LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Category meanings for a categorical VARIABLE, indexed by raw value."
+              },
+        "DTYPE" : {
+                "$ref" : "#/definitions/agfDType",
+                "description" : "Element type of the packed array, from the `$AGF` vocabulary."
+              },
+        "FILL_VALUE" : {
+                "type" : "number",
+                "description" : "Sentinel marking a cell with no data, in RAW units, before scaling."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "physical = raw * SCALE_FACTOR + ADD_OFFSET, applied only to non-fill\ncells."
+              },
+        "ADD_OFFSET" : {
+                "type" : "number"
+              },
+        "NX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns and rows per level."
+              },
+        "NY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ROW_ORDER" : {
+                "$ref" : "#/definitions/agfRowOrder",
+                "description" : "Order of the NY rows within each z-slab."
+              },
+        "PROJECTION" : {
+                "$ref" : "#/definitions/agfProjection",
+                "description" : "Projection family of the horizontal grid."
+              },
+        "PROJECTION_PARAMETERS" : {
+                "$ref" : "#/definitions/AGFProjectionParameters",
+                "description" : "Explicit, authoritative georeferencing parameters. PROJ4 and WKT2\nstrings within remain advisory only."
+              },
+        "NZ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of levels. The payload holds exactly NX * NY * NZ elements."
+              },
+        "VERTICAL_COORDINATE" : {
+                "$ref" : "#/definitions/agvVerticalCoordinate",
+                "description" : "Kind of vertical level, which fixes the units of LEVELS."
+              },
+        "LEVELS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The NZ level values themselves, in payload slab order. Required and\nexplicit: never a start-and-step, never a formula. Length MUST equal NZ."
+              },
+        "LEVEL_ORDER" : {
+                "$ref" : "#/definitions/agvLevelOrder",
+                "description" : "Direction of the LEVELS sequence."
+              },
+        "HYBRID_A_COEFFICIENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Hybrid sigma-pressure A coefficients, pascals, one per level (or per\nlevel interface, when INTERFACE_COEFFICIENTS is true). REQUIRED for\nHYBRID_SIGMA and MODEL_LEVEL; without them a level is not a pressure."
+              },
+        "HYBRID_B_COEFFICIENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Hybrid sigma-pressure B coefficients, dimensionless, same length rule."
+              },
+        "INTERFACE_COEFFICIENTS" : {
+                "type" : "boolean",
+                "description" : "True when the hybrid coefficients are stated at level INTERFACES\n(NZ + 1 values) rather than at level centres (NZ values)."
+              },
+        "SURFACE_PRESSURE_REFERENCE_PA" : {
+                "type" : "number",
+                "description" : "Reference surface pressure used with the hybrid coefficients, pascals.\nNaN when not applicable."
+              },
+        "ARRAY_LAYOUT" : {
+                "$ref" : "#/definitions/agvArrayLayout",
+                "description" : "Memory layout of the packed volume. LEVEL_MAJOR is the only legal value."
+              },
+        "PAYLOAD_CODEC" : {
+                "$ref" : "#/definitions/agfPayloadCodec",
+                "description" : "Codec applied to the packed array, from the `$AGF` vocabulary."
+              },
+        "PAYLOAD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Inline post-codec bytes. LEGAL ONLY when PAYLOAD_SIZE_BYTES is at most\n1048576. MUST be absent when PAYLOAD_CID is present."
+              },
+        "PAYLOAD_CID" : {
+                "type" : "string",
+                "description" : "Content-addressed reference to the identical post-codec byte string.\nMUST be absent when PAYLOAD is present, and MUST be used above 1048576\npost-codec bytes — which is the normal case for a volume."
+              },
+        "PAYLOAD_SHA256" : {
+                "type" : "string",
+                "description" : "Lowercase hex SHA-256 of the post-codec byte string. REQUIRED in BOTH\npayload modes."
+              },
+        "PAYLOAD_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the post-codec byte string, bytes. REQUIRED in BOTH payload\nmodes."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/AGVProvenance",
+                "description" : "Where the volume came from. Required."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Free-text description of the volume, not of its vendor."
+              }
+      },
+      "required" : ["ID", "EPOCH", "UNITS", "PROJECTION_PARAMETERS", "LEVELS", "PAYLOAD_SHA256", "PROVENANCE"],
       "additionalProperties" : false
     },
     "ANI" : {
@@ -35592,7 +36080,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/AGF" },{ "$ref" : "#/definitions/AGV" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

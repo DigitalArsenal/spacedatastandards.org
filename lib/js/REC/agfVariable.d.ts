@@ -1,0 +1,43 @@
+/**
+ * The physical quantity carried in the payload. It says WHICH quantity, never
+ * in what units — UNITS is the sole authority on scale.
+ *
+ * ORDINALS ARE WIRE VALUES. New variables are APPENDED ONLY.
+ */
+export declare enum agfVariable {
+    UNSPECIFIED = 0,
+    /**
+     * Dimensionless vertical optical depth of the cloud column.
+     */
+    CLOUD_OPTICAL_DEPTH = 1,
+    /**
+     * Height of the cloud top above a stated reference.
+     */
+    CLOUD_TOP_HEIGHT = 2,
+    /**
+     * Atmospheric pressure at the cloud top.
+     */
+    CLOUD_TOP_PRESSURE = 3,
+    /**
+     * Brightness or thermodynamic temperature at the cloud top.
+     */
+    CLOUD_TOP_TEMPERATURE = 4,
+    /**
+     * Categorical cloudy / clear classification. Category meanings are stated
+     * in CATEGORY_LABELS; an unlabelled mask is uninterpretable.
+     */
+    CLOUD_MASK = 5,
+    /**
+     * Fraction of the cell covered by cloud.
+     */
+    CLOUD_FRACTION = 6,
+    /**
+     * Mass mixing ratio of cloud liquid water.
+     */
+    CLOUD_LIQUID_MIXING_RATIO = 7,
+    /**
+     * Mass mixing ratio of cloud ice.
+     */
+    CLOUD_ICE_MIXING_RATIO = 8
+}
+//# sourceMappingURL=agfVariable.d.ts.map

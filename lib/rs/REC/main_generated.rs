@@ -209,6 +209,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -343,10 +345,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 208;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 210;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 209] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 211] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -556,6 +558,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 209] = [
   RecordType::CVP,
   RecordType::RFL,
   RecordType::RFS,
+  RecordType::AGF,
+  RecordType::AGV,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -786,9 +790,11 @@ impl RecordType {
   pub const CVP: Self = Self(206);
   pub const RFL: Self = Self(207);
   pub const RFS: Self = Self(208);
+  pub const AGF: Self = Self(209);
+  pub const AGV: Self = Self(210);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 208;
+  pub const ENUM_MAX: u8 = 210;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -999,6 +1005,8 @@ impl RecordType {
     Self::CVP,
     Self::RFL,
     Self::RFS,
+    Self::AGF,
+    Self::AGV,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1212,6 +1220,8 @@ impl RecordType {
       Self::CVP => Some("CVP"),
       Self::RFL => Some("RFL"),
       Self::RFS => Some("RFS"),
+      Self::AGF => Some("AGF"),
+      Self::AGV => Some("AGV"),
       _ => None,
     }
   }
@@ -1481,6 +1491,8 @@ pub enum RecordTypeT {
   CVP(alloc::boxed::Box<CVPT>),
   RFL(alloc::boxed::Box<RFLT>),
   RFS(alloc::boxed::Box<RFST>),
+  AGF(alloc::boxed::Box<AGFT>),
+  AGV(alloc::boxed::Box<AGVT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1699,6 +1711,8 @@ impl RecordTypeT {
       Self::CVP(_) => RecordType::CVP,
       Self::RFL(_) => RecordType::RFL,
       Self::RFS(_) => RecordType::RFS,
+      Self::AGF(_) => RecordType::AGF,
+      Self::AGV(_) => RecordType::AGV,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1912,6 +1926,8 @@ impl RecordTypeT {
       Self::CVP(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFL(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AGF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AGV(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6282,6 +6298,48 @@ impl RecordTypeT {
   pub fn as_rfs_mut(&mut self) -> Option<&mut RFST> {
     if let Self::RFS(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned AGFT, setting the union to NONE.
+  pub fn take_agf(&mut self) -> Option<alloc::boxed::Box<AGFT>> {
+    if let Self::AGF(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::AGF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the AGFT.
+  pub fn as_agf(&self) -> Option<&AGFT> {
+    if let Self::AGF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the AGFT.
+  pub fn as_agf_mut(&mut self) -> Option<&mut AGFT> {
+    if let Self::AGF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned AGVT, setting the union to NONE.
+  pub fn take_agv(&mut self) -> Option<alloc::boxed::Box<AGVT>> {
+    if let Self::AGV(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::AGV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the AGVT.
+  pub fn as_agv(&self) -> Option<&AGVT> {
+    if let Self::AGV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the AGVT.
+  pub fn as_agv_mut(&mut self) -> Option<&mut AGVT> {
+    if let Self::AGV(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7361,6 +7419,16 @@ impl<'a> Record<'a> {
       RecordType::RFS => RecordTypeT::RFS(alloc::boxed::Box::new(
         self.value_as_rfs()
             .expect("Invalid union table, expected `RecordType::RFS`.")
+            .unpack()
+      )),
+      RecordType::AGF => RecordTypeT::AGF(alloc::boxed::Box::new(
+        self.value_as_agf()
+            .expect("Invalid union table, expected `RecordType::AGF`.")
+            .unpack()
+      )),
+      RecordType::AGV => RecordTypeT::AGV(alloc::boxed::Box::new(
+        self.value_as_agv()
+            .expect("Invalid union table, expected `RecordType::AGV`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10517,6 +10585,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_agf(&self) -> Option<AGF<'a>> {
+    if self.value_type() == RecordType::AGF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AGF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_agv(&self) -> Option<AGV<'a>> {
+    if self.value_type() == RecordType::AGV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AGV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10735,6 +10833,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::CVP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CVP>>("RecordType::CVP", pos),
           RecordType::RFL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFL>>("RecordType::RFL", pos),
           RecordType::RFS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFS>>("RecordType::RFS", pos),
+          RecordType::AGF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<AGF>>("RecordType::AGF", pos),
+          RecordType::AGV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<AGV>>("RecordType::AGV", pos),
           _ => Ok(()),
         }
      })?
@@ -12247,6 +12347,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::RFS => {
           if let Some(x) = self.value_as_rfs() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AGF => {
+          if let Some(x) = self.value_as_agf() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AGV => {
+          if let Some(x) = self.value_as_agv() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
