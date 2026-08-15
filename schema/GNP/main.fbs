@@ -1,0 +1,215 @@
+// Hash: 77283a08e55060b787e8c7890d618b3e9bb5769fe69163101c2c6f2fec6489fb
+// Version: 1.189.0
+// -----------------------------------END_HEADER
+/// Broad feature class of a gazetteer place, as the consulted gazetteer
+/// states it. A publisher encodes the class ITS SOURCE STATES and never
+/// re-derives one from the place name, population, or geometry. The source's
+/// own single-letter class token is retained verbatim in FEATURE_CLASS_CODE,
+/// so a class this enum does not model is never lost. Ordinals are wire
+/// values: append only; never reorder or reuse.
+enum gnpFeatureClass : byte {
+  /// Administrative boundary or political entity.
+  ADMINISTRATIVE,
+  /// Hydrographic feature: stream, lake, sea, glacier, spring.
+  HYDROGRAPHIC,
+  /// Area feature: park, reserve, oilfield, region.
+  AREA,
+  /// Populated place: city, town, village, capital, section of a place.
+  POPULATED_PLACE,
+  /// Road or railroad feature.
+  TRANSPORT,
+  /// Spot feature: building, farm, facility, church, mine.
+  SPOT,
+  /// Hypsographic feature: mountain, hill, rock, ridge, plain.
+  HYPSOGRAPHIC,
+  /// Undersea feature: bank, ridge, trench, seamount.
+  UNDERSEA,
+  /// Vegetation feature: forest, heath, grove.
+  VEGETATION,
+  /// The gazetteer names a class this enum does not model, or publishes none.
+  /// FEATURE_CLASS defaults here so an unset field can never be read as
+  /// ADMINISTRATIVE, which holds ordinal 0. The source token, when there is
+  /// one, is still carried in FEATURE_CLASS_CODE.
+  UNSPECIFIED
+}
+
+/// One name a place is known by, beside its primary NAME. Every attribute is
+/// carried as the gazetteer publishes it; a consumer choosing a display name
+/// applies its own policy over these flags and never has the choice baked in
+/// by the publisher.
+table GNPName {
+  /// The alternate name verbatim, in its own script, unnormalized.
+  NAME:string (required);
+  /// ISO 639 language tag when the gazetteer states one. A gazetteer may also
+  /// state a non-language tag for a link or a postal, IATA, ICAO, or similar
+  /// coded name; that token is carried verbatim rather than discarded.
+  LANGUAGE:string;
+  /// The gazetteer marks this as the preferred name for its language.
+  IS_PREFERRED:bool = false;
+  /// The gazetteer marks this as a short form.
+  IS_SHORT:bool = false;
+  /// The gazetteer marks this as colloquial or unofficial.
+  IS_COLLOQUIAL:bool = false;
+  /// The gazetteer marks this name as no longer in use.
+  IS_HISTORIC:bool = false;
+  /// Period the name was in use, verbatim as the gazetteer states it. Not
+  /// normalized to RFC 3339: gazetteers publish partial and era-qualified
+  /// dates here, and coercion would invent precision.
+  VALID_FROM:string;
+  VALID_TO:string;
+}
+
+/// Dataset lineage and redistribution terms for one gazetteer place.
+///
+/// Required on every record: a redistributed place whose dataset, epoch, and
+/// licence are unstated is not publishable. Dataset identity is DATA:
+/// DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the gazetteer
+/// states about itself. The standard names no gazetteer, dataset, or site.
+table GNPProvenance {
+  /// Publisher-stable, lowercase identifier for the gazetteer this place was
+  /// taken from, unique within the publisher's own dataset registry. Never a
+  /// display name and never a URL.
+  DATASET_ID:string (required);
+  /// The dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition this place
+  /// was decoded from. The edition boundary, not the fetch: two records
+  /// carrying the same DATASET_ID and DATASET_EPOCH were cut from the same
+  /// bytes and are directly comparable.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when the publisher
+  /// distributes one, so an epoch can be verified rather than trusted.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter, or file selection used, so the same rows can be
+  /// recovered by repeating the fetch.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Required: there is no encoding for a
+  /// redistributed place whose terms are unstated. A dataset that publishes no
+  /// terms is recorded as publishing no terms; unknown terms are never public
+  /// domain and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as that dataset publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  /// Required whenever the terms are attribution-bearing, which is the common
+  /// case for open gazetteers, and carried verbatim so a downstream surface
+  /// can render it without composing its own credit line.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// This gazetteer's own row identifier for the place, verbatim. The join key
+  /// back to the source dataset; never re-minted by the publisher.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC date on which the gazetteer last modified this row, as the
+  /// gazetteer states it. Distinct from DATASET_EPOCH: an unchanged row keeps
+  /// its modification date across editions, which is what makes incremental
+  /// sync possible.
+  NATIVE_MODIFIED:string;
+}
+
+/// Gazetteer Named Place
+///
+/// One named geographic place as a gazetteer publishes it: its names, its
+/// position on WGS 84, its feature classification, its administrative
+/// containment, and the dataset edition and licence it was redistributed
+/// under. The record is a NAME-TO-PLACE lookup surface — place search,
+/// geocoding, and administrative resolution — and is deliberately not a
+/// facility, station, or emitter record: $SIT carries an operational
+/// facility, $GST a geodetic tracking station, $TBS a terrestrial base-station
+/// site. A place gains meaning from those records by being joined to, never by
+/// being conflated with them.
+///
+/// Positions are decimal degrees on WGS 84 and elevations are metres,
+/// unconverted. A consumer needing other units converts at the join,
+/// explicitly.
+table GNP {
+  /// Publisher-stable identifier for this place record. Never the gazetteer's
+  /// own row identifier, which rides verbatim in SOURCE.NATIVE_ID.
+  ID:string (required);
+  /// Primary name of the place, verbatim in its own script, unnormalized.
+  NAME:string (required);
+  /// Plain-ASCII rendering of NAME when the gazetteer publishes one. A search
+  /// and sort convenience, never a substitute for NAME.
+  ASCII_NAME:string;
+  /// Every other name the gazetteer publishes for this place.
+  ALTERNATE_NAMES:[GNPName];
+  /// Latitude in decimal degrees on WGS 84, positive north.
+  LATITUDE:double;
+  /// Longitude in decimal degrees on WGS 84, positive east.
+  LONGITUDE:double;
+  /// Elevation in metres above the WGS 84 ellipsoid-referenced vertical datum
+  /// the gazetteer states, as published. Zero means unpublished, never sea
+  /// level; a place at sea level is distinguished by ELEVATION_PUBLISHED.
+  ELEVATION_M:double;
+  /// ELEVATION_M carries a published value. False marks a gazetteer that
+  /// publishes no elevation for this place.
+  ELEVATION_PUBLISHED:bool = false;
+  /// Elevation in metres sampled from a digital elevation model, when the
+  /// gazetteer publishes a model-derived value beside or instead of a surveyed
+  /// one. Kept separate: a model sample is not a survey and the two must never
+  /// silently substitute for one another.
+  DEM_ELEVATION_M:double;
+  /// Name of the digital elevation model DEM_ELEVATION_M was sampled from,
+  /// verbatim as the gazetteer states it.
+  DEM_MODEL:string;
+  /// Broad feature class this gazetteer assigns.
+  FEATURE_CLASS:gnpFeatureClass = UNSPECIFIED;
+  /// The gazetteer's own class token, verbatim, so a class outside
+  /// gnpFeatureClass survives a round trip.
+  FEATURE_CLASS_CODE:string;
+  /// The gazetteer's fine-grained feature code, verbatim.
+  FEATURE_CODE:string;
+  /// Human-readable expansion of FEATURE_CODE, as the gazetteer publishes it.
+  /// A display string, never a key.
+  FEATURE_NAME:string;
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the gazetteer states it.
+  COUNTRY_CODE:string;
+  /// Country name as the gazetteer publishes it. A display name, never a key:
+  /// consumers key on COUNTRY_CODE.
+  COUNTRY_NAME:string;
+  /// Further ISO 3166-1 alpha-2 codes for places the gazetteer reports as
+  /// spanning or being disputed between several countries. Order carries no
+  /// precedence and no sovereignty claim.
+  ALTERNATE_COUNTRY_CODES:[string];
+  /// First-order administrative division code within COUNTRY_CODE, verbatim.
+  ADMIN1_CODE:string;
+  /// Resolved name of that division. Carried beside the code so a consumer
+  /// need not hold the division tables to render a place.
+  ADMIN1_NAME:string;
+  /// Second-order administrative division code, verbatim.
+  ADMIN2_CODE:string;
+  /// Resolved name of that division.
+  ADMIN2_NAME:string;
+  /// Third- and fourth-order division codes, verbatim. Gazetteers publish
+  /// these as codes only; a name is carried when one is published.
+  ADMIN3_CODE:string;
+  ADMIN3_NAME:string;
+  ADMIN4_CODE:string;
+  ADMIN4_NAME:string;
+  /// Population as the gazetteer publishes it. Zero means unpublished, never
+  /// uninhabited.
+  POPULATION:long;
+  /// IANA time zone identifier for the place, verbatim.
+  TIME_ZONE_ID:string;
+  /// Offset from UTC in hours the gazetteer states for that zone outside
+  /// daylight saving, and under it. Carried as published; a consumer needing
+  /// an instant-correct offset resolves TIME_ZONE_ID against a current tz
+  /// database rather than trusting these.
+  TIME_ZONE_UTC_OFFSET_H:double;
+  /// Offset from UTC in hours under daylight saving.
+  TIME_ZONE_DST_OFFSET_H:double;
+  /// Dataset lineage and redistribution terms. Required: a place with no named
+  /// dataset, epoch, and licence is not publishable.
+  SOURCE:GNPProvenance (required);
+}
+
+root_type GNP;
+file_identifier "$GNP";

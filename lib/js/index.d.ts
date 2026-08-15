@@ -66,6 +66,7 @@ export * as GDI from './GDI/main.js';
 export * as GEO from './GEO/main.js';
 export * as GJN from './GJN/main.js';
 export * as GNO from './GNO/main.js';
+export * as GNP from './GNP/main.js';
 export * as GPX from './GPX/main.js';
 export * as GRV from './GRV/main.js';
 export * as GST from './GST/main.js';

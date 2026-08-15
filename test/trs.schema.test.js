@@ -122,7 +122,9 @@ describe("TRS schema generation", () => {
     const contract = JSON.parse(ordinals);
     assert.equal(contract.ordinals.TRS, 209);
     assert.equal(contract.ordinals.RFS, 208);
-    assert.equal(contract.member_count, 209);
+    // TRS's own ordinal is frozen at 209; member_count grows as later
+    // standards append after it ($GNP took 210).
+    assert.ok(contract.member_count >= 209);
     assert.match(recSource, /RFL,\s*RFS,\s*TRS/s);
     assert.match(recordTypeTs, /RFS = 208/);
     assert.match(recordTypeTs, /TRS = 209/);

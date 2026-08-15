@@ -1,0 +1,432 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "gnpFeatureClass": {
+      "type": "string",
+      "enum": [
+        "ADMINISTRATIVE",
+        "HYDROGRAPHIC",
+        "AREA",
+        "POPULATED_PLACE",
+        "TRANSPORT",
+        "SPOT",
+        "HYPSOGRAPHIC",
+        "UNDERSEA",
+        "VEGETATION",
+        "UNSPECIFIED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ADMINISTRATIVE": {
+          "value": 0,
+          "description": "Administrative boundary or political entity."
+        },
+        "HYDROGRAPHIC": {
+          "value": 1,
+          "description": "Hydrographic feature: stream, lake, sea, glacier, spring."
+        },
+        "AREA": {
+          "value": 2,
+          "description": "Area feature: park, reserve, oilfield, region."
+        },
+        "POPULATED_PLACE": {
+          "value": 3,
+          "description": "Populated place: city, town, village, capital, section of a place."
+        },
+        "TRANSPORT": {
+          "value": 4,
+          "description": "Road or railroad feature."
+        },
+        "SPOT": {
+          "value": 5,
+          "description": "Spot feature: building, farm, facility, church, mine."
+        },
+        "HYPSOGRAPHIC": {
+          "value": 6,
+          "description": "Hypsographic feature: mountain, hill, rock, ridge, plain."
+        },
+        "UNDERSEA": {
+          "value": 7,
+          "description": "Undersea feature: bank, ridge, trench, seamount."
+        },
+        "VEGETATION": {
+          "value": 8,
+          "description": "Vegetation feature: forest, heath, grove."
+        },
+        "UNSPECIFIED": {
+          "value": 9,
+          "description": "The gazetteer names a class this enum does not model, or publishes none. FEATURE_CLASS defaults here so an unset field can never be read as ADMINISTRATIVE, which holds ordinal 0. The source token, when there is one, is still carried in FEATURE_CLASS_CODE."
+        }
+      }
+    },
+    "GNPName": {
+      "type": "object",
+      "description": "One name a place is known by, beside its primary NAME. Every attribute is\ncarried as the gazetteer publishes it; a consumer choosing a display name\napplies its own policy over these flags and never has the choice baked in\nby the publisher.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "The alternate name verbatim, in its own script, unnormalized.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LANGUAGE": {
+          "type": "string",
+          "description": "ISO 639 language tag when the gazetteer states one. A gazetteer may also\nstate a non-language tag for a link or a postal, IATA, ICAO, or similar\ncoded name; that token is carried verbatim rather than discarded.",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_PREFERRED": {
+          "type": "boolean",
+          "description": "The gazetteer marks this as the preferred name for its language.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "IS_SHORT": {
+          "type": "boolean",
+          "description": "The gazetteer marks this as a short form.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "IS_COLLOQUIAL": {
+          "type": "boolean",
+          "description": "The gazetteer marks this as colloquial or unofficial.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "IS_HISTORIC": {
+          "type": "boolean",
+          "description": "The gazetteer marks this name as no longer in use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "VALID_FROM": {
+          "type": "string",
+          "description": "Period the name was in use, verbatim as the gazetteer states it. Not\nnormalized to RFC 3339: gazetteers publish partial and era-qualified\ndates here, and coercion would invent precision.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_TO": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "GNPProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one gazetteer place.\n\nRequired on every record: a redistributed place whose dataset, epoch, and\nlicence are unstated is not publishable. Dataset identity is DATA:\nDATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the gazetteer\nstates about itself. The standard names no gazetteer, dataset, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the gazetteer this place was\ntaken from, unique within the publisher's own dataset registry. Never a\ndisplay name and never a URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this place\nwas decoded from. The edition boundary, not the fetch: two records\ncarrying the same DATASET_ID and DATASET_EPOCH were cut from the same\nbytes and are directly comparable.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when the publisher\ndistributes one, so an epoch can be verified rather than trusted.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or file selection used, so the same rows can be\nrecovered by repeating the fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed place whose terms are unstated. A dataset that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as that dataset publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.\nRequired whenever the terms are attribution-bearing, which is the common\ncase for open gazetteers, and carried verbatim so a downstream surface\ncan render it without composing its own credit line.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "This gazetteer's own row identifier for the place, verbatim. The join key\nback to the source dataset; never re-minted by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC date on which the gazetteer last modified this row, as the\ngazetteer states it. Distinct from DATASET_EPOCH: an unchanged row keeps\nits modification date across editions, which is what makes incremental\nsync possible.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "GNP": {
+      "type": "object",
+      "description": "Gazetteer Named Place\n\nOne named geographic place as a gazetteer publishes it: its names, its\nposition on WGS 84, its feature classification, its administrative\ncontainment, and the dataset edition and licence it was redistributed\nunder. The record is a NAME-TO-PLACE lookup surface \u2014 place search,\ngeocoding, and administrative resolution \u2014 and is deliberately not a\nfacility, station, or emitter record: $SIT carries an operational\nfacility, $GST a geodetic tracking station, $TBS a terrestrial base-station\nsite. A place gains meaning from those records by being joined to, never by\nbeing conflated with them.\n\nPositions are decimal degrees on WGS 84 and elevations are metres,\nunconverted. A consumer needing other units converts at the join,\nexplicitly.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this place record. Never the gazetteer's\nown row identifier, which rides verbatim in SOURCE.NATIVE_ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Primary name of the place, verbatim in its own script, unnormalized.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ASCII_NAME": {
+          "type": "string",
+          "description": "Plain-ASCII rendering of NAME when the gazetteer publishes one. A search\nand sort convenience, never a substitute for NAME.",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTERNATE_NAMES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GNPName"
+          },
+          "description": "Every other name the gazetteer publishes for this place.",
+          "x-flatbuffer-type": "[GNPName]"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees on WGS 84, positive north.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees on WGS 84, positive east.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_M": {
+          "type": "number",
+          "description": "Elevation in metres above the WGS 84 ellipsoid-referenced vertical datum\nthe gazetteer states, as published. Zero means unpublished, never sea\nlevel; a place at sea level is distinguished by ELEVATION_PUBLISHED.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_PUBLISHED": {
+          "type": "boolean",
+          "description": "ELEVATION_M carries a published value. False marks a gazetteer that\npublishes no elevation for this place.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DEM_ELEVATION_M": {
+          "type": "number",
+          "description": "Elevation in metres sampled from a digital elevation model, when the\ngazetteer publishes a model-derived value beside or instead of a surveyed\none. Kept separate: a model sample is not a survey and the two must never\nsilently substitute for one another.",
+          "x-flatbuffer-type": "double"
+        },
+        "DEM_MODEL": {
+          "type": "string",
+          "description": "Name of the digital elevation model DEM_ELEVATION_M was sampled from,\nverbatim as the gazetteer states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "FEATURE_CLASS": {
+          "$ref": "#/definitions/gnpFeatureClass",
+          "description": "Broad feature class this gazetteer assigns.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ADMINISTRATIVE": {
+              "value": 0,
+              "description": "Administrative boundary or political entity."
+            },
+            "HYDROGRAPHIC": {
+              "value": 1,
+              "description": "Hydrographic feature: stream, lake, sea, glacier, spring."
+            },
+            "AREA": {
+              "value": 2,
+              "description": "Area feature: park, reserve, oilfield, region."
+            },
+            "POPULATED_PLACE": {
+              "value": 3,
+              "description": "Populated place: city, town, village, capital, section of a place."
+            },
+            "TRANSPORT": {
+              "value": 4,
+              "description": "Road or railroad feature."
+            },
+            "SPOT": {
+              "value": 5,
+              "description": "Spot feature: building, farm, facility, church, mine."
+            },
+            "HYPSOGRAPHIC": {
+              "value": 6,
+              "description": "Hypsographic feature: mountain, hill, rock, ridge, plain."
+            },
+            "UNDERSEA": {
+              "value": 7,
+              "description": "Undersea feature: bank, ridge, trench, seamount."
+            },
+            "VEGETATION": {
+              "value": 8,
+              "description": "Vegetation feature: forest, heath, grove."
+            },
+            "UNSPECIFIED": {
+              "value": 9,
+              "description": "The gazetteer names a class this enum does not model, or publishes none. FEATURE_CLASS defaults here so an unset field can never be read as ADMINISTRATIVE, which holds ordinal 0. The source token, when there is one, is still carried in FEATURE_CLASS_CODE."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "FEATURE_CLASS_CODE": {
+          "type": "string",
+          "description": "The gazetteer's own class token, verbatim, so a class outside\ngnpFeatureClass survives a round trip.",
+          "x-flatbuffer-type": "string"
+        },
+        "FEATURE_CODE": {
+          "type": "string",
+          "description": "The gazetteer's fine-grained feature code, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "FEATURE_NAME": {
+          "type": "string",
+          "description": "Human-readable expansion of FEATURE_CODE, as the gazetteer publishes it.\nA display string, never a key.",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code, uppercase, as the gazetteer states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTRY_NAME": {
+          "type": "string",
+          "description": "Country name as the gazetteer publishes it. A display name, never a key:\nconsumers key on COUNTRY_CODE.",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTERNATE_COUNTRY_CODES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Further ISO 3166-1 alpha-2 codes for places the gazetteer reports as\nspanning or being disputed between several countries. Order carries no\nprecedence and no sovereignty claim.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ADMIN1_CODE": {
+          "type": "string",
+          "description": "First-order administrative division code within COUNTRY_CODE, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN1_NAME": {
+          "type": "string",
+          "description": "Resolved name of that division. Carried beside the code so a consumer\nneed not hold the division tables to render a place.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN2_CODE": {
+          "type": "string",
+          "description": "Second-order administrative division code, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN2_NAME": {
+          "type": "string",
+          "description": "Resolved name of that division.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN3_CODE": {
+          "type": "string",
+          "description": "Third- and fourth-order division codes, verbatim. Gazetteers publish\nthese as codes only; a name is carried when one is published.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN3_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN4_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN4_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POPULATION": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Population as the gazetteer publishes it. Zero means unpublished, never\nuninhabited.",
+          "x-flatbuffer-type": "long"
+        },
+        "TIME_ZONE_ID": {
+          "type": "string",
+          "description": "IANA time zone identifier for the place, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_ZONE_UTC_OFFSET_H": {
+          "type": "number",
+          "description": "Offset from UTC in hours the gazetteer states for that zone outside\ndaylight saving, and under it. Carried as published; a consumer needing\nan instant-correct offset resolves TIME_ZONE_ID against a current tz\ndatabase rather than trusting these.",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_ZONE_DST_OFFSET_H": {
+          "type": "number",
+          "description": "Offset from UTC in hours under daylight saving.",
+          "x-flatbuffer-type": "double"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/GNPProvenance",
+          "description": "Dataset lineage and redistribution terms. Required: a place with no named\ndataset, epoch, and licence is not publishable.",
+          "x-flatbuffer-type": "GNPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "NAME",
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GNP",
+  "x-flatbuffer-root-type": "GNP",
+  "x-flatbuffer-file-identifier": "$GNP"
+}

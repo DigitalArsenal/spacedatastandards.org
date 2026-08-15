@@ -713,6 +713,10 @@
       "type" : "string",
       "enum": ["PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF"]
     },
+    "gnpFeatureClass" : {
+      "type" : "string",
+      "enum": ["ADMINISTRATIVE", "HYDROGRAPHIC", "AREA", "POPULATED_PLACE", "TRANSPORT", "SPOT", "HYPSOGRAPHIC", "UNDERSEA", "VEGETATION", "UNSPECIFIED"]
+    },
     "GPXFixType" : {
       "type" : "string",
       "enum": ["NONE", "FIX_2D", "FIX_3D", "DGPS", "PPS"]
@@ -1775,7 +1779,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP"]
     },
     "LKS" : {
       "type" : "object",
@@ -13371,6 +13375,238 @@
                 "description" : "Additional notes"
               }
       },
+      "additionalProperties" : false
+    },
+    "GNPName" : {
+      "type" : "object",
+      "description" : "One name a place is known by, beside its primary NAME. Every attribute is\ncarried as the gazetteer publishes it; a consumer choosing a display name\napplies its own policy over these flags and never has the choice baked in\nby the publisher.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "The alternate name verbatim, in its own script, unnormalized."
+              },
+        "LANGUAGE" : {
+                "type" : "string",
+                "description" : "ISO 639 language tag when the gazetteer states one. A gazetteer may also\nstate a non-language tag for a link or a postal, IATA, ICAO, or similar\ncoded name; that token is carried verbatim rather than discarded."
+              },
+        "IS_PREFERRED" : {
+                "type" : "boolean",
+                "description" : "The gazetteer marks this as the preferred name for its language."
+              },
+        "IS_SHORT" : {
+                "type" : "boolean",
+                "description" : "The gazetteer marks this as a short form."
+              },
+        "IS_COLLOQUIAL" : {
+                "type" : "boolean",
+                "description" : "The gazetteer marks this as colloquial or unofficial."
+              },
+        "IS_HISTORIC" : {
+                "type" : "boolean",
+                "description" : "The gazetteer marks this name as no longer in use."
+              },
+        "VALID_FROM" : {
+                "type" : "string",
+                "description" : "Period the name was in use, verbatim as the gazetteer states it. Not\nnormalized to RFC 3339: gazetteers publish partial and era-qualified\ndates here, and coercion would invent precision."
+              },
+        "VALID_TO" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "GNPProvenance" : {
+      "type" : "object",
+      "description" : "Dataset lineage and redistribution terms for one gazetteer place.\n\nRequired on every record: a redistributed place whose dataset, epoch, and\nlicence are unstated is not publishable. Dataset identity is DATA:\nDATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the gazetteer\nstates about itself. The standard names no gazetteer, dataset, or site.",
+      "properties" : {
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier for the gazetteer this place was\ntaken from, unique within the publisher's own dataset registry. Never a\ndisplay name and never a URL."
+              },
+        "DATASET_NAME" : {
+                "type" : "string",
+                "description" : "The dataset's own name, verbatim as its publisher states it."
+              },
+        "DATASET_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL of the dataset as published."
+              },
+        "DATASET_EPOCH" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this place\nwas decoded from. The edition boundary, not the fetch: two records\ncarrying the same DATASET_ID and DATASET_EPOCH were cut from the same\nbytes and are directly comparable."
+              },
+        "DATASET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the exact dataset artifact, when the publisher\ndistributes one, so an epoch can be verified rather than trusted."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL identifying the source material within the dataset."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "The exact query, filter, or file selection used, so the same rows can be\nrecovered by repeating the fetch."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed place whose terms are unstated. A dataset that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the full licence text as that dataset publishes it."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution text the licence requires a redistributor to display.\nRequired whenever the terms are attribution-bearing, which is the common\ncase for open gazetteers, and carried verbatim so a downstream surface\ncan render it without composing its own credit line."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "The licence forbids commercial use."
+              },
+        "SHARE_ALIKE" : {
+                "type" : "boolean",
+                "description" : "The licence obliges derived works to carry the same terms."
+              },
+        "NATIVE_ID" : {
+                "type" : "string",
+                "description" : "This gazetteer's own row identifier for the place, verbatim. The join key\nback to the source dataset; never re-minted by the publisher."
+              },
+        "NATIVE_MODIFIED" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC date on which the gazetteer last modified this row, as the\ngazetteer states it. Distinct from DATASET_EPOCH: an unchanged row keeps\nits modification date across editions, which is what makes incremental\nsync possible."
+              }
+      },
+      "required" : ["DATASET_ID", "DATASET_EPOCH", "RETRIEVED_AT", "LICENSE", "NATIVE_ID"],
+      "additionalProperties" : false
+    },
+    "GNP" : {
+      "type" : "object",
+      "description" : "Gazetteer Named Place\n\nOne named geographic place as a gazetteer publishes it: its names, its\nposition on WGS 84, its feature classification, its administrative\ncontainment, and the dataset edition and licence it was redistributed\nunder. The record is a NAME-TO-PLACE lookup surface — place search,\ngeocoding, and administrative resolution — and is deliberately not a\nfacility, station, or emitter record: $SIT carries an operational\nfacility, $GST a geodetic tracking station, $TBS a terrestrial base-station\nsite. A place gains meaning from those records by being joined to, never by\nbeing conflated with them.\n\nPositions are decimal degrees on WGS 84 and elevations are metres,\nunconverted. A consumer needing other units converts at the join,\nexplicitly.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier for this place record. Never the gazetteer's\nown row identifier, which rides verbatim in SOURCE.NATIVE_ID."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Primary name of the place, verbatim in its own script, unnormalized."
+              },
+        "ASCII_NAME" : {
+                "type" : "string",
+                "description" : "Plain-ASCII rendering of NAME when the gazetteer publishes one. A search\nand sort convenience, never a substitute for NAME."
+              },
+        "ALTERNATE_NAMES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GNPName"},
+                "description" : "Every other name the gazetteer publishes for this place."
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees on WGS 84, positive north."
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees on WGS 84, positive east."
+              },
+        "ELEVATION_M" : {
+                "type" : "number",
+                "description" : "Elevation in metres above the WGS 84 ellipsoid-referenced vertical datum\nthe gazetteer states, as published. Zero means unpublished, never sea\nlevel; a place at sea level is distinguished by ELEVATION_PUBLISHED."
+              },
+        "ELEVATION_PUBLISHED" : {
+                "type" : "boolean",
+                "description" : "ELEVATION_M carries a published value. False marks a gazetteer that\npublishes no elevation for this place."
+              },
+        "DEM_ELEVATION_M" : {
+                "type" : "number",
+                "description" : "Elevation in metres sampled from a digital elevation model, when the\ngazetteer publishes a model-derived value beside or instead of a surveyed\none. Kept separate: a model sample is not a survey and the two must never\nsilently substitute for one another."
+              },
+        "DEM_MODEL" : {
+                "type" : "string",
+                "description" : "Name of the digital elevation model DEM_ELEVATION_M was sampled from,\nverbatim as the gazetteer states it."
+              },
+        "FEATURE_CLASS" : {
+                "$ref" : "#/definitions/gnpFeatureClass",
+                "description" : "Broad feature class this gazetteer assigns."
+              },
+        "FEATURE_CLASS_CODE" : {
+                "type" : "string",
+                "description" : "The gazetteer's own class token, verbatim, so a class outside\ngnpFeatureClass survives a round trip."
+              },
+        "FEATURE_CODE" : {
+                "type" : "string",
+                "description" : "The gazetteer's fine-grained feature code, verbatim."
+              },
+        "FEATURE_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable expansion of FEATURE_CODE, as the gazetteer publishes it.\nA display string, never a key."
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string",
+                "description" : "ISO 3166-1 alpha-2 country code, uppercase, as the gazetteer states it."
+              },
+        "COUNTRY_NAME" : {
+                "type" : "string",
+                "description" : "Country name as the gazetteer publishes it. A display name, never a key:\nconsumers key on COUNTRY_CODE."
+              },
+        "ALTERNATE_COUNTRY_CODES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Further ISO 3166-1 alpha-2 codes for places the gazetteer reports as\nspanning or being disputed between several countries. Order carries no\nprecedence and no sovereignty claim."
+              },
+        "ADMIN1_CODE" : {
+                "type" : "string",
+                "description" : "First-order administrative division code within COUNTRY_CODE, verbatim."
+              },
+        "ADMIN1_NAME" : {
+                "type" : "string",
+                "description" : "Resolved name of that division. Carried beside the code so a consumer\nneed not hold the division tables to render a place."
+              },
+        "ADMIN2_CODE" : {
+                "type" : "string",
+                "description" : "Second-order administrative division code, verbatim."
+              },
+        "ADMIN2_NAME" : {
+                "type" : "string",
+                "description" : "Resolved name of that division."
+              },
+        "ADMIN3_CODE" : {
+                "type" : "string",
+                "description" : "Third- and fourth-order division codes, verbatim. Gazetteers publish\nthese as codes only; a name is carried when one is published."
+              },
+        "ADMIN3_NAME" : {
+                "type" : "string"
+              },
+        "ADMIN4_CODE" : {
+                "type" : "string"
+              },
+        "ADMIN4_NAME" : {
+                "type" : "string"
+              },
+        "POPULATION" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Population as the gazetteer publishes it. Zero means unpublished, never\nuninhabited."
+              },
+        "TIME_ZONE_ID" : {
+                "type" : "string",
+                "description" : "IANA time zone identifier for the place, verbatim."
+              },
+        "TIME_ZONE_UTC_OFFSET_H" : {
+                "type" : "number",
+                "description" : "Offset from UTC in hours the gazetteer states for that zone outside\ndaylight saving, and under it. Carried as published; a consumer needing\nan instant-correct offset resolves TIME_ZONE_ID against a current tz\ndatabase rather than trusting these."
+              },
+        "TIME_ZONE_DST_OFFSET_H" : {
+                "type" : "number",
+                "description" : "Offset from UTC in hours under daylight saving."
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/GNPProvenance",
+                "description" : "Dataset lineage and redistribution terms. Required: a place with no named\ndataset, epoch, and licence is not publishable."
+              }
+      },
+      "required" : ["ID", "NAME", "SOURCE"],
       "additionalProperties" : false
     },
     "GPXLink" : {
@@ -35841,7 +36077,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {
