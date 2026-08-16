@@ -1,5 +1,5 @@
-// Hash: e423d6b79b3dafa89eb44b1f187551ddf3384cc3f339dba1b3b57f13adfa1f38
-// Version: 1.44.56
+// Hash: f17f96927f50b935aa1cc3cb87341ad3ffac6ba67d0ac0bde29977a9848c78f9
+// Version: 1.44.57
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -15,6 +15,7 @@ include "../ARM/main.fbs";
 include "../AST/main.fbs";
 include "../ATD/main.fbs";
 include "../ATM/main.fbs";
+include "../AVL/main.fbs";
 include "../BAL/main.fbs";
 include "../BEM/main.fbs";
 include "../BMC/main.fbs";
@@ -195,10 +196,12 @@ include "../TAB/main.fbs";
 include "../TBS/main.fbs";
 include "../TCF/main.fbs";
 include "../TDM/main.fbs";
+include "../TFN/main.fbs";
 include "../TIM/main.fbs";
 include "../TKG/main.fbs";
 include "../TME/main.fbs";
 include "../TMF/main.fbs";
+include "../TMS/main.fbs";
 include "../TNR/main.fbs";
 include "../TPN/main.fbs";
 include "../TRE/main.fbs";
@@ -207,6 +210,7 @@ include "../TRN/main.fbs";
 include "../TRS/main.fbs";
 include "../VAM/main.fbs";
 include "../VCM/main.fbs";
+include "../VEP/main.fbs";
 include "../VST/main.fbs";
 include "../WKS/main.fbs";
 include "../WPN/main.fbs";
@@ -280,7 +284,8 @@ union RecordType {
   SBM, PMM, OPP, IQC,
   CNP, CMR, TBS, CCT,
   ACI, CVP, RFL, RFS,
-  TRS, GNP, DTT
+  TRS, GNP, DTT, AVL,
+  TFN, TMS, VEP
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

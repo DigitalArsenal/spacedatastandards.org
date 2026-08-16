@@ -224,6 +224,10 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -458,11 +462,15 @@ enum RecordType : uint8_t {
   RecordType_TRS = 209,
   RecordType_GNP = 210,
   RecordType_DTT = 211,
+  RecordType_AVL = 212,
+  RecordType_TFN = 213,
+  RecordType_TMS = 214,
+  RecordType_VEP = 215,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_DTT
+  RecordType_MAX = RecordType_VEP
 };
 
-inline const RecordType (&EnumValuesRecordType())[212] {
+inline const RecordType (&EnumValuesRecordType())[216] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -675,13 +683,17 @@ inline const RecordType (&EnumValuesRecordType())[212] {
     RecordType_RFS,
     RecordType_TRS,
     RecordType_GNP,
-    RecordType_DTT
+    RecordType_DTT,
+    RecordType_AVL,
+    RecordType_TFN,
+    RecordType_TMS,
+    RecordType_VEP
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[213] = {
+  static const char * const names[217] = {
     "NONE",
     "ACL",
     "ACM",
@@ -894,13 +906,17 @@ inline const char * const *EnumNamesRecordType() {
     "TRS",
     "GNP",
     "DTT",
+    "AVL",
+    "TFN",
+    "TMS",
+    "VEP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_DTT)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_VEP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1753,6 +1769,22 @@ template<> struct RecordTypeTraits<DTT> {
   static const RecordType enum_value = RecordType_DTT;
 };
 
+template<> struct RecordTypeTraits<AVL> {
+  static const RecordType enum_value = RecordType_AVL;
+};
+
+template<> struct RecordTypeTraits<TFN> {
+  static const RecordType enum_value = RecordType_TFN;
+};
+
+template<> struct RecordTypeTraits<TMS> {
+  static const RecordType enum_value = RecordType_TMS;
+};
+
+template<> struct RecordTypeTraits<VEP> {
+  static const RecordType enum_value = RecordType_VEP;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2406,6 +2438,18 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const DTT *value_as_DTT() const {
     return value_type() == RecordType_DTT ? static_cast<const DTT *>(value()) : nullptr;
+  }
+  const AVL *value_as_AVL() const {
+    return value_type() == RecordType_AVL ? static_cast<const AVL *>(value()) : nullptr;
+  }
+  const TFN *value_as_TFN() const {
+    return value_type() == RecordType_TFN ? static_cast<const TFN *>(value()) : nullptr;
+  }
+  const TMS *value_as_TMS() const {
+    return value_type() == RecordType_TMS ? static_cast<const TMS *>(value()) : nullptr;
+  }
+  const VEP *value_as_VEP() const {
+    return value_type() == RecordType_VEP ? static_cast<const VEP *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3265,6 +3309,22 @@ template<> inline const GNP *Record::value_as<GNP>() const {
 
 template<> inline const DTT *Record::value_as<DTT>() const {
   return value_as_DTT();
+}
+
+template<> inline const AVL *Record::value_as<AVL>() const {
+  return value_as_AVL();
+}
+
+template<> inline const TFN *Record::value_as<TFN>() const {
+  return value_as_TFN();
+}
+
+template<> inline const TMS *Record::value_as<TMS>() const {
+  return value_as_TMS();
+}
+
+template<> inline const VEP *Record::value_as<VEP>() const {
+  return value_as_VEP();
 }
 
 struct RecordBuilder {
@@ -4234,6 +4294,22 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_DTT: {
       auto ptr = reinterpret_cast<const DTT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_AVL: {
+      auto ptr = reinterpret_cast<const AVL *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TFN: {
+      auto ptr = reinterpret_cast<const TFN *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TMS: {
+      auto ptr = reinterpret_cast<const TMS *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_VEP: {
+      auto ptr = reinterpret_cast<const VEP *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

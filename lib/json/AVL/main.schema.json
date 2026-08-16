@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "avlRingRole" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "OUTER", "INNER"]
+    },
+    "avlAirspaceClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CLASS_A", "CLASS_B", "CLASS_C", "CLASS_D", "CLASS_E", "CLASS_F", "CLASS_G"]
+    },
+    "avlVolumeType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CONTROLLED", "RESTRICTED", "PROHIBITED", "DANGER", "TMA", "CTR", "ATZ", "FIR", "UIR", "MOA", "ADIZ"]
+    },
+    "avlVerticalDatum" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "AGL", "MSL", "FLIGHT_LEVEL", "WGS84_ELLIPSOID", "SURFACE", "UNLIMITED"]
+    },
+    "AVLProvenance" : {
+      "type" : "object",
+      "description" : "Dataset lineage and redistribution terms for one airspace volume.\n\nRequired on every record: a redistributed volume whose dataset, epoch,\nand licence are unstated is not publishable. Dataset identity is DATA;\nthe standard names no dataset, provider, or site.",
+      "properties" : {
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier for the aeronautical dataset\nthis volume was taken from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL."
+              },
+        "DATASET_NAME" : {
+                "type" : "string",
+                "description" : "The dataset's own name, verbatim as its publisher states it."
+              },
+        "DATASET_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL of the dataset as published."
+              },
+        "DATASET_EPOCH" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this\nvolume was decoded from — the edition boundary (e.g. an AIRAC cycle\neffective date), not the fetch."
+              },
+        "DATASET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the exact dataset artifact, when the publisher\ndistributes one."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL identifying the source material within the dataset."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "The exact query, filter, or file selection used."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the full licence text as the dataset publishes it."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution text the licence requires a redistributor to display."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "The licence forbids commercial use."
+              },
+        "SHARE_ALIKE" : {
+                "type" : "boolean",
+                "description" : "The licence obliges derived works to carry the same terms."
+              },
+        "NATIVE_ID" : {
+                "type" : "string",
+                "description" : "The source dataset's own identifier for this volume, verbatim. The\njoin key back to the source; never re-minted by the publisher."
+              },
+        "NATIVE_MODIFIED" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC date the source last modified this volume, as it states."
+              }
+      },
+      "required" : ["DATASET_ID", "DATASET_EPOCH", "RETRIEVED_AT", "LICENSE", "NATIVE_ID"],
+      "additionalProperties" : false
+    },
+    "AVL" : {
+      "type" : "object",
+      "description" : "Airspace Volume",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier for this volume record. Never the source's\nown identifier, which rides verbatim in SOURCE.NATIVE_ID."
+              },
+        "DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Published designator of the volume, verbatim (e.g. an area designator)."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Published display name of the volume, verbatim."
+              },
+        "AIRSPACE_CLASS" : {
+                "$ref" : "#/definitions/avlAirspaceClass",
+                "description" : "ICAO airspace class."
+              },
+        "VOLUME_TYPE" : {
+                "$ref" : "#/definitions/avlVolumeType",
+                "description" : "Kind of volume."
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string",
+                "description" : "ISO 3166-1 alpha-2 country code, uppercase, as the source states it."
+              },
+        "FLOOR_VALUE" : {
+                "type" : "number",
+                "description" : "Lower vertical limit, metres in FLOOR_DATUM (flight-level number when\nFLOOR_DATUM is FLIGHT_LEVEL; NaN when SURFACE). NaN when unpublished."
+              },
+        "FLOOR_DATUM" : {
+                "$ref" : "#/definitions/avlVerticalDatum",
+                "description" : "Datum of FLOOR_VALUE."
+              },
+        "CEILING_VALUE" : {
+                "type" : "number",
+                "description" : "Upper vertical limit, metres in CEILING_DATUM (flight-level number\nwhen FLIGHT_LEVEL; NaN when UNLIMITED). NaN when unpublished."
+              },
+        "CEILING_DATUM" : {
+                "$ref" : "#/definitions/avlVerticalDatum",
+                "description" : "Datum of CEILING_VALUE."
+              },
+        "EFFECTIVE_FROM" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond instant this volume becomes effective."
+              },
+        "EFFECTIVE_TO" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond instant this volume ceases. Absent for\na volume with no published end."
+              },
+        "TIME_OF_ACTIVITY" : {
+                "type" : "string",
+                "description" : "Activity schedule verbatim as the source publishes it (NOTAM-style\ntext). Never parsed into structure by the publisher: schedule grammar\nis source-specific and coercion would invent activations."
+              },
+        "VERTEX_LONGITUDE_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Vertex longitudes, geodetic degrees in [-180, 180]."
+              },
+        "VERTEX_LATITUDE_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Vertex latitudes, geodetic degrees in [-90, 90]. Same length as\nVERTEX_LONGITUDE_DEG."
+              },
+        "RING_OFFSETS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Ring start indexes; RING_COUNT + 1 entries, last equals vertex count."
+              },
+        "RING_POLYGON_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Polygon each ring belongs to. One entry per ring, so its length is\nRING_OFFSETS length - 1."
+              },
+        "RING_ROLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/avlRingRole"},
+                "description" : "Role of each ring. One entry per ring, so its length is RING_OFFSETS\nlength - 1."
+              },
+        "POLYGON_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of polygons; equals max(RING_POLYGON_INDEXES) + 1, published so\nan empty geometry is distinguishable from an unpopulated record."
+              },
+        "ARC_DENSIFIED" : {
+                "type" : "boolean",
+                "description" : "The source's arc or circle boundary segments were densified into the\nvertices above by the ingest."
+              },
+        "DENSIFICATION_TOLERANCE_M" : {
+                "type" : "number",
+                "description" : "Maximum deviation, metres, between a densified chord and the published\narc. Required knowledge when ARC_DENSIFIED; NaN otherwise."
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/AVLProvenance",
+                "description" : "Dataset lineage and licence. Required."
+              }
+      },
+      "required" : ["ID", "VERTEX_LONGITUDE_DEG", "VERTEX_LATITUDE_DEG", "RING_OFFSETS", "RING_POLYGON_INDEXES", "RING_ROLES", "SOURCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AVL"
+}

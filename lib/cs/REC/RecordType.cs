@@ -230,6 +230,10 @@ public enum RecordType : byte
   TRS = 209,
   GNP = 210,
   DTT = 211,
+  AVL = 212,
+  TFN = 213,
+  TMS = 214,
+  VEP = 215,
 };
 
 public class RecordTypeUnion {
@@ -664,6 +668,14 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromGNP(GNPT _gnp) { return new RecordTypeUnion{ Type = RecordType.GNP, Value = _gnp }; }
   public DTTT AsDTT() { return this.As<DTTT>(); }
   public static RecordTypeUnion FromDTT(DTTT _dtt) { return new RecordTypeUnion{ Type = RecordType.DTT, Value = _dtt }; }
+  public AVLT AsAVL() { return this.As<AVLT>(); }
+  public static RecordTypeUnion FromAVL(AVLT _avl) { return new RecordTypeUnion{ Type = RecordType.AVL, Value = _avl }; }
+  public TFNT AsTFN() { return this.As<TFNT>(); }
+  public static RecordTypeUnion FromTFN(TFNT _tfn) { return new RecordTypeUnion{ Type = RecordType.TFN, Value = _tfn }; }
+  public TMST AsTMS() { return this.As<TMST>(); }
+  public static RecordTypeUnion FromTMS(TMST _tms) { return new RecordTypeUnion{ Type = RecordType.TMS, Value = _tms }; }
+  public VEPT AsVEP() { return this.As<VEPT>(); }
+  public static RecordTypeUnion FromVEP(VEPT _vep) { return new RecordTypeUnion{ Type = RecordType.VEP, Value = _vep }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -879,6 +891,10 @@ public class RecordTypeUnion {
       case RecordType.TRS: return TRS.Pack(builder, _o.AsTRS()).Value;
       case RecordType.GNP: return GNP.Pack(builder, _o.AsGNP()).Value;
       case RecordType.DTT: return DTT.Pack(builder, _o.AsDTT()).Value;
+      case RecordType.AVL: return AVL.Pack(builder, _o.AsAVL()).Value;
+      case RecordType.TFN: return TFN.Pack(builder, _o.AsTFN()).Value;
+      case RecordType.TMS: return TMS.Pack(builder, _o.AsTMS()).Value;
+      case RecordType.VEP: return VEP.Pack(builder, _o.AsVEP()).Value;
     }
   }
 }
@@ -1524,6 +1540,18 @@ static public class RecordTypeVerify
         break;
       case RecordType.DTT:
         result = DTTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AVL:
+        result = AVLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TFN:
+        result = TFNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TMS:
+        result = TMSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.VEP:
+        result = VEPVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

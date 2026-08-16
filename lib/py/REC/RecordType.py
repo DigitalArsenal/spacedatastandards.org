@@ -229,6 +229,10 @@ class RecordType(object):
     TRS = 209
     GNP = 210
     DTT = 211
+    AVL = 212
+    TFN = 213
+    TMS = 214
+    VEP = 215
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -867,4 +871,16 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.DTT:
         import DTT
         return DTT.DTTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.AVL:
+        import AVL
+        return AVL.AVLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TFN:
+        import TFN
+        return TFN.TFNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TMS:
+        import TMS
+        return TMS.TMST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.VEP:
+        import VEP
+        return VEP.VEPT.InitFromBuf(table.Bytes, table.Pos)
     return None

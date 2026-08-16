@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "tfnFacilityType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "AERODROME",
+        "HELIPORT",
+        "SEAPLANE_BASE",
+        "SEAPORT",
+        "INLAND_PORT",
+        "TERMINAL",
+        "SPACEPORT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "AERODROME": {
+          "value": 1
+        },
+        "HELIPORT": {
+          "value": 2
+        },
+        "SEAPLANE_BASE": {
+          "value": 3
+        },
+        "SEAPORT": {
+          "value": 4
+        },
+        "INLAND_PORT": {
+          "value": 5
+        },
+        "TERMINAL": {
+          "value": 6
+        },
+        "SPACEPORT": {
+          "value": 7
+        }
+      }
+    },
+    "tfnSurfaceKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RUNWAY",
+        "HELIPAD",
+        "BERTH",
+        "ANCHORAGE",
+        "QUAY",
+        "PIER",
+        "LAUNCH_PAD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source publishes no kind, or one this enum does not model; the source's own token, when there is one, rides in SURFACE_TYPE_CODE."
+        },
+        "RUNWAY": {
+          "value": 1,
+          "description": "A runway, including water runways at seaplane bases."
+        },
+        "HELIPAD": {
+          "value": 2,
+          "description": "A helipad or other vertical-operations pad."
+        },
+        "BERTH": {
+          "value": 3,
+          "description": "A berth a vessel moors alongside."
+        },
+        "ANCHORAGE": {
+          "value": 4,
+          "description": "An anchorage area."
+        },
+        "QUAY": {
+          "value": 5,
+          "description": "A quay or wharf frontage."
+        },
+        "PIER": {
+          "value": 6,
+          "description": "A pier or jetty."
+        },
+        "LAUNCH_PAD": {
+          "value": 7,
+          "description": "A launch or landing pad at a spaceport."
+        }
+      }
+    },
+    "TFNDesignator": {
+      "type": "object",
+      "description": "One designator the facility answers to in a named coding system.",
+      "properties": {
+        "SCHEME": {
+          "type": "string",
+          "description": "Coding-system token, verbatim (the system's own name). Never a field\nname and never normalized by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "The designator within that system, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SCHEME",
+        "VALUE"
+      ],
+      "additionalProperties": false
+    },
+    "TFNOperatingSurface": {
+      "type": "object",
+      "description": "One operating surface: the arrival/departure geometry of the facility.\nA runway and a berth carry the same shape; fields a domain does not use\nare absent (NaN), never zero.",
+      "properties": {
+        "SURFACE_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of this surface within the facility.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SURFACE_TYPE": {
+          "$ref": "#/definitions/tfnSurfaceKind",
+          "description": "Kind of surface.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no kind, or one this enum does not model; the source's own token, when there is one, rides in SURFACE_TYPE_CODE."
+            },
+            "RUNWAY": {
+              "value": 1,
+              "description": "A runway, including water runways at seaplane bases."
+            },
+            "HELIPAD": {
+              "value": 2,
+              "description": "A helipad or other vertical-operations pad."
+            },
+            "BERTH": {
+              "value": 3,
+              "description": "A berth a vessel moors alongside."
+            },
+            "ANCHORAGE": {
+              "value": 4,
+              "description": "An anchorage area."
+            },
+            "QUAY": {
+              "value": 5,
+              "description": "A quay or wharf frontage."
+            },
+            "PIER": {
+              "value": 6,
+              "description": "A pier or jetty."
+            },
+            "LAUNCH_PAD": {
+              "value": 7,
+              "description": "A launch or landing pad at a spaceport."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SURFACE_TYPE_CODE": {
+          "type": "string",
+          "description": "The source's own surface-kind token, verbatim, so a kind outside\ntfnSurfaceKind survives a round trip.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATOR": {
+          "type": "string",
+          "description": "Published designator of the surface, verbatim (runway designator,\nberth number).",
+          "x-flatbuffer-type": "string"
+        },
+        "LENGTH_M": {
+          "type": "number",
+          "description": "Usable length, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "WIDTH_M": {
+          "type": "number",
+          "description": "Usable width, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "DEPTH_M": {
+          "type": "number",
+          "description": "Available depth of water, metres, for a maritime surface.",
+          "x-flatbuffer-type": "double"
+        },
+        "SURFACE_MATERIAL": {
+          "type": "string",
+          "description": "Surface material or construction, verbatim as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUE_BEARING_DEG": {
+          "type": "number",
+          "description": "True bearing of the surface's operating direction, degrees, [0, 360).",
+          "x-flatbuffer-type": "double"
+        },
+        "THRESHOLD_LATITUDE": {
+          "type": "number",
+          "description": "Geodetic position of the threshold or reference point of this\nsurface, decimal degrees on WGS 84.",
+          "x-flatbuffer-type": "double"
+        },
+        "THRESHOLD_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIGHTED": {
+          "type": "boolean",
+          "description": "The surface is lighted.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "required": [
+        "SURFACE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TFNProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one facility record.\n\nRequired on every record: a redistributed facility whose dataset, epoch,\nand licence are unstated is not publishable. The standard names no\ndataset, provider, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the dataset this facility\nwas taken from, unique within the publisher's own dataset registry.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this\nfacility was decoded from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when one exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or file selection used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the dataset publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source dataset's own identifier for this facility, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC date the source last modified this row, as it states.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TFN": {
+      "type": "object",
+      "description": "Transport Facility Node",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this facility record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLACE_ID": {
+          "type": "string",
+          "description": "`$GNP.ID` of the gazetteer place carrying this facility's name set\nand location. Location is joined, never re-published here.",
+          "x-flatbuffer-type": "string"
+        },
+        "FACILITY_TYPE": {
+          "$ref": "#/definitions/tfnFacilityType",
+          "description": "Kind of facility.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "AERODROME": {
+              "value": 1
+            },
+            "HELIPORT": {
+              "value": 2
+            },
+            "SEAPLANE_BASE": {
+              "value": 3
+            },
+            "SEAPORT": {
+              "value": 4
+            },
+            "INLAND_PORT": {
+              "value": 5
+            },
+            "TERMINAL": {
+              "value": 6
+            },
+            "SPACEPORT": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Operational display name, verbatim, when it differs from the place\nname in `$GNP`.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TFNDesignator"
+          },
+          "description": "Every designator the facility answers to, scheme-tagged.",
+          "x-flatbuffer-type": "[TFNDesignator]"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ELEVATION_M": {
+          "type": "number",
+          "description": "Field or reference elevation, metres above mean sea level as the\nsource publishes it. Zero means unpublished, never sea level; a\nfacility at sea level is distinguished by ELEVATION_PUBLISHED.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_PUBLISHED": {
+          "type": "boolean",
+          "description": "ELEVATION_M carries a published value.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAGNETIC_VARIATION_DEG": {
+          "type": "number",
+          "description": "Magnetic variation at the facility, degrees, positive east, as the\nsource publishes it. NaN when unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "OPERATING_SURFACES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TFNOperatingSurface"
+          },
+          "description": "The operating surfaces of the facility.",
+          "x-flatbuffer-type": "[TFNOperatingSurface]"
+        },
+        "MAXIMUM_DRAFT_M": {
+          "type": "number",
+          "description": "Maximum vessel draft the facility accepts, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANCHORAGE_DEPTH_M": {
+          "type": "number",
+          "description": "Depth of water at the principal anchorage, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "HARBOR_TYPE": {
+          "type": "string",
+          "description": "Harbor type token, verbatim as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SHELTER_AFFORDED": {
+          "type": "string",
+          "description": "Shelter afforded token, verbatim as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/TFNProvenance",
+          "description": "Dataset lineage and licence. Required.",
+          "x-flatbuffer-type": "TFNProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TFN",
+  "x-flatbuffer-root-type": "TFN",
+  "x-flatbuffer-file-identifier": "$TFN"
+}

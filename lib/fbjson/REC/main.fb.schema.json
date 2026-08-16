@@ -2359,6 +2359,181 @@
         }
       }
     },
+    "avlRingRole": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "OUTER",
+        "INNER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "OUTER": {
+          "value": 1
+        },
+        "INNER": {
+          "value": 2
+        }
+      }
+    },
+    "avlAirspaceClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CLASS_A",
+        "CLASS_B",
+        "CLASS_C",
+        "CLASS_D",
+        "CLASS_E",
+        "CLASS_F",
+        "CLASS_G"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source publishes no class, or a class this enum does not model."
+        },
+        "CLASS_A": {
+          "value": 1
+        },
+        "CLASS_B": {
+          "value": 2
+        },
+        "CLASS_C": {
+          "value": 3
+        },
+        "CLASS_D": {
+          "value": 4
+        },
+        "CLASS_E": {
+          "value": 5
+        },
+        "CLASS_F": {
+          "value": 6
+        },
+        "CLASS_G": {
+          "value": 7
+        }
+      }
+    },
+    "avlVolumeType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONTROLLED",
+        "RESTRICTED",
+        "PROHIBITED",
+        "DANGER",
+        "TMA",
+        "CTR",
+        "ATZ",
+        "FIR",
+        "UIR",
+        "MOA",
+        "ADIZ"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CONTROLLED": {
+          "value": 1,
+          "description": "A controlled airspace volume not otherwise classified below."
+        },
+        "RESTRICTED": {
+          "value": 2,
+          "description": "Restricted area: entry restricted per published conditions."
+        },
+        "PROHIBITED": {
+          "value": 3,
+          "description": "Prohibited area: flight prohibited."
+        },
+        "DANGER": {
+          "value": 4,
+          "description": "Danger area: activities hazardous to flight may exist."
+        },
+        "TMA": {
+          "value": 5,
+          "description": "Terminal control area."
+        },
+        "CTR": {
+          "value": 6,
+          "description": "Control zone."
+        },
+        "ATZ": {
+          "value": 7,
+          "description": "Aerodrome traffic zone."
+        },
+        "FIR": {
+          "value": 8,
+          "description": "Flight information region."
+        },
+        "UIR": {
+          "value": 9,
+          "description": "Upper flight information region."
+        },
+        "MOA": {
+          "value": 10,
+          "description": "Military operations area."
+        },
+        "ADIZ": {
+          "value": 11,
+          "description": "Air defense identification zone."
+        }
+      }
+    },
+    "avlVerticalDatum": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "AGL",
+        "MSL",
+        "FLIGHT_LEVEL",
+        "WGS84_ELLIPSOID",
+        "SURFACE",
+        "UNLIMITED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "No datum stated. A consumer MUST refuse a boundary whose value is present but whose datum is UNSPECIFIED rather than guess a reference."
+        },
+        "AGL": {
+          "value": 1,
+          "description": "Metres above ground level."
+        },
+        "MSL": {
+          "value": 2,
+          "description": "Metres above mean sea level."
+        },
+        "FLIGHT_LEVEL": {
+          "value": 3,
+          "description": "Flight level: the value is the flight level number (hundreds of feet on the standard atmosphere), not metres."
+        },
+        "WGS84_ELLIPSOID": {
+          "value": 4,
+          "description": "Metres above the WGS 84 ellipsoid."
+        },
+        "SURFACE": {
+          "value": 5,
+          "description": "The ground or water surface itself; the boundary value is NaN."
+        },
+        "UNLIMITED": {
+          "value": 6,
+          "description": "No upper limit; the boundary value is NaN. A datum member, never a sentinel altitude."
+        }
+      }
+    },
     "DragModel": {
       "type": "string",
       "enum": [
@@ -15806,6 +15981,96 @@
         }
       }
     },
+    "tfnFacilityType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "AERODROME",
+        "HELIPORT",
+        "SEAPLANE_BASE",
+        "SEAPORT",
+        "INLAND_PORT",
+        "TERMINAL",
+        "SPACEPORT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "AERODROME": {
+          "value": 1
+        },
+        "HELIPORT": {
+          "value": 2
+        },
+        "SEAPLANE_BASE": {
+          "value": 3
+        },
+        "SEAPORT": {
+          "value": 4
+        },
+        "INLAND_PORT": {
+          "value": 5
+        },
+        "TERMINAL": {
+          "value": 6
+        },
+        "SPACEPORT": {
+          "value": 7
+        }
+      }
+    },
+    "tfnSurfaceKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RUNWAY",
+        "HELIPAD",
+        "BERTH",
+        "ANCHORAGE",
+        "QUAY",
+        "PIER",
+        "LAUNCH_PAD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source publishes no kind, or one this enum does not model; the source's own token, when there is one, rides in SURFACE_TYPE_CODE."
+        },
+        "RUNWAY": {
+          "value": 1,
+          "description": "A runway, including water runways at seaplane bases."
+        },
+        "HELIPAD": {
+          "value": 2,
+          "description": "A helipad or other vertical-operations pad."
+        },
+        "BERTH": {
+          "value": 3,
+          "description": "A berth a vessel moors alongside."
+        },
+        "ANCHORAGE": {
+          "value": 4,
+          "description": "An anchorage area."
+        },
+        "QUAY": {
+          "value": 5,
+          "description": "A quay or wharf frontage."
+        },
+        "PIER": {
+          "value": 6,
+          "description": "A pier or jetty."
+        },
+        "LAUNCH_PAD": {
+          "value": 7,
+          "description": "A launch or landing pad at a spaceport."
+        }
+      }
+    },
     "FilterType": {
       "type": "string",
       "enum": [
@@ -17084,6 +17349,124 @@
         }
       }
     },
+    "vepEnergyType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "LIQUID_FUEL",
+        "ELECTRIC",
+        "HYBRID",
+        "NUCLEAR",
+        "SOLAR",
+        "WIND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "LIQUID_FUEL": {
+          "value": 1
+        },
+        "ELECTRIC": {
+          "value": 2
+        },
+        "HYBRID": {
+          "value": 3
+        },
+        "NUCLEAR": {
+          "value": 4
+        },
+        "SOLAR": {
+          "value": 5
+        },
+        "WIND": {
+          "value": 6
+        }
+      }
+    },
+    "vepRegime": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TAKEOFF",
+        "CLIMB",
+        "CRUISE",
+        "LOITER",
+        "DESCENT",
+        "TAXI",
+        "TRANSIT",
+        "MANEUVER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "TAKEOFF": {
+          "value": 1
+        },
+        "CLIMB": {
+          "value": 2
+        },
+        "CRUISE": {
+          "value": 3
+        },
+        "LOITER": {
+          "value": 4
+        },
+        "DESCENT": {
+          "value": 5
+        },
+        "TAXI": {
+          "value": 6
+        },
+        "TRANSIT": {
+          "value": 7,
+          "description": "Steady transit for surface and subsurface vehicles."
+        },
+        "MANEUVER": {
+          "value": 8,
+          "description": "High-consumption maneuvering."
+        }
+      }
+    },
+    "vepInterpolation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NEAREST",
+        "LINEAR",
+        "BILINEAR",
+        "TABLE_LOOKUP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "No method stated; a consumer MUST treat the table as TABLE_LOOKUP rather than invent an interpolant."
+        },
+        "NEAREST": {
+          "value": 1,
+          "description": "Nearest point in (regime, altitude, speed)."
+        },
+        "LINEAR": {
+          "value": 2,
+          "description": "Linear along the single varying axis."
+        },
+        "BILINEAR": {
+          "value": 3,
+          "description": "Bilinear over altitude and speed within a regime."
+        },
+        "TABLE_LOOKUP": {
+          "value": 4,
+          "description": "Exact-key lookup only; no interpolation between points."
+        }
+      }
+    },
     "WeaponType": {
       "type": "string",
       "enum": [
@@ -17918,7 +18301,11 @@
         "RFS",
         "TRS",
         "GNP",
-        "DTT"
+        "DTT",
+        "AVL",
+        "TFN",
+        "TMS",
+        "VEP"
       ]
     },
     "LKS": {
@@ -24927,6 +25314,401 @@
           "x-flatbuffer-type": "int"
         }
       },
+      "additionalProperties": false
+    },
+    "AVLProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one airspace volume.\n\nRequired on every record: a redistributed volume whose dataset, epoch,\nand licence are unstated is not publishable. Dataset identity is DATA;\nthe standard names no dataset, provider, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the aeronautical dataset\nthis volume was taken from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this\nvolume was decoded from \u2014 the edition boundary (e.g. an AIRAC cycle\neffective date), not the fetch.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when the publisher\ndistributes one.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or file selection used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the dataset publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source dataset's own identifier for this volume, verbatim. The\njoin key back to the source; never re-minted by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC date the source last modified this volume, as it states.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "AVL": {
+      "type": "object",
+      "description": "Airspace Volume",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this volume record. Never the source's\nown identifier, which rides verbatim in SOURCE.NATIVE_ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESIGNATOR": {
+          "type": "string",
+          "description": "Published designator of the volume, verbatim (e.g. an area designator).",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Published display name of the volume, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "AIRSPACE_CLASS": {
+          "$ref": "#/definitions/avlAirspaceClass",
+          "description": "ICAO airspace class.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no class, or a class this enum does not model."
+            },
+            "CLASS_A": {
+              "value": 1
+            },
+            "CLASS_B": {
+              "value": 2
+            },
+            "CLASS_C": {
+              "value": 3
+            },
+            "CLASS_D": {
+              "value": 4
+            },
+            "CLASS_E": {
+              "value": 5
+            },
+            "CLASS_F": {
+              "value": 6
+            },
+            "CLASS_G": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VOLUME_TYPE": {
+          "$ref": "#/definitions/avlVolumeType",
+          "description": "Kind of volume.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CONTROLLED": {
+              "value": 1,
+              "description": "A controlled airspace volume not otherwise classified below."
+            },
+            "RESTRICTED": {
+              "value": 2,
+              "description": "Restricted area: entry restricted per published conditions."
+            },
+            "PROHIBITED": {
+              "value": 3,
+              "description": "Prohibited area: flight prohibited."
+            },
+            "DANGER": {
+              "value": 4,
+              "description": "Danger area: activities hazardous to flight may exist."
+            },
+            "TMA": {
+              "value": 5,
+              "description": "Terminal control area."
+            },
+            "CTR": {
+              "value": 6,
+              "description": "Control zone."
+            },
+            "ATZ": {
+              "value": 7,
+              "description": "Aerodrome traffic zone."
+            },
+            "FIR": {
+              "value": 8,
+              "description": "Flight information region."
+            },
+            "UIR": {
+              "value": 9,
+              "description": "Upper flight information region."
+            },
+            "MOA": {
+              "value": 10,
+              "description": "Military operations area."
+            },
+            "ADIZ": {
+              "value": 11,
+              "description": "Air defense identification zone."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "FLOOR_VALUE": {
+          "type": "number",
+          "description": "Lower vertical limit, metres in FLOOR_DATUM (flight-level number when\nFLOOR_DATUM is FLIGHT_LEVEL; NaN when SURFACE). NaN when unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "FLOOR_DATUM": {
+          "$ref": "#/definitions/avlVerticalDatum",
+          "description": "Datum of FLOOR_VALUE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No datum stated. A consumer MUST refuse a boundary whose value is present but whose datum is UNSPECIFIED rather than guess a reference."
+            },
+            "AGL": {
+              "value": 1,
+              "description": "Metres above ground level."
+            },
+            "MSL": {
+              "value": 2,
+              "description": "Metres above mean sea level."
+            },
+            "FLIGHT_LEVEL": {
+              "value": 3,
+              "description": "Flight level: the value is the flight level number (hundreds of feet on the standard atmosphere), not metres."
+            },
+            "WGS84_ELLIPSOID": {
+              "value": 4,
+              "description": "Metres above the WGS 84 ellipsoid."
+            },
+            "SURFACE": {
+              "value": 5,
+              "description": "The ground or water surface itself; the boundary value is NaN."
+            },
+            "UNLIMITED": {
+              "value": 6,
+              "description": "No upper limit; the boundary value is NaN. A datum member, never a sentinel altitude."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CEILING_VALUE": {
+          "type": "number",
+          "description": "Upper vertical limit, metres in CEILING_DATUM (flight-level number\nwhen FLIGHT_LEVEL; NaN when UNLIMITED). NaN when unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "CEILING_DATUM": {
+          "$ref": "#/definitions/avlVerticalDatum",
+          "description": "Datum of CEILING_VALUE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No datum stated. A consumer MUST refuse a boundary whose value is present but whose datum is UNSPECIFIED rather than guess a reference."
+            },
+            "AGL": {
+              "value": 1,
+              "description": "Metres above ground level."
+            },
+            "MSL": {
+              "value": 2,
+              "description": "Metres above mean sea level."
+            },
+            "FLIGHT_LEVEL": {
+              "value": 3,
+              "description": "Flight level: the value is the flight level number (hundreds of feet on the standard atmosphere), not metres."
+            },
+            "WGS84_ELLIPSOID": {
+              "value": 4,
+              "description": "Metres above the WGS 84 ellipsoid."
+            },
+            "SURFACE": {
+              "value": 5,
+              "description": "The ground or water surface itself; the boundary value is NaN."
+            },
+            "UNLIMITED": {
+              "value": 6,
+              "description": "No upper limit; the boundary value is NaN. A datum member, never a sentinel altitude."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EFFECTIVE_FROM": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond instant this volume becomes effective.",
+          "x-flatbuffer-type": "string"
+        },
+        "EFFECTIVE_TO": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond instant this volume ceases. Absent for\na volume with no published end.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_OF_ACTIVITY": {
+          "type": "string",
+          "description": "Activity schedule verbatim as the source publishes it (NOTAM-style\ntext). Never parsed into structure by the publisher: schedule grammar\nis source-specific and coercion would invent activations.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERTEX_LONGITUDE_DEG": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Vertex longitudes, geodetic degrees in [-180, 180].",
+          "x-flatbuffer-type": "[double]",
+          "x-flatbuffer-required": true
+        },
+        "VERTEX_LATITUDE_DEG": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Vertex latitudes, geodetic degrees in [-90, 90]. Same length as\nVERTEX_LONGITUDE_DEG.",
+          "x-flatbuffer-type": "[double]",
+          "x-flatbuffer-required": true
+        },
+        "RING_OFFSETS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Ring start indexes; RING_COUNT + 1 entries, last equals vertex count.",
+          "x-flatbuffer-type": "[uint32]",
+          "x-flatbuffer-required": true
+        },
+        "RING_POLYGON_INDEXES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Polygon each ring belongs to. One entry per ring, so its length is\nRING_OFFSETS length - 1.",
+          "x-flatbuffer-type": "[uint32]",
+          "x-flatbuffer-required": true
+        },
+        "RING_ROLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/avlRingRole"
+          },
+          "description": "Role of each ring. One entry per ring, so its length is RING_OFFSETS\nlength - 1.",
+          "x-flatbuffer-type": "[avlRingRole]",
+          "x-flatbuffer-required": true
+        },
+        "POLYGON_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of polygons; equals max(RING_POLYGON_INDEXES) + 1, published so\nan empty geometry is distinguishable from an unpopulated record.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ARC_DENSIFIED": {
+          "type": "boolean",
+          "description": "The source's arc or circle boundary segments were densified into the\nvertices above by the ingest.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DENSIFICATION_TOLERANCE_M": {
+          "type": "number",
+          "description": "Maximum deviation, metres, between a densified chord and the published\narc. Required knowledge when ARC_DENSIFIED; NaN otherwise.",
+          "x-flatbuffer-type": "double"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/AVLProvenance",
+          "description": "Dataset lineage and licence. Required.",
+          "x-flatbuffer-type": "AVLProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "VERTEX_LONGITUDE_DEG",
+        "VERTEX_LATITUDE_DEG",
+        "RING_OFFSETS",
+        "RING_POLYGON_INDEXES",
+        "RING_ROLES",
+        "SOURCE"
+      ],
       "additionalProperties": false
     },
     "BAL": {
@@ -72703,6 +73485,355 @@
       },
       "additionalProperties": false
     },
+    "TFNDesignator": {
+      "type": "object",
+      "description": "One designator the facility answers to in a named coding system.",
+      "properties": {
+        "SCHEME": {
+          "type": "string",
+          "description": "Coding-system token, verbatim (the system's own name). Never a field\nname and never normalized by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "The designator within that system, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SCHEME",
+        "VALUE"
+      ],
+      "additionalProperties": false
+    },
+    "TFNOperatingSurface": {
+      "type": "object",
+      "description": "One operating surface: the arrival/departure geometry of the facility.\nA runway and a berth carry the same shape; fields a domain does not use\nare absent (NaN), never zero.",
+      "properties": {
+        "SURFACE_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of this surface within the facility.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SURFACE_TYPE": {
+          "$ref": "#/definitions/tfnSurfaceKind",
+          "description": "Kind of surface.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no kind, or one this enum does not model; the source's own token, when there is one, rides in SURFACE_TYPE_CODE."
+            },
+            "RUNWAY": {
+              "value": 1,
+              "description": "A runway, including water runways at seaplane bases."
+            },
+            "HELIPAD": {
+              "value": 2,
+              "description": "A helipad or other vertical-operations pad."
+            },
+            "BERTH": {
+              "value": 3,
+              "description": "A berth a vessel moors alongside."
+            },
+            "ANCHORAGE": {
+              "value": 4,
+              "description": "An anchorage area."
+            },
+            "QUAY": {
+              "value": 5,
+              "description": "A quay or wharf frontage."
+            },
+            "PIER": {
+              "value": 6,
+              "description": "A pier or jetty."
+            },
+            "LAUNCH_PAD": {
+              "value": 7,
+              "description": "A launch or landing pad at a spaceport."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SURFACE_TYPE_CODE": {
+          "type": "string",
+          "description": "The source's own surface-kind token, verbatim, so a kind outside\ntfnSurfaceKind survives a round trip.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATOR": {
+          "type": "string",
+          "description": "Published designator of the surface, verbatim (runway designator,\nberth number).",
+          "x-flatbuffer-type": "string"
+        },
+        "LENGTH_M": {
+          "type": "number",
+          "description": "Usable length, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "WIDTH_M": {
+          "type": "number",
+          "description": "Usable width, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "DEPTH_M": {
+          "type": "number",
+          "description": "Available depth of water, metres, for a maritime surface.",
+          "x-flatbuffer-type": "double"
+        },
+        "SURFACE_MATERIAL": {
+          "type": "string",
+          "description": "Surface material or construction, verbatim as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUE_BEARING_DEG": {
+          "type": "number",
+          "description": "True bearing of the surface's operating direction, degrees, [0, 360).",
+          "x-flatbuffer-type": "double"
+        },
+        "THRESHOLD_LATITUDE": {
+          "type": "number",
+          "description": "Geodetic position of the threshold or reference point of this\nsurface, decimal degrees on WGS 84.",
+          "x-flatbuffer-type": "double"
+        },
+        "THRESHOLD_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIGHTED": {
+          "type": "boolean",
+          "description": "The surface is lighted.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "required": [
+        "SURFACE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TFNProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one facility record.\n\nRequired on every record: a redistributed facility whose dataset, epoch,\nand licence are unstated is not publishable. The standard names no\ndataset, provider, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the dataset this facility\nwas taken from, unique within the publisher's own dataset registry.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this\nfacility was decoded from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when one exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or file selection used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the dataset publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source dataset's own identifier for this facility, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC date the source last modified this row, as it states.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TFN": {
+      "type": "object",
+      "description": "Transport Facility Node",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this facility record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLACE_ID": {
+          "type": "string",
+          "description": "`$GNP.ID` of the gazetteer place carrying this facility's name set\nand location. Location is joined, never re-published here.",
+          "x-flatbuffer-type": "string"
+        },
+        "FACILITY_TYPE": {
+          "$ref": "#/definitions/tfnFacilityType",
+          "description": "Kind of facility.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "AERODROME": {
+              "value": 1
+            },
+            "HELIPORT": {
+              "value": 2
+            },
+            "SEAPLANE_BASE": {
+              "value": 3
+            },
+            "SEAPORT": {
+              "value": 4
+            },
+            "INLAND_PORT": {
+              "value": 5
+            },
+            "TERMINAL": {
+              "value": 6
+            },
+            "SPACEPORT": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Operational display name, verbatim, when it differs from the place\nname in `$GNP`.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TFNDesignator"
+          },
+          "description": "Every designator the facility answers to, scheme-tagged.",
+          "x-flatbuffer-type": "[TFNDesignator]"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ELEVATION_M": {
+          "type": "number",
+          "description": "Field or reference elevation, metres above mean sea level as the\nsource publishes it. Zero means unpublished, never sea level; a\nfacility at sea level is distinguished by ELEVATION_PUBLISHED.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_PUBLISHED": {
+          "type": "boolean",
+          "description": "ELEVATION_M carries a published value.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAGNETIC_VARIATION_DEG": {
+          "type": "number",
+          "description": "Magnetic variation at the facility, degrees, positive east, as the\nsource publishes it. NaN when unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "OPERATING_SURFACES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TFNOperatingSurface"
+          },
+          "description": "The operating surfaces of the facility.",
+          "x-flatbuffer-type": "[TFNOperatingSurface]"
+        },
+        "MAXIMUM_DRAFT_M": {
+          "type": "number",
+          "description": "Maximum vessel draft the facility accepts, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANCHORAGE_DEPTH_M": {
+          "type": "number",
+          "description": "Depth of water at the principal anchorage, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "HARBOR_TYPE": {
+          "type": "string",
+          "description": "Harbor type token, verbatim as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SHELTER_AFFORDED": {
+          "type": "string",
+          "description": "Shelter afforded token, verbatim as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/TFNProvenance",
+          "description": "Dataset lineage and licence. Required.",
+          "x-flatbuffer-type": "TFNProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
     "TKG": {
       "type": "object",
       "description": "Tracking and Data Fusion",
@@ -72904,172 +74035,6 @@
           "x-flatbuffer-type": "ushort"
         }
       },
-      "additionalProperties": false
-    },
-    "TNR": {
-      "type": "object",
-      "description": "Trust Node Record - Durable node membership state for an SDN trust graph.\n\nTNR records preserve isolated trust graph nodes that do not currently have\nan active trust edge. The current graph is a projection over the latest TNR\nand TRE records, where deleted records are tombstones.",
-      "properties": {
-        "NODE_ID": {
-          "type": "string",
-          "description": "Stable trust graph node identifier, normally an SDN peer ID or account id.",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
-        },
-        "CREATED_AT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 18446744073709551615,
-          "description": "Unix timestamp in milliseconds when this node record was created.",
-          "x-flatbuffer-type": "uint64"
-        },
-        "UPDATED_AT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 18446744073709551615,
-          "description": "Unix timestamp in milliseconds when this node record was last updated.",
-          "x-flatbuffer-type": "uint64"
-        },
-        "DELETED": {
-          "type": "boolean",
-          "description": "True when this record tombstones the node from the current graph.",
-          "x-flatbuffer-type": "bool"
-        },
-        "PROVIDER_PEER_ID": {
-          "type": "string",
-          "description": "Peer ID of the node/provider that issued this trust graph record.",
-          "x-flatbuffer-type": "string"
-        },
-        "PROVIDER_SIGNATURE": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          },
-          "description": "Provider signature over the trust node record.",
-          "x-flatbuffer-type": "[ubyte]"
-        }
-      },
-      "required": [
-        "NODE_ID"
-      ],
-      "additionalProperties": false
-    },
-    "TPN": {
-      "type": "object",
-      "description": "Transponder",
-      "properties": {
-        "ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "NID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TTF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SYMBOL_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "FEC": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "MODULATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "FORMAT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SYSTEM": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CHANNELS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        }
-      },
-      "additionalProperties": false
-    },
-    "TRE": {
-      "type": "object",
-      "description": "Trust Edge Record - Durable directed trust assertion for an SDN trust graph.\n\nA TRE records one directed truster -> trustee assertion. The current trust\ngraph is a projection over the latest TRE records by EDGE_ID, with deleted\nrecords acting as tombstones. Implementations must still validate the\nprojected graph for acyclicity before accepting it.",
-      "properties": {
-        "EDGE_ID": {
-          "type": "string",
-          "description": "Stable edge identifier, normally \"truster->trustee\".",
-          "x-flatbuffer-type": "string"
-        },
-        "TRUSTER_ID": {
-          "type": "string",
-          "description": "Trusting node identifier.",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
-        },
-        "TRUSTEE_ID": {
-          "type": "string",
-          "description": "Trusted node identifier.",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
-        },
-        "WEIGHT": {
-          "type": "number",
-          "description": "Truster-assigned edge weight in the range [0, 1].",
-          "x-flatbuffer-type": "double"
-        },
-        "UPDATED_AT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 18446744073709551615,
-          "description": "Unix timestamp in milliseconds when this edge was last updated.",
-          "x-flatbuffer-type": "uint64"
-        },
-        "DELETED": {
-          "type": "boolean",
-          "description": "True when this record tombstones the edge from the current graph.",
-          "x-flatbuffer-type": "bool"
-        },
-        "PROVIDER_PEER_ID": {
-          "type": "string",
-          "description": "Peer ID of the node/provider that issued this trust edge record.",
-          "x-flatbuffer-type": "string"
-        },
-        "PROVIDER_SIGNATURE": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          },
-          "description": "Provider signature over the trust edge record.",
-          "x-flatbuffer-type": "[ubyte]"
-        }
-      },
-      "required": [
-        "TRUSTER_ID",
-        "TRUSTEE_ID"
-      ],
       "additionalProperties": false
     },
     "TRK": {
@@ -73470,6 +74435,524 @@
           "x-flatbuffer-type": "[double]"
         }
       },
+      "additionalProperties": false
+    },
+    "TMSModelParameter": {
+      "type": "object",
+      "description": "One parameter of the propagation model, stated by name so a model\nregistry can evolve without schema change.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Parameter name within the MODEL_ID model's own registry, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Parameter value.",
+          "x-flatbuffer-type": "double"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units of VALUE, verbatim. Required: a unitless parameter states so\nexplicitly (e.g. \"1\").",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "NAME",
+        "UNITS"
+      ],
+      "additionalProperties": false
+    },
+    "TMSIdentifier": {
+      "type": "object",
+      "description": "One identity the track is known by in a named identity scheme.",
+      "properties": {
+        "SCHEME": {
+          "type": "string",
+          "description": "Identity scheme token, verbatim (the identity system's own name).\nNever a field name and never normalized by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "The identifier within that scheme, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SCHEME",
+        "VALUE"
+      ],
+      "additionalProperties": false
+    },
+    "TMSProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one track model state.\n\nRequired on every record: a redistributed track whose feed, epoch, and\nlicence are unstated is not publishable. The standard names no feed,\nprovider, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the feed or dataset this\nstate was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The feed or dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the feed or dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition or feed\nsession this state was derived from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when one exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or subscription used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp of the observation\nthis state was updated from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source's own identifier for the track or observation stream this\nstate was derived from, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC instant the source last modified or emitted the\nunderlying observation, as the source states it.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMS": {
+      "type": "object",
+      "description": "Track Model State",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this state record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of the track this state belongs to, held\nconstant across every state update of the same track.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "$ref": "#/definitions/trackEnvironment",
+          "description": "Domain the track moves in. The `$TRK` enum reused verbatim; ordinal 0\nis SPACE, so a publisher MUST set this field \u2014 it is defaulted to\nUNKNOWN explicitly so an unset field can never be read as SPACE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "AIR": {
+              "value": 1
+            },
+            "SURFACE": {
+              "value": 2
+            },
+            "SUBSURFACE": {
+              "value": 3
+            },
+            "LAND": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch this state is valid at. The\npropagation origin: every kinematic field below is stated at EPOCH.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude, decimal degrees on WGS 84, positive north.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude, decimal degrees on WGS 84, positive east, in [-180, 180].",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "description": "Altitude, metres above the WGS 84 ellipsoid. NaN for a surface track\nwhose source publishes no altitude.",
+          "x-flatbuffer-type": "double"
+        },
+        "GROUND_SPEED_MPS": {
+          "type": "number",
+          "description": "Speed over ground, metres per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_NORTH_MPS": {
+          "type": "number",
+          "description": "Velocity components, metres per second, local NED-derived axes:\nnorth, east, and up. Published when the source or filter resolves\nthem; NaN otherwise.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_EAST_MPS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_UP_MPS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HEADING_DEG": {
+          "type": "number",
+          "description": "Heading, degrees true, [0, 360): the direction the vehicle points.",
+          "x-flatbuffer-type": "double"
+        },
+        "COURSE_DEG": {
+          "type": "number",
+          "description": "Course over ground, degrees true, [0, 360): the direction it moves.",
+          "x-flatbuffer-type": "double"
+        },
+        "TURN_RATE_DPS": {
+          "type": "number",
+          "description": "Turn rate, degrees per second, positive clockwise seen from above.",
+          "x-flatbuffer-type": "double"
+        },
+        "VERTICAL_RATE_MPS": {
+          "type": "number",
+          "description": "Vertical rate, metres per second, positive up.",
+          "x-flatbuffer-type": "double"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Identifier of the dead-reckoning or motion model that extrapolates\nthis state, a key into the publisher's model registry. Required: a\nstate with no model is a position report, which this record is not.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MODEL_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMSModelParameter"
+          },
+          "description": "Parameters of that model, named per its own registry.",
+          "x-flatbuffer-type": "[TMSModelParameter]"
+        },
+        "PROPAGATION_VALID_UNTIL": {
+          "type": "string",
+          "description": "RFC 3339 UTC instant beyond which the publisher no longer stands\nbehind propagation of this state.",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "1-sigma horizontal position uncertainty at EPOCH, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "INNOVATION_GATE_SIGMA": {
+          "type": "number",
+          "description": "Gate in standard deviations: an observation whose innovation exceeds\nthis many sigma of POSITION_UNCERTAINTY_M breached the model and\nproduced this update.",
+          "x-flatbuffer-type": "double"
+        },
+        "INNOVATION_GATE_DISTANCE_M": {
+          "type": "number",
+          "description": "Gate as an absolute distance, metres, when the publisher gates on\ndistance rather than sigma.",
+          "x-flatbuffer-type": "double"
+        },
+        "TOLERANCE_M": {
+          "type": "number",
+          "description": "Publisher's stated tolerance, metres, within which propagation of this\nstate is considered to agree with truth.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACK_STATUS": {
+          "$ref": "#/definitions/TrkTrackStatus",
+          "description": "Track status. The `$TRK` enum reused verbatim; ordinal 0 is ACTIVE,\nso a publisher MUST set this field on every record \u2014 an unset field\nreads as ACTIVE and a consumer cannot distinguish the two.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0
+            },
+            "DROPPED": {
+              "value": 1
+            },
+            "TENTATIVE": {
+              "value": 2
+            },
+            "CONFIRMED": {
+              "value": 3
+            },
+            "COASTED": {
+              "value": 4
+            },
+            "DEAD": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "ACTIVE"
+        },
+        "STALE_AFTER_S": {
+          "type": "number",
+          "description": "Seconds after LAST_UPDATE_EPOCH at which a consumer MUST mark the\ntrack stale.",
+          "x-flatbuffer-type": "double"
+        },
+        "DROP_AFTER_S": {
+          "type": "number",
+          "description": "Seconds after LAST_UPDATE_EPOCH at which a consumer MUST drop the\ntrack.",
+          "x-flatbuffer-type": "double"
+        },
+        "LAST_UPDATE_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the last source observation\nthat updated this track \u2014 the staleness clock origin. EPOCH may lag it\nwhen the publisher re-emits a keepalive state.",
+          "x-flatbuffer-type": "string"
+        },
+        "IDENTIFIERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMSIdentifier"
+          },
+          "description": "Every identity the track is known by, scheme-tagged.",
+          "x-flatbuffer-type": "[TMSIdentifier]"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/TMSProvenance",
+          "description": "Feed lineage and licence. Required.",
+          "x-flatbuffer-type": "TMSProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "EPOCH",
+        "MODEL_ID",
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "TNR": {
+      "type": "object",
+      "description": "Trust Node Record - Durable node membership state for an SDN trust graph.\n\nTNR records preserve isolated trust graph nodes that do not currently have\nan active trust edge. The current graph is a projection over the latest TNR\nand TRE records, where deleted records are tombstones.",
+      "properties": {
+        "NODE_ID": {
+          "type": "string",
+          "description": "Stable trust graph node identifier, normally an SDN peer ID or account id.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this node record was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this node record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the node from the current graph.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this trust graph record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the trust node record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "NODE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TPN": {
+      "type": "object",
+      "description": "Transponder",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TTF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SYMBOL_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FEC": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "MODULATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANNELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRE": {
+      "type": "object",
+      "description": "Trust Edge Record - Durable directed trust assertion for an SDN trust graph.\n\nA TRE records one directed truster -> trustee assertion. The current trust\ngraph is a projection over the latest TRE records by EDGE_ID, with deleted\nrecords acting as tombstones. Implementations must still validate the\nprojected graph for acyclicity before accepting it.",
+      "properties": {
+        "EDGE_ID": {
+          "type": "string",
+          "description": "Stable edge identifier, normally \"truster->trustee\".",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUSTER_ID": {
+          "type": "string",
+          "description": "Trusting node identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TRUSTEE_ID": {
+          "type": "string",
+          "description": "Trusted node identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WEIGHT": {
+          "type": "number",
+          "description": "Truster-assigned edge weight in the range [0, 1].",
+          "x-flatbuffer-type": "double"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this edge was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the edge from the current graph.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this trust edge record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the trust edge record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "TRUSTER_ID",
+        "TRUSTEE_ID"
+      ],
       "additionalProperties": false
     },
     "TRN": {
@@ -75565,6 +77048,393 @@
           "x-flatbuffer-type": "double"
         }
       },
+      "additionalProperties": false
+    },
+    "VEPPerformancePoint": {
+      "type": "object",
+      "description": "One point of the burn-rate table: consumption at a stated regime,\naltitude, and speed.",
+      "properties": {
+        "ALTITUDE_M": {
+          "type": "number",
+          "description": "Altitude the point is stated at, metres above mean sea level. NaN for\nsurface and subsurface regimes where altitude does not apply.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPEED_MPS": {
+          "type": "number",
+          "description": "Speed the point is stated at, metres per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "REGIME": {
+          "$ref": "#/definitions/vepRegime",
+          "description": "Operating regime.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "TAKEOFF": {
+              "value": 1
+            },
+            "CLIMB": {
+              "value": 2
+            },
+            "CRUISE": {
+              "value": 3
+            },
+            "LOITER": {
+              "value": 4
+            },
+            "DESCENT": {
+              "value": 5
+            },
+            "TAXI": {
+              "value": 6
+            },
+            "TRANSIT": {
+              "value": 7,
+              "description": "Steady transit for surface and subsurface vehicles."
+            },
+            "MANEUVER": {
+              "value": 8,
+              "description": "High-consumption maneuvering."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "BURN_RATE_VALUE": {
+          "type": "number",
+          "description": "Consumption rate at this point, in BURN_RATE_UNITS per second unless\nthe unit token itself states another time base.",
+          "x-flatbuffer-type": "double"
+        },
+        "BURN_RATE_UNITS": {
+          "type": "string",
+          "description": "Units of BURN_RATE_VALUE, verbatim. Required: a rate with no unit is\nnot publishable.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SPECIFIC_RANGE_M_PER_UNIT": {
+          "type": "number",
+          "description": "Distance travelled per unit of energy at this point, metres per\nCAPACITY_UNITS unit.",
+          "x-flatbuffer-type": "double"
+        },
+        "GROSS_MASS_KG": {
+          "type": "number",
+          "description": "Gross mass the point is stated at, kilograms.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "BURN_RATE_UNITS"
+      ],
+      "additionalProperties": false
+    },
+    "VEPReplenishment": {
+      "type": "object",
+      "description": "One replenishment option: how the energy store is reset.",
+      "properties": {
+        "FACILITY_ID": {
+          "type": "string",
+          "description": "`$TFN.ID` of a facility where this replenishment is available. Absent\nfor a replenishment that is not facility-bound.",
+          "x-flatbuffer-type": "string"
+        },
+        "DURATION_S": {
+          "type": "number",
+          "description": "Typical duration of the replenishment, seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSFER_RATE_VALUE": {
+          "type": "number",
+          "description": "Transfer rate, in TRANSFER_RATE_UNITS.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSFER_RATE_UNITS": {
+          "type": "string",
+          "description": "Units of TRANSFER_RATE_VALUE, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "IN_MOTION": {
+          "type": "boolean",
+          "description": "Replenishment happens while the vehicle is underway (aerial\nrefuelling, underway replenishment).",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VEPProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one endurance profile.\n\nRequired on every record: a profile whose data source, epoch, and\nlicence are unstated is not publishable. The standard names no dataset,\nprovider, or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the dataset or study this\nprofile was derived from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this\nprofile was derived from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when one exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or file selection used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the dataset publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source's own identifier for the vehicle class or type this\nprofile describes, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC instant the source last modified this data, as it\nstates.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "VEP": {
+      "type": "object",
+      "description": "Vehicle Endurance Profile",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this profile record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VEHICLE_CLASS_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of the vehicle CLASS this profile models.\nRequired: every profile is at least class-level.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VEHICLE_TYPE_DESIGNATOR": {
+          "type": "string",
+          "description": "Verbatim vehicle type token refining the class, when this profile is\na per-type refinement.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "$ref": "#/definitions/trackEnvironment",
+          "description": "Domain the vehicle operates in. The `$TRK` enum reused verbatim;\nordinal 0 is SPACE, so it is defaulted to UNKNOWN explicitly.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "AIR": {
+              "value": 1
+            },
+            "SURFACE": {
+              "value": 2
+            },
+            "SUBSURFACE": {
+              "value": 3
+            },
+            "LAND": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "ENERGY_TYPE": {
+          "$ref": "#/definitions/vepEnergyType",
+          "description": "Kind of energy store.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "LIQUID_FUEL": {
+              "value": 1
+            },
+            "ELECTRIC": {
+              "value": 2
+            },
+            "HYBRID": {
+              "value": 3
+            },
+            "NUCLEAR": {
+              "value": 4
+            },
+            "SOLAR": {
+              "value": 5
+            },
+            "WIND": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CAPACITY_VALUE": {
+          "type": "number",
+          "description": "Usable energy store capacity, in CAPACITY_UNITS.",
+          "x-flatbuffer-type": "double"
+        },
+        "CAPACITY_UNITS": {
+          "type": "string",
+          "description": "Units of CAPACITY_VALUE, verbatim. The same unit keys\nSPECIFIC_RANGE_M_PER_UNIT and the replenishment transfer rates.",
+          "x-flatbuffer-type": "string"
+        },
+        "RESERVE_FRACTION": {
+          "type": "number",
+          "description": "Fraction of capacity [0-1] held as reserve; endurance computations\nspend down to the reserve, never through it.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERFORMANCE_POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VEPPerformancePoint"
+          },
+          "description": "The burn-rate table, keyed regime x altitude x speed. Required, and\nnever a single collapsed scalar.",
+          "x-flatbuffer-type": "[VEPPerformancePoint]",
+          "x-flatbuffer-required": true
+        },
+        "INTERPOLATION": {
+          "$ref": "#/definitions/vepInterpolation",
+          "description": "How a consumer interpolates between the points.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No method stated; a consumer MUST treat the table as TABLE_LOOKUP rather than invent an interpolant."
+            },
+            "NEAREST": {
+              "value": 1,
+              "description": "Nearest point in (regime, altitude, speed)."
+            },
+            "LINEAR": {
+              "value": 2,
+              "description": "Linear along the single varying axis."
+            },
+            "BILINEAR": {
+              "value": 3,
+              "description": "Bilinear over altitude and speed within a regime."
+            },
+            "TABLE_LOOKUP": {
+              "value": 4,
+              "description": "Exact-key lookup only; no interpolation between points."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MAXIMUM_ENDURANCE_S": {
+          "type": "number",
+          "description": "Maximum endurance, seconds, as the source publishes it.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_RANGE_M": {
+          "type": "number",
+          "description": "Maximum range, metres, as the source publishes it.",
+          "x-flatbuffer-type": "double"
+        },
+        "LOITER_SPEED_MPS": {
+          "type": "number",
+          "description": "Best-loiter speed, metres per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "SERVICE_CEILING_M": {
+          "type": "number",
+          "description": "Service ceiling, metres above mean sea level.",
+          "x-flatbuffer-type": "double"
+        },
+        "REPLENISHMENT": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VEPReplenishment"
+          },
+          "description": "Replenishment options available to this class or type.",
+          "x-flatbuffer-type": "[VEPReplenishment]"
+        },
+        "REFINES_ID": {
+          "type": "string",
+          "description": "`$VEP.ID` of the parent profile this one refines \u2014 the class-to-type\nspecialization chain. Absent for a class-level root profile.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/VEPProvenance",
+          "description": "Dataset lineage and licence. Required.",
+          "x-flatbuffer-type": "VEPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "VEHICLE_CLASS_ID",
+        "PERFORMANCE_POINTS",
+        "SOURCE"
+      ],
       "additionalProperties": false
     },
     "WKSQuery": {
@@ -79772,6 +81642,18 @@
             },
             {
               "$ref": "#/definitions/DTT"
+            },
+            {
+              "$ref": "#/definitions/AVL"
+            },
+            {
+              "$ref": "#/definitions/TFN"
+            },
+            {
+              "$ref": "#/definitions/TMS"
+            },
+            {
+              "$ref": "#/definitions/VEP"
             }
           ],
           "description": "The record data (union of all supported standards)",

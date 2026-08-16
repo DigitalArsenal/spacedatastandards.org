@@ -231,6 +231,10 @@ public struct Record : IFlatbufferObject
   public TRS valueAsTRS() { return value<TRS>().Value; }
   public GNP valueAsGNP() { return value<GNP>().Value; }
   public DTT valueAsDTT() { return value<DTT>().Value; }
+  public AVL valueAsAVL() { return value<AVL>().Value; }
+  public TFN valueAsTFN() { return value<TFN>().Value; }
+  public TMS valueAsTMS() { return value<TMS>().Value; }
+  public VEP valueAsVEP() { return value<VEP>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -901,6 +905,18 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.DTT:
         _o.value.Value = this.value<DTT>().HasValue ? this.value<DTT>().Value.UnPack() : null;
+        break;
+      case RecordType.AVL:
+        _o.value.Value = this.value<AVL>().HasValue ? this.value<AVL>().Value.UnPack() : null;
+        break;
+      case RecordType.TFN:
+        _o.value.Value = this.value<TFN>().HasValue ? this.value<TFN>().Value.UnPack() : null;
+        break;
+      case RecordType.TMS:
+        _o.value.Value = this.value<TMS>().HasValue ? this.value<TMS>().Value.UnPack() : null;
+        break;
+      case RecordType.VEP:
+        _o.value.Value = this.value<VEP>().HasValue ? this.value<VEP>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;
