@@ -216,6 +216,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -350,10 +351,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 215;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 216;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 216] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 217] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -570,6 +571,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 216] = [
   RecordType::TFN,
   RecordType::TMS,
   RecordType::VEP,
+  RecordType::EGP,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -807,9 +809,10 @@ impl RecordType {
   pub const TFN: Self = Self(213);
   pub const TMS: Self = Self(214);
   pub const VEP: Self = Self(215);
+  pub const EGP: Self = Self(216);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 215;
+  pub const ENUM_MAX: u8 = 216;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1027,6 +1030,7 @@ impl RecordType {
     Self::TFN,
     Self::TMS,
     Self::VEP,
+    Self::EGP,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1247,6 +1251,7 @@ impl RecordType {
       Self::TFN => Some("TFN"),
       Self::TMS => Some("TMS"),
       Self::VEP => Some("VEP"),
+      Self::EGP => Some("EGP"),
       _ => None,
     }
   }
@@ -1523,6 +1528,7 @@ pub enum RecordTypeT {
   TFN(alloc::boxed::Box<TFNT>),
   TMS(alloc::boxed::Box<TMST>),
   VEP(alloc::boxed::Box<VEPT>),
+  EGP(alloc::boxed::Box<EGPT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1748,6 +1754,7 @@ impl RecordTypeT {
       Self::TFN(_) => RecordType::TFN,
       Self::TMS(_) => RecordType::TMS,
       Self::VEP(_) => RecordType::VEP,
+      Self::EGP(_) => RecordType::EGP,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1968,6 +1975,7 @@ impl RecordTypeT {
       Self::TFN(v) => Some(v.pack(fbb).as_union_value()),
       Self::TMS(v) => Some(v.pack(fbb).as_union_value()),
       Self::VEP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::EGP(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6485,6 +6493,27 @@ impl RecordTypeT {
   pub fn as_vep_mut(&mut self) -> Option<&mut VEPT> {
     if let Self::VEP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned EGPT, setting the union to NONE.
+  pub fn take_egp(&mut self) -> Option<alloc::boxed::Box<EGPT>> {
+    if let Self::EGP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::EGP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the EGPT.
+  pub fn as_egp(&self) -> Option<&EGPT> {
+    if let Self::EGP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the EGPT.
+  pub fn as_egp_mut(&mut self) -> Option<&mut EGPT> {
+    if let Self::EGP(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7599,6 +7628,11 @@ impl<'a> Record<'a> {
       RecordType::VEP => RecordTypeT::VEP(alloc::boxed::Box::new(
         self.value_as_vep()
             .expect("Invalid union table, expected `RecordType::VEP`.")
+            .unpack()
+      )),
+      RecordType::EGP => RecordTypeT::EGP(alloc::boxed::Box::new(
+        self.value_as_egp()
+            .expect("Invalid union table, expected `RecordType::EGP`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10860,6 +10894,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_egp(&self) -> Option<EGP<'a>> {
+    if self.value_type() == RecordType::EGP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { EGP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -11085,6 +11134,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::TFN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TFN>>("RecordType::TFN", pos),
           RecordType::TMS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TMS>>("RecordType::TMS", pos),
           RecordType::VEP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VEP>>("RecordType::VEP", pos),
+          RecordType::EGP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<EGP>>("RecordType::EGP", pos),
           _ => Ok(()),
         }
      })?
@@ -12646,6 +12696,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::VEP => {
           if let Some(x) = self.value_as_vep() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::EGP => {
+          if let Some(x) = self.value_as_egp() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

@@ -1,0 +1,171 @@
+// Hash: d7c38fac314fab6f5f3cc5b072ad7dfd1b613bc987cea8718a5e8a26e41e6843
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+// Entity Group (EGP)
+// Description
+// One named, publishable set of entity references — the wire form of a saved
+// selection. A group asserts membership only: it never republishes the members'
+// own data. Each member is named by the `(STANDARD, RECORD_ID)` pair, so a
+// group may mix object catalogue entries, ground places, tracks, sensors, and
+// any other standard in one set. The union ordinal is NEVER stored in a group;
+// `STANDARD` is the discriminator that has never shifted.
+//
+// A member reference is an ASSERTION, not a foreign key. Dangling references
+// are expected and acceptable: a consumer that cannot resolve a member drops
+// that row, never the group.
+//
+// MUTABILITY. A named group is mutable state on an append-only wire. Groups are
+// therefore VERSIONED, never edited in place: each publication is a full record
+// keyed `GROUP_ID` + `UPDATED_AT`, and the highest `UPDATED_AT` from a given
+// publisher wins. Consumers reconcile per publisher; two publishers asserting
+// the same GROUP_ID are two groups, not a conflict.
+//
+// CLASSIFICATION IS TAGS, NEVER FOLDERS. This standard has no parent/child
+// group field and will not gain one: a hierarchy field would force every
+// consumer to build a tree UI and would make a group's meaning depend on where
+// it sits rather than what it says. Grouping-by-grouping is expressed as
+// TAGS and recovered by filtering.
+//
+// TAG GRAMMAR (normative). Every entry in `TAGS` is a single
+// `namespace:value` pair: lowercase ASCII `[a-z0-9._-]` in each part, exactly
+// one colon separator, no whitespace, no empty part. The list is sorted and
+// deduplicated on publication so two publishers describing the same facets emit
+// identical bytes. An entry without a colon is malformed and a conforming
+// consumer ignores that entry, never the record.
+//
+// Ratified namespaces — a publisher may mint others, and consumers ignore
+// namespaces they do not model:
+//   `provisioner:` — the publishing programme that curates the group.
+//   `class:`       — what kind of grouping this is: `manufacturer`, `operator`,
+//                    `government`, `country`, `constellation`, `mission`,
+//                    `regime`, `query`, `user`.
+//   `operator:`, `manufacturer:`, `constellation:`, `agency:` — the named
+//                    party or programme the group is about.
+//   `country:`     — ISO 3166-1 alpha-2, lowercase.
+//   `regime:`      — orbital regime, e.g. `leo`, `meo`, `geo`, `heo`, `xgeo`.
+//   `environment:` — `space`, `air`, `maritime`, `land`.
+//   `status:`      — lifecycle of the grouping itself, e.g. `active`,
+//                    `historical`, `draft`.
+//
+// TAG VALUES ARE DATA. The no-vendor-names rule binds this DESCRIPTION and
+// every enum member in this file — the standard never names a company. A tag
+// VALUE is publisher data and may name any real operator, manufacturer, or
+// constellation verbatim.
+//
+// OWNERSHIP IS THE SIGNATURE, NEVER A TAG. The authoritative provisioner of a
+// group is the publishing key on the envelope that carries it — the `$EPM`
+// identity whose signature covers the record bytes. A `provisioner:` tag is a
+// DENORMALIZED FILTER FACET only: convenient for querying, never evidence. A
+// consumer that finds a `provisioner:` tag disagreeing with the signing key
+// trusts the key and treats the tag as unverified display text.
+
+/// How a group's membership was established.
+enum egpMembershipMode : byte {
+  UNSPECIFIED = 0,
+  /// Members were chosen one by one; MEMBERS is the whole truth.
+  ENUMERATED,
+  /// Members were produced by evaluating QUERY; MEMBERS is that evaluation
+  /// frozen at QUERY.EVALUATED_AT.
+  QUERY_SNAPSHOT,
+  /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
+  /// recompute; the query wins on disagreement.
+  QUERY_LIVE
+}
+
+/// Provenance of the assertions behind a group. Field-for-field the
+/// `$CMR` provenance shape, so one consumer parses both.
+table EGPProvenance {
+  /// Publisher name verbatim as that publisher states it.
+  SOURCE:string (required);
+  /// Source dataset or product name verbatim.
+  SOURCE_DATASET:string (required);
+  /// Source-native row, group, object, or catalogue identifier.
+  SOURCE_RECORD_ID:string;
+  /// Replayable URL or provider query identifying the source material.
+  SOURCE_URL:string;
+  /// Source revision, edition, or upstream update marker verbatim.
+  SOURCE_VERSION:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// SHA-256 of the exact source payload bytes, as 64 lowercase hexadecimal
+  /// characters. Empty only when the source cannot expose replayable bytes.
+  SOURCE_SHA256:string;
+  /// Redistribution terms verbatim. Empty means unknown terms, never public
+  /// domain and never an implied grant.
+  LICENSE:string;
+  /// Attribution text required by the source.
+  ATTRIBUTION:string;
+  /// Source caveats or reconciliation notes; never a substitute for a field.
+  NOTES:string;
+}
+
+/// The query that generated this group — the wire form of save-search-as-group.
+/// This is generating provenance, not source lineage, so it is a field of its
+/// own and never overloaded onto EGPProvenance.
+table EGPQuery {
+  /// Query language the TEXT is written in, verbatim and lowercase, e.g.
+  /// `flatsql`. A consumer that does not implement the dialect keeps MEMBERS
+  /// and never guesses at the text.
+  DIALECT:string (required);
+  /// The query text verbatim, exactly as evaluated.
+  TEXT:string (required);
+  /// RFC 3339 UTC fixed-millisecond timestamp at which TEXT was evaluated to
+  /// produce MEMBERS.
+  EVALUATED_AT:string;
+  /// Row count the evaluation returned. A consumer whose re-evaluation differs
+  /// reports drift; it never silently rewrites the record.
+  RESULT_COUNT:uint;
+  /// Dataset or collection epoch the evaluation ran against, when the publisher
+  /// can name one.
+  DATASET_EPOCH:string;
+}
+
+/// One membership assertion.
+table EGPMember {
+  /// Four-character standard code of the referenced record, `$` included,
+  /// e.g. `$CAT`. Never the union ordinal.
+  STANDARD:string (required);
+  /// The referenced record's publisher-stable identifier, verbatim.
+  RECORD_ID:string (required);
+  /// Denormalized fast key for catalogued space objects. 0 means absent, which
+  /// is the normal case for every non-catalogue member.
+  NORAD_CAT_ID:uint;
+  /// Optional content identifier pinning the exact referenced record bytes.
+  CID:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp the member was added.
+  ADDED_AT:string;
+  /// Publisher note about this membership; never a substitute for a field.
+  NOTES:string;
+}
+
+/// Entity Group
+table EGP {
+  /// Publisher-stable identifier of the group. Together with the publishing
+  /// key it is the group's identity across versions.
+  GROUP_ID:string (required);
+  /// Human-readable group name.
+  NAME:string (required);
+  /// Human-readable description of what the group collects.
+  DESCRIPTION:string;
+  /// `namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.
+  /// This is the ONLY classification surface: there are no folders.
+  TAGS:[string];
+  /// How membership was established.
+  MEMBERSHIP_MODE:egpMembershipMode = UNSPECIFIED;
+  /// The membership assertions.
+  MEMBERS:[EGPMember];
+  /// The generating query, when the group was saved from a search.
+  QUERY:EGPQuery;
+  /// RFC 3339 UTC fixed-millisecond creation timestamp.
+  CREATED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond update timestamp. With GROUP_ID and the
+  /// publishing key this is the version key: latest-wins per publisher.
+  UPDATED_AT:string (required);
+  /// Dataset lineage and licence for the assertions in this group.
+  PROVENANCE:[EGPProvenance];
+  /// Optional content identifier of the dataset the group was drawn from.
+  DATASET_CID:string;
+}
+
+root_type EGP;
+file_identifier "$EGP";

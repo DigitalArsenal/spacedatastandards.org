@@ -233,6 +233,7 @@ class RecordType(object):
     TFN = 213
     TMS = 214
     VEP = 215
+    EGP = 216
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -883,4 +884,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.VEP:
         import VEP
         return VEP.VEPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.EGP:
+        import EGP
+        return EGP.EGPT.InitFromBuf(table.Bytes, table.Pos)
     return None

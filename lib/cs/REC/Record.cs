@@ -235,6 +235,7 @@ public struct Record : IFlatbufferObject
   public TFN valueAsTFN() { return value<TFN>().Value; }
   public TMS valueAsTMS() { return value<TMS>().Value; }
   public VEP valueAsVEP() { return value<VEP>().Value; }
+  public EGP valueAsEGP() { return value<EGP>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -917,6 +918,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.VEP:
         _o.value.Value = this.value<VEP>().HasValue ? this.value<VEP>().Value.UnPack() : null;
+        break;
+      case RecordType.EGP:
+        _o.value.Value = this.value<EGP>().HasValue ? this.value<EGP>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

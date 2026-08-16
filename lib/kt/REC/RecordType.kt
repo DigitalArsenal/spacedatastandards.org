@@ -235,5 +235,6 @@ class RecordType private constructor() {
         const val TFN: UByte = 213u
         const val TMS: UByte = 214u
         const val VEP: UByte = 215u
+        const val EGP: UByte = 216u
     }
 }

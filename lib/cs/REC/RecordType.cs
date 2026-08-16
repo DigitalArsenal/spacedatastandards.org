@@ -234,6 +234,7 @@ public enum RecordType : byte
   TFN = 213,
   TMS = 214,
   VEP = 215,
+  EGP = 216,
 };
 
 public class RecordTypeUnion {
@@ -676,6 +677,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTMS(TMST _tms) { return new RecordTypeUnion{ Type = RecordType.TMS, Value = _tms }; }
   public VEPT AsVEP() { return this.As<VEPT>(); }
   public static RecordTypeUnion FromVEP(VEPT _vep) { return new RecordTypeUnion{ Type = RecordType.VEP, Value = _vep }; }
+  public EGPT AsEGP() { return this.As<EGPT>(); }
+  public static RecordTypeUnion FromEGP(EGPT _egp) { return new RecordTypeUnion{ Type = RecordType.EGP, Value = _egp }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -895,6 +898,7 @@ public class RecordTypeUnion {
       case RecordType.TFN: return TFN.Pack(builder, _o.AsTFN()).Value;
       case RecordType.TMS: return TMS.Pack(builder, _o.AsTMS()).Value;
       case RecordType.VEP: return VEP.Pack(builder, _o.AsVEP()).Value;
+      case RecordType.EGP: return EGP.Pack(builder, _o.AsEGP()).Value;
     }
   }
 }
@@ -1552,6 +1556,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.VEP:
         result = VEPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EGP:
+        result = EGPVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
