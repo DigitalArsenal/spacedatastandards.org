@@ -228,6 +228,7 @@ class RecordType(object):
     RFS = 208
     TRS = 209
     GNP = 210
+    DTT = 211
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -863,4 +864,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.GNP:
         import GNP
         return GNP.GNPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.DTT:
+        import DTT
+        return DTT.DTTT.InitFromBuf(table.Bytes, table.Pos)
     return None

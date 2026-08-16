@@ -229,6 +229,7 @@ public enum RecordType : byte
   RFS = 208,
   TRS = 209,
   GNP = 210,
+  DTT = 211,
 };
 
 public class RecordTypeUnion {
@@ -661,6 +662,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTRS(TRST _trs) { return new RecordTypeUnion{ Type = RecordType.TRS, Value = _trs }; }
   public GNPT AsGNP() { return this.As<GNPT>(); }
   public static RecordTypeUnion FromGNP(GNPT _gnp) { return new RecordTypeUnion{ Type = RecordType.GNP, Value = _gnp }; }
+  public DTTT AsDTT() { return this.As<DTTT>(); }
+  public static RecordTypeUnion FromDTT(DTTT _dtt) { return new RecordTypeUnion{ Type = RecordType.DTT, Value = _dtt }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -875,6 +878,7 @@ public class RecordTypeUnion {
       case RecordType.RFS: return RFS.Pack(builder, _o.AsRFS()).Value;
       case RecordType.TRS: return TRS.Pack(builder, _o.AsTRS()).Value;
       case RecordType.GNP: return GNP.Pack(builder, _o.AsGNP()).Value;
+      case RecordType.DTT: return DTT.Pack(builder, _o.AsDTT()).Value;
     }
   }
 }
@@ -1517,6 +1521,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.GNP:
         result = GNPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.DTT:
+        result = DTTVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

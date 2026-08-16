@@ -1,0 +1,325 @@
+// Hash: 1c06f10c333415f1f9e7e65ed18053134658e3d574844f1699d272ad7f9e5327
+// Version: 1.190.0
+// -----------------------------------END_HEADER
+/// Scheme that maps a LEVEL/X/Y address to a region of the ellipsoid. The
+/// scheme is stated, never inferred from tile counts. Ordinals are wire
+/// values: append only; never reorder or reuse.
+enum dttTilingScheme : byte {
+  /// The scheme this tile is addressed in is not stated. Ordinal 0 so an
+  /// unset field can never be read as a real scheme.
+  UNSPECIFIED,
+  /// Equirectangular geographic scheme on WGS 84, two root tiles at level 0
+  /// covering [-180,0] and [0,180] degrees of longitude.
+  GEOGRAPHIC_WGS84,
+  /// Single-root equirectangular geographic scheme, one root tile at level 0.
+  GEOGRAPHIC_SINGLE_ROOT,
+  /// Spherical Mercator scheme, one square root tile at level 0.
+  WEB_MERCATOR,
+  /// A scheme this enum does not model; the publisher states it out of band
+  /// and the tile is not addressable by a consumer that does not know it.
+  CUSTOM
+}
+
+/// Encoding of the tile payload bytes. The format determines how a consumer
+/// decodes heights; it is never guessed from the payload size or extension.
+enum dttPayloadFormat : byte {
+  /// The payload encoding is not stated. The tile is undecodable.
+  UNSPECIFIED,
+  /// Quantized triangle mesh with 16-bit normalized vertex coordinates and
+  /// an indexed triangle list, plus optional extension chunks.
+  QUANTIZED_MESH,
+  /// Regular grid of 16-bit unsigned height posts with a stated child-tile
+  /// availability byte.
+  HEIGHTMAP_UINT16,
+  /// Regular grid of 32-bit float height posts, row-major from the
+  /// north-west post.
+  HEIGHTMAP_FLOAT32,
+  /// Tagged image raster carrying elevation samples with its own georeference.
+  RASTER_GEOTIFF,
+  /// Lossless RGB image raster whose channels encode elevation.
+  RASTER_RGB_ENCODED,
+  /// A format this enum does not model; the publisher states it out of band.
+  CUSTOM
+}
+
+/// Surface the tile's heights are measured from. A DEM whose datum is unstated
+/// cannot be compared with, or rendered against, one whose datum is known.
+enum dttVerticalDatum : byte {
+  /// The datum is not stated. Heights are not comparable across tiles.
+  UNSPECIFIED,
+  /// Heights above the WGS 84 reference ellipsoid.
+  ELLIPSOIDAL_WGS84,
+  /// Heights above a gravimetric geoid model; the model edition is carried
+  /// verbatim in VERTICAL_DATUM_NAME.
+  GEOID,
+  /// Heights above a tidal mean-sea-level surface; the realization is carried
+  /// verbatim in VERTICAL_DATUM_NAME.
+  MEAN_SEA_LEVEL,
+  /// Heights above a national or regional vertical reference frame, named
+  /// verbatim in VERTICAL_DATUM_NAME.
+  REGIONAL_DATUM,
+  /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
+  CUSTOM
+}
+
+/// Capability class of the measurement technique the source elevations were
+/// produced by. The standard names no mission, dataset, agency, or vendor:
+/// which dataset a tile came from is DATA, carried verbatim in
+/// DTTProvenance.DATASET_ID and DATASET_NAME. Ordinals are wire values:
+/// append only; never reorder or reuse.
+enum dttSourceClass : byte {
+  /// The production technique is not stated.
+  UNSPECIFIED,
+  /// Spaceborne radar interferometry.
+  SPACEBORNE_RADAR_INTERFEROMETRIC,
+  /// Spaceborne optical stereo photogrammetry.
+  SPACEBORNE_OPTICAL_STEREO,
+  /// Spaceborne laser or radar altimetry.
+  SPACEBORNE_ALTIMETRIC,
+  /// Airborne laser scanning.
+  AIRBORNE_LIDAR,
+  /// Airborne radar, including interferometric and synthetic-aperture radar.
+  AIRBORNE_RADAR,
+  /// Airborne or terrestrial optical photogrammetry.
+  PHOTOGRAMMETRIC,
+  /// Ground survey, including levelling and kinematic positioning.
+  GROUND_SURVEY,
+  /// Acoustic or altimetric depth sounding of water-covered surface.
+  BATHYMETRIC_SOUNDING,
+  /// Digitized from a published contour or hypsographic map.
+  CARTOGRAPHIC_CONTOUR,
+  /// Merged from two or more classes above; the contributing datasets are
+  /// carried in DTTProvenance.
+  FUSED_MULTI_SOURCE,
+  /// Synthesized rather than measured: interpolated fill, procedural relief,
+  /// or a model output. Never to be presented as a measurement.
+  SYNTHETIC
+}
+
+/// What the tile states about water cover over its own extent. A renderer
+/// deciding whether a surface is reflective reads this and never infers water
+/// from a height of zero.
+enum dttWaterMask : byte {
+  /// The tile states nothing about water cover.
+  NONE,
+  /// The whole tile extent is land.
+  UNIFORM_LAND,
+  /// The whole tile extent is water.
+  UNIFORM_WATER,
+  /// A per-sample mask accompanies the tile, referenced by WATER_MASK.
+  RASTER
+}
+
+/// Where a block of bytes lives and how it is verified. The payload lane is
+/// CID-first: a tile record addresses its bytes so an epoch can be verified
+/// rather than trusted, and carries them inline only when the block is small
+/// enough that a second fetch costs more than it saves. Exactly one of CID or
+/// BYTES is the authority for a given ref; when both are present the bytes
+/// MUST hash to the CID.
+table DTTPayloadRef {
+  /// Content identifier of the block in the dataset lane.
+  CID:string;
+  /// The block inline. Reserved for small blocks; a tile pyramid is
+  /// distributed by CID, never by embedding megabytes per record.
+  BYTES:[ubyte];
+  /// Length of the block in bytes, whether inline or referenced, so a
+  /// consumer can budget a fetch before making it.
+  SIZE_BYTES:uint64;
+  /// Multihash of the block, lowercase hexadecimal, when the publisher states
+  /// one independently of the CID.
+  DIGEST:string;
+  /// Content encoding applied to the block before hashing, verbatim, when the
+  /// bytes are stored compressed.
+  CONTENT_ENCODING:string;
+  /// Media type of the block as the publisher serves it.
+  MEDIA_TYPE:string;
+}
+
+/// Dataset lineage and redistribution terms for one terrain tile.
+///
+/// Required on every record: a redistributed elevation tile whose dataset,
+/// epoch, and licence are unstated is not publishable. Dataset identity is
+/// DATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the
+/// source states about itself. The standard names no dataset, mission, agency,
+/// or vendor.
+table DTTProvenance {
+  /// Publisher-stable, lowercase identifier for the elevation dataset this
+  /// tile was derived from, unique within the publisher's own dataset
+  /// registry. Never a display name and never a URL.
+  DATASET_ID:string (required);
+  /// The dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was
+  /// derived from. The edition boundary, not the fetch: two tiles carrying the
+  /// same DATASET_ID and DATASET_EPOCH were cut from the same bytes.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when the publisher
+  /// distributes one.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact tile, granule, or file selection used, so the same source
+  /// bytes can be recovered by repeating the fetch.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Required: unknown terms are never public
+  /// domain and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as that dataset publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display,
+  /// carried verbatim so a surface can render it without composing its own
+  /// credit line.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source's own identifier for the granule this tile was cut from,
+  /// verbatim. The join key back to the source dataset.
+  NATIVE_ID:string;
+  /// RFC 3339 UTC timestamp at which this tile's bytes were produced by the
+  /// publisher, as distinct from the dataset edition they were cut from.
+  GENERATED_AT:string;
+  /// Identifier of the processing pipeline and its version that produced the
+  /// tile bytes, so two tiles from one edition but different pipelines are
+  /// distinguishable.
+  PROCESSOR:string;
+}
+
+/// Digital Terrain Tile
+///
+/// One addressable tile of a terrain elevation pyramid: its address in a
+/// stated tiling scheme, its geographic extent, its payload encoding and where
+/// those bytes live, the vertical datum its heights are measured from, what it
+/// states about water cover, and the dataset edition and licence it was
+/// redistributed under.
+///
+/// $DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not
+/// $TRN, which configures how a consumer uses terrain (sources, interpolation,
+/// cache size, exaggeration) and holds no elevation; nor $TRS, which is a
+/// radio-propagation solve over terrain heights. A terrain service publishes
+/// $DTT records, is configured by $TRN, and its heights may be consumed by
+/// $TRS.
+///
+/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// referenced by content identifier by default; see DTTPayloadRef.
+table DTT {
+  /// Publisher-stable identifier for the tile pyramid (the tileset) this tile
+  /// belongs to. Tiles of one pyramid share a scheme, format, and datum.
+  TILESET_ID:string (required);
+  /// The tileset's own name, verbatim, for display.
+  TILESET_NAME:string;
+  /// Scheme the address below is expressed in.
+  TILING_SCHEME:dttTilingScheme = UNSPECIFIED;
+  /// Zoom level of the tile, 0 at the pyramid root.
+  LEVEL:uint32;
+  /// Column index within LEVEL, increasing eastward from the scheme origin.
+  X:uint32;
+  /// Row index within LEVEL, increasing in the scheme's own row direction;
+  /// ROW_ORIGIN_NORTH states which.
+  Y:uint32;
+  /// Row index 0 lies at the north edge of the scheme. When false, row 0 lies
+  /// at the south edge.
+  ROW_ORIGIN_NORTH:bool = false;
+  /// Western extent of the tile, decimal degrees on WGS 84.
+  WEST_DEG:double;
+  /// Southern extent of the tile, decimal degrees on WGS 84.
+  SOUTH_DEG:double;
+  /// Eastern extent of the tile, decimal degrees on WGS 84.
+  EAST_DEG:double;
+  /// Northern extent of the tile, decimal degrees on WGS 84.
+  NORTH_DEG:double;
+  /// Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
+  /// so a consumer can build a bounding volume without decoding the payload.
+  MIN_HEIGHT_M:double;
+  /// Highest height present in the tile, metres above VERTICAL_DATUM.
+  MAX_HEIGHT_M:double;
+  /// Encoding of the payload bytes.
+  PAYLOAD_FORMAT:dttPayloadFormat = UNSPECIFIED;
+  /// Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the
+  /// format is versioned.
+  PAYLOAD_FORMAT_VERSION:string;
+  /// The tile's elevation bytes.
+  PAYLOAD:DTTPayloadRef (required);
+  /// Number of height posts across the tile for gridded formats. Unset for
+  /// mesh formats, whose vertex count varies.
+  GRID_WIDTH:uint32;
+  /// Number of height posts down the tile for gridded formats.
+  GRID_HEIGHT:uint32;
+  /// Nominal ground distance between adjacent height posts at the tile
+  /// centre, metres. The tile's effective resolution as served, which is not
+  /// necessarily the source dataset's native post spacing.
+  POST_SPACING_M:double;
+  /// Native post spacing of the source elevations, metres, when the tile was
+  /// resampled from a coarser or finer grid.
+  SOURCE_POST_SPACING_M:double;
+  /// Surface the heights are measured from.
+  VERTICAL_DATUM:dttVerticalDatum = UNSPECIFIED;
+  /// The datum, geoid model, or vertical reference frame named verbatim as
+  /// its authority states it.
+  VERTICAL_DATUM_NAME:string;
+  /// Horizontal reference frame the extent is expressed in, verbatim, when it
+  /// is not WGS 84.
+  HORIZONTAL_DATUM_NAME:string;
+  /// Vertical accuracy the publisher states for this tile, metres, at the
+  /// confidence level stated in ACCURACY_CONFIDENCE.
+  VERTICAL_ACCURACY_M:double;
+  /// Confidence level the accuracy figures are stated at, as a fraction
+  /// between 0 and 1.
+  ACCURACY_CONFIDENCE:double;
+  /// Horizontal accuracy the publisher states for this tile, metres.
+  HORIZONTAL_ACCURACY_M:double;
+  /// Fraction of the tile extent covered by real measurements rather than
+  /// interpolated or filled values, between 0 and 1.
+  DATA_COVERAGE_FRACTION:double;
+  /// Height value used to mark absent samples in gridded payloads.
+  NO_DATA_VALUE:double;
+  /// What the tile states about water cover.
+  WATER_MASK_KIND:dttWaterMask = NONE;
+  /// The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one
+  /// unsigned byte per sample, 255 fully water, 0 fully land.
+  WATER_MASK:DTTPayloadRef;
+  /// Number of mask samples across and down the tile when WATER_MASK_KIND is
+  /// RASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly
+  /// carried at a different resolution than the heights.
+  WATER_MASK_WIDTH:uint32;
+  WATER_MASK_HEIGHT:uint32;
+  /// Dataset the water mask was derived from, when it is not the elevation
+  /// dataset. A separate lineage because a mask carries its own licence.
+  WATER_MASK_PROVENANCE:DTTProvenance;
+  /// Per-sample surface normals accompanying the tile, when the publisher
+  /// serves them, so a consumer need not derive lighting from heights.
+  VERTEX_NORMALS:DTTPayloadRef;
+  /// Per-sample land-cover classification accompanying the tile, when the
+  /// publisher serves one.
+  LAND_COVER:DTTPayloadRef;
+  /// Availability of the four child tiles at LEVEL+1, as the low four bits:
+  /// bit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.
+  /// A set bit states the child exists in this tileset.
+  CHILD_AVAILABILITY:uint8;
+  /// The deepest level this tileset serves anywhere. A consumer stops
+  /// requesting below it rather than discovering absence by failed fetches.
+  MAX_LEVEL:uint32;
+  /// Production technique class of the source elevations.
+  SOURCE_CLASS:dttSourceClass = UNSPECIFIED;
+  /// Dataset lineage and redistribution terms. Required.
+  PROVENANCE:DTTProvenance (required);
+  /// RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the
+  /// dataset states an observation epoch distinct from its edition. Terrain
+  /// changes; a tile compared across time is compared at this epoch.
+  EPOCH:string;
+  /// Entity tag for the served bytes, verbatim, so a cache can revalidate.
+  ETAG:string;
+  /// RFC 3339 UTC timestamp after which this tile should be revalidated.
+  EXPIRES:string;
+  /// Free-form publisher notes about this tile. Never a substitute for a
+  /// stated field.
+  REMARKS:string;
+}
+
+root_type DTT;
+file_identifier "$DTT";

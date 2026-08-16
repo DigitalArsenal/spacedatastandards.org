@@ -45,6 +45,7 @@ export * as DMG from './DMG/main.js';
 export * as DOA from './DOA/main.js';
 export * as DPM from './DPM/main.js';
 export * as DSS from './DSS/main.js';
+export * as DTT from './DTT/main.js';
 export * as EME from './EME/main.js';
 export * as ENC from './ENC/main.js';
 export * as ENT from './ENT/main.js';

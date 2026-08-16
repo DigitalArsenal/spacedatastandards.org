@@ -211,6 +211,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -345,10 +346,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 210;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 211;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 211] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 212] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -560,6 +561,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 211] = [
   RecordType::RFS,
   RecordType::TRS,
   RecordType::GNP,
+  RecordType::DTT,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -792,9 +794,10 @@ impl RecordType {
   pub const RFS: Self = Self(208);
   pub const TRS: Self = Self(209);
   pub const GNP: Self = Self(210);
+  pub const DTT: Self = Self(211);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 210;
+  pub const ENUM_MAX: u8 = 211;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1007,6 +1010,7 @@ impl RecordType {
     Self::RFS,
     Self::TRS,
     Self::GNP,
+    Self::DTT,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1222,6 +1226,7 @@ impl RecordType {
       Self::RFS => Some("RFS"),
       Self::TRS => Some("TRS"),
       Self::GNP => Some("GNP"),
+      Self::DTT => Some("DTT"),
       _ => None,
     }
   }
@@ -1493,6 +1498,7 @@ pub enum RecordTypeT {
   RFS(alloc::boxed::Box<RFST>),
   TRS(alloc::boxed::Box<TRST>),
   GNP(alloc::boxed::Box<GNPT>),
+  DTT(alloc::boxed::Box<DTTT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1713,6 +1719,7 @@ impl RecordTypeT {
       Self::RFS(_) => RecordType::RFS,
       Self::TRS(_) => RecordType::TRS,
       Self::GNP(_) => RecordType::GNP,
+      Self::DTT(_) => RecordType::DTT,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1928,6 +1935,7 @@ impl RecordTypeT {
       Self::RFS(v) => Some(v.pack(fbb).as_union_value()),
       Self::TRS(v) => Some(v.pack(fbb).as_union_value()),
       Self::GNP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::DTT(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6340,6 +6348,27 @@ impl RecordTypeT {
   pub fn as_gnp_mut(&mut self) -> Option<&mut GNPT> {
     if let Self::GNP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned DTTT, setting the union to NONE.
+  pub fn take_dtt(&mut self) -> Option<alloc::boxed::Box<DTTT>> {
+    if let Self::DTT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::DTT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the DTTT.
+  pub fn as_dtt(&self) -> Option<&DTTT> {
+    if let Self::DTT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the DTTT.
+  pub fn as_dtt_mut(&mut self) -> Option<&mut DTTT> {
+    if let Self::DTT(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7429,6 +7458,11 @@ impl<'a> Record<'a> {
       RecordType::GNP => RecordTypeT::GNP(alloc::boxed::Box::new(
         self.value_as_gnp()
             .expect("Invalid union table, expected `RecordType::GNP`.")
+            .unpack()
+      )),
+      RecordType::DTT => RecordTypeT::DTT(alloc::boxed::Box::new(
+        self.value_as_dtt()
+            .expect("Invalid union table, expected `RecordType::DTT`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10615,6 +10649,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_dtt(&self) -> Option<DTT<'a>> {
+    if self.value_type() == RecordType::DTT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { DTT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10835,6 +10884,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::RFS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFS>>("RecordType::RFS", pos),
           RecordType::TRS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRS>>("RecordType::TRS", pos),
           RecordType::GNP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GNP>>("RecordType::GNP", pos),
+          RecordType::DTT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<DTT>>("RecordType::DTT", pos),
           _ => Ok(()),
         }
      })?
@@ -12361,6 +12411,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::GNP => {
           if let Some(x) = self.value_as_gnp() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::DTT => {
+          if let Some(x) = self.value_as_dtt() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

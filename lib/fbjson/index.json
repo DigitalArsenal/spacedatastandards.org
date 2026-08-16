@@ -8741,6 +8741,776 @@
             "$ref": "#/definitions/VCM",
             "x-flatbuffer-root-type": "VCM"
         },
+        "DTT": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "dttTilingScheme": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GEOGRAPHIC_WGS84",
+                        "GEOGRAPHIC_SINGLE_ROOT",
+                        "WEB_MERCATOR",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                        },
+                        "GEOGRAPHIC_WGS84": {
+                            "value": 1,
+                            "description": "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                        },
+                        "GEOGRAPHIC_SINGLE_ROOT": {
+                            "value": 2,
+                            "description": "Single-root equirectangular geographic scheme, one root tile at level 0."
+                        },
+                        "WEB_MERCATOR": {
+                            "value": 3,
+                            "description": "Spherical Mercator scheme, one square root tile at level 0."
+                        },
+                        "CUSTOM": {
+                            "value": 4,
+                            "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                        }
+                    }
+                },
+                "dttPayloadFormat": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "QUANTIZED_MESH",
+                        "HEIGHTMAP_UINT16",
+                        "HEIGHTMAP_FLOAT32",
+                        "RASTER_GEOTIFF",
+                        "RASTER_RGB_ENCODED",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The payload encoding is not stated. The tile is undecodable."
+                        },
+                        "QUANTIZED_MESH": {
+                            "value": 1,
+                            "description": "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+                        },
+                        "HEIGHTMAP_UINT16": {
+                            "value": 2,
+                            "description": "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+                        },
+                        "HEIGHTMAP_FLOAT32": {
+                            "value": 3,
+                            "description": "Regular grid of 32-bit float height posts, row-major from the north-west post."
+                        },
+                        "RASTER_GEOTIFF": {
+                            "value": 4,
+                            "description": "Tagged image raster carrying elevation samples with its own georeference."
+                        },
+                        "RASTER_RGB_ENCODED": {
+                            "value": 5,
+                            "description": "Lossless RGB image raster whose channels encode elevation."
+                        },
+                        "CUSTOM": {
+                            "value": 6,
+                            "description": "A format this enum does not model; the publisher states it out of band."
+                        }
+                    }
+                },
+                "dttVerticalDatum": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ELLIPSOIDAL_WGS84",
+                        "GEOID",
+                        "MEAN_SEA_LEVEL",
+                        "REGIONAL_DATUM",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The datum is not stated. Heights are not comparable across tiles."
+                        },
+                        "ELLIPSOIDAL_WGS84": {
+                            "value": 1,
+                            "description": "Heights above the WGS 84 reference ellipsoid."
+                        },
+                        "GEOID": {
+                            "value": 2,
+                            "description": "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "MEAN_SEA_LEVEL": {
+                            "value": 3,
+                            "description": "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "REGIONAL_DATUM": {
+                            "value": 4,
+                            "description": "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "CUSTOM": {
+                            "value": 5,
+                            "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                        }
+                    }
+                },
+                "dttSourceClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SPACEBORNE_RADAR_INTERFEROMETRIC",
+                        "SPACEBORNE_OPTICAL_STEREO",
+                        "SPACEBORNE_ALTIMETRIC",
+                        "AIRBORNE_LIDAR",
+                        "AIRBORNE_RADAR",
+                        "PHOTOGRAMMETRIC",
+                        "GROUND_SURVEY",
+                        "BATHYMETRIC_SOUNDING",
+                        "CARTOGRAPHIC_CONTOUR",
+                        "FUSED_MULTI_SOURCE",
+                        "SYNTHETIC"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The production technique is not stated."
+                        },
+                        "SPACEBORNE_RADAR_INTERFEROMETRIC": {
+                            "value": 1,
+                            "description": "Spaceborne radar interferometry."
+                        },
+                        "SPACEBORNE_OPTICAL_STEREO": {
+                            "value": 2,
+                            "description": "Spaceborne optical stereo photogrammetry."
+                        },
+                        "SPACEBORNE_ALTIMETRIC": {
+                            "value": 3,
+                            "description": "Spaceborne laser or radar altimetry."
+                        },
+                        "AIRBORNE_LIDAR": {
+                            "value": 4,
+                            "description": "Airborne laser scanning."
+                        },
+                        "AIRBORNE_RADAR": {
+                            "value": 5,
+                            "description": "Airborne radar, including interferometric and synthetic-aperture radar."
+                        },
+                        "PHOTOGRAMMETRIC": {
+                            "value": 6,
+                            "description": "Airborne or terrestrial optical photogrammetry."
+                        },
+                        "GROUND_SURVEY": {
+                            "value": 7,
+                            "description": "Ground survey, including levelling and kinematic positioning."
+                        },
+                        "BATHYMETRIC_SOUNDING": {
+                            "value": 8,
+                            "description": "Acoustic or altimetric depth sounding of water-covered surface."
+                        },
+                        "CARTOGRAPHIC_CONTOUR": {
+                            "value": 9,
+                            "description": "Digitized from a published contour or hypsographic map."
+                        },
+                        "FUSED_MULTI_SOURCE": {
+                            "value": 10,
+                            "description": "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+                        },
+                        "SYNTHETIC": {
+                            "value": 11,
+                            "description": "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+                        }
+                    }
+                },
+                "dttWaterMask": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNIFORM_LAND",
+                        "UNIFORM_WATER",
+                        "RASTER"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0,
+                            "description": "The tile states nothing about water cover."
+                        },
+                        "UNIFORM_LAND": {
+                            "value": 1,
+                            "description": "The whole tile extent is land."
+                        },
+                        "UNIFORM_WATER": {
+                            "value": 2,
+                            "description": "The whole tile extent is water."
+                        },
+                        "RASTER": {
+                            "value": 3,
+                            "description": "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+                        }
+                    }
+                },
+                "DTTPayloadRef": {
+                    "type": "object",
+                    "description": "Where a block of bytes lives and how it is verified. The payload lane is\nCID-first: a tile record addresses its bytes so an epoch can be verified\nrather than trusted, and carries them inline only when the block is small\nenough that a second fetch costs more than it saves. Exactly one of CID or\nBYTES is the authority for a given ref; when both are present the bytes\nMUST hash to the CID.",
+                    "properties": {
+                        "CID": {
+                            "type": "string",
+                            "description": "Content identifier of the block in the dataset lane.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The block inline. Reserved for small blocks; a tile pyramid is\ndistributed by CID, never by embedding megabytes per record.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "SIZE_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Length of the block in bytes, whether inline or referenced, so a\nconsumer can budget a fetch before making it.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "DIGEST": {
+                            "type": "string",
+                            "description": "Multihash of the block, lowercase hexadecimal, when the publisher states\none independently of the CID.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CONTENT_ENCODING": {
+                            "type": "string",
+                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEDIA_TYPE": {
+                            "type": "string",
+                            "description": "Media type of the block as the publisher serves it.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DTTProvenance": {
+                    "type": "object",
+                    "description": "Dataset lineage and redistribution terms for one terrain tile.\n\nRequired on every record: a redistributed elevation tile whose dataset,\nepoch, and licence are unstated is not publishable. Dataset identity is\nDATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the\nsource states about itself. The standard names no dataset, mission, agency,\nor vendor.",
+                    "properties": {
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier for the elevation dataset this\ntile was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "DATASET_NAME": {
+                            "type": "string",
+                            "description": "The dataset's own name, verbatim as its publisher states it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DATASET_URL": {
+                            "type": "string",
+                            "description": "Replayable URL of the dataset as published.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DATASET_EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was\nderived from. The edition boundary, not the fetch: two tiles carrying the\nsame DATASET_ID and DATASET_EPOCH were cut from the same bytes.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "DATASET_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the exact dataset artifact, when the publisher\ndistributes one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL identifying the source material within the dataset.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "The exact tile, granule, or file selection used, so the same source\nbytes can be recovered by repeating the fetch.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Redistribution terms verbatim. Required: unknown terms are never public\ndomain and never an implied grant.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the full licence text as that dataset publishes it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution text the licence requires a redistributor to display,\ncarried verbatim so a surface can render it without composing its own\ncredit line.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NON_COMMERCIAL_ONLY": {
+                            "type": "boolean",
+                            "description": "The licence forbids commercial use.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "SHARE_ALIKE": {
+                            "type": "boolean",
+                            "description": "The licence obliges derived works to carry the same terms.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the granule this tile was cut from,\nverbatim. The join key back to the source dataset.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "GENERATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp at which this tile's bytes were produced by the\npublisher, as distinct from the dataset edition they were cut from.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROCESSOR": {
+                            "type": "string",
+                            "description": "Identifier of the processing pipeline and its version that produced the\ntile bytes, so two tiles from one edition but different pipelines are\ndistinguishable.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "DATASET_ID",
+                        "DATASET_EPOCH",
+                        "RETRIEVED_AT",
+                        "LICENSE"
+                    ],
+                    "additionalProperties": false
+                },
+                "DTT": {
+                    "type": "object",
+                    "description": "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+                    "properties": {
+                        "TILESET_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for the tile pyramid (the tileset) this tile\nbelongs to. Tiles of one pyramid share a scheme, format, and datum.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "TILESET_NAME": {
+                            "type": "string",
+                            "description": "The tileset's own name, verbatim, for display.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TILING_SCHEME": {
+                            "$ref": "#/definitions/dttTilingScheme",
+                            "description": "Scheme the address below is expressed in.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                                },
+                                "GEOGRAPHIC_WGS84": {
+                                    "value": 1,
+                                    "description": "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                                },
+                                "GEOGRAPHIC_SINGLE_ROOT": {
+                                    "value": 2,
+                                    "description": "Single-root equirectangular geographic scheme, one root tile at level 0."
+                                },
+                                "WEB_MERCATOR": {
+                                    "value": 3,
+                                    "description": "Spherical Mercator scheme, one square root tile at level 0."
+                                },
+                                "CUSTOM": {
+                                    "value": 4,
+                                    "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zoom level of the tile, 0 at the pyramid root.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "X": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Column index within LEVEL, increasing eastward from the scheme origin.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "Y": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Row index within LEVEL, increasing in the scheme's own row direction;\nROW_ORIGIN_NORTH states which.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "ROW_ORIGIN_NORTH": {
+                            "type": "boolean",
+                            "description": "Row index 0 lies at the north edge of the scheme. When false, row 0 lies\nat the south edge.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "WEST_DEG": {
+                            "type": "number",
+                            "description": "Western extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SOUTH_DEG": {
+                            "type": "number",
+                            "description": "Southern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "EAST_DEG": {
+                            "type": "number",
+                            "description": "Eastern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "NORTH_DEG": {
+                            "type": "number",
+                            "description": "Northern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Lowest height present in the tile, metres above VERTICAL_DATUM. Stated\nso a consumer can build a bounding volume without decoding the payload.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MAX_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Highest height present in the tile, metres above VERTICAL_DATUM.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PAYLOAD_FORMAT": {
+                            "$ref": "#/definitions/dttPayloadFormat",
+                            "description": "Encoding of the payload bytes.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The payload encoding is not stated. The tile is undecodable."
+                                },
+                                "QUANTIZED_MESH": {
+                                    "value": 1,
+                                    "description": "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+                                },
+                                "HEIGHTMAP_UINT16": {
+                                    "value": 2,
+                                    "description": "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+                                },
+                                "HEIGHTMAP_FLOAT32": {
+                                    "value": 3,
+                                    "description": "Regular grid of 32-bit float height posts, row-major from the north-west post."
+                                },
+                                "RASTER_GEOTIFF": {
+                                    "value": 4,
+                                    "description": "Tagged image raster carrying elevation samples with its own georeference."
+                                },
+                                "RASTER_RGB_ENCODED": {
+                                    "value": 5,
+                                    "description": "Lossless RGB image raster whose channels encode elevation."
+                                },
+                                "CUSTOM": {
+                                    "value": 6,
+                                    "description": "A format this enum does not model; the publisher states it out of band."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PAYLOAD_FORMAT_VERSION": {
+                            "type": "string",
+                            "description": "Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the\nformat is versioned.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PAYLOAD": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "The tile's elevation bytes.",
+                            "x-flatbuffer-type": "DTTPayloadRef",
+                            "x-flatbuffer-required": true
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of height posts across the tile for gridded formats. Unset for\nmesh formats, whose vertex count varies.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of height posts down the tile for gridded formats.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "POST_SPACING_M": {
+                            "type": "number",
+                            "description": "Nominal ground distance between adjacent height posts at the tile\ncentre, metres. The tile's effective resolution as served, which is not\nnecessarily the source dataset's native post spacing.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SOURCE_POST_SPACING_M": {
+                            "type": "number",
+                            "description": "Native post spacing of the source elevations, metres, when the tile was\nresampled from a coarser or finer grid.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "VERTICAL_DATUM": {
+                            "$ref": "#/definitions/dttVerticalDatum",
+                            "description": "Surface the heights are measured from.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The datum is not stated. Heights are not comparable across tiles."
+                                },
+                                "ELLIPSOIDAL_WGS84": {
+                                    "value": 1,
+                                    "description": "Heights above the WGS 84 reference ellipsoid."
+                                },
+                                "GEOID": {
+                                    "value": 2,
+                                    "description": "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "MEAN_SEA_LEVEL": {
+                                    "value": 3,
+                                    "description": "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "REGIONAL_DATUM": {
+                                    "value": 4,
+                                    "description": "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "CUSTOM": {
+                                    "value": 5,
+                                    "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "VERTICAL_DATUM_NAME": {
+                            "type": "string",
+                            "description": "The datum, geoid model, or vertical reference frame named verbatim as\nits authority states it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "HORIZONTAL_DATUM_NAME": {
+                            "type": "string",
+                            "description": "Horizontal reference frame the extent is expressed in, verbatim, when it\nis not WGS 84.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "VERTICAL_ACCURACY_M": {
+                            "type": "number",
+                            "description": "Vertical accuracy the publisher states for this tile, metres, at the\nconfidence level stated in ACCURACY_CONFIDENCE.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ACCURACY_CONFIDENCE": {
+                            "type": "number",
+                            "description": "Confidence level the accuracy figures are stated at, as a fraction\nbetween 0 and 1.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "HORIZONTAL_ACCURACY_M": {
+                            "type": "number",
+                            "description": "Horizontal accuracy the publisher states for this tile, metres.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "DATA_COVERAGE_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction of the tile extent covered by real measurements rather than\ninterpolated or filled values, between 0 and 1.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "NO_DATA_VALUE": {
+                            "type": "number",
+                            "description": "Height value used to mark absent samples in gridded payloads.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "WATER_MASK_KIND": {
+                            "$ref": "#/definitions/dttWaterMask",
+                            "description": "What the tile states about water cover.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0,
+                                    "description": "The tile states nothing about water cover."
+                                },
+                                "UNIFORM_LAND": {
+                                    "value": 1,
+                                    "description": "The whole tile extent is land."
+                                },
+                                "UNIFORM_WATER": {
+                                    "value": 2,
+                                    "description": "The whole tile extent is water."
+                                },
+                                "RASTER": {
+                                    "value": 3,
+                                    "description": "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+                                }
+                            },
+                            "x-flatbuffer-default": "NONE"
+                        },
+                        "WATER_MASK": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one\nunsigned byte per sample, 255 fully water, 0 fully land.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "WATER_MASK_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of mask samples across and down the tile when WATER_MASK_KIND is\nRASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly\ncarried at a different resolution than the heights.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "WATER_MASK_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "WATER_MASK_PROVENANCE": {
+                            "$ref": "#/definitions/DTTProvenance",
+                            "description": "Dataset the water mask was derived from, when it is not the elevation\ndataset. A separate lineage because a mask carries its own licence.",
+                            "x-flatbuffer-type": "DTTProvenance"
+                        },
+                        "VERTEX_NORMALS": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "Per-sample surface normals accompanying the tile, when the publisher\nserves them, so a consumer need not derive lighting from heights.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "LAND_COVER": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "Per-sample land-cover classification accompanying the tile, when the\npublisher serves one.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "CHILD_AVAILABILITY": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Availability of the four child tiles at LEVEL+1, as the low four bits:\nbit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.\nA set bit states the child exists in this tileset.",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "MAX_LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The deepest level this tileset serves anywhere. A consumer stops\nrequesting below it rather than discovering absence by failed fetches.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SOURCE_CLASS": {
+                            "$ref": "#/definitions/dttSourceClass",
+                            "description": "Production technique class of the source elevations.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The production technique is not stated."
+                                },
+                                "SPACEBORNE_RADAR_INTERFEROMETRIC": {
+                                    "value": 1,
+                                    "description": "Spaceborne radar interferometry."
+                                },
+                                "SPACEBORNE_OPTICAL_STEREO": {
+                                    "value": 2,
+                                    "description": "Spaceborne optical stereo photogrammetry."
+                                },
+                                "SPACEBORNE_ALTIMETRIC": {
+                                    "value": 3,
+                                    "description": "Spaceborne laser or radar altimetry."
+                                },
+                                "AIRBORNE_LIDAR": {
+                                    "value": 4,
+                                    "description": "Airborne laser scanning."
+                                },
+                                "AIRBORNE_RADAR": {
+                                    "value": 5,
+                                    "description": "Airborne radar, including interferometric and synthetic-aperture radar."
+                                },
+                                "PHOTOGRAMMETRIC": {
+                                    "value": 6,
+                                    "description": "Airborne or terrestrial optical photogrammetry."
+                                },
+                                "GROUND_SURVEY": {
+                                    "value": 7,
+                                    "description": "Ground survey, including levelling and kinematic positioning."
+                                },
+                                "BATHYMETRIC_SOUNDING": {
+                                    "value": 8,
+                                    "description": "Acoustic or altimetric depth sounding of water-covered surface."
+                                },
+                                "CARTOGRAPHIC_CONTOUR": {
+                                    "value": 9,
+                                    "description": "Digitized from a published contour or hypsographic map."
+                                },
+                                "FUSED_MULTI_SOURCE": {
+                                    "value": 10,
+                                    "description": "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+                                },
+                                "SYNTHETIC": {
+                                    "value": 11,
+                                    "description": "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/DTTProvenance",
+                            "description": "Dataset lineage and redistribution terms. Required.",
+                            "x-flatbuffer-type": "DTTProvenance",
+                            "x-flatbuffer-required": true
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the\ndataset states an observation epoch distinct from its edition. Terrain\nchanges; a tile compared across time is compared at this epoch.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ETAG": {
+                            "type": "string",
+                            "description": "Entity tag for the served bytes, verbatim, so a cache can revalidate.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EXPIRES": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp after which this tile should be revalidated.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REMARKS": {
+                            "type": "string",
+                            "description": "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "TILESET_ID",
+                        "PAYLOAD",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/DTT",
+            "x-flatbuffer-root-type": "DTT",
+            "x-flatbuffer-file-identifier": "$DTT"
+        },
         "RFO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -105810,6 +106580,221 @@
                         }
                     }
                 },
+                "dttTilingScheme": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GEOGRAPHIC_WGS84",
+                        "GEOGRAPHIC_SINGLE_ROOT",
+                        "WEB_MERCATOR",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                        },
+                        "GEOGRAPHIC_WGS84": {
+                            "value": 1,
+                            "description": "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                        },
+                        "GEOGRAPHIC_SINGLE_ROOT": {
+                            "value": 2,
+                            "description": "Single-root equirectangular geographic scheme, one root tile at level 0."
+                        },
+                        "WEB_MERCATOR": {
+                            "value": 3,
+                            "description": "Spherical Mercator scheme, one square root tile at level 0."
+                        },
+                        "CUSTOM": {
+                            "value": 4,
+                            "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                        }
+                    }
+                },
+                "dttPayloadFormat": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "QUANTIZED_MESH",
+                        "HEIGHTMAP_UINT16",
+                        "HEIGHTMAP_FLOAT32",
+                        "RASTER_GEOTIFF",
+                        "RASTER_RGB_ENCODED",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The payload encoding is not stated. The tile is undecodable."
+                        },
+                        "QUANTIZED_MESH": {
+                            "value": 1,
+                            "description": "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+                        },
+                        "HEIGHTMAP_UINT16": {
+                            "value": 2,
+                            "description": "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+                        },
+                        "HEIGHTMAP_FLOAT32": {
+                            "value": 3,
+                            "description": "Regular grid of 32-bit float height posts, row-major from the north-west post."
+                        },
+                        "RASTER_GEOTIFF": {
+                            "value": 4,
+                            "description": "Tagged image raster carrying elevation samples with its own georeference."
+                        },
+                        "RASTER_RGB_ENCODED": {
+                            "value": 5,
+                            "description": "Lossless RGB image raster whose channels encode elevation."
+                        },
+                        "CUSTOM": {
+                            "value": 6,
+                            "description": "A format this enum does not model; the publisher states it out of band."
+                        }
+                    }
+                },
+                "dttVerticalDatum": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ELLIPSOIDAL_WGS84",
+                        "GEOID",
+                        "MEAN_SEA_LEVEL",
+                        "REGIONAL_DATUM",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The datum is not stated. Heights are not comparable across tiles."
+                        },
+                        "ELLIPSOIDAL_WGS84": {
+                            "value": 1,
+                            "description": "Heights above the WGS 84 reference ellipsoid."
+                        },
+                        "GEOID": {
+                            "value": 2,
+                            "description": "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "MEAN_SEA_LEVEL": {
+                            "value": 3,
+                            "description": "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "REGIONAL_DATUM": {
+                            "value": 4,
+                            "description": "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+                        },
+                        "CUSTOM": {
+                            "value": 5,
+                            "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                        }
+                    }
+                },
+                "dttSourceClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SPACEBORNE_RADAR_INTERFEROMETRIC",
+                        "SPACEBORNE_OPTICAL_STEREO",
+                        "SPACEBORNE_ALTIMETRIC",
+                        "AIRBORNE_LIDAR",
+                        "AIRBORNE_RADAR",
+                        "PHOTOGRAMMETRIC",
+                        "GROUND_SURVEY",
+                        "BATHYMETRIC_SOUNDING",
+                        "CARTOGRAPHIC_CONTOUR",
+                        "FUSED_MULTI_SOURCE",
+                        "SYNTHETIC"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0,
+                            "description": "The production technique is not stated."
+                        },
+                        "SPACEBORNE_RADAR_INTERFEROMETRIC": {
+                            "value": 1,
+                            "description": "Spaceborne radar interferometry."
+                        },
+                        "SPACEBORNE_OPTICAL_STEREO": {
+                            "value": 2,
+                            "description": "Spaceborne optical stereo photogrammetry."
+                        },
+                        "SPACEBORNE_ALTIMETRIC": {
+                            "value": 3,
+                            "description": "Spaceborne laser or radar altimetry."
+                        },
+                        "AIRBORNE_LIDAR": {
+                            "value": 4,
+                            "description": "Airborne laser scanning."
+                        },
+                        "AIRBORNE_RADAR": {
+                            "value": 5,
+                            "description": "Airborne radar, including interferometric and synthetic-aperture radar."
+                        },
+                        "PHOTOGRAMMETRIC": {
+                            "value": 6,
+                            "description": "Airborne or terrestrial optical photogrammetry."
+                        },
+                        "GROUND_SURVEY": {
+                            "value": 7,
+                            "description": "Ground survey, including levelling and kinematic positioning."
+                        },
+                        "BATHYMETRIC_SOUNDING": {
+                            "value": 8,
+                            "description": "Acoustic or altimetric depth sounding of water-covered surface."
+                        },
+                        "CARTOGRAPHIC_CONTOUR": {
+                            "value": 9,
+                            "description": "Digitized from a published contour or hypsographic map."
+                        },
+                        "FUSED_MULTI_SOURCE": {
+                            "value": 10,
+                            "description": "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+                        },
+                        "SYNTHETIC": {
+                            "value": 11,
+                            "description": "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+                        }
+                    }
+                },
+                "dttWaterMask": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNIFORM_LAND",
+                        "UNIFORM_WATER",
+                        "RASTER"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0,
+                            "description": "The tile states nothing about water cover."
+                        },
+                        "UNIFORM_LAND": {
+                            "value": 1,
+                            "description": "The whole tile extent is land."
+                        },
+                        "UNIFORM_WATER": {
+                            "value": 2,
+                            "description": "The whole tile extent is water."
+                        },
+                        "RASTER": {
+                            "value": 3,
+                            "description": "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+                        }
+                    }
+                },
                 "KeyExchange": {
                     "type": "string",
                     "enum": [
@@ -117063,7 +118048,8 @@
                         "RFL",
                         "RFS",
                         "TRS",
-                        "GNP"
+                        "GNP",
+                        "DTT"
                     ]
                 },
                 "LKS": {
@@ -135662,6 +136648,553 @@
                             "x-flatbuffer-type": "string"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "DTTPayloadRef": {
+                    "type": "object",
+                    "description": "Where a block of bytes lives and how it is verified. The payload lane is\nCID-first: a tile record addresses its bytes so an epoch can be verified\nrather than trusted, and carries them inline only when the block is small\nenough that a second fetch costs more than it saves. Exactly one of CID or\nBYTES is the authority for a given ref; when both are present the bytes\nMUST hash to the CID.",
+                    "properties": {
+                        "CID": {
+                            "type": "string",
+                            "description": "Content identifier of the block in the dataset lane.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The block inline. Reserved for small blocks; a tile pyramid is\ndistributed by CID, never by embedding megabytes per record.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "SIZE_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Length of the block in bytes, whether inline or referenced, so a\nconsumer can budget a fetch before making it.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "DIGEST": {
+                            "type": "string",
+                            "description": "Multihash of the block, lowercase hexadecimal, when the publisher states\none independently of the CID.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CONTENT_ENCODING": {
+                            "type": "string",
+                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEDIA_TYPE": {
+                            "type": "string",
+                            "description": "Media type of the block as the publisher serves it.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DTTProvenance": {
+                    "type": "object",
+                    "description": "Dataset lineage and redistribution terms for one terrain tile.\n\nRequired on every record: a redistributed elevation tile whose dataset,\nepoch, and licence are unstated is not publishable. Dataset identity is\nDATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the\nsource states about itself. The standard names no dataset, mission, agency,\nor vendor.",
+                    "properties": {
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier for the elevation dataset this\ntile was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "DATASET_NAME": {
+                            "type": "string",
+                            "description": "The dataset's own name, verbatim as its publisher states it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DATASET_URL": {
+                            "type": "string",
+                            "description": "Replayable URL of the dataset as published.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DATASET_EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was\nderived from. The edition boundary, not the fetch: two tiles carrying the\nsame DATASET_ID and DATASET_EPOCH were cut from the same bytes.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "DATASET_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the exact dataset artifact, when the publisher\ndistributes one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL identifying the source material within the dataset.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "The exact tile, granule, or file selection used, so the same source\nbytes can be recovered by repeating the fetch.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Redistribution terms verbatim. Required: unknown terms are never public\ndomain and never an implied grant.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the full licence text as that dataset publishes it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution text the licence requires a redistributor to display,\ncarried verbatim so a surface can render it without composing its own\ncredit line.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NON_COMMERCIAL_ONLY": {
+                            "type": "boolean",
+                            "description": "The licence forbids commercial use.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "SHARE_ALIKE": {
+                            "type": "boolean",
+                            "description": "The licence obliges derived works to carry the same terms.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the granule this tile was cut from,\nverbatim. The join key back to the source dataset.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "GENERATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp at which this tile's bytes were produced by the\npublisher, as distinct from the dataset edition they were cut from.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROCESSOR": {
+                            "type": "string",
+                            "description": "Identifier of the processing pipeline and its version that produced the\ntile bytes, so two tiles from one edition but different pipelines are\ndistinguishable.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "DATASET_ID",
+                        "DATASET_EPOCH",
+                        "RETRIEVED_AT",
+                        "LICENSE"
+                    ],
+                    "additionalProperties": false
+                },
+                "DTT": {
+                    "type": "object",
+                    "description": "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+                    "properties": {
+                        "TILESET_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for the tile pyramid (the tileset) this tile\nbelongs to. Tiles of one pyramid share a scheme, format, and datum.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "TILESET_NAME": {
+                            "type": "string",
+                            "description": "The tileset's own name, verbatim, for display.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TILING_SCHEME": {
+                            "$ref": "#/definitions/dttTilingScheme",
+                            "description": "Scheme the address below is expressed in.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                                },
+                                "GEOGRAPHIC_WGS84": {
+                                    "value": 1,
+                                    "description": "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                                },
+                                "GEOGRAPHIC_SINGLE_ROOT": {
+                                    "value": 2,
+                                    "description": "Single-root equirectangular geographic scheme, one root tile at level 0."
+                                },
+                                "WEB_MERCATOR": {
+                                    "value": 3,
+                                    "description": "Spherical Mercator scheme, one square root tile at level 0."
+                                },
+                                "CUSTOM": {
+                                    "value": 4,
+                                    "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zoom level of the tile, 0 at the pyramid root.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "X": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Column index within LEVEL, increasing eastward from the scheme origin.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "Y": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Row index within LEVEL, increasing in the scheme's own row direction;\nROW_ORIGIN_NORTH states which.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "ROW_ORIGIN_NORTH": {
+                            "type": "boolean",
+                            "description": "Row index 0 lies at the north edge of the scheme. When false, row 0 lies\nat the south edge.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "WEST_DEG": {
+                            "type": "number",
+                            "description": "Western extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SOUTH_DEG": {
+                            "type": "number",
+                            "description": "Southern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "EAST_DEG": {
+                            "type": "number",
+                            "description": "Eastern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "NORTH_DEG": {
+                            "type": "number",
+                            "description": "Northern extent of the tile, decimal degrees on WGS 84.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Lowest height present in the tile, metres above VERTICAL_DATUM. Stated\nso a consumer can build a bounding volume without decoding the payload.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MAX_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Highest height present in the tile, metres above VERTICAL_DATUM.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PAYLOAD_FORMAT": {
+                            "$ref": "#/definitions/dttPayloadFormat",
+                            "description": "Encoding of the payload bytes.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The payload encoding is not stated. The tile is undecodable."
+                                },
+                                "QUANTIZED_MESH": {
+                                    "value": 1,
+                                    "description": "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+                                },
+                                "HEIGHTMAP_UINT16": {
+                                    "value": 2,
+                                    "description": "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+                                },
+                                "HEIGHTMAP_FLOAT32": {
+                                    "value": 3,
+                                    "description": "Regular grid of 32-bit float height posts, row-major from the north-west post."
+                                },
+                                "RASTER_GEOTIFF": {
+                                    "value": 4,
+                                    "description": "Tagged image raster carrying elevation samples with its own georeference."
+                                },
+                                "RASTER_RGB_ENCODED": {
+                                    "value": 5,
+                                    "description": "Lossless RGB image raster whose channels encode elevation."
+                                },
+                                "CUSTOM": {
+                                    "value": 6,
+                                    "description": "A format this enum does not model; the publisher states it out of band."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PAYLOAD_FORMAT_VERSION": {
+                            "type": "string",
+                            "description": "Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the\nformat is versioned.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PAYLOAD": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "The tile's elevation bytes.",
+                            "x-flatbuffer-type": "DTTPayloadRef",
+                            "x-flatbuffer-required": true
+                        },
+                        "GRID_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of height posts across the tile for gridded formats. Unset for\nmesh formats, whose vertex count varies.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "GRID_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of height posts down the tile for gridded formats.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "POST_SPACING_M": {
+                            "type": "number",
+                            "description": "Nominal ground distance between adjacent height posts at the tile\ncentre, metres. The tile's effective resolution as served, which is not\nnecessarily the source dataset's native post spacing.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SOURCE_POST_SPACING_M": {
+                            "type": "number",
+                            "description": "Native post spacing of the source elevations, metres, when the tile was\nresampled from a coarser or finer grid.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "VERTICAL_DATUM": {
+                            "$ref": "#/definitions/dttVerticalDatum",
+                            "description": "Surface the heights are measured from.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The datum is not stated. Heights are not comparable across tiles."
+                                },
+                                "ELLIPSOIDAL_WGS84": {
+                                    "value": 1,
+                                    "description": "Heights above the WGS 84 reference ellipsoid."
+                                },
+                                "GEOID": {
+                                    "value": 2,
+                                    "description": "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "MEAN_SEA_LEVEL": {
+                                    "value": 3,
+                                    "description": "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "REGIONAL_DATUM": {
+                                    "value": 4,
+                                    "description": "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+                                },
+                                "CUSTOM": {
+                                    "value": 5,
+                                    "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "VERTICAL_DATUM_NAME": {
+                            "type": "string",
+                            "description": "The datum, geoid model, or vertical reference frame named verbatim as\nits authority states it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "HORIZONTAL_DATUM_NAME": {
+                            "type": "string",
+                            "description": "Horizontal reference frame the extent is expressed in, verbatim, when it\nis not WGS 84.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "VERTICAL_ACCURACY_M": {
+                            "type": "number",
+                            "description": "Vertical accuracy the publisher states for this tile, metres, at the\nconfidence level stated in ACCURACY_CONFIDENCE.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ACCURACY_CONFIDENCE": {
+                            "type": "number",
+                            "description": "Confidence level the accuracy figures are stated at, as a fraction\nbetween 0 and 1.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "HORIZONTAL_ACCURACY_M": {
+                            "type": "number",
+                            "description": "Horizontal accuracy the publisher states for this tile, metres.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "DATA_COVERAGE_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction of the tile extent covered by real measurements rather than\ninterpolated or filled values, between 0 and 1.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "NO_DATA_VALUE": {
+                            "type": "number",
+                            "description": "Height value used to mark absent samples in gridded payloads.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "WATER_MASK_KIND": {
+                            "$ref": "#/definitions/dttWaterMask",
+                            "description": "What the tile states about water cover.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0,
+                                    "description": "The tile states nothing about water cover."
+                                },
+                                "UNIFORM_LAND": {
+                                    "value": 1,
+                                    "description": "The whole tile extent is land."
+                                },
+                                "UNIFORM_WATER": {
+                                    "value": 2,
+                                    "description": "The whole tile extent is water."
+                                },
+                                "RASTER": {
+                                    "value": 3,
+                                    "description": "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+                                }
+                            },
+                            "x-flatbuffer-default": "NONE"
+                        },
+                        "WATER_MASK": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one\nunsigned byte per sample, 255 fully water, 0 fully land.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "WATER_MASK_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of mask samples across and down the tile when WATER_MASK_KIND is\nRASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly\ncarried at a different resolution than the heights.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "WATER_MASK_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "WATER_MASK_PROVENANCE": {
+                            "$ref": "#/definitions/DTTProvenance",
+                            "description": "Dataset the water mask was derived from, when it is not the elevation\ndataset. A separate lineage because a mask carries its own licence.",
+                            "x-flatbuffer-type": "DTTProvenance"
+                        },
+                        "VERTEX_NORMALS": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "Per-sample surface normals accompanying the tile, when the publisher\nserves them, so a consumer need not derive lighting from heights.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "LAND_COVER": {
+                            "$ref": "#/definitions/DTTPayloadRef",
+                            "description": "Per-sample land-cover classification accompanying the tile, when the\npublisher serves one.",
+                            "x-flatbuffer-type": "DTTPayloadRef"
+                        },
+                        "CHILD_AVAILABILITY": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Availability of the four child tiles at LEVEL+1, as the low four bits:\nbit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.\nA set bit states the child exists in this tileset.",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "MAX_LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The deepest level this tileset serves anywhere. A consumer stops\nrequesting below it rather than discovering absence by failed fetches.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SOURCE_CLASS": {
+                            "$ref": "#/definitions/dttSourceClass",
+                            "description": "Production technique class of the source elevations.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0,
+                                    "description": "The production technique is not stated."
+                                },
+                                "SPACEBORNE_RADAR_INTERFEROMETRIC": {
+                                    "value": 1,
+                                    "description": "Spaceborne radar interferometry."
+                                },
+                                "SPACEBORNE_OPTICAL_STEREO": {
+                                    "value": 2,
+                                    "description": "Spaceborne optical stereo photogrammetry."
+                                },
+                                "SPACEBORNE_ALTIMETRIC": {
+                                    "value": 3,
+                                    "description": "Spaceborne laser or radar altimetry."
+                                },
+                                "AIRBORNE_LIDAR": {
+                                    "value": 4,
+                                    "description": "Airborne laser scanning."
+                                },
+                                "AIRBORNE_RADAR": {
+                                    "value": 5,
+                                    "description": "Airborne radar, including interferometric and synthetic-aperture radar."
+                                },
+                                "PHOTOGRAMMETRIC": {
+                                    "value": 6,
+                                    "description": "Airborne or terrestrial optical photogrammetry."
+                                },
+                                "GROUND_SURVEY": {
+                                    "value": 7,
+                                    "description": "Ground survey, including levelling and kinematic positioning."
+                                },
+                                "BATHYMETRIC_SOUNDING": {
+                                    "value": 8,
+                                    "description": "Acoustic or altimetric depth sounding of water-covered surface."
+                                },
+                                "CARTOGRAPHIC_CONTOUR": {
+                                    "value": 9,
+                                    "description": "Digitized from a published contour or hypsographic map."
+                                },
+                                "FUSED_MULTI_SOURCE": {
+                                    "value": 10,
+                                    "description": "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+                                },
+                                "SYNTHETIC": {
+                                    "value": 11,
+                                    "description": "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/DTTProvenance",
+                            "description": "Dataset lineage and redistribution terms. Required.",
+                            "x-flatbuffer-type": "DTTProvenance",
+                            "x-flatbuffer-required": true
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the\ndataset states an observation epoch distinct from its edition. Terrain\nchanges; a tile compared across time is compared at this epoch.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ETAG": {
+                            "type": "string",
+                            "description": "Entity tag for the served bytes, verbatim, so a cache can revalidate.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EXPIRES": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp after which this tile should be revalidated.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REMARKS": {
+                            "type": "string",
+                            "description": "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "TILESET_ID",
+                        "PAYLOAD",
+                        "PROVENANCE"
+                    ],
                     "additionalProperties": false
                 },
                 "EME": {
@@ -178367,6 +179900,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/GNP"
+                                },
+                                {
+                                    "$ref": "#/definitions/DTT"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)",

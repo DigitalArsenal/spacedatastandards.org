@@ -230,6 +230,7 @@ public struct Record : IFlatbufferObject
   public RFS valueAsRFS() { return value<RFS>().Value; }
   public TRS valueAsTRS() { return value<TRS>().Value; }
   public GNP valueAsGNP() { return value<GNP>().Value; }
+  public DTT valueAsDTT() { return value<DTT>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -897,6 +898,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.GNP:
         _o.value.Value = this.value<GNP>().HasValue ? this.value<GNP>().Value.UnPack() : null;
+        break;
+      case RecordType.DTT:
+        _o.value.Value = this.value<DTT>().HasValue ? this.value<DTT>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

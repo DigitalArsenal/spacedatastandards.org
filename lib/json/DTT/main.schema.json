@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "dttTilingScheme" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEOGRAPHIC_WGS84", "GEOGRAPHIC_SINGLE_ROOT", "WEB_MERCATOR", "CUSTOM"]
+    },
+    "dttPayloadFormat" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "QUANTIZED_MESH", "HEIGHTMAP_UINT16", "HEIGHTMAP_FLOAT32", "RASTER_GEOTIFF", "RASTER_RGB_ENCODED", "CUSTOM"]
+    },
+    "dttVerticalDatum" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELLIPSOIDAL_WGS84", "GEOID", "MEAN_SEA_LEVEL", "REGIONAL_DATUM", "CUSTOM"]
+    },
+    "dttSourceClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPACEBORNE_RADAR_INTERFEROMETRIC", "SPACEBORNE_OPTICAL_STEREO", "SPACEBORNE_ALTIMETRIC", "AIRBORNE_LIDAR", "AIRBORNE_RADAR", "PHOTOGRAMMETRIC", "GROUND_SURVEY", "BATHYMETRIC_SOUNDING", "CARTOGRAPHIC_CONTOUR", "FUSED_MULTI_SOURCE", "SYNTHETIC"]
+    },
+    "dttWaterMask" : {
+      "type" : "string",
+      "enum": ["NONE", "UNIFORM_LAND", "UNIFORM_WATER", "RASTER"]
+    },
+    "DTTPayloadRef" : {
+      "type" : "object",
+      "description" : "Where a block of bytes lives and how it is verified. The payload lane is\nCID-first: a tile record addresses its bytes so an epoch can be verified\nrather than trusted, and carries them inline only when the block is small\nenough that a second fetch costs more than it saves. Exactly one of CID or\nBYTES is the authority for a given ref; when both are present the bytes\nMUST hash to the CID.",
+      "properties" : {
+        "CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the block in the dataset lane."
+              },
+        "BYTES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The block inline. Reserved for small blocks; a tile pyramid is\ndistributed by CID, never by embedding megabytes per record."
+              },
+        "SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the block in bytes, whether inline or referenced, so a\nconsumer can budget a fetch before making it."
+              },
+        "DIGEST" : {
+                "type" : "string",
+                "description" : "Multihash of the block, lowercase hexadecimal, when the publisher states\none independently of the CID."
+              },
+        "CONTENT_ENCODING" : {
+                "type" : "string",
+                "description" : "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed."
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of the block as the publisher serves it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DTTProvenance" : {
+      "type" : "object",
+      "description" : "Dataset lineage and redistribution terms for one terrain tile.\n\nRequired on every record: a redistributed elevation tile whose dataset,\nepoch, and licence are unstated is not publishable. Dataset identity is\nDATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the\nsource states about itself. The standard names no dataset, mission, agency,\nor vendor.",
+      "properties" : {
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier for the elevation dataset this\ntile was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL."
+              },
+        "DATASET_NAME" : {
+                "type" : "string",
+                "description" : "The dataset's own name, verbatim as its publisher states it."
+              },
+        "DATASET_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL of the dataset as published."
+              },
+        "DATASET_EPOCH" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was\nderived from. The edition boundary, not the fetch: two tiles carrying the\nsame DATASET_ID and DATASET_EPOCH were cut from the same bytes."
+              },
+        "DATASET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the exact dataset artifact, when the publisher\ndistributes one."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL identifying the source material within the dataset."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "The exact tile, granule, or file selection used, so the same source\nbytes can be recovered by repeating the fetch."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Redistribution terms verbatim. Required: unknown terms are never public\ndomain and never an implied grant."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the full licence text as that dataset publishes it."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution text the licence requires a redistributor to display,\ncarried verbatim so a surface can render it without composing its own\ncredit line."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "The licence forbids commercial use."
+              },
+        "SHARE_ALIKE" : {
+                "type" : "boolean",
+                "description" : "The licence obliges derived works to carry the same terms."
+              },
+        "NATIVE_ID" : {
+                "type" : "string",
+                "description" : "The source's own identifier for the granule this tile was cut from,\nverbatim. The join key back to the source dataset."
+              },
+        "GENERATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC timestamp at which this tile's bytes were produced by the\npublisher, as distinct from the dataset edition they were cut from."
+              },
+        "PROCESSOR" : {
+                "type" : "string",
+                "description" : "Identifier of the processing pipeline and its version that produced the\ntile bytes, so two tiles from one edition but different pipelines are\ndistinguishable."
+              }
+      },
+      "required" : ["DATASET_ID", "DATASET_EPOCH", "RETRIEVED_AT", "LICENSE"],
+      "additionalProperties" : false
+    },
+    "DTT" : {
+      "type" : "object",
+      "description" : "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+      "properties" : {
+        "TILESET_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier for the tile pyramid (the tileset) this tile\nbelongs to. Tiles of one pyramid share a scheme, format, and datum."
+              },
+        "TILESET_NAME" : {
+                "type" : "string",
+                "description" : "The tileset's own name, verbatim, for display."
+              },
+        "TILING_SCHEME" : {
+                "$ref" : "#/definitions/dttTilingScheme",
+                "description" : "Scheme the address below is expressed in."
+              },
+        "LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zoom level of the tile, 0 at the pyramid root."
+              },
+        "X" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Column index within LEVEL, increasing eastward from the scheme origin."
+              },
+        "Y" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Row index within LEVEL, increasing in the scheme's own row direction;\nROW_ORIGIN_NORTH states which."
+              },
+        "ROW_ORIGIN_NORTH" : {
+                "type" : "boolean",
+                "description" : "Row index 0 lies at the north edge of the scheme. When false, row 0 lies\nat the south edge."
+              },
+        "WEST_DEG" : {
+                "type" : "number",
+                "description" : "Western extent of the tile, decimal degrees on WGS 84."
+              },
+        "SOUTH_DEG" : {
+                "type" : "number",
+                "description" : "Southern extent of the tile, decimal degrees on WGS 84."
+              },
+        "EAST_DEG" : {
+                "type" : "number",
+                "description" : "Eastern extent of the tile, decimal degrees on WGS 84."
+              },
+        "NORTH_DEG" : {
+                "type" : "number",
+                "description" : "Northern extent of the tile, decimal degrees on WGS 84."
+              },
+        "MIN_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Lowest height present in the tile, metres above VERTICAL_DATUM. Stated\nso a consumer can build a bounding volume without decoding the payload."
+              },
+        "MAX_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Highest height present in the tile, metres above VERTICAL_DATUM."
+              },
+        "PAYLOAD_FORMAT" : {
+                "$ref" : "#/definitions/dttPayloadFormat",
+                "description" : "Encoding of the payload bytes."
+              },
+        "PAYLOAD_FORMAT_VERSION" : {
+                "type" : "string",
+                "description" : "Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the\nformat is versioned."
+              },
+        "PAYLOAD" : {
+                "$ref" : "#/definitions/DTTPayloadRef",
+                "description" : "The tile's elevation bytes."
+              },
+        "GRID_WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of height posts across the tile for gridded formats. Unset for\nmesh formats, whose vertex count varies."
+              },
+        "GRID_HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of height posts down the tile for gridded formats."
+              },
+        "POST_SPACING_M" : {
+                "type" : "number",
+                "description" : "Nominal ground distance between adjacent height posts at the tile\ncentre, metres. The tile's effective resolution as served, which is not\nnecessarily the source dataset's native post spacing."
+              },
+        "SOURCE_POST_SPACING_M" : {
+                "type" : "number",
+                "description" : "Native post spacing of the source elevations, metres, when the tile was\nresampled from a coarser or finer grid."
+              },
+        "VERTICAL_DATUM" : {
+                "$ref" : "#/definitions/dttVerticalDatum",
+                "description" : "Surface the heights are measured from."
+              },
+        "VERTICAL_DATUM_NAME" : {
+                "type" : "string",
+                "description" : "The datum, geoid model, or vertical reference frame named verbatim as\nits authority states it."
+              },
+        "HORIZONTAL_DATUM_NAME" : {
+                "type" : "string",
+                "description" : "Horizontal reference frame the extent is expressed in, verbatim, when it\nis not WGS 84."
+              },
+        "VERTICAL_ACCURACY_M" : {
+                "type" : "number",
+                "description" : "Vertical accuracy the publisher states for this tile, metres, at the\nconfidence level stated in ACCURACY_CONFIDENCE."
+              },
+        "ACCURACY_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Confidence level the accuracy figures are stated at, as a fraction\nbetween 0 and 1."
+              },
+        "HORIZONTAL_ACCURACY_M" : {
+                "type" : "number",
+                "description" : "Horizontal accuracy the publisher states for this tile, metres."
+              },
+        "DATA_COVERAGE_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of the tile extent covered by real measurements rather than\ninterpolated or filled values, between 0 and 1."
+              },
+        "NO_DATA_VALUE" : {
+                "type" : "number",
+                "description" : "Height value used to mark absent samples in gridded payloads."
+              },
+        "WATER_MASK_KIND" : {
+                "$ref" : "#/definitions/dttWaterMask",
+                "description" : "What the tile states about water cover."
+              },
+        "WATER_MASK" : {
+                "$ref" : "#/definitions/DTTPayloadRef",
+                "description" : "The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one\nunsigned byte per sample, 255 fully water, 0 fully land."
+              },
+        "WATER_MASK_WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of mask samples across and down the tile when WATER_MASK_KIND is\nRASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly\ncarried at a different resolution than the heights."
+              },
+        "WATER_MASK_HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WATER_MASK_PROVENANCE" : {
+                "$ref" : "#/definitions/DTTProvenance",
+                "description" : "Dataset the water mask was derived from, when it is not the elevation\ndataset. A separate lineage because a mask carries its own licence."
+              },
+        "VERTEX_NORMALS" : {
+                "$ref" : "#/definitions/DTTPayloadRef",
+                "description" : "Per-sample surface normals accompanying the tile, when the publisher\nserves them, so a consumer need not derive lighting from heights."
+              },
+        "LAND_COVER" : {
+                "$ref" : "#/definitions/DTTPayloadRef",
+                "description" : "Per-sample land-cover classification accompanying the tile, when the\npublisher serves one."
+              },
+        "CHILD_AVAILABILITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Availability of the four child tiles at LEVEL+1, as the low four bits:\nbit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.\nA set bit states the child exists in this tileset."
+              },
+        "MAX_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The deepest level this tileset serves anywhere. A consumer stops\nrequesting below it rather than discovering absence by failed fetches."
+              },
+        "SOURCE_CLASS" : {
+                "$ref" : "#/definitions/dttSourceClass",
+                "description" : "Production technique class of the source elevations."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/DTTProvenance",
+                "description" : "Dataset lineage and redistribution terms. Required."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the\ndataset states an observation epoch distinct from its edition. Terrain\nchanges; a tile compared across time is compared at this epoch."
+              },
+        "ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag for the served bytes, verbatim, so a cache can revalidate."
+              },
+        "EXPIRES" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC timestamp after which this tile should be revalidated."
+              },
+        "REMARKS" : {
+                "type" : "string",
+                "description" : "Free-form publisher notes about this tile. Never a substitute for a\nstated field."
+              }
+      },
+      "required" : ["TILESET_ID", "PAYLOAD", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DTT"
+}
