@@ -1,0 +1,184 @@
+// Hash: 562adbee5bb4a54b04c26ca715faee9e18695774956c4e2373fb072b4526ec2a
+// Version: 1.190.0
+// -----------------------------------END_HEADER
+include "../TRK/main.fbs";
+
+// Track Model State (TMS)
+// Description
+// The propagatable model state of one live air or maritime track: position,
+// motion, the identifier of the dead-reckoning model that extrapolates it,
+// the model's parameters, and the innovation-gate and staleness policy the
+// publisher applied. This is the OMM/TLE paradigm generalized off-orbit —
+// the record is MODEL STATE, not a position report: a consumer propagates it
+// through a pluggable propagator port and receives an update only when a new
+// observation disagrees with the model beyond the published gate.
+//
+// ONE standard carries both domains: `ENVIRONMENT` (the `$TRK`
+// trackEnvironment enum, reused verbatim) is the domain axis; air and
+// maritime tracks propagate under the same contract and forking the code
+// would fork the propagation contract for no schema difference. `$TRK`
+// itself is a fused tactical contact report and carries no model, epoch
+// basis, or gate; the two join on track identity, they never substitute.
+//
+// IDENTIFIERS ARE SCHEME-TAGGED. Transponder and station identity systems
+// are never field names; each identity rides as an IDENTIFIERS entry whose
+// SCHEME token names the identity system verbatim and whose VALUE is the
+// identifier verbatim. The standard names no identity system.
+//
+// ABSENT IS NOT ZERO. A numeric field whose value is unknown is written
+// NaN. A ground speed of 0, a vertical rate of 0 and a heading of 0 are all
+// real claims.
+
+/// One parameter of the propagation model, stated by name so a model
+/// registry can evolve without schema change.
+table TMSModelParameter {
+  /// Parameter name within the MODEL_ID model's own registry, verbatim.
+  NAME:string (required);
+  /// Parameter value.
+  VALUE:double;
+  /// Units of VALUE, verbatim. Required: a unitless parameter states so
+  /// explicitly (e.g. "1").
+  UNITS:string (required);
+}
+
+/// One identity the track is known by in a named identity scheme.
+table TMSIdentifier {
+  /// Identity scheme token, verbatim (the identity system's own name).
+  /// Never a field name and never normalized by the publisher.
+  SCHEME:string (required);
+  /// The identifier within that scheme, verbatim.
+  VALUE:string (required);
+}
+
+/// Dataset lineage and redistribution terms for one track model state.
+///
+/// Required on every record: a redistributed track whose feed, epoch, and
+/// licence are unstated is not publishable. The standard names no feed,
+/// provider, or site.
+table TMSProvenance {
+  /// Publisher-stable, lowercase identifier for the feed or dataset this
+  /// state was derived from, unique within the publisher's own dataset
+  /// registry. Never a display name and never a URL.
+  DATASET_ID:string (required);
+  /// The feed or dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the feed or dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition or feed
+  /// session this state was derived from.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when one exists.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter, or subscription used.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp of the observation
+  /// this state was updated from.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Unknown terms are never public domain
+  /// and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as the source publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source's own identifier for the track or observation stream this
+  /// state was derived from, verbatim.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC instant the source last modified or emitted the
+  /// underlying observation, as the source states it.
+  NATIVE_MODIFIED:string;
+}
+
+/// Track Model State
+table TMS {
+  /// Publisher-stable identifier for this state record.
+  ID:string (required);
+  /// Publisher-stable identifier of the track this state belongs to, held
+  /// constant across every state update of the same track.
+  TRACK_ID:string;
+  /// Domain the track moves in. The `$TRK` enum reused verbatim; ordinal 0
+  /// is SPACE, so a publisher MUST set this field — it is defaulted to
+  /// UNKNOWN explicitly so an unset field can never be read as SPACE.
+  ENVIRONMENT:trackEnvironment = UNKNOWN;
+  /// RFC 3339 UTC fixed-millisecond epoch this state is valid at. The
+  /// propagation origin: every kinematic field below is stated at EPOCH.
+  EPOCH:string (required);
+
+  // ---- Kinematic state at EPOCH ----
+  /// Latitude, decimal degrees on WGS 84, positive north.
+  LATITUDE:double;
+  /// Longitude, decimal degrees on WGS 84, positive east, in [-180, 180].
+  LONGITUDE:double;
+  /// Altitude, metres above the WGS 84 ellipsoid. NaN for a surface track
+  /// whose source publishes no altitude.
+  ALTITUDE_M:double;
+  /// Speed over ground, metres per second.
+  GROUND_SPEED_MPS:double;
+  /// Velocity components, metres per second, local NED-derived axes:
+  /// north, east, and up. Published when the source or filter resolves
+  /// them; NaN otherwise.
+  VELOCITY_NORTH_MPS:double;
+  VELOCITY_EAST_MPS:double;
+  VELOCITY_UP_MPS:double;
+  /// Heading, degrees true, [0, 360): the direction the vehicle points.
+  HEADING_DEG:double;
+  /// Course over ground, degrees true, [0, 360): the direction it moves.
+  COURSE_DEG:double;
+  /// Turn rate, degrees per second, positive clockwise seen from above.
+  TURN_RATE_DPS:double;
+  /// Vertical rate, metres per second, positive up.
+  VERTICAL_RATE_MPS:double;
+
+  // ---- Propagation model ----
+  /// Identifier of the dead-reckoning or motion model that extrapolates
+  /// this state, a key into the publisher's model registry. Required: a
+  /// state with no model is a position report, which this record is not.
+  MODEL_ID:string (required);
+  /// Parameters of that model, named per its own registry.
+  MODEL_PARAMETERS:[TMSModelParameter];
+  /// RFC 3339 UTC instant beyond which the publisher no longer stands
+  /// behind propagation of this state.
+  PROPAGATION_VALID_UNTIL:string;
+  /// 1-sigma horizontal position uncertainty at EPOCH, metres.
+  POSITION_UNCERTAINTY_M:double;
+
+  // ---- Innovation gate and staleness policy ----
+  /// Gate in standard deviations: an observation whose innovation exceeds
+  /// this many sigma of POSITION_UNCERTAINTY_M breached the model and
+  /// produced this update.
+  INNOVATION_GATE_SIGMA:double;
+  /// Gate as an absolute distance, metres, when the publisher gates on
+  /// distance rather than sigma.
+  INNOVATION_GATE_DISTANCE_M:double;
+  /// Publisher's stated tolerance, metres, within which propagation of this
+  /// state is considered to agree with truth.
+  TOLERANCE_M:double;
+  /// Track status. The `$TRK` enum reused verbatim; ordinal 0 is ACTIVE,
+  /// so a publisher MUST set this field on every record — an unset field
+  /// reads as ACTIVE and a consumer cannot distinguish the two.
+  TRACK_STATUS:TrkTrackStatus = ACTIVE;
+  /// Seconds after LAST_UPDATE_EPOCH at which a consumer MUST mark the
+  /// track stale.
+  STALE_AFTER_S:double;
+  /// Seconds after LAST_UPDATE_EPOCH at which a consumer MUST drop the
+  /// track.
+  DROP_AFTER_S:double;
+  /// RFC 3339 UTC fixed-millisecond epoch of the last source observation
+  /// that updated this track — the staleness clock origin. EPOCH may lag it
+  /// when the publisher re-emits a keepalive state.
+  LAST_UPDATE_EPOCH:string;
+
+  /// Every identity the track is known by, scheme-tagged.
+  IDENTIFIERS:[TMSIdentifier];
+  /// Feed lineage and licence. Required.
+  SOURCE:TMSProvenance (required);
+}
+
+root_type TMS;
+file_identifier "$TMS";

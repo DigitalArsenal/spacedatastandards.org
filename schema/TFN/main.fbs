@@ -1,0 +1,189 @@
+// Hash: 8aed576356813b50cef260e43096212e494b71ff946d3f9afb47c313af20216a
+// Version: 1.190.0
+// -----------------------------------END_HEADER
+// Transport Facility Node (TFN)
+// Description
+// The operational description of one transport facility — an aerodrome, a
+// heliport, a seaplane base, a seaport, an inland port, a terminal, or a
+// spaceport: what kind of facility it is, the designators it answers to,
+// the operating surfaces (runways, pads, berths, anchorages) a vehicle
+// arrives at and departs from, and the depth, draft, and shelter figures a
+// maritime consumer plans against.
+//
+// Division of labour: place identity and location live in `$GNP` and are
+// NOT re-published here — an aerodrome as a named point IS a gazetteer
+// place, and PLACE_ID joins to it. `$SIT` carries an operational site in
+// the space-operations sense; `$TFN` carries the transport operation. One
+// code serves air and sea: a runway and a berth are the same abstraction —
+// an OPERATING SURFACE with dimensions, orientation or position, and
+// material — and splitting them would fork every consumer that plans
+// arrivals for both.
+//
+// DESIGNATORS ARE SCHEME-TAGGED. Aviation and maritime location coding
+// systems are never field names; each designator rides as a DESIGNATORS
+// entry whose SCHEME token names the coding system verbatim. The standard
+// names no coding system.
+//
+// ABSENT IS NOT ZERO. A numeric field whose value is unknown is written
+// NaN; ELEVATION_M additionally carries ELEVATION_PUBLISHED because a
+// facility at sea level is a real claim.
+
+/// The kind of transport facility.
+enum tfnFacilityType : byte {
+  UNSPECIFIED = 0,
+  AERODROME,
+  HELIPORT,
+  SEAPLANE_BASE,
+  SEAPORT,
+  INLAND_PORT,
+  TERMINAL,
+  SPACEPORT
+}
+
+/// The kind of operating surface. Ordinals are wire values: append only.
+enum tfnSurfaceKind : byte {
+  /// The source publishes no kind, or one this enum does not model; the
+  /// source's own token, when there is one, rides in SURFACE_TYPE_CODE.
+  UNSPECIFIED = 0,
+  /// A runway, including water runways at seaplane bases.
+  RUNWAY,
+  /// A helipad or other vertical-operations pad.
+  HELIPAD,
+  /// A berth a vessel moors alongside.
+  BERTH,
+  /// An anchorage area.
+  ANCHORAGE,
+  /// A quay or wharf frontage.
+  QUAY,
+  /// A pier or jetty.
+  PIER,
+  /// A launch or landing pad at a spaceport.
+  LAUNCH_PAD
+}
+
+/// One designator the facility answers to in a named coding system.
+table TFNDesignator {
+  /// Coding-system token, verbatim (the system's own name). Never a field
+  /// name and never normalized by the publisher.
+  SCHEME:string (required);
+  /// The designator within that system, verbatim.
+  VALUE:string (required);
+}
+
+/// One operating surface: the arrival/departure geometry of the facility.
+/// A runway and a berth carry the same shape; fields a domain does not use
+/// are absent (NaN), never zero.
+table TFNOperatingSurface {
+  /// Publisher-stable identifier of this surface within the facility.
+  SURFACE_ID:string (required);
+  /// Kind of surface.
+  SURFACE_TYPE:tfnSurfaceKind = UNSPECIFIED;
+  /// The source's own surface-kind token, verbatim, so a kind outside
+  /// tfnSurfaceKind survives a round trip.
+  SURFACE_TYPE_CODE:string;
+  /// Published designator of the surface, verbatim (runway designator,
+  /// berth number).
+  DESIGNATOR:string;
+  /// Usable length, metres.
+  LENGTH_M:double;
+  /// Usable width, metres.
+  WIDTH_M:double;
+  /// Available depth of water, metres, for a maritime surface.
+  DEPTH_M:double;
+  /// Surface material or construction, verbatim as the source states it.
+  SURFACE_MATERIAL:string;
+  /// True bearing of the surface's operating direction, degrees, [0, 360).
+  TRUE_BEARING_DEG:double;
+  /// Geodetic position of the threshold or reference point of this
+  /// surface, decimal degrees on WGS 84.
+  THRESHOLD_LATITUDE:double;
+  THRESHOLD_LONGITUDE:double;
+  /// The surface is lighted.
+  LIGHTED:bool = false;
+}
+
+/// Dataset lineage and redistribution terms for one facility record.
+///
+/// Required on every record: a redistributed facility whose dataset, epoch,
+/// and licence are unstated is not publishable. The standard names no
+/// dataset, provider, or site.
+table TFNProvenance {
+  /// Publisher-stable, lowercase identifier for the dataset this facility
+  /// was taken from, unique within the publisher's own dataset registry.
+  DATASET_ID:string (required);
+  /// The dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition this
+  /// facility was decoded from.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when one exists.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter, or file selection used.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Unknown terms are never public domain
+  /// and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as the dataset publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source dataset's own identifier for this facility, verbatim.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC date the source last modified this row, as it states.
+  NATIVE_MODIFIED:string;
+}
+
+/// Transport Facility Node
+table TFN {
+  /// Publisher-stable identifier for this facility record.
+  ID:string (required);
+  /// `$GNP.ID` of the gazetteer place carrying this facility's name set
+  /// and location. Location is joined, never re-published here.
+  PLACE_ID:string;
+  /// Kind of facility.
+  FACILITY_TYPE:tfnFacilityType = UNSPECIFIED;
+  /// Operational display name, verbatim, when it differs from the place
+  /// name in `$GNP`.
+  NAME:string;
+  /// Every designator the facility answers to, scheme-tagged.
+  DESIGNATORS:[TFNDesignator];
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the source states it.
+  COUNTRY_CODE:string;
+  /// Field or reference elevation, metres above mean sea level as the
+  /// source publishes it. Zero means unpublished, never sea level; a
+  /// facility at sea level is distinguished by ELEVATION_PUBLISHED.
+  ELEVATION_M:double;
+  /// ELEVATION_M carries a published value.
+  ELEVATION_PUBLISHED:bool = false;
+  /// Magnetic variation at the facility, degrees, positive east, as the
+  /// source publishes it. NaN when unpublished.
+  MAGNETIC_VARIATION_DEG:double;
+  /// The operating surfaces of the facility.
+  OPERATING_SURFACES:[TFNOperatingSurface];
+
+  // ---- Maritime planning figures ----
+  /// Maximum vessel draft the facility accepts, metres.
+  MAXIMUM_DRAFT_M:double;
+  /// Depth of water at the principal anchorage, metres.
+  ANCHORAGE_DEPTH_M:double;
+  /// Harbor type token, verbatim as the source publishes it.
+  HARBOR_TYPE:string;
+  /// Shelter afforded token, verbatim as the source publishes it.
+  SHELTER_AFFORDED:string;
+
+  /// Dataset lineage and licence. Required.
+  SOURCE:TFNProvenance (required);
+}
+
+root_type TFN;
+file_identifier "$TFN";

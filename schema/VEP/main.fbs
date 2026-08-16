@@ -1,0 +1,205 @@
+// Hash: 87e9c3a5d644774968807315862c54bd810441e7b92a562e30cda7af024b40ce
+// Version: 1.190.0
+// -----------------------------------END_HEADER
+include "../TRK/main.fbs";
+
+// Vehicle Endurance Profile (VEP)
+// Description
+// The endurance model of a vehicle CLASS, refinable per type: energy store
+// capacity, a burn-rate table keyed by flight/transit regime, altitude, and
+// speed, and the replenishment options that reset it. The profile bounds
+// how long a coasted track stays credible — a consumer propagating a track
+// through a dead-reckoning model integrates burn along the coasted path and
+// expires the track when the modelled energy store, less reserve, is spent.
+//
+// Division of labour: `$GVH` and `$NAV` carry scalar fuel LEVELS —
+// instantaneous state reports — and are never extended into performance
+// tables; `$MPE`/`$MNV` are the structural mirror on orbit. `$VEP` is the
+// PERFORMANCE MODEL: it describes a class of vehicle, not one voyage.
+// `$TMS` carries the track the profile is applied to; REPLENISHMENT joins
+// to `$TFN` facilities.
+//
+// BURN RATE IS A TABLE, NEVER A SCALAR. Consumption depends on regime,
+// altitude, and speed; a profile that collapses it to one number is not
+// publishable under this standard. A generalized class profile may carry
+// few points; a refined type profile carries more and names its parent
+// through REFINES_ID, so generalized-first, refined-later is the intended
+// lifecycle.
+//
+// ABSENT IS NOT ZERO. A numeric field whose value is unknown is written
+// NaN. A burn rate of 0 (an anchored, engines-off point) is a real claim.
+
+/// The kind of energy store the profile models.
+enum vepEnergyType : byte {
+  UNSPECIFIED = 0,
+  LIQUID_FUEL,
+  ELECTRIC,
+  HYBRID,
+  NUCLEAR,
+  SOLAR,
+  WIND
+}
+
+/// Operating regime a performance point is stated for. Ordinals are wire
+/// values: append only.
+enum vepRegime : byte {
+  UNSPECIFIED = 0,
+  TAKEOFF,
+  CLIMB,
+  CRUISE,
+  LOITER,
+  DESCENT,
+  TAXI,
+  /// Steady transit for surface and subsurface vehicles.
+  TRANSIT,
+  /// High-consumption maneuvering.
+  MANEUVER
+}
+
+/// How a consumer interpolates between performance points.
+enum vepInterpolation : byte {
+  /// No method stated; a consumer MUST treat the table as TABLE_LOOKUP
+  /// rather than invent an interpolant.
+  UNSPECIFIED = 0,
+  /// Nearest point in (regime, altitude, speed).
+  NEAREST,
+  /// Linear along the single varying axis.
+  LINEAR,
+  /// Bilinear over altitude and speed within a regime.
+  BILINEAR,
+  /// Exact-key lookup only; no interpolation between points.
+  TABLE_LOOKUP
+}
+
+/// One point of the burn-rate table: consumption at a stated regime,
+/// altitude, and speed.
+table VEPPerformancePoint {
+  /// Altitude the point is stated at, metres above mean sea level. NaN for
+  /// surface and subsurface regimes where altitude does not apply.
+  ALTITUDE_M:double;
+  /// Speed the point is stated at, metres per second.
+  SPEED_MPS:double;
+  /// Operating regime.
+  REGIME:vepRegime = UNSPECIFIED;
+  /// Consumption rate at this point, in BURN_RATE_UNITS per second unless
+  /// the unit token itself states another time base.
+  BURN_RATE_VALUE:double;
+  /// Units of BURN_RATE_VALUE, verbatim. Required: a rate with no unit is
+  /// not publishable.
+  BURN_RATE_UNITS:string (required);
+  /// Distance travelled per unit of energy at this point, metres per
+  /// CAPACITY_UNITS unit.
+  SPECIFIC_RANGE_M_PER_UNIT:double;
+  /// Gross mass the point is stated at, kilograms.
+  GROSS_MASS_KG:double;
+}
+
+/// One replenishment option: how the energy store is reset.
+table VEPReplenishment {
+  /// `$TFN.ID` of a facility where this replenishment is available. Absent
+  /// for a replenishment that is not facility-bound.
+  FACILITY_ID:string;
+  /// Typical duration of the replenishment, seconds.
+  DURATION_S:double;
+  /// Transfer rate, in TRANSFER_RATE_UNITS.
+  TRANSFER_RATE_VALUE:double;
+  /// Units of TRANSFER_RATE_VALUE, verbatim.
+  TRANSFER_RATE_UNITS:string;
+  /// Replenishment happens while the vehicle is underway (aerial
+  /// refuelling, underway replenishment).
+  IN_MOTION:bool = false;
+}
+
+/// Dataset lineage and redistribution terms for one endurance profile.
+///
+/// Required on every record: a profile whose data source, epoch, and
+/// licence are unstated is not publishable. The standard names no dataset,
+/// provider, or site.
+table VEPProvenance {
+  /// Publisher-stable, lowercase identifier for the dataset or study this
+  /// profile was derived from.
+  DATASET_ID:string (required);
+  /// The dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition this
+  /// profile was derived from.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when one exists.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter, or file selection used.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Unknown terms are never public domain
+  /// and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as the dataset publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source's own identifier for the vehicle class or type this
+  /// profile describes, verbatim.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC instant the source last modified this data, as it
+  /// states.
+  NATIVE_MODIFIED:string;
+}
+
+/// Vehicle Endurance Profile
+table VEP {
+  /// Publisher-stable identifier for this profile record.
+  ID:string (required);
+  /// Publisher-stable identifier of the vehicle CLASS this profile models.
+  /// Required: every profile is at least class-level.
+  VEHICLE_CLASS_ID:string (required);
+  /// Verbatim vehicle type token refining the class, when this profile is
+  /// a per-type refinement.
+  VEHICLE_TYPE_DESIGNATOR:string;
+  /// Domain the vehicle operates in. The `$TRK` enum reused verbatim;
+  /// ordinal 0 is SPACE, so it is defaulted to UNKNOWN explicitly.
+  ENVIRONMENT:trackEnvironment = UNKNOWN;
+  /// Kind of energy store.
+  ENERGY_TYPE:vepEnergyType = UNSPECIFIED;
+  /// Usable energy store capacity, in CAPACITY_UNITS.
+  CAPACITY_VALUE:double;
+  /// Units of CAPACITY_VALUE, verbatim. The same unit keys
+  /// SPECIFIC_RANGE_M_PER_UNIT and the replenishment transfer rates.
+  CAPACITY_UNITS:string;
+  /// Fraction of capacity [0-1] held as reserve; endurance computations
+  /// spend down to the reserve, never through it.
+  RESERVE_FRACTION:double;
+  /// The burn-rate table, keyed regime x altitude x speed. Required, and
+  /// never a single collapsed scalar.
+  PERFORMANCE_POINTS:[VEPPerformancePoint] (required);
+  /// How a consumer interpolates between the points.
+  INTERPOLATION:vepInterpolation = UNSPECIFIED;
+
+  // ---- Published envelope figures ----
+  /// Maximum endurance, seconds, as the source publishes it.
+  MAXIMUM_ENDURANCE_S:double;
+  /// Maximum range, metres, as the source publishes it.
+  MAXIMUM_RANGE_M:double;
+  /// Best-loiter speed, metres per second.
+  LOITER_SPEED_MPS:double;
+  /// Service ceiling, metres above mean sea level.
+  SERVICE_CEILING_M:double;
+
+  /// Replenishment options available to this class or type.
+  REPLENISHMENT:[VEPReplenishment];
+  /// `$VEP.ID` of the parent profile this one refines — the class-to-type
+  /// specialization chain. Absent for a class-level root profile.
+  REFINES_ID:string;
+  /// Dataset lineage and licence. Required.
+  SOURCE:VEPProvenance (required);
+}
+
+root_type VEP;
+file_identifier "$VEP";
