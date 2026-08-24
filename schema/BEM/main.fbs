@@ -1,5 +1,5 @@
-// Hash: 72cf435f921e72c07bf5705a4fe7fc476915aca497c7549eed01bad6c3198b55
-// Version: 0.0.3
+// Hash: 99db367bb3ef0bf5fd87855262bf700da20d0bd406f3d332a3dc7abe7a3f9cc4
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum beamType : byte {
   SPOT,
@@ -18,6 +18,56 @@ enum beamPolarization : byte {
   DUAL_CIRCULAR,
   DUAL_LINEAR,
   CROSS_POL
+}
+
+/// Operational state of one beam-hop slot.
+enum bemHopSlotState : byte {
+  UNSPECIFIED = 0,
+  ACTIVE,
+  GUARD,
+  IDLE
+}
+
+/// Provenance of a deployed-beam descriptor or hop schedule.
+table BEMProvenance {
+  SOURCE:string (required);
+  SOURCE_QUERY:string;
+  MODEL_NAME:string;
+  MODEL_VERSION:string;
+  CITATION:string;
+  MODULE_ID:string;
+  MODULE_VERSION:string;
+  MODULE_CONTENT_HASH:string;
+  COMPUTED_AT:uint64;
+}
+
+/// One time slice of a periodic beam-hopping plan.
+table BEMHopSlot {
+  SLOT_ID:string (required);
+  /// Offset from BEMHopSchedule.EPOCH in seconds.
+  START_OFFSET_S:double;
+  DURATION_S:double;
+  STATE:bemHopSlotState = UNSPECIFIED;
+  /// Beam activated in this slot. May name this BEM.ID or another beam in a
+  /// coordinated schedule.
+  BEAM_ID:string (required);
+  TARGET_CELL_ID:string;
+  TARGET_CENTER_LATITUDE_DEG:double;
+  TARGET_CENTER_LONGITUDE_DEG:double;
+  CENTER_FREQUENCY_HZ:double;
+  EIRP_DBW:double;
+  PRIORITY:uint32;
+}
+
+/// Periodic beam-hopping schedule carried by a deployed beam descriptor.
+table BEMHopSchedule {
+  SCHEDULE_ID:string (required);
+  /// Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.
+  EPOCH:double;
+  PERIOD_S:double;
+  REPEATS:bool;
+  SLOTS:[BEMHopSlot] (required);
+  PROVENANCE:BEMProvenance (required);
 }
 
 /// Beam Contour Point (gain pattern boundary)
@@ -76,6 +126,20 @@ table BEM {
   BEAM_CONTOURS:[beamContour];
   /// Additional notes
   NOTES:string;
+  /// Time-sliced activation plan for this deployed beam.
+  HOP_SCHEDULE:BEMHopSchedule;
+  PROVENANCE:BEMProvenance;
+  /// Unix ms this record was serialized.
+  COMPUTED_AT:uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID:string;
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE:[ubyte];
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE:[ubyte];
 }
 
 root_type BEM;

@@ -269,6 +269,77 @@ class RFE : Table() {
         }
     val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
     fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Provenance of the root emitter descriptor.
+     */
+    val provenance : RFEProvenance? get() = provenance(RFEProvenance())
+    fun provenance(obj: RFEProvenance) : RFEProvenance? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Unix ms this record was serialized.
+     */
+    val computedAt : ULong
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * `$EPM` identifier of the producing node.
+     */
+    val producerId : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val producerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun producerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+     * signature payloads zeroed while preserving their vectors and offsets.
+     */
+    fun signature(j: Int) : UByte {
+        val o = __offset(50)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val signatureLength : Int
+        get() {
+            val o = __offset(50); return if (o != 0) __vector_len(o) else 0
+        }
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * Ed25519 signature over canonical JSON with IDL field order and
+     * capitalization, no insignificant whitespace, and both signature fields
+     * omitted.
+     */
+    fun canonicalJsonSignature(j: Int) : UByte {
+        val o = __offset(52)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val canonicalJsonSignatureLength : Int
+        get() {
+            val o = __offset(52); return if (o != 0) __vector_len(o) else 0
+        }
+    val canonicalJsonSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun canonicalJsonSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFE(_bb: ByteBuffer): RFE = getRootAsRFE(_bb, RFE())
@@ -277,13 +348,18 @@ class RFE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFE")
-        fun createRFE(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, type: Byte, entityOffset: Int, elnotOffset: Int, natoNameOffset: Int, platformTypeOffset: Int, countryOffset: Int, functionOffset: Int, bandOffset: Int, freqMin: Double, freqMax: Double, peakPower: Double, avgPower: Double, antennaGain: Double, numModes: UInt, rfEmitterDetailsOffset: Int, threatLevelOffset: Int, notesOffset: Int) : Int {
-            builder.startTable(20)
+        fun createRFE(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, type: Byte, entityOffset: Int, elnotOffset: Int, natoNameOffset: Int, platformTypeOffset: Int, countryOffset: Int, functionOffset: Int, bandOffset: Int, freqMin: Double, freqMax: Double, peakPower: Double, avgPower: Double, antennaGain: Double, numModes: UInt, rfEmitterDetailsOffset: Int, threatLevelOffset: Int, notesOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
+            builder.startTable(25)
+            addCOMPUTEDAT(builder, computedAt)
             addANTENNAGAIN(builder, antennaGain)
             addAVGPOWER(builder, avgPower)
             addPEAKPOWER(builder, peakPower)
             addFREQMAX(builder, freqMax)
             addFREQMIN(builder, freqMin)
+            addCANONICALJSONSIGNATURE(builder, canonicalJsonSignatureOffset)
+            addSIGNATURE(builder, signatureOffset)
+            addPRODUCERID(builder, producerIdOffset)
+            addPROVENANCE(builder, provenanceOffset)
             addNOTES(builder, notesOffset)
             addTHREATLEVEL(builder, threatLevelOffset)
             addRFEMITTERDETAILS(builder, rfEmitterDetailsOffset)
@@ -301,7 +377,7 @@ class RFE : Table() {
             addTYPE(builder, type)
             return endRFE(builder)
         }
-        fun startRFE(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startRFE(builder: FlatBufferBuilder) = builder.startTable(25)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addIDENTITY(builder: FlatBufferBuilder, idEntity: Int) = builder.addOffset(1, idEntity, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
@@ -330,6 +406,29 @@ class RFE : Table() {
         fun startRfEmitterDetailsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addTHREATLEVEL(builder: FlatBufferBuilder, threatLevel: Int) = builder.addOffset(18, threatLevel, 0)
         fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(19, notes, 0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(20, provenance, 0)
+        fun addCOMPUTEDAT(builder: FlatBufferBuilder, computedAt: ULong) = builder.addLong(21, computedAt.toLong(), 0)
+        fun addPRODUCERID(builder: FlatBufferBuilder, producerId: Int) = builder.addOffset(22, producerId, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(23, signature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addCANONICALJSONSIGNATURE(builder: FlatBufferBuilder, canonicalJsonSignature: Int) = builder.addOffset(24, canonicalJsonSignature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCanonicalJsonSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCanonicalJsonSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endRFE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

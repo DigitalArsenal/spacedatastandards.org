@@ -117,6 +117,12 @@ public struct RFLLink : IFlatbufferObject
   public ArraySegment<byte>? GetSERVICEBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetSERVICEArray() { return __p.__vector_as_array<byte>(42); }
+  /// Ordered adaptive modulation-and-coding choices. Per-sample
+  /// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  public RFLModCod? MODCOD_SET(int j) { int o = __p.__offset(44); return o != 0 ? (RFLModCod?)(new RFLModCod()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MODCOD_SETLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Whether the producer evaluated adaptive selection for this link.
+  public bool ACM_ENABLED { get { int o = __p.__offset(46); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<RFLLink> CreateRFLLink(FlatBufferBuilder builder,
       StringOffset LINK_IDOffset = default(StringOffset),
@@ -138,14 +144,17 @@ public struct RFLLink : IFlatbufferObject
       StringOffset RECEIVER_GROUP_IDOffset = default(StringOffset),
       StringOffset CHANNEL_GROUP_IDOffset = default(StringOffset),
       StringOffset CONSTELLATIONOffset = default(StringOffset),
-      StringOffset SERVICEOffset = default(StringOffset)) {
-    builder.StartTable(20);
+      StringOffset SERVICEOffset = default(StringOffset),
+      VectorOffset MODCOD_SETOffset = default(VectorOffset),
+      bool ACM_ENABLED = false) {
+    builder.StartTable(22);
     RFLLink.AddTHRESHOLD_VALUE(builder, THRESHOLD_VALUE);
     RFLLink.AddDATA_RATE_BPS(builder, DATA_RATE_BPS);
     RFLLink.AddSYMBOL_RATE_BAUD(builder, SYMBOL_RATE_BAUD);
     RFLLink.AddCODE_RATE(builder, CODE_RATE);
     RFLLink.AddBANDWIDTH_MHZ(builder, BANDWIDTH_MHZ);
     RFLLink.AddCENTER_FREQUENCY_MHZ(builder, CENTER_FREQUENCY_MHZ);
+    RFLLink.AddMODCOD_SET(builder, MODCOD_SETOffset);
     RFLLink.AddSERVICE(builder, SERVICEOffset);
     RFLLink.AddCONSTELLATION(builder, CONSTELLATIONOffset);
     RFLLink.AddCHANNEL_GROUP_ID(builder, CHANNEL_GROUP_IDOffset);
@@ -157,13 +166,14 @@ public struct RFLLink : IFlatbufferObject
     RFLLink.AddTRANSMIT_ENDPOINT(builder, TRANSMIT_ENDPOINTOffset);
     RFLLink.AddLINK_NAME(builder, LINK_NAMEOffset);
     RFLLink.AddLINK_ID(builder, LINK_IDOffset);
+    RFLLink.AddACM_ENABLED(builder, ACM_ENABLED);
     RFLLink.AddTHRESHOLD_COMPARISON(builder, THRESHOLD_COMPARISON);
     RFLLink.AddTHRESHOLD_TERM(builder, THRESHOLD_TERM);
     RFLLink.AddLINK_KIND(builder, LINK_KIND);
     return RFLLink.EndRFLLink(builder);
   }
 
-  public static void StartRFLLink(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartRFLLink(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddLINK_ID(FlatBufferBuilder builder, StringOffset LINK_IDOffset) { builder.AddOffset(0, LINK_IDOffset.Value, 0); }
   public static void AddLINK_NAME(FlatBufferBuilder builder, StringOffset LINK_NAMEOffset) { builder.AddOffset(1, LINK_NAMEOffset.Value, 0); }
   public static void AddLINK_KIND(FlatBufferBuilder builder, rflLinkKind LINK_KIND) { builder.AddSbyte(2, (sbyte)LINK_KIND, 0); }
@@ -184,6 +194,13 @@ public struct RFLLink : IFlatbufferObject
   public static void AddCHANNEL_GROUP_ID(FlatBufferBuilder builder, StringOffset CHANNEL_GROUP_IDOffset) { builder.AddOffset(17, CHANNEL_GROUP_IDOffset.Value, 0); }
   public static void AddCONSTELLATION(FlatBufferBuilder builder, StringOffset CONSTELLATIONOffset) { builder.AddOffset(18, CONSTELLATIONOffset.Value, 0); }
   public static void AddSERVICE(FlatBufferBuilder builder, StringOffset SERVICEOffset) { builder.AddOffset(19, SERVICEOffset.Value, 0); }
+  public static void AddMODCOD_SET(FlatBufferBuilder builder, VectorOffset MODCOD_SETOffset) { builder.AddOffset(20, MODCOD_SETOffset.Value, 0); }
+  public static VectorOffset CreateMODCOD_SETVector(FlatBufferBuilder builder, Offset<RFLModCod>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMODCOD_SETVectorBlock(FlatBufferBuilder builder, Offset<RFLModCod>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMODCOD_SETVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<RFLModCod>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMODCOD_SETVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<RFLModCod>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMODCOD_SETVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddACM_ENABLED(FlatBufferBuilder builder, bool ACM_ENABLED) { builder.AddBool(21, ACM_ENABLED, false); }
   public static Offset<RFLLink> EndRFLLink(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LINK_ID
@@ -217,6 +234,9 @@ public struct RFLLink : IFlatbufferObject
     _o.CHANNEL_GROUP_ID = this.CHANNEL_GROUP_ID;
     _o.CONSTELLATION = this.CONSTELLATION;
     _o.SERVICE = this.SERVICE;
+    _o.MODCOD_SET = new List<RFLModCodT>();
+    for (var _j = 0; _j < this.MODCOD_SETLength; ++_j) {_o.MODCOD_SET.Add(this.MODCOD_SET(_j).HasValue ? this.MODCOD_SET(_j).Value.UnPack() : null);}
+    _o.ACM_ENABLED = this.ACM_ENABLED;
   }
   public static Offset<RFLLink> Pack(FlatBufferBuilder builder, RFLLinkT _o) {
     if (_o == null) return default(Offset<RFLLink>);
@@ -231,6 +251,12 @@ public struct RFLLink : IFlatbufferObject
     var _CHANNEL_GROUP_ID = _o.CHANNEL_GROUP_ID == null ? default(StringOffset) : builder.CreateString(_o.CHANNEL_GROUP_ID);
     var _CONSTELLATION = _o.CONSTELLATION == null ? default(StringOffset) : builder.CreateString(_o.CONSTELLATION);
     var _SERVICE = _o.SERVICE == null ? default(StringOffset) : builder.CreateString(_o.SERVICE);
+    var _MODCOD_SET = default(VectorOffset);
+    if (_o.MODCOD_SET != null) {
+      var __MODCOD_SET = new Offset<RFLModCod>[_o.MODCOD_SET.Count];
+      for (var _j = 0; _j < __MODCOD_SET.Length; ++_j) { __MODCOD_SET[_j] = RFLModCod.Pack(builder, _o.MODCOD_SET[_j]); }
+      _MODCOD_SET = CreateMODCOD_SETVector(builder, __MODCOD_SET);
+    }
     return CreateRFLLink(
       builder,
       _LINK_ID,
@@ -252,7 +278,9 @@ public struct RFLLink : IFlatbufferObject
       _RECEIVER_GROUP_ID,
       _CHANNEL_GROUP_ID,
       _CONSTELLATION,
-      _SERVICE);
+      _SERVICE,
+      _MODCOD_SET,
+      _o.ACM_ENABLED);
   }
 }
 
@@ -278,6 +306,8 @@ public class RFLLinkT
   public string CHANNEL_GROUP_ID { get; set; }
   public string CONSTELLATION { get; set; }
   public string SERVICE { get; set; }
+  public List<RFLModCodT> MODCOD_SET { get; set; }
+  public bool ACM_ENABLED { get; set; }
 
   public RFLLinkT() {
     this.LINK_ID = null;
@@ -300,6 +330,8 @@ public class RFLLinkT
     this.CHANNEL_GROUP_ID = null;
     this.CONSTELLATION = null;
     this.SERVICE = null;
+    this.MODCOD_SET = null;
+    this.ACM_ENABLED = false;
   }
 }
 
@@ -329,6 +361,8 @@ static public class RFLLinkVerify
       && verifier.VerifyString(tablePos, 38 /*CHANNEL_GROUP_ID*/, false)
       && verifier.VerifyString(tablePos, 40 /*CONSTELLATION*/, false)
       && verifier.VerifyString(tablePos, 42 /*SERVICE*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*MODCOD_SET*/, RFLModCodVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 46 /*ACM_ENABLED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

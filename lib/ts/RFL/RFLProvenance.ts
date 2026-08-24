@@ -172,8 +172,36 @@ CITATION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+ * MODELS remains the per-budget-term attribution surface.
+ */
+MODULE_ID():string|null
+MODULE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MODULE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+MODULE_VERSION():string|null
+MODULE_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MODULE_VERSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content hash of the exact producing WASM artifact.
+ */
+MODULE_CONTENT_HASH():string|null
+MODULE_CONTENT_HASH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MODULE_CONTENT_HASH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startRFLProvenance(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(18);
 }
 
 static addMethod(builder:flatbuffers.Builder, METHOD:rflMethod) {
@@ -248,13 +276,25 @@ static addCitation(builder:flatbuffers.Builder, CITATIONOffset:flatbuffers.Offse
   builder.addFieldOffset(14, CITATIONOffset, 0);
 }
 
+static addModuleId(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, MODULE_IDOffset, 0);
+}
+
+static addModuleVersion(builder:flatbuffers.Builder, MODULE_VERSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, MODULE_VERSIONOffset, 0);
+}
+
+static addModuleContentHash(builder:flatbuffers.Builder, MODULE_CONTENT_HASHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, MODULE_CONTENT_HASHOffset, 0);
+}
+
 static endRFLProvenance(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 6) // SOURCE
   return offset;
 }
 
-static createRFLProvenance(builder:flatbuffers.Builder, METHOD:rflMethod, SOURCEOffset:flatbuffers.Offset, SOURCE_QUERYOffset:flatbuffers.Offset, PROPAGATOR_IDOffset:flatbuffers.Offset, PROPAGATOR_VERSIONOffset:flatbuffers.Offset, PROPAGATOR_CONFIGURATIONOffset:flatbuffers.Offset, SAMPLING_STEP_S:number, MODELSOffset:flatbuffers.Offset, ENVIRONMENT_DATASETOffset:flatbuffers.Offset, TERRAIN_DATASETOffset:flatbuffers.Offset, COMPUTED_AT:bigint, RETRIEVED_AT:bigint, LICENSEOffset:flatbuffers.Offset, NON_COMMERCIAL_ONLY:boolean, CITATIONOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRFLProvenance(builder:flatbuffers.Builder, METHOD:rflMethod, SOURCEOffset:flatbuffers.Offset, SOURCE_QUERYOffset:flatbuffers.Offset, PROPAGATOR_IDOffset:flatbuffers.Offset, PROPAGATOR_VERSIONOffset:flatbuffers.Offset, PROPAGATOR_CONFIGURATIONOffset:flatbuffers.Offset, SAMPLING_STEP_S:number, MODELSOffset:flatbuffers.Offset, ENVIRONMENT_DATASETOffset:flatbuffers.Offset, TERRAIN_DATASETOffset:flatbuffers.Offset, COMPUTED_AT:bigint, RETRIEVED_AT:bigint, LICENSEOffset:flatbuffers.Offset, NON_COMMERCIAL_ONLY:boolean, CITATIONOffset:flatbuffers.Offset, MODULE_IDOffset:flatbuffers.Offset, MODULE_VERSIONOffset:flatbuffers.Offset, MODULE_CONTENT_HASHOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFLProvenance.startRFLProvenance(builder);
   RFLProvenance.addMethod(builder, METHOD);
   RFLProvenance.addSource(builder, SOURCEOffset);
@@ -271,6 +311,9 @@ static createRFLProvenance(builder:flatbuffers.Builder, METHOD:rflMethod, SOURCE
   RFLProvenance.addLicense(builder, LICENSEOffset);
   RFLProvenance.addNonCommercialOnly(builder, NON_COMMERCIAL_ONLY);
   RFLProvenance.addCitation(builder, CITATIONOffset);
+  RFLProvenance.addModuleId(builder, MODULE_IDOffset);
+  RFLProvenance.addModuleVersion(builder, MODULE_VERSIONOffset);
+  RFLProvenance.addModuleContentHash(builder, MODULE_CONTENT_HASHOffset);
   return RFLProvenance.endRFLProvenance(builder);
 }
 
@@ -290,7 +333,10 @@ unpack(): RFLProvenanceT {
     this.RETRIEVED_AT(),
     this.LICENSE(),
     this.NON_COMMERCIAL_ONLY(),
-    this.CITATION()
+    this.CITATION(),
+    this.MODULE_ID(),
+    this.MODULE_VERSION(),
+    this.MODULE_CONTENT_HASH()
   );
 }
 
@@ -311,6 +357,9 @@ unpackTo(_o: RFLProvenanceT): void {
   _o.LICENSE = this.LICENSE();
   _o.NON_COMMERCIAL_ONLY = this.NON_COMMERCIAL_ONLY();
   _o.CITATION = this.CITATION();
+  _o.MODULE_ID = this.MODULE_ID();
+  _o.MODULE_VERSION = this.MODULE_VERSION();
+  _o.MODULE_CONTENT_HASH = this.MODULE_CONTENT_HASH();
 }
 }
 
@@ -330,7 +379,10 @@ constructor(
   public RETRIEVED_AT: bigint = BigInt('0'),
   public LICENSE: string|Uint8Array|null = null,
   public NON_COMMERCIAL_ONLY: boolean = false,
-  public CITATION: string|Uint8Array|null = null
+  public CITATION: string|Uint8Array|null = null,
+  public MODULE_ID: string|Uint8Array|null = null,
+  public MODULE_VERSION: string|Uint8Array|null = null,
+  public MODULE_CONTENT_HASH: string|Uint8Array|null = null
 ){}
 
 
@@ -345,6 +397,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TERRAIN_DATASET = (this.TERRAIN_DATASET !== null ? builder.createString(this.TERRAIN_DATASET!) : 0);
   const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
   const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
+  const MODULE_ID = (this.MODULE_ID !== null ? builder.createString(this.MODULE_ID!) : 0);
+  const MODULE_VERSION = (this.MODULE_VERSION !== null ? builder.createString(this.MODULE_VERSION!) : 0);
+  const MODULE_CONTENT_HASH = (this.MODULE_CONTENT_HASH !== null ? builder.createString(this.MODULE_CONTENT_HASH!) : 0);
 
   return RFLProvenance.createRFLProvenance(builder,
     this.METHOD,
@@ -361,7 +416,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RETRIEVED_AT,
     LICENSE,
     this.NON_COMMERCIAL_ONLY,
-    CITATION
+    CITATION,
+    MODULE_ID,
+    MODULE_VERSION,
+    MODULE_CONTENT_HASH
   );
 }
 }

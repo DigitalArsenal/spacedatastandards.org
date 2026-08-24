@@ -1,0 +1,34 @@
+/**
+ * How the path interacted with an obstacle. A solver that only ever reports
+ * blockage cannot express a reflected multipath component or a wall the
+ * signal went through, so the interaction is named per contribution.
+ */
+export declare enum rflObstacleInteraction {
+    UNSPECIFIED = 0,
+    /**
+     * The obstacle blocked line of sight; no energy was propagated through it.
+     */
+    LINE_OF_SIGHT_BLOCKAGE = 1,
+    /**
+     * Energy passed through the obstacle and paid its penetration loss.
+     */
+    TRANSMISSION = 2,
+    /**
+     * Energy reached the receiver by reflecting off the obstacle.
+     */
+    REFLECTION = 3,
+    /**
+     * Energy reached the receiver by diffracting around an edge.
+     */
+    DIFFRACTION = 4,
+    /**
+     * Energy reached the receiver by rough-surface scattering.
+     */
+    SCATTERING = 5,
+    /**
+     * The obstacle intruded into the Fresnel zone without blocking the direct
+     * ray.
+     */
+    FRESNEL_INTRUSION = 6
+}
+//# sourceMappingURL=rflObstacleInteraction.d.ts.map

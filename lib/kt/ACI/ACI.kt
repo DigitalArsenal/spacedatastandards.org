@@ -162,7 +162,9 @@ class ACI : Table() {
     val producerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
     fun producerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Ed25519 signature by the producing `$EPM`.
+     * Ed25519 signature by the producing `$EPM` over the size-prefixed
+     * FlatBuffer projection with both 64-byte signature payloads zeroed while
+     * preserving their vectors and offsets.
      */
     fun signature(j: Int) : UByte {
         val o = __offset(26)
@@ -178,6 +180,42 @@ class ACI : Table() {
         }
     val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
     fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+     * field order, IDL capitalization, no insignificant whitespace, and both
+     * signature fields omitted.
+     */
+    fun canonicalJsonSignature(j: Int) : UByte {
+        val o = __offset(28)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val canonicalJsonSignatureLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    val canonicalJsonSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun canonicalJsonSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Per-interval delivered volume grouped by selected modulation-and-coding
+     * entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+     */
+    fun dataVolumeByModcod(j: Int) : ACIDataVolumeByModCod? = dataVolumeByModcod(ACIDataVolumeByModCod(), j)
+    fun dataVolumeByModcod(obj: ACIDataVolumeByModCod, j: Int) : ACIDataVolumeByModCod? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val dataVolumeByModcodLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACI(_bb: ByteBuffer): ACI = getRootAsACI(_bb, ACI())
@@ -186,11 +224,13 @@ class ACI : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACI")
-        fun createACI(builder: FlatBufferBuilder, aciIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, intervalsOffset: Int, windowStart: Double, windowStop: Double, timeSystem: Byte, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int) : Int {
-            builder.startTable(12)
+        fun createACI(builder: FlatBufferBuilder, aciIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, intervalsOffset: Int, windowStart: Double, windowStop: Double, timeSystem: Byte, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, dataVolumeByModcodOffset: Int) : Int {
+            builder.startTable(14)
             addCOMPUTEDAT(builder, computedAt)
             addWINDOWSTOP(builder, windowStop)
             addWINDOWSTART(builder, windowStart)
+            addDATAVOLUMEBYMODCOD(builder, dataVolumeByModcodOffset)
+            addCANONICALJSONSIGNATURE(builder, canonicalJsonSignatureOffset)
             addSIGNATURE(builder, signatureOffset)
             addPRODUCERID(builder, producerIdOffset)
             addPROVENANCE(builder, provenanceOffset)
@@ -202,7 +242,7 @@ class ACI : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endACI(builder)
         }
-        fun startACI(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startACI(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addACIID(builder: FlatBufferBuilder, aciId: Int) = builder.addOffset(0, aciId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(2, scenarioId, 0)
@@ -232,6 +272,25 @@ class ACI : Table() {
             return builder.endVector()
         }
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addCANONICALJSONSIGNATURE(builder: FlatBufferBuilder, canonicalJsonSignature: Int) = builder.addOffset(12, canonicalJsonSignature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCanonicalJsonSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCanonicalJsonSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addDATAVOLUMEBYMODCOD(builder: FlatBufferBuilder, dataVolumeByModcod: Int) = builder.addOffset(13, dataVolumeByModcod, 0)
+        fun createDataVolumeByModcodVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDataVolumeByModcodVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endACI(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

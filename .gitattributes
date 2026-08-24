@@ -1,0 +1,3 @@
+# Generated application bundles are reviewed and hashed as binary artifacts.
+packages/standards-explorer/dist/standards-explorer.js binary
+packages/standards-explorer/dist/standards-explorer.min.js binary

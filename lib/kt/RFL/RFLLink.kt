@@ -247,6 +247,31 @@ class RFLLink : Table() {
         }
     val serviceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
     fun serviceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Ordered adaptive modulation-and-coding choices. Per-sample
+     * SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+     */
+    fun modcodSet(j: Int) : RFLModCod? = modcodSet(RFLModCod(), j)
+    fun modcodSet(obj: RFLModCod, j: Int) : RFLModCod? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val modcodSetLength : Int
+        get() {
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Whether the producer evaluated adaptive selection for this link.
+     */
+    val acmEnabled : Boolean
+        get() {
+            val o = __offset(46)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFLLink(_bb: ByteBuffer): RFLLink = getRootAsRFLLink(_bb, RFLLink())
@@ -254,14 +279,15 @@ class RFLLink : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRFLLink(builder: FlatBufferBuilder, linkIdOffset: Int, linkNameOffset: Int, linkKind: Byte, transmitEndpointOffset: Int, receiveEndpointOffset: Int, centerFrequencyMhz: Double, bandwidthMhz: Double, modulationOffset: Int, codingOffset: Int, codeRate: Double, symbolRateBaud: Double, dataRateBps: Double, thresholdTerm: Byte, thresholdValue: Double, thresholdUnitsOffset: Int, thresholdComparison: Byte, receiverGroupIdOffset: Int, channelGroupIdOffset: Int, constellationOffset: Int, serviceOffset: Int) : Int {
-            builder.startTable(20)
+        fun createRFLLink(builder: FlatBufferBuilder, linkIdOffset: Int, linkNameOffset: Int, linkKind: Byte, transmitEndpointOffset: Int, receiveEndpointOffset: Int, centerFrequencyMhz: Double, bandwidthMhz: Double, modulationOffset: Int, codingOffset: Int, codeRate: Double, symbolRateBaud: Double, dataRateBps: Double, thresholdTerm: Byte, thresholdValue: Double, thresholdUnitsOffset: Int, thresholdComparison: Byte, receiverGroupIdOffset: Int, channelGroupIdOffset: Int, constellationOffset: Int, serviceOffset: Int, modcodSetOffset: Int, acmEnabled: Boolean) : Int {
+            builder.startTable(22)
             addTHRESHOLDVALUE(builder, thresholdValue)
             addDATARATEBPS(builder, dataRateBps)
             addSYMBOLRATEBAUD(builder, symbolRateBaud)
             addCODERATE(builder, codeRate)
             addBANDWIDTHMHZ(builder, bandwidthMhz)
             addCENTERFREQUENCYMHZ(builder, centerFrequencyMhz)
+            addMODCODSET(builder, modcodSetOffset)
             addSERVICE(builder, serviceOffset)
             addCONSTELLATION(builder, constellationOffset)
             addCHANNELGROUPID(builder, channelGroupIdOffset)
@@ -273,12 +299,13 @@ class RFLLink : Table() {
             addTRANSMITENDPOINT(builder, transmitEndpointOffset)
             addLINKNAME(builder, linkNameOffset)
             addLINKID(builder, linkIdOffset)
+            addACMENABLED(builder, acmEnabled)
             addTHRESHOLDCOMPARISON(builder, thresholdComparison)
             addTHRESHOLDTERM(builder, thresholdTerm)
             addLINKKIND(builder, linkKind)
             return endRFLLink(builder)
         }
-        fun startRFLLink(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startRFLLink(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addLINKID(builder: FlatBufferBuilder, linkId: Int) = builder.addOffset(0, linkId, 0)
         fun addLINKNAME(builder: FlatBufferBuilder, linkName: Int) = builder.addOffset(1, linkName, 0)
         fun addLINKKIND(builder: FlatBufferBuilder, linkKind: Byte) = builder.addByte(2, linkKind, 0)
@@ -299,6 +326,16 @@ class RFLLink : Table() {
         fun addCHANNELGROUPID(builder: FlatBufferBuilder, channelGroupId: Int) = builder.addOffset(17, channelGroupId, 0)
         fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(18, constellation, 0)
         fun addSERVICE(builder: FlatBufferBuilder, service: Int) = builder.addOffset(19, service, 0)
+        fun addMODCODSET(builder: FlatBufferBuilder, modcodSet: Int) = builder.addOffset(20, modcodSet, 0)
+        fun createModcodSetVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startModcodSetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addACMENABLED(builder: FlatBufferBuilder, acmEnabled: Boolean) = builder.addBoolean(21, acmEnabled, false)
         fun endRFLLink(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

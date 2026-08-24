@@ -123,6 +123,19 @@ public final class RFLLink extends com.google.flatbuffers.Table {
   public String SERVICE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SERVICEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer SERVICEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Ordered adaptive modulation-and-coding choices. Per-sample
+   * SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+   */
+  public RFLModCod MODCOD_SET(int j) { return MODCOD_SET(new RFLModCod(), j); }
+  public RFLModCod MODCOD_SET(RFLModCod obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MODCOD_SETLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public RFLModCod.Vector modcodSetVector() { return modcodSetVector(new RFLModCod.Vector()); }
+  public RFLModCod.Vector modcodSetVector(RFLModCod.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Whether the producer evaluated adaptive selection for this link.
+   */
+  public boolean ACM_ENABLED() { int o = __offset(46); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createRFLLink(FlatBufferBuilder builder,
       int LINK_IDOffset,
@@ -144,14 +157,17 @@ public final class RFLLink extends com.google.flatbuffers.Table {
       int RECEIVER_GROUP_IDOffset,
       int CHANNEL_GROUP_IDOffset,
       int CONSTELLATIONOffset,
-      int SERVICEOffset) {
-    builder.startTable(20);
+      int SERVICEOffset,
+      int MODCOD_SETOffset,
+      boolean ACM_ENABLED) {
+    builder.startTable(22);
     RFLLink.addThresholdValue(builder, THRESHOLD_VALUE);
     RFLLink.addDataRateBps(builder, DATA_RATE_BPS);
     RFLLink.addSymbolRateBaud(builder, SYMBOL_RATE_BAUD);
     RFLLink.addCodeRate(builder, CODE_RATE);
     RFLLink.addBandwidthMhz(builder, BANDWIDTH_MHZ);
     RFLLink.addCenterFrequencyMhz(builder, CENTER_FREQUENCY_MHZ);
+    RFLLink.addModcodSet(builder, MODCOD_SETOffset);
     RFLLink.addService(builder, SERVICEOffset);
     RFLLink.addConstellation(builder, CONSTELLATIONOffset);
     RFLLink.addChannelGroupId(builder, CHANNEL_GROUP_IDOffset);
@@ -163,13 +179,14 @@ public final class RFLLink extends com.google.flatbuffers.Table {
     RFLLink.addTransmitEndpoint(builder, TRANSMIT_ENDPOINTOffset);
     RFLLink.addLinkName(builder, LINK_NAMEOffset);
     RFLLink.addLinkId(builder, LINK_IDOffset);
+    RFLLink.addAcmEnabled(builder, ACM_ENABLED);
     RFLLink.addThresholdComparison(builder, THRESHOLD_COMPARISON);
     RFLLink.addThresholdTerm(builder, THRESHOLD_TERM);
     RFLLink.addLinkKind(builder, LINK_KIND);
     return RFLLink.endRFLLink(builder);
   }
 
-  public static void startRFLLink(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startRFLLink(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addLinkId(FlatBufferBuilder builder, int LINK_IDOffset) { builder.addOffset(0, LINK_IDOffset, 0); }
   public static void addLinkName(FlatBufferBuilder builder, int LINK_NAMEOffset) { builder.addOffset(1, LINK_NAMEOffset, 0); }
   public static void addLinkKind(FlatBufferBuilder builder, byte LINK_KIND) { builder.addByte(2, LINK_KIND, 0); }
@@ -190,6 +207,10 @@ public final class RFLLink extends com.google.flatbuffers.Table {
   public static void addChannelGroupId(FlatBufferBuilder builder, int CHANNEL_GROUP_IDOffset) { builder.addOffset(17, CHANNEL_GROUP_IDOffset, 0); }
   public static void addConstellation(FlatBufferBuilder builder, int CONSTELLATIONOffset) { builder.addOffset(18, CONSTELLATIONOffset, 0); }
   public static void addService(FlatBufferBuilder builder, int SERVICEOffset) { builder.addOffset(19, SERVICEOffset, 0); }
+  public static void addModcodSet(FlatBufferBuilder builder, int MODCOD_SETOffset) { builder.addOffset(20, MODCOD_SETOffset, 0); }
+  public static int createModcodSetVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startModcodSetVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAcmEnabled(FlatBufferBuilder builder, boolean ACM_ENABLED) { builder.addBoolean(21, ACM_ENABLED, false); }
   public static int endRFLLink(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LINK_ID

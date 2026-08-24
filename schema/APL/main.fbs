@@ -1,0 +1,56 @@
+// Hash: 56e2c5bd49f742f4f518bcf6aed045df4e71cb918dcb7f51d5a56dcfd0ccf6be
+// Version: 1.193.1
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Atmospheric Propagation Loss Statistics (APL)
+// Statistical loss distributions complement the deterministic per-sample
+// columns in `$RFL`. Every present curve is aligned with EXCEEDANCE_PERCENT.
+
+/// Atmospheric Propagation Loss Statistics
+table APL {
+  APL_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  RFL_ID: string;
+  LINK_ID: string;
+  WINDOW_START: double;
+  WINDOW_STOP: double;
+  TIME_SYSTEM: timingStandard = UTC;
+
+  /// Percent of time a loss value is exceeded, in descending or ascending
+  /// order as stated by PROVENANCE. Every curve below has this length.
+  EXCEEDANCE_PERCENT: [double] (required);
+  RAIN_LOSS_DB: [double] (required);
+  GASEOUS_ABSORPTION_LOSS_DB: [double] (required);
+  CLOUD_FOG_LOSS_DB: [double] (required);
+  SCINTILLATION_LOSS_DB: [double] (required);
+  TOTAL_LOSS_DB: [double] (required);
+  /// Cross-polarization discrimination at each exceedance percentage, dB.
+  XPD_DB: [double] (required);
+
+  /// Exceedance percentage used for the worst-month summary.
+  WORST_MONTH_EXCEEDANCE_PERCENT: double;
+  WORST_MONTH_TOTAL_LOSS_DB: double;
+  WORST_MONTH_XPD_DB: double;
+  /// Percentage of the analysis window meeting the stated link requirement.
+  AVAILABILITY_PERCENT: double;
+  /// Annualized minutes not meeting the stated link requirement.
+  OUTAGE_MINUTES_PER_YEAR: double;
+  /// Worst-month outage minutes for the analysis window's month length.
+  WORST_MONTH_OUTAGE_MINUTES: double;
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type APL;
+file_identifier "$APL";

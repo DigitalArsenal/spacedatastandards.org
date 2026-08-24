@@ -8,6 +8,44 @@ import Common
 
 import FlatBuffers
 
+///  Capability class represented by an emission-limit curve.
+public enum rfeEmissionMaskClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case inBand = 1
+  case outOfBand = 2
+  case spurious = 3
+  case harmonic = 4
+  case broadbandNoise = 5
+  case conducted = 6
+  case radiated = 7
+  case susceptibility = 8
+
+  public static var max: rfeEmissionMaskClass { return .susceptibility }
+  public static var min: rfeEmissionMaskClass { return .unspecified }
+}
+
+
+///  Physical path to which an emission-limit curve applies.
+public enum rfeEmissionPath: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case antennaPort = 1
+  case powerLead = 2
+  case signalLead = 3
+  case enclosure = 4
+  case freeSpace = 5
+  case structure = 6
+
+  public static var max: rfeEmissionPath { return .structure }
+  public static var min: rfeEmissionPath { return .unspecified }
+}
+
+
 public enum emitterType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -51,6 +89,233 @@ public enum signalModulation: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 }
 
 
+///  One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is
+///  relative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in
+///  the mask's required UNITS.
+public struct RFEEmissionMaskPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFEEmissionMaskPoint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FREQUENCY_OFFSET_HZ: VOffset = 4
+    static let VALUE: VOffset = 6
+  }
+
+  public var FREQUENCY_OFFSET_HZ: Double { let o = _accessor.offset(VT.FREQUENCY_OFFSET_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRFEEmissionMaskPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(FREQUENCY_OFFSET_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_OFFSET_HZ, def: 0.0, at: VT.FREQUENCY_OFFSET_HZ) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func endRFEEmissionMaskPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRFEEmissionMaskPoint(
+    _ fbb: inout FlatBufferBuilder,
+    FREQUENCY_OFFSET_HZ: Double = 0.0,
+    VALUE: Double = 0.0
+  ) -> Offset {
+    let __start = RFEEmissionMaskPoint.startRFEEmissionMaskPoint(&fbb)
+    RFEEmissionMaskPoint.add(FREQUENCY_OFFSET_HZ: FREQUENCY_OFFSET_HZ, &fbb)
+    RFEEmissionMaskPoint.add(VALUE: VALUE, &fbb)
+    return RFEEmissionMaskPoint.endRFEEmissionMaskPoint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FREQUENCY_OFFSET_HZ, fieldName: "FREQUENCY_OFFSET_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Provenance of an emitter descriptor or emission mask. Capability schemas
+///  carry model names and citations as data so the IDL remains provider-neutral.
+public struct RFEProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFEProvenance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let SOURCE_QUERY: VOffset = 6
+    static let MODEL_NAME: VOffset = 8
+    static let MODEL_VERSION: VOffset = 10
+    static let CITATION: VOffset = 12
+    static let MODULE_ID: VOffset = 14
+    static let MODULE_VERSION: VOffset = 16
+    static let MODULE_CONTENT_HASH: VOffset = 18
+    static let COMPUTED_AT: VOffset = 20
+  }
+
+  public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  public var MODEL_NAME: String? { let o = _accessor.offset(VT.MODEL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_NAME) }
+  public var MODEL_VERSION: String? { let o = _accessor.offset(VT.MODEL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_VERSION) }
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startRFEProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func add(MODEL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_NAME, at: VT.MODEL_NAME) }
+  public static func add(MODEL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_VERSION, at: VT.MODEL_VERSION) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func endRFEProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createRFEProvenance(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCEOffset SOURCE: Offset,
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
+    MODEL_NAMEOffset MODEL_NAME: Offset = Offset(),
+    MODEL_VERSIONOffset MODEL_VERSION: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0
+  ) -> Offset {
+    let __start = RFEProvenance.startRFEProvenance(&fbb)
+    RFEProvenance.add(SOURCE: SOURCE, &fbb)
+    RFEProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    RFEProvenance.add(MODEL_NAME: MODEL_NAME, &fbb)
+    RFEProvenance.add(MODEL_VERSION: MODEL_VERSION, &fbb)
+    RFEProvenance.add(CITATION: CITATION, &fbb)
+    RFEProvenance.add(MODULE_ID: MODULE_ID, &fbb)
+    RFEProvenance.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    RFEProvenance.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
+    RFEProvenance.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    return RFEProvenance.endRFEProvenance(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_NAME, fieldName: "MODEL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_VERSION, fieldName: "MODEL_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,
+///  or susceptibility limit curve.
+public struct RFEEmissionMask: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFEEmissionMask.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MASK_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let CLASS: VOffset = 8
+    static let PATH: VOffset = 10
+    static let UNITS: VOffset = 12
+    static let REFERENCE_FREQUENCY_HZ: VOffset = 14
+    static let REFERENCE_BANDWIDTH_HZ: VOffset = 16
+    static let POINTS: VOffset = 18
+    static let PROVENANCE: VOffset = 20
+  }
+
+  public var MASK_ID: String! { let o = _accessor.offset(VT.MASK_ID); return _accessor.string(at: o) }
+  public var MASK_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MASK_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var CLASS: rfeEmissionMaskClass { let o = _accessor.offset(VT.CLASS); return o == 0 ? .unspecified : rfeEmissionMaskClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var PATH: rfeEmissionPath { let o = _accessor.offset(VT.PATH); return o == 0 ? .unspecified : rfeEmissionPath(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,
+  ///  or dBuA. A point with no unit is not publishable.
+  public var UNITS: String! { let o = _accessor.offset(VT.UNITS); return _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UNITS) }
+  public var REFERENCE_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.REFERENCE_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFERENCE_BANDWIDTH_HZ: Double { let o = _accessor.offset(VT.REFERENCE_BANDWIDTH_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POINTS: FlatbufferVector<RFEEmissionMaskPoint> { return _accessor.vector(at: VT.POINTS, byteSize: 4) }
+  public var PROVENANCE: RFEProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFEProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startRFEEmissionMask(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(MASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASK_ID, at: VT.MASK_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(CLASS: rfeEmissionMaskClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLASS.rawValue, def: 0, at: VT.CLASS) }
+  public static func add(PATH: rfeEmissionPath, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH.rawValue, def: 0, at: VT.PATH) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(REFERENCE_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FREQUENCY_HZ, def: 0.0, at: VT.REFERENCE_FREQUENCY_HZ) }
+  public static func add(REFERENCE_BANDWIDTH_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_BANDWIDTH_HZ, def: 0.0, at: VT.REFERENCE_BANDWIDTH_HZ) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VT.POINTS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endRFEEmissionMask(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 18, 20]); return end }
+  public static func createRFEEmissionMask(
+    _ fbb: inout FlatBufferBuilder,
+    MASK_IDOffset MASK_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    CLASS: rfeEmissionMaskClass = .unspecified,
+    PATH: rfeEmissionPath = .unspecified,
+    UNITSOffset UNITS: Offset,
+    REFERENCE_FREQUENCY_HZ: Double = 0.0,
+    REFERENCE_BANDWIDTH_HZ: Double = 0.0,
+    POINTSVectorOffset POINTS: Offset,
+    PROVENANCEOffset PROVENANCE: Offset
+  ) -> Offset {
+    let __start = RFEEmissionMask.startRFEEmissionMask(&fbb)
+    RFEEmissionMask.add(MASK_ID: MASK_ID, &fbb)
+    RFEEmissionMask.add(NAME: NAME, &fbb)
+    RFEEmissionMask.add(CLASS: CLASS, &fbb)
+    RFEEmissionMask.add(PATH: PATH, &fbb)
+    RFEEmissionMask.add(UNITS: UNITS, &fbb)
+    RFEEmissionMask.add(REFERENCE_FREQUENCY_HZ: REFERENCE_FREQUENCY_HZ, &fbb)
+    RFEEmissionMask.add(REFERENCE_BANDWIDTH_HZ: REFERENCE_BANDWIDTH_HZ, &fbb)
+    RFEEmissionMask.addVectorOf(POINTS: POINTS, &fbb)
+    RFEEmissionMask.add(PROVENANCE: PROVENANCE, &fbb)
+    return RFEEmissionMask.endRFEEmissionMask(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MASK_ID, fieldName: "MASK_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASS, fieldName: "CLASS", required: false, type: rfeEmissionMaskClass.self)
+    try _v.visit(field: VT.PATH, fieldName: "PATH", required: false, type: rfeEmissionPath.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_FREQUENCY_HZ, fieldName: "REFERENCE_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.REFERENCE_BANDWIDTH_HZ, fieldName: "REFERENCE_BANDWIDTH_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.POINTS, fieldName: "POINTS", required: true, type: ForwardOffset<Vector<ForwardOffset<RFEEmissionMaskPoint>, RFEEmissionMaskPoint>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFEProvenance>.self)
+    _v.finish()
+  }
+}
+
 ///  RF Emitter Detail Record
 public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -79,6 +344,7 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
     static let MODULATION: VOffset = 28
     static let ANTENNA_PATTERN: VOffset = 30
     static let BEAMWIDTH: VOffset = 32
+    static let EMISSION_MASKS: VOffset = 34
   }
 
   ///  Mode name or identifier
@@ -113,7 +379,10 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var ANTENNA_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANTENNA_PATTERN) }
   ///  3dB beamwidth in degrees
   public var BEAMWIDTH: Double { let o = _accessor.offset(VT.BEAMWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startrfEmitterDetail(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Emission and susceptibility limit curves applicable to this operating
+  ///  mode. Curves are evaluated in point order after sorting by frequency.
+  public var EMISSION_MASKS: FlatbufferVector<RFEEmissionMask> { return _accessor.vector(at: VT.EMISSION_MASKS, byteSize: 4) }
+  public static func startrfEmitterDetail(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(MODE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODE_NAME, at: VT.MODE_NAME) }
   public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
   public static func add(FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MIN, def: 0.0, at: VT.FREQ_MIN) }
@@ -129,6 +398,7 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
   public static func add(MODULATION: signalModulation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULATION.rawValue, def: 0, at: VT.MODULATION) }
   public static func add(ANTENNA_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_PATTERN, at: VT.ANTENNA_PATTERN) }
   public static func add(BEAMWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH, def: 0.0, at: VT.BEAMWIDTH) }
+  public static func addVectorOf(EMISSION_MASKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMISSION_MASKS, at: VT.EMISSION_MASKS) }
   public static func endrfEmitterDetail(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createrfEmitterDetail(
     _ fbb: inout FlatBufferBuilder,
@@ -146,7 +416,8 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
     ERP: Double = 0.0,
     MODULATION: signalModulation = .cw,
     ANTENNA_PATTERNOffset ANTENNA_PATTERN: Offset = Offset(),
-    BEAMWIDTH: Double = 0.0
+    BEAMWIDTH: Double = 0.0,
+    EMISSION_MASKSVectorOffset EMISSION_MASKS: Offset = Offset()
   ) -> Offset {
     let __start = rfEmitterDetail.startrfEmitterDetail(&fbb)
     rfEmitterDetail.add(MODE_NAME: MODE_NAME, &fbb)
@@ -164,6 +435,7 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
     rfEmitterDetail.add(MODULATION: MODULATION, &fbb)
     rfEmitterDetail.add(ANTENNA_PATTERN: ANTENNA_PATTERN, &fbb)
     rfEmitterDetail.add(BEAMWIDTH: BEAMWIDTH, &fbb)
+    rfEmitterDetail.addVectorOf(EMISSION_MASKS: EMISSION_MASKS, &fbb)
     return rfEmitterDetail.endrfEmitterDetail(&fbb, start: __start)
   }
 
@@ -184,6 +456,7 @@ public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, 
     try _v.visit(field: VT.MODULATION, fieldName: "MODULATION", required: false, type: signalModulation.self)
     try _v.visit(field: VT.ANTENNA_PATTERN, fieldName: "ANTENNA_PATTERN", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.BEAMWIDTH, fieldName: "BEAMWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.EMISSION_MASKS, fieldName: "EMISSION_MASKS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFEEmissionMask>, RFEEmissionMask>>.self)
     _v.finish()
   }
 }
@@ -221,6 +494,11 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let RF_EMITTER_DETAILS: VOffset = 38
     static let THREAT_LEVEL: VOffset = 40
     static let NOTES: VOffset = 42
+    static let PROVENANCE: VOffset = 44
+    static let COMPUTED_AT: VOffset = 46
+    static let PRODUCER_ID: VOffset = 48
+    static let SIGNATURE: VOffset = 50
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 52
   }
 
   ///  Unique emitter identifier
@@ -275,7 +553,23 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  public static func startRFE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  Provenance of the root emitter descriptor.
+  public var PROVENANCE: RFEProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : RFEProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Unix ms this record was serialized.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  `$EPM` identifier of the producing node.
+  public var PRODUCER_ID: String? { let o = _accessor.offset(VT.PRODUCER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startRFE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VT.ID_ENTITY) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
@@ -296,6 +590,11 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(RF_EMITTER_DETAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RF_EMITTER_DETAILS, at: VT.RF_EMITTER_DETAILS) }
   public static func add(THREAT_LEVEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THREAT_LEVEL, at: VT.THREAT_LEVEL) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
   public static func endRFE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFE(
     _ fbb: inout FlatBufferBuilder,
@@ -318,7 +617,12 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     NUM_MODES: UInt32 = 0,
     RF_EMITTER_DETAILSVectorOffset RF_EMITTER_DETAILS: Offset = Offset(),
     THREAT_LEVELOffset THREAT_LEVEL: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = RFE.startRFE(&fbb)
     RFE.add(ID: ID, &fbb)
@@ -341,6 +645,11 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     RFE.addVectorOf(RF_EMITTER_DETAILS: RF_EMITTER_DETAILS, &fbb)
     RFE.add(THREAT_LEVEL: THREAT_LEVEL, &fbb)
     RFE.add(NOTES: NOTES, &fbb)
+    RFE.add(PROVENANCE: PROVENANCE, &fbb)
+    RFE.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    RFE.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    RFE.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    RFE.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
     return RFE.endRFE(&fbb, start: __start)
   }
 
@@ -366,6 +675,11 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.RF_EMITTER_DETAILS, fieldName: "RF_EMITTER_DETAILS", required: false, type: ForwardOffset<Vector<ForwardOffset<rfEmitterDetail>, rfEmitterDetail>>.self)
     try _v.visit(field: VT.THREAT_LEVEL, fieldName: "THREAT_LEVEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<RFEProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

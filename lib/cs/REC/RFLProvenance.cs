@@ -106,6 +106,30 @@ public struct RFLProvenance : IFlatbufferObject
   public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(32); }
+  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  /// MODELS remains the per-budget-term attribution surface.
+  public string MODULE_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMODULE_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetMODULE_IDBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetMODULE_IDArray() { return __p.__vector_as_array<byte>(34); }
+  public string MODULE_VERSION { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMODULE_VERSIONBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetMODULE_VERSIONBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetMODULE_VERSIONArray() { return __p.__vector_as_array<byte>(36); }
+  /// Content hash of the exact producing WASM artifact.
+  public string MODULE_CONTENT_HASH { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMODULE_CONTENT_HASHBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetMODULE_CONTENT_HASHBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetMODULE_CONTENT_HASHArray() { return __p.__vector_as_array<byte>(38); }
 
   public static Offset<RFLProvenance> CreateRFLProvenance(FlatBufferBuilder builder,
       rflMethod METHOD = rflMethod.UNSPECIFIED,
@@ -122,11 +146,17 @@ public struct RFLProvenance : IFlatbufferObject
       ulong RETRIEVED_AT = 0,
       StringOffset LICENSEOffset = default(StringOffset),
       bool NON_COMMERCIAL_ONLY = false,
-      StringOffset CITATIONOffset = default(StringOffset)) {
-    builder.StartTable(15);
+      StringOffset CITATIONOffset = default(StringOffset),
+      StringOffset MODULE_IDOffset = default(StringOffset),
+      StringOffset MODULE_VERSIONOffset = default(StringOffset),
+      StringOffset MODULE_CONTENT_HASHOffset = default(StringOffset)) {
+    builder.StartTable(18);
     RFLProvenance.AddRETRIEVED_AT(builder, RETRIEVED_AT);
     RFLProvenance.AddCOMPUTED_AT(builder, COMPUTED_AT);
     RFLProvenance.AddSAMPLING_STEP_S(builder, SAMPLING_STEP_S);
+    RFLProvenance.AddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASHOffset);
+    RFLProvenance.AddMODULE_VERSION(builder, MODULE_VERSIONOffset);
+    RFLProvenance.AddMODULE_ID(builder, MODULE_IDOffset);
     RFLProvenance.AddCITATION(builder, CITATIONOffset);
     RFLProvenance.AddLICENSE(builder, LICENSEOffset);
     RFLProvenance.AddTERRAIN_DATASET(builder, TERRAIN_DATASETOffset);
@@ -142,7 +172,7 @@ public struct RFLProvenance : IFlatbufferObject
     return RFLProvenance.EndRFLProvenance(builder);
   }
 
-  public static void StartRFLProvenance(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartRFLProvenance(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddMETHOD(FlatBufferBuilder builder, rflMethod METHOD) { builder.AddSbyte(0, (sbyte)METHOD, 0); }
   public static void AddSOURCE(FlatBufferBuilder builder, StringOffset SOURCEOffset) { builder.AddOffset(1, SOURCEOffset.Value, 0); }
   public static void AddSOURCE_QUERY(FlatBufferBuilder builder, StringOffset SOURCE_QUERYOffset) { builder.AddOffset(2, SOURCE_QUERYOffset.Value, 0); }
@@ -163,6 +193,9 @@ public struct RFLProvenance : IFlatbufferObject
   public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(12, LICENSEOffset.Value, 0); }
   public static void AddNON_COMMERCIAL_ONLY(FlatBufferBuilder builder, bool NON_COMMERCIAL_ONLY) { builder.AddBool(13, NON_COMMERCIAL_ONLY, false); }
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(14, CITATIONOffset.Value, 0); }
+  public static void AddMODULE_ID(FlatBufferBuilder builder, StringOffset MODULE_IDOffset) { builder.AddOffset(15, MODULE_IDOffset.Value, 0); }
+  public static void AddMODULE_VERSION(FlatBufferBuilder builder, StringOffset MODULE_VERSIONOffset) { builder.AddOffset(16, MODULE_VERSIONOffset.Value, 0); }
+  public static void AddMODULE_CONTENT_HASH(FlatBufferBuilder builder, StringOffset MODULE_CONTENT_HASHOffset) { builder.AddOffset(17, MODULE_CONTENT_HASHOffset.Value, 0); }
   public static Offset<RFLProvenance> EndRFLProvenance(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 6);  // SOURCE
@@ -190,6 +223,9 @@ public struct RFLProvenance : IFlatbufferObject
     _o.LICENSE = this.LICENSE;
     _o.NON_COMMERCIAL_ONLY = this.NON_COMMERCIAL_ONLY;
     _o.CITATION = this.CITATION;
+    _o.MODULE_ID = this.MODULE_ID;
+    _o.MODULE_VERSION = this.MODULE_VERSION;
+    _o.MODULE_CONTENT_HASH = this.MODULE_CONTENT_HASH;
   }
   public static Offset<RFLProvenance> Pack(FlatBufferBuilder builder, RFLProvenanceT _o) {
     if (_o == null) return default(Offset<RFLProvenance>);
@@ -208,6 +244,9 @@ public struct RFLProvenance : IFlatbufferObject
     var _TERRAIN_DATASET = _o.TERRAIN_DATASET == null ? default(StringOffset) : builder.CreateString(_o.TERRAIN_DATASET);
     var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
     var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
+    var _MODULE_ID = _o.MODULE_ID == null ? default(StringOffset) : builder.CreateString(_o.MODULE_ID);
+    var _MODULE_VERSION = _o.MODULE_VERSION == null ? default(StringOffset) : builder.CreateString(_o.MODULE_VERSION);
+    var _MODULE_CONTENT_HASH = _o.MODULE_CONTENT_HASH == null ? default(StringOffset) : builder.CreateString(_o.MODULE_CONTENT_HASH);
     return CreateRFLProvenance(
       builder,
       _o.METHOD,
@@ -224,7 +263,10 @@ public struct RFLProvenance : IFlatbufferObject
       _o.RETRIEVED_AT,
       _LICENSE,
       _o.NON_COMMERCIAL_ONLY,
-      _CITATION);
+      _CITATION,
+      _MODULE_ID,
+      _MODULE_VERSION,
+      _MODULE_CONTENT_HASH);
   }
 }
 
@@ -245,6 +287,9 @@ public class RFLProvenanceT
   public string LICENSE { get; set; }
   public bool NON_COMMERCIAL_ONLY { get; set; }
   public string CITATION { get; set; }
+  public string MODULE_ID { get; set; }
+  public string MODULE_VERSION { get; set; }
+  public string MODULE_CONTENT_HASH { get; set; }
 
   public RFLProvenanceT() {
     this.METHOD = rflMethod.UNSPECIFIED;
@@ -262,6 +307,9 @@ public class RFLProvenanceT
     this.LICENSE = null;
     this.NON_COMMERCIAL_ONLY = false;
     this.CITATION = null;
+    this.MODULE_ID = null;
+    this.MODULE_VERSION = null;
+    this.MODULE_CONTENT_HASH = null;
   }
 }
 
@@ -286,6 +334,9 @@ static public class RFLProvenanceVerify
       && verifier.VerifyString(tablePos, 28 /*LICENSE*/, false)
       && verifier.VerifyField(tablePos, 30 /*NON_COMMERCIAL_ONLY*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 32 /*CITATION*/, false)
+      && verifier.VerifyString(tablePos, 34 /*MODULE_ID*/, false)
+      && verifier.VerifyString(tablePos, 36 /*MODULE_VERSION*/, false)
+      && verifier.VerifyString(tablePos, 38 /*MODULE_CONTENT_HASH*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

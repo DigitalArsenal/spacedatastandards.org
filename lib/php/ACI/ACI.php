@@ -148,7 +148,9 @@ class ACI extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Ed25519 signature by the producing `$EPM`.
+    /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+    /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+    /// preserving their vectors and offsets.
     /**
      * @param int offset
      * @return byte
@@ -176,22 +178,73 @@ class ACI extends Table
         return $this->__vector_as_bytes(26);
     }
 
+    /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+    /// field order, IDL capitalization, no insignificant whitespace, and both
+    /// signature fields omitted.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCANONICAL_JSON_SIGNATURE($j)
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCANONICAL_JSON_SIGNATURELength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCANONICAL_JSON_SIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(28);
+    }
+
+    /// Per-interval delivered volume grouped by selected modulation-and-coding
+    /// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+    /**
+     * @returnVectorOffset
+     */
+    public function getDATA_VOLUME_BY_MODCOD($j)
+    {
+        $o = $this->__offset(30);
+        $obj = new ACIDataVolumeByModCod();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDATA_VOLUME_BY_MODCODLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACI(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACI
      */
-    public static function createACI(FlatBufferBuilder $builder, $ACI_ID, $NAME, $SCENARIO_ID, $RFL_ID, $INTERVALS, $WINDOW_START, $WINDOW_STOP, $TIME_SYSTEM, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE)
+    public static function createACI(FlatBufferBuilder $builder, $ACI_ID, $NAME, $SCENARIO_ID, $RFL_ID, $INTERVALS, $WINDOW_START, $WINDOW_STOP, $TIME_SYSTEM, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE, $DATA_VOLUME_BY_MODCOD)
     {
-        $builder->startObject(12);
+        $builder->startObject(14);
         self::addACI_ID($builder, $ACI_ID);
         self::addNAME($builder, $NAME);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
@@ -204,6 +257,8 @@ class ACI extends Table
         self::addCOMPUTED_AT($builder, $COMPUTED_AT);
         self::addPRODUCER_ID($builder, $PRODUCER_ID);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addCANONICAL_JSON_SIGNATURE($builder, $CANONICAL_JSON_SIGNATURE);
+        self::addDATA_VOLUME_BY_MODCOD($builder, $DATA_VOLUME_BY_MODCOD);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ACI_ID
         $builder->required($o, 12);  // INTERVALS
@@ -377,6 +432,74 @@ class ACI extends Table
     public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCANONICAL_JSON_SIGNATURE(FlatBufferBuilder $builder, $CANONICAL_JSON_SIGNATURE)
+    {
+        $builder->addOffsetX(12, $CANONICAL_JSON_SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDATA_VOLUME_BY_MODCOD(FlatBufferBuilder $builder, $DATA_VOLUME_BY_MODCOD)
+    {
+        $builder->addOffsetX(13, $DATA_VOLUME_BY_MODCOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDATA_VOLUME_BY_MODCODVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDATA_VOLUME_BY_MODCODVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

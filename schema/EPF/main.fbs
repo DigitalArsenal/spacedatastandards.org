@@ -1,0 +1,90 @@
+// Hash: be0efd0be341467a49369ee9d98350a4390d4e172fad96d5c184902ad5a5ae66
+// Version: 1.193.1
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Aggregate Interference and Flux-Density Compliance (EPF)
+// One signed compliance evaluation with sample, contributor, distribution,
+// and verdict rows suitable for direct FlatSQL and `$RPT` queries.
+
+/// Quantity constrained by the compliance limit.
+enum epfLimitCategory : byte {
+  UNSPECIFIED = 0,
+  PFD,
+  EPFD_DOWN,
+  EPFD_UP,
+  EPFD_INTERSATELLITE,
+  AGGREGATE_I_N,
+  DELTA_T_OVER_T
+}
+
+/// One source's contribution to one sample.
+table EPFContributor {
+  CONTRIBUTOR_ID: string (required);
+  SAMPLE_INDEX: uint32;
+  SOURCE_ENDPOINT_ID: string;
+  RFE_ID: string;
+  RFB_ID: string;
+  PAP_ID: string;
+  NORAD_CAT_ID: uint;
+  INTERFERENCE_POWER_DBW: double;
+  /// Pattern discrimination applied in the victim direction, dB.
+  ANTENNA_DISCRIMINATION_DB: double;
+  /// Fraction of the victim measurement bandwidth overlapped [0-1].
+  SPECTRAL_OVERLAP_FRACTION: double;
+  CONTRIBUTION_VALUE: double;
+  CONTRIBUTION_UNITS: string;
+}
+
+/// FlatSQL-queryable compliance verdict consumed directly by `$RPT`.
+table EPFVerdict {
+  LIMIT_KIND: epfLimitCategory = UNSPECIFIED;
+  COMPLIANT: bool;
+  /// Worst margin to the applicable limit, dB. Positive means compliant.
+  MARGIN_DB: double;
+  PERCENT_TIME_EXCEEDED: double;
+  WORST_SAMPLE_INDEX: uint32;
+  NOTE: string;
+}
+
+/// Aggregate Interference and Flux-Density Compliance
+table EPF {
+  EPF_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  RFL_ID: string;
+  ACI_ID: string;
+  VICTIM_ENDPOINT_ID: string;
+  LIMIT_KIND: epfLimitCategory = UNSPECIFIED;
+  LIMIT_MODEL_NAME: string;
+  VALUE_UNITS: string (required);
+
+  SAMPLE_COUNT: uint32;
+  SAMPLE_EPOCHS: [double] (required);
+  SAMPLE_VALUES: [double] (required);
+  SAMPLE_LIMIT_VALUES: [double] (required);
+  /// Positive means the sample complies with its limit.
+  SAMPLE_MARGIN_DB: [double] (required);
+  SAMPLE_EXCEEDS_LIMIT: [bool] (required);
+  CONTRIBUTORS: [EPFContributor];
+
+  /// Empirical distribution values and their percent-time exceedance. Arrays
+  /// are index-aligned and ordered as stated by provenance.
+  CDF_VALUES: [double] (required);
+  CDF_PERCENT_TIME_EXCEEDED: [double] (required);
+  VERDICT: EPFVerdict (required);
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type EPF;
+file_identifier "$EPF";

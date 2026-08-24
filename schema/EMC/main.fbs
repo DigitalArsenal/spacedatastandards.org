@@ -1,0 +1,116 @@
+// Hash: 1f2ae078f6339ab95dff97796897ddf4b69f6e56a8c4ab4da35c34ea1d250a25
+// Version: 1.193.2
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+include "../RFS/main.fbs";
+
+// Electromagnetic Compatibility Assessment (EMC)
+// One signed victim/aggressor assessment. Model and recommendation identifiers
+// are provenance data; the schema names only interoperable capability classes.
+
+/// Physical path by which aggressor energy reaches the victim.
+enum emcCouplingPath : byte {
+  UNSPECIFIED = 0,
+  ANTENNA_TO_ANTENNA,
+  FREE_SPACE_RADIATION,
+  NEAR_FIELD_ELECTRIC,
+  NEAR_FIELD_MAGNETIC,
+  STRUCTURAL_CONDUCTION,
+  CABLE_CONDUCTION,
+  COMMON_IMPEDANCE,
+  APERTURE_LEAKAGE
+}
+
+/// Analytical class of the interference mechanism.
+enum emcMechanismCategory : byte {
+  UNSPECIFIED = 0,
+  FUNDAMENTAL,
+  HARMONIC,
+  SPURIOUS,
+  OUT_OF_BAND,
+  BROADBAND_NOISE,
+  ACTIVE_INTERMODULATION,
+  PASSIVE_INTERMODULATION,
+  RECEIVER_BLOCKING,
+  RECEIVER_DESENSITIZATION,
+  RECEIVER_OVERLOAD
+}
+
+/// Disposition of the assessed incompatibility.
+enum emcResolutionState : byte {
+  UNSPECIFIED = 0,
+  NO_ACTION_REQUIRED,
+  OPEN,
+  MITIGATED,
+  ACCEPTED_RISK,
+  NOT_APPLICABLE
+}
+
+/// Stable reference to one endpoint of the assessment.
+table EMCEndpointRef {
+  ENDPOINT_ID: string (required);
+  ENDPOINT_KIND: rflEndpointKind = UNSPECIFIED;
+  RFE_ID: string;
+  RFB_ID: string;
+  NORAD_CAT_ID: uint;
+  OBJECT_ID: string;
+  BEM_ID: string;
+  PAP_ID: string;
+  CHANNEL_ID: string;
+}
+
+/// One signed integer coefficient in an intermodulation product. The product
+/// frequency is the exact sum of COEFFICIENT * SOURCE_FREQUENCY_HZ terms.
+table EMCIntermodulationTerm {
+  SOURCE_ENDPOINT_ID: string;
+  SOURCE_FREQUENCY_HZ: double;
+  COEFFICIENT: int;
+}
+
+/// Electromagnetic Compatibility Assessment
+table EMC {
+  EMC_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  RFL_ID: string;
+  VICTIM_ENDPOINT: EMCEndpointRef (required);
+  AGGRESSOR_ENDPOINT: EMCEndpointRef (required);
+  COUPLING_MECHANISM: emcCouplingPath = UNSPECIFIED;
+  MECHANISM_CLASS: emcMechanismCategory = UNSPECIFIED;
+
+  /// Order of the active or passive intermodulation product. 0 when the
+  /// mechanism is not intermodulation.
+  INTERMODULATION_ORDER: uint32;
+  INTERMODULATION_TERMS: [EMCIntermodulationTerm];
+  INTERMODULATION_PRODUCT_FREQUENCY_HZ: double;
+  HARMONIC_ORDER: uint32;
+  /// RFEEmissionMask.MASK_ID used for an emission-limit comparison.
+  EMISSION_MASK_ID: string;
+
+  /// `$RFS.MATERIAL_ID` and class used for structural coupling.
+  RFS_MATERIAL_ID: string;
+  RFS_MATERIAL_CLASS: rfsMaterialClass = UNSPECIFIED;
+  ISOLATION_DB: double;
+  COUPLED_POWER_DBW: double;
+  VICTIM_LIMIT_DBW: double;
+  MARGIN_DB: double;
+  /// Positive when the victim limit is exceeded.
+  EXCEEDANCE_DB: double;
+  EXCEEDS_LIMIT: bool;
+  RESOLUTION: emcResolutionState = UNSPECIFIED;
+  RESOLUTION_NOTE: string;
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type EMC;
+file_identifier "$EMC";

@@ -207,6 +207,1084 @@ impl<'a> ::flatbuffers::Verifiable for beamPolarization {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for beamPolarization {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_BEM_HOP_SLOT_STATE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_BEM_HOP_SLOT_STATE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_BEM_HOP_SLOT_STATE: [bemHopSlotState; 4] = [
+  bemHopSlotState::UNSPECIFIED,
+  bemHopSlotState::ACTIVE,
+  bemHopSlotState::GUARD,
+  bemHopSlotState::IDLE,
+];
+
+/// Operational state of one beam-hop slot.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct bemHopSlotState(pub i8);
+#[allow(non_upper_case_globals)]
+impl bemHopSlotState {
+  pub const UNSPECIFIED: Self = Self(0);
+  pub const ACTIVE: Self = Self(1);
+  pub const GUARD: Self = Self(2);
+  pub const IDLE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::ACTIVE,
+    Self::GUARD,
+    Self::IDLE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::ACTIVE => Some("ACTIVE"),
+      Self::GUARD => Some("GUARD"),
+      Self::IDLE => Some("IDLE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for bemHopSlotState {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for bemHopSlotState {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for bemHopSlotState {
+    type Output = bemHopSlotState;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for bemHopSlotState {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for bemHopSlotState {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for bemHopSlotState {}
+pub enum BEMProvenanceOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Provenance of a deployed-beam descriptor or hop schedule.
+pub struct BEMProvenance<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for BEMProvenance<'a> {
+  type Inner = BEMProvenance<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> BEMProvenance<'a> {
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SOURCE_QUERY: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MODEL_NAME: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MODEL_VERSION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CITATION: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 16;
+  pub const VT_MODULE_CONTENT_HASH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 20;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    BEMProvenance { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args BEMProvenanceArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<BEMProvenance<'bldr>> {
+    let mut builder = BEMProvenanceBuilder::new(_fbb);
+    builder.add_COMPUTED_AT(args.COMPUTED_AT);
+    if let Some(x) = args.MODULE_CONTENT_HASH { builder.add_MODULE_CONTENT_HASH(x); }
+    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    if let Some(x) = args.CITATION { builder.add_CITATION(x); }
+    if let Some(x) = args.MODEL_VERSION { builder.add_MODEL_VERSION(x); }
+    if let Some(x) = args.MODEL_NAME { builder.add_MODEL_NAME(x); }
+    if let Some(x) = args.SOURCE_QUERY { builder.add_SOURCE_QUERY(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> BEMProvenanceT {
+    let SOURCE = {
+      let x = self.SOURCE();
+      alloc::string::ToString::to_string(x)
+    };
+    let SOURCE_QUERY = self.SOURCE_QUERY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODEL_NAME = self.MODEL_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODEL_VERSION = self.MODEL_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CITATION = self.CITATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT();
+    BEMProvenanceT {
+      SOURCE,
+      SOURCE_QUERY,
+      MODEL_NAME,
+      MODEL_VERSION,
+      CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
+      COMPUTED_AT,
+    }
+  }
+
+  #[inline]
+  pub fn SOURCE(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_SOURCE, None).unwrap()}
+  }
+  #[inline]
+  pub fn SOURCE_QUERY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_SOURCE_QUERY, None)}
+  }
+  #[inline]
+  pub fn MODEL_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_MODEL_NAME, None)}
+  }
+  #[inline]
+  pub fn MODEL_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_MODEL_VERSION, None)}
+  }
+  #[inline]
+  pub fn CITATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_CITATION, None)}
+  }
+  #[inline]
+  pub fn MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_MODULE_ID, None)}
+  }
+  #[inline]
+  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_MODULE_VERSION, None)}
+  }
+  #[inline]
+  pub fn MODULE_CONTENT_HASH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMProvenance::VT_MODULE_CONTENT_HASH, None)}
+  }
+  #[inline]
+  pub fn COMPUTED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(BEMProvenance::VT_COMPUTED_AT, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for BEMProvenance<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_QUERY", Self::VT_SOURCE_QUERY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_NAME", Self::VT_MODEL_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_VERSION", Self::VT_MODEL_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_CONTENT_HASH", Self::VT_MODULE_CONTENT_HASH, false)?
+     .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct BEMProvenanceArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_QUERY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COMPUTED_AT: u64,
+}
+impl<'a> Default for BEMProvenanceArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    BEMProvenanceArgs {
+      SOURCE: None, // required field
+      SOURCE_QUERY: None,
+      MODEL_NAME: None,
+      MODEL_VERSION: None,
+      CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
+      COMPUTED_AT: 0,
+    }
+  }
+}
+
+pub struct BEMProvenanceBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BEMProvenanceBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_SOURCE_QUERY(&mut self, SOURCE_QUERY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_SOURCE_QUERY, SOURCE_QUERY);
+  }
+  #[inline]
+  pub fn add_MODEL_NAME(&mut self, MODEL_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_MODEL_NAME, MODEL_NAME);
+  }
+  #[inline]
+  pub fn add_MODEL_VERSION(&mut self, MODEL_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_MODEL_VERSION, MODEL_VERSION);
+  }
+  #[inline]
+  pub fn add_CITATION(&mut self, CITATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_CITATION, CITATION);
+  }
+  #[inline]
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_MODULE_ID, MODULE_ID);
+  }
+  #[inline]
+  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_MODULE_VERSION, MODULE_VERSION);
+  }
+  #[inline]
+  pub fn add_MODULE_CONTENT_HASH(&mut self, MODULE_CONTENT_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMProvenance::VT_MODULE_CONTENT_HASH, MODULE_CONTENT_HASH);
+  }
+  #[inline]
+  pub fn add_COMPUTED_AT(&mut self, COMPUTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(BEMProvenance::VT_COMPUTED_AT, COMPUTED_AT, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BEMProvenanceBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    BEMProvenanceBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<BEMProvenance<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, BEMProvenance::VT_SOURCE,"SOURCE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for BEMProvenance<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("BEMProvenance");
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("SOURCE_QUERY", &self.SOURCE_QUERY());
+      ds.field("MODEL_NAME", &self.MODEL_NAME());
+      ds.field("MODEL_VERSION", &self.MODEL_VERSION());
+      ds.field("CITATION", &self.CITATION());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
+      ds.field("MODULE_CONTENT_HASH", &self.MODULE_CONTENT_HASH());
+      ds.field("COMPUTED_AT", &self.COMPUTED_AT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct BEMProvenanceT {
+  pub SOURCE: alloc::string::String,
+  pub SOURCE_QUERY: Option<alloc::string::String>,
+  pub MODEL_NAME: Option<alloc::string::String>,
+  pub MODEL_VERSION: Option<alloc::string::String>,
+  pub CITATION: Option<alloc::string::String>,
+  pub MODULE_ID: Option<alloc::string::String>,
+  pub MODULE_VERSION: Option<alloc::string::String>,
+  pub MODULE_CONTENT_HASH: Option<alloc::string::String>,
+  pub COMPUTED_AT: u64,
+}
+impl Default for BEMProvenanceT {
+  fn default() -> Self {
+    Self {
+      SOURCE: alloc::string::ToString::to_string(""),
+      SOURCE_QUERY: None,
+      MODEL_NAME: None,
+      MODEL_VERSION: None,
+      CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
+      COMPUTED_AT: 0,
+    }
+  }
+}
+impl BEMProvenanceT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<BEMProvenance<'b>> {
+    let SOURCE = Some({
+      let x = &self.SOURCE;
+      _fbb.create_string(x)
+    });
+    let SOURCE_QUERY = self.SOURCE_QUERY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODEL_NAME = self.MODEL_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODEL_VERSION = self.MODEL_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CITATION = self.CITATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT;
+    BEMProvenance::create(_fbb, &BEMProvenanceArgs{
+      SOURCE,
+      SOURCE_QUERY,
+      MODEL_NAME,
+      MODEL_VERSION,
+      CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
+      COMPUTED_AT,
+    })
+  }
+}
+pub enum BEMHopSlotOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One time slice of a periodic beam-hopping plan.
+pub struct BEMHopSlot<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for BEMHopSlot<'a> {
+  type Inner = BEMHopSlot<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> BEMHopSlot<'a> {
+  pub const VT_SLOT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_START_OFFSET_S: ::flatbuffers::VOffsetT = 6;
+  pub const VT_DURATION_S: ::flatbuffers::VOffsetT = 8;
+  pub const VT_STATE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_BEAM_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TARGET_CELL_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TARGET_CENTER_LATITUDE_DEG: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TARGET_CENTER_LONGITUDE_DEG: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CENTER_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 20;
+  pub const VT_EIRP_DBW: ::flatbuffers::VOffsetT = 22;
+  pub const VT_PRIORITY: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    BEMHopSlot { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args BEMHopSlotArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<BEMHopSlot<'bldr>> {
+    let mut builder = BEMHopSlotBuilder::new(_fbb);
+    builder.add_EIRP_DBW(args.EIRP_DBW);
+    builder.add_CENTER_FREQUENCY_HZ(args.CENTER_FREQUENCY_HZ);
+    builder.add_TARGET_CENTER_LONGITUDE_DEG(args.TARGET_CENTER_LONGITUDE_DEG);
+    builder.add_TARGET_CENTER_LATITUDE_DEG(args.TARGET_CENTER_LATITUDE_DEG);
+    builder.add_DURATION_S(args.DURATION_S);
+    builder.add_START_OFFSET_S(args.START_OFFSET_S);
+    builder.add_PRIORITY(args.PRIORITY);
+    if let Some(x) = args.TARGET_CELL_ID { builder.add_TARGET_CELL_ID(x); }
+    if let Some(x) = args.BEAM_ID { builder.add_BEAM_ID(x); }
+    if let Some(x) = args.SLOT_ID { builder.add_SLOT_ID(x); }
+    builder.add_STATE(args.STATE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> BEMHopSlotT {
+    let SLOT_ID = {
+      let x = self.SLOT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let START_OFFSET_S = self.START_OFFSET_S();
+    let DURATION_S = self.DURATION_S();
+    let STATE = self.STATE();
+    let BEAM_ID = {
+      let x = self.BEAM_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let TARGET_CELL_ID = self.TARGET_CELL_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TARGET_CENTER_LATITUDE_DEG = self.TARGET_CENTER_LATITUDE_DEG();
+    let TARGET_CENTER_LONGITUDE_DEG = self.TARGET_CENTER_LONGITUDE_DEG();
+    let CENTER_FREQUENCY_HZ = self.CENTER_FREQUENCY_HZ();
+    let EIRP_DBW = self.EIRP_DBW();
+    let PRIORITY = self.PRIORITY();
+    BEMHopSlotT {
+      SLOT_ID,
+      START_OFFSET_S,
+      DURATION_S,
+      STATE,
+      BEAM_ID,
+      TARGET_CELL_ID,
+      TARGET_CENTER_LATITUDE_DEG,
+      TARGET_CENTER_LONGITUDE_DEG,
+      CENTER_FREQUENCY_HZ,
+      EIRP_DBW,
+      PRIORITY,
+    }
+  }
+
+  #[inline]
+  pub fn SLOT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMHopSlot::VT_SLOT_ID, None).unwrap()}
+  }
+  /// Offset from BEMHopSchedule.EPOCH in seconds.
+  #[inline]
+  pub fn START_OFFSET_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_START_OFFSET_S, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn DURATION_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_DURATION_S, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn STATE(&self) -> bemHopSlotState {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bemHopSlotState>(BEMHopSlot::VT_STATE, Some(bemHopSlotState::UNSPECIFIED)).unwrap()}
+  }
+  /// Beam activated in this slot. May name this BEM.ID or another beam in a
+  /// coordinated schedule.
+  #[inline]
+  pub fn BEAM_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMHopSlot::VT_BEAM_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn TARGET_CELL_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMHopSlot::VT_TARGET_CELL_ID, None)}
+  }
+  #[inline]
+  pub fn TARGET_CENTER_LATITUDE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_TARGET_CENTER_LATITUDE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TARGET_CENTER_LONGITUDE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_TARGET_CENTER_LONGITUDE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CENTER_FREQUENCY_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_CENTER_FREQUENCY_HZ, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn EIRP_DBW(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSlot::VT_EIRP_DBW, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn PRIORITY(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(BEMHopSlot::VT_PRIORITY, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for BEMHopSlot<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SLOT_ID", Self::VT_SLOT_ID, true)?
+     .visit_field::<f64>("START_OFFSET_S", Self::VT_START_OFFSET_S, false)?
+     .visit_field::<f64>("DURATION_S", Self::VT_DURATION_S, false)?
+     .visit_field::<bemHopSlotState>("STATE", Self::VT_STATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BEAM_ID", Self::VT_BEAM_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET_CELL_ID", Self::VT_TARGET_CELL_ID, false)?
+     .visit_field::<f64>("TARGET_CENTER_LATITUDE_DEG", Self::VT_TARGET_CENTER_LATITUDE_DEG, false)?
+     .visit_field::<f64>("TARGET_CENTER_LONGITUDE_DEG", Self::VT_TARGET_CENTER_LONGITUDE_DEG, false)?
+     .visit_field::<f64>("CENTER_FREQUENCY_HZ", Self::VT_CENTER_FREQUENCY_HZ, false)?
+     .visit_field::<f64>("EIRP_DBW", Self::VT_EIRP_DBW, false)?
+     .visit_field::<u32>("PRIORITY", Self::VT_PRIORITY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct BEMHopSlotArgs<'a> {
+    pub SLOT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub START_OFFSET_S: f64,
+    pub DURATION_S: f64,
+    pub STATE: bemHopSlotState,
+    pub BEAM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_CELL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_CENTER_LATITUDE_DEG: f64,
+    pub TARGET_CENTER_LONGITUDE_DEG: f64,
+    pub CENTER_FREQUENCY_HZ: f64,
+    pub EIRP_DBW: f64,
+    pub PRIORITY: u32,
+}
+impl<'a> Default for BEMHopSlotArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    BEMHopSlotArgs {
+      SLOT_ID: None, // required field
+      START_OFFSET_S: 0.0,
+      DURATION_S: 0.0,
+      STATE: bemHopSlotState::UNSPECIFIED,
+      BEAM_ID: None, // required field
+      TARGET_CELL_ID: None,
+      TARGET_CENTER_LATITUDE_DEG: 0.0,
+      TARGET_CENTER_LONGITUDE_DEG: 0.0,
+      CENTER_FREQUENCY_HZ: 0.0,
+      EIRP_DBW: 0.0,
+      PRIORITY: 0,
+    }
+  }
+}
+
+pub struct BEMHopSlotBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BEMHopSlotBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SLOT_ID(&mut self, SLOT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMHopSlot::VT_SLOT_ID, SLOT_ID);
+  }
+  #[inline]
+  pub fn add_START_OFFSET_S(&mut self, START_OFFSET_S: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_START_OFFSET_S, START_OFFSET_S, 0.0);
+  }
+  #[inline]
+  pub fn add_DURATION_S(&mut self, DURATION_S: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_DURATION_S, DURATION_S, 0.0);
+  }
+  #[inline]
+  pub fn add_STATE(&mut self, STATE: bemHopSlotState) {
+    self.fbb_.push_slot::<bemHopSlotState>(BEMHopSlot::VT_STATE, STATE, bemHopSlotState::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_BEAM_ID(&mut self, BEAM_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMHopSlot::VT_BEAM_ID, BEAM_ID);
+  }
+  #[inline]
+  pub fn add_TARGET_CELL_ID(&mut self, TARGET_CELL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMHopSlot::VT_TARGET_CELL_ID, TARGET_CELL_ID);
+  }
+  #[inline]
+  pub fn add_TARGET_CENTER_LATITUDE_DEG(&mut self, TARGET_CENTER_LATITUDE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_TARGET_CENTER_LATITUDE_DEG, TARGET_CENTER_LATITUDE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_TARGET_CENTER_LONGITUDE_DEG(&mut self, TARGET_CENTER_LONGITUDE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_TARGET_CENTER_LONGITUDE_DEG, TARGET_CENTER_LONGITUDE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_CENTER_FREQUENCY_HZ(&mut self, CENTER_FREQUENCY_HZ: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_CENTER_FREQUENCY_HZ, CENTER_FREQUENCY_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_EIRP_DBW(&mut self, EIRP_DBW: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSlot::VT_EIRP_DBW, EIRP_DBW, 0.0);
+  }
+  #[inline]
+  pub fn add_PRIORITY(&mut self, PRIORITY: u32) {
+    self.fbb_.push_slot::<u32>(BEMHopSlot::VT_PRIORITY, PRIORITY, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BEMHopSlotBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    BEMHopSlotBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<BEMHopSlot<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, BEMHopSlot::VT_SLOT_ID,"SLOT_ID");
+    self.fbb_.required(o, BEMHopSlot::VT_BEAM_ID,"BEAM_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for BEMHopSlot<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("BEMHopSlot");
+      ds.field("SLOT_ID", &self.SLOT_ID());
+      ds.field("START_OFFSET_S", &self.START_OFFSET_S());
+      ds.field("DURATION_S", &self.DURATION_S());
+      ds.field("STATE", &self.STATE());
+      ds.field("BEAM_ID", &self.BEAM_ID());
+      ds.field("TARGET_CELL_ID", &self.TARGET_CELL_ID());
+      ds.field("TARGET_CENTER_LATITUDE_DEG", &self.TARGET_CENTER_LATITUDE_DEG());
+      ds.field("TARGET_CENTER_LONGITUDE_DEG", &self.TARGET_CENTER_LONGITUDE_DEG());
+      ds.field("CENTER_FREQUENCY_HZ", &self.CENTER_FREQUENCY_HZ());
+      ds.field("EIRP_DBW", &self.EIRP_DBW());
+      ds.field("PRIORITY", &self.PRIORITY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct BEMHopSlotT {
+  pub SLOT_ID: alloc::string::String,
+  pub START_OFFSET_S: f64,
+  pub DURATION_S: f64,
+  pub STATE: bemHopSlotState,
+  pub BEAM_ID: alloc::string::String,
+  pub TARGET_CELL_ID: Option<alloc::string::String>,
+  pub TARGET_CENTER_LATITUDE_DEG: f64,
+  pub TARGET_CENTER_LONGITUDE_DEG: f64,
+  pub CENTER_FREQUENCY_HZ: f64,
+  pub EIRP_DBW: f64,
+  pub PRIORITY: u32,
+}
+impl Default for BEMHopSlotT {
+  fn default() -> Self {
+    Self {
+      SLOT_ID: alloc::string::ToString::to_string(""),
+      START_OFFSET_S: 0.0,
+      DURATION_S: 0.0,
+      STATE: bemHopSlotState::UNSPECIFIED,
+      BEAM_ID: alloc::string::ToString::to_string(""),
+      TARGET_CELL_ID: None,
+      TARGET_CENTER_LATITUDE_DEG: 0.0,
+      TARGET_CENTER_LONGITUDE_DEG: 0.0,
+      CENTER_FREQUENCY_HZ: 0.0,
+      EIRP_DBW: 0.0,
+      PRIORITY: 0,
+    }
+  }
+}
+impl BEMHopSlotT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<BEMHopSlot<'b>> {
+    let SLOT_ID = Some({
+      let x = &self.SLOT_ID;
+      _fbb.create_string(x)
+    });
+    let START_OFFSET_S = self.START_OFFSET_S;
+    let DURATION_S = self.DURATION_S;
+    let STATE = self.STATE;
+    let BEAM_ID = Some({
+      let x = &self.BEAM_ID;
+      _fbb.create_string(x)
+    });
+    let TARGET_CELL_ID = self.TARGET_CELL_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TARGET_CENTER_LATITUDE_DEG = self.TARGET_CENTER_LATITUDE_DEG;
+    let TARGET_CENTER_LONGITUDE_DEG = self.TARGET_CENTER_LONGITUDE_DEG;
+    let CENTER_FREQUENCY_HZ = self.CENTER_FREQUENCY_HZ;
+    let EIRP_DBW = self.EIRP_DBW;
+    let PRIORITY = self.PRIORITY;
+    BEMHopSlot::create(_fbb, &BEMHopSlotArgs{
+      SLOT_ID,
+      START_OFFSET_S,
+      DURATION_S,
+      STATE,
+      BEAM_ID,
+      TARGET_CELL_ID,
+      TARGET_CENTER_LATITUDE_DEG,
+      TARGET_CENTER_LONGITUDE_DEG,
+      CENTER_FREQUENCY_HZ,
+      EIRP_DBW,
+      PRIORITY,
+    })
+  }
+}
+pub enum BEMHopScheduleOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Periodic beam-hopping schedule carried by a deployed beam descriptor.
+pub struct BEMHopSchedule<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for BEMHopSchedule<'a> {
+  type Inner = BEMHopSchedule<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> BEMHopSchedule<'a> {
+  pub const VT_SCHEDULE_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 6;
+  pub const VT_PERIOD_S: ::flatbuffers::VOffsetT = 8;
+  pub const VT_REPEATS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SLOTS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    BEMHopSchedule { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args BEMHopScheduleArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<BEMHopSchedule<'bldr>> {
+    let mut builder = BEMHopScheduleBuilder::new(_fbb);
+    builder.add_PERIOD_S(args.PERIOD_S);
+    builder.add_EPOCH(args.EPOCH);
+    if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
+    if let Some(x) = args.SLOTS { builder.add_SLOTS(x); }
+    if let Some(x) = args.SCHEDULE_ID { builder.add_SCHEDULE_ID(x); }
+    builder.add_REPEATS(args.REPEATS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> BEMHopScheduleT {
+    let SCHEDULE_ID = {
+      let x = self.SCHEDULE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let EPOCH = self.EPOCH();
+    let PERIOD_S = self.PERIOD_S();
+    let REPEATS = self.REPEATS();
+    let SLOTS = {
+      let x = self.SLOTS();
+      x.iter().map(|t| t.unpack()).collect()
+    };
+    let PROVENANCE = {
+      let x = self.PROVENANCE();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    BEMHopScheduleT {
+      SCHEDULE_ID,
+      EPOCH,
+      PERIOD_S,
+      REPEATS,
+      SLOTS,
+      PROVENANCE,
+    }
+  }
+
+  #[inline]
+  pub fn SCHEDULE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEMHopSchedule::VT_SCHEDULE_ID, None).unwrap()}
+  }
+  /// Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.
+  #[inline]
+  pub fn EPOCH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSchedule::VT_EPOCH, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn PERIOD_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEMHopSchedule::VT_PERIOD_S, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn REPEATS(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(BEMHopSchedule::VT_REPEATS, Some(false)).unwrap()}
+  }
+  #[inline]
+  pub fn SLOTS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<BEMHopSlot<'a>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<BEMHopSlot>>>>(BEMHopSchedule::VT_SLOTS, None).unwrap()}
+  }
+  #[inline]
+  pub fn PROVENANCE(&self) -> BEMProvenance<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BEMProvenance>>(BEMHopSchedule::VT_PROVENANCE, None).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for BEMHopSchedule<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEDULE_ID", Self::VT_SCHEDULE_ID, true)?
+     .visit_field::<f64>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("PERIOD_S", Self::VT_PERIOD_S, false)?
+     .visit_field::<bool>("REPEATS", Self::VT_REPEATS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<BEMHopSlot>>>>("SLOTS", Self::VT_SLOTS, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<BEMProvenance>>("PROVENANCE", Self::VT_PROVENANCE, true)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct BEMHopScheduleArgs<'a> {
+    pub SCHEDULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: f64,
+    pub PERIOD_S: f64,
+    pub REPEATS: bool,
+    pub SLOTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<BEMHopSlot<'a>>>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<BEMProvenance<'a>>>,
+}
+impl<'a> Default for BEMHopScheduleArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    BEMHopScheduleArgs {
+      SCHEDULE_ID: None, // required field
+      EPOCH: 0.0,
+      PERIOD_S: 0.0,
+      REPEATS: false,
+      SLOTS: None, // required field
+      PROVENANCE: None, // required field
+    }
+  }
+}
+
+pub struct BEMHopScheduleBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BEMHopScheduleBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SCHEDULE_ID(&mut self, SCHEDULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMHopSchedule::VT_SCHEDULE_ID, SCHEDULE_ID);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSchedule::VT_EPOCH, EPOCH, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIOD_S(&mut self, PERIOD_S: f64) {
+    self.fbb_.push_slot::<f64>(BEMHopSchedule::VT_PERIOD_S, PERIOD_S, 0.0);
+  }
+  #[inline]
+  pub fn add_REPEATS(&mut self, REPEATS: bool) {
+    self.fbb_.push_slot::<bool>(BEMHopSchedule::VT_REPEATS, REPEATS, false);
+  }
+  #[inline]
+  pub fn add_SLOTS(&mut self, SLOTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<BEMHopSlot<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEMHopSchedule::VT_SLOTS, SLOTS);
+  }
+  #[inline]
+  pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<BEMProvenance<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BEMProvenance>>(BEMHopSchedule::VT_PROVENANCE, PROVENANCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BEMHopScheduleBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    BEMHopScheduleBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<BEMHopSchedule<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, BEMHopSchedule::VT_SCHEDULE_ID,"SCHEDULE_ID");
+    self.fbb_.required(o, BEMHopSchedule::VT_SLOTS,"SLOTS");
+    self.fbb_.required(o, BEMHopSchedule::VT_PROVENANCE,"PROVENANCE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for BEMHopSchedule<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("BEMHopSchedule");
+      ds.field("SCHEDULE_ID", &self.SCHEDULE_ID());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("PERIOD_S", &self.PERIOD_S());
+      ds.field("REPEATS", &self.REPEATS());
+      ds.field("SLOTS", &self.SLOTS());
+      ds.field("PROVENANCE", &self.PROVENANCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct BEMHopScheduleT {
+  pub SCHEDULE_ID: alloc::string::String,
+  pub EPOCH: f64,
+  pub PERIOD_S: f64,
+  pub REPEATS: bool,
+  pub SLOTS: alloc::vec::Vec<BEMHopSlotT>,
+  pub PROVENANCE: alloc::boxed::Box<BEMProvenanceT>,
+}
+impl Default for BEMHopScheduleT {
+  fn default() -> Self {
+    Self {
+      SCHEDULE_ID: alloc::string::ToString::to_string(""),
+      EPOCH: 0.0,
+      PERIOD_S: 0.0,
+      REPEATS: false,
+      SLOTS: Default::default(),
+      PROVENANCE: Default::default(),
+    }
+  }
+}
+impl BEMHopScheduleT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<BEMHopSchedule<'b>> {
+    let SCHEDULE_ID = Some({
+      let x = &self.SCHEDULE_ID;
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH;
+    let PERIOD_S = self.PERIOD_S;
+    let REPEATS = self.REPEATS;
+    let SLOTS = Some({
+      let x = &self.SLOTS;
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PROVENANCE = Some({
+      let x = &self.PROVENANCE;
+      x.pack(_fbb)
+    });
+    BEMHopSchedule::create(_fbb, &BEMHopScheduleArgs{
+      SCHEDULE_ID,
+      EPOCH,
+      PERIOD_S,
+      REPEATS,
+      SLOTS,
+      PROVENANCE,
+    })
+  }
+}
 pub enum beamContourPointOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -599,6 +1677,12 @@ impl<'a> BEM<'a> {
   pub const VT_FOOTPRINT_AREA: ::flatbuffers::VOffsetT = 32;
   pub const VT_BEAM_CONTOURS: ::flatbuffers::VOffsetT = 34;
   pub const VT_NOTES: ::flatbuffers::VOffsetT = 36;
+  pub const VT_HOP_SCHEDULE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 42;
+  pub const VT_PRODUCER_ID: ::flatbuffers::VOffsetT = 44;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 46;
+  pub const VT_CANONICAL_JSON_SIGNATURE: ::flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -610,6 +1694,7 @@ impl<'a> BEM<'a> {
     args: &'args BEMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<BEM<'bldr>> {
     let mut builder = BEMBuilder::new(_fbb);
+    builder.add_COMPUTED_AT(args.COMPUTED_AT);
     builder.add_FOOTPRINT_AREA(args.FOOTPRINT_AREA);
     builder.add_G_OVER_T(args.G_OVER_T);
     builder.add_EIRP(args.EIRP);
@@ -619,6 +1704,11 @@ impl<'a> BEM<'a> {
     builder.add_CENTER_LATITUDE(args.CENTER_LATITUDE);
     builder.add_EOC_GAIN(args.EOC_GAIN);
     builder.add_PEAK_GAIN(args.PEAK_GAIN);
+    if let Some(x) = args.CANONICAL_JSON_SIGNATURE { builder.add_CANONICAL_JSON_SIGNATURE(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.PRODUCER_ID { builder.add_PRODUCER_ID(x); }
+    if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
+    if let Some(x) = args.HOP_SCHEDULE { builder.add_HOP_SCHEDULE(x); }
     if let Some(x) = args.NOTES { builder.add_NOTES(x); }
     if let Some(x) = args.BEAM_CONTOURS { builder.add_BEAM_CONTOURS(x); }
     if let Some(x) = args.ID_ANTENNA { builder.add_ID_ANTENNA(x); }
@@ -660,6 +1750,22 @@ impl<'a> BEM<'a> {
     let NOTES = self.NOTES().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let HOP_SCHEDULE = self.HOP_SCHEDULE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let PROVENANCE = self.PROVENANCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let COMPUTED_AT = self.COMPUTED_AT();
+    let PRODUCER_ID = self.PRODUCER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
     BEMT {
       ID,
       BEAM_NAME,
@@ -678,6 +1784,12 @@ impl<'a> BEM<'a> {
       FOOTPRINT_AREA,
       BEAM_CONTOURS,
       NOTES,
+      HOP_SCHEDULE,
+      PROVENANCE,
+      COMPUTED_AT,
+      PRODUCER_ID,
+      SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
     }
   }
 
@@ -817,6 +1929,56 @@ impl<'a> BEM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEM::VT_NOTES, None)}
   }
+  /// Time-sliced activation plan for this deployed beam.
+  #[inline]
+  pub fn HOP_SCHEDULE(&self) -> Option<BEMHopSchedule<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BEMHopSchedule>>(BEM::VT_HOP_SCHEDULE, None)}
+  }
+  #[inline]
+  pub fn PROVENANCE(&self) -> Option<BEMProvenance<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BEMProvenance>>(BEM::VT_PROVENANCE, None)}
+  }
+  /// Unix ms this record was serialized.
+  #[inline]
+  pub fn COMPUTED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(BEM::VT_COMPUTED_AT, Some(0)).unwrap()}
+  }
+  /// `$EPM` identifier of the producing node.
+  #[inline]
+  pub fn PRODUCER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BEM::VT_PRODUCER_ID, None)}
+  }
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(BEM::VT_SIGNATURE, None)}
+  }
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  #[inline]
+  pub fn CANONICAL_JSON_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(BEM::VT_CANONICAL_JSON_SIGNATURE, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for BEM<'_> {
@@ -842,6 +2004,12 @@ impl ::flatbuffers::Verifiable for BEM<'_> {
      .visit_field::<f64>("FOOTPRINT_AREA", Self::VT_FOOTPRINT_AREA, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<beamContour>>>>("BEAM_CONTOURS", Self::VT_BEAM_CONTOURS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<BEMHopSchedule>>("HOP_SCHEDULE", Self::VT_HOP_SCHEDULE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<BEMProvenance>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+     .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_ID", Self::VT_PRODUCER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CANONICAL_JSON_SIGNATURE", Self::VT_CANONICAL_JSON_SIGNATURE, false)?
      .finish();
     Ok(())
   }
@@ -864,6 +2032,12 @@ pub struct BEMArgs<'a> {
     pub FOOTPRINT_AREA: f64,
     pub BEAM_CONTOURS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<beamContour<'a>>>>>,
     pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HOP_SCHEDULE: Option<::flatbuffers::WIPOffset<BEMHopSchedule<'a>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<BEMProvenance<'a>>>,
+    pub COMPUTED_AT: u64,
+    pub PRODUCER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CANONICAL_JSON_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for BEMArgs<'a> {
   #[inline]
@@ -886,6 +2060,12 @@ impl<'a> Default for BEMArgs<'a> {
       FOOTPRINT_AREA: 0.0,
       BEAM_CONTOURS: None,
       NOTES: None,
+      HOP_SCHEDULE: None,
+      PROVENANCE: None,
+      COMPUTED_AT: 0,
+      PRODUCER_ID: None,
+      SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
     }
   }
 }
@@ -964,6 +2144,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BEMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEM::VT_NOTES, NOTES);
   }
   #[inline]
+  pub fn add_HOP_SCHEDULE(&mut self, HOP_SCHEDULE: ::flatbuffers::WIPOffset<BEMHopSchedule<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BEMHopSchedule>>(BEM::VT_HOP_SCHEDULE, HOP_SCHEDULE);
+  }
+  #[inline]
+  pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<BEMProvenance<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BEMProvenance>>(BEM::VT_PROVENANCE, PROVENANCE);
+  }
+  #[inline]
+  pub fn add_COMPUTED_AT(&mut self, COMPUTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(BEM::VT_COMPUTED_AT, COMPUTED_AT, 0);
+  }
+  #[inline]
+  pub fn add_PRODUCER_ID(&mut self, PRODUCER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEM::VT_PRODUCER_ID, PRODUCER_ID);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEM::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_CANONICAL_JSON_SIGNATURE(&mut self, CANONICAL_JSON_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BEM::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BEMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     BEMBuilder {
@@ -998,6 +2202,12 @@ impl ::core::fmt::Debug for BEM<'_> {
       ds.field("FOOTPRINT_AREA", &self.FOOTPRINT_AREA());
       ds.field("BEAM_CONTOURS", &self.BEAM_CONTOURS());
       ds.field("NOTES", &self.NOTES());
+      ds.field("HOP_SCHEDULE", &self.HOP_SCHEDULE());
+      ds.field("PROVENANCE", &self.PROVENANCE());
+      ds.field("COMPUTED_AT", &self.COMPUTED_AT());
+      ds.field("PRODUCER_ID", &self.PRODUCER_ID());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("CANONICAL_JSON_SIGNATURE", &self.CANONICAL_JSON_SIGNATURE());
       ds.finish()
   }
 }
@@ -1021,6 +2231,12 @@ pub struct BEMT {
   pub FOOTPRINT_AREA: f64,
   pub BEAM_CONTOURS: Option<alloc::vec::Vec<beamContourT>>,
   pub NOTES: Option<alloc::string::String>,
+  pub HOP_SCHEDULE: Option<alloc::boxed::Box<BEMHopScheduleT>>,
+  pub PROVENANCE: Option<alloc::boxed::Box<BEMProvenanceT>>,
+  pub COMPUTED_AT: u64,
+  pub PRODUCER_ID: Option<alloc::string::String>,
+  pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub CANONICAL_JSON_SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for BEMT {
   fn default() -> Self {
@@ -1042,6 +2258,12 @@ impl Default for BEMT {
       FOOTPRINT_AREA: 0.0,
       BEAM_CONTOURS: None,
       NOTES: None,
+      HOP_SCHEDULE: None,
+      PROVENANCE: None,
+      COMPUTED_AT: 0,
+      PRODUCER_ID: None,
+      SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
     }
   }
 }
@@ -1079,6 +2301,22 @@ impl BEMT {
     let NOTES = self.NOTES.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let HOP_SCHEDULE = self.HOP_SCHEDULE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT;
+    let PRODUCER_ID = self.PRODUCER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     BEM::create(_fbb, &BEMArgs{
       ID,
       BEAM_NAME,
@@ -1097,6 +2335,12 @@ impl BEMT {
       FOOTPRINT_AREA,
       BEAM_CONTOURS,
       NOTES,
+      HOP_SCHEDULE,
+      PROVENANCE,
+      COMPUTED_AT,
+      PRODUCER_ID,
+      SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
     })
   }
 }

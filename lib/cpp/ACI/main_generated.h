@@ -27,6 +27,9 @@ struct ACIIntervalBuilder;
 struct ACIProvenance;
 struct ACIProvenanceBuilder;
 
+struct ACIDataVolumeByModCod;
+struct ACIDataVolumeByModCodBuilder;
+
 struct ACI;
 struct ACIBuilder;
 
@@ -1295,6 +1298,155 @@ inline ::flatbuffers::Offset<ACIProvenance> CreateACIProvenanceDirect(
       CITATION__);
 }
 
+/// Data carried by one modulation-and-coding choice during one interval.
+/// Entries are explicit rows so FlatSQL and `$RPT` can group volume by link,
+/// interval, or choice without decoding a producer-specific map.
+struct ACIDataVolumeByModCod FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACIDataVolumeByModCodBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_INTERVAL_ID = 4,
+    VT_LINK_ID = 6,
+    VT_MODCOD_INDEX = 8,
+    VT_MODCOD_ID = 10,
+    VT_DURATION_S = 12,
+    VT_DATA_VOLUME_BITS = 14,
+    VT_MEAN_DATA_RATE_BPS = 16,
+    VT_SAMPLE_COUNT = 18
+  };
+  /// ACIInterval.INTERVAL_ID this row summarizes.
+  const ::flatbuffers::String *INTERVAL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERVAL_ID);
+  }
+  /// ACIInterval.LINK_ID / RFLLink.LINK_ID.
+  const ::flatbuffers::String *LINK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_ID);
+  }
+  /// Index into the link's RFLLink.MODCOD_SET.
+  uint32_t MODCOD_INDEX() const {
+    return GetField<uint32_t>(VT_MODCOD_INDEX, 0);
+  }
+  /// Stable RFLModCod.MODCOD_ID copied for queryability across records.
+  const ::flatbuffers::String *MODCOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODCOD_ID);
+  }
+  double DURATION_S() const {
+    return GetField<double>(VT_DURATION_S, 0.0);
+  }
+  double DATA_VOLUME_BITS() const {
+    return GetField<double>(VT_DATA_VOLUME_BITS, 0.0);
+  }
+  double MEAN_DATA_RATE_BPS() const {
+    return GetField<double>(VT_MEAN_DATA_RATE_BPS, 0.0);
+  }
+  uint32_t SAMPLE_COUNT() const {
+    return GetField<uint32_t>(VT_SAMPLE_COUNT, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_INTERVAL_ID) &&
+           verifier.VerifyString(INTERVAL_ID()) &&
+           VerifyOffset(verifier, VT_LINK_ID) &&
+           verifier.VerifyString(LINK_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_MODCOD_INDEX, 4) &&
+           VerifyOffsetRequired(verifier, VT_MODCOD_ID) &&
+           verifier.VerifyString(MODCOD_ID()) &&
+           VerifyField<double>(verifier, VT_DURATION_S, 8) &&
+           VerifyField<double>(verifier, VT_DATA_VOLUME_BITS, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_DATA_RATE_BPS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_SAMPLE_COUNT, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACIDataVolumeByModCodBuilder {
+  typedef ACIDataVolumeByModCod Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_INTERVAL_ID(::flatbuffers::Offset<::flatbuffers::String> INTERVAL_ID) {
+    fbb_.AddOffset(ACIDataVolumeByModCod::VT_INTERVAL_ID, INTERVAL_ID);
+  }
+  void add_LINK_ID(::flatbuffers::Offset<::flatbuffers::String> LINK_ID) {
+    fbb_.AddOffset(ACIDataVolumeByModCod::VT_LINK_ID, LINK_ID);
+  }
+  void add_MODCOD_INDEX(uint32_t MODCOD_INDEX) {
+    fbb_.AddElement<uint32_t>(ACIDataVolumeByModCod::VT_MODCOD_INDEX, MODCOD_INDEX, 0);
+  }
+  void add_MODCOD_ID(::flatbuffers::Offset<::flatbuffers::String> MODCOD_ID) {
+    fbb_.AddOffset(ACIDataVolumeByModCod::VT_MODCOD_ID, MODCOD_ID);
+  }
+  void add_DURATION_S(double DURATION_S) {
+    fbb_.AddElement<double>(ACIDataVolumeByModCod::VT_DURATION_S, DURATION_S, 0.0);
+  }
+  void add_DATA_VOLUME_BITS(double DATA_VOLUME_BITS) {
+    fbb_.AddElement<double>(ACIDataVolumeByModCod::VT_DATA_VOLUME_BITS, DATA_VOLUME_BITS, 0.0);
+  }
+  void add_MEAN_DATA_RATE_BPS(double MEAN_DATA_RATE_BPS) {
+    fbb_.AddElement<double>(ACIDataVolumeByModCod::VT_MEAN_DATA_RATE_BPS, MEAN_DATA_RATE_BPS, 0.0);
+  }
+  void add_SAMPLE_COUNT(uint32_t SAMPLE_COUNT) {
+    fbb_.AddElement<uint32_t>(ACIDataVolumeByModCod::VT_SAMPLE_COUNT, SAMPLE_COUNT, 0);
+  }
+  explicit ACIDataVolumeByModCodBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACIDataVolumeByModCod> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACIDataVolumeByModCod>(end);
+    fbb_.Required(o, ACIDataVolumeByModCod::VT_INTERVAL_ID);
+    fbb_.Required(o, ACIDataVolumeByModCod::VT_MODCOD_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACIDataVolumeByModCod> CreateACIDataVolumeByModCod(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> INTERVAL_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_ID = 0,
+    uint32_t MODCOD_INDEX = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODCOD_ID = 0,
+    double DURATION_S = 0.0,
+    double DATA_VOLUME_BITS = 0.0,
+    double MEAN_DATA_RATE_BPS = 0.0,
+    uint32_t SAMPLE_COUNT = 0) {
+  ACIDataVolumeByModCodBuilder builder_(_fbb);
+  builder_.add_MEAN_DATA_RATE_BPS(MEAN_DATA_RATE_BPS);
+  builder_.add_DATA_VOLUME_BITS(DATA_VOLUME_BITS);
+  builder_.add_DURATION_S(DURATION_S);
+  builder_.add_SAMPLE_COUNT(SAMPLE_COUNT);
+  builder_.add_MODCOD_ID(MODCOD_ID);
+  builder_.add_MODCOD_INDEX(MODCOD_INDEX);
+  builder_.add_LINK_ID(LINK_ID);
+  builder_.add_INTERVAL_ID(INTERVAL_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACIDataVolumeByModCod> CreateACIDataVolumeByModCodDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *INTERVAL_ID = nullptr,
+    const char *LINK_ID = nullptr,
+    uint32_t MODCOD_INDEX = 0,
+    const char *MODCOD_ID = nullptr,
+    double DURATION_S = 0.0,
+    double DATA_VOLUME_BITS = 0.0,
+    double MEAN_DATA_RATE_BPS = 0.0,
+    uint32_t SAMPLE_COUNT = 0) {
+  auto INTERVAL_ID__ = INTERVAL_ID ? _fbb.CreateString(INTERVAL_ID) : 0;
+  auto LINK_ID__ = LINK_ID ? _fbb.CreateString(LINK_ID) : 0;
+  auto MODCOD_ID__ = MODCOD_ID ? _fbb.CreateString(MODCOD_ID) : 0;
+  return CreateACIDataVolumeByModCod(
+      _fbb,
+      INTERVAL_ID__,
+      LINK_ID__,
+      MODCOD_INDEX,
+      MODCOD_ID__,
+      DURATION_S,
+      DATA_VOLUME_BITS,
+      MEAN_DATA_RATE_BPS,
+      SAMPLE_COUNT);
+}
+
 /// Access Interval
 struct ACI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ACIBuilder Builder;
@@ -1310,7 +1462,9 @@ struct ACI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PROVENANCE = 20,
     VT_COMPUTED_AT = 22,
     VT_PRODUCER_ID = 24,
-    VT_SIGNATURE = 26
+    VT_SIGNATURE = 26,
+    VT_CANONICAL_JSON_SIGNATURE = 28,
+    VT_DATA_VOLUME_BY_MODCOD = 30
   };
   /// Stable identifier of this interval set.
   const ::flatbuffers::String *ACI_ID() const {
@@ -1360,9 +1514,22 @@ struct ACI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PRODUCER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRODUCER_ID);
   }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
+  }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  const ::flatbuffers::Vector<uint8_t> *CANONICAL_JSON_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CANONICAL_JSON_SIGNATURE);
+  }
+  /// Per-interval delivered volume grouped by selected modulation-and-coding
+  /// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACIDataVolumeByModCod>> *DATA_VOLUME_BY_MODCOD() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACIDataVolumeByModCod>> *>(VT_DATA_VOLUME_BY_MODCOD);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1388,6 +1555,11 @@ struct ACI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PRODUCER_ID()) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyVector(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_CANONICAL_JSON_SIGNATURE) &&
+           verifier.VerifyVector(CANONICAL_JSON_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_DATA_VOLUME_BY_MODCOD) &&
+           verifier.VerifyVector(DATA_VOLUME_BY_MODCOD()) &&
+           verifier.VerifyVectorOfTables(DATA_VOLUME_BY_MODCOD()) &&
            verifier.EndTable();
   }
 };
@@ -1432,6 +1604,12 @@ struct ACIBuilder {
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
     fbb_.AddOffset(ACI::VT_SIGNATURE, SIGNATURE);
   }
+  void add_CANONICAL_JSON_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CANONICAL_JSON_SIGNATURE) {
+    fbb_.AddOffset(ACI::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  void add_DATA_VOLUME_BY_MODCOD(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACIDataVolumeByModCod>>> DATA_VOLUME_BY_MODCOD) {
+    fbb_.AddOffset(ACI::VT_DATA_VOLUME_BY_MODCOD, DATA_VOLUME_BY_MODCOD);
+  }
   explicit ACIBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1459,11 +1637,15 @@ inline ::flatbuffers::Offset<ACI> CreateACI(
     ::flatbuffers::Offset<ACIProvenance> PROVENANCE = 0,
     uint64_t COMPUTED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRODUCER_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CANONICAL_JSON_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACIDataVolumeByModCod>>> DATA_VOLUME_BY_MODCOD = 0) {
   ACIBuilder builder_(_fbb);
   builder_.add_COMPUTED_AT(COMPUTED_AT);
   builder_.add_WINDOW_STOP(WINDOW_STOP);
   builder_.add_WINDOW_START(WINDOW_START);
+  builder_.add_DATA_VOLUME_BY_MODCOD(DATA_VOLUME_BY_MODCOD);
+  builder_.add_CANONICAL_JSON_SIGNATURE(CANONICAL_JSON_SIGNATURE);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_PRODUCER_ID(PRODUCER_ID);
   builder_.add_PROVENANCE(PROVENANCE);
@@ -1489,7 +1671,9 @@ inline ::flatbuffers::Offset<ACI> CreateACIDirect(
     ::flatbuffers::Offset<ACIProvenance> PROVENANCE = 0,
     uint64_t COMPUTED_AT = 0,
     const char *PRODUCER_ID = nullptr,
-    const std::vector<uint8_t> *SIGNATURE = nullptr) {
+    const std::vector<uint8_t> *SIGNATURE = nullptr,
+    const std::vector<uint8_t> *CANONICAL_JSON_SIGNATURE = nullptr,
+    const std::vector<::flatbuffers::Offset<ACIDataVolumeByModCod>> *DATA_VOLUME_BY_MODCOD = nullptr) {
   auto ACI_ID__ = ACI_ID ? _fbb.CreateString(ACI_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
@@ -1497,6 +1681,8 @@ inline ::flatbuffers::Offset<ACI> CreateACIDirect(
   auto INTERVALS__ = INTERVALS ? _fbb.CreateVector<::flatbuffers::Offset<ACIInterval>>(*INTERVALS) : 0;
   auto PRODUCER_ID__ = PRODUCER_ID ? _fbb.CreateString(PRODUCER_ID) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
+  auto CANONICAL_JSON_SIGNATURE__ = CANONICAL_JSON_SIGNATURE ? _fbb.CreateVector<uint8_t>(*CANONICAL_JSON_SIGNATURE) : 0;
+  auto DATA_VOLUME_BY_MODCOD__ = DATA_VOLUME_BY_MODCOD ? _fbb.CreateVector<::flatbuffers::Offset<ACIDataVolumeByModCod>>(*DATA_VOLUME_BY_MODCOD) : 0;
   return CreateACI(
       _fbb,
       ACI_ID__,
@@ -1510,7 +1696,9 @@ inline ::flatbuffers::Offset<ACI> CreateACIDirect(
       PROVENANCE,
       COMPUTED_AT,
       PRODUCER_ID__,
-      SIGNATURE__);
+      SIGNATURE__,
+      CANONICAL_JSON_SIGNATURE__,
+      DATA_VOLUME_BY_MODCOD__);
 }
 
 inline const ACI *GetACI(const void *buf) {

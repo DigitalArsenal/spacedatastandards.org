@@ -1,5 +1,5 @@
-// Hash: a0e358f5258d76c8dc2b237b7c78f711cef6c2e87e086a879bd92f84afb82acf
-// Version: 1.186.0
+// Hash: 05b80413a1a806bc15e744c1354d1948452964b9282085091da28fc965199434
+// Version: 1.186.2
 // -----------------------------------END_HEADER
 include "../RFL/main.fbs";
 
@@ -235,6 +235,24 @@ table ACIProvenance {
   CITATION: string;
 }
 
+/// Data carried by one modulation-and-coding choice during one interval.
+/// Entries are explicit rows so FlatSQL and `$RPT` can group volume by link,
+/// interval, or choice without decoding a producer-specific map.
+table ACIDataVolumeByModCod {
+  /// ACIInterval.INTERVAL_ID this row summarizes.
+  INTERVAL_ID: string (required);
+  /// ACIInterval.LINK_ID / RFLLink.LINK_ID.
+  LINK_ID: string;
+  /// Index into the link's RFLLink.MODCOD_SET.
+  MODCOD_INDEX: uint32;
+  /// Stable RFLModCod.MODCOD_ID copied for queryability across records.
+  MODCOD_ID: string (required);
+  DURATION_S: double;
+  DATA_VOLUME_BITS: double;
+  MEAN_DATA_RATE_BPS: double;
+  SAMPLE_COUNT: uint32;
+}
+
 /// Access Interval
 table ACI {
   /// Stable identifier of this interval set.
@@ -263,8 +281,17 @@ table ACI {
   COMPUTED_AT: uint64;
   /// `$EPM` identifier of the producing node.
   PRODUCER_ID: string;
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   SIGNATURE: [ubyte];
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte];
+  /// Per-interval delivered volume grouped by selected modulation-and-coding
+  /// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+  DATA_VOLUME_BY_MODCOD: [ACIDataVolumeByModCod];
 }
 
 root_type ACI;

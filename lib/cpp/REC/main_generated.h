@@ -229,6 +229,12 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -468,11 +474,17 @@ enum RecordType : uint8_t {
   RecordType_TMS = 214,
   RecordType_VEP = 215,
   RecordType_EGP = 216,
+  RecordType_APL = 217,
+  RecordType_EMC = 218,
+  RecordType_EPF = 219,
+  RecordType_GEL = 220,
+  RecordType_PAP = 221,
+  RecordType_RSD = 222,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_EGP
+  RecordType_MAX = RecordType_RSD
 };
 
-inline const RecordType (&EnumValuesRecordType())[217] {
+inline const RecordType (&EnumValuesRecordType())[223] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -690,13 +702,19 @@ inline const RecordType (&EnumValuesRecordType())[217] {
     RecordType_TFN,
     RecordType_TMS,
     RecordType_VEP,
-    RecordType_EGP
+    RecordType_EGP,
+    RecordType_APL,
+    RecordType_EMC,
+    RecordType_EPF,
+    RecordType_GEL,
+    RecordType_PAP,
+    RecordType_RSD
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[218] = {
+  static const char * const names[224] = {
     "NONE",
     "ACL",
     "ACM",
@@ -914,13 +932,19 @@ inline const char * const *EnumNamesRecordType() {
     "TMS",
     "VEP",
     "EGP",
+    "APL",
+    "EMC",
+    "EPF",
+    "GEL",
+    "PAP",
+    "RSD",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_EGP)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_RSD)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1793,6 +1817,30 @@ template<> struct RecordTypeTraits<EGP> {
   static const RecordType enum_value = RecordType_EGP;
 };
 
+template<> struct RecordTypeTraits<APL> {
+  static const RecordType enum_value = RecordType_APL;
+};
+
+template<> struct RecordTypeTraits<EMC> {
+  static const RecordType enum_value = RecordType_EMC;
+};
+
+template<> struct RecordTypeTraits<EPF> {
+  static const RecordType enum_value = RecordType_EPF;
+};
+
+template<> struct RecordTypeTraits<GEL> {
+  static const RecordType enum_value = RecordType_GEL;
+};
+
+template<> struct RecordTypeTraits<PAP> {
+  static const RecordType enum_value = RecordType_PAP;
+};
+
+template<> struct RecordTypeTraits<RSD> {
+  static const RecordType enum_value = RecordType_RSD;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2461,6 +2509,24 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const EGP *value_as_EGP() const {
     return value_type() == RecordType_EGP ? static_cast<const EGP *>(value()) : nullptr;
+  }
+  const APL *value_as_APL() const {
+    return value_type() == RecordType_APL ? static_cast<const APL *>(value()) : nullptr;
+  }
+  const EMC *value_as_EMC() const {
+    return value_type() == RecordType_EMC ? static_cast<const EMC *>(value()) : nullptr;
+  }
+  const EPF *value_as_EPF() const {
+    return value_type() == RecordType_EPF ? static_cast<const EPF *>(value()) : nullptr;
+  }
+  const GEL *value_as_GEL() const {
+    return value_type() == RecordType_GEL ? static_cast<const GEL *>(value()) : nullptr;
+  }
+  const PAP *value_as_PAP() const {
+    return value_type() == RecordType_PAP ? static_cast<const PAP *>(value()) : nullptr;
+  }
+  const RSD *value_as_RSD() const {
+    return value_type() == RecordType_RSD ? static_cast<const RSD *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3340,6 +3406,30 @@ template<> inline const VEP *Record::value_as<VEP>() const {
 
 template<> inline const EGP *Record::value_as<EGP>() const {
   return value_as_EGP();
+}
+
+template<> inline const APL *Record::value_as<APL>() const {
+  return value_as_APL();
+}
+
+template<> inline const EMC *Record::value_as<EMC>() const {
+  return value_as_EMC();
+}
+
+template<> inline const EPF *Record::value_as<EPF>() const {
+  return value_as_EPF();
+}
+
+template<> inline const GEL *Record::value_as<GEL>() const {
+  return value_as_GEL();
+}
+
+template<> inline const PAP *Record::value_as<PAP>() const {
+  return value_as_PAP();
+}
+
+template<> inline const RSD *Record::value_as<RSD>() const {
+  return value_as_RSD();
 }
 
 struct RecordBuilder {
@@ -4329,6 +4419,30 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_EGP: {
       auto ptr = reinterpret_cast<const EGP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_APL: {
+      auto ptr = reinterpret_cast<const APL *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_EMC: {
+      auto ptr = reinterpret_cast<const EMC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_EPF: {
+      auto ptr = reinterpret_cast<const EPF *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_GEL: {
+      auto ptr = reinterpret_cast<const GEL *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PAP: {
+      auto ptr = reinterpret_cast<const PAP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_RSD: {
+      auto ptr = reinterpret_cast<const RSD *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

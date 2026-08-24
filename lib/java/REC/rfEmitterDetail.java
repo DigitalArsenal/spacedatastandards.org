@@ -91,6 +91,15 @@ public final class rfEmitterDetail extends com.google.flatbuffers.Table {
    * 3dB beamwidth in degrees
    */
   public double BEAMWIDTH() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Emission and susceptibility limit curves applicable to this operating
+   * mode. Curves are evaluated in point order after sorting by frequency.
+   */
+  public RFEEmissionMask EMISSION_MASKS(int j) { return EMISSION_MASKS(new RFEEmissionMask(), j); }
+  public RFEEmissionMask EMISSION_MASKS(RFEEmissionMask obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EMISSION_MASKSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public RFEEmissionMask.Vector emissionMasksVector() { return emissionMasksVector(new RFEEmissionMask.Vector()); }
+  public RFEEmissionMask.Vector emissionMasksVector(RFEEmissionMask.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createrfEmitterDetail(FlatBufferBuilder builder,
       int MODE_NAMEOffset,
@@ -107,8 +116,9 @@ public final class rfEmitterDetail extends com.google.flatbuffers.Table {
       double ERP,
       byte MODULATION,
       int ANTENNA_PATTERNOffset,
-      double BEAMWIDTH) {
-    builder.startTable(15);
+      double BEAMWIDTH,
+      int EMISSION_MASKSOffset) {
+    builder.startTable(16);
     rfEmitterDetail.addBeamwidth(builder, BEAMWIDTH);
     rfEmitterDetail.addErp(builder, ERP);
     rfEmitterDetail.addScanPeriod(builder, SCAN_PERIOD);
@@ -121,13 +131,14 @@ public final class rfEmitterDetail extends com.google.flatbuffers.Table {
     rfEmitterDetail.addFreqMax(builder, FREQ_MAX);
     rfEmitterDetail.addFreqMin(builder, FREQ_MIN);
     rfEmitterDetail.addFrequency(builder, FREQUENCY);
+    rfEmitterDetail.addEmissionMasks(builder, EMISSION_MASKSOffset);
     rfEmitterDetail.addAntennaPattern(builder, ANTENNA_PATTERNOffset);
     rfEmitterDetail.addModeName(builder, MODE_NAMEOffset);
     rfEmitterDetail.addModulation(builder, MODULATION);
     return rfEmitterDetail.endrfEmitterDetail(builder);
   }
 
-  public static void startrfEmitterDetail(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startrfEmitterDetail(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addModeName(FlatBufferBuilder builder, int MODE_NAMEOffset) { builder.addOffset(0, MODE_NAMEOffset, 0); }
   public static void addFrequency(FlatBufferBuilder builder, double FREQUENCY) { builder.addDouble(1, FREQUENCY, 0.0); }
   public static void addFreqMin(FlatBufferBuilder builder, double FREQ_MIN) { builder.addDouble(2, FREQ_MIN, 0.0); }
@@ -143,6 +154,9 @@ public final class rfEmitterDetail extends com.google.flatbuffers.Table {
   public static void addModulation(FlatBufferBuilder builder, byte MODULATION) { builder.addByte(12, MODULATION, 0); }
   public static void addAntennaPattern(FlatBufferBuilder builder, int ANTENNA_PATTERNOffset) { builder.addOffset(13, ANTENNA_PATTERNOffset, 0); }
   public static void addBeamwidth(FlatBufferBuilder builder, double BEAMWIDTH) { builder.addDouble(14, BEAMWIDTH, 0.0); }
+  public static void addEmissionMasks(FlatBufferBuilder builder, int EMISSION_MASKSOffset) { builder.addOffset(15, EMISSION_MASKSOffset, 0); }
+  public static int createEmissionMasksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEmissionMasksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endrfEmitterDetail(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

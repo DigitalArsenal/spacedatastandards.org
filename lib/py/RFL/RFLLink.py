@@ -203,8 +203,43 @@ class RFLLink(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Ordered adaptive modulation-and-coding choices. Per-sample
+    # SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+    # RFLLink
+    def MODCOD_SET(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from RFLModCod import RFLModCod
+            obj = RFLModCod()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RFLLink
+    def MODCOD_SETLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFLLink
+    def MODCOD_SETIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
+    # Whether the producer evaluated adaptive selection for this link.
+    # RFLLink
+    def ACM_ENABLED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def RFLLinkStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(22)
 
 def Start(builder):
     RFLLinkStart(builder)
@@ -329,6 +364,30 @@ def RFLLinkAddSERVICE(builder, SERVICE):
 def AddSERVICE(builder, SERVICE):
     RFLLinkAddSERVICE(builder, SERVICE)
 
+def RFLLinkAddMODCOD_SET(builder, MODCOD_SET):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MODCOD_SET), 0)
+
+def AddMODCOD_SET(builder, MODCOD_SET):
+    RFLLinkAddMODCOD_SET(builder, MODCOD_SET)
+
+def RFLLinkStartMODCOD_SETVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMODCOD_SETVector(builder, numElems):
+    return RFLLinkStartMODCOD_SETVector(builder, numElems)
+
+def RFLLinkCreateMODCOD_SETVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMODCOD_SETVector(builder, data):
+    RFLLinkCreateMODCOD_SETVector(builder, data)
+
+def RFLLinkAddACM_ENABLED(builder, ACM_ENABLED):
+    builder.PrependBoolSlot(21, ACM_ENABLED, 0)
+
+def AddACM_ENABLED(builder, ACM_ENABLED):
+    RFLLinkAddACM_ENABLED(builder, ACM_ENABLED)
+
 def RFLLinkEnd(builder):
     return builder.EndObject()
 
@@ -336,8 +395,9 @@ def End(builder):
     return RFLLinkEnd(builder)
 
 import RFLEndpoint
+import RFLModCod
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -366,6 +426,8 @@ class RFLLinkT(object):
         CHANNEL_GROUP_ID = None,
         CONSTELLATION = None,
         SERVICE = None,
+        MODCOD_SET = None,
+        ACM_ENABLED = False,
     ):
         self.LINK_ID = LINK_ID  # type: Optional[str]
         self.LINK_NAME = LINK_NAME  # type: Optional[str]
@@ -387,6 +449,8 @@ class RFLLinkT(object):
         self.CHANNEL_GROUP_ID = CHANNEL_GROUP_ID  # type: Optional[str]
         self.CONSTELLATION = CONSTELLATION  # type: Optional[str]
         self.SERVICE = SERVICE  # type: Optional[str]
+        self.MODCOD_SET = MODCOD_SET  # type: Optional[List[RFLModCod.RFLModCodT]]
+        self.ACM_ENABLED = ACM_ENABLED  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -431,6 +495,15 @@ class RFLLinkT(object):
         self.CHANNEL_GROUP_ID = RFLLink.CHANNEL_GROUP_ID()
         self.CONSTELLATION = RFLLink.CONSTELLATION()
         self.SERVICE = RFLLink.SERVICE()
+        if not RFLLink.MODCOD_SETIsNone():
+            self.MODCOD_SET = []
+            for i in range(RFLLink.MODCOD_SETLength()):
+                if RFLLink.MODCOD_SET(i) is None:
+                    self.MODCOD_SET.append(None)
+                else:
+                    rFLModCod_ = RFLModCod.RFLModCodT.InitFromObj(RFLLink.MODCOD_SET(i))
+                    self.MODCOD_SET.append(rFLModCod_)
+        self.ACM_ENABLED = RFLLink.ACM_ENABLED()
 
     # RFLLinkT
     def Pack(self, builder):
@@ -456,6 +529,14 @@ class RFLLinkT(object):
             CONSTELLATION = builder.CreateString(self.CONSTELLATION)
         if self.SERVICE is not None:
             SERVICE = builder.CreateString(self.SERVICE)
+        if self.MODCOD_SET is not None:
+            MODCOD_SETlist = []
+            for i in range(len(self.MODCOD_SET)):
+                MODCOD_SETlist.append(self.MODCOD_SET[i].Pack(builder))
+            RFLLinkStartMODCOD_SETVector(builder, len(self.MODCOD_SET))
+            for i in reversed(range(len(self.MODCOD_SET))):
+                builder.PrependUOffsetTRelative(MODCOD_SETlist[i])
+            MODCOD_SET = builder.EndVector()
         RFLLinkStart(builder)
         if self.LINK_ID is not None:
             RFLLinkAddLINK_ID(builder, LINK_ID)
@@ -488,5 +569,8 @@ class RFLLinkT(object):
             RFLLinkAddCONSTELLATION(builder, CONSTELLATION)
         if self.SERVICE is not None:
             RFLLinkAddSERVICE(builder, SERVICE)
+        if self.MODCOD_SET is not None:
+            RFLLinkAddMODCOD_SET(builder, MODCOD_SET)
+        RFLLinkAddACM_ENABLED(builder, self.ACM_ENABLED)
         RFLLink = RFLLinkEnd(builder)
         return RFLLink

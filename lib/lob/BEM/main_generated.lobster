@@ -18,11 +18,207 @@ enum beamPolarization:
     beamPolarization_DUAL_LINEAR = 5
     beamPolarization_CROSS_POL = 6
 
+/// Operational state of one beam-hop slot.
+enum bemHopSlotState:
+    bemHopSlotState_UNSPECIFIED = 0
+    bemHopSlotState_ACTIVE = 1
+    bemHopSlotState_GUARD = 2
+    bemHopSlotState_IDLE = 3
+
+class BEMProvenance
+
+class BEMHopSlot
+
+class BEMHopSchedule
+
 class beamContourPoint
 
 class beamContour
 
 class BEM
+
+/// Provenance of a deployed-beam descriptor or hop schedule.
+class BEMProvenance : flatbuffers.handle
+    def SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def SOURCE_QUERY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def MODEL_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def MODEL_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    def CITATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    def MODULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    def MODULE_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    def MODULE_CONTENT_HASH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    def COMPUTED_AT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 20, 0)
+
+def GetRootAsBEMProvenance(buf:string): return BEMProvenance { buf, flatbuffers.indirect(buf, 0) }
+
+struct BEMProvenanceBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(9)
+        return this
+    def add_SOURCE(SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOURCE)
+        return this
+    def add_SOURCE_QUERY(SOURCE_QUERY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SOURCE_QUERY)
+        return this
+    def add_MODEL_NAME(MODEL_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, MODEL_NAME)
+        return this
+    def add_MODEL_VERSION(MODEL_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MODEL_VERSION)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, CITATION)
+        return this
+    def add_MODULE_ID(MODULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, MODULE_ID)
+        return this
+    def add_MODULE_VERSION(MODULE_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MODULE_VERSION)
+        return this
+    def add_MODULE_CONTENT_HASH(MODULE_CONTENT_HASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, MODULE_CONTENT_HASH)
+        return this
+    def add_COMPUTED_AT(COMPUTED_AT:int):
+        b_.PrependUint64Slot(8, COMPUTED_AT, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// One time slice of a periodic beam-hopping plan.
+class BEMHopSlot : flatbuffers.handle
+    def SLOT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Offset from BEMHopSchedule.EPOCH in seconds.
+    def START_OFFSET_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    def DURATION_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def STATE() -> bemHopSlotState:
+        return bemHopSlotState(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// Beam activated in this slot. May name this BEM.ID or another beam in a
+    /// coordinated schedule.
+    def BEAM_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    def TARGET_CELL_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    def TARGET_CENTER_LATITUDE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    def TARGET_CENTER_LONGITUDE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    def CENTER_FREQUENCY_HZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    def EIRP_DBW() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    def PRIORITY() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 24, 0)
+
+def GetRootAsBEMHopSlot(buf:string): return BEMHopSlot { buf, flatbuffers.indirect(buf, 0) }
+
+struct BEMHopSlotBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_SLOT_ID(SLOT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SLOT_ID)
+        return this
+    def add_START_OFFSET_S(START_OFFSET_S:float):
+        b_.PrependFloat64Slot(1, START_OFFSET_S, 0.0)
+        return this
+    def add_DURATION_S(DURATION_S:float):
+        b_.PrependFloat64Slot(2, DURATION_S, 0.0)
+        return this
+    def add_STATE(STATE:bemHopSlotState):
+        b_.PrependInt8Slot(3, STATE, 0)
+        return this
+    def add_BEAM_ID(BEAM_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, BEAM_ID)
+        return this
+    def add_TARGET_CELL_ID(TARGET_CELL_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, TARGET_CELL_ID)
+        return this
+    def add_TARGET_CENTER_LATITUDE_DEG(TARGET_CENTER_LATITUDE_DEG:float):
+        b_.PrependFloat64Slot(6, TARGET_CENTER_LATITUDE_DEG, 0.0)
+        return this
+    def add_TARGET_CENTER_LONGITUDE_DEG(TARGET_CENTER_LONGITUDE_DEG:float):
+        b_.PrependFloat64Slot(7, TARGET_CENTER_LONGITUDE_DEG, 0.0)
+        return this
+    def add_CENTER_FREQUENCY_HZ(CENTER_FREQUENCY_HZ:float):
+        b_.PrependFloat64Slot(8, CENTER_FREQUENCY_HZ, 0.0)
+        return this
+    def add_EIRP_DBW(EIRP_DBW:float):
+        b_.PrependFloat64Slot(9, EIRP_DBW, 0.0)
+        return this
+    def add_PRIORITY(PRIORITY:int):
+        b_.PrependUint32Slot(10, PRIORITY, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Periodic beam-hopping schedule carried by a deployed beam descriptor.
+class BEMHopSchedule : flatbuffers.handle
+    def SCHEDULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.
+    def EPOCH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    def PERIOD_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def REPEATS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    def SLOTS(i:int) -> BEMHopSlot:
+        return BEMHopSlot { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def SLOTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    def PROVENANCE() -> BEMProvenance:
+        let o = flatbuffers.field_table(buf_, pos_, 14)
+        return BEMProvenance { buf_, assert o }
+
+def GetRootAsBEMHopSchedule(buf:string): return BEMHopSchedule { buf, flatbuffers.indirect(buf, 0) }
+
+struct BEMHopScheduleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_SCHEDULE_ID(SCHEDULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SCHEDULE_ID)
+        return this
+    def add_EPOCH(EPOCH:float):
+        b_.PrependFloat64Slot(1, EPOCH, 0.0)
+        return this
+    def add_PERIOD_S(PERIOD_S:float):
+        b_.PrependFloat64Slot(2, PERIOD_S, 0.0)
+        return this
+    def add_REPEATS(REPEATS:bool):
+        b_.PrependBoolSlot(3, REPEATS, 0)
+        return this
+    def add_SLOTS(SLOTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SLOTS)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, PROVENANCE)
+        return this
+    def end():
+        return b_.EndObject()
+
+def BEMHopScheduleStartSLOTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def BEMHopScheduleCreateSLOTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Beam Contour Point (gain pattern boundary)
 class beamContourPoint : flatbuffers.handle
@@ -150,13 +346,39 @@ class BEM : flatbuffers.handle
     /// Additional notes
     def NOTES() -> string:
         return flatbuffers.field_string(buf_, pos_, 36)
+    /// Time-sliced activation plan for this deployed beam.
+    def HOP_SCHEDULE() -> BEMHopSchedule?:
+        let o = flatbuffers.field_table(buf_, pos_, 38)
+        return if o: BEMHopSchedule { buf_, o } else: nil
+    def PROVENANCE() -> BEMProvenance?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: BEMProvenance { buf_, o } else: nil
+    /// Unix ms this record was serialized.
+    def COMPUTED_AT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 42, 0)
+    /// `$EPM` identifier of the producing node.
+    def PRODUCER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+    /// signature payloads zeroed while preserving their vectors and offsets.
+    def SIGNATURE(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 1)
+    def SIGNATURE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 46)
+    /// Ed25519 signature over canonical JSON with IDL field order and
+    /// capitalization, no insignificant whitespace, and both signature fields
+    /// omitted.
+    def CANONICAL_JSON_SIGNATURE(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 1)
+    def CANONICAL_JSON_SIGNATURE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
 
 def GetRootAsBEM(buf:string): return BEM { buf, flatbuffers.indirect(buf, 0) }
 
 struct BEMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(23)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -209,6 +431,24 @@ struct BEMBuilder:
     def add_NOTES(NOTES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, NOTES)
         return this
+    def add_HOP_SCHEDULE(HOP_SCHEDULE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, HOP_SCHEDULE)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, PROVENANCE)
+        return this
+    def add_COMPUTED_AT(COMPUTED_AT:int):
+        b_.PrependUint64Slot(19, COMPUTED_AT, 0)
+        return this
+    def add_PRODUCER_ID(PRODUCER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, PRODUCER_ID)
+        return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, SIGNATURE)
+        return this
+    def add_CANONICAL_JSON_SIGNATURE(CANONICAL_JSON_SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, CANONICAL_JSON_SIGNATURE)
+        return this
     def end():
         return b_.EndObject()
 
@@ -217,4 +457,18 @@ def BEMStartBEAMCONTOURSVector(b_:flatbuffers.builder, n_:int):
 def BEMCreateBEAMCONTOURSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def BEMStartSIGNATUREVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def BEMCreateSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def BEMStartCANONICALJSONSIGNATUREVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def BEMCreateCANONICALJSONSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

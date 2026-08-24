@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { ACIDataVolumeByModCod, ACIDataVolumeByModCodT } from './ACIDataVolumeByModCod.js';
 import { ACIInterval, ACIIntervalT } from './ACIInterval.js';
 import { ACIProvenance, ACIProvenanceT } from './ACIProvenance.js';
 import { timingStandard } from './timingStandard.js';
@@ -65,11 +66,27 @@ export declare class ACI implements flatbuffers.IUnpackableObject<ACIT> {
     PRODUCER_ID(): string | null;
     PRODUCER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Ed25519 signature by the producing `$EPM`.
+     * Ed25519 signature by the producing `$EPM` over the size-prefixed
+     * FlatBuffer projection with both 64-byte signature payloads zeroed while
+     * preserving their vectors and offsets.
      */
     SIGNATURE(index: number): number | null;
     signatureLength(): number;
     signatureArray(): Uint8Array | null;
+    /**
+     * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+     * field order, IDL capitalization, no insignificant whitespace, and both
+     * signature fields omitted.
+     */
+    CANONICAL_JSON_SIGNATURE(index: number): number | null;
+    canonicalJsonSignatureLength(): number;
+    canonicalJsonSignatureArray(): Uint8Array | null;
+    /**
+     * Per-interval delivered volume grouped by selected modulation-and-coding
+     * entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+     */
+    DATA_VOLUME_BY_MODCOD(index: number, obj?: ACIDataVolumeByModCod): ACIDataVolumeByModCod | null;
+    dataVolumeByModcodLength(): number;
     static startACI(builder: flatbuffers.Builder): void;
     static addAciId(builder: flatbuffers.Builder, ACI_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -87,6 +104,12 @@ export declare class ACI implements flatbuffers.IUnpackableObject<ACIT> {
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCanonicalJsonSignature(builder: flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset: flatbuffers.Offset): void;
+    static createCanonicalJsonSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCanonicalJsonSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDataVolumeByModcod(builder: flatbuffers.Builder, DATA_VOLUME_BY_MODCODOffset: flatbuffers.Offset): void;
+    static createDataVolumeByModcodVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startDataVolumeByModcodVector(builder: flatbuffers.Builder, numElems: number): void;
     static endACI(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishACIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedACIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -106,7 +129,9 @@ export declare class ACIT implements flatbuffers.IGeneratedObject {
     COMPUTED_AT: bigint;
     PRODUCER_ID: string | Uint8Array | null;
     SIGNATURE: (number)[];
-    constructor(ACI_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, RFL_ID?: string | Uint8Array | null, INTERVALS?: (ACIIntervalT)[], WINDOW_START?: number, WINDOW_STOP?: number, TIME_SYSTEM?: timingStandard, PROVENANCE?: ACIProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[]);
+    CANONICAL_JSON_SIGNATURE: (number)[];
+    DATA_VOLUME_BY_MODCOD: (ACIDataVolumeByModCodT)[];
+    constructor(ACI_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, RFL_ID?: string | Uint8Array | null, INTERVALS?: (ACIIntervalT)[], WINDOW_START?: number, WINDOW_STOP?: number, TIME_SYSTEM?: timingStandard, PROVENANCE?: ACIProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[], DATA_VOLUME_BY_MODCOD?: (ACIDataVolumeByModCodT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACI.d.ts.map

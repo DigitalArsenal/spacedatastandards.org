@@ -416,8 +416,65 @@ func (rcv *RFLLink) Service() []byte {
 }
 
 /// Operator-facing service or mission designation.
+/// Ordered adaptive modulation-and-coding choices. Per-sample
+/// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+func (rcv *RFLLink) MODCOD_SET(obj *RFLModCod, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(RFLModCod)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *RFLLink) ModcodSet(obj *RFLModCod, j int) bool {
+	return rcv.MODCOD_SET(obj, j)
+}
+
+func (rcv *RFLLink) MODCOD_SETLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFLLink) ModcodSetLength() int {
+	return rcv.MODCOD_SETLength()
+}
+
+/// Ordered adaptive modulation-and-coding choices. Per-sample
+/// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+/// Whether the producer evaluated adaptive selection for this link.
+func (rcv *RFLLink) ACM_ENABLED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *RFLLink) AcmEnabled() bool {
+	return rcv.ACM_ENABLED()
+}
+
+/// Whether the producer evaluated adaptive selection for this link.
+func (rcv *RFLLink) MutateACM_ENABLED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(46, n)
+}
+
+func (rcv *RFLLink) MutateAcmEnabled(n bool) bool {
+	return rcv.MutateACM_ENABLED(n)
+}
+
 func RFLLinkStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(22)
 }
 func RFLLinkAddLINK_ID(builder *flatbuffers.Builder, LINK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LINK_ID), 0)
@@ -538,6 +595,24 @@ func RFLLinkAddSERVICE(builder *flatbuffers.Builder, SERVICE flatbuffers.UOffset
 }
 func RFLLinkAddService(builder *flatbuffers.Builder, SERVICE flatbuffers.UOffsetT) {
 	RFLLinkAddSERVICE(builder, SERVICE)
+}
+func RFLLinkAddMODCOD_SET(builder *flatbuffers.Builder, MODCOD_SET flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(MODCOD_SET), 0)
+}
+func RFLLinkAddModcodSet(builder *flatbuffers.Builder, MODCOD_SET flatbuffers.UOffsetT) {
+	RFLLinkAddMODCOD_SET(builder, MODCOD_SET)
+}
+func RFLLinkStartMODCOD_SETVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func RFLLinkStartModcodSetVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLLinkStartMODCOD_SETVector(builder, numElems)
+}
+func RFLLinkAddACM_ENABLED(builder *flatbuffers.Builder, ACM_ENABLED bool) {
+	builder.PrependBoolSlot(21, ACM_ENABLED, false)
+}
+func RFLLinkAddAcmEnabled(builder *flatbuffers.Builder, ACM_ENABLED bool) {
+	RFLLinkAddACM_ENABLED(builder, ACM_ENABLED)
 }
 func RFLLinkEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

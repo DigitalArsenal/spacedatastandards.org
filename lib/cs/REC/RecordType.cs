@@ -235,6 +235,12 @@ public enum RecordType : byte
   TMS = 214,
   VEP = 215,
   EGP = 216,
+  APL = 217,
+  EMC = 218,
+  EPF = 219,
+  GEL = 220,
+  PAP = 221,
+  RSD = 222,
 };
 
 public class RecordTypeUnion {
@@ -679,6 +685,18 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromVEP(VEPT _vep) { return new RecordTypeUnion{ Type = RecordType.VEP, Value = _vep }; }
   public EGPT AsEGP() { return this.As<EGPT>(); }
   public static RecordTypeUnion FromEGP(EGPT _egp) { return new RecordTypeUnion{ Type = RecordType.EGP, Value = _egp }; }
+  public APLT AsAPL() { return this.As<APLT>(); }
+  public static RecordTypeUnion FromAPL(APLT _apl) { return new RecordTypeUnion{ Type = RecordType.APL, Value = _apl }; }
+  public EMCT AsEMC() { return this.As<EMCT>(); }
+  public static RecordTypeUnion FromEMC(EMCT _emc) { return new RecordTypeUnion{ Type = RecordType.EMC, Value = _emc }; }
+  public EPFT AsEPF() { return this.As<EPFT>(); }
+  public static RecordTypeUnion FromEPF(EPFT _epf) { return new RecordTypeUnion{ Type = RecordType.EPF, Value = _epf }; }
+  public GELT AsGEL() { return this.As<GELT>(); }
+  public static RecordTypeUnion FromGEL(GELT _gel) { return new RecordTypeUnion{ Type = RecordType.GEL, Value = _gel }; }
+  public PAPT AsPAP() { return this.As<PAPT>(); }
+  public static RecordTypeUnion FromPAP(PAPT _pap) { return new RecordTypeUnion{ Type = RecordType.PAP, Value = _pap }; }
+  public RSDT AsRSD() { return this.As<RSDT>(); }
+  public static RecordTypeUnion FromRSD(RSDT _rsd) { return new RecordTypeUnion{ Type = RecordType.RSD, Value = _rsd }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -899,6 +917,12 @@ public class RecordTypeUnion {
       case RecordType.TMS: return TMS.Pack(builder, _o.AsTMS()).Value;
       case RecordType.VEP: return VEP.Pack(builder, _o.AsVEP()).Value;
       case RecordType.EGP: return EGP.Pack(builder, _o.AsEGP()).Value;
+      case RecordType.APL: return APL.Pack(builder, _o.AsAPL()).Value;
+      case RecordType.EMC: return EMC.Pack(builder, _o.AsEMC()).Value;
+      case RecordType.EPF: return EPF.Pack(builder, _o.AsEPF()).Value;
+      case RecordType.GEL: return GEL.Pack(builder, _o.AsGEL()).Value;
+      case RecordType.PAP: return PAP.Pack(builder, _o.AsPAP()).Value;
+      case RecordType.RSD: return RSD.Pack(builder, _o.AsRSD()).Value;
     }
   }
 }
@@ -1559,6 +1583,24 @@ static public class RecordTypeVerify
         break;
       case RecordType.EGP:
         result = EGPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.APL:
+        result = APLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EMC:
+        result = EMCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EPF:
+        result = EPFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GEL:
+        result = GELVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PAP:
+        result = PAPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RSD:
+        result = RSDVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

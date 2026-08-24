@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { RFEEmissionMask, RFEEmissionMaskT } from './RFEEmissionMask.js';
 import { signalModulation } from './signalModulation.js';
 /**
  * RF Emitter Detail Record
@@ -71,6 +72,12 @@ export declare class rfEmitterDetail implements flatbuffers.IUnpackableObject<rf
      * 3dB beamwidth in degrees
      */
     BEAMWIDTH(): number;
+    /**
+     * Emission and susceptibility limit curves applicable to this operating
+     * mode. Curves are evaluated in point order after sorting by frequency.
+     */
+    EMISSION_MASKS(index: number, obj?: RFEEmissionMask): RFEEmissionMask | null;
+    emissionMasksLength(): number;
     static startrfEmitterDetail(builder: flatbuffers.Builder): void;
     static addModeName(builder: flatbuffers.Builder, MODE_NAMEOffset: flatbuffers.Offset): void;
     static addFrequency(builder: flatbuffers.Builder, FREQUENCY: number): void;
@@ -87,8 +94,11 @@ export declare class rfEmitterDetail implements flatbuffers.IUnpackableObject<rf
     static addModulation(builder: flatbuffers.Builder, MODULATION: signalModulation): void;
     static addAntennaPattern(builder: flatbuffers.Builder, ANTENNA_PATTERNOffset: flatbuffers.Offset): void;
     static addBeamwidth(builder: flatbuffers.Builder, BEAMWIDTH: number): void;
+    static addEmissionMasks(builder: flatbuffers.Builder, EMISSION_MASKSOffset: flatbuffers.Offset): void;
+    static createEmissionMasksVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startEmissionMasksVector(builder: flatbuffers.Builder, numElems: number): void;
     static endrfEmitterDetail(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createrfEmitterDetail(builder: flatbuffers.Builder, MODE_NAMEOffset: flatbuffers.Offset, FREQUENCY: number, FREQ_MIN: number, FREQ_MAX: number, PRI: number, PRI_MIN: number, PRI_MAX: number, PULSE_WIDTH: number, PW_MIN: number, PW_MAX: number, SCAN_PERIOD: number, ERP: number, MODULATION: signalModulation, ANTENNA_PATTERNOffset: flatbuffers.Offset, BEAMWIDTH: number): flatbuffers.Offset;
+    static createrfEmitterDetail(builder: flatbuffers.Builder, MODE_NAMEOffset: flatbuffers.Offset, FREQUENCY: number, FREQ_MIN: number, FREQ_MAX: number, PRI: number, PRI_MIN: number, PRI_MAX: number, PULSE_WIDTH: number, PW_MIN: number, PW_MAX: number, SCAN_PERIOD: number, ERP: number, MODULATION: signalModulation, ANTENNA_PATTERNOffset: flatbuffers.Offset, BEAMWIDTH: number, EMISSION_MASKSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): rfEmitterDetailT;
     unpackTo(_o: rfEmitterDetailT): void;
 }
@@ -108,7 +118,8 @@ export declare class rfEmitterDetailT implements flatbuffers.IGeneratedObject {
     MODULATION: signalModulation;
     ANTENNA_PATTERN: string | Uint8Array | null;
     BEAMWIDTH: number;
-    constructor(MODE_NAME?: string | Uint8Array | null, FREQUENCY?: number, FREQ_MIN?: number, FREQ_MAX?: number, PRI?: number, PRI_MIN?: number, PRI_MAX?: number, PULSE_WIDTH?: number, PW_MIN?: number, PW_MAX?: number, SCAN_PERIOD?: number, ERP?: number, MODULATION?: signalModulation, ANTENNA_PATTERN?: string | Uint8Array | null, BEAMWIDTH?: number);
+    EMISSION_MASKS: (RFEEmissionMaskT)[];
+    constructor(MODE_NAME?: string | Uint8Array | null, FREQUENCY?: number, FREQ_MIN?: number, FREQ_MAX?: number, PRI?: number, PRI_MIN?: number, PRI_MAX?: number, PULSE_WIDTH?: number, PW_MIN?: number, PW_MAX?: number, SCAN_PERIOD?: number, ERP?: number, MODULATION?: signalModulation, ANTENNA_PATTERN?: string | Uint8Array | null, BEAMWIDTH?: number, EMISSION_MASKS?: (RFEEmissionMaskT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=rfEmitterDetail.d.ts.map

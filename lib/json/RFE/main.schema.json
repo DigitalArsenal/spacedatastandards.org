@@ -1,6 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfeEmissionMaskClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "IN_BAND", "OUT_OF_BAND", "SPURIOUS", "HARMONIC", "BROADBAND_NOISE", "CONDUCTED", "RADIATED", "SUSCEPTIBILITY"]
+    },
+    "rfeEmissionPath" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ANTENNA_PORT", "POWER_LEAD", "SIGNAL_LEAD", "ENCLOSURE", "FREE_SPACE", "STRUCTURE"]
+    },
     "emitterType" : {
       "type" : "string",
       "enum": ["RADAR", "COMMUNICATIONS", "NAVIGATION", "JAMMER", "BEACON", "TRANSPONDER", "DATA_LINK", "TELEMETRY", "EW", "UNKNOWN"]
@@ -8,6 +16,90 @@
     "signalModulation" : {
       "type" : "string",
       "enum": ["CW", "PULSE", "FMCW", "CHIRP", "BPSK", "QPSK", "FSK", "AM", "FM", "SPREAD_SPECTRUM", "PHASED_ARRAY", "AGILE", "UNKNOWN"]
+    },
+    "RFEEmissionMaskPoint" : {
+      "type" : "object",
+      "description" : "One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is\nrelative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in\nthe mask's required UNITS.",
+      "properties" : {
+        "FREQUENCY_OFFSET_HZ" : {
+                "type" : "number"
+              },
+        "VALUE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFEProvenance" : {
+      "type" : "object",
+      "description" : "Provenance of an emitter descriptor or emission mask. Capability schemas\ncarry model names and citations as data so the IDL remains provider-neutral.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string"
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string"
+              },
+        "MODEL_NAME" : {
+                "type" : "string"
+              },
+        "MODEL_VERSION" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "RFEEmissionMask" : {
+      "type" : "object",
+      "description" : "A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,\nor susceptibility limit curve.",
+      "properties" : {
+        "MASK_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "CLASS" : {
+                "$ref" : "#/definitions/rfeEmissionMaskClass"
+              },
+        "PATH" : {
+                "$ref" : "#/definitions/rfeEmissionPath"
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,\nor dBuA. A point with no unit is not publishable."
+              },
+        "REFERENCE_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "REFERENCE_BANDWIDTH_HZ" : {
+                "type" : "number"
+              },
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFEEmissionMaskPoint"}
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFEProvenance"
+              }
+      },
+      "required" : ["MASK_ID", "UNITS", "POINTS", "PROVENANCE"],
+      "additionalProperties" : false
     },
     "rfEmitterDetail" : {
       "type" : "object",
@@ -72,6 +164,10 @@
         "BEAMWIDTH" : {
                 "type" : "number",
                 "description" : "3dB beamwidth in degrees"
+              },
+        "EMISSION_MASKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFEEmissionMask"},
+                "description" : "Emission and susceptibility limit curves applicable to this operating\nmode. Curves are evaluated in point order after sorting by frequency."
               }
       },
       "additionalProperties" : false
@@ -159,6 +255,26 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFEProvenance",
+                "description" : "Provenance of the root emitter descriptor."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
               }
       },
       "additionalProperties" : false

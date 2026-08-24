@@ -216,22 +216,53 @@ class RFLLink extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Ordered adaptive modulation-and-coding choices. Per-sample
+    /// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMODCOD_SET($j)
+    {
+        $o = $this->__offset(44);
+        $obj = new RFLModCod();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMODCOD_SETLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Whether the producer evaluated adaptive selection for this link.
+    /**
+     * @return bool
+     */
+    public function getACM_ENABLED()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFLLink(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFLLink
      */
-    public static function createRFLLink(FlatBufferBuilder $builder, $LINK_ID, $LINK_NAME, $LINK_KIND, $TRANSMIT_ENDPOINT, $RECEIVE_ENDPOINT, $CENTER_FREQUENCY_MHZ, $BANDWIDTH_MHZ, $MODULATION, $CODING, $CODE_RATE, $SYMBOL_RATE_BAUD, $DATA_RATE_BPS, $THRESHOLD_TERM, $THRESHOLD_VALUE, $THRESHOLD_UNITS, $THRESHOLD_COMPARISON, $RECEIVER_GROUP_ID, $CHANNEL_GROUP_ID, $CONSTELLATION, $SERVICE)
+    public static function createRFLLink(FlatBufferBuilder $builder, $LINK_ID, $LINK_NAME, $LINK_KIND, $TRANSMIT_ENDPOINT, $RECEIVE_ENDPOINT, $CENTER_FREQUENCY_MHZ, $BANDWIDTH_MHZ, $MODULATION, $CODING, $CODE_RATE, $SYMBOL_RATE_BAUD, $DATA_RATE_BPS, $THRESHOLD_TERM, $THRESHOLD_VALUE, $THRESHOLD_UNITS, $THRESHOLD_COMPARISON, $RECEIVER_GROUP_ID, $CHANNEL_GROUP_ID, $CONSTELLATION, $SERVICE, $MODCOD_SET, $ACM_ENABLED)
     {
-        $builder->startObject(20);
+        $builder->startObject(22);
         self::addLINK_ID($builder, $LINK_ID);
         self::addLINK_NAME($builder, $LINK_NAME);
         self::addLINK_KIND($builder, $LINK_KIND);
@@ -252,6 +283,8 @@ class RFLLink extends Table
         self::addCHANNEL_GROUP_ID($builder, $CHANNEL_GROUP_ID);
         self::addCONSTELLATION($builder, $CONSTELLATION);
         self::addSERVICE($builder, $SERVICE);
+        self::addMODCOD_SET($builder, $MODCOD_SET);
+        self::addACM_ENABLED($builder, $ACM_ENABLED);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LINK_ID
         $builder->required($o, 10);  // TRANSMIT_ENDPOINT
@@ -457,6 +490,50 @@ class RFLLink extends Table
     public static function addSERVICE(FlatBufferBuilder $builder, $SERVICE)
     {
         $builder->addOffsetX(19, $SERVICE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMODCOD_SET(FlatBufferBuilder $builder, $MODCOD_SET)
+    {
+        $builder->addOffsetX(20, $MODCOD_SET, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMODCOD_SETVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMODCOD_SETVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addACM_ENABLED(FlatBufferBuilder $builder, $ACM_ENABLED)
+    {
+        $builder->addBoolX(21, $ACM_ENABLED, false);
     }
 
     /**

@@ -183,8 +183,106 @@ class BEM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Time-sliced activation plan for this deployed beam.
+    # BEM
+    def HOP_SCHEDULE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BEMHopSchedule import BEMHopSchedule
+            obj = BEMHopSchedule()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # BEM
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BEMProvenance import BEMProvenance
+            obj = BEMProvenance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Unix ms this record was serialized.
+    # BEM
+    def COMPUTED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # `$EPM` identifier of the producing node.
+    # BEM
+    def PRODUCER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+    # signature payloads zeroed while preserving their vectors and offsets.
+    # BEM
+    def SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # BEM
+    def SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # BEM
+    def SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BEM
+    def SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
+    # Ed25519 signature over canonical JSON with IDL field order and
+    # capitalization, no insignificant whitespace, and both signature fields
+    # omitted.
+    # BEM
+    def CANONICAL_JSON_SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # BEM
+    def CANONICAL_JSON_SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # BEM
+    def CANONICAL_JSON_SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BEM
+    def CANONICAL_JSON_SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
 def BEMStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(23)
 
 def Start(builder):
     BEMStart(builder)
@@ -303,15 +401,85 @@ def BEMAddNOTES(builder, NOTES):
 def AddNOTES(builder, NOTES):
     BEMAddNOTES(builder, NOTES)
 
+def BEMAddHOP_SCHEDULE(builder, HOP_SCHEDULE):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(HOP_SCHEDULE), 0)
+
+def AddHOP_SCHEDULE(builder, HOP_SCHEDULE):
+    BEMAddHOP_SCHEDULE(builder, HOP_SCHEDULE)
+
+def BEMAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    BEMAddPROVENANCE(builder, PROVENANCE)
+
+def BEMAddCOMPUTED_AT(builder, COMPUTED_AT):
+    builder.PrependUint64Slot(19, COMPUTED_AT, 0)
+
+def AddCOMPUTED_AT(builder, COMPUTED_AT):
+    BEMAddCOMPUTED_AT(builder, COMPUTED_AT)
+
+def BEMAddPRODUCER_ID(builder, PRODUCER_ID):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCER_ID), 0)
+
+def AddPRODUCER_ID(builder, PRODUCER_ID):
+    BEMAddPRODUCER_ID(builder, PRODUCER_ID)
+
+def BEMAddSIGNATURE(builder, SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+
+def AddSIGNATURE(builder, SIGNATURE):
+    BEMAddSIGNATURE(builder, SIGNATURE)
+
+def BEMStartSIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartSIGNATUREVector(builder, numElems):
+    return BEMStartSIGNATUREVector(builder, numElems)
+
+def BEMCreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    BEMCreateSIGNATUREVector(builder, data)
+
+def BEMAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
+
+def AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    BEMAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+
+def BEMStartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return BEMStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+
+def BEMCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    BEMCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+
 def BEMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return BEMEnd(builder)
 
+import BEMHopSchedule
+import BEMProvenance
 import beamContour
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -337,6 +505,12 @@ class BEMT(object):
         FOOTPRINT_AREA = 0.0,
         BEAM_CONTOURS = None,
         NOTES = None,
+        HOP_SCHEDULE = None,
+        PROVENANCE = None,
+        COMPUTED_AT = 0,
+        PRODUCER_ID = None,
+        SIGNATURE = None,
+        CANONICAL_JSON_SIGNATURE = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.BEAM_NAME = BEAM_NAME  # type: Optional[str]
@@ -355,6 +529,12 @@ class BEMT(object):
         self.FOOTPRINT_AREA = FOOTPRINT_AREA  # type: float
         self.BEAM_CONTOURS = BEAM_CONTOURS  # type: Optional[List[beamContour.beamContourT]]
         self.NOTES = NOTES  # type: Optional[str]
+        self.HOP_SCHEDULE = HOP_SCHEDULE  # type: Optional[BEMHopSchedule.BEMHopScheduleT]
+        self.PROVENANCE = PROVENANCE  # type: Optional[BEMProvenance.BEMProvenanceT]
+        self.COMPUTED_AT = COMPUTED_AT  # type: int
+        self.PRODUCER_ID = PRODUCER_ID  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.CANONICAL_JSON_SIGNATURE = CANONICAL_JSON_SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -401,6 +581,26 @@ class BEMT(object):
                     beamContour_ = beamContour.beamContourT.InitFromObj(BEM.BEAM_CONTOURS(i))
                     self.BEAM_CONTOURS.append(beamContour_)
         self.NOTES = BEM.NOTES()
+        if BEM.HOP_SCHEDULE() is not None:
+            self.HOP_SCHEDULE = BEMHopSchedule.BEMHopScheduleT.InitFromObj(BEM.HOP_SCHEDULE())
+        if BEM.PROVENANCE() is not None:
+            self.PROVENANCE = BEMProvenance.BEMProvenanceT.InitFromObj(BEM.PROVENANCE())
+        self.COMPUTED_AT = BEM.COMPUTED_AT()
+        self.PRODUCER_ID = BEM.PRODUCER_ID()
+        if not BEM.SIGNATUREIsNone():
+            if np is None:
+                self.SIGNATURE = []
+                for i in range(BEM.SIGNATURELength()):
+                    self.SIGNATURE.append(BEM.SIGNATURE(i))
+            else:
+                self.SIGNATURE = BEM.SIGNATUREAsNumpy()
+        if not BEM.CANONICAL_JSON_SIGNATUREIsNone():
+            if np is None:
+                self.CANONICAL_JSON_SIGNATURE = []
+                for i in range(BEM.CANONICAL_JSON_SIGNATURELength()):
+                    self.CANONICAL_JSON_SIGNATURE.append(BEM.CANONICAL_JSON_SIGNATURE(i))
+            else:
+                self.CANONICAL_JSON_SIGNATURE = BEM.CANONICAL_JSON_SIGNATUREAsNumpy()
 
     # BEMT
     def Pack(self, builder):
@@ -422,6 +622,28 @@ class BEMT(object):
             BEAM_CONTOURS = builder.EndVector()
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
+        if self.HOP_SCHEDULE is not None:
+            HOP_SCHEDULE = self.HOP_SCHEDULE.Pack(builder)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.PRODUCER_ID is not None:
+            PRODUCER_ID = builder.CreateString(self.PRODUCER_ID)
+        if self.SIGNATURE is not None:
+            if np is not None and type(self.SIGNATURE) is np.ndarray:
+                SIGNATURE = builder.CreateNumpyVector(self.SIGNATURE)
+            else:
+                BEMStartSIGNATUREVector(builder, len(self.SIGNATURE))
+                for i in reversed(range(len(self.SIGNATURE))):
+                    builder.PrependUint8(self.SIGNATURE[i])
+                SIGNATURE = builder.EndVector()
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            if np is not None and type(self.CANONICAL_JSON_SIGNATURE) is np.ndarray:
+                CANONICAL_JSON_SIGNATURE = builder.CreateNumpyVector(self.CANONICAL_JSON_SIGNATURE)
+            else:
+                BEMStartCANONICAL_JSON_SIGNATUREVector(builder, len(self.CANONICAL_JSON_SIGNATURE))
+                for i in reversed(range(len(self.CANONICAL_JSON_SIGNATURE))):
+                    builder.PrependUint8(self.CANONICAL_JSON_SIGNATURE[i])
+                CANONICAL_JSON_SIGNATURE = builder.EndVector()
         BEMStart(builder)
         if self.ID is not None:
             BEMAddID(builder, ID)
@@ -446,5 +668,16 @@ class BEMT(object):
             BEMAddBEAM_CONTOURS(builder, BEAM_CONTOURS)
         if self.NOTES is not None:
             BEMAddNOTES(builder, NOTES)
+        if self.HOP_SCHEDULE is not None:
+            BEMAddHOP_SCHEDULE(builder, HOP_SCHEDULE)
+        if self.PROVENANCE is not None:
+            BEMAddPROVENANCE(builder, PROVENANCE)
+        BEMAddCOMPUTED_AT(builder, self.COMPUTED_AT)
+        if self.PRODUCER_ID is not None:
+            BEMAddPRODUCER_ID(builder, PRODUCER_ID)
+        if self.SIGNATURE is not None:
+            BEMAddSIGNATURE(builder, SIGNATURE)
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            BEMAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
         BEM = BEMEnd(builder)
         return BEM

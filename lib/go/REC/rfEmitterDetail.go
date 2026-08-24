@@ -356,8 +356,43 @@ func (rcv *rfEmitterDetail) MutateBeamwidth(n float64) bool {
 	return rcv.MutateBEAMWIDTH(n)
 }
 
+/// Emission and susceptibility limit curves applicable to this operating
+/// mode. Curves are evaluated in point order after sorting by frequency.
+func (rcv *rfEmitterDetail) EMISSION_MASKS(obj *RFEEmissionMask, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(RFEEmissionMask)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *rfEmitterDetail) EmissionMasks(obj *RFEEmissionMask, j int) bool {
+	return rcv.EMISSION_MASKS(obj, j)
+}
+
+func (rcv *rfEmitterDetail) EMISSION_MASKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *rfEmitterDetail) EmissionMasksLength() int {
+	return rcv.EMISSION_MASKSLength()
+}
+
+/// Emission and susceptibility limit curves applicable to this operating
+/// mode. Curves are evaluated in point order after sorting by frequency.
 func rfEmitterDetailStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(16)
 }
 func rfEmitterDetailAddMODE_NAME(builder *flatbuffers.Builder, MODE_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MODE_NAME), 0)
@@ -448,6 +483,18 @@ func rfEmitterDetailAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64
 }
 func rfEmitterDetailAddBeamwidth(builder *flatbuffers.Builder, BEAMWIDTH float64) {
 	rfEmitterDetailAddBEAMWIDTH(builder, BEAMWIDTH)
+}
+func rfEmitterDetailAddEMISSION_MASKS(builder *flatbuffers.Builder, EMISSION_MASKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EMISSION_MASKS), 0)
+}
+func rfEmitterDetailAddEmissionMasks(builder *flatbuffers.Builder, EMISSION_MASKS flatbuffers.UOffsetT) {
+	rfEmitterDetailAddEMISSION_MASKS(builder, EMISSION_MASKS)
+}
+func rfEmitterDetailStartEMISSION_MASKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func rfEmitterDetailStartEmissionMasksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return rfEmitterDetailStartEMISSION_MASKSVector(builder, numElems)
 }
 func rfEmitterDetailEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

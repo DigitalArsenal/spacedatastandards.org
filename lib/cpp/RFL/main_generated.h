@@ -22,6 +22,9 @@ struct RFLObstructionBuilder;
 struct RFLEndpoint;
 struct RFLEndpointBuilder;
 
+struct RFLModCod;
+struct RFLModCodBuilder;
+
 struct RFLLink;
 struct RFLLinkBuilder;
 
@@ -139,11 +142,21 @@ enum rflBudgetTerm : int8_t {
   rflBudgetTerm_INTERFERENCE_POWER = 28,
   rflBudgetTerm_CARRIER_TO_NOISE_PLUS_INTERFERENCE = 29,
   rflBudgetTerm_SIGNAL_TO_INTERFERENCE_PLUS_NOISE = 30,
+  /// Energy per transmitted symbol divided by noise spectral density.
+  rflBudgetTerm_SYMBOL_ENERGY_TO_NOISE_DENSITY = 31,
+  /// Error probability for a decoded transport block or frame.
+  rflBudgetTerm_BLOCK_ERROR_RATE = 32,
+  /// Delivered information bits per second per hertz.
+  rflBudgetTerm_SPECTRAL_EFFICIENCY = 33,
+  /// Data rate delivered by the selected modulation and coding entry.
+  rflBudgetTerm_ACHIEVED_DATA_RATE = 34,
+  /// Margin above the threshold of the selected adaptive entry.
+  rflBudgetTerm_ACM_MARGIN = 35,
   rflBudgetTerm_MIN = rflBudgetTerm_UNSPECIFIED,
-  rflBudgetTerm_MAX = rflBudgetTerm_SIGNAL_TO_INTERFERENCE_PLUS_NOISE
+  rflBudgetTerm_MAX = rflBudgetTerm_ACM_MARGIN
 };
 
-inline const rflBudgetTerm (&EnumValuesrflBudgetTerm())[31] {
+inline const rflBudgetTerm (&EnumValuesrflBudgetTerm())[36] {
   static const rflBudgetTerm values[] = {
     rflBudgetTerm_UNSPECIFIED,
     rflBudgetTerm_RANGE,
@@ -175,13 +188,18 @@ inline const rflBudgetTerm (&EnumValuesrflBudgetTerm())[31] {
     rflBudgetTerm_CHANNEL_CAPACITY,
     rflBudgetTerm_INTERFERENCE_POWER,
     rflBudgetTerm_CARRIER_TO_NOISE_PLUS_INTERFERENCE,
-    rflBudgetTerm_SIGNAL_TO_INTERFERENCE_PLUS_NOISE
+    rflBudgetTerm_SIGNAL_TO_INTERFERENCE_PLUS_NOISE,
+    rflBudgetTerm_SYMBOL_ENERGY_TO_NOISE_DENSITY,
+    rflBudgetTerm_BLOCK_ERROR_RATE,
+    rflBudgetTerm_SPECTRAL_EFFICIENCY,
+    rflBudgetTerm_ACHIEVED_DATA_RATE,
+    rflBudgetTerm_ACM_MARGIN
   };
   return values;
 }
 
 inline const char * const *EnumNamesrflBudgetTerm() {
-  static const char * const names[32] = {
+  static const char * const names[37] = {
     "UNSPECIFIED",
     "RANGE",
     "RANGE_RATE",
@@ -213,13 +231,18 @@ inline const char * const *EnumNamesrflBudgetTerm() {
     "INTERFERENCE_POWER",
     "CARRIER_TO_NOISE_PLUS_INTERFERENCE",
     "SIGNAL_TO_INTERFERENCE_PLUS_NOISE",
+    "SYMBOL_ENERGY_TO_NOISE_DENSITY",
+    "BLOCK_ERROR_RATE",
+    "SPECTRAL_EFFICIENCY",
+    "ACHIEVED_DATA_RATE",
+    "ACM_MARGIN",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamerflBudgetTerm(rflBudgetTerm e) {
-  if (::flatbuffers::IsOutRange(e, rflBudgetTerm_UNSPECIFIED, rflBudgetTerm_SIGNAL_TO_INTERFERENCE_PLUS_NOISE)) return "";
+  if (::flatbuffers::IsOutRange(e, rflBudgetTerm_UNSPECIFIED, rflBudgetTerm_ACM_MARGIN)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesrflBudgetTerm()[index];
 }
@@ -1093,6 +1116,217 @@ inline ::flatbuffers::Offset<RFLEndpoint> CreateRFLEndpointDirect(
       POLARIZATION);
 }
 
+/// One modulation-and-coding choice available to a link. The table carries
+/// engineering capability only; catalogue or recommendation names belong in
+/// ID / NAME and provenance data, never in the schema vocabulary.
+struct RFLModCod FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFLModCodBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MODCOD_ID = 4,
+    VT_NAME = 6,
+    VT_MODULATION = 8,
+    VT_CODING = 10,
+    VT_CODE_RATE = 12,
+    VT_BITS_PER_SYMBOL = 14,
+    VT_SPECTRAL_EFFICIENCY_BPS_HZ = 16,
+    VT_REQUIRED_ES_N0_DB = 18,
+    VT_REQUIRED_EB_N0_DB = 20,
+    VT_TARGET_BIT_ERROR_RATE = 22,
+    VT_TARGET_BLOCK_ERROR_RATE = 24,
+    VT_REQUIRED_MARGIN_DB = 26,
+    VT_MAXIMUM_DATA_RATE_BPS = 28
+  };
+  /// Stable identifier within the containing link's MODCOD_SET.
+  const ::flatbuffers::String *MODCOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODCOD_ID);
+  }
+  /// Producer-supplied display name.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const ::flatbuffers::String *MODULATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULATION);
+  }
+  const ::flatbuffers::String *CODING() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CODING);
+  }
+  /// Information bits divided by coded bits, in (0,1].
+  double CODE_RATE() const {
+    return GetField<double>(VT_CODE_RATE, 0.0);
+  }
+  double BITS_PER_SYMBOL() const {
+    return GetField<double>(VT_BITS_PER_SYMBOL, 0.0);
+  }
+  double SPECTRAL_EFFICIENCY_BPS_HZ() const {
+    return GetField<double>(VT_SPECTRAL_EFFICIENCY_BPS_HZ, 0.0);
+  }
+  double REQUIRED_ES_N0_DB() const {
+    return GetField<double>(VT_REQUIRED_ES_N0_DB, 0.0);
+  }
+  double REQUIRED_EB_N0_DB() const {
+    return GetField<double>(VT_REQUIRED_EB_N0_DB, 0.0);
+  }
+  double TARGET_BIT_ERROR_RATE() const {
+    return GetField<double>(VT_TARGET_BIT_ERROR_RATE, 0.0);
+  }
+  double TARGET_BLOCK_ERROR_RATE() const {
+    return GetField<double>(VT_TARGET_BLOCK_ERROR_RATE, 0.0);
+  }
+  /// Additional implementation margin required before this entry is selected.
+  double REQUIRED_MARGIN_DB() const {
+    return GetField<double>(VT_REQUIRED_MARGIN_DB, 0.0);
+  }
+  /// Optional ceiling imposed by framing or implementation, bits per second.
+  double MAXIMUM_DATA_RATE_BPS() const {
+    return GetField<double>(VT_MAXIMUM_DATA_RATE_BPS, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_MODCOD_ID) &&
+           verifier.VerifyString(MODCOD_ID()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_MODULATION) &&
+           verifier.VerifyString(MODULATION()) &&
+           VerifyOffset(verifier, VT_CODING) &&
+           verifier.VerifyString(CODING()) &&
+           VerifyField<double>(verifier, VT_CODE_RATE, 8) &&
+           VerifyField<double>(verifier, VT_BITS_PER_SYMBOL, 8) &&
+           VerifyField<double>(verifier, VT_SPECTRAL_EFFICIENCY_BPS_HZ, 8) &&
+           VerifyField<double>(verifier, VT_REQUIRED_ES_N0_DB, 8) &&
+           VerifyField<double>(verifier, VT_REQUIRED_EB_N0_DB, 8) &&
+           VerifyField<double>(verifier, VT_TARGET_BIT_ERROR_RATE, 8) &&
+           VerifyField<double>(verifier, VT_TARGET_BLOCK_ERROR_RATE, 8) &&
+           VerifyField<double>(verifier, VT_REQUIRED_MARGIN_DB, 8) &&
+           VerifyField<double>(verifier, VT_MAXIMUM_DATA_RATE_BPS, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFLModCodBuilder {
+  typedef RFLModCod Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_MODCOD_ID(::flatbuffers::Offset<::flatbuffers::String> MODCOD_ID) {
+    fbb_.AddOffset(RFLModCod::VT_MODCOD_ID, MODCOD_ID);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(RFLModCod::VT_NAME, NAME);
+  }
+  void add_MODULATION(::flatbuffers::Offset<::flatbuffers::String> MODULATION) {
+    fbb_.AddOffset(RFLModCod::VT_MODULATION, MODULATION);
+  }
+  void add_CODING(::flatbuffers::Offset<::flatbuffers::String> CODING) {
+    fbb_.AddOffset(RFLModCod::VT_CODING, CODING);
+  }
+  void add_CODE_RATE(double CODE_RATE) {
+    fbb_.AddElement<double>(RFLModCod::VT_CODE_RATE, CODE_RATE, 0.0);
+  }
+  void add_BITS_PER_SYMBOL(double BITS_PER_SYMBOL) {
+    fbb_.AddElement<double>(RFLModCod::VT_BITS_PER_SYMBOL, BITS_PER_SYMBOL, 0.0);
+  }
+  void add_SPECTRAL_EFFICIENCY_BPS_HZ(double SPECTRAL_EFFICIENCY_BPS_HZ) {
+    fbb_.AddElement<double>(RFLModCod::VT_SPECTRAL_EFFICIENCY_BPS_HZ, SPECTRAL_EFFICIENCY_BPS_HZ, 0.0);
+  }
+  void add_REQUIRED_ES_N0_DB(double REQUIRED_ES_N0_DB) {
+    fbb_.AddElement<double>(RFLModCod::VT_REQUIRED_ES_N0_DB, REQUIRED_ES_N0_DB, 0.0);
+  }
+  void add_REQUIRED_EB_N0_DB(double REQUIRED_EB_N0_DB) {
+    fbb_.AddElement<double>(RFLModCod::VT_REQUIRED_EB_N0_DB, REQUIRED_EB_N0_DB, 0.0);
+  }
+  void add_TARGET_BIT_ERROR_RATE(double TARGET_BIT_ERROR_RATE) {
+    fbb_.AddElement<double>(RFLModCod::VT_TARGET_BIT_ERROR_RATE, TARGET_BIT_ERROR_RATE, 0.0);
+  }
+  void add_TARGET_BLOCK_ERROR_RATE(double TARGET_BLOCK_ERROR_RATE) {
+    fbb_.AddElement<double>(RFLModCod::VT_TARGET_BLOCK_ERROR_RATE, TARGET_BLOCK_ERROR_RATE, 0.0);
+  }
+  void add_REQUIRED_MARGIN_DB(double REQUIRED_MARGIN_DB) {
+    fbb_.AddElement<double>(RFLModCod::VT_REQUIRED_MARGIN_DB, REQUIRED_MARGIN_DB, 0.0);
+  }
+  void add_MAXIMUM_DATA_RATE_BPS(double MAXIMUM_DATA_RATE_BPS) {
+    fbb_.AddElement<double>(RFLModCod::VT_MAXIMUM_DATA_RATE_BPS, MAXIMUM_DATA_RATE_BPS, 0.0);
+  }
+  explicit RFLModCodBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFLModCod> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFLModCod>(end);
+    fbb_.Required(o, RFLModCod::VT_MODCOD_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFLModCod> CreateRFLModCod(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> MODCOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CODING = 0,
+    double CODE_RATE = 0.0,
+    double BITS_PER_SYMBOL = 0.0,
+    double SPECTRAL_EFFICIENCY_BPS_HZ = 0.0,
+    double REQUIRED_ES_N0_DB = 0.0,
+    double REQUIRED_EB_N0_DB = 0.0,
+    double TARGET_BIT_ERROR_RATE = 0.0,
+    double TARGET_BLOCK_ERROR_RATE = 0.0,
+    double REQUIRED_MARGIN_DB = 0.0,
+    double MAXIMUM_DATA_RATE_BPS = 0.0) {
+  RFLModCodBuilder builder_(_fbb);
+  builder_.add_MAXIMUM_DATA_RATE_BPS(MAXIMUM_DATA_RATE_BPS);
+  builder_.add_REQUIRED_MARGIN_DB(REQUIRED_MARGIN_DB);
+  builder_.add_TARGET_BLOCK_ERROR_RATE(TARGET_BLOCK_ERROR_RATE);
+  builder_.add_TARGET_BIT_ERROR_RATE(TARGET_BIT_ERROR_RATE);
+  builder_.add_REQUIRED_EB_N0_DB(REQUIRED_EB_N0_DB);
+  builder_.add_REQUIRED_ES_N0_DB(REQUIRED_ES_N0_DB);
+  builder_.add_SPECTRAL_EFFICIENCY_BPS_HZ(SPECTRAL_EFFICIENCY_BPS_HZ);
+  builder_.add_BITS_PER_SYMBOL(BITS_PER_SYMBOL);
+  builder_.add_CODE_RATE(CODE_RATE);
+  builder_.add_CODING(CODING);
+  builder_.add_MODULATION(MODULATION);
+  builder_.add_NAME(NAME);
+  builder_.add_MODCOD_ID(MODCOD_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFLModCod> CreateRFLModCodDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *MODCOD_ID = nullptr,
+    const char *NAME = nullptr,
+    const char *MODULATION = nullptr,
+    const char *CODING = nullptr,
+    double CODE_RATE = 0.0,
+    double BITS_PER_SYMBOL = 0.0,
+    double SPECTRAL_EFFICIENCY_BPS_HZ = 0.0,
+    double REQUIRED_ES_N0_DB = 0.0,
+    double REQUIRED_EB_N0_DB = 0.0,
+    double TARGET_BIT_ERROR_RATE = 0.0,
+    double TARGET_BLOCK_ERROR_RATE = 0.0,
+    double REQUIRED_MARGIN_DB = 0.0,
+    double MAXIMUM_DATA_RATE_BPS = 0.0) {
+  auto MODCOD_ID__ = MODCOD_ID ? _fbb.CreateString(MODCOD_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto MODULATION__ = MODULATION ? _fbb.CreateString(MODULATION) : 0;
+  auto CODING__ = CODING ? _fbb.CreateString(CODING) : 0;
+  return CreateRFLModCod(
+      _fbb,
+      MODCOD_ID__,
+      NAME__,
+      MODULATION__,
+      CODING__,
+      CODE_RATE,
+      BITS_PER_SYMBOL,
+      SPECTRAL_EFFICIENCY_BPS_HZ,
+      REQUIRED_ES_N0_DB,
+      REQUIRED_EB_N0_DB,
+      TARGET_BIT_ERROR_RATE,
+      TARGET_BLOCK_ERROR_RATE,
+      REQUIRED_MARGIN_DB,
+      MAXIMUM_DATA_RATE_BPS);
+}
+
 /// One link whose budget is sampled by this record.
 struct RFLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFLLinkBuilder Builder;
@@ -1116,7 +1350,9 @@ struct RFLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RECEIVER_GROUP_ID = 36,
     VT_CHANNEL_GROUP_ID = 38,
     VT_CONSTELLATION = 40,
-    VT_SERVICE = 42
+    VT_SERVICE = 42,
+    VT_MODCOD_SET = 44,
+    VT_ACM_ENABLED = 46
   };
   /// Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and
   /// `$LKS.ID` when the same link also has an operational-state record.
@@ -1204,6 +1440,15 @@ struct RFLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SERVICE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SERVICE);
   }
+  /// Ordered adaptive modulation-and-coding choices. Per-sample
+  /// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<RFLModCod>> *MODCOD_SET() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<RFLModCod>> *>(VT_MODCOD_SET);
+  }
+  /// Whether the producer evaluated adaptive selection for this link.
+  bool ACM_ENABLED() const {
+    return GetField<uint8_t>(VT_ACM_ENABLED, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1238,6 +1483,10 @@ struct RFLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CONSTELLATION()) &&
            VerifyOffset(verifier, VT_SERVICE) &&
            verifier.VerifyString(SERVICE()) &&
+           VerifyOffset(verifier, VT_MODCOD_SET) &&
+           verifier.VerifyVector(MODCOD_SET()) &&
+           verifier.VerifyVectorOfTables(MODCOD_SET()) &&
+           VerifyField<uint8_t>(verifier, VT_ACM_ENABLED, 1) &&
            verifier.EndTable();
   }
 };
@@ -1306,6 +1555,12 @@ struct RFLLinkBuilder {
   void add_SERVICE(::flatbuffers::Offset<::flatbuffers::String> SERVICE) {
     fbb_.AddOffset(RFLLink::VT_SERVICE, SERVICE);
   }
+  void add_MODCOD_SET(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RFLModCod>>> MODCOD_SET) {
+    fbb_.AddOffset(RFLLink::VT_MODCOD_SET, MODCOD_SET);
+  }
+  void add_ACM_ENABLED(bool ACM_ENABLED) {
+    fbb_.AddElement<uint8_t>(RFLLink::VT_ACM_ENABLED, static_cast<uint8_t>(ACM_ENABLED), 0);
+  }
   explicit RFLLinkBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1341,7 +1596,9 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLink(
     ::flatbuffers::Offset<::flatbuffers::String> RECEIVER_GROUP_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CHANNEL_GROUP_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CONSTELLATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SERVICE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> SERVICE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RFLModCod>>> MODCOD_SET = 0,
+    bool ACM_ENABLED = false) {
   RFLLinkBuilder builder_(_fbb);
   builder_.add_THRESHOLD_VALUE(THRESHOLD_VALUE);
   builder_.add_DATA_RATE_BPS(DATA_RATE_BPS);
@@ -1349,6 +1606,7 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLink(
   builder_.add_CODE_RATE(CODE_RATE);
   builder_.add_BANDWIDTH_MHZ(BANDWIDTH_MHZ);
   builder_.add_CENTER_FREQUENCY_MHZ(CENTER_FREQUENCY_MHZ);
+  builder_.add_MODCOD_SET(MODCOD_SET);
   builder_.add_SERVICE(SERVICE);
   builder_.add_CONSTELLATION(CONSTELLATION);
   builder_.add_CHANNEL_GROUP_ID(CHANNEL_GROUP_ID);
@@ -1360,6 +1618,7 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLink(
   builder_.add_TRANSMIT_ENDPOINT(TRANSMIT_ENDPOINT);
   builder_.add_LINK_NAME(LINK_NAME);
   builder_.add_LINK_ID(LINK_ID);
+  builder_.add_ACM_ENABLED(ACM_ENABLED);
   builder_.add_THRESHOLD_COMPARISON(THRESHOLD_COMPARISON);
   builder_.add_THRESHOLD_TERM(THRESHOLD_TERM);
   builder_.add_LINK_KIND(LINK_KIND);
@@ -1387,7 +1646,9 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLinkDirect(
     const char *RECEIVER_GROUP_ID = nullptr,
     const char *CHANNEL_GROUP_ID = nullptr,
     const char *CONSTELLATION = nullptr,
-    const char *SERVICE = nullptr) {
+    const char *SERVICE = nullptr,
+    const std::vector<::flatbuffers::Offset<RFLModCod>> *MODCOD_SET = nullptr,
+    bool ACM_ENABLED = false) {
   auto LINK_ID__ = LINK_ID ? _fbb.CreateString(LINK_ID) : 0;
   auto LINK_NAME__ = LINK_NAME ? _fbb.CreateString(LINK_NAME) : 0;
   auto MODULATION__ = MODULATION ? _fbb.CreateString(MODULATION) : 0;
@@ -1397,6 +1658,7 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLinkDirect(
   auto CHANNEL_GROUP_ID__ = CHANNEL_GROUP_ID ? _fbb.CreateString(CHANNEL_GROUP_ID) : 0;
   auto CONSTELLATION__ = CONSTELLATION ? _fbb.CreateString(CONSTELLATION) : 0;
   auto SERVICE__ = SERVICE ? _fbb.CreateString(SERVICE) : 0;
+  auto MODCOD_SET__ = MODCOD_SET ? _fbb.CreateVector<::flatbuffers::Offset<RFLModCod>>(*MODCOD_SET) : 0;
   return CreateRFLLink(
       _fbb,
       LINK_ID__,
@@ -1418,7 +1680,9 @@ inline ::flatbuffers::Offset<RFLLink> CreateRFLLinkDirect(
       RECEIVER_GROUP_ID__,
       CHANNEL_GROUP_ID__,
       CONSTELLATION__,
-      SERVICE__);
+      SERVICE__,
+      MODCOD_SET__,
+      ACM_ENABLED);
 }
 
 /// One interfering contribution to one sample. SPARSE: entries exist only
@@ -1860,7 +2124,10 @@ struct RFLProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RETRIEVED_AT = 26,
     VT_LICENSE = 28,
     VT_NON_COMMERCIAL_ONLY = 30,
-    VT_CITATION = 32
+    VT_CITATION = 32,
+    VT_MODULE_ID = 34,
+    VT_MODULE_VERSION = 36,
+    VT_MODULE_CONTENT_HASH = 38
   };
   rflMethod METHOD() const {
     return static_cast<rflMethod>(GetField<int8_t>(VT_METHOD, 0));
@@ -1926,6 +2193,18 @@ struct RFLProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CITATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CITATION);
   }
+  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  /// MODELS remains the per-budget-term attribution surface.
+  const ::flatbuffers::String *MODULE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_ID);
+  }
+  const ::flatbuffers::String *MODULE_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_VERSION);
+  }
+  /// Content hash of the exact producing WASM artifact.
+  const ::flatbuffers::String *MODULE_CONTENT_HASH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_CONTENT_HASH);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1955,6 +2234,12 @@ struct RFLProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_NON_COMMERCIAL_ONLY, 1) &&
            VerifyOffset(verifier, VT_CITATION) &&
            verifier.VerifyString(CITATION()) &&
+           VerifyOffset(verifier, VT_MODULE_ID) &&
+           verifier.VerifyString(MODULE_ID()) &&
+           VerifyOffset(verifier, VT_MODULE_VERSION) &&
+           verifier.VerifyString(MODULE_VERSION()) &&
+           VerifyOffset(verifier, VT_MODULE_CONTENT_HASH) &&
+           verifier.VerifyString(MODULE_CONTENT_HASH()) &&
            verifier.EndTable();
   }
 };
@@ -2008,6 +2293,15 @@ struct RFLProvenanceBuilder {
   void add_CITATION(::flatbuffers::Offset<::flatbuffers::String> CITATION) {
     fbb_.AddOffset(RFLProvenance::VT_CITATION, CITATION);
   }
+  void add_MODULE_ID(::flatbuffers::Offset<::flatbuffers::String> MODULE_ID) {
+    fbb_.AddOffset(RFLProvenance::VT_MODULE_ID, MODULE_ID);
+  }
+  void add_MODULE_VERSION(::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION) {
+    fbb_.AddOffset(RFLProvenance::VT_MODULE_VERSION, MODULE_VERSION);
+  }
+  void add_MODULE_CONTENT_HASH(::flatbuffers::Offset<::flatbuffers::String> MODULE_CONTENT_HASH) {
+    fbb_.AddOffset(RFLProvenance::VT_MODULE_CONTENT_HASH, MODULE_CONTENT_HASH);
+  }
   explicit RFLProvenanceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2036,11 +2330,17 @@ inline ::flatbuffers::Offset<RFLProvenance> CreateRFLProvenance(
     uint64_t RETRIEVED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
     bool NON_COMMERCIAL_ONLY = false,
-    ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_CONTENT_HASH = 0) {
   RFLProvenanceBuilder builder_(_fbb);
   builder_.add_RETRIEVED_AT(RETRIEVED_AT);
   builder_.add_COMPUTED_AT(COMPUTED_AT);
   builder_.add_SAMPLING_STEP_S(SAMPLING_STEP_S);
+  builder_.add_MODULE_CONTENT_HASH(MODULE_CONTENT_HASH);
+  builder_.add_MODULE_VERSION(MODULE_VERSION);
+  builder_.add_MODULE_ID(MODULE_ID);
   builder_.add_CITATION(CITATION);
   builder_.add_LICENSE(LICENSE);
   builder_.add_TERRAIN_DATASET(TERRAIN_DATASET);
@@ -2072,7 +2372,10 @@ inline ::flatbuffers::Offset<RFLProvenance> CreateRFLProvenanceDirect(
     uint64_t RETRIEVED_AT = 0,
     const char *LICENSE = nullptr,
     bool NON_COMMERCIAL_ONLY = false,
-    const char *CITATION = nullptr) {
+    const char *CITATION = nullptr,
+    const char *MODULE_ID = nullptr,
+    const char *MODULE_VERSION = nullptr,
+    const char *MODULE_CONTENT_HASH = nullptr) {
   auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
   auto SOURCE_QUERY__ = SOURCE_QUERY ? _fbb.CreateString(SOURCE_QUERY) : 0;
   auto PROPAGATOR_ID__ = PROPAGATOR_ID ? _fbb.CreateString(PROPAGATOR_ID) : 0;
@@ -2083,6 +2386,9 @@ inline ::flatbuffers::Offset<RFLProvenance> CreateRFLProvenanceDirect(
   auto TERRAIN_DATASET__ = TERRAIN_DATASET ? _fbb.CreateString(TERRAIN_DATASET) : 0;
   auto LICENSE__ = LICENSE ? _fbb.CreateString(LICENSE) : 0;
   auto CITATION__ = CITATION ? _fbb.CreateString(CITATION) : 0;
+  auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
+  auto MODULE_VERSION__ = MODULE_VERSION ? _fbb.CreateString(MODULE_VERSION) : 0;
+  auto MODULE_CONTENT_HASH__ = MODULE_CONTENT_HASH ? _fbb.CreateString(MODULE_CONTENT_HASH) : 0;
   return CreateRFLProvenance(
       _fbb,
       METHOD,
@@ -2099,7 +2405,10 @@ inline ::flatbuffers::Offset<RFLProvenance> CreateRFLProvenanceDirect(
       RETRIEVED_AT,
       LICENSE__,
       NON_COMMERCIAL_ONLY,
-      CITATION__);
+      CITATION__,
+      MODULE_ID__,
+      MODULE_VERSION__,
+      MODULE_CONTENT_HASH__);
 }
 
 /// RF Link Sample
@@ -2156,7 +2465,15 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PROVENANCE = 98,
     VT_COMPUTED_AT = 100,
     VT_PRODUCER_ID = 102,
-    VT_SIGNATURE = 104
+    VT_SIGNATURE = 104,
+    VT_CANONICAL_JSON_SIGNATURE = 106,
+    VT_SELECTED_MODCOD_INDEX = 108,
+    VT_SELECTED_MODCOD_VALID = 110,
+    VT_SPECTRAL_EFFICIENCY_BPS_HZ = 112,
+    VT_ACHIEVED_DATA_RATE_BPS = 114,
+    VT_ACM_MARGIN_DB = 116,
+    VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = 118,
+    VT_BLOCK_ERROR_RATE = 120
   };
   /// Stable identifier of this sample set.
   const ::flatbuffers::String *RFL_ID() const {
@@ -2375,9 +2692,45 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PRODUCER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRODUCER_ID);
   }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
+  }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  const ::flatbuffers::Vector<uint8_t> *CANONICAL_JSON_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CANONICAL_JSON_SIGNATURE);
+  }
+  /// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  const ::flatbuffers::Vector<uint32_t> *SELECTED_MODCOD_INDEX() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_SELECTED_MODCOD_INDEX);
+  }
+  const ::flatbuffers::Vector<uint8_t> *SELECTED_MODCOD_VALID() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SELECTED_MODCOD_VALID);
+  }
+  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  const ::flatbuffers::Vector<double> *SPECTRAL_EFFICIENCY_BPS_HZ() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SPECTRAL_EFFICIENCY_BPS_HZ);
+  }
+  /// Delivered information rate after adaptive selection, bits per second.
+  const ::flatbuffers::Vector<double> *ACHIEVED_DATA_RATE_BPS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ACHIEVED_DATA_RATE_BPS);
+  }
+  /// Margin above the selected entry's threshold, dB.
+  const ::flatbuffers::Vector<double> *ACM_MARGIN_DB() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ACM_MARGIN_DB);
+  }
+  /// Symbol energy to noise spectral density, dB.
+  const ::flatbuffers::Vector<double> *ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  }
+  /// Decoded block error probability [0-1].
+  const ::flatbuffers::Vector<double> *BLOCK_ERROR_RATE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_BLOCK_ERROR_RATE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -2484,6 +2837,22 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PRODUCER_ID()) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyVector(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_CANONICAL_JSON_SIGNATURE) &&
+           verifier.VerifyVector(CANONICAL_JSON_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_SELECTED_MODCOD_INDEX) &&
+           verifier.VerifyVector(SELECTED_MODCOD_INDEX()) &&
+           VerifyOffset(verifier, VT_SELECTED_MODCOD_VALID) &&
+           verifier.VerifyVector(SELECTED_MODCOD_VALID()) &&
+           VerifyOffset(verifier, VT_SPECTRAL_EFFICIENCY_BPS_HZ) &&
+           verifier.VerifyVector(SPECTRAL_EFFICIENCY_BPS_HZ()) &&
+           VerifyOffset(verifier, VT_ACHIEVED_DATA_RATE_BPS) &&
+           verifier.VerifyVector(ACHIEVED_DATA_RATE_BPS()) &&
+           VerifyOffset(verifier, VT_ACM_MARGIN_DB) &&
+           verifier.VerifyVector(ACM_MARGIN_DB()) &&
+           VerifyOffset(verifier, VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) &&
+           verifier.VerifyVector(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB()) &&
+           VerifyOffset(verifier, VT_BLOCK_ERROR_RATE) &&
+           verifier.VerifyVector(BLOCK_ERROR_RATE()) &&
            verifier.EndTable();
   }
 };
@@ -2645,6 +3014,30 @@ struct RFLBuilder {
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
     fbb_.AddOffset(RFL::VT_SIGNATURE, SIGNATURE);
   }
+  void add_CANONICAL_JSON_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CANONICAL_JSON_SIGNATURE) {
+    fbb_.AddOffset(RFL::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  void add_SELECTED_MODCOD_INDEX(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> SELECTED_MODCOD_INDEX) {
+    fbb_.AddOffset(RFL::VT_SELECTED_MODCOD_INDEX, SELECTED_MODCOD_INDEX);
+  }
+  void add_SELECTED_MODCOD_VALID(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SELECTED_MODCOD_VALID) {
+    fbb_.AddOffset(RFL::VT_SELECTED_MODCOD_VALID, SELECTED_MODCOD_VALID);
+  }
+  void add_SPECTRAL_EFFICIENCY_BPS_HZ(::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_EFFICIENCY_BPS_HZ) {
+    fbb_.AddOffset(RFL::VT_SPECTRAL_EFFICIENCY_BPS_HZ, SPECTRAL_EFFICIENCY_BPS_HZ);
+  }
+  void add_ACHIEVED_DATA_RATE_BPS(::flatbuffers::Offset<::flatbuffers::Vector<double>> ACHIEVED_DATA_RATE_BPS) {
+    fbb_.AddOffset(RFL::VT_ACHIEVED_DATA_RATE_BPS, ACHIEVED_DATA_RATE_BPS);
+  }
+  void add_ACM_MARGIN_DB(::flatbuffers::Offset<::flatbuffers::Vector<double>> ACM_MARGIN_DB) {
+    fbb_.AddOffset(RFL::VT_ACM_MARGIN_DB, ACM_MARGIN_DB);
+  }
+  void add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(::flatbuffers::Offset<::flatbuffers::Vector<double>> ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) {
+    fbb_.AddOffset(RFL::VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  }
+  void add_BLOCK_ERROR_RATE(::flatbuffers::Offset<::flatbuffers::Vector<double>> BLOCK_ERROR_RATE) {
+    fbb_.AddOffset(RFL::VT_BLOCK_ERROR_RATE, BLOCK_ERROR_RATE);
+  }
   explicit RFLBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2713,9 +3106,25 @@ inline ::flatbuffers::Offset<RFL> CreateRFL(
     ::flatbuffers::Offset<RFLProvenance> PROVENANCE = 0,
     uint64_t COMPUTED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRODUCER_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CANONICAL_JSON_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> SELECTED_MODCOD_INDEX = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SELECTED_MODCOD_VALID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_EFFICIENCY_BPS_HZ = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ACHIEVED_DATA_RATE_BPS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ACM_MARGIN_DB = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> BLOCK_ERROR_RATE = 0) {
   RFLBuilder builder_(_fbb);
   builder_.add_COMPUTED_AT(COMPUTED_AT);
+  builder_.add_BLOCK_ERROR_RATE(BLOCK_ERROR_RATE);
+  builder_.add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  builder_.add_ACM_MARGIN_DB(ACM_MARGIN_DB);
+  builder_.add_ACHIEVED_DATA_RATE_BPS(ACHIEVED_DATA_RATE_BPS);
+  builder_.add_SPECTRAL_EFFICIENCY_BPS_HZ(SPECTRAL_EFFICIENCY_BPS_HZ);
+  builder_.add_SELECTED_MODCOD_VALID(SELECTED_MODCOD_VALID);
+  builder_.add_SELECTED_MODCOD_INDEX(SELECTED_MODCOD_INDEX);
+  builder_.add_CANONICAL_JSON_SIGNATURE(CANONICAL_JSON_SIGNATURE);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_PRODUCER_ID(PRODUCER_ID);
   builder_.add_PROVENANCE(PROVENANCE);
@@ -2821,7 +3230,15 @@ inline ::flatbuffers::Offset<RFL> CreateRFLDirect(
     ::flatbuffers::Offset<RFLProvenance> PROVENANCE = 0,
     uint64_t COMPUTED_AT = 0,
     const char *PRODUCER_ID = nullptr,
-    const std::vector<uint8_t> *SIGNATURE = nullptr) {
+    const std::vector<uint8_t> *SIGNATURE = nullptr,
+    const std::vector<uint8_t> *CANONICAL_JSON_SIGNATURE = nullptr,
+    const std::vector<uint32_t> *SELECTED_MODCOD_INDEX = nullptr,
+    const std::vector<uint8_t> *SELECTED_MODCOD_VALID = nullptr,
+    const std::vector<double> *SPECTRAL_EFFICIENCY_BPS_HZ = nullptr,
+    const std::vector<double> *ACHIEVED_DATA_RATE_BPS = nullptr,
+    const std::vector<double> *ACM_MARGIN_DB = nullptr,
+    const std::vector<double> *ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = nullptr,
+    const std::vector<double> *BLOCK_ERROR_RATE = nullptr) {
   auto RFL_ID__ = RFL_ID ? _fbb.CreateString(RFL_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
@@ -2869,6 +3286,14 @@ inline ::flatbuffers::Offset<RFL> CreateRFLDirect(
   auto LIMITING_CONSTRAINT_NOTE__ = LIMITING_CONSTRAINT_NOTE ? _fbb.CreateString(LIMITING_CONSTRAINT_NOTE) : 0;
   auto PRODUCER_ID__ = PRODUCER_ID ? _fbb.CreateString(PRODUCER_ID) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
+  auto CANONICAL_JSON_SIGNATURE__ = CANONICAL_JSON_SIGNATURE ? _fbb.CreateVector<uint8_t>(*CANONICAL_JSON_SIGNATURE) : 0;
+  auto SELECTED_MODCOD_INDEX__ = SELECTED_MODCOD_INDEX ? _fbb.CreateVector<uint32_t>(*SELECTED_MODCOD_INDEX) : 0;
+  auto SELECTED_MODCOD_VALID__ = SELECTED_MODCOD_VALID ? _fbb.CreateVector<uint8_t>(*SELECTED_MODCOD_VALID) : 0;
+  auto SPECTRAL_EFFICIENCY_BPS_HZ__ = SPECTRAL_EFFICIENCY_BPS_HZ ? _fbb.CreateVector<double>(*SPECTRAL_EFFICIENCY_BPS_HZ) : 0;
+  auto ACHIEVED_DATA_RATE_BPS__ = ACHIEVED_DATA_RATE_BPS ? _fbb.CreateVector<double>(*ACHIEVED_DATA_RATE_BPS) : 0;
+  auto ACM_MARGIN_DB__ = ACM_MARGIN_DB ? _fbb.CreateVector<double>(*ACM_MARGIN_DB) : 0;
+  auto ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB__ = ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB ? _fbb.CreateVector<double>(*ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) : 0;
+  auto BLOCK_ERROR_RATE__ = BLOCK_ERROR_RATE ? _fbb.CreateVector<double>(*BLOCK_ERROR_RATE) : 0;
   return CreateRFL(
       _fbb,
       RFL_ID__,
@@ -2921,7 +3346,15 @@ inline ::flatbuffers::Offset<RFL> CreateRFLDirect(
       PROVENANCE,
       COMPUTED_AT,
       PRODUCER_ID__,
-      SIGNATURE__);
+      SIGNATURE__,
+      CANONICAL_JSON_SIGNATURE__,
+      SELECTED_MODCOD_INDEX__,
+      SELECTED_MODCOD_VALID__,
+      SPECTRAL_EFFICIENCY_BPS_HZ__,
+      ACHIEVED_DATA_RATE_BPS__,
+      ACM_MARGIN_DB__,
+      ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB__,
+      BLOCK_ERROR_RATE__);
 }
 
 inline const RFL *GetRFL(const void *buf) {

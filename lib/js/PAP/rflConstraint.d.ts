@@ -1,0 +1,49 @@
+/**
+ * The single condition that bound the link at a sample epoch — the answer to
+ * "why is this link not better than it is". Shared by `$ACI` intervals and
+ * `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.
+ *
+ * ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.
+ */
+export declare enum rflConstraint {
+    UNSPECIFIED = 0,
+    ELEVATION_MASK = 1,
+    TERRAIN_BLOCKAGE = 2,
+    /**
+     * A 3D obstacle intersected the path. The material that did it is named in
+     * RFLObstruction.MATERIAL_ID (`$RFS`).
+     */
+    OBSTACLE_BLOCKAGE = 3,
+    /**
+     * The path passed THROUGH an obstacle and paid its penetration loss.
+     */
+    MATERIAL_PENETRATION = 4,
+    RANGE_LIMIT = 5,
+    BEAM_EDGE = 6,
+    SLEW_RATE = 7,
+    ANTENNA_KEYHOLE = 8,
+    TRANSMIT_POWER_LIMIT = 9,
+    REGULATORY_POWER_LIMIT = 10,
+    GASEOUS_ABSORPTION = 11,
+    RAIN_ATTENUATION = 12,
+    CLOUD_FOG_ATTENUATION = 13,
+    SCINTILLATION = 14,
+    POLARIZATION_MISMATCH = 15,
+    POINTING_ERROR = 16,
+    RECEIVER_SENSITIVITY = 17,
+    NOISE_TEMPERATURE = 18,
+    INTERFERENCE = 19,
+    SUN_OUTAGE = 20,
+    BANDWIDTH_LIMIT = 21,
+    MODULATION_THRESHOLD = 22,
+    CODING_THRESHOLD = 23,
+    SCHEDULE_CONFLICT = 24,
+    CHANNEL_CAPACITY_LIMIT = 25,
+    EMITTER_UNAVAILABLE = 26,
+    /**
+     * The producer states a binding condition this enum cannot express. The
+     * verbatim description MUST be preserved in LIMITING_CONSTRAINT_NOTE.
+     */
+    OTHER = 27
+}
+//# sourceMappingURL=rflConstraint.d.ts.map

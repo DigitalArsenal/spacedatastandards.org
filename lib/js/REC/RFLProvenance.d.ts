@@ -80,6 +80,19 @@ export declare class RFLProvenance implements flatbuffers.IUnpackableObject<RFLP
      */
     CITATION(): string | null;
     CITATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+     * MODELS remains the per-budget-term attribution surface.
+     */
+    MODULE_ID(): string | null;
+    MODULE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    MODULE_VERSION(): string | null;
+    MODULE_VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Content hash of the exact producing WASM artifact.
+     */
+    MODULE_CONTENT_HASH(): string | null;
+    MODULE_CONTENT_HASH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startRFLProvenance(builder: flatbuffers.Builder): void;
     static addMethod(builder: flatbuffers.Builder, METHOD: rflMethod): void;
     static addSource(builder: flatbuffers.Builder, SOURCEOffset: flatbuffers.Offset): void;
@@ -98,8 +111,11 @@ export declare class RFLProvenance implements flatbuffers.IUnpackableObject<RFLP
     static addLicense(builder: flatbuffers.Builder, LICENSEOffset: flatbuffers.Offset): void;
     static addNonCommercialOnly(builder: flatbuffers.Builder, NON_COMMERCIAL_ONLY: boolean): void;
     static addCitation(builder: flatbuffers.Builder, CITATIONOffset: flatbuffers.Offset): void;
+    static addModuleId(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset): void;
+    static addModuleVersion(builder: flatbuffers.Builder, MODULE_VERSIONOffset: flatbuffers.Offset): void;
+    static addModuleContentHash(builder: flatbuffers.Builder, MODULE_CONTENT_HASHOffset: flatbuffers.Offset): void;
     static endRFLProvenance(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createRFLProvenance(builder: flatbuffers.Builder, METHOD: rflMethod, SOURCEOffset: flatbuffers.Offset, SOURCE_QUERYOffset: flatbuffers.Offset, PROPAGATOR_IDOffset: flatbuffers.Offset, PROPAGATOR_VERSIONOffset: flatbuffers.Offset, PROPAGATOR_CONFIGURATIONOffset: flatbuffers.Offset, SAMPLING_STEP_S: number, MODELSOffset: flatbuffers.Offset, ENVIRONMENT_DATASETOffset: flatbuffers.Offset, TERRAIN_DATASETOffset: flatbuffers.Offset, COMPUTED_AT: bigint, RETRIEVED_AT: bigint, LICENSEOffset: flatbuffers.Offset, NON_COMMERCIAL_ONLY: boolean, CITATIONOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRFLProvenance(builder: flatbuffers.Builder, METHOD: rflMethod, SOURCEOffset: flatbuffers.Offset, SOURCE_QUERYOffset: flatbuffers.Offset, PROPAGATOR_IDOffset: flatbuffers.Offset, PROPAGATOR_VERSIONOffset: flatbuffers.Offset, PROPAGATOR_CONFIGURATIONOffset: flatbuffers.Offset, SAMPLING_STEP_S: number, MODELSOffset: flatbuffers.Offset, ENVIRONMENT_DATASETOffset: flatbuffers.Offset, TERRAIN_DATASETOffset: flatbuffers.Offset, COMPUTED_AT: bigint, RETRIEVED_AT: bigint, LICENSEOffset: flatbuffers.Offset, NON_COMMERCIAL_ONLY: boolean, CITATIONOffset: flatbuffers.Offset, MODULE_IDOffset: flatbuffers.Offset, MODULE_VERSIONOffset: flatbuffers.Offset, MODULE_CONTENT_HASHOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): RFLProvenanceT;
     unpackTo(_o: RFLProvenanceT): void;
 }
@@ -119,7 +135,10 @@ export declare class RFLProvenanceT implements flatbuffers.IGeneratedObject {
     LICENSE: string | Uint8Array | null;
     NON_COMMERCIAL_ONLY: boolean;
     CITATION: string | Uint8Array | null;
-    constructor(METHOD?: rflMethod, SOURCE?: string | Uint8Array | null, SOURCE_QUERY?: string | Uint8Array | null, PROPAGATOR_ID?: string | Uint8Array | null, PROPAGATOR_VERSION?: string | Uint8Array | null, PROPAGATOR_CONFIGURATION?: string | Uint8Array | null, SAMPLING_STEP_S?: number, MODELS?: (RFLModelBindingT)[], ENVIRONMENT_DATASET?: string | Uint8Array | null, TERRAIN_DATASET?: string | Uint8Array | null, COMPUTED_AT?: bigint, RETRIEVED_AT?: bigint, LICENSE?: string | Uint8Array | null, NON_COMMERCIAL_ONLY?: boolean, CITATION?: string | Uint8Array | null);
+    MODULE_ID: string | Uint8Array | null;
+    MODULE_VERSION: string | Uint8Array | null;
+    MODULE_CONTENT_HASH: string | Uint8Array | null;
+    constructor(METHOD?: rflMethod, SOURCE?: string | Uint8Array | null, SOURCE_QUERY?: string | Uint8Array | null, PROPAGATOR_ID?: string | Uint8Array | null, PROPAGATOR_VERSION?: string | Uint8Array | null, PROPAGATOR_CONFIGURATION?: string | Uint8Array | null, SAMPLING_STEP_S?: number, MODELS?: (RFLModelBindingT)[], ENVIRONMENT_DATASET?: string | Uint8Array | null, TERRAIN_DATASET?: string | Uint8Array | null, COMPUTED_AT?: bigint, RETRIEVED_AT?: bigint, LICENSE?: string | Uint8Array | null, NON_COMMERCIAL_ONLY?: boolean, CITATION?: string | Uint8Array | null, MODULE_ID?: string | Uint8Array | null, MODULE_VERSION?: string | Uint8Array | null, MODULE_CONTENT_HASH?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFLProvenance.d.ts.map

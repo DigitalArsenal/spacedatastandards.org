@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { RFLEndpoint, RFLEndpointT } from './RFLEndpoint.js';
+import { RFLModCod, RFLModCodT } from './RFLModCod.js';
 import { rflBudgetTerm } from './rflBudgetTerm.js';
 import { rflComparison } from './rflComparison.js';
 import { rflLinkKind } from './rflLinkKind.js';
@@ -97,6 +98,16 @@ export declare class RFLLink implements flatbuffers.IUnpackableObject<RFLLinkT> 
      */
     SERVICE(): string | null;
     SERVICE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Ordered adaptive modulation-and-coding choices. Per-sample
+     * SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+     */
+    MODCOD_SET(index: number, obj?: RFLModCod): RFLModCod | null;
+    modcodSetLength(): number;
+    /**
+     * Whether the producer evaluated adaptive selection for this link.
+     */
+    ACM_ENABLED(): boolean;
     static startRFLLink(builder: flatbuffers.Builder): void;
     static addLinkId(builder: flatbuffers.Builder, LINK_IDOffset: flatbuffers.Offset): void;
     static addLinkName(builder: flatbuffers.Builder, LINK_NAMEOffset: flatbuffers.Offset): void;
@@ -118,6 +129,10 @@ export declare class RFLLink implements flatbuffers.IUnpackableObject<RFLLinkT> 
     static addChannelGroupId(builder: flatbuffers.Builder, CHANNEL_GROUP_IDOffset: flatbuffers.Offset): void;
     static addConstellation(builder: flatbuffers.Builder, CONSTELLATIONOffset: flatbuffers.Offset): void;
     static addService(builder: flatbuffers.Builder, SERVICEOffset: flatbuffers.Offset): void;
+    static addModcodSet(builder: flatbuffers.Builder, MODCOD_SETOffset: flatbuffers.Offset): void;
+    static createModcodSetVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startModcodSetVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addAcmEnabled(builder: flatbuffers.Builder, ACM_ENABLED: boolean): void;
     static endRFLLink(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): RFLLinkT;
     unpackTo(_o: RFLLinkT): void;
@@ -143,7 +158,9 @@ export declare class RFLLinkT implements flatbuffers.IGeneratedObject {
     CHANNEL_GROUP_ID: string | Uint8Array | null;
     CONSTELLATION: string | Uint8Array | null;
     SERVICE: string | Uint8Array | null;
-    constructor(LINK_ID?: string | Uint8Array | null, LINK_NAME?: string | Uint8Array | null, LINK_KIND?: rflLinkKind, TRANSMIT_ENDPOINT?: RFLEndpointT | null, RECEIVE_ENDPOINT?: RFLEndpointT | null, CENTER_FREQUENCY_MHZ?: number, BANDWIDTH_MHZ?: number, MODULATION?: string | Uint8Array | null, CODING?: string | Uint8Array | null, CODE_RATE?: number, SYMBOL_RATE_BAUD?: number, DATA_RATE_BPS?: number, THRESHOLD_TERM?: rflBudgetTerm, THRESHOLD_VALUE?: number, THRESHOLD_UNITS?: string | Uint8Array | null, THRESHOLD_COMPARISON?: rflComparison, RECEIVER_GROUP_ID?: string | Uint8Array | null, CHANNEL_GROUP_ID?: string | Uint8Array | null, CONSTELLATION?: string | Uint8Array | null, SERVICE?: string | Uint8Array | null);
+    MODCOD_SET: (RFLModCodT)[];
+    ACM_ENABLED: boolean;
+    constructor(LINK_ID?: string | Uint8Array | null, LINK_NAME?: string | Uint8Array | null, LINK_KIND?: rflLinkKind, TRANSMIT_ENDPOINT?: RFLEndpointT | null, RECEIVE_ENDPOINT?: RFLEndpointT | null, CENTER_FREQUENCY_MHZ?: number, BANDWIDTH_MHZ?: number, MODULATION?: string | Uint8Array | null, CODING?: string | Uint8Array | null, CODE_RATE?: number, SYMBOL_RATE_BAUD?: number, DATA_RATE_BPS?: number, THRESHOLD_TERM?: rflBudgetTerm, THRESHOLD_VALUE?: number, THRESHOLD_UNITS?: string | Uint8Array | null, THRESHOLD_COMPARISON?: rflComparison, RECEIVER_GROUP_ID?: string | Uint8Array | null, CHANNEL_GROUP_ID?: string | Uint8Array | null, CONSTELLATION?: string | Uint8Array | null, SERVICE?: string | Uint8Array | null, MODCOD_SET?: (RFLModCodT)[], ACM_ENABLED?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFLLink.d.ts.map

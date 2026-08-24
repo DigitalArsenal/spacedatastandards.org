@@ -143,7 +143,9 @@ class ACI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Ed25519 signature by the producing `$EPM`.
+    # Ed25519 signature by the producing `$EPM` over the size-prefixed
+    # FlatBuffer projection with both 64-byte signature payloads zeroed while
+    # preserving their vectors and offsets.
     # ACI
     def SIGNATURE(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -171,8 +173,65 @@ class ACI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
+    # Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+    # field order, IDL capitalization, no insignificant whitespace, and both
+    # signature fields omitted.
+    # ACI
+    def CANONICAL_JSON_SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # ACI
+    def CANONICAL_JSON_SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # ACI
+    def CANONICAL_JSON_SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACI
+    def CANONICAL_JSON_SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Per-interval delivered volume grouped by selected modulation-and-coding
+    # entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+    # ACI
+    def DATA_VOLUME_BY_MODCOD(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACIDataVolumeByModCod import ACIDataVolumeByModCod
+            obj = ACIDataVolumeByModCod()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACI
+    def DATA_VOLUME_BY_MODCODLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACI
+    def DATA_VOLUME_BY_MODCODIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
 def ACIStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(14)
 
 def Start(builder):
     ACIStart(builder)
@@ -277,12 +336,53 @@ def ACICreateSIGNATUREVector(builder, data):
 def CreateSIGNATUREVector(builder, data):
     ACICreateSIGNATUREVector(builder, data)
 
+def ACIAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
+
+def AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    ACIAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+
+def ACIStartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return ACIStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+
+def ACICreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    ACICreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+
+def ACIAddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_VOLUME_BY_MODCOD), 0)
+
+def AddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD):
+    ACIAddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD)
+
+def ACIStartDATA_VOLUME_BY_MODCODVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDATA_VOLUME_BY_MODCODVector(builder, numElems):
+    return ACIStartDATA_VOLUME_BY_MODCODVector(builder, numElems)
+
+def ACICreateDATA_VOLUME_BY_MODCODVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDATA_VOLUME_BY_MODCODVector(builder, data):
+    ACICreateDATA_VOLUME_BY_MODCODVector(builder, data)
+
 def ACIEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return ACIEnd(builder)
 
+import ACIDataVolumeByModCod
 import ACIInterval
 import ACIProvenance
 try:
@@ -307,6 +407,8 @@ class ACIT(object):
         COMPUTED_AT = 0,
         PRODUCER_ID = None,
         SIGNATURE = None,
+        CANONICAL_JSON_SIGNATURE = None,
+        DATA_VOLUME_BY_MODCOD = None,
     ):
         self.ACI_ID = ACI_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -320,6 +422,8 @@ class ACIT(object):
         self.COMPUTED_AT = COMPUTED_AT  # type: int
         self.PRODUCER_ID = PRODUCER_ID  # type: Optional[str]
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.CANONICAL_JSON_SIGNATURE = CANONICAL_JSON_SIGNATURE  # type: Optional[List[int]]
+        self.DATA_VOLUME_BY_MODCOD = DATA_VOLUME_BY_MODCOD  # type: Optional[List[ACIDataVolumeByModCod.ACIDataVolumeByModCodT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -368,6 +472,21 @@ class ACIT(object):
                     self.SIGNATURE.append(ACI.SIGNATURE(i))
             else:
                 self.SIGNATURE = ACI.SIGNATUREAsNumpy()
+        if not ACI.CANONICAL_JSON_SIGNATUREIsNone():
+            if np is None:
+                self.CANONICAL_JSON_SIGNATURE = []
+                for i in range(ACI.CANONICAL_JSON_SIGNATURELength()):
+                    self.CANONICAL_JSON_SIGNATURE.append(ACI.CANONICAL_JSON_SIGNATURE(i))
+            else:
+                self.CANONICAL_JSON_SIGNATURE = ACI.CANONICAL_JSON_SIGNATUREAsNumpy()
+        if not ACI.DATA_VOLUME_BY_MODCODIsNone():
+            self.DATA_VOLUME_BY_MODCOD = []
+            for i in range(ACI.DATA_VOLUME_BY_MODCODLength()):
+                if ACI.DATA_VOLUME_BY_MODCOD(i) is None:
+                    self.DATA_VOLUME_BY_MODCOD.append(None)
+                else:
+                    aCIDataVolumeByModCod_ = ACIDataVolumeByModCod.ACIDataVolumeByModCodT.InitFromObj(ACI.DATA_VOLUME_BY_MODCOD(i))
+                    self.DATA_VOLUME_BY_MODCOD.append(aCIDataVolumeByModCod_)
 
     # ACIT
     def Pack(self, builder):
@@ -399,6 +518,22 @@ class ACIT(object):
                 for i in reversed(range(len(self.SIGNATURE))):
                     builder.PrependUint8(self.SIGNATURE[i])
                 SIGNATURE = builder.EndVector()
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            if np is not None and type(self.CANONICAL_JSON_SIGNATURE) is np.ndarray:
+                CANONICAL_JSON_SIGNATURE = builder.CreateNumpyVector(self.CANONICAL_JSON_SIGNATURE)
+            else:
+                ACIStartCANONICAL_JSON_SIGNATUREVector(builder, len(self.CANONICAL_JSON_SIGNATURE))
+                for i in reversed(range(len(self.CANONICAL_JSON_SIGNATURE))):
+                    builder.PrependUint8(self.CANONICAL_JSON_SIGNATURE[i])
+                CANONICAL_JSON_SIGNATURE = builder.EndVector()
+        if self.DATA_VOLUME_BY_MODCOD is not None:
+            DATA_VOLUME_BY_MODCODlist = []
+            for i in range(len(self.DATA_VOLUME_BY_MODCOD)):
+                DATA_VOLUME_BY_MODCODlist.append(self.DATA_VOLUME_BY_MODCOD[i].Pack(builder))
+            ACIStartDATA_VOLUME_BY_MODCODVector(builder, len(self.DATA_VOLUME_BY_MODCOD))
+            for i in reversed(range(len(self.DATA_VOLUME_BY_MODCOD))):
+                builder.PrependUOffsetTRelative(DATA_VOLUME_BY_MODCODlist[i])
+            DATA_VOLUME_BY_MODCOD = builder.EndVector()
         ACIStart(builder)
         if self.ACI_ID is not None:
             ACIAddACI_ID(builder, ACI_ID)
@@ -420,5 +555,9 @@ class ACIT(object):
             ACIAddPRODUCER_ID(builder, PRODUCER_ID)
         if self.SIGNATURE is not None:
             ACIAddSIGNATURE(builder, SIGNATURE)
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            ACIAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+        if self.DATA_VOLUME_BY_MODCOD is not None:
+            ACIAddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD)
         ACI = ACIEnd(builder)
         return ACI

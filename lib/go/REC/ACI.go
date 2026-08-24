@@ -272,7 +272,9 @@ func (rcv *ACI) ProducerId() []byte {
 }
 
 /// `$EPM` identifier of the producing node.
-/// Ed25519 signature by the producing `$EPM`.
+/// Ed25519 signature by the producing `$EPM` over the size-prefixed
+/// FlatBuffer projection with both 64-byte signature payloads zeroed while
+/// preserving their vectors and offsets.
 func (rcv *ACI) SIGNATURE(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -310,7 +312,9 @@ func (rcv *ACI) SignatureBytes() []byte {
 	return rcv.SIGNATUREBytes()
 }
 
-/// Ed25519 signature by the producing `$EPM`.
+/// Ed25519 signature by the producing `$EPM` over the size-prefixed
+/// FlatBuffer projection with both 64-byte signature payloads zeroed while
+/// preserving their vectors and offsets.
 func (rcv *ACI) MutateSIGNATURE(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -324,8 +328,99 @@ func (rcv *ACI) MutateSignature(j int, n byte) bool {
 	return rcv.MutateSIGNATURE(j, n)
 }
 
+/// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+/// field order, IDL capitalization, no insignificant whitespace, and both
+/// signature fields omitted.
+func (rcv *ACI) CANONICAL_JSON_SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *ACI) CanonicalJsonSignature(j int) byte {
+	return rcv.CANONICAL_JSON_SIGNATURE(j)
+}
+
+func (rcv *ACI) CANONICAL_JSON_SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACI) CanonicalJsonSignatureLength() int {
+	return rcv.CANONICAL_JSON_SIGNATURELength()
+}
+
+func (rcv *ACI) CANONICAL_JSON_SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACI) CanonicalJsonSignatureBytes() []byte {
+	return rcv.CANONICAL_JSON_SIGNATUREBytes()
+}
+
+/// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+/// field order, IDL capitalization, no insignificant whitespace, and both
+/// signature fields omitted.
+func (rcv *ACI) MutateCANONICAL_JSON_SIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *ACI) MutateCanonicalJsonSignature(j int, n byte) bool {
+	return rcv.MutateCANONICAL_JSON_SIGNATURE(j, n)
+}
+
+/// Per-interval delivered volume grouped by selected modulation-and-coding
+/// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+func (rcv *ACI) DATA_VOLUME_BY_MODCOD(obj *ACIDataVolumeByModCod, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACIDataVolumeByModCod)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACI) DataVolumeByModcod(obj *ACIDataVolumeByModCod, j int) bool {
+	return rcv.DATA_VOLUME_BY_MODCOD(obj, j)
+}
+
+func (rcv *ACI) DATA_VOLUME_BY_MODCODLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACI) DataVolumeByModcodLength() int {
+	return rcv.DATA_VOLUME_BY_MODCODLength()
+}
+
+/// Per-interval delivered volume grouped by selected modulation-and-coding
+/// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
 func ACIStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(14)
 }
 func ACIAddACI_ID(builder *flatbuffers.Builder, ACI_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ACI_ID), 0)
@@ -410,6 +505,30 @@ func ACIStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func ACIStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACIStartSIGNATUREVector(builder, numElems)
+}
+func ACIAddCANONICAL_JSON_SIGNATURE(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CANONICAL_JSON_SIGNATURE), 0)
+}
+func ACIAddCanonicalJsonSignature(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	ACIAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+}
+func ACIStartCANONICAL_JSON_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func ACIStartCanonicalJsonSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACIStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+}
+func ACIAddDATA_VOLUME_BY_MODCOD(builder *flatbuffers.Builder, DATA_VOLUME_BY_MODCOD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(DATA_VOLUME_BY_MODCOD), 0)
+}
+func ACIAddDataVolumeByModcod(builder *flatbuffers.Builder, DATA_VOLUME_BY_MODCOD flatbuffers.UOffsetT) {
+	ACIAddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD)
+}
+func ACIStartDATA_VOLUME_BY_MODCODVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACIStartDataVolumeByModcodVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACIStartDATA_VOLUME_BY_MODCODVector(builder, numElems)
 }
 func ACIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

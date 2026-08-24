@@ -318,11 +318,61 @@ export declare class RFL implements flatbuffers.IUnpackableObject<RFLT> {
     PRODUCER_ID(): string | null;
     PRODUCER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Ed25519 signature by the producing `$EPM`.
+     * Ed25519 signature by the producing `$EPM` over the size-prefixed
+     * FlatBuffer projection with both 64-byte signature payloads zeroed while
+     * preserving their vectors and offsets.
      */
     SIGNATURE(index: number): number | null;
     signatureLength(): number;
     signatureArray(): Uint8Array | null;
+    /**
+     * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+     * field order, IDL capitalization, no insignificant whitespace, and both
+     * signature fields omitted.
+     */
+    CANONICAL_JSON_SIGNATURE(index: number): number | null;
+    canonicalJsonSignatureLength(): number;
+    canonicalJsonSignatureArray(): Uint8Array | null;
+    /**
+     * Index into the selected link's RFLLink.MODCOD_SET for each sample.
+     * SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+     */
+    SELECTED_MODCOD_INDEX(index: number): number | null;
+    selectedModcodIndexLength(): number;
+    selectedModcodIndexArray(): Uint32Array | null;
+    SELECTED_MODCOD_VALID(index: number): boolean | null;
+    selectedModcodValidLength(): number;
+    selectedModcodValidArray(): Int8Array | null;
+    /**
+     * Spectral efficiency delivered by the selected entry, bit/s/Hz.
+     */
+    SPECTRAL_EFFICIENCY_BPS_HZ(index: number): number | null;
+    spectralEfficiencyBpsHzLength(): number;
+    spectralEfficiencyBpsHzArray(): Float64Array | null;
+    /**
+     * Delivered information rate after adaptive selection, bits per second.
+     */
+    ACHIEVED_DATA_RATE_BPS(index: number): number | null;
+    achievedDataRateBpsLength(): number;
+    achievedDataRateBpsArray(): Float64Array | null;
+    /**
+     * Margin above the selected entry's threshold, dB.
+     */
+    ACM_MARGIN_DB(index: number): number | null;
+    acmMarginDbLength(): number;
+    acmMarginDbArray(): Float64Array | null;
+    /**
+     * Symbol energy to noise spectral density, dB.
+     */
+    ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(index: number): number | null;
+    energyPerSymbolToNoiseDensityDbLength(): number;
+    energyPerSymbolToNoiseDensityDbArray(): Float64Array | null;
+    /**
+     * Decoded block error probability [0-1].
+     */
+    BLOCK_ERROR_RATE(index: number): number | null;
+    blockErrorRateLength(): number;
+    blockErrorRateArray(): Float64Array | null;
     static startRFL(builder: flatbuffers.Builder): void;
     static addRflId(builder: flatbuffers.Builder, RFL_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -603,6 +653,54 @@ export declare class RFL implements flatbuffers.IUnpackableObject<RFLT> {
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCanonicalJsonSignature(builder: flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset: flatbuffers.Offset): void;
+    static createCanonicalJsonSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCanonicalJsonSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSelectedModcodIndex(builder: flatbuffers.Builder, SELECTED_MODCOD_INDEXOffset: flatbuffers.Offset): void;
+    static createSelectedModcodIndexVector(builder: flatbuffers.Builder, data: number[] | Uint32Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createSelectedModcodIndexVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSelectedModcodIndexVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSelectedModcodValid(builder: flatbuffers.Builder, SELECTED_MODCOD_VALIDOffset: flatbuffers.Offset): void;
+    static createSelectedModcodValidVector(builder: flatbuffers.Builder, data: boolean[]): flatbuffers.Offset;
+    static startSelectedModcodValidVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSpectralEfficiencyBpsHz(builder: flatbuffers.Builder, SPECTRAL_EFFICIENCY_BPS_HZOffset: flatbuffers.Offset): void;
+    static createSpectralEfficiencyBpsHzVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createSpectralEfficiencyBpsHzVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSpectralEfficiencyBpsHzVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addAchievedDataRateBps(builder: flatbuffers.Builder, ACHIEVED_DATA_RATE_BPSOffset: flatbuffers.Offset): void;
+    static createAchievedDataRateBpsVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createAchievedDataRateBpsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startAchievedDataRateBpsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addAcmMarginDb(builder: flatbuffers.Builder, ACM_MARGIN_DBOffset: flatbuffers.Offset): void;
+    static createAcmMarginDbVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createAcmMarginDbVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startAcmMarginDbVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEnergyPerSymbolToNoiseDensityDb(builder: flatbuffers.Builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset: flatbuffers.Offset): void;
+    static createEnergyPerSymbolToNoiseDensityDbVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createEnergyPerSymbolToNoiseDensityDbVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEnergyPerSymbolToNoiseDensityDbVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addBlockErrorRate(builder: flatbuffers.Builder, BLOCK_ERROR_RATEOffset: flatbuffers.Offset): void;
+    static createBlockErrorRateVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createBlockErrorRateVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startBlockErrorRateVector(builder: flatbuffers.Builder, numElems: number): void;
     static endRFL(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishRFLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedRFLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -661,7 +759,15 @@ export declare class RFLT implements flatbuffers.IGeneratedObject {
     COMPUTED_AT: bigint;
     PRODUCER_ID: string | Uint8Array | null;
     SIGNATURE: (number)[];
-    constructor(RFL_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, LINKS?: (RFLLinkT)[], SAMPLE_COUNT?: number, SAMPLE_LINK_INDEXES?: (number)[], SAMPLE_EPOCHS?: (number)[], TIME_SYSTEM?: timingStandard, ACCESS_STATES?: (rflAccessState)[], RANGE_M?: (number)[], RANGE_RATE_M_S?: (number)[], AZIMUTH_DEG?: (number)[], ELEVATION_DEG?: (number)[], TRANSMIT_AZIMUTH_DEG?: (number)[], TRANSMIT_ELEVATION_DEG?: (number)[], DOPPLER_SHIFT_HZ?: (number)[], DOPPLER_RATE_HZ_S?: (number)[], EIRP_DBW?: (number)[], TRANSMIT_ANTENNA_GAIN_DBI?: (number)[], RECEIVE_ANTENNA_GAIN_DBI?: (number)[], FREE_SPACE_PATH_LOSS_DB?: (number)[], GASEOUS_ABSORPTION_LOSS_DB?: (number)[], RAIN_LOSS_DB?: (number)[], CLOUD_FOG_LOSS_DB?: (number)[], SCINTILLATION_LOSS_DB?: (number)[], TERRAIN_DIFFRACTION_LOSS_DB?: (number)[], OBSTRUCTION_LOSS_DB?: (number)[], POLARIZATION_LOSS_DB?: (number)[], POINTING_LOSS_DB?: (number)[], IMPLEMENTATION_LOSS_DB?: (number)[], TOTAL_PATH_LOSS_DB?: (number)[], RECEIVED_POWER_DBW?: (number)[], SYSTEM_NOISE_TEMPERATURE_K?: (number)[], GAIN_TO_NOISE_TEMPERATURE_DB_PER_K?: (number)[], CARRIER_TO_NOISE_DENSITY_DBHZ?: (number)[], CARRIER_TO_NOISE_DB?: (number)[], ENERGY_PER_BIT_TO_NOISE_DENSITY_DB?: (number)[], BIT_ERROR_RATE?: (number)[], LINK_MARGIN_DB?: (number)[], CHANNEL_CAPACITY_BPS?: (number)[], INTERFERENCE_POWER_DBW?: (number)[], CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB?: (number)[], SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB?: (number)[], INTERFERENCE_CONTRIBUTIONS?: (RFLInterferenceContributionT)[], OBSTRUCTIONS?: (RFLObstructionT)[], LIMITING_CONSTRAINTS?: (rflConstraint)[], LIMITING_CONSTRAINT_NOTE?: string | Uint8Array | null, PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[]);
+    CANONICAL_JSON_SIGNATURE: (number)[];
+    SELECTED_MODCOD_INDEX: (number)[];
+    SELECTED_MODCOD_VALID: (boolean)[];
+    SPECTRAL_EFFICIENCY_BPS_HZ: (number)[];
+    ACHIEVED_DATA_RATE_BPS: (number)[];
+    ACM_MARGIN_DB: (number)[];
+    ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: (number)[];
+    BLOCK_ERROR_RATE: (number)[];
+    constructor(RFL_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, LINKS?: (RFLLinkT)[], SAMPLE_COUNT?: number, SAMPLE_LINK_INDEXES?: (number)[], SAMPLE_EPOCHS?: (number)[], TIME_SYSTEM?: timingStandard, ACCESS_STATES?: (rflAccessState)[], RANGE_M?: (number)[], RANGE_RATE_M_S?: (number)[], AZIMUTH_DEG?: (number)[], ELEVATION_DEG?: (number)[], TRANSMIT_AZIMUTH_DEG?: (number)[], TRANSMIT_ELEVATION_DEG?: (number)[], DOPPLER_SHIFT_HZ?: (number)[], DOPPLER_RATE_HZ_S?: (number)[], EIRP_DBW?: (number)[], TRANSMIT_ANTENNA_GAIN_DBI?: (number)[], RECEIVE_ANTENNA_GAIN_DBI?: (number)[], FREE_SPACE_PATH_LOSS_DB?: (number)[], GASEOUS_ABSORPTION_LOSS_DB?: (number)[], RAIN_LOSS_DB?: (number)[], CLOUD_FOG_LOSS_DB?: (number)[], SCINTILLATION_LOSS_DB?: (number)[], TERRAIN_DIFFRACTION_LOSS_DB?: (number)[], OBSTRUCTION_LOSS_DB?: (number)[], POLARIZATION_LOSS_DB?: (number)[], POINTING_LOSS_DB?: (number)[], IMPLEMENTATION_LOSS_DB?: (number)[], TOTAL_PATH_LOSS_DB?: (number)[], RECEIVED_POWER_DBW?: (number)[], SYSTEM_NOISE_TEMPERATURE_K?: (number)[], GAIN_TO_NOISE_TEMPERATURE_DB_PER_K?: (number)[], CARRIER_TO_NOISE_DENSITY_DBHZ?: (number)[], CARRIER_TO_NOISE_DB?: (number)[], ENERGY_PER_BIT_TO_NOISE_DENSITY_DB?: (number)[], BIT_ERROR_RATE?: (number)[], LINK_MARGIN_DB?: (number)[], CHANNEL_CAPACITY_BPS?: (number)[], INTERFERENCE_POWER_DBW?: (number)[], CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB?: (number)[], SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB?: (number)[], INTERFERENCE_CONTRIBUTIONS?: (RFLInterferenceContributionT)[], OBSTRUCTIONS?: (RFLObstructionT)[], LIMITING_CONSTRAINTS?: (rflConstraint)[], LIMITING_CONSTRAINT_NOTE?: string | Uint8Array | null, PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[], SELECTED_MODCOD_INDEX?: (number)[], SELECTED_MODCOD_VALID?: (boolean)[], SPECTRAL_EFFICIENCY_BPS_HZ?: (number)[], ACHIEVED_DATA_RATE_BPS?: (number)[], ACM_MARGIN_DB?: (number)[], ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB?: (number)[], BLOCK_ERROR_RATE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFL.d.ts.map

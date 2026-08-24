@@ -459,7 +459,9 @@ public final class RFL extends com.google.flatbuffers.Table {
   public ByteBuffer PRODUCER_IDAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
   public ByteBuffer PRODUCER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
   /**
-   * Ed25519 signature by the producing `$EPM`.
+   * Ed25519 signature by the producing `$EPM` over the size-prefixed
+   * FlatBuffer projection with both 64-byte signature payloads zeroed while
+   * preserving their vectors and offsets.
    */
   public int SIGNATURE(int j) { int o = __offset(104); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
   public int SIGNATURELength() { int o = __offset(104); return o != 0 ? __vector_len(o) : 0; }
@@ -467,6 +469,78 @@ public final class RFL extends com.google.flatbuffers.Table {
   public ByteVector signatureVector(ByteVector obj) { int o = __offset(104); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
   public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
+  /**
+   * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+   * field order, IDL capitalization, no insignificant whitespace, and both
+   * signature fields omitted.
+   */
+  public int CANONICAL_JSON_SIGNATURE(int j) { int o = __offset(106); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CANONICAL_JSON_SIGNATURELength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector canonicalJsonSignatureVector() { return canonicalJsonSignatureVector(new ByteVector()); }
+  public ByteVector canonicalJsonSignatureVector(ByteVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(106, 1); }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 1); }
+  /**
+   * Index into the selected link's RFLLink.MODCOD_SET for each sample.
+   * SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+   */
+  public long SELECTED_MODCOD_INDEX(int j) { int o = __offset(108); return o != 0 ? (long)bb.getInt(__vector(o) + j * 4) & 0xFFFFFFFFL : 0; }
+  public int SELECTED_MODCOD_INDEXLength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public IntVector selectedModcodIndexVector() { return selectedModcodIndexVector(new IntVector()); }
+  public IntVector selectedModcodIndexVector(IntVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SELECTED_MODCOD_INDEXAsByteBuffer() { return __vector_as_bytebuffer(108, 4); }
+  public ByteBuffer SELECTED_MODCOD_INDEXInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 4); }
+  public boolean SELECTED_MODCOD_VALID(int j) { int o = __offset(110); return o != 0 ? 0!=bb.get(__vector(o) + j * 1) : false; }
+  public int SELECTED_MODCOD_VALIDLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
+  public BooleanVector selectedModcodValidVector() { return selectedModcodValidVector(new BooleanVector()); }
+  public BooleanVector selectedModcodValidVector(BooleanVector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SELECTED_MODCOD_VALIDAsByteBuffer() { return __vector_as_bytebuffer(110, 1); }
+  public ByteBuffer SELECTED_MODCOD_VALIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 110, 1); }
+  /**
+   * Spectral efficiency delivered by the selected entry, bit/s/Hz.
+   */
+  public double SPECTRAL_EFFICIENCY_BPS_HZ(int j) { int o = __offset(112); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SPECTRAL_EFFICIENCY_BPS_HZLength() { int o = __offset(112); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector spectralEfficiencyBpsHzVector() { return spectralEfficiencyBpsHzVector(new DoubleVector()); }
+  public DoubleVector spectralEfficiencyBpsHzVector(DoubleVector obj) { int o = __offset(112); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SPECTRAL_EFFICIENCY_BPS_HZAsByteBuffer() { return __vector_as_bytebuffer(112, 8); }
+  public ByteBuffer SPECTRAL_EFFICIENCY_BPS_HZInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 8); }
+  /**
+   * Delivered information rate after adaptive selection, bits per second.
+   */
+  public double ACHIEVED_DATA_RATE_BPS(int j) { int o = __offset(114); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ACHIEVED_DATA_RATE_BPSLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector achievedDataRateBpsVector() { return achievedDataRateBpsVector(new DoubleVector()); }
+  public DoubleVector achievedDataRateBpsVector(DoubleVector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ACHIEVED_DATA_RATE_BPSAsByteBuffer() { return __vector_as_bytebuffer(114, 8); }
+  public ByteBuffer ACHIEVED_DATA_RATE_BPSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 8); }
+  /**
+   * Margin above the selected entry's threshold, dB.
+   */
+  public double ACM_MARGIN_DB(int j) { int o = __offset(116); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ACM_MARGIN_DBLength() { int o = __offset(116); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector acmMarginDbVector() { return acmMarginDbVector(new DoubleVector()); }
+  public DoubleVector acmMarginDbVector(DoubleVector obj) { int o = __offset(116); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ACM_MARGIN_DBAsByteBuffer() { return __vector_as_bytebuffer(116, 8); }
+  public ByteBuffer ACM_MARGIN_DBInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 8); }
+  /**
+   * Symbol energy to noise spectral density, dB.
+   */
+  public double ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(int j) { int o = __offset(118); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength() { int o = __offset(118); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector energyPerSymbolToNoiseDensityDbVector() { return energyPerSymbolToNoiseDensityDbVector(new DoubleVector()); }
+  public DoubleVector energyPerSymbolToNoiseDensityDbVector(DoubleVector obj) { int o = __offset(118); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBAsByteBuffer() { return __vector_as_bytebuffer(118, 8); }
+  public ByteBuffer ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 8); }
+  /**
+   * Decoded block error probability [0-1].
+   */
+  public double BLOCK_ERROR_RATE(int j) { int o = __offset(120); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int BLOCK_ERROR_RATELength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector blockErrorRateVector() { return blockErrorRateVector(new DoubleVector()); }
+  public DoubleVector blockErrorRateVector(DoubleVector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer BLOCK_ERROR_RATEAsByteBuffer() { return __vector_as_bytebuffer(120, 8); }
+  public ByteBuffer BLOCK_ERROR_RATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 120, 8); }
 
   public static int createRFL(FlatBufferBuilder builder,
       int RFL_IDOffset,
@@ -519,9 +593,25 @@ public final class RFL extends com.google.flatbuffers.Table {
       int PROVENANCEOffset,
       long COMPUTED_AT,
       int PRODUCER_IDOffset,
-      int SIGNATUREOffset) {
-    builder.startTable(51);
+      int SIGNATUREOffset,
+      int CANONICAL_JSON_SIGNATUREOffset,
+      int SELECTED_MODCOD_INDEXOffset,
+      int SELECTED_MODCOD_VALIDOffset,
+      int SPECTRAL_EFFICIENCY_BPS_HZOffset,
+      int ACHIEVED_DATA_RATE_BPSOffset,
+      int ACM_MARGIN_DBOffset,
+      int ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset,
+      int BLOCK_ERROR_RATEOffset) {
+    builder.startTable(59);
     RFL.addComputedAt(builder, COMPUTED_AT);
+    RFL.addBlockErrorRate(builder, BLOCK_ERROR_RATEOffset);
+    RFL.addEnergyPerSymbolToNoiseDensityDb(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
+    RFL.addAcmMarginDb(builder, ACM_MARGIN_DBOffset);
+    RFL.addAchievedDataRateBps(builder, ACHIEVED_DATA_RATE_BPSOffset);
+    RFL.addSpectralEfficiencyBpsHz(builder, SPECTRAL_EFFICIENCY_BPS_HZOffset);
+    RFL.addSelectedModcodValid(builder, SELECTED_MODCOD_VALIDOffset);
+    RFL.addSelectedModcodIndex(builder, SELECTED_MODCOD_INDEXOffset);
+    RFL.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATUREOffset);
     RFL.addSignature(builder, SIGNATUREOffset);
     RFL.addProducerId(builder, PRODUCER_IDOffset);
     RFL.addProvenance(builder, PROVENANCEOffset);
@@ -575,7 +665,7 @@ public final class RFL extends com.google.flatbuffers.Table {
     return RFL.endRFL(builder);
   }
 
-  public static void startRFL(FlatBufferBuilder builder) { builder.startTable(51); }
+  public static void startRFL(FlatBufferBuilder builder) { builder.startTable(59); }
   public static void addRflId(FlatBufferBuilder builder, int RFL_IDOffset) { builder.addOffset(0, RFL_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(2, SCENARIO_IDOffset, 0); }
@@ -714,6 +804,31 @@ public final class RFL extends com.google.flatbuffers.Table {
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addCanonicalJsonSignature(FlatBufferBuilder builder, int CANONICAL_JSON_SIGNATUREOffset) { builder.addOffset(51, CANONICAL_JSON_SIGNATUREOffset, 0); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCanonicalJsonSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addSelectedModcodIndex(FlatBufferBuilder builder, int SELECTED_MODCOD_INDEXOffset) { builder.addOffset(52, SELECTED_MODCOD_INDEXOffset, 0); }
+  public static int createSelectedModcodIndexVector(FlatBufferBuilder builder, long[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addInt((int) data[i]); return builder.endVector(); }
+  public static void startSelectedModcodIndexVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSelectedModcodValid(FlatBufferBuilder builder, int SELECTED_MODCOD_VALIDOffset) { builder.addOffset(53, SELECTED_MODCOD_VALIDOffset, 0); }
+  public static int createSelectedModcodValidVector(FlatBufferBuilder builder, boolean[] data) { builder.startVector(1, data.length, 1); for (int i = data.length - 1; i >= 0; i--) builder.addBoolean(data[i]); return builder.endVector(); }
+  public static void startSelectedModcodValidVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addSpectralEfficiencyBpsHz(FlatBufferBuilder builder, int SPECTRAL_EFFICIENCY_BPS_HZOffset) { builder.addOffset(54, SPECTRAL_EFFICIENCY_BPS_HZOffset, 0); }
+  public static int createSpectralEfficiencyBpsHzVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSpectralEfficiencyBpsHzVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addAchievedDataRateBps(FlatBufferBuilder builder, int ACHIEVED_DATA_RATE_BPSOffset) { builder.addOffset(55, ACHIEVED_DATA_RATE_BPSOffset, 0); }
+  public static int createAchievedDataRateBpsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAchievedDataRateBpsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addAcmMarginDb(FlatBufferBuilder builder, int ACM_MARGIN_DBOffset) { builder.addOffset(56, ACM_MARGIN_DBOffset, 0); }
+  public static int createAcmMarginDbVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAcmMarginDbVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addEnergyPerSymbolToNoiseDensityDb(FlatBufferBuilder builder, int ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset) { builder.addOffset(57, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset, 0); }
+  public static int createEnergyPerSymbolToNoiseDensityDbVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startEnergyPerSymbolToNoiseDensityDbVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addBlockErrorRate(FlatBufferBuilder builder, int BLOCK_ERROR_RATEOffset) { builder.addOffset(58, BLOCK_ERROR_RATEOffset, 0); }
+  public static int createBlockErrorRateVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startBlockErrorRateVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endRFL(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // RFL_ID

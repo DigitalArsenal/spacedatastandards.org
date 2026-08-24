@@ -71,6 +71,200 @@
         }
       }
     },
+    "bemHopSlotState": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACTIVE",
+        "GUARD",
+        "IDLE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACTIVE": {
+          "value": 1
+        },
+        "GUARD": {
+          "value": 2
+        },
+        "IDLE": {
+          "value": 3
+        }
+      }
+    },
+    "BEMProvenance": {
+      "type": "object",
+      "description": "Provenance of a deployed-beam descriptor or hop schedule.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_CONTENT_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "BEMHopSlot": {
+      "type": "object",
+      "description": "One time slice of a periodic beam-hopping plan.",
+      "properties": {
+        "SLOT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "START_OFFSET_S": {
+          "type": "number",
+          "description": "Offset from BEMHopSchedule.EPOCH in seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "DURATION_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STATE": {
+          "$ref": "#/definitions/bemHopSlotState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACTIVE": {
+              "value": 1
+            },
+            "GUARD": {
+              "value": 2
+            },
+            "IDLE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "BEAM_ID": {
+          "type": "string",
+          "description": "Beam activated in this slot. May name this BEM.ID or another beam in a\ncoordinated schedule.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET_CELL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_CENTER_LATITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_CENTER_LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTER_FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP_DBW": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRIORITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "SLOT_ID",
+        "BEAM_ID"
+      ],
+      "additionalProperties": false
+    },
+    "BEMHopSchedule": {
+      "type": "object",
+      "description": "Periodic beam-hopping schedule carried by a deployed beam descriptor.",
+      "properties": {
+        "SCHEDULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REPEATS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SLOTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BEMHopSlot"
+          },
+          "x-flatbuffer-type": "[BEMHopSlot]",
+          "x-flatbuffer-required": true
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/BEMProvenance",
+          "x-flatbuffer-type": "BEMProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SCHEDULE_ID",
+        "SLOTS",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
     "beamContourPoint": {
       "type": "object",
       "description": "Beam Contour Point (gain pattern boundary)",
@@ -254,6 +448,47 @@
           "type": "string",
           "description": "Additional notes",
           "x-flatbuffer-type": "string"
+        },
+        "HOP_SCHEDULE": {
+          "$ref": "#/definitions/BEMHopSchedule",
+          "description": "Time-sliced activation plan for this deployed beam.",
+          "x-flatbuffer-type": "BEMHopSchedule"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/BEMProvenance",
+          "x-flatbuffer-type": "BEMProvenance"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix ms this record was serialized.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCER_ID": {
+          "type": "string",
+          "description": "`$EPM` identifier of the producing node.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "additionalProperties": false

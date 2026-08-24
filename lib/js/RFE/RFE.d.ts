@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { RFEProvenance, RFEProvenanceT } from './RFEProvenance.js';
 import { emitterType } from './emitterType.js';
 import { rfEmitterDetail, rfEmitterDetailT } from './rfEmitterDetail.js';
 /**
@@ -104,6 +105,34 @@ export declare class RFE implements flatbuffers.IUnpackableObject<RFET> {
      */
     NOTES(): string | null;
     NOTES(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Provenance of the root emitter descriptor.
+     */
+    PROVENANCE(obj?: RFEProvenance): RFEProvenance | null;
+    /**
+     * Unix ms this record was serialized.
+     */
+    COMPUTED_AT(): bigint;
+    /**
+     * `$EPM` identifier of the producing node.
+     */
+    PRODUCER_ID(): string | null;
+    PRODUCER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+     * signature payloads zeroed while preserving their vectors and offsets.
+     */
+    SIGNATURE(index: number): number | null;
+    signatureLength(): number;
+    signatureArray(): Uint8Array | null;
+    /**
+     * Ed25519 signature over canonical JSON with IDL field order and
+     * capitalization, no insignificant whitespace, and both signature fields
+     * omitted.
+     */
+    CANONICAL_JSON_SIGNATURE(index: number): number | null;
+    canonicalJsonSignatureLength(): number;
+    canonicalJsonSignatureArray(): Uint8Array | null;
     static startRFE(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addIdEntity(builder: flatbuffers.Builder, ID_ENTITYOffset: flatbuffers.Offset): void;
@@ -127,10 +156,18 @@ export declare class RFE implements flatbuffers.IUnpackableObject<RFET> {
     static startRfEmitterDetailsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addThreatLevel(builder: flatbuffers.Builder, THREAT_LEVELOffset: flatbuffers.Offset): void;
     static addNotes(builder: flatbuffers.Builder, NOTESOffset: flatbuffers.Offset): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
+    static addComputedAt(builder: flatbuffers.Builder, COMPUTED_AT: bigint): void;
+    static addProducerId(builder: flatbuffers.Builder, PRODUCER_IDOffset: flatbuffers.Offset): void;
+    static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
+    static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCanonicalJsonSignature(builder: flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset: flatbuffers.Offset): void;
+    static createCanonicalJsonSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCanonicalJsonSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
     static endRFE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishRFEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedRFEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createRFE(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, ID_ENTITYOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, TYPE: emitterType, ENTITYOffset: flatbuffers.Offset, ELNOTOffset: flatbuffers.Offset, NATO_NAMEOffset: flatbuffers.Offset, PLATFORM_TYPEOffset: flatbuffers.Offset, COUNTRYOffset: flatbuffers.Offset, FUNCTIONOffset: flatbuffers.Offset, BANDOffset: flatbuffers.Offset, FREQ_MIN: number, FREQ_MAX: number, PEAK_POWER: number, AVG_POWER: number, ANTENNA_GAIN: number, NUM_MODES: number, RF_EMITTER_DETAILSOffset: flatbuffers.Offset, THREAT_LEVELOffset: flatbuffers.Offset, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): RFET;
     unpackTo(_o: RFET): void;
 }
@@ -155,7 +192,12 @@ export declare class RFET implements flatbuffers.IGeneratedObject {
     RF_EMITTER_DETAILS: (rfEmitterDetailT)[];
     THREAT_LEVEL: string | Uint8Array | null;
     NOTES: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, ID_ENTITY?: string | Uint8Array | null, NAME?: string | Uint8Array | null, TYPE?: emitterType, ENTITY?: string | Uint8Array | null, ELNOT?: string | Uint8Array | null, NATO_NAME?: string | Uint8Array | null, PLATFORM_TYPE?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, FUNCTION?: string | Uint8Array | null, BAND?: string | Uint8Array | null, FREQ_MIN?: number, FREQ_MAX?: number, PEAK_POWER?: number, AVG_POWER?: number, ANTENNA_GAIN?: number, NUM_MODES?: number, RF_EMITTER_DETAILS?: (rfEmitterDetailT)[], THREAT_LEVEL?: string | Uint8Array | null, NOTES?: string | Uint8Array | null);
+    PROVENANCE: RFEProvenanceT | null;
+    COMPUTED_AT: bigint;
+    PRODUCER_ID: string | Uint8Array | null;
+    SIGNATURE: (number)[];
+    CANONICAL_JSON_SIGNATURE: (number)[];
+    constructor(ID?: string | Uint8Array | null, ID_ENTITY?: string | Uint8Array | null, NAME?: string | Uint8Array | null, TYPE?: emitterType, ENTITY?: string | Uint8Array | null, ELNOT?: string | Uint8Array | null, NATO_NAME?: string | Uint8Array | null, PLATFORM_TYPE?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, FUNCTION?: string | Uint8Array | null, BAND?: string | Uint8Array | null, FREQ_MIN?: number, FREQ_MAX?: number, PEAK_POWER?: number, AVG_POWER?: number, ANTENNA_GAIN?: number, NUM_MODES?: number, RF_EMITTER_DETAILS?: (rfEmitterDetailT)[], THREAT_LEVEL?: string | Uint8Array | null, NOTES?: string | Uint8Array | null, PROVENANCE?: RFEProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFE.d.ts.map

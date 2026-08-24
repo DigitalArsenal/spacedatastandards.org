@@ -59,6 +59,10 @@ public struct rfEmitterDetail : IFlatbufferObject
   public byte[] GetANTENNA_PATTERNArray() { return __p.__vector_as_array<byte>(30); }
   /// 3dB beamwidth in degrees
   public double BEAMWIDTH { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Emission and susceptibility limit curves applicable to this operating
+  /// mode. Curves are evaluated in point order after sorting by frequency.
+  public RFEEmissionMask? EMISSION_MASKS(int j) { int o = __p.__offset(34); return o != 0 ? (RFEEmissionMask?)(new RFEEmissionMask()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EMISSION_MASKSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<rfEmitterDetail> CreaterfEmitterDetail(FlatBufferBuilder builder,
       StringOffset MODE_NAMEOffset = default(StringOffset),
@@ -75,8 +79,9 @@ public struct rfEmitterDetail : IFlatbufferObject
       double ERP = 0.0,
       signalModulation MODULATION = signalModulation.CW,
       StringOffset ANTENNA_PATTERNOffset = default(StringOffset),
-      double BEAMWIDTH = 0.0) {
-    builder.StartTable(15);
+      double BEAMWIDTH = 0.0,
+      VectorOffset EMISSION_MASKSOffset = default(VectorOffset)) {
+    builder.StartTable(16);
     rfEmitterDetail.AddBEAMWIDTH(builder, BEAMWIDTH);
     rfEmitterDetail.AddERP(builder, ERP);
     rfEmitterDetail.AddSCAN_PERIOD(builder, SCAN_PERIOD);
@@ -89,13 +94,14 @@ public struct rfEmitterDetail : IFlatbufferObject
     rfEmitterDetail.AddFREQ_MAX(builder, FREQ_MAX);
     rfEmitterDetail.AddFREQ_MIN(builder, FREQ_MIN);
     rfEmitterDetail.AddFREQUENCY(builder, FREQUENCY);
+    rfEmitterDetail.AddEMISSION_MASKS(builder, EMISSION_MASKSOffset);
     rfEmitterDetail.AddANTENNA_PATTERN(builder, ANTENNA_PATTERNOffset);
     rfEmitterDetail.AddMODE_NAME(builder, MODE_NAMEOffset);
     rfEmitterDetail.AddMODULATION(builder, MODULATION);
     return rfEmitterDetail.EndrfEmitterDetail(builder);
   }
 
-  public static void StartrfEmitterDetail(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartrfEmitterDetail(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddMODE_NAME(FlatBufferBuilder builder, StringOffset MODE_NAMEOffset) { builder.AddOffset(0, MODE_NAMEOffset.Value, 0); }
   public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(1, FREQUENCY, 0.0); }
   public static void AddFREQ_MIN(FlatBufferBuilder builder, double FREQ_MIN) { builder.AddDouble(2, FREQ_MIN, 0.0); }
@@ -111,6 +117,12 @@ public struct rfEmitterDetail : IFlatbufferObject
   public static void AddMODULATION(FlatBufferBuilder builder, signalModulation MODULATION) { builder.AddSbyte(12, (sbyte)MODULATION, 0); }
   public static void AddANTENNA_PATTERN(FlatBufferBuilder builder, StringOffset ANTENNA_PATTERNOffset) { builder.AddOffset(13, ANTENNA_PATTERNOffset.Value, 0); }
   public static void AddBEAMWIDTH(FlatBufferBuilder builder, double BEAMWIDTH) { builder.AddDouble(14, BEAMWIDTH, 0.0); }
+  public static void AddEMISSION_MASKS(FlatBufferBuilder builder, VectorOffset EMISSION_MASKSOffset) { builder.AddOffset(15, EMISSION_MASKSOffset.Value, 0); }
+  public static VectorOffset CreateEMISSION_MASKSVector(FlatBufferBuilder builder, Offset<RFEEmissionMask>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEMISSION_MASKSVectorBlock(FlatBufferBuilder builder, Offset<RFEEmissionMask>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEMISSION_MASKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<RFEEmissionMask>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEMISSION_MASKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<RFEEmissionMask>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEMISSION_MASKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<rfEmitterDetail> EndrfEmitterDetail(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<rfEmitterDetail>(o);
@@ -136,11 +148,19 @@ public struct rfEmitterDetail : IFlatbufferObject
     _o.MODULATION = this.MODULATION;
     _o.ANTENNA_PATTERN = this.ANTENNA_PATTERN;
     _o.BEAMWIDTH = this.BEAMWIDTH;
+    _o.EMISSION_MASKS = new List<RFEEmissionMaskT>();
+    for (var _j = 0; _j < this.EMISSION_MASKSLength; ++_j) {_o.EMISSION_MASKS.Add(this.EMISSION_MASKS(_j).HasValue ? this.EMISSION_MASKS(_j).Value.UnPack() : null);}
   }
   public static Offset<rfEmitterDetail> Pack(FlatBufferBuilder builder, rfEmitterDetailT _o) {
     if (_o == null) return default(Offset<rfEmitterDetail>);
     var _MODE_NAME = _o.MODE_NAME == null ? default(StringOffset) : builder.CreateString(_o.MODE_NAME);
     var _ANTENNA_PATTERN = _o.ANTENNA_PATTERN == null ? default(StringOffset) : builder.CreateString(_o.ANTENNA_PATTERN);
+    var _EMISSION_MASKS = default(VectorOffset);
+    if (_o.EMISSION_MASKS != null) {
+      var __EMISSION_MASKS = new Offset<RFEEmissionMask>[_o.EMISSION_MASKS.Count];
+      for (var _j = 0; _j < __EMISSION_MASKS.Length; ++_j) { __EMISSION_MASKS[_j] = RFEEmissionMask.Pack(builder, _o.EMISSION_MASKS[_j]); }
+      _EMISSION_MASKS = CreateEMISSION_MASKSVector(builder, __EMISSION_MASKS);
+    }
     return CreaterfEmitterDetail(
       builder,
       _MODE_NAME,
@@ -157,7 +177,8 @@ public struct rfEmitterDetail : IFlatbufferObject
       _o.ERP,
       _o.MODULATION,
       _ANTENNA_PATTERN,
-      _o.BEAMWIDTH);
+      _o.BEAMWIDTH,
+      _EMISSION_MASKS);
   }
 }
 
@@ -178,6 +199,7 @@ public class rfEmitterDetailT
   public signalModulation MODULATION { get; set; }
   public string ANTENNA_PATTERN { get; set; }
   public double BEAMWIDTH { get; set; }
+  public List<RFEEmissionMaskT> EMISSION_MASKS { get; set; }
 
   public rfEmitterDetailT() {
     this.MODE_NAME = null;
@@ -195,6 +217,7 @@ public class rfEmitterDetailT
     this.MODULATION = signalModulation.CW;
     this.ANTENNA_PATTERN = null;
     this.BEAMWIDTH = 0.0;
+    this.EMISSION_MASKS = null;
   }
 }
 
@@ -219,6 +242,7 @@ static public class rfEmitterDetailVerify
       && verifier.VerifyField(tablePos, 28 /*MODULATION*/, 1 /*signalModulation*/, 1, false)
       && verifier.VerifyString(tablePos, 30 /*ANTENNA_PATTERN*/, false)
       && verifier.VerifyField(tablePos, 32 /*BEAMWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*EMISSION_MASKS*/, RFEEmissionMaskVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -2513,6 +2513,317 @@ impl ACIProvenanceT {
     })
   }
 }
+pub enum ACIDataVolumeByModCodOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Data carried by one modulation-and-coding choice during one interval.
+/// Entries are explicit rows so FlatSQL and `$RPT` can group volume by link,
+/// interval, or choice without decoding a producer-specific map.
+pub struct ACIDataVolumeByModCod<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACIDataVolumeByModCod<'a> {
+  type Inner = ACIDataVolumeByModCod<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ACIDataVolumeByModCod<'a> {
+  pub const VT_INTERVAL_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_LINK_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MODCOD_INDEX: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MODCOD_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_DURATION_S: ::flatbuffers::VOffsetT = 12;
+  pub const VT_DATA_VOLUME_BITS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MEAN_DATA_RATE_BPS: ::flatbuffers::VOffsetT = 16;
+  pub const VT_SAMPLE_COUNT: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ACIDataVolumeByModCod { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ACIDataVolumeByModCodArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ACIDataVolumeByModCod<'bldr>> {
+    let mut builder = ACIDataVolumeByModCodBuilder::new(_fbb);
+    builder.add_MEAN_DATA_RATE_BPS(args.MEAN_DATA_RATE_BPS);
+    builder.add_DATA_VOLUME_BITS(args.DATA_VOLUME_BITS);
+    builder.add_DURATION_S(args.DURATION_S);
+    builder.add_SAMPLE_COUNT(args.SAMPLE_COUNT);
+    if let Some(x) = args.MODCOD_ID { builder.add_MODCOD_ID(x); }
+    builder.add_MODCOD_INDEX(args.MODCOD_INDEX);
+    if let Some(x) = args.LINK_ID { builder.add_LINK_ID(x); }
+    if let Some(x) = args.INTERVAL_ID { builder.add_INTERVAL_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ACIDataVolumeByModCodT {
+    let INTERVAL_ID = {
+      let x = self.INTERVAL_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let LINK_ID = self.LINK_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODCOD_INDEX = self.MODCOD_INDEX();
+    let MODCOD_ID = {
+      let x = self.MODCOD_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let DURATION_S = self.DURATION_S();
+    let DATA_VOLUME_BITS = self.DATA_VOLUME_BITS();
+    let MEAN_DATA_RATE_BPS = self.MEAN_DATA_RATE_BPS();
+    let SAMPLE_COUNT = self.SAMPLE_COUNT();
+    ACIDataVolumeByModCodT {
+      INTERVAL_ID,
+      LINK_ID,
+      MODCOD_INDEX,
+      MODCOD_ID,
+      DURATION_S,
+      DATA_VOLUME_BITS,
+      MEAN_DATA_RATE_BPS,
+      SAMPLE_COUNT,
+    }
+  }
+
+  /// ACIInterval.INTERVAL_ID this row summarizes.
+  #[inline]
+  pub fn INTERVAL_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACIDataVolumeByModCod::VT_INTERVAL_ID, None).unwrap()}
+  }
+  /// ACIInterval.LINK_ID / RFLLink.LINK_ID.
+  #[inline]
+  pub fn LINK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACIDataVolumeByModCod::VT_LINK_ID, None)}
+  }
+  /// Index into the link's RFLLink.MODCOD_SET.
+  #[inline]
+  pub fn MODCOD_INDEX(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ACIDataVolumeByModCod::VT_MODCOD_INDEX, Some(0)).unwrap()}
+  }
+  /// Stable RFLModCod.MODCOD_ID copied for queryability across records.
+  #[inline]
+  pub fn MODCOD_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACIDataVolumeByModCod::VT_MODCOD_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn DURATION_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACIDataVolumeByModCod::VT_DURATION_S, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn DATA_VOLUME_BITS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACIDataVolumeByModCod::VT_DATA_VOLUME_BITS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_DATA_RATE_BPS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACIDataVolumeByModCod::VT_MEAN_DATA_RATE_BPS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn SAMPLE_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ACIDataVolumeByModCod::VT_SAMPLE_COUNT, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ACIDataVolumeByModCod<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERVAL_ID", Self::VT_INTERVAL_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINK_ID", Self::VT_LINK_ID, false)?
+     .visit_field::<u32>("MODCOD_INDEX", Self::VT_MODCOD_INDEX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODCOD_ID", Self::VT_MODCOD_ID, true)?
+     .visit_field::<f64>("DURATION_S", Self::VT_DURATION_S, false)?
+     .visit_field::<f64>("DATA_VOLUME_BITS", Self::VT_DATA_VOLUME_BITS, false)?
+     .visit_field::<f64>("MEAN_DATA_RATE_BPS", Self::VT_MEAN_DATA_RATE_BPS, false)?
+     .visit_field::<u32>("SAMPLE_COUNT", Self::VT_SAMPLE_COUNT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ACIDataVolumeByModCodArgs<'a> {
+    pub INTERVAL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODCOD_INDEX: u32,
+    pub MODCOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DURATION_S: f64,
+    pub DATA_VOLUME_BITS: f64,
+    pub MEAN_DATA_RATE_BPS: f64,
+    pub SAMPLE_COUNT: u32,
+}
+impl<'a> Default for ACIDataVolumeByModCodArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ACIDataVolumeByModCodArgs {
+      INTERVAL_ID: None, // required field
+      LINK_ID: None,
+      MODCOD_INDEX: 0,
+      MODCOD_ID: None, // required field
+      DURATION_S: 0.0,
+      DATA_VOLUME_BITS: 0.0,
+      MEAN_DATA_RATE_BPS: 0.0,
+      SAMPLE_COUNT: 0,
+    }
+  }
+}
+
+pub struct ACIDataVolumeByModCodBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACIDataVolumeByModCodBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_INTERVAL_ID(&mut self, INTERVAL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACIDataVolumeByModCod::VT_INTERVAL_ID, INTERVAL_ID);
+  }
+  #[inline]
+  pub fn add_LINK_ID(&mut self, LINK_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACIDataVolumeByModCod::VT_LINK_ID, LINK_ID);
+  }
+  #[inline]
+  pub fn add_MODCOD_INDEX(&mut self, MODCOD_INDEX: u32) {
+    self.fbb_.push_slot::<u32>(ACIDataVolumeByModCod::VT_MODCOD_INDEX, MODCOD_INDEX, 0);
+  }
+  #[inline]
+  pub fn add_MODCOD_ID(&mut self, MODCOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACIDataVolumeByModCod::VT_MODCOD_ID, MODCOD_ID);
+  }
+  #[inline]
+  pub fn add_DURATION_S(&mut self, DURATION_S: f64) {
+    self.fbb_.push_slot::<f64>(ACIDataVolumeByModCod::VT_DURATION_S, DURATION_S, 0.0);
+  }
+  #[inline]
+  pub fn add_DATA_VOLUME_BITS(&mut self, DATA_VOLUME_BITS: f64) {
+    self.fbb_.push_slot::<f64>(ACIDataVolumeByModCod::VT_DATA_VOLUME_BITS, DATA_VOLUME_BITS, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_DATA_RATE_BPS(&mut self, MEAN_DATA_RATE_BPS: f64) {
+    self.fbb_.push_slot::<f64>(ACIDataVolumeByModCod::VT_MEAN_DATA_RATE_BPS, MEAN_DATA_RATE_BPS, 0.0);
+  }
+  #[inline]
+  pub fn add_SAMPLE_COUNT(&mut self, SAMPLE_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(ACIDataVolumeByModCod::VT_SAMPLE_COUNT, SAMPLE_COUNT, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACIDataVolumeByModCodBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ACIDataVolumeByModCodBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ACIDataVolumeByModCod<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, ACIDataVolumeByModCod::VT_INTERVAL_ID,"INTERVAL_ID");
+    self.fbb_.required(o, ACIDataVolumeByModCod::VT_MODCOD_ID,"MODCOD_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ACIDataVolumeByModCod<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ACIDataVolumeByModCod");
+      ds.field("INTERVAL_ID", &self.INTERVAL_ID());
+      ds.field("LINK_ID", &self.LINK_ID());
+      ds.field("MODCOD_INDEX", &self.MODCOD_INDEX());
+      ds.field("MODCOD_ID", &self.MODCOD_ID());
+      ds.field("DURATION_S", &self.DURATION_S());
+      ds.field("DATA_VOLUME_BITS", &self.DATA_VOLUME_BITS());
+      ds.field("MEAN_DATA_RATE_BPS", &self.MEAN_DATA_RATE_BPS());
+      ds.field("SAMPLE_COUNT", &self.SAMPLE_COUNT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACIDataVolumeByModCodT {
+  pub INTERVAL_ID: alloc::string::String,
+  pub LINK_ID: Option<alloc::string::String>,
+  pub MODCOD_INDEX: u32,
+  pub MODCOD_ID: alloc::string::String,
+  pub DURATION_S: f64,
+  pub DATA_VOLUME_BITS: f64,
+  pub MEAN_DATA_RATE_BPS: f64,
+  pub SAMPLE_COUNT: u32,
+}
+impl Default for ACIDataVolumeByModCodT {
+  fn default() -> Self {
+    Self {
+      INTERVAL_ID: alloc::string::ToString::to_string(""),
+      LINK_ID: None,
+      MODCOD_INDEX: 0,
+      MODCOD_ID: alloc::string::ToString::to_string(""),
+      DURATION_S: 0.0,
+      DATA_VOLUME_BITS: 0.0,
+      MEAN_DATA_RATE_BPS: 0.0,
+      SAMPLE_COUNT: 0,
+    }
+  }
+}
+impl ACIDataVolumeByModCodT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ACIDataVolumeByModCod<'b>> {
+    let INTERVAL_ID = Some({
+      let x = &self.INTERVAL_ID;
+      _fbb.create_string(x)
+    });
+    let LINK_ID = self.LINK_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODCOD_INDEX = self.MODCOD_INDEX;
+    let MODCOD_ID = Some({
+      let x = &self.MODCOD_ID;
+      _fbb.create_string(x)
+    });
+    let DURATION_S = self.DURATION_S;
+    let DATA_VOLUME_BITS = self.DATA_VOLUME_BITS;
+    let MEAN_DATA_RATE_BPS = self.MEAN_DATA_RATE_BPS;
+    let SAMPLE_COUNT = self.SAMPLE_COUNT;
+    ACIDataVolumeByModCod::create(_fbb, &ACIDataVolumeByModCodArgs{
+      INTERVAL_ID,
+      LINK_ID,
+      MODCOD_INDEX,
+      MODCOD_ID,
+      DURATION_S,
+      DATA_VOLUME_BITS,
+      MEAN_DATA_RATE_BPS,
+      SAMPLE_COUNT,
+    })
+  }
+}
 pub enum ACIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -2542,6 +2853,8 @@ impl<'a> ACI<'a> {
   pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 22;
   pub const VT_PRODUCER_ID: ::flatbuffers::VOffsetT = 24;
   pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_CANONICAL_JSON_SIGNATURE: ::flatbuffers::VOffsetT = 28;
+  pub const VT_DATA_VOLUME_BY_MODCOD: ::flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2556,6 +2869,8 @@ impl<'a> ACI<'a> {
     builder.add_COMPUTED_AT(args.COMPUTED_AT);
     builder.add_WINDOW_STOP(args.WINDOW_STOP);
     builder.add_WINDOW_START(args.WINDOW_START);
+    if let Some(x) = args.DATA_VOLUME_BY_MODCOD { builder.add_DATA_VOLUME_BY_MODCOD(x); }
+    if let Some(x) = args.CANONICAL_JSON_SIGNATURE { builder.add_CANONICAL_JSON_SIGNATURE(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.PRODUCER_ID { builder.add_PRODUCER_ID(x); }
     if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
@@ -2600,6 +2915,12 @@ impl<'a> ACI<'a> {
     let SIGNATURE = self.SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    let DATA_VOLUME_BY_MODCOD = self.DATA_VOLUME_BY_MODCOD().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     ACIT {
       ACI_ID,
       NAME,
@@ -2613,6 +2934,8 @@ impl<'a> ACI<'a> {
       COMPUTED_AT,
       PRODUCER_ID,
       SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
+      DATA_VOLUME_BY_MODCOD,
     }
   }
 
@@ -2708,13 +3031,34 @@ impl<'a> ACI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACI::VT_PRODUCER_ID, None)}
   }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   #[inline]
   pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ACI::VT_SIGNATURE, None)}
+  }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  #[inline]
+  pub fn CANONICAL_JSON_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ACI::VT_CANONICAL_JSON_SIGNATURE, None)}
+  }
+  /// Per-interval delivered volume grouped by selected modulation-and-coding
+  /// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+  #[inline]
+  pub fn DATA_VOLUME_BY_MODCOD(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACIDataVolumeByModCod<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACIDataVolumeByModCod>>>>(ACI::VT_DATA_VOLUME_BY_MODCOD, None)}
   }
 }
 
@@ -2736,6 +3080,8 @@ impl ::flatbuffers::Verifiable for ACI<'_> {
      .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_ID", Self::VT_PRODUCER_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CANONICAL_JSON_SIGNATURE", Self::VT_CANONICAL_JSON_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACIDataVolumeByModCod>>>>("DATA_VOLUME_BY_MODCOD", Self::VT_DATA_VOLUME_BY_MODCOD, false)?
      .finish();
     Ok(())
   }
@@ -2753,6 +3099,8 @@ pub struct ACIArgs<'a> {
     pub COMPUTED_AT: u64,
     pub PRODUCER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CANONICAL_JSON_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub DATA_VOLUME_BY_MODCOD: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACIDataVolumeByModCod<'a>>>>>,
 }
 impl<'a> Default for ACIArgs<'a> {
   #[inline]
@@ -2770,6 +3118,8 @@ impl<'a> Default for ACIArgs<'a> {
       COMPUTED_AT: 0,
       PRODUCER_ID: None,
       SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
+      DATA_VOLUME_BY_MODCOD: None,
     }
   }
 }
@@ -2828,6 +3178,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACI::VT_SIGNATURE, SIGNATURE);
   }
   #[inline]
+  pub fn add_CANONICAL_JSON_SIGNATURE(&mut self, CANONICAL_JSON_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACI::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  #[inline]
+  pub fn add_DATA_VOLUME_BY_MODCOD(&mut self, DATA_VOLUME_BY_MODCOD: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACIDataVolumeByModCod<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACI::VT_DATA_VOLUME_BY_MODCOD, DATA_VOLUME_BY_MODCOD);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACIBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACIBuilder {
@@ -2860,6 +3218,8 @@ impl ::core::fmt::Debug for ACI<'_> {
       ds.field("COMPUTED_AT", &self.COMPUTED_AT());
       ds.field("PRODUCER_ID", &self.PRODUCER_ID());
       ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("CANONICAL_JSON_SIGNATURE", &self.CANONICAL_JSON_SIGNATURE());
+      ds.field("DATA_VOLUME_BY_MODCOD", &self.DATA_VOLUME_BY_MODCOD());
       ds.finish()
   }
 }
@@ -2878,6 +3238,8 @@ pub struct ACIT {
   pub COMPUTED_AT: u64,
   pub PRODUCER_ID: Option<alloc::string::String>,
   pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub CANONICAL_JSON_SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub DATA_VOLUME_BY_MODCOD: Option<alloc::vec::Vec<ACIDataVolumeByModCodT>>,
 }
 impl Default for ACIT {
   fn default() -> Self {
@@ -2894,6 +3256,8 @@ impl Default for ACIT {
       COMPUTED_AT: 0,
       PRODUCER_ID: None,
       SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
+      DATA_VOLUME_BY_MODCOD: None,
     }
   }
 }
@@ -2933,6 +3297,12 @@ impl ACIT {
     let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let DATA_VOLUME_BY_MODCOD = self.DATA_VOLUME_BY_MODCOD.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     ACI::create(_fbb, &ACIArgs{
       ACI_ID,
       NAME,
@@ -2946,6 +3316,8 @@ impl ACIT {
       COMPUTED_AT,
       PRODUCER_ID,
       SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
+      DATA_VOLUME_BY_MODCOD,
     })
   }
 }

@@ -136,6 +136,42 @@ public final class RFE extends com.google.flatbuffers.Table {
   public String NOTES() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Provenance of the root emitter descriptor.
+   */
+  public RFEProvenance PROVENANCE() { return PROVENANCE(new RFEProvenance()); }
+  public RFEProvenance PROVENANCE(RFEProvenance obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Unix ms this record was serialized.
+   */
+  public long COMPUTED_AT() { int o = __offset(46); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * `$EPM` identifier of the producing node.
+   */
+  public String PRODUCER_ID() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PRODUCER_IDAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer PRODUCER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+   * signature payloads zeroed while preserving their vectors and offsets.
+   */
+  public int SIGNATURE(int j) { int o = __offset(50); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int SIGNATURELength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector signatureVector() { return signatureVector(new ByteVector()); }
+  public ByteVector signatureVector(ByteVector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * Ed25519 signature over canonical JSON with IDL field order and
+   * capitalization, no insignificant whitespace, and both signature fields
+   * omitted.
+   */
+  public int CANONICAL_JSON_SIGNATURE(int j) { int o = __offset(52); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CANONICAL_JSON_SIGNATURELength() { int o = __offset(52); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector canonicalJsonSignatureVector() { return canonicalJsonSignatureVector(new ByteVector()); }
+  public ByteVector canonicalJsonSignatureVector(ByteVector obj) { int o = __offset(52); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
 
   public static int createRFE(FlatBufferBuilder builder,
       int IDOffset,
@@ -157,13 +193,23 @@ public final class RFE extends com.google.flatbuffers.Table {
       long NUM_MODES,
       int RF_EMITTER_DETAILSOffset,
       int THREAT_LEVELOffset,
-      int NOTESOffset) {
-    builder.startTable(20);
+      int NOTESOffset,
+      int PROVENANCEOffset,
+      long COMPUTED_AT,
+      int PRODUCER_IDOffset,
+      int SIGNATUREOffset,
+      int CANONICAL_JSON_SIGNATUREOffset) {
+    builder.startTable(25);
+    RFE.addComputedAt(builder, COMPUTED_AT);
     RFE.addAntennaGain(builder, ANTENNA_GAIN);
     RFE.addAvgPower(builder, AVG_POWER);
     RFE.addPeakPower(builder, PEAK_POWER);
     RFE.addFreqMax(builder, FREQ_MAX);
     RFE.addFreqMin(builder, FREQ_MIN);
+    RFE.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATUREOffset);
+    RFE.addSignature(builder, SIGNATUREOffset);
+    RFE.addProducerId(builder, PRODUCER_IDOffset);
+    RFE.addProvenance(builder, PROVENANCEOffset);
     RFE.addNotes(builder, NOTESOffset);
     RFE.addThreatLevel(builder, THREAT_LEVELOffset);
     RFE.addRfEmitterDetails(builder, RF_EMITTER_DETAILSOffset);
@@ -182,7 +228,7 @@ public final class RFE extends com.google.flatbuffers.Table {
     return RFE.endRFE(builder);
   }
 
-  public static void startRFE(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startRFE(FlatBufferBuilder builder) { builder.startTable(25); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
@@ -205,6 +251,17 @@ public final class RFE extends com.google.flatbuffers.Table {
   public static void startRfEmitterDetailsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addThreatLevel(FlatBufferBuilder builder, int THREAT_LEVELOffset) { builder.addOffset(18, THREAT_LEVELOffset, 0); }
   public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(19, NOTESOffset, 0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(20, PROVENANCEOffset, 0); }
+  public static void addComputedAt(FlatBufferBuilder builder, long COMPUTED_AT) { builder.addLong(21, COMPUTED_AT, 0L); }
+  public static void addProducerId(FlatBufferBuilder builder, int PRODUCER_IDOffset) { builder.addOffset(22, PRODUCER_IDOffset, 0); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(23, SIGNATUREOffset, 0); }
+  public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addCanonicalJsonSignature(FlatBufferBuilder builder, int CANONICAL_JSON_SIGNATUREOffset) { builder.addOffset(24, CANONICAL_JSON_SIGNATUREOffset, 0); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCanonicalJsonSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endRFE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

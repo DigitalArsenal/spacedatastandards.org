@@ -44,5 +44,25 @@ class rflBudgetTerm private constructor() {
         const val INTERFERENCE_POWER: Byte = 28
         const val CARRIER_TO_NOISE_PLUS_INTERFERENCE: Byte = 29
         const val SIGNAL_TO_INTERFERENCE_PLUS_NOISE: Byte = 30
+        /**
+         * Energy per transmitted symbol divided by noise spectral density.
+         */
+        const val SYMBOL_ENERGY_TO_NOISE_DENSITY: Byte = 31
+        /**
+         * Error probability for a decoded transport block or frame.
+         */
+        const val BLOCK_ERROR_RATE: Byte = 32
+        /**
+         * Delivered information bits per second per hertz.
+         */
+        const val SPECTRAL_EFFICIENCY: Byte = 33
+        /**
+         * Data rate delivered by the selected modulation and coding entry.
+         */
+        const val ACHIEVED_DATA_RATE: Byte = 34
+        /**
+         * Margin above the threshold of the selected adaptive entry.
+         */
+        const val ACM_MARGIN: Byte = 35
     }
 }

@@ -1,6 +1,88 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfeEmissionMaskClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "IN_BAND",
+        "OUT_OF_BAND",
+        "SPURIOUS",
+        "HARMONIC",
+        "BROADBAND_NOISE",
+        "CONDUCTED",
+        "RADIATED",
+        "SUSCEPTIBILITY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "IN_BAND": {
+          "value": 1
+        },
+        "OUT_OF_BAND": {
+          "value": 2
+        },
+        "SPURIOUS": {
+          "value": 3
+        },
+        "HARMONIC": {
+          "value": 4
+        },
+        "BROADBAND_NOISE": {
+          "value": 5
+        },
+        "CONDUCTED": {
+          "value": 6
+        },
+        "RADIATED": {
+          "value": 7
+        },
+        "SUSCEPTIBILITY": {
+          "value": 8
+        }
+      }
+    },
+    "rfeEmissionPath": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ANTENNA_PORT",
+        "POWER_LEAD",
+        "SIGNAL_LEAD",
+        "ENCLOSURE",
+        "FREE_SPACE",
+        "STRUCTURE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ANTENNA_PORT": {
+          "value": 1
+        },
+        "POWER_LEAD": {
+          "value": 2
+        },
+        "SIGNAL_LEAD": {
+          "value": 3
+        },
+        "ENCLOSURE": {
+          "value": 4
+        },
+        "FREE_SPACE": {
+          "value": 5
+        },
+        "STRUCTURE": {
+          "value": 6
+        }
+      }
+    },
     "emitterType": {
       "type": "string",
       "enum": [
@@ -110,6 +192,183 @@
           "value": 12
         }
       }
+    },
+    "RFEEmissionMaskPoint": {
+      "type": "object",
+      "description": "One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is\nrelative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in\nthe mask's required UNITS.",
+      "properties": {
+        "FREQUENCY_OFFSET_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFEProvenance": {
+      "type": "object",
+      "description": "Provenance of an emitter descriptor or emission mask. Capability schemas\ncarry model names and citations as data so the IDL remains provider-neutral.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_CONTENT_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "RFEEmissionMask": {
+      "type": "object",
+      "description": "A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,\nor susceptibility limit curve.",
+      "properties": {
+        "MASK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASS": {
+          "$ref": "#/definitions/rfeEmissionMaskClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "IN_BAND": {
+              "value": 1
+            },
+            "OUT_OF_BAND": {
+              "value": 2
+            },
+            "SPURIOUS": {
+              "value": 3
+            },
+            "HARMONIC": {
+              "value": 4
+            },
+            "BROADBAND_NOISE": {
+              "value": 5
+            },
+            "CONDUCTED": {
+              "value": 6
+            },
+            "RADIATED": {
+              "value": 7
+            },
+            "SUSCEPTIBILITY": {
+              "value": 8
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PATH": {
+          "$ref": "#/definitions/rfeEmissionPath",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ANTENNA_PORT": {
+              "value": 1
+            },
+            "POWER_LEAD": {
+              "value": 2
+            },
+            "SIGNAL_LEAD": {
+              "value": 3
+            },
+            "ENCLOSURE": {
+              "value": 4
+            },
+            "FREE_SPACE": {
+              "value": 5
+            },
+            "STRUCTURE": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,\nor dBuA. A point with no unit is not publishable.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REFERENCE_FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RFEEmissionMaskPoint"
+          },
+          "x-flatbuffer-type": "[RFEEmissionMaskPoint]",
+          "x-flatbuffer-required": true
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/RFEProvenance",
+          "x-flatbuffer-type": "RFEProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "MASK_ID",
+        "UNITS",
+        "POINTS",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
     },
     "rfEmitterDetail": {
       "type": "object",
@@ -231,6 +490,14 @@
           "type": "number",
           "description": "3dB beamwidth in degrees",
           "x-flatbuffer-type": "double"
+        },
+        "EMISSION_MASKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RFEEmissionMask"
+          },
+          "description": "Emission and susceptibility limit curves applicable to this operating\nmode. Curves are evaluated in point order after sorting by frequency.",
+          "x-flatbuffer-type": "[RFEEmissionMask]"
         }
       },
       "additionalProperties": false
@@ -376,6 +643,43 @@
           "type": "string",
           "description": "Additional notes",
           "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/RFEProvenance",
+          "description": "Provenance of the root emitter descriptor.",
+          "x-flatbuffer-type": "RFEProvenance"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix ms this record was serialized.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCER_ID": {
+          "type": "string",
+          "description": "`$EPM` identifier of the producing node.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "additionalProperties": false

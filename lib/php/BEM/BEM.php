@@ -206,22 +206,113 @@ class BEM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time-sliced activation plan for this deployed beam.
+    public function getHOP_SCHEDULE()
+    {
+        $obj = new BEMHopSchedule();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getPROVENANCE()
+    {
+        $obj = new BEMProvenance();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Unix ms this record was serialized.
+    /**
+     * @return ulong
+     */
+    public function getCOMPUTED_AT()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// `$EPM` identifier of the producing node.
+    public function getPRODUCER_ID()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+    /// signature payloads zeroed while preserving their vectors and offsets.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getSIGNATURE($j)
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSIGNATURELength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(46);
+    }
+
+    /// Ed25519 signature over canonical JSON with IDL field order and
+    /// capitalization, no insignificant whitespace, and both signature fields
+    /// omitted.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCANONICAL_JSON_SIGNATURE($j)
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCANONICAL_JSON_SIGNATURELength()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCANONICAL_JSON_SIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(48);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startBEM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return BEM
      */
-    public static function createBEM(FlatBufferBuilder $builder, $ID, $BEAM_NAME, $ID_ENTITY, $ID_ANTENNA, $TYPE, $POLARIZATION, $PEAK_GAIN, $EOC_GAIN, $CENTER_LATITUDE, $CENTER_LONGITUDE, $BEAMWIDTH, $FREQUENCY, $EIRP, $G_OVER_T, $FOOTPRINT_AREA, $BEAM_CONTOURS, $NOTES)
+    public static function createBEM(FlatBufferBuilder $builder, $ID, $BEAM_NAME, $ID_ENTITY, $ID_ANTENNA, $TYPE, $POLARIZATION, $PEAK_GAIN, $EOC_GAIN, $CENTER_LATITUDE, $CENTER_LONGITUDE, $BEAMWIDTH, $FREQUENCY, $EIRP, $G_OVER_T, $FOOTPRINT_AREA, $BEAM_CONTOURS, $NOTES, $HOP_SCHEDULE, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE)
     {
-        $builder->startObject(17);
+        $builder->startObject(23);
         self::addID($builder, $ID);
         self::addBEAM_NAME($builder, $BEAM_NAME);
         self::addID_ENTITY($builder, $ID_ENTITY);
@@ -239,6 +330,12 @@ class BEM extends Table
         self::addFOOTPRINT_AREA($builder, $FOOTPRINT_AREA);
         self::addBEAM_CONTOURS($builder, $BEAM_CONTOURS);
         self::addNOTES($builder, $NOTES);
+        self::addHOP_SCHEDULE($builder, $HOP_SCHEDULE);
+        self::addPROVENANCE($builder, $PROVENANCE);
+        self::addCOMPUTED_AT($builder, $COMPUTED_AT);
+        self::addPRODUCER_ID($builder, $PRODUCER_ID);
+        self::addSIGNATURE($builder, $SIGNATURE);
+        self::addCANONICAL_JSON_SIGNATURE($builder, $CANONICAL_JSON_SIGNATURE);
         $o = $builder->endObject();
         return $o;
     }
@@ -435,6 +532,114 @@ class BEM extends Table
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
         $builder->addOffsetX(16, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addHOP_SCHEDULE(FlatBufferBuilder $builder, $HOP_SCHEDULE)
+    {
+        $builder->addOffsetX(17, $HOP_SCHEDULE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(18, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addCOMPUTED_AT(FlatBufferBuilder $builder, $COMPUTED_AT)
+    {
+        $builder->addUlongX(19, $COMPUTED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPRODUCER_ID(FlatBufferBuilder $builder, $PRODUCER_ID)
+    {
+        $builder->addOffsetX(20, $PRODUCER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
+    {
+        $builder->addOffsetX(21, $SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCANONICAL_JSON_SIGNATURE(FlatBufferBuilder $builder, $CANONICAL_JSON_SIGNATURE)
+    {
+        $builder->addOffsetX(22, $CANONICAL_JSON_SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

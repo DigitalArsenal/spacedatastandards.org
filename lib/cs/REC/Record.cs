@@ -236,6 +236,12 @@ public struct Record : IFlatbufferObject
   public TMS valueAsTMS() { return value<TMS>().Value; }
   public VEP valueAsVEP() { return value<VEP>().Value; }
   public EGP valueAsEGP() { return value<EGP>().Value; }
+  public APL valueAsAPL() { return value<APL>().Value; }
+  public EMC valueAsEMC() { return value<EMC>().Value; }
+  public EPF valueAsEPF() { return value<EPF>().Value; }
+  public GEL valueAsGEL() { return value<GEL>().Value; }
+  public PAP valueAsPAP() { return value<PAP>().Value; }
+  public RSD valueAsRSD() { return value<RSD>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -921,6 +927,24 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.EGP:
         _o.value.Value = this.value<EGP>().HasValue ? this.value<EGP>().Value.UnPack() : null;
+        break;
+      case RecordType.APL:
+        _o.value.Value = this.value<APL>().HasValue ? this.value<APL>().Value.UnPack() : null;
+        break;
+      case RecordType.EMC:
+        _o.value.Value = this.value<EMC>().HasValue ? this.value<EMC>().Value.UnPack() : null;
+        break;
+      case RecordType.EPF:
+        _o.value.Value = this.value<EPF>().HasValue ? this.value<EPF>().Value.UnPack() : null;
+        break;
+      case RecordType.GEL:
+        _o.value.Value = this.value<GEL>().HasValue ? this.value<GEL>().Value.UnPack() : null;
+        break;
+      case RecordType.PAP:
+        _o.value.Value = this.value<PAP>().HasValue ? this.value<PAP>().Value.UnPack() : null;
+        break;
+      case RecordType.RSD:
+        _o.value.Value = this.value<RSD>().HasValue ? this.value<RSD>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

@@ -211,6 +211,46 @@ class RFLProvenance : Table() {
         }
     val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
     fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+     * MODELS remains the per-budget-term attribution surface.
+     */
+    val moduleId : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val moduleIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun moduleIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    val moduleVersion : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val moduleVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun moduleVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Content hash of the exact producing WASM artifact.
+     */
+    val moduleContentHash : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val moduleContentHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun moduleContentHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFLProvenance(_bb: ByteBuffer): RFLProvenance = getRootAsRFLProvenance(_bb, RFLProvenance())
@@ -218,11 +258,14 @@ class RFLProvenance : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRFLProvenance(builder: FlatBufferBuilder, method: Byte, sourceOffset: Int, sourceQueryOffset: Int, propagatorIdOffset: Int, propagatorVersionOffset: Int, propagatorConfigurationOffset: Int, samplingStepS: Double, modelsOffset: Int, environmentDatasetOffset: Int, terrainDatasetOffset: Int, computedAt: ULong, retrievedAt: ULong, licenseOffset: Int, nonCommercialOnly: Boolean, citationOffset: Int) : Int {
-            builder.startTable(15)
+        fun createRFLProvenance(builder: FlatBufferBuilder, method: Byte, sourceOffset: Int, sourceQueryOffset: Int, propagatorIdOffset: Int, propagatorVersionOffset: Int, propagatorConfigurationOffset: Int, samplingStepS: Double, modelsOffset: Int, environmentDatasetOffset: Int, terrainDatasetOffset: Int, computedAt: ULong, retrievedAt: ULong, licenseOffset: Int, nonCommercialOnly: Boolean, citationOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, moduleContentHashOffset: Int) : Int {
+            builder.startTable(18)
             addRETRIEVEDAT(builder, retrievedAt)
             addCOMPUTEDAT(builder, computedAt)
             addSAMPLINGSTEPS(builder, samplingStepS)
+            addMODULECONTENTHASH(builder, moduleContentHashOffset)
+            addMODULEVERSION(builder, moduleVersionOffset)
+            addMODULEID(builder, moduleIdOffset)
             addCITATION(builder, citationOffset)
             addLICENSE(builder, licenseOffset)
             addTERRAINDATASET(builder, terrainDatasetOffset)
@@ -237,7 +280,7 @@ class RFLProvenance : Table() {
             addMETHOD(builder, method)
             return endRFLProvenance(builder)
         }
-        fun startRFLProvenance(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startRFLProvenance(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addMETHOD(builder: FlatBufferBuilder, method: Byte) = builder.addByte(0, method, 0)
         fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(1, source, 0)
         fun addSOURCEQUERY(builder: FlatBufferBuilder, sourceQuery: Int) = builder.addOffset(2, sourceQuery, 0)
@@ -261,6 +304,9 @@ class RFLProvenance : Table() {
         fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(12, license, 0)
         fun addNONCOMMERCIALONLY(builder: FlatBufferBuilder, nonCommercialOnly: Boolean) = builder.addBoolean(13, nonCommercialOnly, false)
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(14, citation, 0)
+        fun addMODULEID(builder: FlatBufferBuilder, moduleId: Int) = builder.addOffset(15, moduleId, 0)
+        fun addMODULEVERSION(builder: FlatBufferBuilder, moduleVersion: Int) = builder.addOffset(16, moduleVersion, 0)
+        fun addMODULECONTENTHASH(builder: FlatBufferBuilder, moduleContentHash: Int) = builder.addOffset(17, moduleContentHash, 0)
         fun endRFLProvenance(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 6)

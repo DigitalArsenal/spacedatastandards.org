@@ -43,7 +43,7 @@
     },
     "rflBudgetTerm" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE"]
+      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE", "SYMBOL_ENERGY_TO_NOISE_DENSITY", "BLOCK_ERROR_RATE", "SPECTRAL_EFFICIENCY", "ACHIEVED_DATA_RATE", "ACM_MARGIN"]
     },
     "rflConstraint" : {
       "type" : "string",
@@ -586,6 +586,58 @@
       "required" : ["ENDPOINT_ID"],
       "additionalProperties" : false
     },
+    "RFLModCod" : {
+      "type" : "object",
+      "description" : "One modulation-and-coding choice available to a link. The table carries\nengineering capability only; catalogue or recommendation names belong in\nID / NAME and provenance data, never in the schema vocabulary.",
+      "properties" : {
+        "MODCOD_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier within the containing link's MODCOD_SET."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Producer-supplied display name."
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "CODING" : {
+                "type" : "string"
+              },
+        "CODE_RATE" : {
+                "type" : "number",
+                "description" : "Information bits divided by coded bits, in (0,1]."
+              },
+        "BITS_PER_SYMBOL" : {
+                "type" : "number"
+              },
+        "SPECTRAL_EFFICIENCY_BPS_HZ" : {
+                "type" : "number"
+              },
+        "REQUIRED_ES_N0_DB" : {
+                "type" : "number"
+              },
+        "REQUIRED_EB_N0_DB" : {
+                "type" : "number"
+              },
+        "TARGET_BIT_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "TARGET_BLOCK_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "REQUIRED_MARGIN_DB" : {
+                "type" : "number",
+                "description" : "Additional implementation margin required before this entry is selected."
+              },
+        "MAXIMUM_DATA_RATE_BPS" : {
+                "type" : "number",
+                "description" : "Optional ceiling imposed by framing or implementation, bits per second."
+              }
+      },
+      "required" : ["MODCOD_ID"],
+      "additionalProperties" : false
+    },
     "RFLLink" : {
       "type" : "object",
       "description" : "One link whose budget is sampled by this record.",
@@ -664,6 +716,14 @@
         "SERVICE" : {
                 "type" : "string",
                 "description" : "Operator-facing service or mission designation."
+              },
+        "MODCOD_SET" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLModCod"},
+                "description" : "Ordered adaptive modulation-and-coding choices. Per-sample\nSELECTED_MODCOD_INDEX indexes this vector for the sample's selected link."
+              },
+        "ACM_ENABLED" : {
+                "type" : "boolean",
+                "description" : "Whether the producer evaluated adaptive selection for this link."
               }
       },
       "required" : ["LINK_ID", "TRANSMIT_ENDPOINT", "RECEIVE_ENDPOINT"],
@@ -831,6 +891,17 @@
         "CITATION" : {
                 "type" : "string",
                 "description" : "Attribution the licence requires this record to carry downstream."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.\nMODELS remains the per-budget-term attribution surface."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "Content hash of the exact producing WASM artifact."
               }
       },
       "required" : ["SOURCE"],
@@ -1042,7 +1113,38 @@
               },
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature by the producing `$EPM`."
+                "description" : "Ed25519 signature by the producing `$EPM` over the size-prefixed\nFlatBuffer projection with both 64-byte signature payloads zeroed while\npreserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\nfield order, IDL capitalization, no insignificant whitespace, and both\nsignature fields omitted."
+              },
+        "SELECTED_MODCOD_INDEX" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Index into the selected link's RFLLink.MODCOD_SET for each sample.\nSELECTED_MODCOD_VALID distinguishes index 0 from no selection."
+              },
+        "SELECTED_MODCOD_VALID" : {
+                "type" : "array", "items" : {"type" : "boolean"}
+              },
+        "SPECTRAL_EFFICIENCY_BPS_HZ" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral efficiency delivered by the selected entry, bit/s/Hz."
+              },
+        "ACHIEVED_DATA_RATE_BPS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Delivered information rate after adaptive selection, bits per second."
+              },
+        "ACM_MARGIN_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Margin above the selected entry's threshold, dB."
+              },
+        "ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Symbol energy to noise spectral density, dB."
+              },
+        "BLOCK_ERROR_RATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Decoded block error probability [0-1]."
               }
       },
       "required" : ["RFL_ID", "LINKS", "SAMPLE_LINK_INDEXES", "SAMPLE_EPOCHS", "PROVENANCE"],
@@ -1344,6 +1446,42 @@
       "required" : ["SOURCE"],
       "additionalProperties" : false
     },
+    "ACIDataVolumeByModCod" : {
+      "type" : "object",
+      "description" : "Data carried by one modulation-and-coding choice during one interval.\nEntries are explicit rows so FlatSQL and `$RPT` can group volume by link,\ninterval, or choice without decoding a producer-specific map.",
+      "properties" : {
+        "INTERVAL_ID" : {
+                "type" : "string",
+                "description" : "ACIInterval.INTERVAL_ID this row summarizes."
+              },
+        "LINK_ID" : {
+                "type" : "string",
+                "description" : "ACIInterval.LINK_ID / RFLLink.LINK_ID."
+              },
+        "MODCOD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into the link's RFLLink.MODCOD_SET."
+              },
+        "MODCOD_ID" : {
+                "type" : "string",
+                "description" : "Stable RFLModCod.MODCOD_ID copied for queryability across records."
+              },
+        "DURATION_S" : {
+                "type" : "number"
+              },
+        "DATA_VOLUME_BITS" : {
+                "type" : "number"
+              },
+        "MEAN_DATA_RATE_BPS" : {
+                "type" : "number"
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["INTERVAL_ID", "MODCOD_ID"],
+      "additionalProperties" : false
+    },
     "ACI" : {
       "type" : "object",
       "description" : "Access Interval",
@@ -1393,7 +1531,15 @@
               },
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature by the producing `$EPM`."
+                "description" : "Ed25519 signature by the producing `$EPM` over the size-prefixed\nFlatBuffer projection with both 64-byte signature payloads zeroed while\npreserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\nfield order, IDL capitalization, no insignificant whitespace, and both\nsignature fields omitted."
+              },
+        "DATA_VOLUME_BY_MODCOD" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACIDataVolumeByModCod"},
+                "description" : "Per-interval delivered volume grouped by selected modulation-and-coding\nentry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS."
               }
       },
       "required" : ["ACI_ID", "INTERVALS", "PROVENANCE"],

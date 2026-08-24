@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { RFLEndpoint, RFLEndpointT } from './RFLEndpoint.js';
+import { RFLModCod, RFLModCodT } from './RFLModCod.js';
 import { rflBudgetTerm } from './rflBudgetTerm.js';
 import { rflComparison } from './rflComparison.js';
 import { rflLinkKind } from './rflLinkKind.js';
@@ -205,8 +206,30 @@ SERVICE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Ordered adaptive modulation-and-coding choices. Per-sample
+ * SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+ */
+MODCOD_SET(index: number, obj?:RFLModCod):RFLModCod|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new RFLModCod()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+modcodSetLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Whether the producer evaluated adaptive selection for this link.
+ */
+ACM_ENABLED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startRFLLink(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(22);
 }
 
 static addLinkId(builder:flatbuffers.Builder, LINK_IDOffset:flatbuffers.Offset) {
@@ -289,6 +312,26 @@ static addService(builder:flatbuffers.Builder, SERVICEOffset:flatbuffers.Offset)
   builder.addFieldOffset(19, SERVICEOffset, 0);
 }
 
+static addModcodSet(builder:flatbuffers.Builder, MODCOD_SETOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, MODCOD_SETOffset, 0);
+}
+
+static createModcodSetVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startModcodSetVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addAcmEnabled(builder:flatbuffers.Builder, ACM_ENABLED:boolean) {
+  builder.addFieldInt8(21, +ACM_ENABLED, +false);
+}
+
 static endRFLLink(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LINK_ID
@@ -319,7 +362,9 @@ unpack(): RFLLinkT {
     this.RECEIVER_GROUP_ID(),
     this.CHANNEL_GROUP_ID(),
     this.CONSTELLATION(),
-    this.SERVICE()
+    this.SERVICE(),
+    this.bb!.createObjList<RFLModCod, RFLModCodT>(this.MODCOD_SET.bind(this), this.modcodSetLength()),
+    this.ACM_ENABLED()
   );
 }
 
@@ -345,6 +390,8 @@ unpackTo(_o: RFLLinkT): void {
   _o.CHANNEL_GROUP_ID = this.CHANNEL_GROUP_ID();
   _o.CONSTELLATION = this.CONSTELLATION();
   _o.SERVICE = this.SERVICE();
+  _o.MODCOD_SET = this.bb!.createObjList<RFLModCod, RFLModCodT>(this.MODCOD_SET.bind(this), this.modcodSetLength());
+  _o.ACM_ENABLED = this.ACM_ENABLED();
 }
 }
 
@@ -369,7 +416,9 @@ constructor(
   public RECEIVER_GROUP_ID: string|Uint8Array|null = null,
   public CHANNEL_GROUP_ID: string|Uint8Array|null = null,
   public CONSTELLATION: string|Uint8Array|null = null,
-  public SERVICE: string|Uint8Array|null = null
+  public SERVICE: string|Uint8Array|null = null,
+  public MODCOD_SET: (RFLModCodT)[] = [],
+  public ACM_ENABLED: boolean = false
 ){}
 
 
@@ -385,6 +434,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CHANNEL_GROUP_ID = (this.CHANNEL_GROUP_ID !== null ? builder.createString(this.CHANNEL_GROUP_ID!) : 0);
   const CONSTELLATION = (this.CONSTELLATION !== null ? builder.createString(this.CONSTELLATION!) : 0);
   const SERVICE = (this.SERVICE !== null ? builder.createString(this.SERVICE!) : 0);
+  const MODCOD_SET = RFLLink.createModcodSetVector(builder, builder.createObjectOffsetList(this.MODCOD_SET));
 
   RFLLink.startRFLLink(builder);
   RFLLink.addLinkId(builder, LINK_ID);
@@ -407,6 +457,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   RFLLink.addChannelGroupId(builder, CHANNEL_GROUP_ID);
   RFLLink.addConstellation(builder, CONSTELLATION);
   RFLLink.addService(builder, SERVICE);
+  RFLLink.addModcodSet(builder, MODCOD_SET);
+  RFLLink.addAcmEnabled(builder, this.ACM_ENABLED);
 
   return RFLLink.endRFLLink(builder);
 }

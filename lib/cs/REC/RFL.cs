@@ -435,7 +435,9 @@ public struct RFL : IFlatbufferObject
   public ArraySegment<byte>? GetPRODUCER_IDBytes() { return __p.__vector_as_arraysegment(102); }
 #endif
   public byte[] GetPRODUCER_IDArray() { return __p.__vector_as_array<byte>(102); }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   public byte SIGNATURE(int j) { int o = __p.__offset(104); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int SIGNATURELength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -444,6 +446,80 @@ public struct RFL : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(104); }
 #endif
   public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(104); }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  public byte CANONICAL_JSON_SIGNATURE(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int CANONICAL_JSON_SIGNATURELength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_span<byte>(106, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_arraysegment(106); }
+#endif
+  public byte[] GetCANONICAL_JSON_SIGNATUREArray() { return __p.__vector_as_array<byte>(106); }
+  /// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  public uint SELECTED_MODCOD_INDEX(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int SELECTED_MODCOD_INDEXLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<uint> GetSELECTED_MODCOD_INDEXBytes() { return __p.__vector_as_span<uint>(108, 4); }
+#else
+  public ArraySegment<byte>? GetSELECTED_MODCOD_INDEXBytes() { return __p.__vector_as_arraysegment(108); }
+#endif
+  public uint[] GetSELECTED_MODCOD_INDEXArray() { return __p.__vector_as_array<uint>(108); }
+  public bool SELECTED_MODCOD_VALID(int j) { int o = __p.__offset(110); return o != 0 ? 0!=__p.bb.Get(__p.__vector(o) + j * 1) : false; }
+  public int SELECTED_MODCOD_VALIDLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<bool> GetSELECTED_MODCOD_VALIDBytes() { return __p.__vector_as_span<bool>(110, 1); }
+#else
+  public ArraySegment<byte>? GetSELECTED_MODCOD_VALIDBytes() { return __p.__vector_as_arraysegment(110); }
+#endif
+  public bool[] GetSELECTED_MODCOD_VALIDArray() { return __p.__vector_as_array<bool>(110); }
+  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  public double SPECTRAL_EFFICIENCY_BPS_HZ(int j) { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SPECTRAL_EFFICIENCY_BPS_HZLength { get { int o = __p.__offset(112); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSPECTRAL_EFFICIENCY_BPS_HZBytes() { return __p.__vector_as_span<double>(112, 8); }
+#else
+  public ArraySegment<byte>? GetSPECTRAL_EFFICIENCY_BPS_HZBytes() { return __p.__vector_as_arraysegment(112); }
+#endif
+  public double[] GetSPECTRAL_EFFICIENCY_BPS_HZArray() { return __p.__vector_as_array<double>(112); }
+  /// Delivered information rate after adaptive selection, bits per second.
+  public double ACHIEVED_DATA_RATE_BPS(int j) { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ACHIEVED_DATA_RATE_BPSLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetACHIEVED_DATA_RATE_BPSBytes() { return __p.__vector_as_span<double>(114, 8); }
+#else
+  public ArraySegment<byte>? GetACHIEVED_DATA_RATE_BPSBytes() { return __p.__vector_as_arraysegment(114); }
+#endif
+  public double[] GetACHIEVED_DATA_RATE_BPSArray() { return __p.__vector_as_array<double>(114); }
+  /// Margin above the selected entry's threshold, dB.
+  public double ACM_MARGIN_DB(int j) { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ACM_MARGIN_DBLength { get { int o = __p.__offset(116); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetACM_MARGIN_DBBytes() { return __p.__vector_as_span<double>(116, 8); }
+#else
+  public ArraySegment<byte>? GetACM_MARGIN_DBBytes() { return __p.__vector_as_arraysegment(116); }
+#endif
+  public double[] GetACM_MARGIN_DBArray() { return __p.__vector_as_array<double>(116); }
+  /// Symbol energy to noise spectral density, dB.
+  public double ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(int j) { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBBytes() { return __p.__vector_as_span<double>(118, 8); }
+#else
+  public ArraySegment<byte>? GetENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBBytes() { return __p.__vector_as_arraysegment(118); }
+#endif
+  public double[] GetENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBArray() { return __p.__vector_as_array<double>(118); }
+  /// Decoded block error probability [0-1].
+  public double BLOCK_ERROR_RATE(int j) { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int BLOCK_ERROR_RATELength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetBLOCK_ERROR_RATEBytes() { return __p.__vector_as_span<double>(120, 8); }
+#else
+  public ArraySegment<byte>? GetBLOCK_ERROR_RATEBytes() { return __p.__vector_as_arraysegment(120); }
+#endif
+  public double[] GetBLOCK_ERROR_RATEArray() { return __p.__vector_as_array<double>(120); }
 
   public static Offset<RFL> CreateRFL(FlatBufferBuilder builder,
       StringOffset RFL_IDOffset = default(StringOffset),
@@ -496,9 +572,25 @@ public struct RFL : IFlatbufferObject
       Offset<RFLProvenance> PROVENANCEOffset = default(Offset<RFLProvenance>),
       ulong COMPUTED_AT = 0,
       StringOffset PRODUCER_IDOffset = default(StringOffset),
-      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(51);
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset),
+      VectorOffset SELECTED_MODCOD_INDEXOffset = default(VectorOffset),
+      VectorOffset SELECTED_MODCOD_VALIDOffset = default(VectorOffset),
+      VectorOffset SPECTRAL_EFFICIENCY_BPS_HZOffset = default(VectorOffset),
+      VectorOffset ACHIEVED_DATA_RATE_BPSOffset = default(VectorOffset),
+      VectorOffset ACM_MARGIN_DBOffset = default(VectorOffset),
+      VectorOffset ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset = default(VectorOffset),
+      VectorOffset BLOCK_ERROR_RATEOffset = default(VectorOffset)) {
+    builder.StartTable(59);
     RFL.AddCOMPUTED_AT(builder, COMPUTED_AT);
+    RFL.AddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATEOffset);
+    RFL.AddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
+    RFL.AddACM_MARGIN_DB(builder, ACM_MARGIN_DBOffset);
+    RFL.AddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPSOffset);
+    RFL.AddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZOffset);
+    RFL.AddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALIDOffset);
+    RFL.AddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEXOffset);
+    RFL.AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATUREOffset);
     RFL.AddSIGNATURE(builder, SIGNATUREOffset);
     RFL.AddPRODUCER_ID(builder, PRODUCER_IDOffset);
     RFL.AddPROVENANCE(builder, PROVENANCEOffset);
@@ -552,7 +644,7 @@ public struct RFL : IFlatbufferObject
     return RFL.EndRFL(builder);
   }
 
-  public static void StartRFL(FlatBufferBuilder builder) { builder.StartTable(51); }
+  public static void StartRFL(FlatBufferBuilder builder) { builder.StartTable(59); }
   public static void AddRFL_ID(FlatBufferBuilder builder, StringOffset RFL_IDOffset) { builder.AddOffset(0, RFL_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(2, SCENARIO_IDOffset.Value, 0); }
@@ -814,6 +906,54 @@ public struct RFL : IFlatbufferObject
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCANONICAL_JSON_SIGNATURE(FlatBufferBuilder builder, VectorOffset CANONICAL_JSON_SIGNATUREOffset) { builder.AddOffset(51, CANONICAL_JSON_SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddSELECTED_MODCOD_INDEX(FlatBufferBuilder builder, VectorOffset SELECTED_MODCOD_INDEXOffset) { builder.AddOffset(52, SELECTED_MODCOD_INDEXOffset.Value, 0); }
+  public static VectorOffset CreateSELECTED_MODCOD_INDEXVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_INDEXVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_INDEXVectorBlock(FlatBufferBuilder builder, ArraySegment<uint> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_INDEXVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<uint>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSELECTED_MODCOD_INDEXVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSELECTED_MODCOD_VALID(FlatBufferBuilder builder, VectorOffset SELECTED_MODCOD_VALIDOffset) { builder.AddOffset(53, SELECTED_MODCOD_VALIDOffset.Value, 0); }
+  public static VectorOffset CreateSELECTED_MODCOD_VALIDVector(FlatBufferBuilder builder, bool[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddBool(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_VALIDVectorBlock(FlatBufferBuilder builder, bool[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_VALIDVectorBlock(FlatBufferBuilder builder, ArraySegment<bool> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECTED_MODCOD_VALIDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<bool>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSELECTED_MODCOD_VALIDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddSPECTRAL_EFFICIENCY_BPS_HZ(FlatBufferBuilder builder, VectorOffset SPECTRAL_EFFICIENCY_BPS_HZOffset) { builder.AddOffset(54, SPECTRAL_EFFICIENCY_BPS_HZOffset.Value, 0); }
+  public static VectorOffset CreateSPECTRAL_EFFICIENCY_BPS_HZVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_EFFICIENCY_BPS_HZVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_EFFICIENCY_BPS_HZVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_EFFICIENCY_BPS_HZVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPECTRAL_EFFICIENCY_BPS_HZVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddACHIEVED_DATA_RATE_BPS(FlatBufferBuilder builder, VectorOffset ACHIEVED_DATA_RATE_BPSOffset) { builder.AddOffset(55, ACHIEVED_DATA_RATE_BPSOffset.Value, 0); }
+  public static VectorOffset CreateACHIEVED_DATA_RATE_BPSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateACHIEVED_DATA_RATE_BPSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACHIEVED_DATA_RATE_BPSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACHIEVED_DATA_RATE_BPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartACHIEVED_DATA_RATE_BPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddACM_MARGIN_DB(FlatBufferBuilder builder, VectorOffset ACM_MARGIN_DBOffset) { builder.AddOffset(56, ACM_MARGIN_DBOffset.Value, 0); }
+  public static VectorOffset CreateACM_MARGIN_DBVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateACM_MARGIN_DBVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACM_MARGIN_DBVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACM_MARGIN_DBVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartACM_MARGIN_DBVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(FlatBufferBuilder builder, VectorOffset ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset) { builder.AddOffset(57, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset.Value, 0); }
+  public static VectorOffset CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddBLOCK_ERROR_RATE(FlatBufferBuilder builder, VectorOffset BLOCK_ERROR_RATEOffset) { builder.AddOffset(58, BLOCK_ERROR_RATEOffset.Value, 0); }
+  public static VectorOffset CreateBLOCK_ERROR_RATEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateBLOCK_ERROR_RATEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBLOCK_ERROR_RATEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBLOCK_ERROR_RATEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartBLOCK_ERROR_RATEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<RFL> EndRFL(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // RFL_ID
@@ -924,6 +1064,22 @@ public struct RFL : IFlatbufferObject
     _o.PRODUCER_ID = this.PRODUCER_ID;
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.CANONICAL_JSON_SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.CANONICAL_JSON_SIGNATURELength; ++_j) {_o.CANONICAL_JSON_SIGNATURE.Add(this.CANONICAL_JSON_SIGNATURE(_j));}
+    _o.SELECTED_MODCOD_INDEX = new List<uint>();
+    for (var _j = 0; _j < this.SELECTED_MODCOD_INDEXLength; ++_j) {_o.SELECTED_MODCOD_INDEX.Add(this.SELECTED_MODCOD_INDEX(_j));}
+    _o.SELECTED_MODCOD_VALID = new List<bool>();
+    for (var _j = 0; _j < this.SELECTED_MODCOD_VALIDLength; ++_j) {_o.SELECTED_MODCOD_VALID.Add(this.SELECTED_MODCOD_VALID(_j));}
+    _o.SPECTRAL_EFFICIENCY_BPS_HZ = new List<double>();
+    for (var _j = 0; _j < this.SPECTRAL_EFFICIENCY_BPS_HZLength; ++_j) {_o.SPECTRAL_EFFICIENCY_BPS_HZ.Add(this.SPECTRAL_EFFICIENCY_BPS_HZ(_j));}
+    _o.ACHIEVED_DATA_RATE_BPS = new List<double>();
+    for (var _j = 0; _j < this.ACHIEVED_DATA_RATE_BPSLength; ++_j) {_o.ACHIEVED_DATA_RATE_BPS.Add(this.ACHIEVED_DATA_RATE_BPS(_j));}
+    _o.ACM_MARGIN_DB = new List<double>();
+    for (var _j = 0; _j < this.ACM_MARGIN_DBLength; ++_j) {_o.ACM_MARGIN_DB.Add(this.ACM_MARGIN_DB(_j));}
+    _o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = new List<double>();
+    for (var _j = 0; _j < this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength; ++_j) {_o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.Add(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(_j));}
+    _o.BLOCK_ERROR_RATE = new List<double>();
+    for (var _j = 0; _j < this.BLOCK_ERROR_RATELength; ++_j) {_o.BLOCK_ERROR_RATE.Add(this.BLOCK_ERROR_RATE(_j));}
   }
   public static Offset<RFL> Pack(FlatBufferBuilder builder, RFLT _o) {
     if (_o == null) return default(Offset<RFL>);
@@ -1146,6 +1302,46 @@ public struct RFL : IFlatbufferObject
       var __SIGNATURE = _o.SIGNATURE.ToArray();
       _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
     }
+    var _CANONICAL_JSON_SIGNATURE = default(VectorOffset);
+    if (_o.CANONICAL_JSON_SIGNATURE != null) {
+      var __CANONICAL_JSON_SIGNATURE = _o.CANONICAL_JSON_SIGNATURE.ToArray();
+      _CANONICAL_JSON_SIGNATURE = CreateCANONICAL_JSON_SIGNATUREVector(builder, __CANONICAL_JSON_SIGNATURE);
+    }
+    var _SELECTED_MODCOD_INDEX = default(VectorOffset);
+    if (_o.SELECTED_MODCOD_INDEX != null) {
+      var __SELECTED_MODCOD_INDEX = _o.SELECTED_MODCOD_INDEX.ToArray();
+      _SELECTED_MODCOD_INDEX = CreateSELECTED_MODCOD_INDEXVector(builder, __SELECTED_MODCOD_INDEX);
+    }
+    var _SELECTED_MODCOD_VALID = default(VectorOffset);
+    if (_o.SELECTED_MODCOD_VALID != null) {
+      var __SELECTED_MODCOD_VALID = _o.SELECTED_MODCOD_VALID.ToArray();
+      _SELECTED_MODCOD_VALID = CreateSELECTED_MODCOD_VALIDVector(builder, __SELECTED_MODCOD_VALID);
+    }
+    var _SPECTRAL_EFFICIENCY_BPS_HZ = default(VectorOffset);
+    if (_o.SPECTRAL_EFFICIENCY_BPS_HZ != null) {
+      var __SPECTRAL_EFFICIENCY_BPS_HZ = _o.SPECTRAL_EFFICIENCY_BPS_HZ.ToArray();
+      _SPECTRAL_EFFICIENCY_BPS_HZ = CreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, __SPECTRAL_EFFICIENCY_BPS_HZ);
+    }
+    var _ACHIEVED_DATA_RATE_BPS = default(VectorOffset);
+    if (_o.ACHIEVED_DATA_RATE_BPS != null) {
+      var __ACHIEVED_DATA_RATE_BPS = _o.ACHIEVED_DATA_RATE_BPS.ToArray();
+      _ACHIEVED_DATA_RATE_BPS = CreateACHIEVED_DATA_RATE_BPSVector(builder, __ACHIEVED_DATA_RATE_BPS);
+    }
+    var _ACM_MARGIN_DB = default(VectorOffset);
+    if (_o.ACM_MARGIN_DB != null) {
+      var __ACM_MARGIN_DB = _o.ACM_MARGIN_DB.ToArray();
+      _ACM_MARGIN_DB = CreateACM_MARGIN_DBVector(builder, __ACM_MARGIN_DB);
+    }
+    var _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = default(VectorOffset);
+    if (_o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB != null) {
+      var __ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = _o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.ToArray();
+      _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, __ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+    }
+    var _BLOCK_ERROR_RATE = default(VectorOffset);
+    if (_o.BLOCK_ERROR_RATE != null) {
+      var __BLOCK_ERROR_RATE = _o.BLOCK_ERROR_RATE.ToArray();
+      _BLOCK_ERROR_RATE = CreateBLOCK_ERROR_RATEVector(builder, __BLOCK_ERROR_RATE);
+    }
     return CreateRFL(
       builder,
       _RFL_ID,
@@ -1198,7 +1394,15 @@ public struct RFL : IFlatbufferObject
       _PROVENANCE,
       _o.COMPUTED_AT,
       _PRODUCER_ID,
-      _SIGNATURE);
+      _SIGNATURE,
+      _CANONICAL_JSON_SIGNATURE,
+      _SELECTED_MODCOD_INDEX,
+      _SELECTED_MODCOD_VALID,
+      _SPECTRAL_EFFICIENCY_BPS_HZ,
+      _ACHIEVED_DATA_RATE_BPS,
+      _ACM_MARGIN_DB,
+      _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
+      _BLOCK_ERROR_RATE);
   }
 }
 
@@ -1255,6 +1459,14 @@ public class RFLT
   public ulong COMPUTED_AT { get; set; }
   public string PRODUCER_ID { get; set; }
   public List<byte> SIGNATURE { get; set; }
+  public List<byte> CANONICAL_JSON_SIGNATURE { get; set; }
+  public List<uint> SELECTED_MODCOD_INDEX { get; set; }
+  public List<bool> SELECTED_MODCOD_VALID { get; set; }
+  public List<double> SPECTRAL_EFFICIENCY_BPS_HZ { get; set; }
+  public List<double> ACHIEVED_DATA_RATE_BPS { get; set; }
+  public List<double> ACM_MARGIN_DB { get; set; }
+  public List<double> ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB { get; set; }
+  public List<double> BLOCK_ERROR_RATE { get; set; }
 
   public RFLT() {
     this.RFL_ID = null;
@@ -1308,6 +1520,14 @@ public class RFLT
     this.COMPUTED_AT = 0;
     this.PRODUCER_ID = null;
     this.SIGNATURE = null;
+    this.CANONICAL_JSON_SIGNATURE = null;
+    this.SELECTED_MODCOD_INDEX = null;
+    this.SELECTED_MODCOD_VALID = null;
+    this.SPECTRAL_EFFICIENCY_BPS_HZ = null;
+    this.ACHIEVED_DATA_RATE_BPS = null;
+    this.ACM_MARGIN_DB = null;
+    this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = null;
+    this.BLOCK_ERROR_RATE = null;
   }
   public static RFLT DeserializeFromBinary(byte[] fbBuffer) {
     return RFL.GetRootAsRFL(new ByteBuffer(fbBuffer)).UnPack();
@@ -1376,6 +1596,14 @@ static public class RFLVerify
       && verifier.VerifyField(tablePos, 100 /*COMPUTED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 102 /*PRODUCER_ID*/, false)
       && verifier.VerifyVectorOfData(tablePos, 104 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 106 /*CANONICAL_JSON_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 108 /*SELECTED_MODCOD_INDEX*/, 4 /*uint*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 110 /*SELECTED_MODCOD_VALID*/, 1 /*bool*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 112 /*SPECTRAL_EFFICIENCY_BPS_HZ*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 114 /*ACHIEVED_DATA_RATE_BPS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 116 /*ACM_MARGIN_DB*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 118 /*ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 120 /*BLOCK_ERROR_RATE*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,5 +1,5 @@
-// Hash: 7589bc146450023bc45e474dcb42fd2f271861a5fc26b0396335e2227efe00c4
-// Version: 1.186.0
+// Hash: abd9f332ab53b48889720b65790ae930db16dbaf6b237ab10223bc3900b066c0
+// Version: 1.186.2
 // -----------------------------------END_HEADER
 include "../RFB/main.fbs";
 include "../TIM/main.fbs";
@@ -107,7 +107,17 @@ enum rflBudgetTerm : byte {
   CHANNEL_CAPACITY,
   INTERFERENCE_POWER,
   CARRIER_TO_NOISE_PLUS_INTERFERENCE,
-  SIGNAL_TO_INTERFERENCE_PLUS_NOISE
+  SIGNAL_TO_INTERFERENCE_PLUS_NOISE,
+  /// Energy per transmitted symbol divided by noise spectral density.
+  SYMBOL_ENERGY_TO_NOISE_DENSITY,
+  /// Error probability for a decoded transport block or frame.
+  BLOCK_ERROR_RATE,
+  /// Delivered information bits per second per hertz.
+  SPECTRAL_EFFICIENCY,
+  /// Data rate delivered by the selected modulation and coding entry.
+  ACHIEVED_DATA_RATE,
+  /// Margin above the threshold of the selected adaptive entry.
+  ACM_MARGIN
 }
 
 /// The single condition that bound the link at a sample epoch — the answer to
@@ -318,6 +328,30 @@ table RFLEndpoint {
   POLARIZATION: rfPolarization = UNKNOWN;
 }
 
+/// One modulation-and-coding choice available to a link. The table carries
+/// engineering capability only; catalogue or recommendation names belong in
+/// ID / NAME and provenance data, never in the schema vocabulary.
+table RFLModCod {
+  /// Stable identifier within the containing link's MODCOD_SET.
+  MODCOD_ID: string (required);
+  /// Producer-supplied display name.
+  NAME: string;
+  MODULATION: string;
+  CODING: string;
+  /// Information bits divided by coded bits, in (0,1].
+  CODE_RATE: double;
+  BITS_PER_SYMBOL: double;
+  SPECTRAL_EFFICIENCY_BPS_HZ: double;
+  REQUIRED_ES_N0_DB: double;
+  REQUIRED_EB_N0_DB: double;
+  TARGET_BIT_ERROR_RATE: double;
+  TARGET_BLOCK_ERROR_RATE: double;
+  /// Additional implementation margin required before this entry is selected.
+  REQUIRED_MARGIN_DB: double;
+  /// Optional ceiling imposed by framing or implementation, bits per second.
+  MAXIMUM_DATA_RATE_BPS: double;
+}
+
 /// One link whose budget is sampled by this record.
 table RFLLink {
   /// Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and
@@ -366,6 +400,11 @@ table RFLLink {
   CONSTELLATION: string;
   /// Operator-facing service or mission designation.
   SERVICE: string;
+  /// Ordered adaptive modulation-and-coding choices. Per-sample
+  /// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  MODCOD_SET: [RFLModCod];
+  /// Whether the producer evaluated adaptive selection for this link.
+  ACM_ENABLED: bool;
 }
 
 /// One interfering contribution to one sample. SPARSE: entries exist only
@@ -461,6 +500,12 @@ table RFLProvenance {
   NON_COMMERCIAL_ONLY: bool;
   /// Attribution the licence requires this record to carry downstream.
   CITATION: string;
+  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  /// MODELS remains the per-budget-term attribution surface.
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  /// Content hash of the exact producing WASM artifact.
+  MODULE_CONTENT_HASH: string;
 }
 
 /// RF Link Sample
@@ -598,8 +643,30 @@ table RFL {
   COMPUTED_AT: uint64;
   /// `$EPM` identifier of the producing node.
   PRODUCER_ID: string;
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   SIGNATURE: [ubyte];
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte];
+
+  // ---- Adaptive modulation and coding ----
+  /// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  SELECTED_MODCOD_INDEX: [uint32];
+  SELECTED_MODCOD_VALID: [bool];
+  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  SPECTRAL_EFFICIENCY_BPS_HZ: [double];
+  /// Delivered information rate after adaptive selection, bits per second.
+  ACHIEVED_DATA_RATE_BPS: [double];
+  /// Margin above the selected entry's threshold, dB.
+  ACM_MARGIN_DB: [double];
+  /// Symbol energy to noise spectral density, dB.
+  ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: [double];
+  /// Decoded block error probability [0-1].
+  BLOCK_ERROR_RATE: [double];
 }
 
 root_type RFL;

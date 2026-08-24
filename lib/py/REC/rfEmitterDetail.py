@@ -149,8 +149,35 @@ class rfEmitterDetail(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Emission and susceptibility limit curves applicable to this operating
+    # mode. Curves are evaluated in point order after sorting by frequency.
+    # rfEmitterDetail
+    def EMISSION_MASKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from RFEEmissionMask import RFEEmissionMask
+            obj = RFEEmissionMask()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # rfEmitterDetail
+    def EMISSION_MASKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # rfEmitterDetail
+    def EMISSION_MASKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
 def rfEmitterDetailStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(16)
 
 def Start(builder):
     rfEmitterDetailStart(builder)
@@ -245,12 +272,35 @@ def rfEmitterDetailAddBEAMWIDTH(builder, BEAMWIDTH):
 def AddBEAMWIDTH(builder, BEAMWIDTH):
     rfEmitterDetailAddBEAMWIDTH(builder, BEAMWIDTH)
 
+def rfEmitterDetailAddEMISSION_MASKS(builder, EMISSION_MASKS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EMISSION_MASKS), 0)
+
+def AddEMISSION_MASKS(builder, EMISSION_MASKS):
+    rfEmitterDetailAddEMISSION_MASKS(builder, EMISSION_MASKS)
+
+def rfEmitterDetailStartEMISSION_MASKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEMISSION_MASKSVector(builder, numElems):
+    return rfEmitterDetailStartEMISSION_MASKSVector(builder, numElems)
+
+def rfEmitterDetailCreateEMISSION_MASKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEMISSION_MASKSVector(builder, data):
+    rfEmitterDetailCreateEMISSION_MASKSVector(builder, data)
+
 def rfEmitterDetailEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return rfEmitterDetailEnd(builder)
 
+import RFEEmissionMask
+try:
+    from typing import List
+except:
+    pass
 
 class rfEmitterDetailT(object):
 
@@ -272,6 +322,7 @@ class rfEmitterDetailT(object):
         MODULATION = 0,
         ANTENNA_PATTERN = None,
         BEAMWIDTH = 0.0,
+        EMISSION_MASKS = None,
     ):
         self.MODE_NAME = MODE_NAME  # type: Optional[str]
         self.FREQUENCY = FREQUENCY  # type: float
@@ -288,6 +339,7 @@ class rfEmitterDetailT(object):
         self.MODULATION = MODULATION  # type: int
         self.ANTENNA_PATTERN = ANTENNA_PATTERN  # type: Optional[str]
         self.BEAMWIDTH = BEAMWIDTH  # type: float
+        self.EMISSION_MASKS = EMISSION_MASKS  # type: Optional[List[RFEEmissionMask.RFEEmissionMaskT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -325,6 +377,14 @@ class rfEmitterDetailT(object):
         self.MODULATION = rfEmitterDetail.MODULATION()
         self.ANTENNA_PATTERN = rfEmitterDetail.ANTENNA_PATTERN()
         self.BEAMWIDTH = rfEmitterDetail.BEAMWIDTH()
+        if not rfEmitterDetail.EMISSION_MASKSIsNone():
+            self.EMISSION_MASKS = []
+            for i in range(rfEmitterDetail.EMISSION_MASKSLength()):
+                if rfEmitterDetail.EMISSION_MASKS(i) is None:
+                    self.EMISSION_MASKS.append(None)
+                else:
+                    rFEEmissionMask_ = RFEEmissionMask.RFEEmissionMaskT.InitFromObj(rfEmitterDetail.EMISSION_MASKS(i))
+                    self.EMISSION_MASKS.append(rFEEmissionMask_)
 
     # rfEmitterDetailT
     def Pack(self, builder):
@@ -332,6 +392,14 @@ class rfEmitterDetailT(object):
             MODE_NAME = builder.CreateString(self.MODE_NAME)
         if self.ANTENNA_PATTERN is not None:
             ANTENNA_PATTERN = builder.CreateString(self.ANTENNA_PATTERN)
+        if self.EMISSION_MASKS is not None:
+            EMISSION_MASKSlist = []
+            for i in range(len(self.EMISSION_MASKS)):
+                EMISSION_MASKSlist.append(self.EMISSION_MASKS[i].Pack(builder))
+            rfEmitterDetailStartEMISSION_MASKSVector(builder, len(self.EMISSION_MASKS))
+            for i in reversed(range(len(self.EMISSION_MASKS))):
+                builder.PrependUOffsetTRelative(EMISSION_MASKSlist[i])
+            EMISSION_MASKS = builder.EndVector()
         rfEmitterDetailStart(builder)
         if self.MODE_NAME is not None:
             rfEmitterDetailAddMODE_NAME(builder, MODE_NAME)
@@ -350,5 +418,7 @@ class rfEmitterDetailT(object):
         if self.ANTENNA_PATTERN is not None:
             rfEmitterDetailAddANTENNA_PATTERN(builder, ANTENNA_PATTERN)
         rfEmitterDetailAddBEAMWIDTH(builder, self.BEAMWIDTH)
+        if self.EMISSION_MASKS is not None:
+            rfEmitterDetailAddEMISSION_MASKS(builder, EMISSION_MASKS)
         rfEmitterDetail = rfEmitterDetailEnd(builder)
         return rfEmitterDetail

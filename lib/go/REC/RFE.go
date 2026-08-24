@@ -409,8 +409,173 @@ func (rcv *RFE) Notes() []byte {
 }
 
 /// Additional notes
+/// Provenance of the root emitter descriptor.
+func (rcv *RFE) PROVENANCE(obj *RFEProvenance) *RFEProvenance {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFEProvenance)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *RFE) Provenance(obj *RFEProvenance) *RFEProvenance {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Provenance of the root emitter descriptor.
+/// Unix ms this record was serialized.
+func (rcv *RFE) COMPUTED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *RFE) ComputedAt() uint64 {
+	return rcv.COMPUTED_AT()
+}
+
+/// Unix ms this record was serialized.
+func (rcv *RFE) MutateCOMPUTED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(46, n)
+}
+
+func (rcv *RFE) MutateComputedAt(n uint64) bool {
+	return rcv.MutateCOMPUTED_AT(n)
+}
+
+/// `$EPM` identifier of the producing node.
+func (rcv *RFE) PRODUCER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFE) ProducerId() []byte {
+	return rcv.PRODUCER_ID()
+}
+
+/// `$EPM` identifier of the producing node.
+/// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+/// signature payloads zeroed while preserving their vectors and offsets.
+func (rcv *RFE) SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *RFE) Signature(j int) byte {
+	return rcv.SIGNATURE(j)
+}
+
+func (rcv *RFE) SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFE) SignatureLength() int {
+	return rcv.SIGNATURELength()
+}
+
+func (rcv *RFE) SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFE) SignatureBytes() []byte {
+	return rcv.SIGNATUREBytes()
+}
+
+/// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+/// signature payloads zeroed while preserving their vectors and offsets.
+func (rcv *RFE) MutateSIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *RFE) MutateSignature(j int, n byte) bool {
+	return rcv.MutateSIGNATURE(j, n)
+}
+
+/// Ed25519 signature over canonical JSON with IDL field order and
+/// capitalization, no insignificant whitespace, and both signature fields
+/// omitted.
+func (rcv *RFE) CANONICAL_JSON_SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *RFE) CanonicalJsonSignature(j int) byte {
+	return rcv.CANONICAL_JSON_SIGNATURE(j)
+}
+
+func (rcv *RFE) CANONICAL_JSON_SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFE) CanonicalJsonSignatureLength() int {
+	return rcv.CANONICAL_JSON_SIGNATURELength()
+}
+
+func (rcv *RFE) CANONICAL_JSON_SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFE) CanonicalJsonSignatureBytes() []byte {
+	return rcv.CANONICAL_JSON_SIGNATUREBytes()
+}
+
+/// Ed25519 signature over canonical JSON with IDL field order and
+/// capitalization, no insignificant whitespace, and both signature fields
+/// omitted.
+func (rcv *RFE) MutateCANONICAL_JSON_SIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *RFE) MutateCanonicalJsonSignature(j int, n byte) bool {
+	return rcv.MutateCANONICAL_JSON_SIGNATURE(j, n)
+}
+
 func RFEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(25)
 }
 func RFEAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -537,6 +702,48 @@ func RFEAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 }
 func RFEAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	RFEAddNOTES(builder, NOTES)
+}
+func RFEAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func RFEAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	RFEAddPROVENANCE(builder, PROVENANCE)
+}
+func RFEAddCOMPUTED_AT(builder *flatbuffers.Builder, COMPUTED_AT uint64) {
+	builder.PrependUint64Slot(21, COMPUTED_AT, 0)
+}
+func RFEAddComputedAt(builder *flatbuffers.Builder, COMPUTED_AT uint64) {
+	RFEAddCOMPUTED_AT(builder, COMPUTED_AT)
+}
+func RFEAddPRODUCER_ID(builder *flatbuffers.Builder, PRODUCER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(PRODUCER_ID), 0)
+}
+func RFEAddProducerId(builder *flatbuffers.Builder, PRODUCER_ID flatbuffers.UOffsetT) {
+	RFEAddPRODUCER_ID(builder, PRODUCER_ID)
+}
+func RFEAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(SIGNATURE), 0)
+}
+func RFEAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	RFEAddSIGNATURE(builder, SIGNATURE)
+}
+func RFEStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func RFEStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFEStartSIGNATUREVector(builder, numElems)
+}
+func RFEAddCANONICAL_JSON_SIGNATURE(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(CANONICAL_JSON_SIGNATURE), 0)
+}
+func RFEAddCanonicalJsonSignature(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	RFEAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+}
+func RFEStartCANONICAL_JSON_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func RFEStartCanonicalJsonSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFEStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
 }
 func RFEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

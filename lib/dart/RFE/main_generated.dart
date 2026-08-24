@@ -6,6 +6,100 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
+///  Capability class represented by an emission-limit curve.
+enum rfeEmissionMaskClass {
+  UNSPECIFIED(0),
+  IN_BAND(1),
+  OUT_OF_BAND(2),
+  SPURIOUS(3),
+  HARMONIC(4),
+  BROADBAND_NOISE(5),
+  CONDUCTED(6),
+  RADIATED(7),
+  SUSCEPTIBILITY(8);
+
+  final int value;
+  const rfeEmissionMaskClass(this.value);
+
+  factory rfeEmissionMaskClass.fromValue(int value) {
+    switch (value) {
+      case 0: return rfeEmissionMaskClass.UNSPECIFIED;
+      case 1: return rfeEmissionMaskClass.IN_BAND;
+      case 2: return rfeEmissionMaskClass.OUT_OF_BAND;
+      case 3: return rfeEmissionMaskClass.SPURIOUS;
+      case 4: return rfeEmissionMaskClass.HARMONIC;
+      case 5: return rfeEmissionMaskClass.BROADBAND_NOISE;
+      case 6: return rfeEmissionMaskClass.CONDUCTED;
+      case 7: return rfeEmissionMaskClass.RADIATED;
+      case 8: return rfeEmissionMaskClass.SUSCEPTIBILITY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rfeEmissionMaskClass? _createOrNull(int? value) =>
+      value == null ? null : rfeEmissionMaskClass.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static const fb.Reader<rfeEmissionMaskClass> reader = _rfeEmissionMaskClassReader();
+}
+
+class _rfeEmissionMaskClassReader extends fb.Reader<rfeEmissionMaskClass> {
+  const _rfeEmissionMaskClassReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rfeEmissionMaskClass read(fb.BufferContext bc, int offset) =>
+      rfeEmissionMaskClass.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Physical path to which an emission-limit curve applies.
+enum rfeEmissionPath {
+  UNSPECIFIED(0),
+  ANTENNA_PORT(1),
+  POWER_LEAD(2),
+  SIGNAL_LEAD(3),
+  ENCLOSURE(4),
+  FREE_SPACE(5),
+  STRUCTURE(6);
+
+  final int value;
+  const rfeEmissionPath(this.value);
+
+  factory rfeEmissionPath.fromValue(int value) {
+    switch (value) {
+      case 0: return rfeEmissionPath.UNSPECIFIED;
+      case 1: return rfeEmissionPath.ANTENNA_PORT;
+      case 2: return rfeEmissionPath.POWER_LEAD;
+      case 3: return rfeEmissionPath.SIGNAL_LEAD;
+      case 4: return rfeEmissionPath.ENCLOSURE;
+      case 5: return rfeEmissionPath.FREE_SPACE;
+      case 6: return rfeEmissionPath.STRUCTURE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rfeEmissionPath? _createOrNull(int? value) =>
+      value == null ? null : rfeEmissionPath.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<rfeEmissionPath> reader = _rfeEmissionPathReader();
+}
+
+class _rfeEmissionPathReader extends fb.Reader<rfeEmissionPath> {
+  const _rfeEmissionPathReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rfeEmissionPath read(fb.BufferContext bc, int offset) =>
+      rfeEmissionPath.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 enum emitterType {
   RADAR(0),
   COMMUNICATIONS(1),
@@ -112,6 +206,428 @@ class _signalModulationReader extends fb.Reader<signalModulation> {
       signalModulation.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is
+///  relative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in
+///  the mask's required UNITS.
+class RFEEmissionMaskPoint {
+  RFEEmissionMaskPoint._(this._bc, this._bcOffset);
+  factory RFEEmissionMaskPoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFEEmissionMaskPoint> reader = _RFEEmissionMaskPointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get FREQUENCY_OFFSET_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get frequencyOffsetHz => FREQUENCY_OFFSET_HZ;
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+
+  @override
+  String toString() {
+    return 'RFEEmissionMaskPoint{frequencyOffsetHz: ${frequencyOffsetHz}, VALUE: ${VALUE}}';
+  }
+}
+
+class _RFEEmissionMaskPointReader extends fb.TableReader<RFEEmissionMaskPoint> {
+  const _RFEEmissionMaskPointReader();
+
+  @override
+  RFEEmissionMaskPoint createObject(fb.BufferContext bc, int offset) =>
+    RFEEmissionMaskPoint._(bc, offset);
+}
+
+class RFEEmissionMaskPointBuilder {
+  RFEEmissionMaskPointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addFrequencyOffsetHz(double? FREQUENCY_OFFSET_HZ) {
+    fbBuilder.addFloat64(0, FREQUENCY_OFFSET_HZ);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFEEmissionMaskPointObjectBuilder extends fb.ObjectBuilder {
+  final double? _FREQUENCY_OFFSET_HZ;
+  final double? _VALUE;
+
+  RFEEmissionMaskPointObjectBuilder({
+    double? FREQUENCY_OFFSET_HZ,
+    double? frequencyOffsetHz,
+    double? VALUE,
+  })
+      : _FREQUENCY_OFFSET_HZ = frequencyOffsetHz ?? FREQUENCY_OFFSET_HZ,
+        _VALUE = VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addFloat64(0, _FREQUENCY_OFFSET_HZ);
+    fbBuilder.addFloat64(1, _VALUE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Provenance of an emitter descriptor or emission mask. Capability schemas
+///  carry model names and citations as data so the IDL remains provider-neutral.
+class RFEProvenance {
+  RFEProvenance._(this._bc, this._bcOffset);
+  factory RFEProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFEProvenance> reader = _RFEProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sourceQuery => SOURCE_QUERY;
+  String? get MODEL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get modelName => MODEL_NAME;
+  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get modelVersion => MODEL_VERSION;
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get moduleVersion => MODULE_VERSION;
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get computedAt => COMPUTED_AT;
+
+  @override
+  String toString() {
+    return 'RFEProvenance{SOURCE: ${SOURCE}, sourceQuery: ${sourceQuery}, modelName: ${modelName}, modelVersion: ${modelVersion}, CITATION: ${CITATION}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}, computedAt: ${computedAt}}';
+  }
+}
+
+class _RFEProvenanceReader extends fb.TableReader<RFEProvenance> {
+  const _RFEProvenanceReader();
+
+  @override
+  RFEProvenance createObject(fb.BufferContext bc, int offset) =>
+    RFEProvenance._(bc, offset);
+}
+
+class RFEProvenanceBuilder {
+  RFEProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModelNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addModelVersionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(8, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFEProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final String? _SOURCE;
+  final String? _SOURCE_QUERY;
+  final String? _MODEL_NAME;
+  final String? _MODEL_VERSION;
+  final String? _CITATION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+  final int? _COMPUTED_AT;
+
+  RFEProvenanceObjectBuilder({
+    String? SOURCE,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? MODEL_NAME,
+    String? modelName,
+    String? MODEL_VERSION,
+    String? modelVersion,
+    String? CITATION,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+    int? COMPUTED_AT,
+    int? computedAt,
+  })
+      : _SOURCE = SOURCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _MODEL_NAME = modelName ?? MODEL_NAME,
+        _MODEL_VERSION = modelVersion ?? MODEL_VERSION,
+        _CITATION = CITATION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? MODEL_NAMEOffset = _MODEL_NAME == null ? null
+        : fbBuilder.writeString(_MODEL_NAME!);
+    final int? MODEL_VERSIONOffset = _MODEL_VERSION == null ? null
+        : fbBuilder.writeString(_MODEL_VERSION!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addOffset(1, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(2, MODEL_NAMEOffset);
+    fbBuilder.addOffset(3, MODEL_VERSIONOffset);
+    fbBuilder.addOffset(4, CITATIONOffset);
+    fbBuilder.addOffset(5, MODULE_IDOffset);
+    fbBuilder.addOffset(6, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(7, MODULE_CONTENT_HASHOffset);
+    fbBuilder.addUint64(8, _COMPUTED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,
+///  or susceptibility limit curve.
+class RFEEmissionMask {
+  RFEEmissionMask._(this._bc, this._bcOffset);
+  factory RFEEmissionMask(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFEEmissionMask> reader = _RFEEmissionMaskReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get MASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get maskId => MASK_ID;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  rfeEmissionMaskClass get CLASS => rfeEmissionMaskClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  rfeEmissionPath get PATH => rfeEmissionPath.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,
+  ///  or dBuA. A point with no unit is not publishable.
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  double get REFERENCE_FREQUENCY_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get referenceFrequencyHz => REFERENCE_FREQUENCY_HZ;
+  double get REFERENCE_BANDWIDTH_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get referenceBandwidthHz => REFERENCE_BANDWIDTH_HZ;
+  List<RFEEmissionMaskPoint>? get POINTS => const fb.ListReader<RFEEmissionMaskPoint>(RFEEmissionMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  RFEProvenance? get PROVENANCE => RFEProvenance.reader.vTableGetNullable(_bc, _bcOffset, 20);
+
+  @override
+  String toString() {
+    return 'RFEEmissionMask{maskId: ${maskId}, NAME: ${NAME}, CLASS: ${CLASS}, PATH: ${PATH}, UNITS: ${UNITS}, referenceFrequencyHz: ${referenceFrequencyHz}, referenceBandwidthHz: ${referenceBandwidthHz}, POINTS: ${POINTS}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _RFEEmissionMaskReader extends fb.TableReader<RFEEmissionMask> {
+  const _RFEEmissionMaskReader();
+
+  @override
+  RFEEmissionMask createObject(fb.BufferContext bc, int offset) =>
+    RFEEmissionMask._(bc, offset);
+}
+
+class RFEEmissionMaskBuilder {
+  RFEEmissionMaskBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addMaskIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addClass(rfeEmissionMaskClass? CLASS) {
+    fbBuilder.addInt8(2, CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addPath(rfeEmissionPath? PATH) {
+    fbBuilder.addInt8(3, PATH?.value);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrequencyHz(double? REFERENCE_FREQUENCY_HZ) {
+    fbBuilder.addFloat64(5, REFERENCE_FREQUENCY_HZ);
+    return fbBuilder.offset;
+  }
+  int addReferenceBandwidthHz(double? REFERENCE_BANDWIDTH_HZ) {
+    fbBuilder.addFloat64(6, REFERENCE_BANDWIDTH_HZ);
+    return fbBuilder.offset;
+  }
+  int addPointsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFEEmissionMaskObjectBuilder extends fb.ObjectBuilder {
+  final String? _MASK_ID;
+  final String? _NAME;
+  final rfeEmissionMaskClass? _CLASS;
+  final rfeEmissionPath? _PATH;
+  final String? _UNITS;
+  final double? _REFERENCE_FREQUENCY_HZ;
+  final double? _REFERENCE_BANDWIDTH_HZ;
+  final List<RFEEmissionMaskPointObjectBuilder>? _POINTS;
+  final RFEProvenanceObjectBuilder? _PROVENANCE;
+
+  RFEEmissionMaskObjectBuilder({
+    String? MASK_ID,
+    String? maskId,
+    String? NAME,
+    rfeEmissionMaskClass? CLASS,
+    rfeEmissionPath? PATH,
+    String? UNITS,
+    double? REFERENCE_FREQUENCY_HZ,
+    double? referenceFrequencyHz,
+    double? REFERENCE_BANDWIDTH_HZ,
+    double? referenceBandwidthHz,
+    List<RFEEmissionMaskPointObjectBuilder>? POINTS,
+    RFEProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _MASK_ID = maskId ?? MASK_ID,
+        _NAME = NAME,
+        _CLASS = CLASS,
+        _PATH = PATH,
+        _UNITS = UNITS,
+        _REFERENCE_FREQUENCY_HZ = referenceFrequencyHz ?? REFERENCE_FREQUENCY_HZ,
+        _REFERENCE_BANDWIDTH_HZ = referenceBandwidthHz ?? REFERENCE_BANDWIDTH_HZ,
+        _POINTS = POINTS,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MASK_IDOffset = _MASK_ID == null ? null
+        : fbBuilder.writeString(_MASK_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    final int? POINTSOffset = _POINTS == null ? null
+        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, MASK_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addInt8(2, _CLASS?.value);
+    fbBuilder.addInt8(3, _PATH?.value);
+    fbBuilder.addOffset(4, UNITSOffset);
+    fbBuilder.addFloat64(5, _REFERENCE_FREQUENCY_HZ);
+    fbBuilder.addFloat64(6, _REFERENCE_BANDWIDTH_HZ);
+    fbBuilder.addOffset(7, POINTSOffset);
+    fbBuilder.addOffset(8, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  RF Emitter Detail Record
 class rfEmitterDetail {
   rfEmitterDetail._(this._bc, this._bcOffset);
@@ -165,10 +681,14 @@ class rfEmitterDetail {
   String? get antennaPattern => ANTENNA_PATTERN;
   ///  3dB beamwidth in degrees
   double get BEAMWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Emission and susceptibility limit curves applicable to this operating
+  ///  mode. Curves are evaluated in point order after sorting by frequency.
+  List<RFEEmissionMask>? get EMISSION_MASKS => const fb.ListReader<RFEEmissionMask>(RFEEmissionMask.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  List<RFEEmissionMask>? get emissionMasks => EMISSION_MASKS;
 
   @override
   String toString() {
-    return 'rfEmitterDetail{modeName: ${modeName}, FREQUENCY: ${FREQUENCY}, freqMin: ${freqMin}, freqMax: ${freqMax}, PRI: ${PRI}, priMin: ${priMin}, priMax: ${priMax}, pulseWidth: ${pulseWidth}, pwMin: ${pwMin}, pwMax: ${pwMax}, scanPeriod: ${scanPeriod}, ERP: ${ERP}, MODULATION: ${MODULATION}, antennaPattern: ${antennaPattern}, BEAMWIDTH: ${BEAMWIDTH}}';
+    return 'rfEmitterDetail{modeName: ${modeName}, FREQUENCY: ${FREQUENCY}, freqMin: ${freqMin}, freqMax: ${freqMax}, PRI: ${PRI}, priMin: ${priMin}, priMax: ${priMax}, pulseWidth: ${pulseWidth}, pwMin: ${pwMin}, pwMax: ${pwMax}, scanPeriod: ${scanPeriod}, ERP: ${ERP}, MODULATION: ${MODULATION}, antennaPattern: ${antennaPattern}, BEAMWIDTH: ${BEAMWIDTH}, emissionMasks: ${emissionMasks}}';
   }
 }
 
@@ -186,7 +706,7 @@ class rfEmitterDetailBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(16);
   }
 
   int addModeNameOffset(int? offset) {
@@ -249,6 +769,10 @@ class rfEmitterDetailBuilder {
     fbBuilder.addFloat64(14, BEAMWIDTH);
     return fbBuilder.offset;
   }
+  int addEmissionMasksOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -271,6 +795,7 @@ class rfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
   final signalModulation? _MODULATION;
   final String? _ANTENNA_PATTERN;
   final double? _BEAMWIDTH;
+  final List<RFEEmissionMaskObjectBuilder>? _EMISSION_MASKS;
 
   rfEmitterDetailObjectBuilder({
     String? MODE_NAME,
@@ -298,6 +823,8 @@ class rfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
     String? ANTENNA_PATTERN,
     String? antennaPattern,
     double? BEAMWIDTH,
+    List<RFEEmissionMaskObjectBuilder>? EMISSION_MASKS,
+    List<RFEEmissionMaskObjectBuilder>? emissionMasks,
   })
       : _MODE_NAME = modeName ?? MODE_NAME,
         _FREQUENCY = FREQUENCY,
@@ -313,7 +840,8 @@ class rfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
         _ERP = ERP,
         _MODULATION = MODULATION,
         _ANTENNA_PATTERN = antennaPattern ?? ANTENNA_PATTERN,
-        _BEAMWIDTH = BEAMWIDTH;
+        _BEAMWIDTH = BEAMWIDTH,
+        _EMISSION_MASKS = emissionMasks ?? EMISSION_MASKS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -322,7 +850,9 @@ class rfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_MODE_NAME!);
     final int? ANTENNA_PATTERNOffset = _ANTENNA_PATTERN == null ? null
         : fbBuilder.writeString(_ANTENNA_PATTERN!);
-    fbBuilder.startTable(15);
+    final int? EMISSION_MASKSOffset = _EMISSION_MASKS == null ? null
+        : fbBuilder.writeList(_EMISSION_MASKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(16);
     fbBuilder.addOffset(0, MODE_NAMEOffset);
     fbBuilder.addFloat64(1, _FREQUENCY);
     fbBuilder.addFloat64(2, _FREQ_MIN);
@@ -338,6 +868,7 @@ class rfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(12, _MODULATION?.value);
     fbBuilder.addOffset(13, ANTENNA_PATTERNOffset);
     fbBuilder.addFloat64(14, _BEAMWIDTH);
+    fbBuilder.addOffset(15, EMISSION_MASKSOffset);
     return fbBuilder.endTable();
   }
 
@@ -413,10 +944,26 @@ class RFE {
   String? get threatLevel => THREAT_LEVEL;
   ///  Additional notes
   String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Provenance of the root emitter descriptor.
+  RFEProvenance? get PROVENANCE => RFEProvenance.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Unix ms this record was serialized.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  `$EPM` identifier of the producing node.
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 50);
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 52);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
 
   @override
   String toString() {
-    return 'RFE{ID: ${ID}, idEntity: ${idEntity}, NAME: ${NAME}, TYPE: ${TYPE}, ENTITY: ${ENTITY}, ELNOT: ${ELNOT}, natoName: ${natoName}, platformType: ${platformType}, COUNTRY: ${COUNTRY}, FUNCTION: ${FUNCTION}, BAND: ${BAND}, freqMin: ${freqMin}, freqMax: ${freqMax}, peakPower: ${peakPower}, avgPower: ${avgPower}, antennaGain: ${antennaGain}, numModes: ${numModes}, rfEmitterDetails: ${rfEmitterDetails}, threatLevel: ${threatLevel}, NOTES: ${NOTES}}';
+    return 'RFE{ID: ${ID}, idEntity: ${idEntity}, NAME: ${NAME}, TYPE: ${TYPE}, ENTITY: ${ENTITY}, ELNOT: ${ELNOT}, natoName: ${natoName}, platformType: ${platformType}, COUNTRY: ${COUNTRY}, FUNCTION: ${FUNCTION}, BAND: ${BAND}, freqMin: ${freqMin}, freqMax: ${freqMax}, peakPower: ${peakPower}, avgPower: ${avgPower}, antennaGain: ${antennaGain}, numModes: ${numModes}, rfEmitterDetails: ${rfEmitterDetails}, threatLevel: ${threatLevel}, NOTES: ${NOTES}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
   }
 }
 
@@ -434,7 +981,7 @@ class RFEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(25);
   }
 
   int addIdOffset(int? offset) {
@@ -517,6 +1064,26 @@ class RFEBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(21, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -544,6 +1111,11 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
   final List<rfEmitterDetailObjectBuilder>? _RF_EMITTER_DETAILS;
   final String? _THREAT_LEVEL;
   final String? _NOTES;
+  final RFEProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
 
   RFEObjectBuilder({
     String? ID,
@@ -577,6 +1149,14 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
     String? THREAT_LEVEL,
     String? threatLevel,
     String? NOTES,
+    RFEProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
   })
       : _ID = ID,
         _ID_ENTITY = idEntity ?? ID_ENTITY,
@@ -597,7 +1177,12 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
         _NUM_MODES = numModes ?? NUM_MODES,
         _RF_EMITTER_DETAILS = rfEmitterDetails ?? RF_EMITTER_DETAILS,
         _THREAT_LEVEL = threatLevel ?? THREAT_LEVEL,
-        _NOTES = NOTES;
+        _NOTES = NOTES,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -628,7 +1213,14 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_THREAT_LEVEL!);
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    fbBuilder.startTable(20);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(25);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
@@ -649,6 +1241,11 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(17, RF_EMITTER_DETAILSOffset);
     fbBuilder.addOffset(18, THREAT_LEVELOffset);
     fbBuilder.addOffset(19, NOTESOffset);
+    fbBuilder.addOffset(20, PROVENANCEOffset);
+    fbBuilder.addUint64(21, _COMPUTED_AT);
+    fbBuilder.addOffset(22, PRODUCER_IDOffset);
+    fbBuilder.addOffset(23, SIGNATUREOffset);
+    fbBuilder.addOffset(24, CANONICAL_JSON_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

@@ -76,7 +76,9 @@ public struct ACI : IFlatbufferObject
   public ArraySegment<byte>? GetPRODUCER_IDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetPRODUCER_IDArray() { return __p.__vector_as_array<byte>(24); }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   public byte SIGNATURE(int j) { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int SIGNATURELength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -85,6 +87,21 @@ public struct ACI : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(26); }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  public byte CANONICAL_JSON_SIGNATURE(int j) { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int CANONICAL_JSON_SIGNATURELength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetCANONICAL_JSON_SIGNATUREArray() { return __p.__vector_as_array<byte>(28); }
+  /// Per-interval delivered volume grouped by selected modulation-and-coding
+  /// entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+  public ACIDataVolumeByModCod? DATA_VOLUME_BY_MODCOD(int j) { int o = __p.__offset(30); return o != 0 ? (ACIDataVolumeByModCod?)(new ACIDataVolumeByModCod()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DATA_VOLUME_BY_MODCODLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ACI> CreateACI(FlatBufferBuilder builder,
       StringOffset ACI_IDOffset = default(StringOffset),
@@ -98,11 +115,15 @@ public struct ACI : IFlatbufferObject
       Offset<ACIProvenance> PROVENANCEOffset = default(Offset<ACIProvenance>),
       ulong COMPUTED_AT = 0,
       StringOffset PRODUCER_IDOffset = default(StringOffset),
-      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(12);
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset),
+      VectorOffset DATA_VOLUME_BY_MODCODOffset = default(VectorOffset)) {
+    builder.StartTable(14);
     ACI.AddCOMPUTED_AT(builder, COMPUTED_AT);
     ACI.AddWINDOW_STOP(builder, WINDOW_STOP);
     ACI.AddWINDOW_START(builder, WINDOW_START);
+    ACI.AddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCODOffset);
+    ACI.AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATUREOffset);
     ACI.AddSIGNATURE(builder, SIGNATUREOffset);
     ACI.AddPRODUCER_ID(builder, PRODUCER_IDOffset);
     ACI.AddPROVENANCE(builder, PROVENANCEOffset);
@@ -115,7 +136,7 @@ public struct ACI : IFlatbufferObject
     return ACI.EndACI(builder);
   }
 
-  public static void StartACI(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartACI(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddACI_ID(FlatBufferBuilder builder, StringOffset ACI_IDOffset) { builder.AddOffset(0, ACI_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(2, SCENARIO_IDOffset.Value, 0); }
@@ -138,6 +159,18 @@ public struct ACI : IFlatbufferObject
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCANONICAL_JSON_SIGNATURE(FlatBufferBuilder builder, VectorOffset CANONICAL_JSON_SIGNATUREOffset) { builder.AddOffset(12, CANONICAL_JSON_SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddDATA_VOLUME_BY_MODCOD(FlatBufferBuilder builder, VectorOffset DATA_VOLUME_BY_MODCODOffset) { builder.AddOffset(13, DATA_VOLUME_BY_MODCODOffset.Value, 0); }
+  public static VectorOffset CreateDATA_VOLUME_BY_MODCODVector(FlatBufferBuilder builder, Offset<ACIDataVolumeByModCod>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDATA_VOLUME_BY_MODCODVectorBlock(FlatBufferBuilder builder, Offset<ACIDataVolumeByModCod>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDATA_VOLUME_BY_MODCODVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACIDataVolumeByModCod>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDATA_VOLUME_BY_MODCODVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACIDataVolumeByModCod>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDATA_VOLUME_BY_MODCODVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ACI> EndACI(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ACI_ID
@@ -167,6 +200,10 @@ public struct ACI : IFlatbufferObject
     _o.PRODUCER_ID = this.PRODUCER_ID;
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.CANONICAL_JSON_SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.CANONICAL_JSON_SIGNATURELength; ++_j) {_o.CANONICAL_JSON_SIGNATURE.Add(this.CANONICAL_JSON_SIGNATURE(_j));}
+    _o.DATA_VOLUME_BY_MODCOD = new List<ACIDataVolumeByModCodT>();
+    for (var _j = 0; _j < this.DATA_VOLUME_BY_MODCODLength; ++_j) {_o.DATA_VOLUME_BY_MODCOD.Add(this.DATA_VOLUME_BY_MODCOD(_j).HasValue ? this.DATA_VOLUME_BY_MODCOD(_j).Value.UnPack() : null);}
   }
   public static Offset<ACI> Pack(FlatBufferBuilder builder, ACIT _o) {
     if (_o == null) return default(Offset<ACI>);
@@ -187,6 +224,17 @@ public struct ACI : IFlatbufferObject
       var __SIGNATURE = _o.SIGNATURE.ToArray();
       _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
     }
+    var _CANONICAL_JSON_SIGNATURE = default(VectorOffset);
+    if (_o.CANONICAL_JSON_SIGNATURE != null) {
+      var __CANONICAL_JSON_SIGNATURE = _o.CANONICAL_JSON_SIGNATURE.ToArray();
+      _CANONICAL_JSON_SIGNATURE = CreateCANONICAL_JSON_SIGNATUREVector(builder, __CANONICAL_JSON_SIGNATURE);
+    }
+    var _DATA_VOLUME_BY_MODCOD = default(VectorOffset);
+    if (_o.DATA_VOLUME_BY_MODCOD != null) {
+      var __DATA_VOLUME_BY_MODCOD = new Offset<ACIDataVolumeByModCod>[_o.DATA_VOLUME_BY_MODCOD.Count];
+      for (var _j = 0; _j < __DATA_VOLUME_BY_MODCOD.Length; ++_j) { __DATA_VOLUME_BY_MODCOD[_j] = ACIDataVolumeByModCod.Pack(builder, _o.DATA_VOLUME_BY_MODCOD[_j]); }
+      _DATA_VOLUME_BY_MODCOD = CreateDATA_VOLUME_BY_MODCODVector(builder, __DATA_VOLUME_BY_MODCOD);
+    }
     return CreateACI(
       builder,
       _ACI_ID,
@@ -200,7 +248,9 @@ public struct ACI : IFlatbufferObject
       _PROVENANCE,
       _o.COMPUTED_AT,
       _PRODUCER_ID,
-      _SIGNATURE);
+      _SIGNATURE,
+      _CANONICAL_JSON_SIGNATURE,
+      _DATA_VOLUME_BY_MODCOD);
   }
 }
 
@@ -218,6 +268,8 @@ public class ACIT
   public ulong COMPUTED_AT { get; set; }
   public string PRODUCER_ID { get; set; }
   public List<byte> SIGNATURE { get; set; }
+  public List<byte> CANONICAL_JSON_SIGNATURE { get; set; }
+  public List<ACIDataVolumeByModCodT> DATA_VOLUME_BY_MODCOD { get; set; }
 
   public ACIT() {
     this.ACI_ID = null;
@@ -232,6 +284,8 @@ public class ACIT
     this.COMPUTED_AT = 0;
     this.PRODUCER_ID = null;
     this.SIGNATURE = null;
+    this.CANONICAL_JSON_SIGNATURE = null;
+    this.DATA_VOLUME_BY_MODCOD = null;
   }
   public static ACIT DeserializeFromBinary(byte[] fbBuffer) {
     return ACI.GetRootAsACI(new ByteBuffer(fbBuffer)).UnPack();
@@ -261,6 +315,8 @@ static public class ACIVerify
       && verifier.VerifyField(tablePos, 22 /*COMPUTED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 24 /*PRODUCER_ID*/, false)
       && verifier.VerifyVectorOfData(tablePos, 26 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 28 /*CANONICAL_JSON_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*DATA_VOLUME_BY_MODCOD*/, ACIDataVolumeByModCodVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -171,8 +171,32 @@ class RFLProvenance(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+    # MODELS remains the per-budget-term attribution surface.
+    # RFLProvenance
+    def MODULE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RFLProvenance
+    def MODULE_VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content hash of the exact producing WASM artifact.
+    # RFLProvenance
+    def MODULE_CONTENT_HASH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def RFLProvenanceStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(18)
 
 def Start(builder):
     RFLProvenanceStart(builder)
@@ -279,6 +303,24 @@ def RFLProvenanceAddCITATION(builder, CITATION):
 def AddCITATION(builder, CITATION):
     RFLProvenanceAddCITATION(builder, CITATION)
 
+def RFLProvenanceAddMODULE_ID(builder, MODULE_ID):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MODULE_ID), 0)
+
+def AddMODULE_ID(builder, MODULE_ID):
+    RFLProvenanceAddMODULE_ID(builder, MODULE_ID)
+
+def RFLProvenanceAddMODULE_VERSION(builder, MODULE_VERSION):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MODULE_VERSION), 0)
+
+def AddMODULE_VERSION(builder, MODULE_VERSION):
+    RFLProvenanceAddMODULE_VERSION(builder, MODULE_VERSION)
+
+def RFLProvenanceAddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASH):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MODULE_CONTENT_HASH), 0)
+
+def AddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASH):
+    RFLProvenanceAddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASH)
+
 def RFLProvenanceEnd(builder):
     return builder.EndObject()
 
@@ -311,6 +353,9 @@ class RFLProvenanceT(object):
         LICENSE = None,
         NON_COMMERCIAL_ONLY = False,
         CITATION = None,
+        MODULE_ID = None,
+        MODULE_VERSION = None,
+        MODULE_CONTENT_HASH = None,
     ):
         self.METHOD = METHOD  # type: int
         self.SOURCE = SOURCE  # type: Optional[str]
@@ -327,6 +372,9 @@ class RFLProvenanceT(object):
         self.LICENSE = LICENSE  # type: Optional[str]
         self.NON_COMMERCIAL_ONLY = NON_COMMERCIAL_ONLY  # type: bool
         self.CITATION = CITATION  # type: Optional[str]
+        self.MODULE_ID = MODULE_ID  # type: Optional[str]
+        self.MODULE_VERSION = MODULE_VERSION  # type: Optional[str]
+        self.MODULE_CONTENT_HASH = MODULE_CONTENT_HASH  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -371,6 +419,9 @@ class RFLProvenanceT(object):
         self.LICENSE = RFLProvenance.LICENSE()
         self.NON_COMMERCIAL_ONLY = RFLProvenance.NON_COMMERCIAL_ONLY()
         self.CITATION = RFLProvenance.CITATION()
+        self.MODULE_ID = RFLProvenance.MODULE_ID()
+        self.MODULE_VERSION = RFLProvenance.MODULE_VERSION()
+        self.MODULE_CONTENT_HASH = RFLProvenance.MODULE_CONTENT_HASH()
 
     # RFLProvenanceT
     def Pack(self, builder):
@@ -400,6 +451,12 @@ class RFLProvenanceT(object):
             LICENSE = builder.CreateString(self.LICENSE)
         if self.CITATION is not None:
             CITATION = builder.CreateString(self.CITATION)
+        if self.MODULE_ID is not None:
+            MODULE_ID = builder.CreateString(self.MODULE_ID)
+        if self.MODULE_VERSION is not None:
+            MODULE_VERSION = builder.CreateString(self.MODULE_VERSION)
+        if self.MODULE_CONTENT_HASH is not None:
+            MODULE_CONTENT_HASH = builder.CreateString(self.MODULE_CONTENT_HASH)
         RFLProvenanceStart(builder)
         RFLProvenanceAddMETHOD(builder, self.METHOD)
         if self.SOURCE is not None:
@@ -426,5 +483,11 @@ class RFLProvenanceT(object):
         RFLProvenanceAddNON_COMMERCIAL_ONLY(builder, self.NON_COMMERCIAL_ONLY)
         if self.CITATION is not None:
             RFLProvenanceAddCITATION(builder, CITATION)
+        if self.MODULE_ID is not None:
+            RFLProvenanceAddMODULE_ID(builder, MODULE_ID)
+        if self.MODULE_VERSION is not None:
+            RFLProvenanceAddMODULE_VERSION(builder, MODULE_VERSION)
+        if self.MODULE_CONTENT_HASH is not None:
+            RFLProvenanceAddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASH)
         RFLProvenance = RFLProvenanceEnd(builder)
         return RFLProvenance

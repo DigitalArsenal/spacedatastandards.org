@@ -84,6 +84,40 @@ public struct BEM : IFlatbufferObject
   public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(36); }
+  /// Time-sliced activation plan for this deployed beam.
+  public BEMHopSchedule? HOP_SCHEDULE { get { int o = __p.__offset(38); return o != 0 ? (BEMHopSchedule?)(new BEMHopSchedule()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public BEMProvenance? PROVENANCE { get { int o = __p.__offset(40); return o != 0 ? (BEMProvenance?)(new BEMProvenance()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Unix ms this record was serialized.
+  public ulong COMPUTED_AT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// `$EPM` identifier of the producing node.
+  public string PRODUCER_ID { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPRODUCER_IDBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetPRODUCER_IDBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetPRODUCER_IDArray() { return __p.__vector_as_array<byte>(44); }
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  public byte SIGNATURE(int j) { int o = __p.__offset(46); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(46); }
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  public byte CANONICAL_JSON_SIGNATURE(int j) { int o = __p.__offset(48); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int CANONICAL_JSON_SIGNATURELength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetCANONICAL_JSON_SIGNATUREArray() { return __p.__vector_as_array<byte>(48); }
 
   public static Offset<BEM> CreateBEM(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -102,8 +136,15 @@ public struct BEM : IFlatbufferObject
       double G_OVER_T = 0.0,
       double FOOTPRINT_AREA = 0.0,
       VectorOffset BEAM_CONTOURSOffset = default(VectorOffset),
-      StringOffset NOTESOffset = default(StringOffset)) {
-    builder.StartTable(17);
+      StringOffset NOTESOffset = default(StringOffset),
+      Offset<BEMHopSchedule> HOP_SCHEDULEOffset = default(Offset<BEMHopSchedule>),
+      Offset<BEMProvenance> PROVENANCEOffset = default(Offset<BEMProvenance>),
+      ulong COMPUTED_AT = 0,
+      StringOffset PRODUCER_IDOffset = default(StringOffset),
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset)) {
+    builder.StartTable(23);
+    BEM.AddCOMPUTED_AT(builder, COMPUTED_AT);
     BEM.AddFOOTPRINT_AREA(builder, FOOTPRINT_AREA);
     BEM.AddG_OVER_T(builder, G_OVER_T);
     BEM.AddEIRP(builder, EIRP);
@@ -113,6 +154,11 @@ public struct BEM : IFlatbufferObject
     BEM.AddCENTER_LATITUDE(builder, CENTER_LATITUDE);
     BEM.AddEOC_GAIN(builder, EOC_GAIN);
     BEM.AddPEAK_GAIN(builder, PEAK_GAIN);
+    BEM.AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATUREOffset);
+    BEM.AddSIGNATURE(builder, SIGNATUREOffset);
+    BEM.AddPRODUCER_ID(builder, PRODUCER_IDOffset);
+    BEM.AddPROVENANCE(builder, PROVENANCEOffset);
+    BEM.AddHOP_SCHEDULE(builder, HOP_SCHEDULEOffset);
     BEM.AddNOTES(builder, NOTESOffset);
     BEM.AddBEAM_CONTOURS(builder, BEAM_CONTOURSOffset);
     BEM.AddID_ANTENNA(builder, ID_ANTENNAOffset);
@@ -124,7 +170,7 @@ public struct BEM : IFlatbufferObject
     return BEM.EndBEM(builder);
   }
 
-  public static void StartBEM(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartBEM(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddBEAM_NAME(FlatBufferBuilder builder, StringOffset BEAM_NAMEOffset) { builder.AddOffset(1, BEAM_NAMEOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(2, ID_ENTITYOffset.Value, 0); }
@@ -147,6 +193,22 @@ public struct BEM : IFlatbufferObject
   public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<beamContour>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBEAM_CONTOURSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(16, NOTESOffset.Value, 0); }
+  public static void AddHOP_SCHEDULE(FlatBufferBuilder builder, Offset<BEMHopSchedule> HOP_SCHEDULEOffset) { builder.AddOffset(17, HOP_SCHEDULEOffset.Value, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<BEMProvenance> PROVENANCEOffset) { builder.AddOffset(18, PROVENANCEOffset.Value, 0); }
+  public static void AddCOMPUTED_AT(FlatBufferBuilder builder, ulong COMPUTED_AT) { builder.AddUlong(19, COMPUTED_AT, 0); }
+  public static void AddPRODUCER_ID(FlatBufferBuilder builder, StringOffset PRODUCER_IDOffset) { builder.AddOffset(20, PRODUCER_IDOffset.Value, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(21, SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCANONICAL_JSON_SIGNATURE(FlatBufferBuilder builder, VectorOffset CANONICAL_JSON_SIGNATUREOffset) { builder.AddOffset(22, CANONICAL_JSON_SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<BEM> EndBEM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<BEM>(o);
@@ -177,6 +239,14 @@ public struct BEM : IFlatbufferObject
     _o.BEAM_CONTOURS = new List<beamContourT>();
     for (var _j = 0; _j < this.BEAM_CONTOURSLength; ++_j) {_o.BEAM_CONTOURS.Add(this.BEAM_CONTOURS(_j).HasValue ? this.BEAM_CONTOURS(_j).Value.UnPack() : null);}
     _o.NOTES = this.NOTES;
+    _o.HOP_SCHEDULE = this.HOP_SCHEDULE.HasValue ? this.HOP_SCHEDULE.Value.UnPack() : null;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.COMPUTED_AT = this.COMPUTED_AT;
+    _o.PRODUCER_ID = this.PRODUCER_ID;
+    _o.SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.CANONICAL_JSON_SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.CANONICAL_JSON_SIGNATURELength; ++_j) {_o.CANONICAL_JSON_SIGNATURE.Add(this.CANONICAL_JSON_SIGNATURE(_j));}
   }
   public static Offset<BEM> Pack(FlatBufferBuilder builder, BEMT _o) {
     if (_o == null) return default(Offset<BEM>);
@@ -191,6 +261,19 @@ public struct BEM : IFlatbufferObject
       _BEAM_CONTOURS = CreateBEAM_CONTOURSVector(builder, __BEAM_CONTOURS);
     }
     var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _HOP_SCHEDULE = _o.HOP_SCHEDULE == null ? default(Offset<BEMHopSchedule>) : BEMHopSchedule.Pack(builder, _o.HOP_SCHEDULE);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<BEMProvenance>) : BEMProvenance.Pack(builder, _o.PROVENANCE);
+    var _PRODUCER_ID = _o.PRODUCER_ID == null ? default(StringOffset) : builder.CreateString(_o.PRODUCER_ID);
+    var _SIGNATURE = default(VectorOffset);
+    if (_o.SIGNATURE != null) {
+      var __SIGNATURE = _o.SIGNATURE.ToArray();
+      _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
+    }
+    var _CANONICAL_JSON_SIGNATURE = default(VectorOffset);
+    if (_o.CANONICAL_JSON_SIGNATURE != null) {
+      var __CANONICAL_JSON_SIGNATURE = _o.CANONICAL_JSON_SIGNATURE.ToArray();
+      _CANONICAL_JSON_SIGNATURE = CreateCANONICAL_JSON_SIGNATUREVector(builder, __CANONICAL_JSON_SIGNATURE);
+    }
     return CreateBEM(
       builder,
       _ID,
@@ -209,7 +292,13 @@ public struct BEM : IFlatbufferObject
       _o.G_OVER_T,
       _o.FOOTPRINT_AREA,
       _BEAM_CONTOURS,
-      _NOTES);
+      _NOTES,
+      _HOP_SCHEDULE,
+      _PROVENANCE,
+      _o.COMPUTED_AT,
+      _PRODUCER_ID,
+      _SIGNATURE,
+      _CANONICAL_JSON_SIGNATURE);
   }
 }
 
@@ -232,6 +321,12 @@ public class BEMT
   public double FOOTPRINT_AREA { get; set; }
   public List<beamContourT> BEAM_CONTOURS { get; set; }
   public string NOTES { get; set; }
+  public BEMHopScheduleT HOP_SCHEDULE { get; set; }
+  public BEMProvenanceT PROVENANCE { get; set; }
+  public ulong COMPUTED_AT { get; set; }
+  public string PRODUCER_ID { get; set; }
+  public List<byte> SIGNATURE { get; set; }
+  public List<byte> CANONICAL_JSON_SIGNATURE { get; set; }
 
   public BEMT() {
     this.ID = null;
@@ -251,6 +346,12 @@ public class BEMT
     this.FOOTPRINT_AREA = 0.0;
     this.BEAM_CONTOURS = null;
     this.NOTES = null;
+    this.HOP_SCHEDULE = null;
+    this.PROVENANCE = null;
+    this.COMPUTED_AT = 0;
+    this.PRODUCER_ID = null;
+    this.SIGNATURE = null;
+    this.CANONICAL_JSON_SIGNATURE = null;
   }
   public static BEMT DeserializeFromBinary(byte[] fbBuffer) {
     return BEM.GetRootAsBEM(new ByteBuffer(fbBuffer)).UnPack();
@@ -285,6 +386,12 @@ static public class BEMVerify
       && verifier.VerifyField(tablePos, 32 /*FOOTPRINT_AREA*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 34 /*BEAM_CONTOURS*/, beamContourVerify.Verify, false)
       && verifier.VerifyString(tablePos, 36 /*NOTES*/, false)
+      && verifier.VerifyTable(tablePos, 38 /*HOP_SCHEDULE*/, BEMHopScheduleVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*PROVENANCE*/, BEMProvenanceVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*COMPUTED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 44 /*PRODUCER_ID*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 46 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 48 /*CANONICAL_JSON_SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

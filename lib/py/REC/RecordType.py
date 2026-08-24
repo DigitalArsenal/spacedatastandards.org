@@ -234,6 +234,12 @@ class RecordType(object):
     TMS = 214
     VEP = 215
     EGP = 216
+    APL = 217
+    EMC = 218
+    EPF = 219
+    GEL = 220
+    PAP = 221
+    RSD = 222
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -887,4 +893,22 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.EGP:
         import EGP
         return EGP.EGPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.APL:
+        import APL
+        return APL.APLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.EMC:
+        import EMC
+        return EMC.EMCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.EPF:
+        import EPF
+        return EPF.EPFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GEL:
+        import GEL
+        return GEL.GELT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PAP:
+        import PAP
+        return PAP.PAPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RSD:
+        import RSD
+        return RSD.RSDT.InitFromBuf(table.Bytes, table.Pos)
     return None

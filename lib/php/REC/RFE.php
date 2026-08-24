@@ -215,22 +215,106 @@ class RFE extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Provenance of the root emitter descriptor.
+    public function getPROVENANCE()
+    {
+        $obj = new RFEProvenance();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Unix ms this record was serialized.
+    /**
+     * @return ulong
+     */
+    public function getCOMPUTED_AT()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// `$EPM` identifier of the producing node.
+    public function getPRODUCER_ID()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+    /// signature payloads zeroed while preserving their vectors and offsets.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getSIGNATURE($j)
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSIGNATURELength()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(50);
+    }
+
+    /// Ed25519 signature over canonical JSON with IDL field order and
+    /// capitalization, no insignificant whitespace, and both signature fields
+    /// omitted.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCANONICAL_JSON_SIGNATURE($j)
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCANONICAL_JSON_SIGNATURELength()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCANONICAL_JSON_SIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(52);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(25);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFE
      */
-    public static function createRFE(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $TYPE, $ENTITY, $ELNOT, $NATO_NAME, $PLATFORM_TYPE, $COUNTRY, $FUNCTION, $BAND, $FREQ_MIN, $FREQ_MAX, $PEAK_POWER, $AVG_POWER, $ANTENNA_GAIN, $NUM_MODES, $RF_EMITTER_DETAILS, $THREAT_LEVEL, $NOTES)
+    public static function createRFE(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $TYPE, $ENTITY, $ELNOT, $NATO_NAME, $PLATFORM_TYPE, $COUNTRY, $FUNCTION, $BAND, $FREQ_MIN, $FREQ_MAX, $PEAK_POWER, $AVG_POWER, $ANTENNA_GAIN, $NUM_MODES, $RF_EMITTER_DETAILS, $THREAT_LEVEL, $NOTES, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE)
     {
-        $builder->startObject(20);
+        $builder->startObject(25);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
@@ -251,6 +335,11 @@ class RFE extends Table
         self::addRF_EMITTER_DETAILS($builder, $RF_EMITTER_DETAILS);
         self::addTHREAT_LEVEL($builder, $THREAT_LEVEL);
         self::addNOTES($builder, $NOTES);
+        self::addPROVENANCE($builder, $PROVENANCE);
+        self::addCOMPUTED_AT($builder, $COMPUTED_AT);
+        self::addPRODUCER_ID($builder, $PRODUCER_ID);
+        self::addSIGNATURE($builder, $SIGNATURE);
+        self::addCANONICAL_JSON_SIGNATURE($builder, $CANONICAL_JSON_SIGNATURE);
         $o = $builder->endObject();
         return $o;
     }
@@ -477,6 +566,104 @@ class RFE extends Table
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
         $builder->addOffsetX(19, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(20, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addCOMPUTED_AT(FlatBufferBuilder $builder, $COMPUTED_AT)
+    {
+        $builder->addUlongX(21, $COMPUTED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPRODUCER_ID(FlatBufferBuilder $builder, $PRODUCER_ID)
+    {
+        $builder->addOffsetX(22, $PRODUCER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
+    {
+        $builder->addOffsetX(23, $SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCANONICAL_JSON_SIGNATURE(FlatBufferBuilder $builder, $CANONICAL_JSON_SIGNATURE)
+    {
+        $builder->addOffsetX(24, $CANONICAL_JSON_SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

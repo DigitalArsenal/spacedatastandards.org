@@ -161,6 +161,23 @@ class rfEmitterDetail : Table() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Emission and susceptibility limit curves applicable to this operating
+     * mode. Curves are evaluated in point order after sorting by frequency.
+     */
+    fun emissionMasks(j: Int) : RFEEmissionMask? = emissionMasks(RFEEmissionMask(), j)
+    fun emissionMasks(obj: RFEEmissionMask, j: Int) : RFEEmissionMask? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val emissionMasksLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsrfEmitterDetail(_bb: ByteBuffer): rfEmitterDetail = getRootAsrfEmitterDetail(_bb, rfEmitterDetail())
@@ -168,8 +185,8 @@ class rfEmitterDetail : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createrfEmitterDetail(builder: FlatBufferBuilder, modeNameOffset: Int, frequency: Double, freqMin: Double, freqMax: Double, pri: Double, priMin: Double, priMax: Double, pulseWidth: Double, pwMin: Double, pwMax: Double, scanPeriod: Double, erp: Double, modulation: Byte, antennaPatternOffset: Int, beamwidth: Double) : Int {
-            builder.startTable(15)
+        fun createrfEmitterDetail(builder: FlatBufferBuilder, modeNameOffset: Int, frequency: Double, freqMin: Double, freqMax: Double, pri: Double, priMin: Double, priMax: Double, pulseWidth: Double, pwMin: Double, pwMax: Double, scanPeriod: Double, erp: Double, modulation: Byte, antennaPatternOffset: Int, beamwidth: Double, emissionMasksOffset: Int) : Int {
+            builder.startTable(16)
             addBEAMWIDTH(builder, beamwidth)
             addERP(builder, erp)
             addSCANPERIOD(builder, scanPeriod)
@@ -182,12 +199,13 @@ class rfEmitterDetail : Table() {
             addFREQMAX(builder, freqMax)
             addFREQMIN(builder, freqMin)
             addFREQUENCY(builder, frequency)
+            addEMISSIONMASKS(builder, emissionMasksOffset)
             addANTENNAPATTERN(builder, antennaPatternOffset)
             addMODENAME(builder, modeNameOffset)
             addMODULATION(builder, modulation)
             return endrfEmitterDetail(builder)
         }
-        fun startrfEmitterDetail(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startrfEmitterDetail(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addMODENAME(builder: FlatBufferBuilder, modeName: Int) = builder.addOffset(0, modeName, 0)
         fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Double) = builder.addDouble(1, frequency, 0.0)
         fun addFREQMIN(builder: FlatBufferBuilder, freqMin: Double) = builder.addDouble(2, freqMin, 0.0)
@@ -203,6 +221,15 @@ class rfEmitterDetail : Table() {
         fun addMODULATION(builder: FlatBufferBuilder, modulation: Byte) = builder.addByte(12, modulation, 0)
         fun addANTENNAPATTERN(builder: FlatBufferBuilder, antennaPattern: Int) = builder.addOffset(13, antennaPattern, 0)
         fun addBEAMWIDTH(builder: FlatBufferBuilder, beamwidth: Double) = builder.addDouble(14, beamwidth, 0.0)
+        fun addEMISSIONMASKS(builder: FlatBufferBuilder, emissionMasks: Int) = builder.addOffset(15, emissionMasks, 0)
+        fun createEmissionMasksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEmissionMasksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endrfEmitterDetail(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

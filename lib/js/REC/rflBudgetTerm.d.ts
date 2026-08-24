@@ -39,6 +39,26 @@ export declare enum rflBudgetTerm {
     CHANNEL_CAPACITY = 27,
     INTERFERENCE_POWER = 28,
     CARRIER_TO_NOISE_PLUS_INTERFERENCE = 29,
-    SIGNAL_TO_INTERFERENCE_PLUS_NOISE = 30
+    SIGNAL_TO_INTERFERENCE_PLUS_NOISE = 30,
+    /**
+     * Energy per transmitted symbol divided by noise spectral density.
+     */
+    SYMBOL_ENERGY_TO_NOISE_DENSITY = 31,
+    /**
+     * Error probability for a decoded transport block or frame.
+     */
+    BLOCK_ERROR_RATE = 32,
+    /**
+     * Delivered information bits per second per hertz.
+     */
+    SPECTRAL_EFFICIENCY = 33,
+    /**
+     * Data rate delivered by the selected modulation and coding entry.
+     */
+    ACHIEVED_DATA_RATE = 34,
+    /**
+     * Margin above the threshold of the selected adaptive entry.
+     */
+    ACM_MARGIN = 35
 }
 //# sourceMappingURL=rflBudgetTerm.d.ts.map

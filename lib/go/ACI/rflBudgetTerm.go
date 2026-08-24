@@ -44,6 +44,16 @@ const (
 	rflBudgetTermINTERFERENCE_POWER                 rflBudgetTerm = 28
 	rflBudgetTermCARRIER_TO_NOISE_PLUS_INTERFERENCE rflBudgetTerm = 29
 	rflBudgetTermSIGNAL_TO_INTERFERENCE_PLUS_NOISE  rflBudgetTerm = 30
+	/// Energy per transmitted symbol divided by noise spectral density.
+	rflBudgetTermSYMBOL_ENERGY_TO_NOISE_DENSITY     rflBudgetTerm = 31
+	/// Error probability for a decoded transport block or frame.
+	rflBudgetTermBLOCK_ERROR_RATE                   rflBudgetTerm = 32
+	/// Delivered information bits per second per hertz.
+	rflBudgetTermSPECTRAL_EFFICIENCY                rflBudgetTerm = 33
+	/// Data rate delivered by the selected modulation and coding entry.
+	rflBudgetTermACHIEVED_DATA_RATE                 rflBudgetTerm = 34
+	/// Margin above the threshold of the selected adaptive entry.
+	rflBudgetTermACM_MARGIN                         rflBudgetTerm = 35
 )
 
 var EnumNamesrflBudgetTerm = map[rflBudgetTerm]string{
@@ -78,6 +88,11 @@ var EnumNamesrflBudgetTerm = map[rflBudgetTerm]string{
 	rflBudgetTermINTERFERENCE_POWER:                 "INTERFERENCE_POWER",
 	rflBudgetTermCARRIER_TO_NOISE_PLUS_INTERFERENCE: "CARRIER_TO_NOISE_PLUS_INTERFERENCE",
 	rflBudgetTermSIGNAL_TO_INTERFERENCE_PLUS_NOISE:  "SIGNAL_TO_INTERFERENCE_PLUS_NOISE",
+	rflBudgetTermSYMBOL_ENERGY_TO_NOISE_DENSITY:     "SYMBOL_ENERGY_TO_NOISE_DENSITY",
+	rflBudgetTermBLOCK_ERROR_RATE:                   "BLOCK_ERROR_RATE",
+	rflBudgetTermSPECTRAL_EFFICIENCY:                "SPECTRAL_EFFICIENCY",
+	rflBudgetTermACHIEVED_DATA_RATE:                 "ACHIEVED_DATA_RATE",
+	rflBudgetTermACM_MARGIN:                         "ACM_MARGIN",
 }
 
 var EnumValuesrflBudgetTerm = map[string]rflBudgetTerm{
@@ -112,6 +127,11 @@ var EnumValuesrflBudgetTerm = map[string]rflBudgetTerm{
 	"INTERFERENCE_POWER":                 rflBudgetTermINTERFERENCE_POWER,
 	"CARRIER_TO_NOISE_PLUS_INTERFERENCE": rflBudgetTermCARRIER_TO_NOISE_PLUS_INTERFERENCE,
 	"SIGNAL_TO_INTERFERENCE_PLUS_NOISE":  rflBudgetTermSIGNAL_TO_INTERFERENCE_PLUS_NOISE,
+	"SYMBOL_ENERGY_TO_NOISE_DENSITY":     rflBudgetTermSYMBOL_ENERGY_TO_NOISE_DENSITY,
+	"BLOCK_ERROR_RATE":                   rflBudgetTermBLOCK_ERROR_RATE,
+	"SPECTRAL_EFFICIENCY":                rflBudgetTermSPECTRAL_EFFICIENCY,
+	"ACHIEVED_DATA_RATE":                 rflBudgetTermACHIEVED_DATA_RATE,
+	"ACM_MARGIN":                         rflBudgetTermACM_MARGIN,
 }
 
 func (v rflBudgetTerm) String() string {

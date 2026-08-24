@@ -1862,7 +1862,9 @@ func (rcv *RFL) ProducerId() []byte {
 }
 
 /// `$EPM` identifier of the producing node.
-/// Ed25519 signature by the producing `$EPM`.
+/// Ed25519 signature by the producing `$EPM` over the size-prefixed
+/// FlatBuffer projection with both 64-byte signature payloads zeroed while
+/// preserving their vectors and offsets.
 func (rcv *RFL) SIGNATURE(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -1900,7 +1902,9 @@ func (rcv *RFL) SignatureBytes() []byte {
 	return rcv.SIGNATUREBytes()
 }
 
-/// Ed25519 signature by the producing `$EPM`.
+/// Ed25519 signature by the producing `$EPM` over the size-prefixed
+/// FlatBuffer projection with both 64-byte signature payloads zeroed while
+/// preserving their vectors and offsets.
 func (rcv *RFL) MutateSIGNATURE(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -1914,8 +1918,344 @@ func (rcv *RFL) MutateSignature(j int, n byte) bool {
 	return rcv.MutateSIGNATURE(j, n)
 }
 
+/// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+/// field order, IDL capitalization, no insignificant whitespace, and both
+/// signature fields omitted.
+func (rcv *RFL) CANONICAL_JSON_SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *RFL) CanonicalJsonSignature(j int) byte {
+	return rcv.CANONICAL_JSON_SIGNATURE(j)
+}
+
+func (rcv *RFL) CANONICAL_JSON_SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) CanonicalJsonSignatureLength() int {
+	return rcv.CANONICAL_JSON_SIGNATURELength()
+}
+
+func (rcv *RFL) CANONICAL_JSON_SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFL) CanonicalJsonSignatureBytes() []byte {
+	return rcv.CANONICAL_JSON_SIGNATUREBytes()
+}
+
+/// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+/// field order, IDL capitalization, no insignificant whitespace, and both
+/// signature fields omitted.
+func (rcv *RFL) MutateCANONICAL_JSON_SIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateCanonicalJsonSignature(j int, n byte) bool {
+	return rcv.MutateCANONICAL_JSON_SIGNATURE(j, n)
+}
+
+/// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+/// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+func (rcv *RFL) SELECTED_MODCOD_INDEX(j int) uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint32(a + flatbuffers.UOffsetT(j*4))
+	}
+	return 0
+}
+
+func (rcv *RFL) SelectedModcodIndex(j int) uint32 {
+	return rcv.SELECTED_MODCOD_INDEX(j)
+}
+
+func (rcv *RFL) SELECTED_MODCOD_INDEXLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) SelectedModcodIndexLength() int {
+	return rcv.SELECTED_MODCOD_INDEXLength()
+}
+
+/// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+/// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+func (rcv *RFL) MutateSELECTED_MODCOD_INDEX(j int, n uint32) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateUint32(a+flatbuffers.UOffsetT(j*4), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateSelectedModcodIndex(j int, n uint32) bool {
+	return rcv.MutateSELECTED_MODCOD_INDEX(j, n)
+}
+
+func (rcv *RFL) SELECTED_MODCOD_VALID(j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetBool(a + flatbuffers.UOffsetT(j*1))
+	}
+	return false
+}
+
+func (rcv *RFL) SelectedModcodValid(j int) bool {
+	return rcv.SELECTED_MODCOD_VALID(j)
+}
+
+func (rcv *RFL) SELECTED_MODCOD_VALIDLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) SelectedModcodValidLength() int {
+	return rcv.SELECTED_MODCOD_VALIDLength()
+}
+
+func (rcv *RFL) MutateSELECTED_MODCOD_VALID(j int, n bool) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateBool(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateSelectedModcodValid(j int, n bool) bool {
+	return rcv.MutateSELECTED_MODCOD_VALID(j, n)
+}
+
+/// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+func (rcv *RFL) SPECTRAL_EFFICIENCY_BPS_HZ(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFL) SpectralEfficiencyBpsHz(j int) float64 {
+	return rcv.SPECTRAL_EFFICIENCY_BPS_HZ(j)
+}
+
+func (rcv *RFL) SPECTRAL_EFFICIENCY_BPS_HZLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) SpectralEfficiencyBpsHzLength() int {
+	return rcv.SPECTRAL_EFFICIENCY_BPS_HZLength()
+}
+
+/// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+func (rcv *RFL) MutateSPECTRAL_EFFICIENCY_BPS_HZ(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateSpectralEfficiencyBpsHz(j int, n float64) bool {
+	return rcv.MutateSPECTRAL_EFFICIENCY_BPS_HZ(j, n)
+}
+
+/// Delivered information rate after adaptive selection, bits per second.
+func (rcv *RFL) ACHIEVED_DATA_RATE_BPS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFL) AchievedDataRateBps(j int) float64 {
+	return rcv.ACHIEVED_DATA_RATE_BPS(j)
+}
+
+func (rcv *RFL) ACHIEVED_DATA_RATE_BPSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) AchievedDataRateBpsLength() int {
+	return rcv.ACHIEVED_DATA_RATE_BPSLength()
+}
+
+/// Delivered information rate after adaptive selection, bits per second.
+func (rcv *RFL) MutateACHIEVED_DATA_RATE_BPS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateAchievedDataRateBps(j int, n float64) bool {
+	return rcv.MutateACHIEVED_DATA_RATE_BPS(j, n)
+}
+
+/// Margin above the selected entry's threshold, dB.
+func (rcv *RFL) ACM_MARGIN_DB(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFL) AcmMarginDb(j int) float64 {
+	return rcv.ACM_MARGIN_DB(j)
+}
+
+func (rcv *RFL) ACM_MARGIN_DBLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) AcmMarginDbLength() int {
+	return rcv.ACM_MARGIN_DBLength()
+}
+
+/// Margin above the selected entry's threshold, dB.
+func (rcv *RFL) MutateACM_MARGIN_DB(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateAcmMarginDb(j int, n float64) bool {
+	return rcv.MutateACM_MARGIN_DB(j, n)
+}
+
+/// Symbol energy to noise spectral density, dB.
+func (rcv *RFL) ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFL) EnergyPerSymbolToNoiseDensityDb(j int) float64 {
+	return rcv.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(j)
+}
+
+func (rcv *RFL) ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) EnergyPerSymbolToNoiseDensityDbLength() int {
+	return rcv.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength()
+}
+
+/// Symbol energy to noise spectral density, dB.
+func (rcv *RFL) MutateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateEnergyPerSymbolToNoiseDensityDb(j int, n float64) bool {
+	return rcv.MutateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(j, n)
+}
+
+/// Decoded block error probability [0-1].
+func (rcv *RFL) BLOCK_ERROR_RATE(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFL) BlockErrorRate(j int) float64 {
+	return rcv.BLOCK_ERROR_RATE(j)
+}
+
+func (rcv *RFL) BLOCK_ERROR_RATELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFL) BlockErrorRateLength() int {
+	return rcv.BLOCK_ERROR_RATELength()
+}
+
+/// Decoded block error probability [0-1].
+func (rcv *RFL) MutateBLOCK_ERROR_RATE(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFL) MutateBlockErrorRate(j int, n float64) bool {
+	return rcv.MutateBLOCK_ERROR_RATE(j, n)
+}
+
 func RFLStart(builder *flatbuffers.Builder) {
-	builder.StartObject(51)
+	builder.StartObject(59)
 }
 func RFLAddRFL_ID(builder *flatbuffers.Builder, RFL_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RFL_ID), 0)
@@ -2474,6 +2814,102 @@ func RFLStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func RFLStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return RFLStartSIGNATUREVector(builder, numElems)
+}
+func RFLAddCANONICAL_JSON_SIGNATURE(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(CANONICAL_JSON_SIGNATURE), 0)
+}
+func RFLAddCanonicalJsonSignature(builder *flatbuffers.Builder, CANONICAL_JSON_SIGNATURE flatbuffers.UOffsetT) {
+	RFLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+}
+func RFLStartCANONICAL_JSON_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func RFLStartCanonicalJsonSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+}
+func RFLAddSELECTED_MODCOD_INDEX(builder *flatbuffers.Builder, SELECTED_MODCOD_INDEX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(SELECTED_MODCOD_INDEX), 0)
+}
+func RFLAddSelectedModcodIndex(builder *flatbuffers.Builder, SELECTED_MODCOD_INDEX flatbuffers.UOffsetT) {
+	RFLAddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX)
+}
+func RFLStartSELECTED_MODCOD_INDEXVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func RFLStartSelectedModcodIndexVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartSELECTED_MODCOD_INDEXVector(builder, numElems)
+}
+func RFLAddSELECTED_MODCOD_VALID(builder *flatbuffers.Builder, SELECTED_MODCOD_VALID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(SELECTED_MODCOD_VALID), 0)
+}
+func RFLAddSelectedModcodValid(builder *flatbuffers.Builder, SELECTED_MODCOD_VALID flatbuffers.UOffsetT) {
+	RFLAddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID)
+}
+func RFLStartSELECTED_MODCOD_VALIDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func RFLStartSelectedModcodValidVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartSELECTED_MODCOD_VALIDVector(builder, numElems)
+}
+func RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder *flatbuffers.Builder, SPECTRAL_EFFICIENCY_BPS_HZ flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(SPECTRAL_EFFICIENCY_BPS_HZ), 0)
+}
+func RFLAddSpectralEfficiencyBpsHz(builder *flatbuffers.Builder, SPECTRAL_EFFICIENCY_BPS_HZ flatbuffers.UOffsetT) {
+	RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ)
+}
+func RFLStartSPECTRAL_EFFICIENCY_BPS_HZVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFLStartSpectralEfficiencyBpsHzVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartSPECTRAL_EFFICIENCY_BPS_HZVector(builder, numElems)
+}
+func RFLAddACHIEVED_DATA_RATE_BPS(builder *flatbuffers.Builder, ACHIEVED_DATA_RATE_BPS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(ACHIEVED_DATA_RATE_BPS), 0)
+}
+func RFLAddAchievedDataRateBps(builder *flatbuffers.Builder, ACHIEVED_DATA_RATE_BPS flatbuffers.UOffsetT) {
+	RFLAddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS)
+}
+func RFLStartACHIEVED_DATA_RATE_BPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFLStartAchievedDataRateBpsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartACHIEVED_DATA_RATE_BPSVector(builder, numElems)
+}
+func RFLAddACM_MARGIN_DB(builder *flatbuffers.Builder, ACM_MARGIN_DB flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(ACM_MARGIN_DB), 0)
+}
+func RFLAddAcmMarginDb(builder *flatbuffers.Builder, ACM_MARGIN_DB flatbuffers.UOffsetT) {
+	RFLAddACM_MARGIN_DB(builder, ACM_MARGIN_DB)
+}
+func RFLStartACM_MARGIN_DBVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFLStartAcmMarginDbVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartACM_MARGIN_DBVector(builder, numElems)
+}
+func RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder *flatbuffers.Builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB), 0)
+}
+func RFLAddEnergyPerSymbolToNoiseDensityDb(builder *flatbuffers.Builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB flatbuffers.UOffsetT) {
+	RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
+}
+func RFLStartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFLStartEnergyPerSymbolToNoiseDensityDbVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, numElems)
+}
+func RFLAddBLOCK_ERROR_RATE(builder *flatbuffers.Builder, BLOCK_ERROR_RATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(BLOCK_ERROR_RATE), 0)
+}
+func RFLAddBlockErrorRate(builder *flatbuffers.Builder, BLOCK_ERROR_RATE flatbuffers.UOffsetT) {
+	RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE)
+}
+func RFLStartBLOCK_ERROR_RATEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFLStartBlockErrorRateVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFLStartBLOCK_ERROR_RATEVector(builder, numElems)
 }
 func RFLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,4 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
+import { BEMHopSchedule, BEMHopScheduleT } from './BEMHopSchedule.js';
+import { BEMProvenance, BEMProvenanceT } from './BEMProvenance.js';
 import { beamContour, beamContourT } from './beamContour.js';
 import { beamPolarization } from './beamPolarization.js';
 import { beamType } from './beamType.js';
@@ -86,6 +88,35 @@ export declare class BEM implements flatbuffers.IUnpackableObject<BEMT> {
      */
     NOTES(): string | null;
     NOTES(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Time-sliced activation plan for this deployed beam.
+     */
+    HOP_SCHEDULE(obj?: BEMHopSchedule): BEMHopSchedule | null;
+    PROVENANCE(obj?: BEMProvenance): BEMProvenance | null;
+    /**
+     * Unix ms this record was serialized.
+     */
+    COMPUTED_AT(): bigint;
+    /**
+     * `$EPM` identifier of the producing node.
+     */
+    PRODUCER_ID(): string | null;
+    PRODUCER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+     * signature payloads zeroed while preserving their vectors and offsets.
+     */
+    SIGNATURE(index: number): number | null;
+    signatureLength(): number;
+    signatureArray(): Uint8Array | null;
+    /**
+     * Ed25519 signature over canonical JSON with IDL field order and
+     * capitalization, no insignificant whitespace, and both signature fields
+     * omitted.
+     */
+    CANONICAL_JSON_SIGNATURE(index: number): number | null;
+    canonicalJsonSignatureLength(): number;
+    canonicalJsonSignatureArray(): Uint8Array | null;
     static startBEM(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addBeamName(builder: flatbuffers.Builder, BEAM_NAMEOffset: flatbuffers.Offset): void;
@@ -106,10 +137,19 @@ export declare class BEM implements flatbuffers.IUnpackableObject<BEMT> {
     static createBeamContoursVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startBeamContoursVector(builder: flatbuffers.Builder, numElems: number): void;
     static addNotes(builder: flatbuffers.Builder, NOTESOffset: flatbuffers.Offset): void;
+    static addHopSchedule(builder: flatbuffers.Builder, HOP_SCHEDULEOffset: flatbuffers.Offset): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
+    static addComputedAt(builder: flatbuffers.Builder, COMPUTED_AT: bigint): void;
+    static addProducerId(builder: flatbuffers.Builder, PRODUCER_IDOffset: flatbuffers.Offset): void;
+    static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
+    static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCanonicalJsonSignature(builder: flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset: flatbuffers.Offset): void;
+    static createCanonicalJsonSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCanonicalJsonSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
     static endBEM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishBEMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedBEMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createBEM(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, BEAM_NAMEOffset: flatbuffers.Offset, ID_ENTITYOffset: flatbuffers.Offset, ID_ANTENNAOffset: flatbuffers.Offset, TYPE: beamType, POLARIZATION: beamPolarization, PEAK_GAIN: number, EOC_GAIN: number, CENTER_LATITUDE: number, CENTER_LONGITUDE: number, BEAMWIDTH: number, FREQUENCY: number, EIRP: number, G_OVER_T: number, FOOTPRINT_AREA: number, BEAM_CONTOURSOffset: flatbuffers.Offset, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): BEMT;
     unpackTo(_o: BEMT): void;
 }
@@ -131,7 +171,13 @@ export declare class BEMT implements flatbuffers.IGeneratedObject {
     FOOTPRINT_AREA: number;
     BEAM_CONTOURS: (beamContourT)[];
     NOTES: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, BEAM_NAME?: string | Uint8Array | null, ID_ENTITY?: string | Uint8Array | null, ID_ANTENNA?: string | Uint8Array | null, TYPE?: beamType, POLARIZATION?: beamPolarization, PEAK_GAIN?: number, EOC_GAIN?: number, CENTER_LATITUDE?: number, CENTER_LONGITUDE?: number, BEAMWIDTH?: number, FREQUENCY?: number, EIRP?: number, G_OVER_T?: number, FOOTPRINT_AREA?: number, BEAM_CONTOURS?: (beamContourT)[], NOTES?: string | Uint8Array | null);
+    HOP_SCHEDULE: BEMHopScheduleT | null;
+    PROVENANCE: BEMProvenanceT | null;
+    COMPUTED_AT: bigint;
+    PRODUCER_ID: string | Uint8Array | null;
+    SIGNATURE: (number)[];
+    CANONICAL_JSON_SIGNATURE: (number)[];
+    constructor(ID?: string | Uint8Array | null, BEAM_NAME?: string | Uint8Array | null, ID_ENTITY?: string | Uint8Array | null, ID_ANTENNA?: string | Uint8Array | null, TYPE?: beamType, POLARIZATION?: beamPolarization, PEAK_GAIN?: number, EOC_GAIN?: number, CENTER_LATITUDE?: number, CENTER_LONGITUDE?: number, BEAMWIDTH?: number, FREQUENCY?: number, EIRP?: number, G_OVER_T?: number, FOOTPRINT_AREA?: number, BEAM_CONTOURS?: (beamContourT)[], NOTES?: string | Uint8Array | null, HOP_SCHEDULE?: BEMHopScheduleT | null, PROVENANCE?: BEMProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=BEM.d.ts.map

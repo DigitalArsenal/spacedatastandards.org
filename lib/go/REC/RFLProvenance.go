@@ -319,8 +319,50 @@ func (rcv *RFLProvenance) Citation() []byte {
 }
 
 /// Attribution the licence requires this record to carry downstream.
+/// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+/// MODELS remains the per-budget-term attribution surface.
+func (rcv *RFLProvenance) MODULE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFLProvenance) ModuleId() []byte {
+	return rcv.MODULE_ID()
+}
+
+/// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+/// MODELS remains the per-budget-term attribution surface.
+func (rcv *RFLProvenance) MODULE_VERSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFLProvenance) ModuleVersion() []byte {
+	return rcv.MODULE_VERSION()
+}
+
+/// Content hash of the exact producing WASM artifact.
+func (rcv *RFLProvenance) MODULE_CONTENT_HASH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFLProvenance) ModuleContentHash() []byte {
+	return rcv.MODULE_CONTENT_HASH()
+}
+
+/// Content hash of the exact producing WASM artifact.
 func RFLProvenanceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(18)
 }
 func RFLProvenanceAddMETHOD(builder *flatbuffers.Builder, METHOD rflMethod) {
 	builder.PrependInt8Slot(0, int8(METHOD), 0)
@@ -417,6 +459,24 @@ func RFLProvenanceAddCITATION(builder *flatbuffers.Builder, CITATION flatbuffers
 }
 func RFLProvenanceAddCitation(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
 	RFLProvenanceAddCITATION(builder, CITATION)
+}
+func RFLProvenanceAddMODULE_ID(builder *flatbuffers.Builder, MODULE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MODULE_ID), 0)
+}
+func RFLProvenanceAddModuleId(builder *flatbuffers.Builder, MODULE_ID flatbuffers.UOffsetT) {
+	RFLProvenanceAddMODULE_ID(builder, MODULE_ID)
+}
+func RFLProvenanceAddMODULE_VERSION(builder *flatbuffers.Builder, MODULE_VERSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(MODULE_VERSION), 0)
+}
+func RFLProvenanceAddModuleVersion(builder *flatbuffers.Builder, MODULE_VERSION flatbuffers.UOffsetT) {
+	RFLProvenanceAddMODULE_VERSION(builder, MODULE_VERSION)
+}
+func RFLProvenanceAddMODULE_CONTENT_HASH(builder *flatbuffers.Builder, MODULE_CONTENT_HASH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(MODULE_CONTENT_HASH), 0)
+}
+func RFLProvenanceAddModuleContentHash(builder *flatbuffers.Builder, MODULE_CONTENT_HASH flatbuffers.UOffsetT) {
+	RFLProvenanceAddMODULE_CONTENT_HASH(builder, MODULE_CONTENT_HASH)
 }
 func RFLProvenanceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

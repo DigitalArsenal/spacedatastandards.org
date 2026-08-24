@@ -1,5 +1,6 @@
 export * from './ACI.js';
 export * from './ACIBestServer.js';
+export * from './ACIDataVolumeByModCod.js';
 export * from './ACIHandover.js';
 export * from './aciHandoverKind.js';
 export * from './ACIInterval.js';
@@ -21,6 +22,7 @@ export * from './RFLInterferenceContribution.js';
 export * from './RFLLink.js';
 export * from './rflLinkKind.js';
 export * from './rflMethod.js';
+export * from './RFLModCod.js';
 export * from './RFLModelBinding.js';
 export * from './RFLModelParameter.js';
 export * from './rflObstacleInteraction.js';

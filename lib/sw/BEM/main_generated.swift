@@ -41,6 +41,284 @@ public enum beamPolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 }
 
 
+///  Operational state of one beam-hop slot.
+public enum bemHopSlotState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case active = 1
+  case guard_ = 2
+  case idle = 3
+
+  public static var max: bemHopSlotState { return .idle }
+  public static var min: bemHopSlotState { return .unspecified }
+}
+
+
+///  Provenance of a deployed-beam descriptor or hop schedule.
+public struct BEMProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BEM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BEMProvenance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let SOURCE_QUERY: VOffset = 6
+    static let MODEL_NAME: VOffset = 8
+    static let MODEL_VERSION: VOffset = 10
+    static let CITATION: VOffset = 12
+    static let MODULE_ID: VOffset = 14
+    static let MODULE_VERSION: VOffset = 16
+    static let MODULE_CONTENT_HASH: VOffset = 18
+    static let COMPUTED_AT: VOffset = 20
+  }
+
+  public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  public var MODEL_NAME: String? { let o = _accessor.offset(VT.MODEL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_NAME) }
+  public var MODEL_VERSION: String? { let o = _accessor.offset(VT.MODEL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_VERSION) }
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startBEMProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func add(MODEL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_NAME, at: VT.MODEL_NAME) }
+  public static func add(MODEL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_VERSION, at: VT.MODEL_VERSION) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func endBEMProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createBEMProvenance(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCEOffset SOURCE: Offset,
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
+    MODEL_NAMEOffset MODEL_NAME: Offset = Offset(),
+    MODEL_VERSIONOffset MODEL_VERSION: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0
+  ) -> Offset {
+    let __start = BEMProvenance.startBEMProvenance(&fbb)
+    BEMProvenance.add(SOURCE: SOURCE, &fbb)
+    BEMProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    BEMProvenance.add(MODEL_NAME: MODEL_NAME, &fbb)
+    BEMProvenance.add(MODEL_VERSION: MODEL_VERSION, &fbb)
+    BEMProvenance.add(CITATION: CITATION, &fbb)
+    BEMProvenance.add(MODULE_ID: MODULE_ID, &fbb)
+    BEMProvenance.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    BEMProvenance.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
+    BEMProvenance.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    return BEMProvenance.endBEMProvenance(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_NAME, fieldName: "MODEL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_VERSION, fieldName: "MODEL_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  One time slice of a periodic beam-hopping plan.
+public struct BEMHopSlot: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BEM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BEMHopSlot.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SLOT_ID: VOffset = 4
+    static let START_OFFSET_S: VOffset = 6
+    static let DURATION_S: VOffset = 8
+    static let STATE: VOffset = 10
+    static let BEAM_ID: VOffset = 12
+    static let TARGET_CELL_ID: VOffset = 14
+    static let TARGET_CENTER_LATITUDE_DEG: VOffset = 16
+    static let TARGET_CENTER_LONGITUDE_DEG: VOffset = 18
+    static let CENTER_FREQUENCY_HZ: VOffset = 20
+    static let EIRP_DBW: VOffset = 22
+    static let PRIORITY: VOffset = 24
+  }
+
+  public var SLOT_ID: String! { let o = _accessor.offset(VT.SLOT_ID); return _accessor.string(at: o) }
+  public var SLOT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLOT_ID) }
+  ///  Offset from BEMHopSchedule.EPOCH in seconds.
+  public var START_OFFSET_S: Double { let o = _accessor.offset(VT.START_OFFSET_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DURATION_S: Double { let o = _accessor.offset(VT.DURATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STATE: bemHopSlotState { let o = _accessor.offset(VT.STATE); return o == 0 ? .unspecified : bemHopSlotState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Beam activated in this slot. May name this BEM.ID or another beam in a
+  ///  coordinated schedule.
+  public var BEAM_ID: String! { let o = _accessor.offset(VT.BEAM_ID); return _accessor.string(at: o) }
+  public var BEAM_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BEAM_ID) }
+  public var TARGET_CELL_ID: String? { let o = _accessor.offset(VT.TARGET_CELL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_CELL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_CELL_ID) }
+  public var TARGET_CENTER_LATITUDE_DEG: Double { let o = _accessor.offset(VT.TARGET_CENTER_LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_CENTER_LONGITUDE_DEG: Double { let o = _accessor.offset(VT.TARGET_CENTER_LONGITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CENTER_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.CENTER_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EIRP_DBW: Double { let o = _accessor.offset(VT.EIRP_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PRIORITY: UInt32 { let o = _accessor.offset(VT.PRIORITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startBEMHopSlot(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(SLOT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOT_ID, at: VT.SLOT_ID) }
+  public static func add(START_OFFSET_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_OFFSET_S, def: 0.0, at: VT.START_OFFSET_S) }
+  public static func add(DURATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_S, def: 0.0, at: VT.DURATION_S) }
+  public static func add(STATE: bemHopSlotState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE.rawValue, def: 0, at: VT.STATE) }
+  public static func add(BEAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_ID, at: VT.BEAM_ID) }
+  public static func add(TARGET_CELL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_CELL_ID, at: VT.TARGET_CELL_ID) }
+  public static func add(TARGET_CENTER_LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_CENTER_LATITUDE_DEG, def: 0.0, at: VT.TARGET_CENTER_LATITUDE_DEG) }
+  public static func add(TARGET_CENTER_LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_CENTER_LONGITUDE_DEG, def: 0.0, at: VT.TARGET_CENTER_LONGITUDE_DEG) }
+  public static func add(CENTER_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQUENCY_HZ, def: 0.0, at: VT.CENTER_FREQUENCY_HZ) }
+  public static func add(EIRP_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP_DBW, def: 0.0, at: VT.EIRP_DBW) }
+  public static func add(PRIORITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIORITY, def: 0, at: VT.PRIORITY) }
+  public static func endBEMHopSlot(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12]); return end }
+  public static func createBEMHopSlot(
+    _ fbb: inout FlatBufferBuilder,
+    SLOT_IDOffset SLOT_ID: Offset,
+    START_OFFSET_S: Double = 0.0,
+    DURATION_S: Double = 0.0,
+    STATE: bemHopSlotState = .unspecified,
+    BEAM_IDOffset BEAM_ID: Offset,
+    TARGET_CELL_IDOffset TARGET_CELL_ID: Offset = Offset(),
+    TARGET_CENTER_LATITUDE_DEG: Double = 0.0,
+    TARGET_CENTER_LONGITUDE_DEG: Double = 0.0,
+    CENTER_FREQUENCY_HZ: Double = 0.0,
+    EIRP_DBW: Double = 0.0,
+    PRIORITY: UInt32 = 0
+  ) -> Offset {
+    let __start = BEMHopSlot.startBEMHopSlot(&fbb)
+    BEMHopSlot.add(SLOT_ID: SLOT_ID, &fbb)
+    BEMHopSlot.add(START_OFFSET_S: START_OFFSET_S, &fbb)
+    BEMHopSlot.add(DURATION_S: DURATION_S, &fbb)
+    BEMHopSlot.add(STATE: STATE, &fbb)
+    BEMHopSlot.add(BEAM_ID: BEAM_ID, &fbb)
+    BEMHopSlot.add(TARGET_CELL_ID: TARGET_CELL_ID, &fbb)
+    BEMHopSlot.add(TARGET_CENTER_LATITUDE_DEG: TARGET_CENTER_LATITUDE_DEG, &fbb)
+    BEMHopSlot.add(TARGET_CENTER_LONGITUDE_DEG: TARGET_CENTER_LONGITUDE_DEG, &fbb)
+    BEMHopSlot.add(CENTER_FREQUENCY_HZ: CENTER_FREQUENCY_HZ, &fbb)
+    BEMHopSlot.add(EIRP_DBW: EIRP_DBW, &fbb)
+    BEMHopSlot.add(PRIORITY: PRIORITY, &fbb)
+    return BEMHopSlot.endBEMHopSlot(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SLOT_ID, fieldName: "SLOT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_OFFSET_S, fieldName: "START_OFFSET_S", required: false, type: Double.self)
+    try _v.visit(field: VT.DURATION_S, fieldName: "DURATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: false, type: bemHopSlotState.self)
+    try _v.visit(field: VT.BEAM_ID, fieldName: "BEAM_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_CELL_ID, fieldName: "TARGET_CELL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_CENTER_LATITUDE_DEG, fieldName: "TARGET_CENTER_LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_CENTER_LONGITUDE_DEG, fieldName: "TARGET_CENTER_LONGITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.CENTER_FREQUENCY_HZ, fieldName: "CENTER_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.EIRP_DBW, fieldName: "EIRP_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.PRIORITY, fieldName: "PRIORITY", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Periodic beam-hopping schedule carried by a deployed beam descriptor.
+public struct BEMHopSchedule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BEM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BEMHopSchedule.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SCHEDULE_ID: VOffset = 4
+    static let EPOCH: VOffset = 6
+    static let PERIOD_S: VOffset = 8
+    static let REPEATS: VOffset = 10
+    static let SLOTS: VOffset = 12
+    static let PROVENANCE: VOffset = 14
+  }
+
+  public var SCHEDULE_ID: String! { let o = _accessor.offset(VT.SCHEDULE_ID); return _accessor.string(at: o) }
+  public var SCHEDULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SCHEDULE_ID) }
+  ///  Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIOD_S: Double { let o = _accessor.offset(VT.PERIOD_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEATS: Bool { let o = _accessor.offset(VT.REPEATS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SLOTS: FlatbufferVector<BEMHopSlot> { return _accessor.vector(at: VT.SLOTS, byteSize: 4) }
+  public var PROVENANCE: BEMProvenance! { let o = _accessor.offset(VT.PROVENANCE); return BEMProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startBEMHopSchedule(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(SCHEDULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEDULE_ID, at: VT.SCHEDULE_ID) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func add(PERIOD_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD_S, def: 0.0, at: VT.PERIOD_S) }
+  public static func add(REPEATS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEATS, def: false,
+   at: VT.REPEATS) }
+  public static func addVectorOf(SLOTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOTS, at: VT.SLOTS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endBEMHopSchedule(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 14]); return end }
+  public static func createBEMHopSchedule(
+    _ fbb: inout FlatBufferBuilder,
+    SCHEDULE_IDOffset SCHEDULE_ID: Offset,
+    EPOCH: Double = 0.0,
+    PERIOD_S: Double = 0.0,
+    REPEATS: Bool = false,
+    SLOTSVectorOffset SLOTS: Offset,
+    PROVENANCEOffset PROVENANCE: Offset
+  ) -> Offset {
+    let __start = BEMHopSchedule.startBEMHopSchedule(&fbb)
+    BEMHopSchedule.add(SCHEDULE_ID: SCHEDULE_ID, &fbb)
+    BEMHopSchedule.add(EPOCH: EPOCH, &fbb)
+    BEMHopSchedule.add(PERIOD_S: PERIOD_S, &fbb)
+    BEMHopSchedule.add(REPEATS: REPEATS, &fbb)
+    BEMHopSchedule.addVectorOf(SLOTS: SLOTS, &fbb)
+    BEMHopSchedule.add(PROVENANCE: PROVENANCE, &fbb)
+    return BEMHopSchedule.endBEMHopSchedule(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SCHEDULE_ID, fieldName: "SCHEDULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIOD_S, fieldName: "PERIOD_S", required: false, type: Double.self)
+    try _v.visit(field: VT.REPEATS, fieldName: "REPEATS", required: false, type: Bool.self)
+    try _v.visit(field: VT.SLOTS, fieldName: "SLOTS", required: true, type: ForwardOffset<Vector<ForwardOffset<BEMHopSlot>, BEMHopSlot>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<BEMProvenance>.self)
+    _v.finish()
+  }
+}
+
 ///  Beam Contour Point (gain pattern boundary)
 public struct beamContourPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -174,6 +452,12 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let FOOTPRINT_AREA: VOffset = 32
     static let BEAM_CONTOURS: VOffset = 34
     static let NOTES: VOffset = 36
+    static let HOP_SCHEDULE: VOffset = 38
+    static let PROVENANCE: VOffset = 40
+    static let COMPUTED_AT: VOffset = 42
+    static let PRODUCER_ID: VOffset = 44
+    static let SIGNATURE: VOffset = 46
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 48
   }
 
   ///  Unique beam identifier
@@ -215,7 +499,24 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  public static func startBEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  Time-sliced activation plan for this deployed beam.
+  public var HOP_SCHEDULE: BEMHopSchedule? { let o = _accessor.offset(VT.HOP_SCHEDULE); return o == 0 ? nil : BEMHopSchedule(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROVENANCE: BEMProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : BEMProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Unix ms this record was serialized.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  `$EPM` identifier of the producing node.
+  public var PRODUCER_ID: String? { let o = _accessor.offset(VT.PRODUCER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startBEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(BEAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_NAME, at: VT.BEAM_NAME) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VT.ID_ENTITY) }
@@ -233,6 +534,12 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(FOOTPRINT_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOOTPRINT_AREA, def: 0.0, at: VT.FOOTPRINT_AREA) }
   public static func addVectorOf(BEAM_CONTOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_CONTOURS, at: VT.BEAM_CONTOURS) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(HOP_SCHEDULE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOP_SCHEDULE, at: VT.HOP_SCHEDULE) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
   public static func endBEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBEM(
     _ fbb: inout FlatBufferBuilder,
@@ -252,7 +559,13 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     G_OVER_T: Double = 0.0,
     FOOTPRINT_AREA: Double = 0.0,
     BEAM_CONTOURSVectorOffset BEAM_CONTOURS: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset(),
+    HOP_SCHEDULEOffset HOP_SCHEDULE: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = BEM.startBEM(&fbb)
     BEM.add(ID: ID, &fbb)
@@ -272,6 +585,12 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     BEM.add(FOOTPRINT_AREA: FOOTPRINT_AREA, &fbb)
     BEM.addVectorOf(BEAM_CONTOURS: BEAM_CONTOURS, &fbb)
     BEM.add(NOTES: NOTES, &fbb)
+    BEM.add(HOP_SCHEDULE: HOP_SCHEDULE, &fbb)
+    BEM.add(PROVENANCE: PROVENANCE, &fbb)
+    BEM.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    BEM.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    BEM.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    BEM.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
     return BEM.endBEM(&fbb, start: __start)
   }
 
@@ -294,6 +613,12 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.FOOTPRINT_AREA, fieldName: "FOOTPRINT_AREA", required: false, type: Double.self)
     try _v.visit(field: VT.BEAM_CONTOURS, fieldName: "BEAM_CONTOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<beamContour>, beamContour>>.self)
     try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HOP_SCHEDULE, fieldName: "HOP_SCHEDULE", required: false, type: ForwardOffset<BEMHopSchedule>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<BEMProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

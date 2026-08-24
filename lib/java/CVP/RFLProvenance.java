@@ -109,6 +109,22 @@ public final class RFLProvenance extends com.google.flatbuffers.Table {
   public String CITATION() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
   public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+   * MODELS remains the per-budget-term attribution surface.
+   */
+  public String MODULE_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MODULE_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer MODULE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String MODULE_VERSION() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MODULE_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer MODULE_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Content hash of the exact producing WASM artifact.
+   */
+  public String MODULE_CONTENT_HASH() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MODULE_CONTENT_HASHAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer MODULE_CONTENT_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
 
   public static int createRFLProvenance(FlatBufferBuilder builder,
       byte METHOD,
@@ -125,11 +141,17 @@ public final class RFLProvenance extends com.google.flatbuffers.Table {
       long RETRIEVED_AT,
       int LICENSEOffset,
       boolean NON_COMMERCIAL_ONLY,
-      int CITATIONOffset) {
-    builder.startTable(15);
+      int CITATIONOffset,
+      int MODULE_IDOffset,
+      int MODULE_VERSIONOffset,
+      int MODULE_CONTENT_HASHOffset) {
+    builder.startTable(18);
     RFLProvenance.addRetrievedAt(builder, RETRIEVED_AT);
     RFLProvenance.addComputedAt(builder, COMPUTED_AT);
     RFLProvenance.addSamplingStepS(builder, SAMPLING_STEP_S);
+    RFLProvenance.addModuleContentHash(builder, MODULE_CONTENT_HASHOffset);
+    RFLProvenance.addModuleVersion(builder, MODULE_VERSIONOffset);
+    RFLProvenance.addModuleId(builder, MODULE_IDOffset);
     RFLProvenance.addCitation(builder, CITATIONOffset);
     RFLProvenance.addLicense(builder, LICENSEOffset);
     RFLProvenance.addTerrainDataset(builder, TERRAIN_DATASETOffset);
@@ -145,7 +167,7 @@ public final class RFLProvenance extends com.google.flatbuffers.Table {
     return RFLProvenance.endRFLProvenance(builder);
   }
 
-  public static void startRFLProvenance(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startRFLProvenance(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addMethod(FlatBufferBuilder builder, byte METHOD) { builder.addByte(0, METHOD, 0); }
   public static void addSource(FlatBufferBuilder builder, int SOURCEOffset) { builder.addOffset(1, SOURCEOffset, 0); }
   public static void addSourceQuery(FlatBufferBuilder builder, int SOURCE_QUERYOffset) { builder.addOffset(2, SOURCE_QUERYOffset, 0); }
@@ -163,6 +185,9 @@ public final class RFLProvenance extends com.google.flatbuffers.Table {
   public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(12, LICENSEOffset, 0); }
   public static void addNonCommercialOnly(FlatBufferBuilder builder, boolean NON_COMMERCIAL_ONLY) { builder.addBoolean(13, NON_COMMERCIAL_ONLY, false); }
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(14, CITATIONOffset, 0); }
+  public static void addModuleId(FlatBufferBuilder builder, int MODULE_IDOffset) { builder.addOffset(15, MODULE_IDOffset, 0); }
+  public static void addModuleVersion(FlatBufferBuilder builder, int MODULE_VERSIONOffset) { builder.addOffset(16, MODULE_VERSIONOffset, 0); }
+  public static void addModuleContentHash(FlatBufferBuilder builder, int MODULE_CONTENT_HASHOffset) { builder.addOffset(17, MODULE_CONTENT_HASHOffset, 0); }
   public static int endRFLProvenance(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 6);  // SOURCE

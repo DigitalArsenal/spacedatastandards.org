@@ -1,0 +1,33 @@
+/**
+ * What kind of thing an endpoint is, which selects the standard it joins to.
+ */
+export declare enum rflEndpointKind {
+    UNSPECIFIED = 0,
+    /**
+     * On-orbit object; joins `$CAT` by NORAD_CAT_ID / OBJECT_ID.
+     */
+    SPACECRAFT = 1,
+    /**
+     * Geodetic tracking station; joins `$GST` by STATION_ID.
+     */
+    GEODETIC_TRACKING_STATION = 2,
+    /**
+     * Satellite ground station / teleport; joins `$SIT`.
+     */
+    SATELLITE_GROUND_STATION = 3,
+    /**
+     * Terrestrial base-station site; joins `$TBS`.
+     */
+    TERRESTRIAL_SITE = 4,
+    /**
+     * User terminal, fixed or mobile.
+     */
+    USER_TERMINAL = 5,
+    AIRBORNE = 6,
+    MARITIME = 7,
+    /**
+     * A relay payload acting as an intermediate endpoint of a multi-hop chain.
+     */
+    RELAY_PAYLOAD = 8
+}
+//# sourceMappingURL=rflEndpointKind.d.ts.map

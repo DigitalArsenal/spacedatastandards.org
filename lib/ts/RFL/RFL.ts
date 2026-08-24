@@ -861,7 +861,9 @@ PRODUCER_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Ed25519 signature by the producing `$EPM`.
+ * Ed25519 signature by the producing `$EPM` over the size-prefixed
+ * FlatBuffer projection with both 64-byte signature payloads zeroed while
+ * preserving their vectors and offsets.
  */
 SIGNATURE(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 104);
@@ -878,8 +880,152 @@ signatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+ * field order, IDL capitalization, no insignificant whitespace, and both
+ * signature fields omitted.
+ */
+CANONICAL_JSON_SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+canonicalJsonSignatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+canonicalJsonSignatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Index into the selected link's RFLLink.MODCOD_SET for each sample.
+ * SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+ */
+SELECTED_MODCOD_INDEX(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readUint32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+}
+
+selectedModcodIndexLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+selectedModcodIndexArray():Uint32Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? new Uint32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+SELECTED_MODCOD_VALID(index: number):boolean|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? !!this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : false;
+}
+
+selectedModcodValidLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+selectedModcodValidArray():Int8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? new Int8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Spectral efficiency delivered by the selected entry, bit/s/Hz.
+ */
+SPECTRAL_EFFICIENCY_BPS_HZ(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+spectralEfficiencyBpsHzLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+spectralEfficiencyBpsHzArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Delivered information rate after adaptive selection, bits per second.
+ */
+ACHIEVED_DATA_RATE_BPS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+achievedDataRateBpsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+achievedDataRateBpsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Margin above the selected entry's threshold, dB.
+ */
+ACM_MARGIN_DB(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+acmMarginDbLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+acmMarginDbArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Symbol energy to noise spectral density, dB.
+ */
+ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+energyPerSymbolToNoiseDensityDbLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+energyPerSymbolToNoiseDensityDbArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Decoded block error probability [0-1].
+ */
+BLOCK_ERROR_RATE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+blockErrorRateLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+blockErrorRateArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startRFL(builder:flatbuffers.Builder) {
-  builder.startObject(51);
+  builder.startObject(59);
 }
 
 static addRflId(builder:flatbuffers.Builder, RFL_IDOffset:flatbuffers.Offset) {
@@ -1770,6 +1916,164 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addCanonicalJsonSignature(builder:flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, CANONICAL_JSON_SIGNATUREOffset, 0);
+}
+
+static createCanonicalJsonSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCanonicalJsonSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addSelectedModcodIndex(builder:flatbuffers.Builder, SELECTED_MODCOD_INDEXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, SELECTED_MODCOD_INDEXOffset, 0);
+}
+
+static createSelectedModcodIndexVector(builder:flatbuffers.Builder, data:number[]|Uint32Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSelectedModcodIndexVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSelectedModcodIndexVector(builder:flatbuffers.Builder, data:number[]|Uint32Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt32(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSelectedModcodIndexVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSelectedModcodValid(builder:flatbuffers.Builder, SELECTED_MODCOD_VALIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(53, SELECTED_MODCOD_VALIDOffset, 0);
+}
+
+static createSelectedModcodValidVector(builder:flatbuffers.Builder, data:boolean[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(+data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSelectedModcodValidVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addSpectralEfficiencyBpsHz(builder:flatbuffers.Builder, SPECTRAL_EFFICIENCY_BPS_HZOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(54, SPECTRAL_EFFICIENCY_BPS_HZOffset, 0);
+}
+
+static createSpectralEfficiencyBpsHzVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSpectralEfficiencyBpsHzVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSpectralEfficiencyBpsHzVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSpectralEfficiencyBpsHzVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addAchievedDataRateBps(builder:flatbuffers.Builder, ACHIEVED_DATA_RATE_BPSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(55, ACHIEVED_DATA_RATE_BPSOffset, 0);
+}
+
+static createAchievedDataRateBpsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAchievedDataRateBpsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAchievedDataRateBpsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAchievedDataRateBpsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addAcmMarginDb(builder:flatbuffers.Builder, ACM_MARGIN_DBOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(56, ACM_MARGIN_DBOffset, 0);
+}
+
+static createAcmMarginDbVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAcmMarginDbVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAcmMarginDbVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAcmMarginDbVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addEnergyPerSymbolToNoiseDensityDb(builder:flatbuffers.Builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(57, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset, 0);
+}
+
+static createEnergyPerSymbolToNoiseDensityDbVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createEnergyPerSymbolToNoiseDensityDbVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createEnergyPerSymbolToNoiseDensityDbVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEnergyPerSymbolToNoiseDensityDbVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addBlockErrorRate(builder:flatbuffers.Builder, BLOCK_ERROR_RATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(58, BLOCK_ERROR_RATEOffset, 0);
+}
+
+static createBlockErrorRateVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createBlockErrorRateVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createBlockErrorRateVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startBlockErrorRateVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endRFL(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // RFL_ID
@@ -1841,7 +2145,15 @@ unpack(): RFLT {
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
     this.COMPUTED_AT(),
     this.PRODUCER_ID(),
-    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength()),
+    this.bb!.createScalarList<number>(this.SELECTED_MODCOD_INDEX.bind(this), this.selectedModcodIndexLength()),
+    this.bb!.createScalarList<boolean>(this.SELECTED_MODCOD_VALID.bind(this), this.selectedModcodValidLength()),
+    this.bb!.createScalarList<number>(this.SPECTRAL_EFFICIENCY_BPS_HZ.bind(this), this.spectralEfficiencyBpsHzLength()),
+    this.bb!.createScalarList<number>(this.ACHIEVED_DATA_RATE_BPS.bind(this), this.achievedDataRateBpsLength()),
+    this.bb!.createScalarList<number>(this.ACM_MARGIN_DB.bind(this), this.acmMarginDbLength()),
+    this.bb!.createScalarList<number>(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.bind(this), this.energyPerSymbolToNoiseDensityDbLength()),
+    this.bb!.createScalarList<number>(this.BLOCK_ERROR_RATE.bind(this), this.blockErrorRateLength())
   );
 }
 
@@ -1898,6 +2210,14 @@ unpackTo(_o: RFLT): void {
   _o.COMPUTED_AT = this.COMPUTED_AT();
   _o.PRODUCER_ID = this.PRODUCER_ID();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.CANONICAL_JSON_SIGNATURE = this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength());
+  _o.SELECTED_MODCOD_INDEX = this.bb!.createScalarList<number>(this.SELECTED_MODCOD_INDEX.bind(this), this.selectedModcodIndexLength());
+  _o.SELECTED_MODCOD_VALID = this.bb!.createScalarList<boolean>(this.SELECTED_MODCOD_VALID.bind(this), this.selectedModcodValidLength());
+  _o.SPECTRAL_EFFICIENCY_BPS_HZ = this.bb!.createScalarList<number>(this.SPECTRAL_EFFICIENCY_BPS_HZ.bind(this), this.spectralEfficiencyBpsHzLength());
+  _o.ACHIEVED_DATA_RATE_BPS = this.bb!.createScalarList<number>(this.ACHIEVED_DATA_RATE_BPS.bind(this), this.achievedDataRateBpsLength());
+  _o.ACM_MARGIN_DB = this.bb!.createScalarList<number>(this.ACM_MARGIN_DB.bind(this), this.acmMarginDbLength());
+  _o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = this.bb!.createScalarList<number>(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.bind(this), this.energyPerSymbolToNoiseDensityDbLength());
+  _o.BLOCK_ERROR_RATE = this.bb!.createScalarList<number>(this.BLOCK_ERROR_RATE.bind(this), this.blockErrorRateLength());
 }
 }
 
@@ -1953,7 +2273,15 @@ constructor(
   public PROVENANCE: RFLProvenanceT|null = null,
   public COMPUTED_AT: bigint = BigInt('0'),
   public PRODUCER_ID: string|Uint8Array|null = null,
-  public SIGNATURE: (number)[] = []
+  public SIGNATURE: (number)[] = [],
+  public CANONICAL_JSON_SIGNATURE: (number)[] = [],
+  public SELECTED_MODCOD_INDEX: (number)[] = [],
+  public SELECTED_MODCOD_VALID: (boolean)[] = [],
+  public SPECTRAL_EFFICIENCY_BPS_HZ: (number)[] = [],
+  public ACHIEVED_DATA_RATE_BPS: (number)[] = [],
+  public ACM_MARGIN_DB: (number)[] = [],
+  public ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: (number)[] = [],
+  public BLOCK_ERROR_RATE: (number)[] = []
 ){}
 
 
@@ -2006,6 +2334,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const PRODUCER_ID = (this.PRODUCER_ID !== null ? builder.createString(this.PRODUCER_ID!) : 0);
   const SIGNATURE = RFL.createSignatureVector(builder, this.SIGNATURE);
+  const CANONICAL_JSON_SIGNATURE = RFL.createCanonicalJsonSignatureVector(builder, this.CANONICAL_JSON_SIGNATURE);
+  const SELECTED_MODCOD_INDEX = RFL.createSelectedModcodIndexVector(builder, this.SELECTED_MODCOD_INDEX);
+  const SELECTED_MODCOD_VALID = RFL.createSelectedModcodValidVector(builder, this.SELECTED_MODCOD_VALID);
+  const SPECTRAL_EFFICIENCY_BPS_HZ = RFL.createSpectralEfficiencyBpsHzVector(builder, this.SPECTRAL_EFFICIENCY_BPS_HZ);
+  const ACHIEVED_DATA_RATE_BPS = RFL.createAchievedDataRateBpsVector(builder, this.ACHIEVED_DATA_RATE_BPS);
+  const ACM_MARGIN_DB = RFL.createAcmMarginDbVector(builder, this.ACM_MARGIN_DB);
+  const ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = RFL.createEnergyPerSymbolToNoiseDensityDbVector(builder, this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  const BLOCK_ERROR_RATE = RFL.createBlockErrorRateVector(builder, this.BLOCK_ERROR_RATE);
 
   RFL.startRFL(builder);
   RFL.addRflId(builder, RFL_ID);
@@ -2059,6 +2395,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   RFL.addComputedAt(builder, this.COMPUTED_AT);
   RFL.addProducerId(builder, PRODUCER_ID);
   RFL.addSignature(builder, SIGNATURE);
+  RFL.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATURE);
+  RFL.addSelectedModcodIndex(builder, SELECTED_MODCOD_INDEX);
+  RFL.addSelectedModcodValid(builder, SELECTED_MODCOD_VALID);
+  RFL.addSpectralEfficiencyBpsHz(builder, SPECTRAL_EFFICIENCY_BPS_HZ);
+  RFL.addAchievedDataRateBps(builder, ACHIEVED_DATA_RATE_BPS);
+  RFL.addAcmMarginDb(builder, ACM_MARGIN_DB);
+  RFL.addEnergyPerSymbolToNoiseDensityDb(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  RFL.addBlockErrorRate(builder, BLOCK_ERROR_RATE);
 
   return RFL.endRFL(builder);
 }

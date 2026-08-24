@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { BEMHopSchedule, BEMHopScheduleT } from './BEMHopSchedule.js';
+import { BEMProvenance, BEMProvenanceT } from './BEMProvenance.js';
 import { beamContour, beamContourT } from './beamContour.js';
 import { beamPolarization } from './beamPolarization.js';
 import { beamType } from './beamType.js';
@@ -185,8 +187,78 @@ NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Time-sliced activation plan for this deployed beam.
+ */
+HOP_SCHEDULE(obj?:BEMHopSchedule):BEMHopSchedule|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new BEMHopSchedule()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+PROVENANCE(obj?:BEMProvenance):BEMProvenance|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new BEMProvenance()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Unix ms this record was serialized.
+ */
+COMPUTED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * `$EPM` identifier of the producing node.
+ */
+PRODUCER_ID():string|null
+PRODUCER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PRODUCER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+ * signature payloads zeroed while preserving their vectors and offsets.
+ */
+SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+signatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+signatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Ed25519 signature over canonical JSON with IDL field order and
+ * capitalization, no insignificant whitespace, and both signature fields
+ * omitted.
+ */
+CANONICAL_JSON_SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+canonicalJsonSignatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+canonicalJsonSignatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startBEM(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(23);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -269,6 +341,54 @@ static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(16, NOTESOffset, 0);
 }
 
+static addHopSchedule(builder:flatbuffers.Builder, HOP_SCHEDULEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, HOP_SCHEDULEOffset, 0);
+}
+
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, PROVENANCEOffset, 0);
+}
+
+static addComputedAt(builder:flatbuffers.Builder, COMPUTED_AT:bigint) {
+  builder.addFieldInt64(19, COMPUTED_AT, BigInt('0'));
+}
+
+static addProducerId(builder:flatbuffers.Builder, PRODUCER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, PRODUCER_IDOffset, 0);
+}
+
+static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, SIGNATUREOffset, 0);
+}
+
+static createSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addCanonicalJsonSignature(builder:flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, CANONICAL_JSON_SIGNATUREOffset, 0);
+}
+
+static createCanonicalJsonSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCanonicalJsonSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endBEM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -282,27 +402,6 @@ static finishSizePrefixedBEMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$BEM', true);
 }
 
-static createBEM(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, BEAM_NAMEOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, ID_ANTENNAOffset:flatbuffers.Offset, TYPE:beamType, POLARIZATION:beamPolarization, PEAK_GAIN:number, EOC_GAIN:number, CENTER_LATITUDE:number, CENTER_LONGITUDE:number, BEAMWIDTH:number, FREQUENCY:number, EIRP:number, G_OVER_T:number, FOOTPRINT_AREA:number, BEAM_CONTOURSOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
-  BEM.startBEM(builder);
-  BEM.addId(builder, IDOffset);
-  BEM.addBeamName(builder, BEAM_NAMEOffset);
-  BEM.addIdEntity(builder, ID_ENTITYOffset);
-  BEM.addIdAntenna(builder, ID_ANTENNAOffset);
-  BEM.addType(builder, TYPE);
-  BEM.addPolarization(builder, POLARIZATION);
-  BEM.addPeakGain(builder, PEAK_GAIN);
-  BEM.addEocGain(builder, EOC_GAIN);
-  BEM.addCenterLatitude(builder, CENTER_LATITUDE);
-  BEM.addCenterLongitude(builder, CENTER_LONGITUDE);
-  BEM.addBeamwidth(builder, BEAMWIDTH);
-  BEM.addFrequency(builder, FREQUENCY);
-  BEM.addEirp(builder, EIRP);
-  BEM.addGOverT(builder, G_OVER_T);
-  BEM.addFootprintArea(builder, FOOTPRINT_AREA);
-  BEM.addBeamContours(builder, BEAM_CONTOURSOffset);
-  BEM.addNotes(builder, NOTESOffset);
-  return BEM.endBEM(builder);
-}
 
 unpack(): BEMT {
   return new BEMT(
@@ -322,7 +421,13 @@ unpack(): BEMT {
     this.G_OVER_T(),
     this.FOOTPRINT_AREA(),
     this.bb!.createObjList<beamContour, beamContourT>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength()),
-    this.NOTES()
+    this.NOTES(),
+    (this.HOP_SCHEDULE() !== null ? this.HOP_SCHEDULE()!.unpack() : null),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.COMPUTED_AT(),
+    this.PRODUCER_ID(),
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength())
   );
 }
 
@@ -345,6 +450,12 @@ unpackTo(_o: BEMT): void {
   _o.FOOTPRINT_AREA = this.FOOTPRINT_AREA();
   _o.BEAM_CONTOURS = this.bb!.createObjList<beamContour, beamContourT>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength());
   _o.NOTES = this.NOTES();
+  _o.HOP_SCHEDULE = (this.HOP_SCHEDULE() !== null ? this.HOP_SCHEDULE()!.unpack() : null);
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.COMPUTED_AT = this.COMPUTED_AT();
+  _o.PRODUCER_ID = this.PRODUCER_ID();
+  _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.CANONICAL_JSON_SIGNATURE = this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength());
 }
 }
 
@@ -366,7 +477,13 @@ constructor(
   public G_OVER_T: number = 0.0,
   public FOOTPRINT_AREA: number = 0.0,
   public BEAM_CONTOURS: (beamContourT)[] = [],
-  public NOTES: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null,
+  public HOP_SCHEDULE: BEMHopScheduleT|null = null,
+  public PROVENANCE: BEMProvenanceT|null = null,
+  public COMPUTED_AT: bigint = BigInt('0'),
+  public PRODUCER_ID: string|Uint8Array|null = null,
+  public SIGNATURE: (number)[] = [],
+  public CANONICAL_JSON_SIGNATURE: (number)[] = []
 ){}
 
 
@@ -377,25 +494,37 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID_ANTENNA = (this.ID_ANTENNA !== null ? builder.createString(this.ID_ANTENNA!) : 0);
   const BEAM_CONTOURS = BEM.createBeamContoursVector(builder, builder.createObjectOffsetList(this.BEAM_CONTOURS));
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const HOP_SCHEDULE = (this.HOP_SCHEDULE !== null ? this.HOP_SCHEDULE!.pack(builder) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const PRODUCER_ID = (this.PRODUCER_ID !== null ? builder.createString(this.PRODUCER_ID!) : 0);
+  const SIGNATURE = BEM.createSignatureVector(builder, this.SIGNATURE);
+  const CANONICAL_JSON_SIGNATURE = BEM.createCanonicalJsonSignatureVector(builder, this.CANONICAL_JSON_SIGNATURE);
 
-  return BEM.createBEM(builder,
-    ID,
-    BEAM_NAME,
-    ID_ENTITY,
-    ID_ANTENNA,
-    this.TYPE,
-    this.POLARIZATION,
-    this.PEAK_GAIN,
-    this.EOC_GAIN,
-    this.CENTER_LATITUDE,
-    this.CENTER_LONGITUDE,
-    this.BEAMWIDTH,
-    this.FREQUENCY,
-    this.EIRP,
-    this.G_OVER_T,
-    this.FOOTPRINT_AREA,
-    BEAM_CONTOURS,
-    NOTES
-  );
+  BEM.startBEM(builder);
+  BEM.addId(builder, ID);
+  BEM.addBeamName(builder, BEAM_NAME);
+  BEM.addIdEntity(builder, ID_ENTITY);
+  BEM.addIdAntenna(builder, ID_ANTENNA);
+  BEM.addType(builder, this.TYPE);
+  BEM.addPolarization(builder, this.POLARIZATION);
+  BEM.addPeakGain(builder, this.PEAK_GAIN);
+  BEM.addEocGain(builder, this.EOC_GAIN);
+  BEM.addCenterLatitude(builder, this.CENTER_LATITUDE);
+  BEM.addCenterLongitude(builder, this.CENTER_LONGITUDE);
+  BEM.addBeamwidth(builder, this.BEAMWIDTH);
+  BEM.addFrequency(builder, this.FREQUENCY);
+  BEM.addEirp(builder, this.EIRP);
+  BEM.addGOverT(builder, this.G_OVER_T);
+  BEM.addFootprintArea(builder, this.FOOTPRINT_AREA);
+  BEM.addBeamContours(builder, BEAM_CONTOURS);
+  BEM.addNotes(builder, NOTES);
+  BEM.addHopSchedule(builder, HOP_SCHEDULE);
+  BEM.addProvenance(builder, PROVENANCE);
+  BEM.addComputedAt(builder, this.COMPUTED_AT);
+  BEM.addProducerId(builder, PRODUCER_ID);
+  BEM.addSignature(builder, SIGNATURE);
+  BEM.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATURE);
+
+  return BEM.endBEM(builder);
 }
 }

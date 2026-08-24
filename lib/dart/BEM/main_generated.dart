@@ -92,6 +92,535 @@ class _beamPolarizationReader extends fb.Reader<beamPolarization> {
       beamPolarization.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Operational state of one beam-hop slot.
+enum bemHopSlotState {
+  UNSPECIFIED(0),
+  ACTIVE(1),
+  GUARD(2),
+  IDLE(3);
+
+  final int value;
+  const bemHopSlotState(this.value);
+
+  factory bemHopSlotState.fromValue(int value) {
+    switch (value) {
+      case 0: return bemHopSlotState.UNSPECIFIED;
+      case 1: return bemHopSlotState.ACTIVE;
+      case 2: return bemHopSlotState.GUARD;
+      case 3: return bemHopSlotState.IDLE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static bemHopSlotState? _createOrNull(int? value) =>
+      value == null ? null : bemHopSlotState.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<bemHopSlotState> reader = _bemHopSlotStateReader();
+}
+
+class _bemHopSlotStateReader extends fb.Reader<bemHopSlotState> {
+  const _bemHopSlotStateReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  bemHopSlotState read(fb.BufferContext bc, int offset) =>
+      bemHopSlotState.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Provenance of a deployed-beam descriptor or hop schedule.
+class BEMProvenance {
+  BEMProvenance._(this._bc, this._bcOffset);
+  factory BEMProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BEMProvenance> reader = _BEMProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sourceQuery => SOURCE_QUERY;
+  String? get MODEL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get modelName => MODEL_NAME;
+  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get modelVersion => MODEL_VERSION;
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get moduleVersion => MODULE_VERSION;
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get computedAt => COMPUTED_AT;
+
+  @override
+  String toString() {
+    return 'BEMProvenance{SOURCE: ${SOURCE}, sourceQuery: ${sourceQuery}, modelName: ${modelName}, modelVersion: ${modelVersion}, CITATION: ${CITATION}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}, computedAt: ${computedAt}}';
+  }
+}
+
+class _BEMProvenanceReader extends fb.TableReader<BEMProvenance> {
+  const _BEMProvenanceReader();
+
+  @override
+  BEMProvenance createObject(fb.BufferContext bc, int offset) =>
+    BEMProvenance._(bc, offset);
+}
+
+class BEMProvenanceBuilder {
+  BEMProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModelNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addModelVersionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(8, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BEMProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final String? _SOURCE;
+  final String? _SOURCE_QUERY;
+  final String? _MODEL_NAME;
+  final String? _MODEL_VERSION;
+  final String? _CITATION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+  final int? _COMPUTED_AT;
+
+  BEMProvenanceObjectBuilder({
+    String? SOURCE,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? MODEL_NAME,
+    String? modelName,
+    String? MODEL_VERSION,
+    String? modelVersion,
+    String? CITATION,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+    int? COMPUTED_AT,
+    int? computedAt,
+  })
+      : _SOURCE = SOURCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _MODEL_NAME = modelName ?? MODEL_NAME,
+        _MODEL_VERSION = modelVersion ?? MODEL_VERSION,
+        _CITATION = CITATION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? MODEL_NAMEOffset = _MODEL_NAME == null ? null
+        : fbBuilder.writeString(_MODEL_NAME!);
+    final int? MODEL_VERSIONOffset = _MODEL_VERSION == null ? null
+        : fbBuilder.writeString(_MODEL_VERSION!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addOffset(1, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(2, MODEL_NAMEOffset);
+    fbBuilder.addOffset(3, MODEL_VERSIONOffset);
+    fbBuilder.addOffset(4, CITATIONOffset);
+    fbBuilder.addOffset(5, MODULE_IDOffset);
+    fbBuilder.addOffset(6, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(7, MODULE_CONTENT_HASHOffset);
+    fbBuilder.addUint64(8, _COMPUTED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One time slice of a periodic beam-hopping plan.
+class BEMHopSlot {
+  BEMHopSlot._(this._bc, this._bcOffset);
+  factory BEMHopSlot(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BEMHopSlot> reader = _BEMHopSlotReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SLOT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get slotId => SLOT_ID;
+  ///  Offset from BEMHopSchedule.EPOCH in seconds.
+  double get START_OFFSET_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get startOffsetS => START_OFFSET_S;
+  double get DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get durationS => DURATION_S;
+  bemHopSlotState get STATE => bemHopSlotState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Beam activated in this slot. May name this BEM.ID or another beam in a
+  ///  coordinated schedule.
+  String? get BEAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get beamId => BEAM_ID;
+  String? get TARGET_CELL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get targetCellId => TARGET_CELL_ID;
+  double get TARGET_CENTER_LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get targetCenterLatitudeDeg => TARGET_CENTER_LATITUDE_DEG;
+  double get TARGET_CENTER_LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get targetCenterLongitudeDeg => TARGET_CENTER_LONGITUDE_DEG;
+  double get CENTER_FREQUENCY_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get centerFrequencyHz => CENTER_FREQUENCY_HZ;
+  double get EIRP_DBW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get eirpDbw => EIRP_DBW;
+  int get PRIORITY => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+
+  @override
+  String toString() {
+    return 'BEMHopSlot{slotId: ${slotId}, startOffsetS: ${startOffsetS}, durationS: ${durationS}, STATE: ${STATE}, beamId: ${beamId}, targetCellId: ${targetCellId}, targetCenterLatitudeDeg: ${targetCenterLatitudeDeg}, targetCenterLongitudeDeg: ${targetCenterLongitudeDeg}, centerFrequencyHz: ${centerFrequencyHz}, eirpDbw: ${eirpDbw}, PRIORITY: ${PRIORITY}}';
+  }
+}
+
+class _BEMHopSlotReader extends fb.TableReader<BEMHopSlot> {
+  const _BEMHopSlotReader();
+
+  @override
+  BEMHopSlot createObject(fb.BufferContext bc, int offset) =>
+    BEMHopSlot._(bc, offset);
+}
+
+class BEMHopSlotBuilder {
+  BEMHopSlotBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addSlotIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addStartOffsetS(double? START_OFFSET_S) {
+    fbBuilder.addFloat64(1, START_OFFSET_S);
+    return fbBuilder.offset;
+  }
+  int addDurationS(double? DURATION_S) {
+    fbBuilder.addFloat64(2, DURATION_S);
+    return fbBuilder.offset;
+  }
+  int addState(bemHopSlotState? STATE) {
+    fbBuilder.addInt8(3, STATE?.value);
+    return fbBuilder.offset;
+  }
+  int addBeamIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetCellIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetCenterLatitudeDeg(double? TARGET_CENTER_LATITUDE_DEG) {
+    fbBuilder.addFloat64(6, TARGET_CENTER_LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addTargetCenterLongitudeDeg(double? TARGET_CENTER_LONGITUDE_DEG) {
+    fbBuilder.addFloat64(7, TARGET_CENTER_LONGITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addCenterFrequencyHz(double? CENTER_FREQUENCY_HZ) {
+    fbBuilder.addFloat64(8, CENTER_FREQUENCY_HZ);
+    return fbBuilder.offset;
+  }
+  int addEirpDbw(double? EIRP_DBW) {
+    fbBuilder.addFloat64(9, EIRP_DBW);
+    return fbBuilder.offset;
+  }
+  int addPriority(int? PRIORITY) {
+    fbBuilder.addUint32(10, PRIORITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BEMHopSlotObjectBuilder extends fb.ObjectBuilder {
+  final String? _SLOT_ID;
+  final double? _START_OFFSET_S;
+  final double? _DURATION_S;
+  final bemHopSlotState? _STATE;
+  final String? _BEAM_ID;
+  final String? _TARGET_CELL_ID;
+  final double? _TARGET_CENTER_LATITUDE_DEG;
+  final double? _TARGET_CENTER_LONGITUDE_DEG;
+  final double? _CENTER_FREQUENCY_HZ;
+  final double? _EIRP_DBW;
+  final int? _PRIORITY;
+
+  BEMHopSlotObjectBuilder({
+    String? SLOT_ID,
+    String? slotId,
+    double? START_OFFSET_S,
+    double? startOffsetS,
+    double? DURATION_S,
+    double? durationS,
+    bemHopSlotState? STATE,
+    String? BEAM_ID,
+    String? beamId,
+    String? TARGET_CELL_ID,
+    String? targetCellId,
+    double? TARGET_CENTER_LATITUDE_DEG,
+    double? targetCenterLatitudeDeg,
+    double? TARGET_CENTER_LONGITUDE_DEG,
+    double? targetCenterLongitudeDeg,
+    double? CENTER_FREQUENCY_HZ,
+    double? centerFrequencyHz,
+    double? EIRP_DBW,
+    double? eirpDbw,
+    int? PRIORITY,
+  })
+      : _SLOT_ID = slotId ?? SLOT_ID,
+        _START_OFFSET_S = startOffsetS ?? START_OFFSET_S,
+        _DURATION_S = durationS ?? DURATION_S,
+        _STATE = STATE,
+        _BEAM_ID = beamId ?? BEAM_ID,
+        _TARGET_CELL_ID = targetCellId ?? TARGET_CELL_ID,
+        _TARGET_CENTER_LATITUDE_DEG = targetCenterLatitudeDeg ?? TARGET_CENTER_LATITUDE_DEG,
+        _TARGET_CENTER_LONGITUDE_DEG = targetCenterLongitudeDeg ?? TARGET_CENTER_LONGITUDE_DEG,
+        _CENTER_FREQUENCY_HZ = centerFrequencyHz ?? CENTER_FREQUENCY_HZ,
+        _EIRP_DBW = eirpDbw ?? EIRP_DBW,
+        _PRIORITY = PRIORITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SLOT_IDOffset = _SLOT_ID == null ? null
+        : fbBuilder.writeString(_SLOT_ID!);
+    final int? BEAM_IDOffset = _BEAM_ID == null ? null
+        : fbBuilder.writeString(_BEAM_ID!);
+    final int? TARGET_CELL_IDOffset = _TARGET_CELL_ID == null ? null
+        : fbBuilder.writeString(_TARGET_CELL_ID!);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, SLOT_IDOffset);
+    fbBuilder.addFloat64(1, _START_OFFSET_S);
+    fbBuilder.addFloat64(2, _DURATION_S);
+    fbBuilder.addInt8(3, _STATE?.value);
+    fbBuilder.addOffset(4, BEAM_IDOffset);
+    fbBuilder.addOffset(5, TARGET_CELL_IDOffset);
+    fbBuilder.addFloat64(6, _TARGET_CENTER_LATITUDE_DEG);
+    fbBuilder.addFloat64(7, _TARGET_CENTER_LONGITUDE_DEG);
+    fbBuilder.addFloat64(8, _CENTER_FREQUENCY_HZ);
+    fbBuilder.addFloat64(9, _EIRP_DBW);
+    fbBuilder.addUint32(10, _PRIORITY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Periodic beam-hopping schedule carried by a deployed beam descriptor.
+class BEMHopSchedule {
+  BEMHopSchedule._(this._bc, this._bcOffset);
+  factory BEMHopSchedule(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BEMHopSchedule> reader = _BEMHopScheduleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SCHEDULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get scheduleId => SCHEDULE_ID;
+  ///  Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin.
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get PERIOD_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get periodS => PERIOD_S;
+  bool get REPEATS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  List<BEMHopSlot>? get SLOTS => const fb.ListReader<BEMHopSlot>(BEMHopSlot.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  BEMProvenance? get PROVENANCE => BEMProvenance.reader.vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'BEMHopSchedule{scheduleId: ${scheduleId}, EPOCH: ${EPOCH}, periodS: ${periodS}, REPEATS: ${REPEATS}, SLOTS: ${SLOTS}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _BEMHopScheduleReader extends fb.TableReader<BEMHopSchedule> {
+  const _BEMHopScheduleReader();
+
+  @override
+  BEMHopSchedule createObject(fb.BufferContext bc, int offset) =>
+    BEMHopSchedule._(bc, offset);
+}
+
+class BEMHopScheduleBuilder {
+  BEMHopScheduleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addScheduleIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(1, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addPeriodS(double? PERIOD_S) {
+    fbBuilder.addFloat64(2, PERIOD_S);
+    return fbBuilder.offset;
+  }
+  int addRepeats(bool? REPEATS) {
+    fbBuilder.addBool(3, REPEATS);
+    return fbBuilder.offset;
+  }
+  int addSlotsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BEMHopScheduleObjectBuilder extends fb.ObjectBuilder {
+  final String? _SCHEDULE_ID;
+  final double? _EPOCH;
+  final double? _PERIOD_S;
+  final bool? _REPEATS;
+  final List<BEMHopSlotObjectBuilder>? _SLOTS;
+  final BEMProvenanceObjectBuilder? _PROVENANCE;
+
+  BEMHopScheduleObjectBuilder({
+    String? SCHEDULE_ID,
+    String? scheduleId,
+    double? EPOCH,
+    double? PERIOD_S,
+    double? periodS,
+    bool? REPEATS,
+    List<BEMHopSlotObjectBuilder>? SLOTS,
+    BEMProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _SCHEDULE_ID = scheduleId ?? SCHEDULE_ID,
+        _EPOCH = EPOCH,
+        _PERIOD_S = periodS ?? PERIOD_S,
+        _REPEATS = REPEATS,
+        _SLOTS = SLOTS,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SCHEDULE_IDOffset = _SCHEDULE_ID == null ? null
+        : fbBuilder.writeString(_SCHEDULE_ID!);
+    final int? SLOTSOffset = _SLOTS == null ? null
+        : fbBuilder.writeList(_SLOTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, SCHEDULE_IDOffset);
+    fbBuilder.addFloat64(1, _EPOCH);
+    fbBuilder.addFloat64(2, _PERIOD_S);
+    fbBuilder.addBool(3, _REPEATS);
+    fbBuilder.addOffset(4, SLOTSOffset);
+    fbBuilder.addOffset(5, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Beam Contour Point (gain pattern boundary)
 class beamContourPoint {
   beamContourPoint._(this._bc, this._bcOffset);
@@ -343,10 +872,28 @@ class BEM {
   List<beamContour>? get beamContours => BEAM_CONTOURS;
   ///  Additional notes
   String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Time-sliced activation plan for this deployed beam.
+  BEMHopSchedule? get HOP_SCHEDULE => BEMHopSchedule.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  BEMHopSchedule? get hopSchedule => HOP_SCHEDULE;
+  BEMProvenance? get PROVENANCE => BEMProvenance.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Unix ms this record was serialized.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  `$EPM` identifier of the producing node.
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 48);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
 
   @override
   String toString() {
-    return 'BEM{ID: ${ID}, beamName: ${beamName}, idEntity: ${idEntity}, idAntenna: ${idAntenna}, TYPE: ${TYPE}, POLARIZATION: ${POLARIZATION}, peakGain: ${peakGain}, eocGain: ${eocGain}, centerLatitude: ${centerLatitude}, centerLongitude: ${centerLongitude}, BEAMWIDTH: ${BEAMWIDTH}, FREQUENCY: ${FREQUENCY}, EIRP: ${EIRP}, gOverT: ${gOverT}, footprintArea: ${footprintArea}, beamContours: ${beamContours}, NOTES: ${NOTES}}';
+    return 'BEM{ID: ${ID}, beamName: ${beamName}, idEntity: ${idEntity}, idAntenna: ${idAntenna}, TYPE: ${TYPE}, POLARIZATION: ${POLARIZATION}, peakGain: ${peakGain}, eocGain: ${eocGain}, centerLatitude: ${centerLatitude}, centerLongitude: ${centerLongitude}, BEAMWIDTH: ${BEAMWIDTH}, FREQUENCY: ${FREQUENCY}, EIRP: ${EIRP}, gOverT: ${gOverT}, footprintArea: ${footprintArea}, beamContours: ${beamContours}, NOTES: ${NOTES}, hopSchedule: ${hopSchedule}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
   }
 }
 
@@ -364,7 +911,7 @@ class BEMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(23);
   }
 
   int addIdOffset(int? offset) {
@@ -435,6 +982,30 @@ class BEMBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addHopScheduleOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(19, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -459,6 +1030,12 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
   final double? _FOOTPRINT_AREA;
   final List<beamContourObjectBuilder>? _BEAM_CONTOURS;
   final String? _NOTES;
+  final BEMHopScheduleObjectBuilder? _HOP_SCHEDULE;
+  final BEMProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
 
   BEMObjectBuilder({
     String? ID,
@@ -488,6 +1065,16 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
     List<beamContourObjectBuilder>? BEAM_CONTOURS,
     List<beamContourObjectBuilder>? beamContours,
     String? NOTES,
+    BEMHopScheduleObjectBuilder? HOP_SCHEDULE,
+    BEMHopScheduleObjectBuilder? hopSchedule,
+    BEMProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
   })
       : _ID = ID,
         _BEAM_NAME = beamName ?? BEAM_NAME,
@@ -505,7 +1092,13 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
         _G_OVER_T = gOverT ?? G_OVER_T,
         _FOOTPRINT_AREA = footprintArea ?? FOOTPRINT_AREA,
         _BEAM_CONTOURS = beamContours ?? BEAM_CONTOURS,
-        _NOTES = NOTES;
+        _NOTES = NOTES,
+        _HOP_SCHEDULE = hopSchedule ?? HOP_SCHEDULE,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -522,7 +1115,15 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_BEAM_CONTOURS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    fbBuilder.startTable(17);
+    final int? HOP_SCHEDULEOffset = _HOP_SCHEDULE?.getOrCreateOffset(fbBuilder);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, BEAM_NAMEOffset);
     fbBuilder.addOffset(2, ID_ENTITYOffset);
@@ -540,6 +1141,12 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(14, _FOOTPRINT_AREA);
     fbBuilder.addOffset(15, BEAM_CONTOURSOffset);
     fbBuilder.addOffset(16, NOTESOffset);
+    fbBuilder.addOffset(17, HOP_SCHEDULEOffset);
+    fbBuilder.addOffset(18, PROVENANCEOffset);
+    fbBuilder.addUint64(19, _COMPUTED_AT);
+    fbBuilder.addOffset(20, PRODUCER_IDOffset);
+    fbBuilder.addOffset(21, SIGNATUREOffset);
+    fbBuilder.addOffset(22, CANONICAL_JSON_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

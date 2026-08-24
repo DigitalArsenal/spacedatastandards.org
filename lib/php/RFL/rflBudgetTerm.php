@@ -40,6 +40,16 @@ class rflBudgetTerm
     const INTERFERENCE_POWER = 28;
     const CARRIER_TO_NOISE_PLUS_INTERFERENCE = 29;
     const SIGNAL_TO_INTERFERENCE_PLUS_NOISE = 30;
+    /// Energy per transmitted symbol divided by noise spectral density.
+    const SYMBOL_ENERGY_TO_NOISE_DENSITY = 31;
+    /// Error probability for a decoded transport block or frame.
+    const BLOCK_ERROR_RATE = 32;
+    /// Delivered information bits per second per hertz.
+    const SPECTRAL_EFFICIENCY = 33;
+    /// Data rate delivered by the selected modulation and coding entry.
+    const ACHIEVED_DATA_RATE = 34;
+    /// Margin above the threshold of the selected adaptive entry.
+    const ACM_MARGIN = 35;
 
     private static $names = array(
         rflBudgetTerm::UNSPECIFIED=>"UNSPECIFIED",
@@ -73,6 +83,11 @@ class rflBudgetTerm
         rflBudgetTerm::INTERFERENCE_POWER=>"INTERFERENCE_POWER",
         rflBudgetTerm::CARRIER_TO_NOISE_PLUS_INTERFERENCE=>"CARRIER_TO_NOISE_PLUS_INTERFERENCE",
         rflBudgetTerm::SIGNAL_TO_INTERFERENCE_PLUS_NOISE=>"SIGNAL_TO_INTERFERENCE_PLUS_NOISE",
+        rflBudgetTerm::SYMBOL_ENERGY_TO_NOISE_DENSITY=>"SYMBOL_ENERGY_TO_NOISE_DENSITY",
+        rflBudgetTerm::BLOCK_ERROR_RATE=>"BLOCK_ERROR_RATE",
+        rflBudgetTerm::SPECTRAL_EFFICIENCY=>"SPECTRAL_EFFICIENCY",
+        rflBudgetTerm::ACHIEVED_DATA_RATE=>"ACHIEVED_DATA_RATE",
+        rflBudgetTerm::ACM_MARGIN=>"ACM_MARGIN",
     );
 
     public static function Name($e)

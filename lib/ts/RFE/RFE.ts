@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { RFEProvenance, RFEProvenanceT } from './RFEProvenance.js';
 import { emitterType } from './emitterType.js';
 import { rfEmitterDetail, rfEmitterDetailT } from './rfEmitterDetail.js';
 
@@ -222,8 +223,73 @@ NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Provenance of the root emitter descriptor.
+ */
+PROVENANCE(obj?:RFEProvenance):RFEProvenance|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new RFEProvenance()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Unix ms this record was serialized.
+ */
+COMPUTED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * `$EPM` identifier of the producing node.
+ */
+PRODUCER_ID():string|null
+PRODUCER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PRODUCER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+ * signature payloads zeroed while preserving their vectors and offsets.
+ */
+SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+signatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+signatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Ed25519 signature over canonical JSON with IDL field order and
+ * capitalization, no insignificant whitespace, and both signature fields
+ * omitted.
+ */
+CANONICAL_JSON_SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+canonicalJsonSignatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+canonicalJsonSignatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startRFE(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(25);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -318,6 +384,50 @@ static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(19, NOTESOffset, 0);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, PROVENANCEOffset, 0);
+}
+
+static addComputedAt(builder:flatbuffers.Builder, COMPUTED_AT:bigint) {
+  builder.addFieldInt64(21, COMPUTED_AT, BigInt('0'));
+}
+
+static addProducerId(builder:flatbuffers.Builder, PRODUCER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, PRODUCER_IDOffset, 0);
+}
+
+static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, SIGNATUREOffset, 0);
+}
+
+static createSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addCanonicalJsonSignature(builder:flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, CANONICAL_JSON_SIGNATUREOffset, 0);
+}
+
+static createCanonicalJsonSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCanonicalJsonSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endRFE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -331,30 +441,6 @@ static finishSizePrefixedRFEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFE', true);
 }
 
-static createRFE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, TYPE:emitterType, ENTITYOffset:flatbuffers.Offset, ELNOTOffset:flatbuffers.Offset, NATO_NAMEOffset:flatbuffers.Offset, PLATFORM_TYPEOffset:flatbuffers.Offset, COUNTRYOffset:flatbuffers.Offset, FUNCTIONOffset:flatbuffers.Offset, BANDOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, PEAK_POWER:number, AVG_POWER:number, ANTENNA_GAIN:number, NUM_MODES:number, RF_EMITTER_DETAILSOffset:flatbuffers.Offset, THREAT_LEVELOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
-  RFE.startRFE(builder);
-  RFE.addId(builder, IDOffset);
-  RFE.addIdEntity(builder, ID_ENTITYOffset);
-  RFE.addName(builder, NAMEOffset);
-  RFE.addType(builder, TYPE);
-  RFE.addEntity(builder, ENTITYOffset);
-  RFE.addElnot(builder, ELNOTOffset);
-  RFE.addNatoName(builder, NATO_NAMEOffset);
-  RFE.addPlatformType(builder, PLATFORM_TYPEOffset);
-  RFE.addCountry(builder, COUNTRYOffset);
-  RFE.addFunction(builder, FUNCTIONOffset);
-  RFE.addBand(builder, BANDOffset);
-  RFE.addFreqMin(builder, FREQ_MIN);
-  RFE.addFreqMax(builder, FREQ_MAX);
-  RFE.addPeakPower(builder, PEAK_POWER);
-  RFE.addAvgPower(builder, AVG_POWER);
-  RFE.addAntennaGain(builder, ANTENNA_GAIN);
-  RFE.addNumModes(builder, NUM_MODES);
-  RFE.addRfEmitterDetails(builder, RF_EMITTER_DETAILSOffset);
-  RFE.addThreatLevel(builder, THREAT_LEVELOffset);
-  RFE.addNotes(builder, NOTESOffset);
-  return RFE.endRFE(builder);
-}
 
 unpack(): RFET {
   return new RFET(
@@ -377,7 +463,12 @@ unpack(): RFET {
     this.NUM_MODES(),
     this.bb!.createObjList<rfEmitterDetail, rfEmitterDetailT>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength()),
     this.THREAT_LEVEL(),
-    this.NOTES()
+    this.NOTES(),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.COMPUTED_AT(),
+    this.PRODUCER_ID(),
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength())
   );
 }
 
@@ -403,6 +494,11 @@ unpackTo(_o: RFET): void {
   _o.RF_EMITTER_DETAILS = this.bb!.createObjList<rfEmitterDetail, rfEmitterDetailT>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength());
   _o.THREAT_LEVEL = this.THREAT_LEVEL();
   _o.NOTES = this.NOTES();
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.COMPUTED_AT = this.COMPUTED_AT();
+  _o.PRODUCER_ID = this.PRODUCER_ID();
+  _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.CANONICAL_JSON_SIGNATURE = this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength());
 }
 }
 
@@ -427,7 +523,12 @@ constructor(
   public NUM_MODES: number = 0,
   public RF_EMITTER_DETAILS: (rfEmitterDetailT)[] = [],
   public THREAT_LEVEL: string|Uint8Array|null = null,
-  public NOTES: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null,
+  public PROVENANCE: RFEProvenanceT|null = null,
+  public COMPUTED_AT: bigint = BigInt('0'),
+  public PRODUCER_ID: string|Uint8Array|null = null,
+  public SIGNATURE: (number)[] = [],
+  public CANONICAL_JSON_SIGNATURE: (number)[] = []
 ){}
 
 
@@ -445,28 +546,38 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RF_EMITTER_DETAILS = RFE.createRfEmitterDetailsVector(builder, builder.createObjectOffsetList(this.RF_EMITTER_DETAILS));
   const THREAT_LEVEL = (this.THREAT_LEVEL !== null ? builder.createString(this.THREAT_LEVEL!) : 0);
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const PRODUCER_ID = (this.PRODUCER_ID !== null ? builder.createString(this.PRODUCER_ID!) : 0);
+  const SIGNATURE = RFE.createSignatureVector(builder, this.SIGNATURE);
+  const CANONICAL_JSON_SIGNATURE = RFE.createCanonicalJsonSignatureVector(builder, this.CANONICAL_JSON_SIGNATURE);
 
-  return RFE.createRFE(builder,
-    ID,
-    ID_ENTITY,
-    NAME,
-    this.TYPE,
-    ENTITY,
-    ELNOT,
-    NATO_NAME,
-    PLATFORM_TYPE,
-    COUNTRY,
-    FUNCTION,
-    BAND,
-    this.FREQ_MIN,
-    this.FREQ_MAX,
-    this.PEAK_POWER,
-    this.AVG_POWER,
-    this.ANTENNA_GAIN,
-    this.NUM_MODES,
-    RF_EMITTER_DETAILS,
-    THREAT_LEVEL,
-    NOTES
-  );
+  RFE.startRFE(builder);
+  RFE.addId(builder, ID);
+  RFE.addIdEntity(builder, ID_ENTITY);
+  RFE.addName(builder, NAME);
+  RFE.addType(builder, this.TYPE);
+  RFE.addEntity(builder, ENTITY);
+  RFE.addElnot(builder, ELNOT);
+  RFE.addNatoName(builder, NATO_NAME);
+  RFE.addPlatformType(builder, PLATFORM_TYPE);
+  RFE.addCountry(builder, COUNTRY);
+  RFE.addFunction(builder, FUNCTION);
+  RFE.addBand(builder, BAND);
+  RFE.addFreqMin(builder, this.FREQ_MIN);
+  RFE.addFreqMax(builder, this.FREQ_MAX);
+  RFE.addPeakPower(builder, this.PEAK_POWER);
+  RFE.addAvgPower(builder, this.AVG_POWER);
+  RFE.addAntennaGain(builder, this.ANTENNA_GAIN);
+  RFE.addNumModes(builder, this.NUM_MODES);
+  RFE.addRfEmitterDetails(builder, RF_EMITTER_DETAILS);
+  RFE.addThreatLevel(builder, THREAT_LEVEL);
+  RFE.addNotes(builder, NOTES);
+  RFE.addProvenance(builder, PROVENANCE);
+  RFE.addComputedAt(builder, this.COMPUTED_AT);
+  RFE.addProducerId(builder, PRODUCER_ID);
+  RFE.addSignature(builder, SIGNATURE);
+  RFE.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATURE);
+
+  return RFE.endRFE(builder);
 }
 }

@@ -178,22 +178,43 @@ class RFLProvenance extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+    /// MODELS remains the per-budget-term attribution surface.
+    public function getMODULE_ID()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getMODULE_VERSION()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content hash of the exact producing WASM artifact.
+    public function getMODULE_CONTENT_HASH()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFLProvenance(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFLProvenance
      */
-    public static function createRFLProvenance(FlatBufferBuilder $builder, $METHOD, $SOURCE, $SOURCE_QUERY, $PROPAGATOR_ID, $PROPAGATOR_VERSION, $PROPAGATOR_CONFIGURATION, $SAMPLING_STEP_S, $MODELS, $ENVIRONMENT_DATASET, $TERRAIN_DATASET, $COMPUTED_AT, $RETRIEVED_AT, $LICENSE, $NON_COMMERCIAL_ONLY, $CITATION)
+    public static function createRFLProvenance(FlatBufferBuilder $builder, $METHOD, $SOURCE, $SOURCE_QUERY, $PROPAGATOR_ID, $PROPAGATOR_VERSION, $PROPAGATOR_CONFIGURATION, $SAMPLING_STEP_S, $MODELS, $ENVIRONMENT_DATASET, $TERRAIN_DATASET, $COMPUTED_AT, $RETRIEVED_AT, $LICENSE, $NON_COMMERCIAL_ONLY, $CITATION, $MODULE_ID, $MODULE_VERSION, $MODULE_CONTENT_HASH)
     {
-        $builder->startObject(15);
+        $builder->startObject(18);
         self::addMETHOD($builder, $METHOD);
         self::addSOURCE($builder, $SOURCE);
         self::addSOURCE_QUERY($builder, $SOURCE_QUERY);
@@ -209,6 +230,9 @@ class RFLProvenance extends Table
         self::addLICENSE($builder, $LICENSE);
         self::addNON_COMMERCIAL_ONLY($builder, $NON_COMMERCIAL_ONLY);
         self::addCITATION($builder, $CITATION);
+        self::addMODULE_ID($builder, $MODULE_ID);
+        self::addMODULE_VERSION($builder, $MODULE_VERSION);
+        self::addMODULE_CONTENT_HASH($builder, $MODULE_CONTENT_HASH);
         $o = $builder->endObject();
         $builder->required($o, 6);  // SOURCE
         return $o;
@@ -386,6 +410,36 @@ class RFLProvenance extends Table
     public static function addCITATION(FlatBufferBuilder $builder, $CITATION)
     {
         $builder->addOffsetX(14, $CITATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMODULE_ID(FlatBufferBuilder $builder, $MODULE_ID)
+    {
+        $builder->addOffsetX(15, $MODULE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMODULE_VERSION(FlatBufferBuilder $builder, $MODULE_VERSION)
+    {
+        $builder->addOffsetX(16, $MODULE_VERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMODULE_CONTENT_HASH(FlatBufferBuilder $builder, $MODULE_CONTENT_HASH)
+    {
+        $builder->addOffsetX(17, $MODULE_CONTENT_HASH, 0);
     }
 
     /**

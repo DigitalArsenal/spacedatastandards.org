@@ -951,7 +951,9 @@ class RFL extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Ed25519 signature by the producing `$EPM`.
+    /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+    /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+    /// preserving their vectors and offsets.
     /**
      * @param int offset
      * @return byte
@@ -979,22 +981,192 @@ class RFL extends Table
         return $this->__vector_as_bytes(104);
     }
 
+    /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+    /// field order, IDL capitalization, no insignificant whitespace, and both
+    /// signature fields omitted.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCANONICAL_JSON_SIGNATURE($j)
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCANONICAL_JSON_SIGNATURELength()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCANONICAL_JSON_SIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(106);
+    }
+
+    /// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+    /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+    /**
+     * @param int offset
+     * @return uint
+     */
+    public function getSELECTED_MODCOD_INDEX($j)
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getUint($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSELECTED_MODCOD_INDEXLength()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @param int offset
+     * @return bool
+     */
+    public function getSELECTED_MODCOD_VALID($j)
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getBool($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSELECTED_MODCOD_VALIDLength()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getSPECTRAL_EFFICIENCY_BPS_HZ($j)
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSPECTRAL_EFFICIENCY_BPS_HZLength()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Delivered information rate after adaptive selection, bits per second.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getACHIEVED_DATA_RATE_BPS($j)
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getACHIEVED_DATA_RATE_BPSLength()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Margin above the selected entry's threshold, dB.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getACM_MARGIN_DB($j)
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getACM_MARGIN_DBLength()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Symbol energy to noise spectral density, dB.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB($j)
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Decoded block error probability [0-1].
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getBLOCK_ERROR_RATE($j)
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBLOCK_ERROR_RATELength()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFL(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(51);
+        $builder->StartObject(59);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFL
      */
-    public static function createRFL(FlatBufferBuilder $builder, $RFL_ID, $NAME, $SCENARIO_ID, $LINKS, $SAMPLE_COUNT, $SAMPLE_LINK_INDEXES, $SAMPLE_EPOCHS, $TIME_SYSTEM, $ACCESS_STATES, $RANGE_M, $RANGE_RATE_M_S, $AZIMUTH_DEG, $ELEVATION_DEG, $TRANSMIT_AZIMUTH_DEG, $TRANSMIT_ELEVATION_DEG, $DOPPLER_SHIFT_HZ, $DOPPLER_RATE_HZ_S, $EIRP_DBW, $TRANSMIT_ANTENNA_GAIN_DBI, $RECEIVE_ANTENNA_GAIN_DBI, $FREE_SPACE_PATH_LOSS_DB, $GASEOUS_ABSORPTION_LOSS_DB, $RAIN_LOSS_DB, $CLOUD_FOG_LOSS_DB, $SCINTILLATION_LOSS_DB, $TERRAIN_DIFFRACTION_LOSS_DB, $OBSTRUCTION_LOSS_DB, $POLARIZATION_LOSS_DB, $POINTING_LOSS_DB, $IMPLEMENTATION_LOSS_DB, $TOTAL_PATH_LOSS_DB, $RECEIVED_POWER_DBW, $SYSTEM_NOISE_TEMPERATURE_K, $GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, $CARRIER_TO_NOISE_DENSITY_DBHZ, $CARRIER_TO_NOISE_DB, $ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, $BIT_ERROR_RATE, $LINK_MARGIN_DB, $CHANNEL_CAPACITY_BPS, $INTERFERENCE_POWER_DBW, $CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, $SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, $INTERFERENCE_CONTRIBUTIONS, $OBSTRUCTIONS, $LIMITING_CONSTRAINTS, $LIMITING_CONSTRAINT_NOTE, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE)
+    public static function createRFL(FlatBufferBuilder $builder, $RFL_ID, $NAME, $SCENARIO_ID, $LINKS, $SAMPLE_COUNT, $SAMPLE_LINK_INDEXES, $SAMPLE_EPOCHS, $TIME_SYSTEM, $ACCESS_STATES, $RANGE_M, $RANGE_RATE_M_S, $AZIMUTH_DEG, $ELEVATION_DEG, $TRANSMIT_AZIMUTH_DEG, $TRANSMIT_ELEVATION_DEG, $DOPPLER_SHIFT_HZ, $DOPPLER_RATE_HZ_S, $EIRP_DBW, $TRANSMIT_ANTENNA_GAIN_DBI, $RECEIVE_ANTENNA_GAIN_DBI, $FREE_SPACE_PATH_LOSS_DB, $GASEOUS_ABSORPTION_LOSS_DB, $RAIN_LOSS_DB, $CLOUD_FOG_LOSS_DB, $SCINTILLATION_LOSS_DB, $TERRAIN_DIFFRACTION_LOSS_DB, $OBSTRUCTION_LOSS_DB, $POLARIZATION_LOSS_DB, $POINTING_LOSS_DB, $IMPLEMENTATION_LOSS_DB, $TOTAL_PATH_LOSS_DB, $RECEIVED_POWER_DBW, $SYSTEM_NOISE_TEMPERATURE_K, $GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, $CARRIER_TO_NOISE_DENSITY_DBHZ, $CARRIER_TO_NOISE_DB, $ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, $BIT_ERROR_RATE, $LINK_MARGIN_DB, $CHANNEL_CAPACITY_BPS, $INTERFERENCE_POWER_DBW, $CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, $SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, $INTERFERENCE_CONTRIBUTIONS, $OBSTRUCTIONS, $LIMITING_CONSTRAINTS, $LIMITING_CONSTRAINT_NOTE, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE, $SELECTED_MODCOD_INDEX, $SELECTED_MODCOD_VALID, $SPECTRAL_EFFICIENCY_BPS_HZ, $ACHIEVED_DATA_RATE_BPS, $ACM_MARGIN_DB, $ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, $BLOCK_ERROR_RATE)
     {
-        $builder->startObject(51);
+        $builder->startObject(59);
         self::addRFL_ID($builder, $RFL_ID);
         self::addNAME($builder, $NAME);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
@@ -1046,6 +1218,14 @@ class RFL extends Table
         self::addCOMPUTED_AT($builder, $COMPUTED_AT);
         self::addPRODUCER_ID($builder, $PRODUCER_ID);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addCANONICAL_JSON_SIGNATURE($builder, $CANONICAL_JSON_SIGNATURE);
+        self::addSELECTED_MODCOD_INDEX($builder, $SELECTED_MODCOD_INDEX);
+        self::addSELECTED_MODCOD_VALID($builder, $SELECTED_MODCOD_VALID);
+        self::addSPECTRAL_EFFICIENCY_BPS_HZ($builder, $SPECTRAL_EFFICIENCY_BPS_HZ);
+        self::addACHIEVED_DATA_RATE_BPS($builder, $ACHIEVED_DATA_RATE_BPS);
+        self::addACM_MARGIN_DB($builder, $ACM_MARGIN_DB);
+        self::addENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB($builder, $ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+        self::addBLOCK_ERROR_RATE($builder, $BLOCK_ERROR_RATE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // RFL_ID
         $builder->required($o, 10);  // LINKS
@@ -2571,6 +2751,278 @@ class RFL extends Table
     public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCANONICAL_JSON_SIGNATURE(FlatBufferBuilder $builder, $CANONICAL_JSON_SIGNATURE)
+    {
+        $builder->addOffsetX(51, $CANONICAL_JSON_SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSELECTED_MODCOD_INDEX(FlatBufferBuilder $builder, $SELECTED_MODCOD_INDEX)
+    {
+        $builder->addOffsetX(52, $SELECTED_MODCOD_INDEX, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSELECTED_MODCOD_INDEXVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putUint($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSELECTED_MODCOD_INDEXVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSELECTED_MODCOD_VALID(FlatBufferBuilder $builder, $SELECTED_MODCOD_VALID)
+    {
+        $builder->addOffsetX(53, $SELECTED_MODCOD_VALID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSELECTED_MODCOD_VALIDVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putBool($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSELECTED_MODCOD_VALIDVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSPECTRAL_EFFICIENCY_BPS_HZ(FlatBufferBuilder $builder, $SPECTRAL_EFFICIENCY_BPS_HZ)
+    {
+        $builder->addOffsetX(54, $SPECTRAL_EFFICIENCY_BPS_HZ, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSPECTRAL_EFFICIENCY_BPS_HZVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSPECTRAL_EFFICIENCY_BPS_HZVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addACHIEVED_DATA_RATE_BPS(FlatBufferBuilder $builder, $ACHIEVED_DATA_RATE_BPS)
+    {
+        $builder->addOffsetX(55, $ACHIEVED_DATA_RATE_BPS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createACHIEVED_DATA_RATE_BPSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startACHIEVED_DATA_RATE_BPSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addACM_MARGIN_DB(FlatBufferBuilder $builder, $ACM_MARGIN_DB)
+    {
+        $builder->addOffsetX(56, $ACM_MARGIN_DB, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createACM_MARGIN_DBVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startACM_MARGIN_DBVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(FlatBufferBuilder $builder, $ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
+    {
+        $builder->addOffsetX(57, $ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBLOCK_ERROR_RATE(FlatBufferBuilder $builder, $BLOCK_ERROR_RATE)
+    {
+        $builder->addOffsetX(58, $BLOCK_ERROR_RATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createBLOCK_ERROR_RATEVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startBLOCK_ERROR_RATEVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

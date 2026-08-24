@@ -43,7 +43,7 @@
     },
     "rflBudgetTerm" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE"]
+      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE", "SYMBOL_ENERGY_TO_NOISE_DENSITY", "BLOCK_ERROR_RATE", "SPECTRAL_EFFICIENCY", "ACHIEVED_DATA_RATE", "ACM_MARGIN"]
     },
     "rflConstraint" : {
       "type" : "string",
@@ -252,6 +252,10 @@
     "beamPolarization" : {
       "type" : "string",
       "enum": ["RHCP", "LHCP", "LINEAR_H", "LINEAR_V", "DUAL_CIRCULAR", "DUAL_LINEAR", "CROSS_POL"]
+    },
+    "bemHopSlotState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACTIVE", "GUARD", "IDLE"]
     },
     "bspInterpolationStatus" : {
       "type" : "string",
@@ -597,6 +601,42 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE"]
     },
+    "rfsMaterialClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CONCRETE", "BRICK", "PLASTERBOARD", "WOOD", "GLASS", "COATED_GLASS", "CEILING_BOARD", "CHIPBOARD", "FLOORBOARD", "METAL", "STONE", "ASPHALT", "ROOFING_TILE", "VERY_DRY_GROUND", "MEDIUM_DRY_GROUND", "WET_GROUND", "SOIL", "SAND", "VEGETATION", "FRESH_WATER", "SEA_WATER", "ICE", "SNOW", "COMPOSITE", "CARBON_FIBER_COMPOSITE", "MULTI_LAYER_INSULATION", "SOLAR_CELL", "COATING", "ABSORBER", "ENGINEERED_SURFACE", "OTHER"]
+    },
+    "rfsScatteringClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPECULAR", "DIFFUSE", "MIXED", "LAMBERTIAN", "ANISOTROPIC"]
+    },
+    "rfsIncidencePolarization" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TRANSVERSE_ELECTRIC", "TRANSVERSE_MAGNETIC", "CIRCULAR_LEFT", "CIRCULAR_RIGHT", "UNPOLARIZED"]
+    },
+    "rfsPropertyMethod" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEASURED", "MODELED", "CLASS_DEFAULT", "INFERRED_FROM_FAMILY"]
+    },
+    "rfsGeometryKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ASSET_MESH", "OBJECT_SURFACE", "PANEL", "CATALOG_OBJECT", "SITE_STRUCTURE", "BUILDING_FACE", "TERRAIN_SURFACE", "ANALYTIC_SHAPE"]
+    },
+    "rfsAnalyticShape" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PLANE", "DISK", "BOX", "SPHERE", "ELLIPSOID", "CYLINDER", "CONE", "PARABOLOID", "CONVEX_HULL"]
+    },
+    "emcCouplingPath" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ANTENNA_TO_ANTENNA", "FREE_SPACE_RADIATION", "NEAR_FIELD_ELECTRIC", "NEAR_FIELD_MAGNETIC", "STRUCTURAL_CONDUCTION", "CABLE_CONDUCTION", "COMMON_IMPEDANCE", "APERTURE_LEAKAGE"]
+    },
+    "emcMechanismCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FUNDAMENTAL", "HARMONIC", "SPURIOUS", "OUT_OF_BAND", "BROADBAND_NOISE", "ACTIVE_INTERMODULATION", "PASSIVE_INTERMODULATION", "RECEIVER_BLOCKING", "RECEIVER_DESENSITIZATION", "RECEIVER_OVERLOAD"]
+    },
+    "emcResolutionState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NO_ACTION_REQUIRED", "OPEN", "MITIGATED", "ACCEPTED_RISK", "NOT_APPLICABLE"]
+    },
     "KeyExchange" : {
       "type" : "string",
       "enum": ["X25519", "Secp256k1", "P256"]
@@ -644,6 +684,10 @@
     "iauPrecessionNutationModel" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "IAU_2000A", "IAU_2000B", "IAU_2006"]
+    },
+    "epfLimitCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PFD", "EPFD_DOWN", "EPFD_UP", "EPFD_INTERSATELLITE", "AGGREGATE_I_N", "DELTA_T_OVER_T"]
     },
     "JammingType" : {
       "type" : "string",
@@ -728,6 +772,14 @@
     "imageFormat" : {
       "type" : "string",
       "enum": ["FITS", "JPEG", "PNG", "TIFF", "RAW", "NITF", "GEOTIFF", "OTHER"]
+    },
+    "gelTechniqueClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TDOA", "FDOA", "TDOA_FDOA", "ANGLE_OF_ARRIVAL", "HYBRID", "MULTI_EPOCH_FUSION"]
+    },
+    "gelObservationDisposition" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPTED", "DOWNWEIGHTED", "REJECTED"]
     },
     "geoStationKeeping" : {
       "type" : "string",
@@ -1181,6 +1233,18 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "ALUMINIUM", "TITANIUM", "STEEL", "CARBON_COMPOSITE", "MULTI_LAYER_INSULATION", "SOLAR_CELL", "COVER_GLASS", "PAINT_WHITE", "PAINT_BLACK", "OPTICAL_SOLAR_REFLECTOR", "POLYIMIDE_FILM", "MESH", "CERAMIC", "GOLD_FOIL", "OTHER"]
     },
+    "papArrayGeometry" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "LINEAR", "RECTANGULAR", "TRIANGULAR", "CIRCULAR", "CONFORMAL", "ARBITRARY"]
+    },
+    "papTaperFamily" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "UNIFORM", "COSINE", "RAISED_COSINE", "EQUAL_SIDELOBE", "CONTROLLED_SIDELOBE", "CUSTOM"]
+    },
+    "papGainCutAxis" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "AZIMUTH", "ELEVATION", "CONE", "CLOCK"]
+    },
     "IntegratorType" : {
       "type" : "string",
       "enum": ["RK4", "RK45", "RK78", "DOPRI5", "DOPRI853", "ABM", "BS", "ANALYTICAL"]
@@ -1301,6 +1365,14 @@
       "type" : "string",
       "enum": ["Published", "Pending", "Flagged", "Hidden", "Removed"]
     },
+    "rfeEmissionMaskClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "IN_BAND", "OUT_OF_BAND", "SPURIOUS", "HARMONIC", "BROADBAND_NOISE", "CONDUCTED", "RADIATED", "SUSCEPTIBILITY"]
+    },
+    "rfeEmissionPath" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ANTENNA_PORT", "POWER_LEAD", "SIGNAL_LEAD", "ENCLOSURE", "FREE_SPACE", "STRUCTURE"]
+    },
     "emitterType" : {
       "type" : "string",
       "enum": ["RADAR", "COMMUNICATIONS", "NAVIGATION", "JAMMER", "BEACON", "TRANSPONDER", "DATA_LINK", "TELEMETRY", "EW", "UNKNOWN"]
@@ -1317,29 +1389,21 @@
       "type" : "string",
       "enum": ["DETECTED", "CONFIRMED", "TENTATIVE", "LOST", "INTERFERENCE_ONLY"]
     },
-    "rfsMaterialClass" : {
+    "rsdWaveformClass" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "CONCRETE", "BRICK", "PLASTERBOARD", "WOOD", "GLASS", "COATED_GLASS", "CEILING_BOARD", "CHIPBOARD", "FLOORBOARD", "METAL", "STONE", "ASPHALT", "ROOFING_TILE", "VERY_DRY_GROUND", "MEDIUM_DRY_GROUND", "WET_GROUND", "SOIL", "SAND", "VEGETATION", "FRESH_WATER", "SEA_WATER", "ICE", "SNOW", "COMPOSITE", "CARBON_FIBER_COMPOSITE", "MULTI_LAYER_INSULATION", "SOLAR_CELL", "COATING", "ABSORBER", "ENGINEERED_SURFACE", "OTHER"]
+      "enum": ["UNSPECIFIED", "CONTINUOUS_WAVE", "PULSED", "FREQUENCY_MODULATED_CONTINUOUS_WAVE", "LINEAR_FREQUENCY_SWEEP", "PHASE_CODED", "FREQUENCY_AGILE"]
     },
-    "rfsScatteringClass" : {
+    "rsdIntegrationStrategy" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "SPECULAR", "DIFFUSE", "MIXED", "LAMBERTIAN", "ANISOTROPIC"]
+      "enum": ["UNSPECIFIED", "SINGLE_PULSE", "COHERENT", "NONCOHERENT", "HYBRID"]
     },
-    "rfsIncidencePolarization" : {
+    "rsdThresholdStrategy" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "TRANSVERSE_ELECTRIC", "TRANSVERSE_MAGNETIC", "CIRCULAR_LEFT", "CIRCULAR_RIGHT", "UNPOLARIZED"]
+      "enum": ["UNSPECIFIED", "NONE", "CELL_AVERAGING", "GREATEST_OF", "SMALLEST_OF", "ORDER_STATISTIC", "ADAPTIVE"]
     },
-    "rfsPropertyMethod" : {
+    "rsdTargetFluctuation" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "MEASURED", "MODELED", "CLASS_DEFAULT", "INFERRED_FROM_FAMILY"]
-    },
-    "rfsGeometryKind" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "ASSET_MESH", "OBJECT_SURFACE", "PANEL", "CATALOG_OBJECT", "SITE_STRUCTURE", "BUILDING_FACE", "TERRAIN_SURFACE", "ANALYTIC_SHAPE"]
-    },
-    "rfsAnalyticShape" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "PLANE", "DISK", "BOX", "SPHERE", "ELLIPSOID", "CYLINDER", "CONE", "PARABOLOID", "CONVEX_HULL"]
+      "enum": ["UNSPECIFIED", "NONFLUCTUATING", "SCAN_TO_SCAN_EXPONENTIAL", "PULSE_TO_PULSE_EXPONENTIAL", "SCAN_TO_SCAN_FOURTH_MOMENT", "PULSE_TO_PULSE_FOURTH_MOMENT"]
     },
     "sarMission" : {
       "type" : "string",
@@ -1839,7 +1903,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD"]
     },
     "LKS" : {
       "type" : "object",
@@ -2350,6 +2414,58 @@
       "required" : ["ENDPOINT_ID"],
       "additionalProperties" : false
     },
+    "RFLModCod" : {
+      "type" : "object",
+      "description" : "One modulation-and-coding choice available to a link. The table carries\nengineering capability only; catalogue or recommendation names belong in\nID / NAME and provenance data, never in the schema vocabulary.",
+      "properties" : {
+        "MODCOD_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier within the containing link's MODCOD_SET."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Producer-supplied display name."
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "CODING" : {
+                "type" : "string"
+              },
+        "CODE_RATE" : {
+                "type" : "number",
+                "description" : "Information bits divided by coded bits, in (0,1]."
+              },
+        "BITS_PER_SYMBOL" : {
+                "type" : "number"
+              },
+        "SPECTRAL_EFFICIENCY_BPS_HZ" : {
+                "type" : "number"
+              },
+        "REQUIRED_ES_N0_DB" : {
+                "type" : "number"
+              },
+        "REQUIRED_EB_N0_DB" : {
+                "type" : "number"
+              },
+        "TARGET_BIT_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "TARGET_BLOCK_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "REQUIRED_MARGIN_DB" : {
+                "type" : "number",
+                "description" : "Additional implementation margin required before this entry is selected."
+              },
+        "MAXIMUM_DATA_RATE_BPS" : {
+                "type" : "number",
+                "description" : "Optional ceiling imposed by framing or implementation, bits per second."
+              }
+      },
+      "required" : ["MODCOD_ID"],
+      "additionalProperties" : false
+    },
     "RFLLink" : {
       "type" : "object",
       "description" : "One link whose budget is sampled by this record.",
@@ -2428,6 +2544,14 @@
         "SERVICE" : {
                 "type" : "string",
                 "description" : "Operator-facing service or mission designation."
+              },
+        "MODCOD_SET" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFLModCod"},
+                "description" : "Ordered adaptive modulation-and-coding choices. Per-sample\nSELECTED_MODCOD_INDEX indexes this vector for the sample's selected link."
+              },
+        "ACM_ENABLED" : {
+                "type" : "boolean",
+                "description" : "Whether the producer evaluated adaptive selection for this link."
               }
       },
       "required" : ["LINK_ID", "TRANSMIT_ENDPOINT", "RECEIVE_ENDPOINT"],
@@ -2595,6 +2719,17 @@
         "CITATION" : {
                 "type" : "string",
                 "description" : "Attribution the licence requires this record to carry downstream."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.\nMODELS remains the per-budget-term attribution surface."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "Content hash of the exact producing WASM artifact."
               }
       },
       "required" : ["SOURCE"],
@@ -2806,7 +2941,38 @@
               },
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature by the producing `$EPM`."
+                "description" : "Ed25519 signature by the producing `$EPM` over the size-prefixed\nFlatBuffer projection with both 64-byte signature payloads zeroed while\npreserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\nfield order, IDL capitalization, no insignificant whitespace, and both\nsignature fields omitted."
+              },
+        "SELECTED_MODCOD_INDEX" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Index into the selected link's RFLLink.MODCOD_SET for each sample.\nSELECTED_MODCOD_VALID distinguishes index 0 from no selection."
+              },
+        "SELECTED_MODCOD_VALID" : {
+                "type" : "array", "items" : {"type" : "boolean"}
+              },
+        "SPECTRAL_EFFICIENCY_BPS_HZ" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral efficiency delivered by the selected entry, bit/s/Hz."
+              },
+        "ACHIEVED_DATA_RATE_BPS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Delivered information rate after adaptive selection, bits per second."
+              },
+        "ACM_MARGIN_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Margin above the selected entry's threshold, dB."
+              },
+        "ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Symbol energy to noise spectral density, dB."
+              },
+        "BLOCK_ERROR_RATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Decoded block error probability [0-1]."
               }
       },
       "required" : ["RFL_ID", "LINKS", "SAMPLE_LINK_INDEXES", "SAMPLE_EPOCHS", "PROVENANCE"],
@@ -3108,6 +3274,42 @@
       "required" : ["SOURCE"],
       "additionalProperties" : false
     },
+    "ACIDataVolumeByModCod" : {
+      "type" : "object",
+      "description" : "Data carried by one modulation-and-coding choice during one interval.\nEntries are explicit rows so FlatSQL and `$RPT` can group volume by link,\ninterval, or choice without decoding a producer-specific map.",
+      "properties" : {
+        "INTERVAL_ID" : {
+                "type" : "string",
+                "description" : "ACIInterval.INTERVAL_ID this row summarizes."
+              },
+        "LINK_ID" : {
+                "type" : "string",
+                "description" : "ACIInterval.LINK_ID / RFLLink.LINK_ID."
+              },
+        "MODCOD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into the link's RFLLink.MODCOD_SET."
+              },
+        "MODCOD_ID" : {
+                "type" : "string",
+                "description" : "Stable RFLModCod.MODCOD_ID copied for queryability across records."
+              },
+        "DURATION_S" : {
+                "type" : "number"
+              },
+        "DATA_VOLUME_BITS" : {
+                "type" : "number"
+              },
+        "MEAN_DATA_RATE_BPS" : {
+                "type" : "number"
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["INTERVAL_ID", "MODCOD_ID"],
+      "additionalProperties" : false
+    },
     "ACI" : {
       "type" : "object",
       "description" : "Access Interval",
@@ -3157,7 +3359,15 @@
               },
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature by the producing `$EPM`."
+                "description" : "Ed25519 signature by the producing `$EPM` over the size-prefixed\nFlatBuffer projection with both 64-byte signature payloads zeroed while\npreserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\nfield order, IDL capitalization, no insignificant whitespace, and both\nsignature fields omitted."
+              },
+        "DATA_VOLUME_BY_MODCOD" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACIDataVolumeByModCod"},
+                "description" : "Per-interval delivered volume grouped by selected modulation-and-coding\nentry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS."
               }
       },
       "required" : ["ACI_ID", "INTERVALS", "PROVENANCE"],
@@ -4515,6 +4725,100 @@
       },
       "additionalProperties" : false
     },
+    "APL" : {
+      "type" : "object",
+      "description" : "Atmospheric Propagation Loss Statistics",
+      "properties" : {
+        "APL_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "RFL_ID" : {
+                "type" : "string"
+              },
+        "LINK_ID" : {
+                "type" : "string"
+              },
+        "WINDOW_START" : {
+                "type" : "number"
+              },
+        "WINDOW_STOP" : {
+                "type" : "number"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard"
+              },
+        "EXCEEDANCE_PERCENT" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Percent of time a loss value is exceeded, in descending or ascending\norder as stated by PROVENANCE. Every curve below has this length."
+              },
+        "RAIN_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "GASEOUS_ABSORPTION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CLOUD_FOG_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SCINTILLATION_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "TOTAL_LOSS_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "XPD_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Cross-polarization discrimination at each exceedance percentage, dB."
+              },
+        "WORST_MONTH_EXCEEDANCE_PERCENT" : {
+                "type" : "number",
+                "description" : "Exceedance percentage used for the worst-month summary."
+              },
+        "WORST_MONTH_TOTAL_LOSS_DB" : {
+                "type" : "number"
+              },
+        "WORST_MONTH_XPD_DB" : {
+                "type" : "number"
+              },
+        "AVAILABILITY_PERCENT" : {
+                "type" : "number",
+                "description" : "Percentage of the analysis window meeting the stated link requirement."
+              },
+        "OUTAGE_MINUTES_PER_YEAR" : {
+                "type" : "number",
+                "description" : "Annualized minutes not meeting the stated link requirement."
+              },
+        "WORST_MONTH_OUTAGE_MINUTES" : {
+                "type" : "number",
+                "description" : "Worst-month outage minutes for the analysis window's month length."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["APL_ID", "EXCEEDANCE_PERCENT", "RAIN_LOSS_DB", "GASEOUS_ABSORPTION_LOSS_DB", "CLOUD_FOG_LOSS_DB", "SCINTILLATION_LOSS_DB", "TOTAL_LOSS_DB", "XPD_DB", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
     "APM" : {
       "type" : "object",
       "description" : "Attitude Parameter Message",
@@ -5260,6 +5564,111 @@
       },
       "additionalProperties" : false
     },
+    "BEMProvenance" : {
+      "type" : "object",
+      "description" : "Provenance of a deployed-beam descriptor or hop schedule.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string"
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string"
+              },
+        "MODEL_NAME" : {
+                "type" : "string"
+              },
+        "MODEL_VERSION" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "BEMHopSlot" : {
+      "type" : "object",
+      "description" : "One time slice of a periodic beam-hopping plan.",
+      "properties" : {
+        "SLOT_ID" : {
+                "type" : "string"
+              },
+        "START_OFFSET_S" : {
+                "type" : "number",
+                "description" : "Offset from BEMHopSchedule.EPOCH in seconds."
+              },
+        "DURATION_S" : {
+                "type" : "number"
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/bemHopSlotState"
+              },
+        "BEAM_ID" : {
+                "type" : "string",
+                "description" : "Beam activated in this slot. May name this BEM.ID or another beam in a\ncoordinated schedule."
+              },
+        "TARGET_CELL_ID" : {
+                "type" : "string"
+              },
+        "TARGET_CENTER_LATITUDE_DEG" : {
+                "type" : "number"
+              },
+        "TARGET_CENTER_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "CENTER_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "EIRP_DBW" : {
+                "type" : "number"
+              },
+        "PRIORITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["SLOT_ID", "BEAM_ID"],
+      "additionalProperties" : false
+    },
+    "BEMHopSchedule" : {
+      "type" : "object",
+      "description" : "Periodic beam-hopping schedule carried by a deployed beam descriptor.",
+      "properties" : {
+        "SCHEDULE_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin."
+              },
+        "PERIOD_S" : {
+                "type" : "number"
+              },
+        "REPEATS" : {
+                "type" : "boolean"
+              },
+        "SLOTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BEMHopSlot"}
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/BEMProvenance"
+              }
+      },
+      "required" : ["SCHEDULE_ID", "SLOTS", "PROVENANCE"],
+      "additionalProperties" : false
+    },
     "beamContourPoint" : {
       "type" : "object",
       "description" : "Beam Contour Point (gain pattern boundary)",
@@ -5369,6 +5778,29 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              },
+        "HOP_SCHEDULE" : {
+                "$ref" : "#/definitions/BEMHopSchedule",
+                "description" : "Time-sliced activation plan for this deployed beam."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/BEMProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
               }
       },
       "additionalProperties" : false
@@ -11929,6 +12361,552 @@
       "required" : ["GROUP_ID", "NAME", "UPDATED_AT"],
       "additionalProperties" : false
     },
+    "RFSFrequencySample" : {
+      "type" : "object",
+      "description" : "The material's electromagnetic properties at ONE frequency. A table of\nthese beats the power-law fit wherever it covers the frequency.",
+      "properties" : {
+        "FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency this sample is stated at, megahertz — the `$RFB` MHz\nconvention. A join to `$IQC` (hertz) converts explicitly at the join."
+              },
+        "RELATIVE_PERMITTIVITY_REAL" : {
+                "type" : "number",
+                "description" : "Real part of the relative permittivity."
+              },
+        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
+                "type" : "number",
+                "description" : "Imaginary part of the relative permittivity (loss term), stated as a\nPOSITIVE magnitude."
+              },
+        "CONDUCTIVITY_S_PER_M" : {
+                "type" : "number",
+                "description" : "Conductivity, siemens per metre."
+              },
+        "LOSS_TANGENT" : {
+                "type" : "number",
+                "description" : "Loss tangent, dimensionless."
+              },
+        "RELATIVE_PERMEABILITY_REAL" : {
+                "type" : "number",
+                "description" : "Real and imaginary relative permeability. 1.0 and 0.0 for non-magnetic\nmaterials — stated, not assumed."
+              },
+        "RELATIVE_PERMEABILITY_IMAGINARY" : {
+                "type" : "number"
+              },
+        "REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Power reflected at normal incidence as a ratio [0-1]."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss at normal incidence, dB (positive)."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through the material at THICKNESS_M, dB (positive)."
+              },
+        "ATTENUATION_DB_PER_M" : {
+                "type" : "number",
+                "description" : "Attenuation inside the material, dB per metre."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFSReflectionEntry" : {
+      "type" : "object",
+      "description" : "Reflection and transmission at one incidence angle and polarization. The\nangular dependence of a real surface cannot be carried by a single\nnormal-incidence number.",
+      "properties" : {
+        "FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency this entry is stated at, megahertz."
+              },
+        "INCIDENCE_ANGLE_DEG" : {
+                "type" : "number",
+                "description" : "Angle from the surface normal, degrees [0-90)."
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfsIncidencePolarization"
+              },
+        "REFLECTION_COEFFICIENT_MAGNITUDE" : {
+                "type" : "number",
+                "description" : "Magnitude of the field reflection coefficient [0-1]."
+              },
+        "REFLECTION_COEFFICIENT_PHASE_DEG" : {
+                "type" : "number",
+                "description" : "Phase of the field reflection coefficient, degrees."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss, dB (positive)."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through the material at this angle, dB (positive)."
+              },
+        "SCATTERING_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Power removed from the specular direction by surface roughness, dB."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFSGeometryRef" : {
+      "type" : "object",
+      "description" : "Where and what this material is attached to. A material record with no\ngeometry describes a substance; a material record WITH geometry describes\nan obstacle a solver can intersect.",
+      "properties" : {
+        "GEOMETRY_REF_ID" : {
+                "type" : "string",
+                "description" : "Producer-stable identifier of this attachment."
+              },
+        "GEOMETRY_KIND" : {
+                "$ref" : "#/definitions/rfsGeometryKind"
+              },
+        "VAM_ID" : {
+                "type" : "string",
+                "description" : "`$VAM` asset identity, copied VERBATIM including the byte hash so the\nmaterial can never drift onto a different revision of the mesh."
+              },
+        "VARIANT_ID" : {
+                "type" : "string"
+              },
+        "ASSET_SHA256" : {
+                "type" : "string"
+              },
+        "MESH_NAME" : {
+                "type" : "string",
+                "description" : "Mesh and primitive inside the asset."
+              },
+        "PRIMITIVE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GLTF_MATERIAL_NAME" : {
+                "type" : "string",
+                "description" : "glTF material slot the properties apply to, matching the\n`$OPP.OPPSurface` join fields."
+              },
+        "GLTF_MATERIAL_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FACE_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Explicit face indexes, when the material covers part of a mesh."
+              },
+        "OPP_SURFACE_ID" : {
+                "type" : "string",
+                "description" : "`$OPP.OPPSurface` surface identifier."
+              },
+        "PANEL_ID" : {
+                "type" : "string",
+                "description" : "`$PNL` panel identifier."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "`$CAT` identity, when the obstacle is a catalogued object. 0 when\nunbound."
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TBS_SITE_ID" : {
+                "type" : "string",
+                "description" : "`$TBS.SITE_ID`, when the obstacle is a structure at a terrestrial site."
+              },
+        "FEATURE_ID" : {
+                "type" : "string",
+                "description" : "Producer's own feature identifier for a building, wall or terrain patch."
+              },
+        "ANALYTIC_SHAPE" : {
+                "$ref" : "#/definitions/rfsAnalyticShape",
+                "description" : "Primitive and its dimensions in metres, when GEOMETRY_KIND is\nANALYTIC_SHAPE. The dimension order is the primitive's own convention and\nMUST be stated in SHAPE_DIMENSION_NAMES."
+              },
+        "SHAPE_DIMENSIONS_M" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SHAPE_DIMENSION_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Geodetic placement of a fixed obstacle, degrees and metres. Absent for\nan obstacle whose position is joined from `$CAT`, `$TBS` or `$VAM`."
+              },
+        "LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "ALTITUDE_M" : {
+                "type" : "number"
+              },
+        "HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Height above ground of a fixed structure, metres."
+              },
+        "NORMAL_AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Orientation of the surface normal, degrees east of north and above the\nhorizon. A wall that faces the wrong way blocks the wrong link."
+              },
+        "NORMAL_ELEVATION_DEG" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["GEOMETRY_REF_ID"],
+      "additionalProperties" : false
+    },
+    "RFSProvenance" : {
+      "type" : "object",
+      "description" : "Where these properties came from.",
+      "properties" : {
+        "METHOD" : {
+                "$ref" : "#/definitions/rfsPropertyMethod"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "The measurement campaign, published table or model. Required: an\nunattributed permittivity is not publishable."
+              },
+        "SOURCE_REFERENCE" : {
+                "type" : "string",
+                "description" : "The specific table, recommendation or dataset entry within SOURCE."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "Replayable query that retrieves the source value."
+              },
+        "MEASUREMENT_TECHNIQUE" : {
+                "type" : "string",
+                "description" : "How it was measured (e.g. \"free-space transmission\", \"coaxial probe\",\n\"resonant cavity\")."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced modelled values."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "MEASURED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms measured and retrieved."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "RELATIVE_PERMITTIVITY_SIGMA" : {
+                "type" : "number",
+                "description" : "1-sigma uncertainty of the permittivity and conductivity values, in the\nunits of the quantity they qualify."
+              },
+        "CONDUCTIVITY_SIGMA_S_PER_M" : {
+                "type" : "number"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean"
+              },
+        "CITATION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "RFS" : {
+      "type" : "object",
+      "description" : "RF Surface Material",
+      "properties" : {
+        "MATERIAL_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this material. Joined by\n`$RFL.RFLObstruction.MATERIAL_ID` and `$CVP.CVPObstacleRef.MATERIAL_ID`."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name as its source states it, verbatim."
+              },
+        "MATERIAL_CLASS" : {
+                "$ref" : "#/definitions/rfsMaterialClass"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Free-text description of the surface, not of its vendor."
+              },
+        "FREQUENCY_MIN_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency range over which this record's parameters are valid,\nmegahertz. A solver MUST refuse to evaluate outside it rather than\nextrapolate."
+              },
+        "FREQUENCY_MAX_MHZ" : {
+                "type" : "number"
+              },
+        "PERMITTIVITY_COEFFICIENT_A" : {
+                "type" : "number",
+                "description" : "relative permittivity = PERMITTIVITY_COEFFICIENT_A * f^PERMITTIVITY_EXPONENT_B"
+              },
+        "PERMITTIVITY_EXPONENT_B" : {
+                "type" : "number"
+              },
+        "CONDUCTIVITY_COEFFICIENT_C" : {
+                "type" : "number",
+                "description" : "conductivity [S/m] = CONDUCTIVITY_COEFFICIENT_C * f^CONDUCTIVITY_EXPONENT_D"
+              },
+        "CONDUCTIVITY_EXPONENT_D" : {
+                "type" : "number"
+              },
+        "REFERENCE_FREQUENCY_MHZ" : {
+                "type" : "number",
+                "description" : "Frequency the scalar values below are stated at, megahertz. Without it\nthey are uninterpretable."
+              },
+        "RELATIVE_PERMITTIVITY_REAL" : {
+                "type" : "number"
+              },
+        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
+                "type" : "number",
+                "description" : "Loss term, stated as a POSITIVE magnitude."
+              },
+        "CONDUCTIVITY_S_PER_M" : {
+                "type" : "number"
+              },
+        "LOSS_TANGENT" : {
+                "type" : "number"
+              },
+        "RELATIVE_PERMEABILITY_REAL" : {
+                "type" : "number",
+                "description" : "1.0 and 0.0 for non-magnetic materials — stated, not assumed."
+              },
+        "RELATIVE_PERMEABILITY_IMAGINARY" : {
+                "type" : "number"
+              },
+        "REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Power reflected at normal incidence as a ratio [0-1]."
+              },
+        "REFLECTION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Reflection loss at normal incidence, dB (positive)."
+              },
+        "THICKNESS_M" : {
+                "type" : "number",
+                "description" : "Thickness the transmission and penetration losses are stated for, metres.\nA transmission loss without a thickness cannot be rescaled."
+              },
+        "TRANSMISSION_LOSS_DB" : {
+                "type" : "number",
+                "description" : "Loss through THICKNESS_M at normal incidence, dB (positive)."
+              },
+        "ATTENUATION_DB_PER_M" : {
+                "type" : "number",
+                "description" : "Attenuation inside the material, dB per metre."
+              },
+        "ABSORPTION_COEFFICIENT" : {
+                "type" : "number",
+                "description" : "Fraction of incident power absorbed at normal incidence [0-1]."
+              },
+        "SURFACE_ROUGHNESS_RMS_M" : {
+                "type" : "number",
+                "description" : "RMS surface roughness, metres. Roughness is what decides whether a\nsurface is a mirror or a scatterer at a given wavelength."
+              },
+        "ROUGHNESS_CORRELATION_LENGTH_M" : {
+                "type" : "number",
+                "description" : "Correlation length of the roughness, metres."
+              },
+        "SCATTERING_CLASS" : {
+                "$ref" : "#/definitions/rfsScatteringClass"
+              },
+        "DIFFUSE_SCATTERING_COEFFICIENT" : {
+                "type" : "number",
+                "description" : "Fraction of non-absorbed power leaving diffusely [0-1]."
+              },
+        "BACKSCATTER_COEFFICIENT_DB" : {
+                "type" : "number",
+                "description" : "Backscatter coefficient, dB."
+              },
+        "TEMPERATURE_K" : {
+                "type" : "number",
+                "description" : "Temperature the properties were evaluated at, kelvin."
+              },
+        "MOISTURE_CONTENT_FRACTION" : {
+                "type" : "number",
+                "description" : "Volumetric moisture content [0-1]. Wet concrete and dry concrete are\ndifferent materials at RF."
+              },
+        "SALINITY_PSU" : {
+                "type" : "number",
+                "description" : "Salinity, practical salinity units, for water surfaces."
+              },
+        "FREQUENCY_SAMPLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSFrequencySample"},
+                "description" : "Per-frequency samples. Where present and covering the frequency, these\ntake precedence over the power law."
+              },
+        "REFLECTION_TABLE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSReflectionEntry"},
+                "description" : "Angular and polarization dependence."
+              },
+        "GEOMETRY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFSGeometryRef"},
+                "description" : "Geometry this material is attached to. A record may attach one material\nto several obstacles."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFSProvenance",
+                "description" : "Provenance. Required."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM`."
+              }
+      },
+      "required" : ["MATERIAL_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "EMCEndpointRef" : {
+      "type" : "object",
+      "description" : "Stable reference to one endpoint of the assessment.",
+      "properties" : {
+        "ENDPOINT_ID" : {
+                "type" : "string"
+              },
+        "ENDPOINT_KIND" : {
+                "$ref" : "#/definitions/rflEndpointKind"
+              },
+        "RFE_ID" : {
+                "type" : "string"
+              },
+        "RFB_ID" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "BEM_ID" : {
+                "type" : "string"
+              },
+        "PAP_ID" : {
+                "type" : "string"
+              },
+        "CHANNEL_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["ENDPOINT_ID"],
+      "additionalProperties" : false
+    },
+    "EMCIntermodulationTerm" : {
+      "type" : "object",
+      "description" : "One signed integer coefficient in an intermodulation product. The product\nfrequency is the exact sum of COEFFICIENT * SOURCE_FREQUENCY_HZ terms.",
+      "properties" : {
+        "SOURCE_ENDPOINT_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "COEFFICIENT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EMC" : {
+      "type" : "object",
+      "description" : "Electromagnetic Compatibility Assessment",
+      "properties" : {
+        "EMC_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "RFL_ID" : {
+                "type" : "string"
+              },
+        "VICTIM_ENDPOINT" : {
+                "$ref" : "#/definitions/EMCEndpointRef"
+              },
+        "AGGRESSOR_ENDPOINT" : {
+                "$ref" : "#/definitions/EMCEndpointRef"
+              },
+        "COUPLING_MECHANISM" : {
+                "$ref" : "#/definitions/emcCouplingPath"
+              },
+        "MECHANISM_CLASS" : {
+                "$ref" : "#/definitions/emcMechanismCategory"
+              },
+        "INTERMODULATION_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Order of the active or passive intermodulation product. 0 when the\nmechanism is not intermodulation."
+              },
+        "INTERMODULATION_TERMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EMCIntermodulationTerm"}
+              },
+        "INTERMODULATION_PRODUCT_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "HARMONIC_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EMISSION_MASK_ID" : {
+                "type" : "string",
+                "description" : "RFEEmissionMask.MASK_ID used for an emission-limit comparison."
+              },
+        "RFS_MATERIAL_ID" : {
+                "type" : "string",
+                "description" : "`$RFS.MATERIAL_ID` and class used for structural coupling."
+              },
+        "RFS_MATERIAL_CLASS" : {
+                "$ref" : "#/definitions/rfsMaterialClass"
+              },
+        "ISOLATION_DB" : {
+                "type" : "number"
+              },
+        "COUPLED_POWER_DBW" : {
+                "type" : "number"
+              },
+        "VICTIM_LIMIT_DBW" : {
+                "type" : "number"
+              },
+        "MARGIN_DB" : {
+                "type" : "number"
+              },
+        "EXCEEDANCE_DB" : {
+                "type" : "number",
+                "description" : "Positive when the victim limit is exceeded."
+              },
+        "EXCEEDS_LIMIT" : {
+                "type" : "boolean"
+              },
+        "RESOLUTION" : {
+                "$ref" : "#/definitions/emcResolutionState"
+              },
+        "RESOLUTION_NOTE" : {
+                "type" : "string"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["EMC_ID", "VICTIM_ENDPOINT", "AGGRESSOR_ENDPOINT", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
     "EME" : {
       "type" : "object",
       "description" : "Encrypted Message Envelope",
@@ -12757,6 +13735,162 @@
       },
       "additionalProperties" : false
     },
+    "EPFContributor" : {
+      "type" : "object",
+      "description" : "One source's contribution to one sample.",
+      "properties" : {
+        "CONTRIBUTOR_ID" : {
+                "type" : "string"
+              },
+        "SAMPLE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SOURCE_ENDPOINT_ID" : {
+                "type" : "string"
+              },
+        "RFE_ID" : {
+                "type" : "string"
+              },
+        "RFB_ID" : {
+                "type" : "string"
+              },
+        "PAP_ID" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "INTERFERENCE_POWER_DBW" : {
+                "type" : "number"
+              },
+        "ANTENNA_DISCRIMINATION_DB" : {
+                "type" : "number",
+                "description" : "Pattern discrimination applied in the victim direction, dB."
+              },
+        "SPECTRAL_OVERLAP_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of the victim measurement bandwidth overlapped [0-1]."
+              },
+        "CONTRIBUTION_VALUE" : {
+                "type" : "number"
+              },
+        "CONTRIBUTION_UNITS" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["CONTRIBUTOR_ID"],
+      "additionalProperties" : false
+    },
+    "EPFVerdict" : {
+      "type" : "object",
+      "description" : "FlatSQL-queryable compliance verdict consumed directly by `$RPT`.",
+      "properties" : {
+        "LIMIT_KIND" : {
+                "$ref" : "#/definitions/epfLimitCategory"
+              },
+        "COMPLIANT" : {
+                "type" : "boolean"
+              },
+        "MARGIN_DB" : {
+                "type" : "number",
+                "description" : "Worst margin to the applicable limit, dB. Positive means compliant."
+              },
+        "PERCENT_TIME_EXCEEDED" : {
+                "type" : "number"
+              },
+        "WORST_SAMPLE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "NOTE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EPF" : {
+      "type" : "object",
+      "description" : "Aggregate Interference and Flux-Density Compliance",
+      "properties" : {
+        "EPF_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "RFL_ID" : {
+                "type" : "string"
+              },
+        "ACI_ID" : {
+                "type" : "string"
+              },
+        "VICTIM_ENDPOINT_ID" : {
+                "type" : "string"
+              },
+        "LIMIT_KIND" : {
+                "$ref" : "#/definitions/epfLimitCategory"
+              },
+        "LIMIT_MODEL_NAME" : {
+                "type" : "string"
+              },
+        "VALUE_UNITS" : {
+                "type" : "string"
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SAMPLE_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SAMPLE_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SAMPLE_LIMIT_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SAMPLE_MARGIN_DB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positive means the sample complies with its limit."
+              },
+        "SAMPLE_EXCEEDS_LIMIT" : {
+                "type" : "array", "items" : {"type" : "boolean"}
+              },
+        "CONTRIBUTORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EPFContributor"}
+              },
+        "CDF_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Empirical distribution values and their percent-time exceedance. Arrays\nare index-aligned and ordered as stated by provenance."
+              },
+        "CDF_PERCENT_TIME_EXCEEDED" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "VERDICT" : {
+                "$ref" : "#/definitions/EPFVerdict"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["EPF_ID", "VALUE_UNITS", "SAMPLE_EPOCHS", "SAMPLE_VALUES", "SAMPLE_LIMIT_VALUES", "SAMPLE_MARGIN_DB", "SAMPLE_EXCEEDS_LIMIT", "CDF_VALUES", "CDF_PERCENT_TIME_EXCEEDED", "VERDICT", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
     "ESL" : {
       "type" : "object",
       "description" : "Entity / Standards Link — join-table row connecting a host-local entity\nmetadata record to a standards record index row, enabling cascade-safe\nmutation and cross-plugin query ownership.",
@@ -13581,6 +14715,173 @@
                 "description" : "Notes"
               }
       },
+      "additionalProperties" : false
+    },
+    "GELObservationRef" : {
+      "type" : "object",
+      "description" : "Trace from a solution row back to one `$DOA` observation or `$IQC` capture.",
+      "properties" : {
+        "OBSERVATION_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DOA_ID" : {
+                "type" : "string",
+                "description" : "At least one of DOA_ID or IQC_ID is required. When both are present, the\n`$DOA` observation must have been derived from the named `$IQC` capture."
+              },
+        "IQC_ID" : {
+                "type" : "string"
+              },
+        "COLLECTOR_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "number"
+              },
+        "TIME_DIFFERENCE_RESIDUAL_S" : {
+                "type" : "number"
+              },
+        "FREQUENCY_DIFFERENCE_RESIDUAL_HZ" : {
+                "type" : "number"
+              },
+        "ANGULAR_RESIDUAL_DEG" : {
+                "type" : "number"
+              },
+        "WEIGHT" : {
+                "type" : "number"
+              },
+        "DISPOSITION" : {
+                "$ref" : "#/definitions/gelObservationDisposition"
+              },
+        "REJECTION_REASON" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GELConvergenceDiagnostics" : {
+      "type" : "object",
+      "description" : "Numerical convergence diagnostics for the fused estimator.",
+      "properties" : {
+        "CONVERGED" : {
+                "type" : "boolean"
+              },
+        "ITERATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECTIVE_VALUE" : {
+                "type" : "number"
+              },
+        "OBJECTIVE_CHANGE" : {
+                "type" : "number"
+              },
+        "STEP_NORM_M" : {
+                "type" : "number"
+              },
+        "GRADIENT_NORM" : {
+                "type" : "number"
+              },
+        "NORMAL_MATRIX_CONDITION_NUMBER" : {
+                "type" : "number"
+              },
+        "DEGREES_OF_FREEDOM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TERMINATION_REASON" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GEL" : {
+      "type" : "object",
+      "description" : "Emitter Geolocation Solution",
+      "properties" : {
+        "GEL_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "EMITTER_ID" : {
+                "type" : "string"
+              },
+        "TECHNIQUE" : {
+                "$ref" : "#/definitions/gelTechniqueClass"
+              },
+        "SOLUTION_EPOCH" : {
+                "type" : "number"
+              },
+        "LATITUDE_DEG" : {
+                "type" : "number"
+              },
+        "LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "ALTITUDE_M" : {
+                "type" : "number"
+              },
+        "ENU_COVARIANCE_M2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "3x3 east-north-up covariance, row-major, square metres."
+              },
+        "ERROR_ELLIPSE_SEMI_MAJOR_M" : {
+                "type" : "number"
+              },
+        "ERROR_ELLIPSE_SEMI_MINOR_M" : {
+                "type" : "number"
+              },
+        "ERROR_ELLIPSE_ORIENTATION_DEG" : {
+                "type" : "number"
+              },
+        "CEP50_M" : {
+                "type" : "number"
+              },
+        "CEP95_M" : {
+                "type" : "number"
+              },
+        "GDOP" : {
+                "type" : "number"
+              },
+        "VELOCITY_EAST_M_S" : {
+                "type" : "number"
+              },
+        "VELOCITY_NORTH_M_S" : {
+                "type" : "number"
+              },
+        "VELOCITY_UP_M_S" : {
+                "type" : "number"
+              },
+        "VELOCITY_COVARIANCE_M2_S2" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "OBSERVATION_REFS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GELObservationRef"}
+              },
+        "CONVERGENCE_DIAGNOSTICS" : {
+                "$ref" : "#/definitions/GELConvergenceDiagnostics"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["GEL_ID", "ENU_COVARIANCE_M2", "OBSERVATION_REFS", "CONVERGENCE_DIAGNOSTICS", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
       "additionalProperties" : false
     },
     "GEO" : {
@@ -24677,6 +25978,200 @@
       },
       "additionalProperties" : false
     },
+    "PAPElement" : {
+      "type" : "object",
+      "description" : "One array element and its applied complex weight.",
+      "properties" : {
+        "ELEMENT_ID" : {
+                "type" : "string"
+              },
+        "POSITION_X_M" : {
+                "type" : "number"
+              },
+        "POSITION_Y_M" : {
+                "type" : "number"
+              },
+        "POSITION_Z_M" : {
+                "type" : "number"
+              },
+        "WEIGHT_REAL" : {
+                "type" : "number"
+              },
+        "WEIGHT_IMAGINARY" : {
+                "type" : "number"
+              },
+        "AMPLITUDE" : {
+                "type" : "number"
+              },
+        "PHASE_DEG" : {
+                "type" : "number"
+              },
+        "ELEMENT_PATTERN_ID" : {
+                "type" : "string"
+              },
+        "FAILURE_FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FAILED" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["ELEMENT_ID"],
+      "additionalProperties" : false
+    },
+    "PAPGainCut" : {
+      "type" : "object",
+      "description" : "One one-dimensional gain cut through the synthesized pattern.",
+      "properties" : {
+        "CUT_ID" : {
+                "type" : "string"
+              },
+        "AXIS" : {
+                "$ref" : "#/definitions/papGainCutAxis"
+              },
+        "FIXED_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "ANGLES_DEG" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "GAIN_DBI" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "required" : ["CUT_ID", "ANGLES_DEG", "GAIN_DBI"],
+      "additionalProperties" : false
+    },
+    "PAPNull" : {
+      "type" : "object",
+      "description" : "One requested adaptive null and its achieved result.",
+      "properties" : {
+        "NULL_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_ID" : {
+                "type" : "string"
+              },
+        "AZIMUTH_DEG" : {
+                "type" : "number"
+              },
+        "ELEVATION_DEG" : {
+                "type" : "number"
+              },
+        "REQUESTED_DEPTH_DB" : {
+                "type" : "number"
+              },
+        "ACHIEVED_DEPTH_DB" : {
+                "type" : "number"
+              },
+        "ANGULAR_ERROR_DEG" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["NULL_ID"],
+      "additionalProperties" : false
+    },
+    "PAP" : {
+      "type" : "object",
+      "description" : "Phased Array Pattern Synthesis",
+      "properties" : {
+        "PAP_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "RFE_ID" : {
+                "type" : "string"
+              },
+        "BEM_ID" : {
+                "type" : "string"
+              },
+        "HOP_SCHEDULE_ID" : {
+                "type" : "string",
+                "description" : "BEMHopSchedule.SCHEDULE_ID evaluated by this synthesis, when applicable."
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/papArrayGeometry"
+              },
+        "ELEMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PAPElement"}
+              },
+        "TAPER" : {
+                "$ref" : "#/definitions/papTaperFamily"
+              },
+        "TAPER_PARAMETERS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "STEERING_AZIMUTH_DEG" : {
+                "type" : "number"
+              },
+        "STEERING_ELEVATION_DEG" : {
+                "type" : "number"
+              },
+        "STEERING_CONE_DEG" : {
+                "type" : "number"
+              },
+        "STEERING_CLOCK_DEG" : {
+                "type" : "number"
+              },
+        "SCAN_LOSS_DB" : {
+                "type" : "number"
+              },
+        "PEAK_GAIN_DBI" : {
+                "type" : "number"
+              },
+        "GAIN_CUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PAPGainCut"}
+              },
+        "AZIMUTH_3DB_BEAMWIDTH_DEG" : {
+                "type" : "number"
+              },
+        "ELEVATION_3DB_BEAMWIDTH_DEG" : {
+                "type" : "number"
+              },
+        "FIRST_SIDELOBE_LEVEL_DB" : {
+                "type" : "number"
+              },
+        "PEAK_SIDELOBE_LEVEL_DB" : {
+                "type" : "number"
+              },
+        "GRATING_LOBE_PRESENT" : {
+                "type" : "boolean"
+              },
+        "GRATING_LOBE_AZIMUTH_DEG" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "GRATING_LOBE_ELEVATION_DEG" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "NULLS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PAPNull"}
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["PAP_ID", "ELEMENTS", "GAIN_CUTS", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
     "PCF" : {
       "type" : "object",
       "description" : "Propagator Configuration",
@@ -26940,6 +28435,90 @@
       "required" : ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],
       "additionalProperties" : false
     },
+    "RFEEmissionMaskPoint" : {
+      "type" : "object",
+      "description" : "One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is\nrelative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in\nthe mask's required UNITS.",
+      "properties" : {
+        "FREQUENCY_OFFSET_HZ" : {
+                "type" : "number"
+              },
+        "VALUE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFEProvenance" : {
+      "type" : "object",
+      "description" : "Provenance of an emitter descriptor or emission mask. Capability schemas\ncarry model names and citations as data so the IDL remains provider-neutral.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string"
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string"
+              },
+        "MODEL_NAME" : {
+                "type" : "string"
+              },
+        "MODEL_VERSION" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "RFEEmissionMask" : {
+      "type" : "object",
+      "description" : "A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,\nor susceptibility limit curve.",
+      "properties" : {
+        "MASK_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "CLASS" : {
+                "$ref" : "#/definitions/rfeEmissionMaskClass"
+              },
+        "PATH" : {
+                "$ref" : "#/definitions/rfeEmissionPath"
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,\nor dBuA. A point with no unit is not publishable."
+              },
+        "REFERENCE_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "REFERENCE_BANDWIDTH_HZ" : {
+                "type" : "number"
+              },
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFEEmissionMaskPoint"}
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFEProvenance"
+              }
+      },
+      "required" : ["MASK_ID", "UNITS", "POINTS", "PROVENANCE"],
+      "additionalProperties" : false
+    },
     "rfEmitterDetail" : {
       "type" : "object",
       "description" : "RF Emitter Detail Record",
@@ -27003,6 +28582,10 @@
         "BEAMWIDTH" : {
                 "type" : "number",
                 "description" : "3dB beamwidth in degrees"
+              },
+        "EMISSION_MASKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFEEmissionMask"},
+                "description" : "Emission and susceptibility limit curves applicable to this operating\nmode. Curves are evaluated in point order after sorting by frequency."
               }
       },
       "additionalProperties" : false
@@ -27090,6 +28673,26 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFEProvenance",
+                "description" : "Provenance of the root emitter descriptor."
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
               }
       },
       "additionalProperties" : false
@@ -27397,403 +29000,6 @@
       },
       "additionalProperties" : false
     },
-    "RFSFrequencySample" : {
-      "type" : "object",
-      "description" : "The material's electromagnetic properties at ONE frequency. A table of\nthese beats the power-law fit wherever it covers the frequency.",
-      "properties" : {
-        "FREQUENCY_MHZ" : {
-                "type" : "number",
-                "description" : "Frequency this sample is stated at, megahertz — the `$RFB` MHz\nconvention. A join to `$IQC` (hertz) converts explicitly at the join."
-              },
-        "RELATIVE_PERMITTIVITY_REAL" : {
-                "type" : "number",
-                "description" : "Real part of the relative permittivity."
-              },
-        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
-                "type" : "number",
-                "description" : "Imaginary part of the relative permittivity (loss term), stated as a\nPOSITIVE magnitude."
-              },
-        "CONDUCTIVITY_S_PER_M" : {
-                "type" : "number",
-                "description" : "Conductivity, siemens per metre."
-              },
-        "LOSS_TANGENT" : {
-                "type" : "number",
-                "description" : "Loss tangent, dimensionless."
-              },
-        "RELATIVE_PERMEABILITY_REAL" : {
-                "type" : "number",
-                "description" : "Real and imaginary relative permeability. 1.0 and 0.0 for non-magnetic\nmaterials — stated, not assumed."
-              },
-        "RELATIVE_PERMEABILITY_IMAGINARY" : {
-                "type" : "number"
-              },
-        "REFLECTIVITY" : {
-                "type" : "number",
-                "description" : "Power reflected at normal incidence as a ratio [0-1]."
-              },
-        "REFLECTION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Reflection loss at normal incidence, dB (positive)."
-              },
-        "TRANSMISSION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Loss through the material at THICKNESS_M, dB (positive)."
-              },
-        "ATTENUATION_DB_PER_M" : {
-                "type" : "number",
-                "description" : "Attenuation inside the material, dB per metre."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFSReflectionEntry" : {
-      "type" : "object",
-      "description" : "Reflection and transmission at one incidence angle and polarization. The\nangular dependence of a real surface cannot be carried by a single\nnormal-incidence number.",
-      "properties" : {
-        "FREQUENCY_MHZ" : {
-                "type" : "number",
-                "description" : "Frequency this entry is stated at, megahertz."
-              },
-        "INCIDENCE_ANGLE_DEG" : {
-                "type" : "number",
-                "description" : "Angle from the surface normal, degrees [0-90)."
-              },
-        "POLARIZATION" : {
-                "$ref" : "#/definitions/rfsIncidencePolarization"
-              },
-        "REFLECTION_COEFFICIENT_MAGNITUDE" : {
-                "type" : "number",
-                "description" : "Magnitude of the field reflection coefficient [0-1]."
-              },
-        "REFLECTION_COEFFICIENT_PHASE_DEG" : {
-                "type" : "number",
-                "description" : "Phase of the field reflection coefficient, degrees."
-              },
-        "REFLECTION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Reflection loss, dB (positive)."
-              },
-        "TRANSMISSION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Loss through the material at this angle, dB (positive)."
-              },
-        "SCATTERING_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Power removed from the specular direction by surface roughness, dB."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFSGeometryRef" : {
-      "type" : "object",
-      "description" : "Where and what this material is attached to. A material record with no\ngeometry describes a substance; a material record WITH geometry describes\nan obstacle a solver can intersect.",
-      "properties" : {
-        "GEOMETRY_REF_ID" : {
-                "type" : "string",
-                "description" : "Producer-stable identifier of this attachment."
-              },
-        "GEOMETRY_KIND" : {
-                "$ref" : "#/definitions/rfsGeometryKind"
-              },
-        "VAM_ID" : {
-                "type" : "string",
-                "description" : "`$VAM` asset identity, copied VERBATIM including the byte hash so the\nmaterial can never drift onto a different revision of the mesh."
-              },
-        "VARIANT_ID" : {
-                "type" : "string"
-              },
-        "ASSET_SHA256" : {
-                "type" : "string"
-              },
-        "MESH_NAME" : {
-                "type" : "string",
-                "description" : "Mesh and primitive inside the asset."
-              },
-        "PRIMITIVE_INDEX" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "GLTF_MATERIAL_NAME" : {
-                "type" : "string",
-                "description" : "glTF material slot the properties apply to, matching the\n`$OPP.OPPSurface` join fields."
-              },
-        "GLTF_MATERIAL_INDEX" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "FACE_INDEXES" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
-                "description" : "Explicit face indexes, when the material covers part of a mesh."
-              },
-        "OPP_SURFACE_ID" : {
-                "type" : "string",
-                "description" : "`$OPP.OPPSurface` surface identifier."
-              },
-        "PANEL_ID" : {
-                "type" : "string",
-                "description" : "`$PNL` panel identifier."
-              },
-        "NORAD_CAT_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "`$CAT` identity, when the obstacle is a catalogued object. 0 when\nunbound."
-              },
-        "OBJECT_ID" : {
-                "type" : "string"
-              },
-        "TBS_SITE_ID" : {
-                "type" : "string",
-                "description" : "`$TBS.SITE_ID`, when the obstacle is a structure at a terrestrial site."
-              },
-        "FEATURE_ID" : {
-                "type" : "string",
-                "description" : "Producer's own feature identifier for a building, wall or terrain patch."
-              },
-        "ANALYTIC_SHAPE" : {
-                "$ref" : "#/definitions/rfsAnalyticShape",
-                "description" : "Primitive and its dimensions in metres, when GEOMETRY_KIND is\nANALYTIC_SHAPE. The dimension order is the primitive's own convention and\nMUST be stated in SHAPE_DIMENSION_NAMES."
-              },
-        "SHAPE_DIMENSIONS_M" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "SHAPE_DIMENSION_NAMES" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "LATITUDE_DEG" : {
-                "type" : "number",
-                "description" : "Geodetic placement of a fixed obstacle, degrees and metres. Absent for\nan obstacle whose position is joined from `$CAT`, `$TBS` or `$VAM`."
-              },
-        "LONGITUDE_DEG" : {
-                "type" : "number"
-              },
-        "ALTITUDE_M" : {
-                "type" : "number"
-              },
-        "HEIGHT_M" : {
-                "type" : "number",
-                "description" : "Height above ground of a fixed structure, metres."
-              },
-        "NORMAL_AZIMUTH_DEG" : {
-                "type" : "number",
-                "description" : "Orientation of the surface normal, degrees east of north and above the\nhorizon. A wall that faces the wrong way blocks the wrong link."
-              },
-        "NORMAL_ELEVATION_DEG" : {
-                "type" : "number"
-              }
-      },
-      "required" : ["GEOMETRY_REF_ID"],
-      "additionalProperties" : false
-    },
-    "RFSProvenance" : {
-      "type" : "object",
-      "description" : "Where these properties came from.",
-      "properties" : {
-        "METHOD" : {
-                "$ref" : "#/definitions/rfsPropertyMethod"
-              },
-        "SOURCE" : {
-                "type" : "string",
-                "description" : "The measurement campaign, published table or model. Required: an\nunattributed permittivity is not publishable."
-              },
-        "SOURCE_REFERENCE" : {
-                "type" : "string",
-                "description" : "The specific table, recommendation or dataset entry within SOURCE."
-              },
-        "SOURCE_QUERY" : {
-                "type" : "string",
-                "description" : "Replayable query that retrieves the source value."
-              },
-        "MEASUREMENT_TECHNIQUE" : {
-                "type" : "string",
-                "description" : "How it was measured (e.g. \"free-space transmission\", \"coaxial probe\",\n\"resonant cavity\")."
-              },
-        "MODULE_ID" : {
-                "type" : "string",
-                "description" : "`$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced modelled values."
-              },
-        "MODULE_VERSION" : {
-                "type" : "string"
-              },
-        "MODULE_CONTENT_HASH" : {
-                "type" : "string"
-              },
-        "MEASURED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix ms measured and retrieved."
-              },
-        "RETRIEVED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "RELATIVE_PERMITTIVITY_SIGMA" : {
-                "type" : "number",
-                "description" : "1-sigma uncertainty of the permittivity and conductivity values, in the\nunits of the quantity they qualify."
-              },
-        "CONDUCTIVITY_SIGMA_S_PER_M" : {
-                "type" : "number"
-              },
-        "LICENSE" : {
-                "type" : "string",
-                "description" : "Licence terms. Empty means UNKNOWN TERMS — never public domain, never a\ngrant to redistribute."
-              },
-        "NON_COMMERCIAL_ONLY" : {
-                "type" : "boolean"
-              },
-        "CITATION" : {
-                "type" : "string"
-              }
-      },
-      "required" : ["SOURCE"],
-      "additionalProperties" : false
-    },
-    "RFS" : {
-      "type" : "object",
-      "description" : "RF Surface Material",
-      "properties" : {
-        "MATERIAL_ID" : {
-                "type" : "string",
-                "description" : "Stable identifier of this material. Joined by\n`$RFL.RFLObstruction.MATERIAL_ID` and `$CVP.CVPObstacleRef.MATERIAL_ID`."
-              },
-        "NAME" : {
-                "type" : "string",
-                "description" : "Name as its source states it, verbatim."
-              },
-        "MATERIAL_CLASS" : {
-                "$ref" : "#/definitions/rfsMaterialClass"
-              },
-        "DESCRIPTION" : {
-                "type" : "string",
-                "description" : "Free-text description of the surface, not of its vendor."
-              },
-        "FREQUENCY_MIN_MHZ" : {
-                "type" : "number",
-                "description" : "Frequency range over which this record's parameters are valid,\nmegahertz. A solver MUST refuse to evaluate outside it rather than\nextrapolate."
-              },
-        "FREQUENCY_MAX_MHZ" : {
-                "type" : "number"
-              },
-        "PERMITTIVITY_COEFFICIENT_A" : {
-                "type" : "number",
-                "description" : "relative permittivity = PERMITTIVITY_COEFFICIENT_A * f^PERMITTIVITY_EXPONENT_B"
-              },
-        "PERMITTIVITY_EXPONENT_B" : {
-                "type" : "number"
-              },
-        "CONDUCTIVITY_COEFFICIENT_C" : {
-                "type" : "number",
-                "description" : "conductivity [S/m] = CONDUCTIVITY_COEFFICIENT_C * f^CONDUCTIVITY_EXPONENT_D"
-              },
-        "CONDUCTIVITY_EXPONENT_D" : {
-                "type" : "number"
-              },
-        "REFERENCE_FREQUENCY_MHZ" : {
-                "type" : "number",
-                "description" : "Frequency the scalar values below are stated at, megahertz. Without it\nthey are uninterpretable."
-              },
-        "RELATIVE_PERMITTIVITY_REAL" : {
-                "type" : "number"
-              },
-        "RELATIVE_PERMITTIVITY_IMAGINARY" : {
-                "type" : "number",
-                "description" : "Loss term, stated as a POSITIVE magnitude."
-              },
-        "CONDUCTIVITY_S_PER_M" : {
-                "type" : "number"
-              },
-        "LOSS_TANGENT" : {
-                "type" : "number"
-              },
-        "RELATIVE_PERMEABILITY_REAL" : {
-                "type" : "number",
-                "description" : "1.0 and 0.0 for non-magnetic materials — stated, not assumed."
-              },
-        "RELATIVE_PERMEABILITY_IMAGINARY" : {
-                "type" : "number"
-              },
-        "REFLECTIVITY" : {
-                "type" : "number",
-                "description" : "Power reflected at normal incidence as a ratio [0-1]."
-              },
-        "REFLECTION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Reflection loss at normal incidence, dB (positive)."
-              },
-        "THICKNESS_M" : {
-                "type" : "number",
-                "description" : "Thickness the transmission and penetration losses are stated for, metres.\nA transmission loss without a thickness cannot be rescaled."
-              },
-        "TRANSMISSION_LOSS_DB" : {
-                "type" : "number",
-                "description" : "Loss through THICKNESS_M at normal incidence, dB (positive)."
-              },
-        "ATTENUATION_DB_PER_M" : {
-                "type" : "number",
-                "description" : "Attenuation inside the material, dB per metre."
-              },
-        "ABSORPTION_COEFFICIENT" : {
-                "type" : "number",
-                "description" : "Fraction of incident power absorbed at normal incidence [0-1]."
-              },
-        "SURFACE_ROUGHNESS_RMS_M" : {
-                "type" : "number",
-                "description" : "RMS surface roughness, metres. Roughness is what decides whether a\nsurface is a mirror or a scatterer at a given wavelength."
-              },
-        "ROUGHNESS_CORRELATION_LENGTH_M" : {
-                "type" : "number",
-                "description" : "Correlation length of the roughness, metres."
-              },
-        "SCATTERING_CLASS" : {
-                "$ref" : "#/definitions/rfsScatteringClass"
-              },
-        "DIFFUSE_SCATTERING_COEFFICIENT" : {
-                "type" : "number",
-                "description" : "Fraction of non-absorbed power leaving diffusely [0-1]."
-              },
-        "BACKSCATTER_COEFFICIENT_DB" : {
-                "type" : "number",
-                "description" : "Backscatter coefficient, dB."
-              },
-        "TEMPERATURE_K" : {
-                "type" : "number",
-                "description" : "Temperature the properties were evaluated at, kelvin."
-              },
-        "MOISTURE_CONTENT_FRACTION" : {
-                "type" : "number",
-                "description" : "Volumetric moisture content [0-1]. Wet concrete and dry concrete are\ndifferent materials at RF."
-              },
-        "SALINITY_PSU" : {
-                "type" : "number",
-                "description" : "Salinity, practical salinity units, for water surfaces."
-              },
-        "FREQUENCY_SAMPLES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFSFrequencySample"},
-                "description" : "Per-frequency samples. Where present and covering the frequency, these\ntake precedence over the power law."
-              },
-        "REFLECTION_TABLE" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFSReflectionEntry"},
-                "description" : "Angular and polarization dependence."
-              },
-        "GEOMETRY" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFSGeometryRef"},
-                "description" : "Geometry this material is attached to. A record may attach one material\nto several obstacles."
-              },
-        "PROVENANCE" : {
-                "$ref" : "#/definitions/RFSProvenance",
-                "description" : "Provenance. Required."
-              },
-        "COMPUTED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix ms this record was serialized."
-              },
-        "PRODUCER_ID" : {
-                "type" : "string",
-                "description" : "`$EPM` identifier of the producing node."
-              },
-        "SIGNATURE" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature by the producing `$EPM`."
-              }
-      },
-      "required" : ["MATERIAL_ID", "PROVENANCE"],
-      "additionalProperties" : false
-    },
     "RPT" : {
       "type" : "object",
       "description" : "Verifiable Report descriptor",
@@ -27856,6 +29062,123 @@
               }
       },
       "required" : ["REPORT_ID"],
+      "additionalProperties" : false
+    },
+    "RSD" : {
+      "type" : "object",
+      "description" : "Radar Sensitivity and Detection Performance",
+      "properties" : {
+        "RSD_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCENARIO_ID" : {
+                "type" : "string"
+              },
+        "SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SNR_ID" : {
+                "type" : "string"
+              },
+        "SDR_ID" : {
+                "type" : "string"
+              },
+        "APL_ID" : {
+                "type" : "string",
+                "description" : "`$APL.APL_ID` supplying the propagation-loss statistics."
+              },
+        "WAVEFORM" : {
+                "$ref" : "#/definitions/rsdWaveformClass"
+              },
+        "INTEGRATION" : {
+                "$ref" : "#/definitions/rsdIntegrationStrategy"
+              },
+        "CFAR" : {
+                "$ref" : "#/definitions/rsdThresholdStrategy"
+              },
+        "TARGET_MODEL" : {
+                "$ref" : "#/definitions/rsdTargetFluctuation"
+              },
+        "PULSE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CFAR_REFERENCE_CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CFAR_GUARD_CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CFAR_LOSS_DB" : {
+                "type" : "number"
+              },
+        "TARGET_RCS_M2" : {
+                "type" : "number"
+              },
+        "FALSE_ALARM_PROBABILITY_REQUIREMENT" : {
+                "type" : "number"
+              },
+        "DETECTION_PROBABILITY_REQUIREMENT" : {
+                "type" : "number"
+              },
+        "RANGE_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Parallel detection-performance curve arrays."
+              },
+        "DETECTION_PROBABILITY" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "FALSE_ALARM_PROBABILITY" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "SNR_DB" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "MAXIMUM_DETECTION_RANGE_M" : {
+                "type" : "number"
+              },
+        "MINIMUM_DETECTABLE_RCS_M2" : {
+                "type" : "number"
+              },
+        "RANGE_AT_PD_0P5_M" : {
+                "type" : "number"
+              },
+        "RANGE_AT_PD_0P9_M" : {
+                "type" : "number"
+              },
+        "CLUTTER_TO_NOISE_DB" : {
+                "type" : "number"
+              },
+        "PROPAGATION_LOSS_DB" : {
+                "type" : "number"
+              },
+        "JAMMING_TO_SIGNAL_DB" : {
+                "type" : "number"
+              },
+        "BURN_THROUGH_RANGE_M" : {
+                "type" : "number"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/RFLProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCER_ID" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["RSD_ID", "RANGE_M", "DETECTION_PROBABILITY", "FALSE_ALARM_PROBABILITY", "SNR_DB", "PROVENANCE", "PRODUCER_ID", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
       "additionalProperties" : false
     },
     "SAR" : {
@@ -37379,7 +38702,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

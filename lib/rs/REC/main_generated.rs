@@ -217,6 +217,12 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -351,10 +357,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 216;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 222;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 217] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 223] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -572,6 +578,12 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 217] = [
   RecordType::TMS,
   RecordType::VEP,
   RecordType::EGP,
+  RecordType::APL,
+  RecordType::EMC,
+  RecordType::EPF,
+  RecordType::GEL,
+  RecordType::PAP,
+  RecordType::RSD,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -810,9 +822,15 @@ impl RecordType {
   pub const TMS: Self = Self(214);
   pub const VEP: Self = Self(215);
   pub const EGP: Self = Self(216);
+  pub const APL: Self = Self(217);
+  pub const EMC: Self = Self(218);
+  pub const EPF: Self = Self(219);
+  pub const GEL: Self = Self(220);
+  pub const PAP: Self = Self(221);
+  pub const RSD: Self = Self(222);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 216;
+  pub const ENUM_MAX: u8 = 222;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1031,6 +1049,12 @@ impl RecordType {
     Self::TMS,
     Self::VEP,
     Self::EGP,
+    Self::APL,
+    Self::EMC,
+    Self::EPF,
+    Self::GEL,
+    Self::PAP,
+    Self::RSD,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1252,6 +1276,12 @@ impl RecordType {
       Self::TMS => Some("TMS"),
       Self::VEP => Some("VEP"),
       Self::EGP => Some("EGP"),
+      Self::APL => Some("APL"),
+      Self::EMC => Some("EMC"),
+      Self::EPF => Some("EPF"),
+      Self::GEL => Some("GEL"),
+      Self::PAP => Some("PAP"),
+      Self::RSD => Some("RSD"),
       _ => None,
     }
   }
@@ -1529,6 +1559,12 @@ pub enum RecordTypeT {
   TMS(alloc::boxed::Box<TMST>),
   VEP(alloc::boxed::Box<VEPT>),
   EGP(alloc::boxed::Box<EGPT>),
+  APL(alloc::boxed::Box<APLT>),
+  EMC(alloc::boxed::Box<EMCT>),
+  EPF(alloc::boxed::Box<EPFT>),
+  GEL(alloc::boxed::Box<GELT>),
+  PAP(alloc::boxed::Box<PAPT>),
+  RSD(alloc::boxed::Box<RSDT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1755,6 +1791,12 @@ impl RecordTypeT {
       Self::TMS(_) => RecordType::TMS,
       Self::VEP(_) => RecordType::VEP,
       Self::EGP(_) => RecordType::EGP,
+      Self::APL(_) => RecordType::APL,
+      Self::EMC(_) => RecordType::EMC,
+      Self::EPF(_) => RecordType::EPF,
+      Self::GEL(_) => RecordType::GEL,
+      Self::PAP(_) => RecordType::PAP,
+      Self::RSD(_) => RecordType::RSD,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1976,6 +2018,12 @@ impl RecordTypeT {
       Self::TMS(v) => Some(v.pack(fbb).as_union_value()),
       Self::VEP(v) => Some(v.pack(fbb).as_union_value()),
       Self::EGP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::APL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::EMC(v) => Some(v.pack(fbb).as_union_value()),
+      Self::EPF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GEL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PAP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RSD(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6514,6 +6562,132 @@ impl RecordTypeT {
   pub fn as_egp_mut(&mut self) -> Option<&mut EGPT> {
     if let Self::EGP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned APLT, setting the union to NONE.
+  pub fn take_apl(&mut self) -> Option<alloc::boxed::Box<APLT>> {
+    if let Self::APL(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::APL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the APLT.
+  pub fn as_apl(&self) -> Option<&APLT> {
+    if let Self::APL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the APLT.
+  pub fn as_apl_mut(&mut self) -> Option<&mut APLT> {
+    if let Self::APL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned EMCT, setting the union to NONE.
+  pub fn take_emc(&mut self) -> Option<alloc::boxed::Box<EMCT>> {
+    if let Self::EMC(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::EMC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the EMCT.
+  pub fn as_emc(&self) -> Option<&EMCT> {
+    if let Self::EMC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the EMCT.
+  pub fn as_emc_mut(&mut self) -> Option<&mut EMCT> {
+    if let Self::EMC(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned EPFT, setting the union to NONE.
+  pub fn take_epf(&mut self) -> Option<alloc::boxed::Box<EPFT>> {
+    if let Self::EPF(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::EPF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the EPFT.
+  pub fn as_epf(&self) -> Option<&EPFT> {
+    if let Self::EPF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the EPFT.
+  pub fn as_epf_mut(&mut self) -> Option<&mut EPFT> {
+    if let Self::EPF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GELT, setting the union to NONE.
+  pub fn take_gel(&mut self) -> Option<alloc::boxed::Box<GELT>> {
+    if let Self::GEL(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::GEL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GELT.
+  pub fn as_gel(&self) -> Option<&GELT> {
+    if let Self::GEL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GELT.
+  pub fn as_gel_mut(&mut self) -> Option<&mut GELT> {
+    if let Self::GEL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PAPT, setting the union to NONE.
+  pub fn take_pap(&mut self) -> Option<alloc::boxed::Box<PAPT>> {
+    if let Self::PAP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PAP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PAPT.
+  pub fn as_pap(&self) -> Option<&PAPT> {
+    if let Self::PAP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PAPT.
+  pub fn as_pap_mut(&mut self) -> Option<&mut PAPT> {
+    if let Self::PAP(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RSDT, setting the union to NONE.
+  pub fn take_rsd(&mut self) -> Option<alloc::boxed::Box<RSDT>> {
+    if let Self::RSD(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::RSD(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RSDT.
+  pub fn as_rsd(&self) -> Option<&RSDT> {
+    if let Self::RSD(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RSDT.
+  pub fn as_rsd_mut(&mut self) -> Option<&mut RSDT> {
+    if let Self::RSD(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7633,6 +7807,36 @@ impl<'a> Record<'a> {
       RecordType::EGP => RecordTypeT::EGP(alloc::boxed::Box::new(
         self.value_as_egp()
             .expect("Invalid union table, expected `RecordType::EGP`.")
+            .unpack()
+      )),
+      RecordType::APL => RecordTypeT::APL(alloc::boxed::Box::new(
+        self.value_as_apl()
+            .expect("Invalid union table, expected `RecordType::APL`.")
+            .unpack()
+      )),
+      RecordType::EMC => RecordTypeT::EMC(alloc::boxed::Box::new(
+        self.value_as_emc()
+            .expect("Invalid union table, expected `RecordType::EMC`.")
+            .unpack()
+      )),
+      RecordType::EPF => RecordTypeT::EPF(alloc::boxed::Box::new(
+        self.value_as_epf()
+            .expect("Invalid union table, expected `RecordType::EPF`.")
+            .unpack()
+      )),
+      RecordType::GEL => RecordTypeT::GEL(alloc::boxed::Box::new(
+        self.value_as_gel()
+            .expect("Invalid union table, expected `RecordType::GEL`.")
+            .unpack()
+      )),
+      RecordType::PAP => RecordTypeT::PAP(alloc::boxed::Box::new(
+        self.value_as_pap()
+            .expect("Invalid union table, expected `RecordType::PAP`.")
+            .unpack()
+      )),
+      RecordType::RSD => RecordTypeT::RSD(alloc::boxed::Box::new(
+        self.value_as_rsd()
+            .expect("Invalid union table, expected `RecordType::RSD`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10909,6 +11113,96 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_apl(&self) -> Option<APL<'a>> {
+    if self.value_type() == RecordType::APL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { APL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_emc(&self) -> Option<EMC<'a>> {
+    if self.value_type() == RecordType::EMC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { EMC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_epf(&self) -> Option<EPF<'a>> {
+    if self.value_type() == RecordType::EPF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { EPF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_gel(&self) -> Option<GEL<'a>> {
+    if self.value_type() == RecordType::GEL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GEL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_pap(&self) -> Option<PAP<'a>> {
+    if self.value_type() == RecordType::PAP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PAP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_rsd(&self) -> Option<RSD<'a>> {
+    if self.value_type() == RecordType::RSD {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RSD::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -11135,6 +11429,12 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::TMS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TMS>>("RecordType::TMS", pos),
           RecordType::VEP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VEP>>("RecordType::VEP", pos),
           RecordType::EGP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<EGP>>("RecordType::EGP", pos),
+          RecordType::APL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<APL>>("RecordType::APL", pos),
+          RecordType::EMC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<EMC>>("RecordType::EMC", pos),
+          RecordType::EPF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<EPF>>("RecordType::EPF", pos),
+          RecordType::GEL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GEL>>("RecordType::GEL", pos),
+          RecordType::PAP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PAP>>("RecordType::PAP", pos),
+          RecordType::RSD => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RSD>>("RecordType::RSD", pos),
           _ => Ok(()),
         }
      })?
@@ -12703,6 +13003,48 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::EGP => {
           if let Some(x) = self.value_as_egp() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::APL => {
+          if let Some(x) = self.value_as_apl() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::EMC => {
+          if let Some(x) = self.value_as_emc() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::EPF => {
+          if let Some(x) = self.value_as_epf() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GEL => {
+          if let Some(x) = self.value_as_gel() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PAP => {
+          if let Some(x) = self.value_as_pap() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RSD => {
+          if let Some(x) = self.value_as_rsd() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

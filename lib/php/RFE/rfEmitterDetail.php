@@ -185,22 +185,43 @@ class rfEmitterDetail extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Emission and susceptibility limit curves applicable to this operating
+    /// mode. Curves are evaluated in point order after sorting by frequency.
+    /**
+     * @returnVectorOffset
+     */
+    public function getEMISSION_MASKS($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new RFEEmissionMask();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEMISSION_MASKSLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startrfEmitterDetail(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return rfEmitterDetail
      */
-    public static function createrfEmitterDetail(FlatBufferBuilder $builder, $MODE_NAME, $FREQUENCY, $FREQ_MIN, $FREQ_MAX, $PRI, $PRI_MIN, $PRI_MAX, $PULSE_WIDTH, $PW_MIN, $PW_MAX, $SCAN_PERIOD, $ERP, $MODULATION, $ANTENNA_PATTERN, $BEAMWIDTH)
+    public static function createrfEmitterDetail(FlatBufferBuilder $builder, $MODE_NAME, $FREQUENCY, $FREQ_MIN, $FREQ_MAX, $PRI, $PRI_MIN, $PRI_MAX, $PULSE_WIDTH, $PW_MIN, $PW_MAX, $SCAN_PERIOD, $ERP, $MODULATION, $ANTENNA_PATTERN, $BEAMWIDTH, $EMISSION_MASKS)
     {
-        $builder->startObject(15);
+        $builder->startObject(16);
         self::addMODE_NAME($builder, $MODE_NAME);
         self::addFREQUENCY($builder, $FREQUENCY);
         self::addFREQ_MIN($builder, $FREQ_MIN);
@@ -216,6 +237,7 @@ class rfEmitterDetail extends Table
         self::addMODULATION($builder, $MODULATION);
         self::addANTENNA_PATTERN($builder, $ANTENNA_PATTERN);
         self::addBEAMWIDTH($builder, $BEAMWIDTH);
+        self::addEMISSION_MASKS($builder, $EMISSION_MASKS);
         $o = $builder->endObject();
         return $o;
     }
@@ -368,6 +390,40 @@ class rfEmitterDetail extends Table
     public static function addBEAMWIDTH(FlatBufferBuilder $builder, $BEAMWIDTH)
     {
         $builder->addDoubleX(14, $BEAMWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEMISSION_MASKS(FlatBufferBuilder $builder, $EMISSION_MASKS)
+    {
+        $builder->addOffsetX(15, $EMISSION_MASKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEMISSION_MASKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEMISSION_MASKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -129,10 +129,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for rflAccessState {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RFL_BUDGET_TERM: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFL_BUDGET_TERM: i8 = 30;
+pub const ENUM_MAX_RFL_BUDGET_TERM: i8 = 35;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFL_BUDGET_TERM: [rflBudgetTerm; 31] = [
+pub const ENUM_VALUES_RFL_BUDGET_TERM: [rflBudgetTerm; 36] = [
   rflBudgetTerm::UNSPECIFIED,
   rflBudgetTerm::RANGE,
   rflBudgetTerm::RANGE_RATE,
@@ -164,6 +164,11 @@ pub const ENUM_VALUES_RFL_BUDGET_TERM: [rflBudgetTerm; 31] = [
   rflBudgetTerm::INTERFERENCE_POWER,
   rflBudgetTerm::CARRIER_TO_NOISE_PLUS_INTERFERENCE,
   rflBudgetTerm::SIGNAL_TO_INTERFERENCE_PLUS_NOISE,
+  rflBudgetTerm::SYMBOL_ENERGY_TO_NOISE_DENSITY,
+  rflBudgetTerm::BLOCK_ERROR_RATE,
+  rflBudgetTerm::SPECTRAL_EFFICIENCY,
+  rflBudgetTerm::ACHIEVED_DATA_RATE,
+  rflBudgetTerm::ACM_MARGIN,
 ];
 
 /// A named term of the link budget. Used to declare which quantity a
@@ -208,9 +213,19 @@ impl rflBudgetTerm {
   pub const INTERFERENCE_POWER: Self = Self(28);
   pub const CARRIER_TO_NOISE_PLUS_INTERFERENCE: Self = Self(29);
   pub const SIGNAL_TO_INTERFERENCE_PLUS_NOISE: Self = Self(30);
+  /// Energy per transmitted symbol divided by noise spectral density.
+  pub const SYMBOL_ENERGY_TO_NOISE_DENSITY: Self = Self(31);
+  /// Error probability for a decoded transport block or frame.
+  pub const BLOCK_ERROR_RATE: Self = Self(32);
+  /// Delivered information bits per second per hertz.
+  pub const SPECTRAL_EFFICIENCY: Self = Self(33);
+  /// Data rate delivered by the selected modulation and coding entry.
+  pub const ACHIEVED_DATA_RATE: Self = Self(34);
+  /// Margin above the threshold of the selected adaptive entry.
+  pub const ACM_MARGIN: Self = Self(35);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 30;
+  pub const ENUM_MAX: i8 = 35;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::UNSPECIFIED,
     Self::RANGE,
@@ -243,6 +258,11 @@ impl rflBudgetTerm {
     Self::INTERFERENCE_POWER,
     Self::CARRIER_TO_NOISE_PLUS_INTERFERENCE,
     Self::SIGNAL_TO_INTERFERENCE_PLUS_NOISE,
+    Self::SYMBOL_ENERGY_TO_NOISE_DENSITY,
+    Self::BLOCK_ERROR_RATE,
+    Self::SPECTRAL_EFFICIENCY,
+    Self::ACHIEVED_DATA_RATE,
+    Self::ACM_MARGIN,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -278,6 +298,11 @@ impl rflBudgetTerm {
       Self::INTERFERENCE_POWER => Some("INTERFERENCE_POWER"),
       Self::CARRIER_TO_NOISE_PLUS_INTERFERENCE => Some("CARRIER_TO_NOISE_PLUS_INTERFERENCE"),
       Self::SIGNAL_TO_INTERFERENCE_PLUS_NOISE => Some("SIGNAL_TO_INTERFERENCE_PLUS_NOISE"),
+      Self::SYMBOL_ENERGY_TO_NOISE_DENSITY => Some("SYMBOL_ENERGY_TO_NOISE_DENSITY"),
+      Self::BLOCK_ERROR_RATE => Some("BLOCK_ERROR_RATE"),
+      Self::SPECTRAL_EFFICIENCY => Some("SPECTRAL_EFFICIENCY"),
+      Self::ACHIEVED_DATA_RATE => Some("ACHIEVED_DATA_RATE"),
+      Self::ACM_MARGIN => Some("ACM_MARGIN"),
       _ => None,
     }
   }
@@ -2045,6 +2070,434 @@ impl RFLEndpointT {
     })
   }
 }
+pub enum RFLModCodOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One modulation-and-coding choice available to a link. The table carries
+/// engineering capability only; catalogue or recommendation names belong in
+/// ID / NAME and provenance data, never in the schema vocabulary.
+pub struct RFLModCod<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFLModCod<'a> {
+  type Inner = RFLModCod<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFLModCod<'a> {
+  pub const VT_MODCOD_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MODULATION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CODING: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CODE_RATE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_BITS_PER_SYMBOL: ::flatbuffers::VOffsetT = 14;
+  pub const VT_SPECTRAL_EFFICIENCY_BPS_HZ: ::flatbuffers::VOffsetT = 16;
+  pub const VT_REQUIRED_ES_N0_DB: ::flatbuffers::VOffsetT = 18;
+  pub const VT_REQUIRED_EB_N0_DB: ::flatbuffers::VOffsetT = 20;
+  pub const VT_TARGET_BIT_ERROR_RATE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_TARGET_BLOCK_ERROR_RATE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_REQUIRED_MARGIN_DB: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MAXIMUM_DATA_RATE_BPS: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFLModCod { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFLModCodArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFLModCod<'bldr>> {
+    let mut builder = RFLModCodBuilder::new(_fbb);
+    builder.add_MAXIMUM_DATA_RATE_BPS(args.MAXIMUM_DATA_RATE_BPS);
+    builder.add_REQUIRED_MARGIN_DB(args.REQUIRED_MARGIN_DB);
+    builder.add_TARGET_BLOCK_ERROR_RATE(args.TARGET_BLOCK_ERROR_RATE);
+    builder.add_TARGET_BIT_ERROR_RATE(args.TARGET_BIT_ERROR_RATE);
+    builder.add_REQUIRED_EB_N0_DB(args.REQUIRED_EB_N0_DB);
+    builder.add_REQUIRED_ES_N0_DB(args.REQUIRED_ES_N0_DB);
+    builder.add_SPECTRAL_EFFICIENCY_BPS_HZ(args.SPECTRAL_EFFICIENCY_BPS_HZ);
+    builder.add_BITS_PER_SYMBOL(args.BITS_PER_SYMBOL);
+    builder.add_CODE_RATE(args.CODE_RATE);
+    if let Some(x) = args.CODING { builder.add_CODING(x); }
+    if let Some(x) = args.MODULATION { builder.add_MODULATION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.MODCOD_ID { builder.add_MODCOD_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFLModCodT {
+    let MODCOD_ID = {
+      let x = self.MODCOD_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULATION = self.MODULATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CODING = self.CODING().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CODE_RATE = self.CODE_RATE();
+    let BITS_PER_SYMBOL = self.BITS_PER_SYMBOL();
+    let SPECTRAL_EFFICIENCY_BPS_HZ = self.SPECTRAL_EFFICIENCY_BPS_HZ();
+    let REQUIRED_ES_N0_DB = self.REQUIRED_ES_N0_DB();
+    let REQUIRED_EB_N0_DB = self.REQUIRED_EB_N0_DB();
+    let TARGET_BIT_ERROR_RATE = self.TARGET_BIT_ERROR_RATE();
+    let TARGET_BLOCK_ERROR_RATE = self.TARGET_BLOCK_ERROR_RATE();
+    let REQUIRED_MARGIN_DB = self.REQUIRED_MARGIN_DB();
+    let MAXIMUM_DATA_RATE_BPS = self.MAXIMUM_DATA_RATE_BPS();
+    RFLModCodT {
+      MODCOD_ID,
+      NAME,
+      MODULATION,
+      CODING,
+      CODE_RATE,
+      BITS_PER_SYMBOL,
+      SPECTRAL_EFFICIENCY_BPS_HZ,
+      REQUIRED_ES_N0_DB,
+      REQUIRED_EB_N0_DB,
+      TARGET_BIT_ERROR_RATE,
+      TARGET_BLOCK_ERROR_RATE,
+      REQUIRED_MARGIN_DB,
+      MAXIMUM_DATA_RATE_BPS,
+    }
+  }
+
+  /// Stable identifier within the containing link's MODCOD_SET.
+  #[inline]
+  pub fn MODCOD_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLModCod::VT_MODCOD_ID, None).unwrap()}
+  }
+  /// Producer-supplied display name.
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLModCod::VT_NAME, None)}
+  }
+  #[inline]
+  pub fn MODULATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLModCod::VT_MODULATION, None)}
+  }
+  #[inline]
+  pub fn CODING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLModCod::VT_CODING, None)}
+  }
+  /// Information bits divided by coded bits, in (0,1].
+  #[inline]
+  pub fn CODE_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_CODE_RATE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn BITS_PER_SYMBOL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_BITS_PER_SYMBOL, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn SPECTRAL_EFFICIENCY_BPS_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_SPECTRAL_EFFICIENCY_BPS_HZ, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn REQUIRED_ES_N0_DB(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_REQUIRED_ES_N0_DB, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn REQUIRED_EB_N0_DB(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_REQUIRED_EB_N0_DB, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TARGET_BIT_ERROR_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_TARGET_BIT_ERROR_RATE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TARGET_BLOCK_ERROR_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_TARGET_BLOCK_ERROR_RATE, Some(0.0)).unwrap()}
+  }
+  /// Additional implementation margin required before this entry is selected.
+  #[inline]
+  pub fn REQUIRED_MARGIN_DB(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_REQUIRED_MARGIN_DB, Some(0.0)).unwrap()}
+  }
+  /// Optional ceiling imposed by framing or implementation, bits per second.
+  #[inline]
+  pub fn MAXIMUM_DATA_RATE_BPS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFLModCod::VT_MAXIMUM_DATA_RATE_BPS, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFLModCod<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODCOD_ID", Self::VT_MODCOD_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULATION", Self::VT_MODULATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CODING", Self::VT_CODING, false)?
+     .visit_field::<f64>("CODE_RATE", Self::VT_CODE_RATE, false)?
+     .visit_field::<f64>("BITS_PER_SYMBOL", Self::VT_BITS_PER_SYMBOL, false)?
+     .visit_field::<f64>("SPECTRAL_EFFICIENCY_BPS_HZ", Self::VT_SPECTRAL_EFFICIENCY_BPS_HZ, false)?
+     .visit_field::<f64>("REQUIRED_ES_N0_DB", Self::VT_REQUIRED_ES_N0_DB, false)?
+     .visit_field::<f64>("REQUIRED_EB_N0_DB", Self::VT_REQUIRED_EB_N0_DB, false)?
+     .visit_field::<f64>("TARGET_BIT_ERROR_RATE", Self::VT_TARGET_BIT_ERROR_RATE, false)?
+     .visit_field::<f64>("TARGET_BLOCK_ERROR_RATE", Self::VT_TARGET_BLOCK_ERROR_RATE, false)?
+     .visit_field::<f64>("REQUIRED_MARGIN_DB", Self::VT_REQUIRED_MARGIN_DB, false)?
+     .visit_field::<f64>("MAXIMUM_DATA_RATE_BPS", Self::VT_MAXIMUM_DATA_RATE_BPS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFLModCodArgs<'a> {
+    pub MODCOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CODING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CODE_RATE: f64,
+    pub BITS_PER_SYMBOL: f64,
+    pub SPECTRAL_EFFICIENCY_BPS_HZ: f64,
+    pub REQUIRED_ES_N0_DB: f64,
+    pub REQUIRED_EB_N0_DB: f64,
+    pub TARGET_BIT_ERROR_RATE: f64,
+    pub TARGET_BLOCK_ERROR_RATE: f64,
+    pub REQUIRED_MARGIN_DB: f64,
+    pub MAXIMUM_DATA_RATE_BPS: f64,
+}
+impl<'a> Default for RFLModCodArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFLModCodArgs {
+      MODCOD_ID: None, // required field
+      NAME: None,
+      MODULATION: None,
+      CODING: None,
+      CODE_RATE: 0.0,
+      BITS_PER_SYMBOL: 0.0,
+      SPECTRAL_EFFICIENCY_BPS_HZ: 0.0,
+      REQUIRED_ES_N0_DB: 0.0,
+      REQUIRED_EB_N0_DB: 0.0,
+      TARGET_BIT_ERROR_RATE: 0.0,
+      TARGET_BLOCK_ERROR_RATE: 0.0,
+      REQUIRED_MARGIN_DB: 0.0,
+      MAXIMUM_DATA_RATE_BPS: 0.0,
+    }
+  }
+}
+
+pub struct RFLModCodBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLModCodBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MODCOD_ID(&mut self, MODCOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLModCod::VT_MODCOD_ID, MODCOD_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLModCod::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_MODULATION(&mut self, MODULATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLModCod::VT_MODULATION, MODULATION);
+  }
+  #[inline]
+  pub fn add_CODING(&mut self, CODING: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLModCod::VT_CODING, CODING);
+  }
+  #[inline]
+  pub fn add_CODE_RATE(&mut self, CODE_RATE: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_CODE_RATE, CODE_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_BITS_PER_SYMBOL(&mut self, BITS_PER_SYMBOL: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_BITS_PER_SYMBOL, BITS_PER_SYMBOL, 0.0);
+  }
+  #[inline]
+  pub fn add_SPECTRAL_EFFICIENCY_BPS_HZ(&mut self, SPECTRAL_EFFICIENCY_BPS_HZ: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_SPECTRAL_EFFICIENCY_BPS_HZ, SPECTRAL_EFFICIENCY_BPS_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_REQUIRED_ES_N0_DB(&mut self, REQUIRED_ES_N0_DB: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_REQUIRED_ES_N0_DB, REQUIRED_ES_N0_DB, 0.0);
+  }
+  #[inline]
+  pub fn add_REQUIRED_EB_N0_DB(&mut self, REQUIRED_EB_N0_DB: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_REQUIRED_EB_N0_DB, REQUIRED_EB_N0_DB, 0.0);
+  }
+  #[inline]
+  pub fn add_TARGET_BIT_ERROR_RATE(&mut self, TARGET_BIT_ERROR_RATE: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_TARGET_BIT_ERROR_RATE, TARGET_BIT_ERROR_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_TARGET_BLOCK_ERROR_RATE(&mut self, TARGET_BLOCK_ERROR_RATE: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_TARGET_BLOCK_ERROR_RATE, TARGET_BLOCK_ERROR_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_REQUIRED_MARGIN_DB(&mut self, REQUIRED_MARGIN_DB: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_REQUIRED_MARGIN_DB, REQUIRED_MARGIN_DB, 0.0);
+  }
+  #[inline]
+  pub fn add_MAXIMUM_DATA_RATE_BPS(&mut self, MAXIMUM_DATA_RATE_BPS: f64) {
+    self.fbb_.push_slot::<f64>(RFLModCod::VT_MAXIMUM_DATA_RATE_BPS, MAXIMUM_DATA_RATE_BPS, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLModCodBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFLModCodBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFLModCod<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, RFLModCod::VT_MODCOD_ID,"MODCOD_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFLModCod<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFLModCod");
+      ds.field("MODCOD_ID", &self.MODCOD_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("MODULATION", &self.MODULATION());
+      ds.field("CODING", &self.CODING());
+      ds.field("CODE_RATE", &self.CODE_RATE());
+      ds.field("BITS_PER_SYMBOL", &self.BITS_PER_SYMBOL());
+      ds.field("SPECTRAL_EFFICIENCY_BPS_HZ", &self.SPECTRAL_EFFICIENCY_BPS_HZ());
+      ds.field("REQUIRED_ES_N0_DB", &self.REQUIRED_ES_N0_DB());
+      ds.field("REQUIRED_EB_N0_DB", &self.REQUIRED_EB_N0_DB());
+      ds.field("TARGET_BIT_ERROR_RATE", &self.TARGET_BIT_ERROR_RATE());
+      ds.field("TARGET_BLOCK_ERROR_RATE", &self.TARGET_BLOCK_ERROR_RATE());
+      ds.field("REQUIRED_MARGIN_DB", &self.REQUIRED_MARGIN_DB());
+      ds.field("MAXIMUM_DATA_RATE_BPS", &self.MAXIMUM_DATA_RATE_BPS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFLModCodT {
+  pub MODCOD_ID: alloc::string::String,
+  pub NAME: Option<alloc::string::String>,
+  pub MODULATION: Option<alloc::string::String>,
+  pub CODING: Option<alloc::string::String>,
+  pub CODE_RATE: f64,
+  pub BITS_PER_SYMBOL: f64,
+  pub SPECTRAL_EFFICIENCY_BPS_HZ: f64,
+  pub REQUIRED_ES_N0_DB: f64,
+  pub REQUIRED_EB_N0_DB: f64,
+  pub TARGET_BIT_ERROR_RATE: f64,
+  pub TARGET_BLOCK_ERROR_RATE: f64,
+  pub REQUIRED_MARGIN_DB: f64,
+  pub MAXIMUM_DATA_RATE_BPS: f64,
+}
+impl Default for RFLModCodT {
+  fn default() -> Self {
+    Self {
+      MODCOD_ID: alloc::string::ToString::to_string(""),
+      NAME: None,
+      MODULATION: None,
+      CODING: None,
+      CODE_RATE: 0.0,
+      BITS_PER_SYMBOL: 0.0,
+      SPECTRAL_EFFICIENCY_BPS_HZ: 0.0,
+      REQUIRED_ES_N0_DB: 0.0,
+      REQUIRED_EB_N0_DB: 0.0,
+      TARGET_BIT_ERROR_RATE: 0.0,
+      TARGET_BLOCK_ERROR_RATE: 0.0,
+      REQUIRED_MARGIN_DB: 0.0,
+      MAXIMUM_DATA_RATE_BPS: 0.0,
+    }
+  }
+}
+impl RFLModCodT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFLModCod<'b>> {
+    let MODCOD_ID = Some({
+      let x = &self.MODCOD_ID;
+      _fbb.create_string(x)
+    });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULATION = self.MODULATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CODING = self.CODING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CODE_RATE = self.CODE_RATE;
+    let BITS_PER_SYMBOL = self.BITS_PER_SYMBOL;
+    let SPECTRAL_EFFICIENCY_BPS_HZ = self.SPECTRAL_EFFICIENCY_BPS_HZ;
+    let REQUIRED_ES_N0_DB = self.REQUIRED_ES_N0_DB;
+    let REQUIRED_EB_N0_DB = self.REQUIRED_EB_N0_DB;
+    let TARGET_BIT_ERROR_RATE = self.TARGET_BIT_ERROR_RATE;
+    let TARGET_BLOCK_ERROR_RATE = self.TARGET_BLOCK_ERROR_RATE;
+    let REQUIRED_MARGIN_DB = self.REQUIRED_MARGIN_DB;
+    let MAXIMUM_DATA_RATE_BPS = self.MAXIMUM_DATA_RATE_BPS;
+    RFLModCod::create(_fbb, &RFLModCodArgs{
+      MODCOD_ID,
+      NAME,
+      MODULATION,
+      CODING,
+      CODE_RATE,
+      BITS_PER_SYMBOL,
+      SPECTRAL_EFFICIENCY_BPS_HZ,
+      REQUIRED_ES_N0_DB,
+      REQUIRED_EB_N0_DB,
+      TARGET_BIT_ERROR_RATE,
+      TARGET_BLOCK_ERROR_RATE,
+      REQUIRED_MARGIN_DB,
+      MAXIMUM_DATA_RATE_BPS,
+    })
+  }
+}
 pub enum RFLLinkOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -2082,6 +2535,8 @@ impl<'a> RFLLink<'a> {
   pub const VT_CHANNEL_GROUP_ID: ::flatbuffers::VOffsetT = 38;
   pub const VT_CONSTELLATION: ::flatbuffers::VOffsetT = 40;
   pub const VT_SERVICE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_MODCOD_SET: ::flatbuffers::VOffsetT = 44;
+  pub const VT_ACM_ENABLED: ::flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2099,6 +2554,7 @@ impl<'a> RFLLink<'a> {
     builder.add_CODE_RATE(args.CODE_RATE);
     builder.add_BANDWIDTH_MHZ(args.BANDWIDTH_MHZ);
     builder.add_CENTER_FREQUENCY_MHZ(args.CENTER_FREQUENCY_MHZ);
+    if let Some(x) = args.MODCOD_SET { builder.add_MODCOD_SET(x); }
     if let Some(x) = args.SERVICE { builder.add_SERVICE(x); }
     if let Some(x) = args.CONSTELLATION { builder.add_CONSTELLATION(x); }
     if let Some(x) = args.CHANNEL_GROUP_ID { builder.add_CHANNEL_GROUP_ID(x); }
@@ -2110,6 +2566,7 @@ impl<'a> RFLLink<'a> {
     if let Some(x) = args.TRANSMIT_ENDPOINT { builder.add_TRANSMIT_ENDPOINT(x); }
     if let Some(x) = args.LINK_NAME { builder.add_LINK_NAME(x); }
     if let Some(x) = args.LINK_ID { builder.add_LINK_ID(x); }
+    builder.add_ACM_ENABLED(args.ACM_ENABLED);
     builder.add_THRESHOLD_COMPARISON(args.THRESHOLD_COMPARISON);
     builder.add_THRESHOLD_TERM(args.THRESHOLD_TERM);
     builder.add_LINK_KIND(args.LINK_KIND);
@@ -2162,6 +2619,10 @@ impl<'a> RFLLink<'a> {
     let SERVICE = self.SERVICE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let MODCOD_SET = self.MODCOD_SET().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let ACM_ENABLED = self.ACM_ENABLED();
     RFLLinkT {
       LINK_ID,
       LINK_NAME,
@@ -2183,6 +2644,8 @@ impl<'a> RFLLink<'a> {
       CHANNEL_GROUP_ID,
       CONSTELLATION,
       SERVICE,
+      MODCOD_SET,
+      ACM_ENABLED,
     }
   }
 
@@ -2352,6 +2815,23 @@ impl<'a> RFLLink<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLLink::VT_SERVICE, None)}
   }
+  /// Ordered adaptive modulation-and-coding choices. Per-sample
+  /// SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  #[inline]
+  pub fn MODCOD_SET(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFLModCod<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFLModCod>>>>(RFLLink::VT_MODCOD_SET, None)}
+  }
+  /// Whether the producer evaluated adaptive selection for this link.
+  #[inline]
+  pub fn ACM_ENABLED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(RFLLink::VT_ACM_ENABLED, Some(false)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for RFLLink<'_> {
@@ -2380,6 +2860,8 @@ impl ::flatbuffers::Verifiable for RFLLink<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHANNEL_GROUP_ID", Self::VT_CHANNEL_GROUP_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SERVICE", Self::VT_SERVICE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<RFLModCod>>>>("MODCOD_SET", Self::VT_MODCOD_SET, false)?
+     .visit_field::<bool>("ACM_ENABLED", Self::VT_ACM_ENABLED, false)?
      .finish();
     Ok(())
   }
@@ -2405,6 +2887,8 @@ pub struct RFLLinkArgs<'a> {
     pub CHANNEL_GROUP_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CONSTELLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SERVICE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODCOD_SET: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFLModCod<'a>>>>>,
+    pub ACM_ENABLED: bool,
 }
 impl<'a> Default for RFLLinkArgs<'a> {
   #[inline]
@@ -2430,6 +2914,8 @@ impl<'a> Default for RFLLinkArgs<'a> {
       CHANNEL_GROUP_ID: None,
       CONSTELLATION: None,
       SERVICE: None,
+      MODCOD_SET: None,
+      ACM_ENABLED: false,
     }
   }
 }
@@ -2520,6 +3006,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLLinkBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLLink::VT_SERVICE, SERVICE);
   }
   #[inline]
+  pub fn add_MODCOD_SET(&mut self, MODCOD_SET: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<RFLModCod<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLLink::VT_MODCOD_SET, MODCOD_SET);
+  }
+  #[inline]
+  pub fn add_ACM_ENABLED(&mut self, ACM_ENABLED: bool) {
+    self.fbb_.push_slot::<bool>(RFLLink::VT_ACM_ENABLED, ACM_ENABLED, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLLinkBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFLLinkBuilder {
@@ -2560,6 +3054,8 @@ impl ::core::fmt::Debug for RFLLink<'_> {
       ds.field("CHANNEL_GROUP_ID", &self.CHANNEL_GROUP_ID());
       ds.field("CONSTELLATION", &self.CONSTELLATION());
       ds.field("SERVICE", &self.SERVICE());
+      ds.field("MODCOD_SET", &self.MODCOD_SET());
+      ds.field("ACM_ENABLED", &self.ACM_ENABLED());
       ds.finish()
   }
 }
@@ -2586,6 +3082,8 @@ pub struct RFLLinkT {
   pub CHANNEL_GROUP_ID: Option<alloc::string::String>,
   pub CONSTELLATION: Option<alloc::string::String>,
   pub SERVICE: Option<alloc::string::String>,
+  pub MODCOD_SET: Option<alloc::vec::Vec<RFLModCodT>>,
+  pub ACM_ENABLED: bool,
 }
 impl Default for RFLLinkT {
   fn default() -> Self {
@@ -2610,6 +3108,8 @@ impl Default for RFLLinkT {
       CHANNEL_GROUP_ID: None,
       CONSTELLATION: None,
       SERVICE: None,
+      MODCOD_SET: None,
+      ACM_ENABLED: false,
     }
   }
 }
@@ -2663,6 +3163,10 @@ impl RFLLinkT {
     let SERVICE = self.SERVICE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let MODCOD_SET = self.MODCOD_SET.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ACM_ENABLED = self.ACM_ENABLED;
     RFLLink::create(_fbb, &RFLLinkArgs{
       LINK_ID,
       LINK_NAME,
@@ -2684,6 +3188,8 @@ impl RFLLinkT {
       CHANNEL_GROUP_ID,
       CONSTELLATION,
       SERVICE,
+      MODCOD_SET,
+      ACM_ENABLED,
     })
   }
 }
@@ -3592,6 +4098,9 @@ impl<'a> RFLProvenance<'a> {
   pub const VT_LICENSE: ::flatbuffers::VOffsetT = 28;
   pub const VT_NON_COMMERCIAL_ONLY: ::flatbuffers::VOffsetT = 30;
   pub const VT_CITATION: ::flatbuffers::VOffsetT = 32;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 34;
+  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 36;
+  pub const VT_MODULE_CONTENT_HASH: ::flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3606,6 +4115,9 @@ impl<'a> RFLProvenance<'a> {
     builder.add_RETRIEVED_AT(args.RETRIEVED_AT);
     builder.add_COMPUTED_AT(args.COMPUTED_AT);
     builder.add_SAMPLING_STEP_S(args.SAMPLING_STEP_S);
+    if let Some(x) = args.MODULE_CONTENT_HASH { builder.add_MODULE_CONTENT_HASH(x); }
+    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
     if let Some(x) = args.CITATION { builder.add_CITATION(x); }
     if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
     if let Some(x) = args.TERRAIN_DATASET { builder.add_TERRAIN_DATASET(x); }
@@ -3658,6 +4170,15 @@ impl<'a> RFLProvenance<'a> {
     let CITATION = self.CITATION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let MODULE_ID = self.MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     RFLProvenanceT {
       METHOD,
       SOURCE,
@@ -3674,6 +4195,9 @@ impl<'a> RFLProvenance<'a> {
       LICENSE,
       NON_COMMERCIAL_ONLY,
       CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
     }
   }
 
@@ -3801,6 +4325,30 @@ impl<'a> RFLProvenance<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLProvenance::VT_CITATION, None)}
   }
+  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  /// MODELS remains the per-budget-term attribution surface.
+  #[inline]
+  pub fn MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLProvenance::VT_MODULE_ID, None)}
+  }
+  #[inline]
+  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLProvenance::VT_MODULE_VERSION, None)}
+  }
+  /// Content hash of the exact producing WASM artifact.
+  #[inline]
+  pub fn MODULE_CONTENT_HASH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLProvenance::VT_MODULE_CONTENT_HASH, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for RFLProvenance<'_> {
@@ -3824,6 +4372,9 @@ impl ::flatbuffers::Verifiable for RFLProvenance<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
      .visit_field::<bool>("NON_COMMERCIAL_ONLY", Self::VT_NON_COMMERCIAL_ONLY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_CONTENT_HASH", Self::VT_MODULE_CONTENT_HASH, false)?
      .finish();
     Ok(())
   }
@@ -3844,6 +4395,9 @@ pub struct RFLProvenanceArgs<'a> {
     pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NON_COMMERCIAL_ONLY: bool,
     pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RFLProvenanceArgs<'a> {
   #[inline]
@@ -3864,6 +4418,9 @@ impl<'a> Default for RFLProvenanceArgs<'a> {
       LICENSE: None,
       NON_COMMERCIAL_ONLY: false,
       CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
     }
   }
 }
@@ -3934,6 +4491,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLProvenanceBuilder<'a, 'b, 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLProvenance::VT_CITATION, CITATION);
   }
   #[inline]
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLProvenance::VT_MODULE_ID, MODULE_ID);
+  }
+  #[inline]
+  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLProvenance::VT_MODULE_VERSION, MODULE_VERSION);
+  }
+  #[inline]
+  pub fn add_MODULE_CONTENT_HASH(&mut self, MODULE_CONTENT_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLProvenance::VT_MODULE_CONTENT_HASH, MODULE_CONTENT_HASH);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLProvenanceBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFLProvenanceBuilder {
@@ -3967,6 +4536,9 @@ impl ::core::fmt::Debug for RFLProvenance<'_> {
       ds.field("LICENSE", &self.LICENSE());
       ds.field("NON_COMMERCIAL_ONLY", &self.NON_COMMERCIAL_ONLY());
       ds.field("CITATION", &self.CITATION());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
+      ds.field("MODULE_CONTENT_HASH", &self.MODULE_CONTENT_HASH());
       ds.finish()
   }
 }
@@ -3988,6 +4560,9 @@ pub struct RFLProvenanceT {
   pub LICENSE: Option<alloc::string::String>,
   pub NON_COMMERCIAL_ONLY: bool,
   pub CITATION: Option<alloc::string::String>,
+  pub MODULE_ID: Option<alloc::string::String>,
+  pub MODULE_VERSION: Option<alloc::string::String>,
+  pub MODULE_CONTENT_HASH: Option<alloc::string::String>,
 }
 impl Default for RFLProvenanceT {
   fn default() -> Self {
@@ -4007,6 +4582,9 @@ impl Default for RFLProvenanceT {
       LICENSE: None,
       NON_COMMERCIAL_ONLY: false,
       CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
     }
   }
 }
@@ -4051,6 +4629,15 @@ impl RFLProvenanceT {
     let CITATION = self.CITATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let MODULE_ID = self.MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     RFLProvenance::create(_fbb, &RFLProvenanceArgs{
       METHOD,
       SOURCE,
@@ -4067,6 +4654,9 @@ impl RFLProvenanceT {
       LICENSE,
       NON_COMMERCIAL_ONLY,
       CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
     })
   }
 }
@@ -4138,6 +4728,14 @@ impl<'a> RFL<'a> {
   pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 100;
   pub const VT_PRODUCER_ID: ::flatbuffers::VOffsetT = 102;
   pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 104;
+  pub const VT_CANONICAL_JSON_SIGNATURE: ::flatbuffers::VOffsetT = 106;
+  pub const VT_SELECTED_MODCOD_INDEX: ::flatbuffers::VOffsetT = 108;
+  pub const VT_SELECTED_MODCOD_VALID: ::flatbuffers::VOffsetT = 110;
+  pub const VT_SPECTRAL_EFFICIENCY_BPS_HZ: ::flatbuffers::VOffsetT = 112;
+  pub const VT_ACHIEVED_DATA_RATE_BPS: ::flatbuffers::VOffsetT = 114;
+  pub const VT_ACM_MARGIN_DB: ::flatbuffers::VOffsetT = 116;
+  pub const VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: ::flatbuffers::VOffsetT = 118;
+  pub const VT_BLOCK_ERROR_RATE: ::flatbuffers::VOffsetT = 120;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4150,6 +4748,14 @@ impl<'a> RFL<'a> {
   ) -> ::flatbuffers::WIPOffset<RFL<'bldr>> {
     let mut builder = RFLBuilder::new(_fbb);
     builder.add_COMPUTED_AT(args.COMPUTED_AT);
+    if let Some(x) = args.BLOCK_ERROR_RATE { builder.add_BLOCK_ERROR_RATE(x); }
+    if let Some(x) = args.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB { builder.add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(x); }
+    if let Some(x) = args.ACM_MARGIN_DB { builder.add_ACM_MARGIN_DB(x); }
+    if let Some(x) = args.ACHIEVED_DATA_RATE_BPS { builder.add_ACHIEVED_DATA_RATE_BPS(x); }
+    if let Some(x) = args.SPECTRAL_EFFICIENCY_BPS_HZ { builder.add_SPECTRAL_EFFICIENCY_BPS_HZ(x); }
+    if let Some(x) = args.SELECTED_MODCOD_VALID { builder.add_SELECTED_MODCOD_VALID(x); }
+    if let Some(x) = args.SELECTED_MODCOD_INDEX { builder.add_SELECTED_MODCOD_INDEX(x); }
+    if let Some(x) = args.CANONICAL_JSON_SIGNATURE { builder.add_CANONICAL_JSON_SIGNATURE(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.PRODUCER_ID { builder.add_PRODUCER_ID(x); }
     if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
@@ -4356,6 +4962,30 @@ impl<'a> RFL<'a> {
     let SIGNATURE = self.SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    let SELECTED_MODCOD_INDEX = self.SELECTED_MODCOD_INDEX().map(|x| {
+      x.into_iter().collect()
+    });
+    let SELECTED_MODCOD_VALID = self.SELECTED_MODCOD_VALID().map(|x| {
+      x.into_iter().collect()
+    });
+    let SPECTRAL_EFFICIENCY_BPS_HZ = self.SPECTRAL_EFFICIENCY_BPS_HZ().map(|x| {
+      x.into_iter().collect()
+    });
+    let ACHIEVED_DATA_RATE_BPS = self.ACHIEVED_DATA_RATE_BPS().map(|x| {
+      x.into_iter().collect()
+    });
+    let ACM_MARGIN_DB = self.ACM_MARGIN_DB().map(|x| {
+      x.into_iter().collect()
+    });
+    let ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB().map(|x| {
+      x.into_iter().collect()
+    });
+    let BLOCK_ERROR_RATE = self.BLOCK_ERROR_RATE().map(|x| {
+      x.into_iter().collect()
+    });
     RFLT {
       RFL_ID,
       NAME,
@@ -4408,6 +5038,14 @@ impl<'a> RFL<'a> {
       COMPUTED_AT,
       PRODUCER_ID,
       SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
+      SELECTED_MODCOD_INDEX,
+      SELECTED_MODCOD_VALID,
+      SPECTRAL_EFFICIENCY_BPS_HZ,
+      ACHIEVED_DATA_RATE_BPS,
+      ACM_MARGIN_DB,
+      ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
+      BLOCK_ERROR_RATE,
     }
   }
 
@@ -4828,13 +5466,81 @@ impl<'a> RFL<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFL::VT_PRODUCER_ID, None)}
   }
-  /// Ed25519 signature by the producing `$EPM`.
+  /// Ed25519 signature by the producing `$EPM` over the size-prefixed
+  /// FlatBuffer projection with both 64-byte signature payloads zeroed while
+  /// preserving their vectors and offsets.
   #[inline]
   pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(RFL::VT_SIGNATURE, None)}
+  }
+  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  /// field order, IDL capitalization, no insignificant whitespace, and both
+  /// signature fields omitted.
+  #[inline]
+  pub fn CANONICAL_JSON_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(RFL::VT_CANONICAL_JSON_SIGNATURE, None)}
+  }
+  /// Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  #[inline]
+  pub fn SELECTED_MODCOD_INDEX(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(RFL::VT_SELECTED_MODCOD_INDEX, None)}
+  }
+  #[inline]
+  pub fn SELECTED_MODCOD_VALID(&self) -> Option<::flatbuffers::Vector<'a, bool>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, bool>>>(RFL::VT_SELECTED_MODCOD_VALID, None)}
+  }
+  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  #[inline]
+  pub fn SPECTRAL_EFFICIENCY_BPS_HZ(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_SPECTRAL_EFFICIENCY_BPS_HZ, None)}
+  }
+  /// Delivered information rate after adaptive selection, bits per second.
+  #[inline]
+  pub fn ACHIEVED_DATA_RATE_BPS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_ACHIEVED_DATA_RATE_BPS, None)}
+  }
+  /// Margin above the selected entry's threshold, dB.
+  #[inline]
+  pub fn ACM_MARGIN_DB(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_ACM_MARGIN_DB, None)}
+  }
+  /// Symbol energy to noise spectral density, dB.
+  #[inline]
+  pub fn ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, None)}
+  }
+  /// Decoded block error probability [0-1].
+  #[inline]
+  pub fn BLOCK_ERROR_RATE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_BLOCK_ERROR_RATE, None)}
   }
 }
 
@@ -4895,6 +5601,14 @@ impl ::flatbuffers::Verifiable for RFL<'_> {
      .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_ID", Self::VT_PRODUCER_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CANONICAL_JSON_SIGNATURE", Self::VT_CANONICAL_JSON_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("SELECTED_MODCOD_INDEX", Self::VT_SELECTED_MODCOD_INDEX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, bool>>>("SELECTED_MODCOD_VALID", Self::VT_SELECTED_MODCOD_VALID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SPECTRAL_EFFICIENCY_BPS_HZ", Self::VT_SPECTRAL_EFFICIENCY_BPS_HZ, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ACHIEVED_DATA_RATE_BPS", Self::VT_ACHIEVED_DATA_RATE_BPS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ACM_MARGIN_DB", Self::VT_ACM_MARGIN_DB, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", Self::VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BLOCK_ERROR_RATE", Self::VT_BLOCK_ERROR_RATE, false)?
      .finish();
     Ok(())
   }
@@ -4951,6 +5665,14 @@ pub struct RFLArgs<'a> {
     pub COMPUTED_AT: u64,
     pub PRODUCER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CANONICAL_JSON_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub SELECTED_MODCOD_INDEX: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+    pub SELECTED_MODCOD_VALID: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, bool>>>,
+    pub SPECTRAL_EFFICIENCY_BPS_HZ: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ACHIEVED_DATA_RATE_BPS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ACM_MARGIN_DB: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BLOCK_ERROR_RATE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for RFLArgs<'a> {
   #[inline]
@@ -5007,6 +5729,14 @@ impl<'a> Default for RFLArgs<'a> {
       COMPUTED_AT: 0,
       PRODUCER_ID: None,
       SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
+      SELECTED_MODCOD_INDEX: None,
+      SELECTED_MODCOD_VALID: None,
+      SPECTRAL_EFFICIENCY_BPS_HZ: None,
+      ACHIEVED_DATA_RATE_BPS: None,
+      ACM_MARGIN_DB: None,
+      ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: None,
+      BLOCK_ERROR_RATE: None,
     }
   }
 }
@@ -5221,6 +5951,38 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_SIGNATURE, SIGNATURE);
   }
   #[inline]
+  pub fn add_CANONICAL_JSON_SIGNATURE(&mut self, CANONICAL_JSON_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  #[inline]
+  pub fn add_SELECTED_MODCOD_INDEX(&mut self, SELECTED_MODCOD_INDEX: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_SELECTED_MODCOD_INDEX, SELECTED_MODCOD_INDEX);
+  }
+  #[inline]
+  pub fn add_SELECTED_MODCOD_VALID(&mut self, SELECTED_MODCOD_VALID: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , bool>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_SELECTED_MODCOD_VALID, SELECTED_MODCOD_VALID);
+  }
+  #[inline]
+  pub fn add_SPECTRAL_EFFICIENCY_BPS_HZ(&mut self, SPECTRAL_EFFICIENCY_BPS_HZ: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_SPECTRAL_EFFICIENCY_BPS_HZ, SPECTRAL_EFFICIENCY_BPS_HZ);
+  }
+  #[inline]
+  pub fn add_ACHIEVED_DATA_RATE_BPS(&mut self, ACHIEVED_DATA_RATE_BPS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_ACHIEVED_DATA_RATE_BPS, ACHIEVED_DATA_RATE_BPS);
+  }
+  #[inline]
+  pub fn add_ACM_MARGIN_DB(&mut self, ACM_MARGIN_DB: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_ACM_MARGIN_DB, ACM_MARGIN_DB);
+  }
+  #[inline]
+  pub fn add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(&mut self, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
+  }
+  #[inline]
+  pub fn add_BLOCK_ERROR_RATE(&mut self, BLOCK_ERROR_RATE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFL::VT_BLOCK_ERROR_RATE, BLOCK_ERROR_RATE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFLBuilder {
@@ -5294,6 +6056,14 @@ impl ::core::fmt::Debug for RFL<'_> {
       ds.field("COMPUTED_AT", &self.COMPUTED_AT());
       ds.field("PRODUCER_ID", &self.PRODUCER_ID());
       ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("CANONICAL_JSON_SIGNATURE", &self.CANONICAL_JSON_SIGNATURE());
+      ds.field("SELECTED_MODCOD_INDEX", &self.SELECTED_MODCOD_INDEX());
+      ds.field("SELECTED_MODCOD_VALID", &self.SELECTED_MODCOD_VALID());
+      ds.field("SPECTRAL_EFFICIENCY_BPS_HZ", &self.SPECTRAL_EFFICIENCY_BPS_HZ());
+      ds.field("ACHIEVED_DATA_RATE_BPS", &self.ACHIEVED_DATA_RATE_BPS());
+      ds.field("ACM_MARGIN_DB", &self.ACM_MARGIN_DB());
+      ds.field("ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", &self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB());
+      ds.field("BLOCK_ERROR_RATE", &self.BLOCK_ERROR_RATE());
       ds.finish()
   }
 }
@@ -5351,6 +6121,14 @@ pub struct RFLT {
   pub COMPUTED_AT: u64,
   pub PRODUCER_ID: Option<alloc::string::String>,
   pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub CANONICAL_JSON_SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub SELECTED_MODCOD_INDEX: Option<alloc::vec::Vec<u32>>,
+  pub SELECTED_MODCOD_VALID: Option<alloc::vec::Vec<bool>>,
+  pub SPECTRAL_EFFICIENCY_BPS_HZ: Option<alloc::vec::Vec<f64>>,
+  pub ACHIEVED_DATA_RATE_BPS: Option<alloc::vec::Vec<f64>>,
+  pub ACM_MARGIN_DB: Option<alloc::vec::Vec<f64>>,
+  pub ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Option<alloc::vec::Vec<f64>>,
+  pub BLOCK_ERROR_RATE: Option<alloc::vec::Vec<f64>>,
 }
 impl Default for RFLT {
   fn default() -> Self {
@@ -5406,6 +6184,14 @@ impl Default for RFLT {
       COMPUTED_AT: 0,
       PRODUCER_ID: None,
       SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
+      SELECTED_MODCOD_INDEX: None,
+      SELECTED_MODCOD_VALID: None,
+      SPECTRAL_EFFICIENCY_BPS_HZ: None,
+      ACHIEVED_DATA_RATE_BPS: None,
+      ACM_MARGIN_DB: None,
+      ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: None,
+      BLOCK_ERROR_RATE: None,
     }
   }
 }
@@ -5566,6 +6352,30 @@ impl RFLT {
     let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SELECTED_MODCOD_INDEX = self.SELECTED_MODCOD_INDEX.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SELECTED_MODCOD_VALID = self.SELECTED_MODCOD_VALID.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SPECTRAL_EFFICIENCY_BPS_HZ = self.SPECTRAL_EFFICIENCY_BPS_HZ.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ACHIEVED_DATA_RATE_BPS = self.ACHIEVED_DATA_RATE_BPS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ACM_MARGIN_DB = self.ACM_MARGIN_DB.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let BLOCK_ERROR_RATE = self.BLOCK_ERROR_RATE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     RFL::create(_fbb, &RFLArgs{
       RFL_ID,
       NAME,
@@ -5618,6 +6428,14 @@ impl RFLT {
       COMPUTED_AT,
       PRODUCER_ID,
       SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
+      SELECTED_MODCOD_INDEX,
+      SELECTED_MODCOD_VALID,
+      SPECTRAL_EFFICIENCY_BPS_HZ,
+      ACHIEVED_DATA_RATE_BPS,
+      ACM_MARGIN_DB,
+      ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
+      BLOCK_ERROR_RATE,
     })
   }
 }

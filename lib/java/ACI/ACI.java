@@ -90,7 +90,9 @@ public final class ACI extends com.google.flatbuffers.Table {
   public ByteBuffer PRODUCER_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer PRODUCER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * Ed25519 signature by the producing `$EPM`.
+   * Ed25519 signature by the producing `$EPM` over the size-prefixed
+   * FlatBuffer projection with both 64-byte signature payloads zeroed while
+   * preserving their vectors and offsets.
    */
   public int SIGNATURE(int j) { int o = __offset(26); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
   public int SIGNATURELength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
@@ -98,6 +100,26 @@ public final class ACI extends com.google.flatbuffers.Table {
   public ByteVector signatureVector(ByteVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
   public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+   * field order, IDL capitalization, no insignificant whitespace, and both
+   * signature fields omitted.
+   */
+  public int CANONICAL_JSON_SIGNATURE(int j) { int o = __offset(28); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int CANONICAL_JSON_SIGNATURELength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector canonicalJsonSignatureVector() { return canonicalJsonSignatureVector(new ByteVector()); }
+  public ByteVector canonicalJsonSignatureVector(ByteVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer CANONICAL_JSON_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Per-interval delivered volume grouped by selected modulation-and-coding
+   * entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+   */
+  public ACIDataVolumeByModCod DATA_VOLUME_BY_MODCOD(int j) { return DATA_VOLUME_BY_MODCOD(new ACIDataVolumeByModCod(), j); }
+  public ACIDataVolumeByModCod DATA_VOLUME_BY_MODCOD(ACIDataVolumeByModCod obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DATA_VOLUME_BY_MODCODLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public ACIDataVolumeByModCod.Vector dataVolumeByModcodVector() { return dataVolumeByModcodVector(new ACIDataVolumeByModCod.Vector()); }
+  public ACIDataVolumeByModCod.Vector dataVolumeByModcodVector(ACIDataVolumeByModCod.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createACI(FlatBufferBuilder builder,
       int ACI_IDOffset,
@@ -111,11 +133,15 @@ public final class ACI extends com.google.flatbuffers.Table {
       int PROVENANCEOffset,
       long COMPUTED_AT,
       int PRODUCER_IDOffset,
-      int SIGNATUREOffset) {
-    builder.startTable(12);
+      int SIGNATUREOffset,
+      int CANONICAL_JSON_SIGNATUREOffset,
+      int DATA_VOLUME_BY_MODCODOffset) {
+    builder.startTable(14);
     ACI.addComputedAt(builder, COMPUTED_AT);
     ACI.addWindowStop(builder, WINDOW_STOP);
     ACI.addWindowStart(builder, WINDOW_START);
+    ACI.addDataVolumeByModcod(builder, DATA_VOLUME_BY_MODCODOffset);
+    ACI.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATUREOffset);
     ACI.addSignature(builder, SIGNATUREOffset);
     ACI.addProducerId(builder, PRODUCER_IDOffset);
     ACI.addProvenance(builder, PROVENANCEOffset);
@@ -128,7 +154,7 @@ public final class ACI extends com.google.flatbuffers.Table {
     return ACI.endACI(builder);
   }
 
-  public static void startACI(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startACI(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addAciId(FlatBufferBuilder builder, int ACI_IDOffset) { builder.addOffset(0, ACI_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(2, SCENARIO_IDOffset, 0); }
@@ -146,6 +172,13 @@ public final class ACI extends com.google.flatbuffers.Table {
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addCanonicalJsonSignature(FlatBufferBuilder builder, int CANONICAL_JSON_SIGNATUREOffset) { builder.addOffset(12, CANONICAL_JSON_SIGNATUREOffset, 0); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCanonicalJsonSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addDataVolumeByModcod(FlatBufferBuilder builder, int DATA_VOLUME_BY_MODCODOffset) { builder.addOffset(13, DATA_VOLUME_BY_MODCODOffset, 0); }
+  public static int createDataVolumeByModcodVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDataVolumeByModcodVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endACI(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ACI_ID

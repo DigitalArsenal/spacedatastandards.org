@@ -9,6 +9,115 @@
       "type" : "string",
       "enum": ["RHCP", "LHCP", "LINEAR_H", "LINEAR_V", "DUAL_CIRCULAR", "DUAL_LINEAR", "CROSS_POL"]
     },
+    "bemHopSlotState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACTIVE", "GUARD", "IDLE"]
+    },
+    "BEMProvenance" : {
+      "type" : "object",
+      "description" : "Provenance of a deployed-beam descriptor or hop schedule.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string"
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string"
+              },
+        "MODEL_NAME" : {
+                "type" : "string"
+              },
+        "MODEL_VERSION" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "MODULE_CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "BEMHopSlot" : {
+      "type" : "object",
+      "description" : "One time slice of a periodic beam-hopping plan.",
+      "properties" : {
+        "SLOT_ID" : {
+                "type" : "string"
+              },
+        "START_OFFSET_S" : {
+                "type" : "number",
+                "description" : "Offset from BEMHopSchedule.EPOCH in seconds."
+              },
+        "DURATION_S" : {
+                "type" : "number"
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/bemHopSlotState"
+              },
+        "BEAM_ID" : {
+                "type" : "string",
+                "description" : "Beam activated in this slot. May name this BEM.ID or another beam in a\ncoordinated schedule."
+              },
+        "TARGET_CELL_ID" : {
+                "type" : "string"
+              },
+        "TARGET_CENTER_LATITUDE_DEG" : {
+                "type" : "number"
+              },
+        "TARGET_CENTER_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "CENTER_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "EIRP_DBW" : {
+                "type" : "number"
+              },
+        "PRIORITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["SLOT_ID", "BEAM_ID"],
+      "additionalProperties" : false
+    },
+    "BEMHopSchedule" : {
+      "type" : "object",
+      "description" : "Periodic beam-hopping schedule carried by a deployed beam descriptor.",
+      "properties" : {
+        "SCHEDULE_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Seconds since 1970-01-01T00:00:00 UTC at which slot offsets begin."
+              },
+        "PERIOD_S" : {
+                "type" : "number"
+              },
+        "REPEATS" : {
+                "type" : "boolean"
+              },
+        "SLOTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BEMHopSlot"}
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/BEMProvenance"
+              }
+      },
+      "required" : ["SCHEDULE_ID", "SLOTS", "PROVENANCE"],
+      "additionalProperties" : false
+    },
     "beamContourPoint" : {
       "type" : "object",
       "description" : "Beam Contour Point (gain pattern boundary)",
@@ -118,6 +227,29 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              },
+        "HOP_SCHEDULE" : {
+                "$ref" : "#/definitions/BEMHopSchedule",
+                "description" : "Time-sliced activation plan for this deployed beam."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/BEMProvenance"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this record was serialized."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "`$EPM` identifier of the producing node."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
               }
       },
       "additionalProperties" : false

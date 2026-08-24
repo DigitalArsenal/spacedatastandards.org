@@ -44,8 +44,28 @@ public final class rflBudgetTerm {
   public static final byte INTERFERENCE_POWER = 28;
   public static final byte CARRIER_TO_NOISE_PLUS_INTERFERENCE = 29;
   public static final byte SIGNAL_TO_INTERFERENCE_PLUS_NOISE = 30;
+  /**
+   * Energy per transmitted symbol divided by noise spectral density.
+   */
+  public static final byte SYMBOL_ENERGY_TO_NOISE_DENSITY = 31;
+  /**
+   * Error probability for a decoded transport block or frame.
+   */
+  public static final byte BLOCK_ERROR_RATE = 32;
+  /**
+   * Delivered information bits per second per hertz.
+   */
+  public static final byte SPECTRAL_EFFICIENCY = 33;
+  /**
+   * Data rate delivered by the selected modulation and coding entry.
+   */
+  public static final byte ACHIEVED_DATA_RATE = 34;
+  /**
+   * Margin above the threshold of the selected adaptive entry.
+   */
+  public static final byte ACM_MARGIN = 35;
 
-  public static final String[] names = { "UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE", };
+  public static final String[] names = { "UNSPECIFIED", "RANGE", "RANGE_RATE", "AZIMUTH", "ELEVATION", "DOPPLER_SHIFT", "EIRP", "TRANSMIT_ANTENNA_GAIN", "RECEIVE_ANTENNA_GAIN", "FREE_SPACE_PATH_LOSS", "GASEOUS_ABSORPTION_LOSS", "RAIN_LOSS", "CLOUD_FOG_LOSS", "SCINTILLATION_LOSS", "TERRAIN_DIFFRACTION_LOSS", "OBSTRUCTION_LOSS", "POLARIZATION_LOSS", "POINTING_LOSS", "IMPLEMENTATION_LOSS", "RECEIVED_POWER", "SYSTEM_NOISE_TEMPERATURE", "GAIN_TO_NOISE_TEMPERATURE", "CARRIER_TO_NOISE_DENSITY", "CARRIER_TO_NOISE", "ENERGY_PER_BIT_TO_NOISE_DENSITY", "BIT_ERROR_RATE", "LINK_MARGIN", "CHANNEL_CAPACITY", "INTERFERENCE_POWER", "CARRIER_TO_NOISE_PLUS_INTERFERENCE", "SIGNAL_TO_INTERFERENCE_PLUS_NOISE", "SYMBOL_ENERGY_TO_NOISE_DENSITY", "BLOCK_ERROR_RATE", "SPECTRAL_EFFICIENCY", "ACHIEVED_DATA_RATE", "ACM_MARGIN", };
 
   public static String name(int e) { return names[e]; }
 }

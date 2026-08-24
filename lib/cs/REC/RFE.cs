@@ -132,6 +132,39 @@ public struct RFE : IFlatbufferObject
   public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(42); }
+  /// Provenance of the root emitter descriptor.
+  public RFEProvenance? PROVENANCE { get { int o = __p.__offset(44); return o != 0 ? (RFEProvenance?)(new RFEProvenance()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Unix ms this record was serialized.
+  public ulong COMPUTED_AT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// `$EPM` identifier of the producing node.
+  public string PRODUCER_ID { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPRODUCER_IDBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetPRODUCER_IDBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetPRODUCER_IDArray() { return __p.__vector_as_array<byte>(48); }
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  public byte SIGNATURE(int j) { int o = __p.__offset(50); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(50); }
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  public byte CANONICAL_JSON_SIGNATURE(int j) { int o = __p.__offset(52); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int CANONICAL_JSON_SIGNATURELength { get { int o = __p.__offset(52); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetCANONICAL_JSON_SIGNATUREArray() { return __p.__vector_as_array<byte>(52); }
 
   public static Offset<RFE> CreateRFE(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -153,13 +186,23 @@ public struct RFE : IFlatbufferObject
       uint NUM_MODES = 0,
       VectorOffset RF_EMITTER_DETAILSOffset = default(VectorOffset),
       StringOffset THREAT_LEVELOffset = default(StringOffset),
-      StringOffset NOTESOffset = default(StringOffset)) {
-    builder.StartTable(20);
+      StringOffset NOTESOffset = default(StringOffset),
+      Offset<RFEProvenance> PROVENANCEOffset = default(Offset<RFEProvenance>),
+      ulong COMPUTED_AT = 0,
+      StringOffset PRODUCER_IDOffset = default(StringOffset),
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset)) {
+    builder.StartTable(25);
+    RFE.AddCOMPUTED_AT(builder, COMPUTED_AT);
     RFE.AddANTENNA_GAIN(builder, ANTENNA_GAIN);
     RFE.AddAVG_POWER(builder, AVG_POWER);
     RFE.AddPEAK_POWER(builder, PEAK_POWER);
     RFE.AddFREQ_MAX(builder, FREQ_MAX);
     RFE.AddFREQ_MIN(builder, FREQ_MIN);
+    RFE.AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATUREOffset);
+    RFE.AddSIGNATURE(builder, SIGNATUREOffset);
+    RFE.AddPRODUCER_ID(builder, PRODUCER_IDOffset);
+    RFE.AddPROVENANCE(builder, PROVENANCEOffset);
     RFE.AddNOTES(builder, NOTESOffset);
     RFE.AddTHREAT_LEVEL(builder, THREAT_LEVELOffset);
     RFE.AddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILSOffset);
@@ -178,7 +221,7 @@ public struct RFE : IFlatbufferObject
     return RFE.EndRFE(builder);
   }
 
-  public static void StartRFE(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartRFE(FlatBufferBuilder builder) { builder.StartTable(25); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
@@ -204,6 +247,21 @@ public struct RFE : IFlatbufferObject
   public static void StartRF_EMITTER_DETAILSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddTHREAT_LEVEL(FlatBufferBuilder builder, StringOffset THREAT_LEVELOffset) { builder.AddOffset(18, THREAT_LEVELOffset.Value, 0); }
   public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(19, NOTESOffset.Value, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<RFEProvenance> PROVENANCEOffset) { builder.AddOffset(20, PROVENANCEOffset.Value, 0); }
+  public static void AddCOMPUTED_AT(FlatBufferBuilder builder, ulong COMPUTED_AT) { builder.AddUlong(21, COMPUTED_AT, 0); }
+  public static void AddPRODUCER_ID(FlatBufferBuilder builder, StringOffset PRODUCER_IDOffset) { builder.AddOffset(22, PRODUCER_IDOffset.Value, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(23, SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCANONICAL_JSON_SIGNATURE(FlatBufferBuilder builder, VectorOffset CANONICAL_JSON_SIGNATUREOffset) { builder.AddOffset(24, CANONICAL_JSON_SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<RFE> EndRFE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFE>(o);
@@ -237,6 +295,13 @@ public struct RFE : IFlatbufferObject
     for (var _j = 0; _j < this.RF_EMITTER_DETAILSLength; ++_j) {_o.RF_EMITTER_DETAILS.Add(this.RF_EMITTER_DETAILS(_j).HasValue ? this.RF_EMITTER_DETAILS(_j).Value.UnPack() : null);}
     _o.THREAT_LEVEL = this.THREAT_LEVEL;
     _o.NOTES = this.NOTES;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.COMPUTED_AT = this.COMPUTED_AT;
+    _o.PRODUCER_ID = this.PRODUCER_ID;
+    _o.SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.CANONICAL_JSON_SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.CANONICAL_JSON_SIGNATURELength; ++_j) {_o.CANONICAL_JSON_SIGNATURE.Add(this.CANONICAL_JSON_SIGNATURE(_j));}
   }
   public static Offset<RFE> Pack(FlatBufferBuilder builder, RFET _o) {
     if (_o == null) return default(Offset<RFE>);
@@ -258,6 +323,18 @@ public struct RFE : IFlatbufferObject
     }
     var _THREAT_LEVEL = _o.THREAT_LEVEL == null ? default(StringOffset) : builder.CreateString(_o.THREAT_LEVEL);
     var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<RFEProvenance>) : RFEProvenance.Pack(builder, _o.PROVENANCE);
+    var _PRODUCER_ID = _o.PRODUCER_ID == null ? default(StringOffset) : builder.CreateString(_o.PRODUCER_ID);
+    var _SIGNATURE = default(VectorOffset);
+    if (_o.SIGNATURE != null) {
+      var __SIGNATURE = _o.SIGNATURE.ToArray();
+      _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
+    }
+    var _CANONICAL_JSON_SIGNATURE = default(VectorOffset);
+    if (_o.CANONICAL_JSON_SIGNATURE != null) {
+      var __CANONICAL_JSON_SIGNATURE = _o.CANONICAL_JSON_SIGNATURE.ToArray();
+      _CANONICAL_JSON_SIGNATURE = CreateCANONICAL_JSON_SIGNATUREVector(builder, __CANONICAL_JSON_SIGNATURE);
+    }
     return CreateRFE(
       builder,
       _ID,
@@ -279,7 +356,12 @@ public struct RFE : IFlatbufferObject
       _o.NUM_MODES,
       _RF_EMITTER_DETAILS,
       _THREAT_LEVEL,
-      _NOTES);
+      _NOTES,
+      _PROVENANCE,
+      _o.COMPUTED_AT,
+      _PRODUCER_ID,
+      _SIGNATURE,
+      _CANONICAL_JSON_SIGNATURE);
   }
 }
 
@@ -305,6 +387,11 @@ public class RFET
   public List<rfEmitterDetailT> RF_EMITTER_DETAILS { get; set; }
   public string THREAT_LEVEL { get; set; }
   public string NOTES { get; set; }
+  public RFEProvenanceT PROVENANCE { get; set; }
+  public ulong COMPUTED_AT { get; set; }
+  public string PRODUCER_ID { get; set; }
+  public List<byte> SIGNATURE { get; set; }
+  public List<byte> CANONICAL_JSON_SIGNATURE { get; set; }
 
   public RFET() {
     this.ID = null;
@@ -327,6 +414,11 @@ public class RFET
     this.RF_EMITTER_DETAILS = null;
     this.THREAT_LEVEL = null;
     this.NOTES = null;
+    this.PROVENANCE = null;
+    this.COMPUTED_AT = 0;
+    this.PRODUCER_ID = null;
+    this.SIGNATURE = null;
+    this.CANONICAL_JSON_SIGNATURE = null;
   }
   public static RFET DeserializeFromBinary(byte[] fbBuffer) {
     return RFE.GetRootAsRFE(new ByteBuffer(fbBuffer)).UnPack();
@@ -364,6 +456,11 @@ static public class RFEVerify
       && verifier.VerifyVectorOfTables(tablePos, 38 /*RF_EMITTER_DETAILS*/, rfEmitterDetailVerify.Verify, false)
       && verifier.VerifyString(tablePos, 40 /*THREAT_LEVEL*/, false)
       && verifier.VerifyString(tablePos, 42 /*NOTES*/, false)
+      && verifier.VerifyTable(tablePos, 44 /*PROVENANCE*/, RFEProvenanceVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 46 /*COMPUTED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 48 /*PRODUCER_ID*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 50 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 52 /*CANONICAL_JSON_SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

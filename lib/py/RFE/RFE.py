@@ -207,8 +207,95 @@ class RFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Provenance of the root emitter descriptor.
+    # RFE
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFEProvenance import RFEProvenance
+            obj = RFEProvenance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Unix ms this record was serialized.
+    # RFE
+    def COMPUTED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # `$EPM` identifier of the producing node.
+    # RFE
+    def PRODUCER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+    # signature payloads zeroed while preserving their vectors and offsets.
+    # RFE
+    def SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # RFE
+    def SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # RFE
+    def SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFE
+    def SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        return o == 0
+
+    # Ed25519 signature over canonical JSON with IDL field order and
+    # capitalization, no insignificant whitespace, and both signature fields
+    # omitted.
+    # RFE
+    def CANONICAL_JSON_SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # RFE
+    def CANONICAL_JSON_SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # RFE
+    def CANONICAL_JSON_SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFE
+    def CANONICAL_JSON_SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        return o == 0
+
 def RFEStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(25)
 
 def Start(builder):
     RFEStart(builder)
@@ -345,15 +432,78 @@ def RFEAddNOTES(builder, NOTES):
 def AddNOTES(builder, NOTES):
     RFEAddNOTES(builder, NOTES)
 
+def RFEAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    RFEAddPROVENANCE(builder, PROVENANCE)
+
+def RFEAddCOMPUTED_AT(builder, COMPUTED_AT):
+    builder.PrependUint64Slot(21, COMPUTED_AT, 0)
+
+def AddCOMPUTED_AT(builder, COMPUTED_AT):
+    RFEAddCOMPUTED_AT(builder, COMPUTED_AT)
+
+def RFEAddPRODUCER_ID(builder, PRODUCER_ID):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCER_ID), 0)
+
+def AddPRODUCER_ID(builder, PRODUCER_ID):
+    RFEAddPRODUCER_ID(builder, PRODUCER_ID)
+
+def RFEAddSIGNATURE(builder, SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+
+def AddSIGNATURE(builder, SIGNATURE):
+    RFEAddSIGNATURE(builder, SIGNATURE)
+
+def RFEStartSIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartSIGNATUREVector(builder, numElems):
+    return RFEStartSIGNATUREVector(builder, numElems)
+
+def RFECreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    RFECreateSIGNATUREVector(builder, data)
+
+def RFEAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
+
+def AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    RFEAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+
+def RFEStartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return RFEStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+
+def RFECreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    RFECreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+
 def RFEEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return RFEEnd(builder)
 
+import RFEProvenance
 import rfEmitterDetail
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -382,6 +532,11 @@ class RFET(object):
         RF_EMITTER_DETAILS = None,
         THREAT_LEVEL = None,
         NOTES = None,
+        PROVENANCE = None,
+        COMPUTED_AT = 0,
+        PRODUCER_ID = None,
+        SIGNATURE = None,
+        CANONICAL_JSON_SIGNATURE = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
@@ -403,6 +558,11 @@ class RFET(object):
         self.RF_EMITTER_DETAILS = RF_EMITTER_DETAILS  # type: Optional[List[rfEmitterDetail.rfEmitterDetailT]]
         self.THREAT_LEVEL = THREAT_LEVEL  # type: Optional[str]
         self.NOTES = NOTES  # type: Optional[str]
+        self.PROVENANCE = PROVENANCE  # type: Optional[RFEProvenance.RFEProvenanceT]
+        self.COMPUTED_AT = COMPUTED_AT  # type: int
+        self.PRODUCER_ID = PRODUCER_ID  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.CANONICAL_JSON_SIGNATURE = CANONICAL_JSON_SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -452,6 +612,24 @@ class RFET(object):
                     self.RF_EMITTER_DETAILS.append(rfEmitterDetail_)
         self.THREAT_LEVEL = RFE.THREAT_LEVEL()
         self.NOTES = RFE.NOTES()
+        if RFE.PROVENANCE() is not None:
+            self.PROVENANCE = RFEProvenance.RFEProvenanceT.InitFromObj(RFE.PROVENANCE())
+        self.COMPUTED_AT = RFE.COMPUTED_AT()
+        self.PRODUCER_ID = RFE.PRODUCER_ID()
+        if not RFE.SIGNATUREIsNone():
+            if np is None:
+                self.SIGNATURE = []
+                for i in range(RFE.SIGNATURELength()):
+                    self.SIGNATURE.append(RFE.SIGNATURE(i))
+            else:
+                self.SIGNATURE = RFE.SIGNATUREAsNumpy()
+        if not RFE.CANONICAL_JSON_SIGNATUREIsNone():
+            if np is None:
+                self.CANONICAL_JSON_SIGNATURE = []
+                for i in range(RFE.CANONICAL_JSON_SIGNATURELength()):
+                    self.CANONICAL_JSON_SIGNATURE.append(RFE.CANONICAL_JSON_SIGNATURE(i))
+            else:
+                self.CANONICAL_JSON_SIGNATURE = RFE.CANONICAL_JSON_SIGNATUREAsNumpy()
 
     # RFET
     def Pack(self, builder):
@@ -487,6 +665,26 @@ class RFET(object):
             THREAT_LEVEL = builder.CreateString(self.THREAT_LEVEL)
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.PRODUCER_ID is not None:
+            PRODUCER_ID = builder.CreateString(self.PRODUCER_ID)
+        if self.SIGNATURE is not None:
+            if np is not None and type(self.SIGNATURE) is np.ndarray:
+                SIGNATURE = builder.CreateNumpyVector(self.SIGNATURE)
+            else:
+                RFEStartSIGNATUREVector(builder, len(self.SIGNATURE))
+                for i in reversed(range(len(self.SIGNATURE))):
+                    builder.PrependUint8(self.SIGNATURE[i])
+                SIGNATURE = builder.EndVector()
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            if np is not None and type(self.CANONICAL_JSON_SIGNATURE) is np.ndarray:
+                CANONICAL_JSON_SIGNATURE = builder.CreateNumpyVector(self.CANONICAL_JSON_SIGNATURE)
+            else:
+                RFEStartCANONICAL_JSON_SIGNATUREVector(builder, len(self.CANONICAL_JSON_SIGNATURE))
+                for i in reversed(range(len(self.CANONICAL_JSON_SIGNATURE))):
+                    builder.PrependUint8(self.CANONICAL_JSON_SIGNATURE[i])
+                CANONICAL_JSON_SIGNATURE = builder.EndVector()
         RFEStart(builder)
         if self.ID is not None:
             RFEAddID(builder, ID)
@@ -521,5 +719,14 @@ class RFET(object):
             RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL)
         if self.NOTES is not None:
             RFEAddNOTES(builder, NOTES)
+        if self.PROVENANCE is not None:
+            RFEAddPROVENANCE(builder, PROVENANCE)
+        RFEAddCOMPUTED_AT(builder, self.COMPUTED_AT)
+        if self.PRODUCER_ID is not None:
+            RFEAddPRODUCER_ID(builder, PRODUCER_ID)
+        if self.SIGNATURE is not None:
+            RFEAddSIGNATURE(builder, SIGNATURE)
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            RFEAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
         RFE = RFEEnd(builder)
         return RFE

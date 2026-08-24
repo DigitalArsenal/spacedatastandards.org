@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { RFEEmissionMask, RFEEmissionMaskT } from './RFEEmissionMask.js';
 import { signalModulation } from './signalModulation.js';
 
 
@@ -152,8 +153,22 @@ BEAMWIDTH():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Emission and susceptibility limit curves applicable to this operating
+ * mode. Curves are evaluated in point order after sorting by frequency.
+ */
+EMISSION_MASKS(index: number, obj?:RFEEmissionMask):RFEEmissionMask|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new RFEEmissionMask()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+emissionMasksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startrfEmitterDetail(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(16);
 }
 
 static addModeName(builder:flatbuffers.Builder, MODE_NAMEOffset:flatbuffers.Offset) {
@@ -216,12 +231,28 @@ static addBeamwidth(builder:flatbuffers.Builder, BEAMWIDTH:number) {
   builder.addFieldFloat64(14, BEAMWIDTH, 0.0);
 }
 
+static addEmissionMasks(builder:flatbuffers.Builder, EMISSION_MASKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, EMISSION_MASKSOffset, 0);
+}
+
+static createEmissionMasksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEmissionMasksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endrfEmitterDetail(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createrfEmitterDetail(builder:flatbuffers.Builder, MODE_NAMEOffset:flatbuffers.Offset, FREQUENCY:number, FREQ_MIN:number, FREQ_MAX:number, PRI:number, PRI_MIN:number, PRI_MAX:number, PULSE_WIDTH:number, PW_MIN:number, PW_MAX:number, SCAN_PERIOD:number, ERP:number, MODULATION:signalModulation, ANTENNA_PATTERNOffset:flatbuffers.Offset, BEAMWIDTH:number):flatbuffers.Offset {
+static createrfEmitterDetail(builder:flatbuffers.Builder, MODE_NAMEOffset:flatbuffers.Offset, FREQUENCY:number, FREQ_MIN:number, FREQ_MAX:number, PRI:number, PRI_MIN:number, PRI_MAX:number, PULSE_WIDTH:number, PW_MIN:number, PW_MAX:number, SCAN_PERIOD:number, ERP:number, MODULATION:signalModulation, ANTENNA_PATTERNOffset:flatbuffers.Offset, BEAMWIDTH:number, EMISSION_MASKSOffset:flatbuffers.Offset):flatbuffers.Offset {
   rfEmitterDetail.startrfEmitterDetail(builder);
   rfEmitterDetail.addModeName(builder, MODE_NAMEOffset);
   rfEmitterDetail.addFrequency(builder, FREQUENCY);
@@ -238,6 +269,7 @@ static createrfEmitterDetail(builder:flatbuffers.Builder, MODE_NAMEOffset:flatbu
   rfEmitterDetail.addModulation(builder, MODULATION);
   rfEmitterDetail.addAntennaPattern(builder, ANTENNA_PATTERNOffset);
   rfEmitterDetail.addBeamwidth(builder, BEAMWIDTH);
+  rfEmitterDetail.addEmissionMasks(builder, EMISSION_MASKSOffset);
   return rfEmitterDetail.endrfEmitterDetail(builder);
 }
 
@@ -257,7 +289,8 @@ unpack(): rfEmitterDetailT {
     this.ERP(),
     this.MODULATION(),
     this.ANTENNA_PATTERN(),
-    this.BEAMWIDTH()
+    this.BEAMWIDTH(),
+    this.bb!.createObjList<RFEEmissionMask, RFEEmissionMaskT>(this.EMISSION_MASKS.bind(this), this.emissionMasksLength())
   );
 }
 
@@ -278,6 +311,7 @@ unpackTo(_o: rfEmitterDetailT): void {
   _o.MODULATION = this.MODULATION();
   _o.ANTENNA_PATTERN = this.ANTENNA_PATTERN();
   _o.BEAMWIDTH = this.BEAMWIDTH();
+  _o.EMISSION_MASKS = this.bb!.createObjList<RFEEmissionMask, RFEEmissionMaskT>(this.EMISSION_MASKS.bind(this), this.emissionMasksLength());
 }
 }
 
@@ -297,13 +331,15 @@ constructor(
   public ERP: number = 0.0,
   public MODULATION: signalModulation = signalModulation.CW,
   public ANTENNA_PATTERN: string|Uint8Array|null = null,
-  public BEAMWIDTH: number = 0.0
+  public BEAMWIDTH: number = 0.0,
+  public EMISSION_MASKS: (RFEEmissionMaskT)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MODE_NAME = (this.MODE_NAME !== null ? builder.createString(this.MODE_NAME!) : 0);
   const ANTENNA_PATTERN = (this.ANTENNA_PATTERN !== null ? builder.createString(this.ANTENNA_PATTERN!) : 0);
+  const EMISSION_MASKS = rfEmitterDetail.createEmissionMasksVector(builder, builder.createObjectOffsetList(this.EMISSION_MASKS));
 
   return rfEmitterDetail.createrfEmitterDetail(builder,
     MODE_NAME,
@@ -320,7 +356,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ERP,
     this.MODULATION,
     ANTENNA_PATTERN,
-    this.BEAMWIDTH
+    this.BEAMWIDTH,
+    EMISSION_MASKS
   );
 }
 }

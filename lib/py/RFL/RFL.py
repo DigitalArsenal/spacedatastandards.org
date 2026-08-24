@@ -1264,7 +1264,9 @@ class RFL(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Ed25519 signature by the producing `$EPM`.
+    # Ed25519 signature by the producing `$EPM` over the size-prefixed
+    # FlatBuffer projection with both 64-byte signature payloads zeroed while
+    # preserving their vectors and offsets.
     # RFL
     def SIGNATURE(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
@@ -1292,8 +1294,234 @@ class RFL(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         return o == 0
 
+    # Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+    # field order, IDL capitalization, no insignificant whitespace, and both
+    # signature fields omitted.
+    # RFL
+    def CANONICAL_JSON_SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # RFL
+    def CANONICAL_JSON_SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # RFL
+    def CANONICAL_JSON_SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def CANONICAL_JSON_SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
+    # Index into the selected link's RFLLink.MODCOD_SET for each sample.
+    # SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+    # RFL
+    def SELECTED_MODCOD_INDEX(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_INDEXAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_INDEXLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_INDEXIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        return o == 0
+
+    # RFL
+    def SELECTED_MODCOD_VALID(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.BoolFlags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_VALIDAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.BoolFlags, o)
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_VALIDLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def SELECTED_MODCOD_VALIDIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        return o == 0
+
+    # Spectral efficiency delivered by the selected entry, bit/s/Hz.
+    # RFL
+    def SPECTRAL_EFFICIENCY_BPS_HZ(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFL
+    def SPECTRAL_EFFICIENCY_BPS_HZAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFL
+    def SPECTRAL_EFFICIENCY_BPS_HZLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def SPECTRAL_EFFICIENCY_BPS_HZIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        return o == 0
+
+    # Delivered information rate after adaptive selection, bits per second.
+    # RFL
+    def ACHIEVED_DATA_RATE_BPS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFL
+    def ACHIEVED_DATA_RATE_BPSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFL
+    def ACHIEVED_DATA_RATE_BPSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def ACHIEVED_DATA_RATE_BPSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        return o == 0
+
+    # Margin above the selected entry's threshold, dB.
+    # RFL
+    def ACM_MARGIN_DB(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFL
+    def ACM_MARGIN_DBAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFL
+    def ACM_MARGIN_DBLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def ACM_MARGIN_DBIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        return o == 0
+
+    # Symbol energy to noise spectral density, dB.
+    # RFL
+    def ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFL
+    def ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFL
+    def ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        return o == 0
+
+    # Decoded block error probability [0-1].
+    # RFL
+    def BLOCK_ERROR_RATE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFL
+    def BLOCK_ERROR_RATEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFL
+    def BLOCK_ERROR_RATELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFL
+    def BLOCK_ERROR_RATEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        return o == 0
+
 def RFLStart(builder):
-    builder.StartObject(51)
+    builder.StartObject(59)
 
 def Start(builder):
     RFLStart(builder)
@@ -2264,6 +2492,182 @@ def RFLCreateSIGNATUREVector(builder, data):
 def CreateSIGNATUREVector(builder, data):
     RFLCreateSIGNATUREVector(builder, data)
 
+def RFLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
+
+def AddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
+    RFLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+
+def RFLStartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCANONICAL_JSON_SIGNATUREVector(builder, numElems):
+    return RFLStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+
+def RFLCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
+    RFLCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+
+def RFLAddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTED_MODCOD_INDEX), 0)
+
+def AddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX):
+    RFLAddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX)
+
+def RFLStartSELECTED_MODCOD_INDEXVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSELECTED_MODCOD_INDEXVector(builder, numElems):
+    return RFLStartSELECTED_MODCOD_INDEXVector(builder, numElems)
+
+def RFLCreateSELECTED_MODCOD_INDEXVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependUint32(item)
+    return builder.EndVector()
+
+def CreateSELECTED_MODCOD_INDEXVector(builder, data):
+    RFLCreateSELECTED_MODCOD_INDEXVector(builder, data)
+
+def RFLAddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID):
+    builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTED_MODCOD_VALID), 0)
+
+def AddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID):
+    RFLAddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID)
+
+def RFLStartSELECTED_MODCOD_VALIDVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartSELECTED_MODCOD_VALIDVector(builder, numElems):
+    return RFLStartSELECTED_MODCOD_VALIDVector(builder, numElems)
+
+def RFLCreateSELECTED_MODCOD_VALIDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependBool(item)
+    return builder.EndVector()
+
+def CreateSELECTED_MODCOD_VALIDVector(builder, data):
+    RFLCreateSELECTED_MODCOD_VALIDVector(builder, data)
+
+def RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ):
+    builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_EFFICIENCY_BPS_HZ), 0)
+
+def AddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ):
+    RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ)
+
+def RFLStartSPECTRAL_EFFICIENCY_BPS_HZVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPECTRAL_EFFICIENCY_BPS_HZVector(builder, numElems):
+    return RFLStartSPECTRAL_EFFICIENCY_BPS_HZVector(builder, numElems)
+
+def RFLCreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data):
+    RFLCreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data)
+
+def RFLAddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(ACHIEVED_DATA_RATE_BPS), 0)
+
+def AddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS):
+    RFLAddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS)
+
+def RFLStartACHIEVED_DATA_RATE_BPSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartACHIEVED_DATA_RATE_BPSVector(builder, numElems):
+    return RFLStartACHIEVED_DATA_RATE_BPSVector(builder, numElems)
+
+def RFLCreateACHIEVED_DATA_RATE_BPSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateACHIEVED_DATA_RATE_BPSVector(builder, data):
+    RFLCreateACHIEVED_DATA_RATE_BPSVector(builder, data)
+
+def RFLAddACM_MARGIN_DB(builder, ACM_MARGIN_DB):
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(ACM_MARGIN_DB), 0)
+
+def AddACM_MARGIN_DB(builder, ACM_MARGIN_DB):
+    RFLAddACM_MARGIN_DB(builder, ACM_MARGIN_DB)
+
+def RFLStartACM_MARGIN_DBVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartACM_MARGIN_DBVector(builder, numElems):
+    return RFLStartACM_MARGIN_DBVector(builder, numElems)
+
+def RFLCreateACM_MARGIN_DBVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateACM_MARGIN_DBVector(builder, data):
+    RFLCreateACM_MARGIN_DBVector(builder, data)
+
+def RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB):
+    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB), 0)
+
+def AddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB):
+    RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
+
+def RFLStartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, numElems):
+    return RFLStartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, numElems)
+
+def RFLCreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data):
+    RFLCreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data)
+
+def RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE):
+    builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(BLOCK_ERROR_RATE), 0)
+
+def AddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE):
+    RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE)
+
+def RFLStartBLOCK_ERROR_RATEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartBLOCK_ERROR_RATEVector(builder, numElems):
+    return RFLStartBLOCK_ERROR_RATEVector(builder, numElems)
+
+def RFLCreateBLOCK_ERROR_RATEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateBLOCK_ERROR_RATEVector(builder, data):
+    RFLCreateBLOCK_ERROR_RATEVector(builder, data)
+
 def RFLEnd(builder):
     return builder.EndObject()
 
@@ -2335,6 +2739,14 @@ class RFLT(object):
         COMPUTED_AT = 0,
         PRODUCER_ID = None,
         SIGNATURE = None,
+        CANONICAL_JSON_SIGNATURE = None,
+        SELECTED_MODCOD_INDEX = None,
+        SELECTED_MODCOD_VALID = None,
+        SPECTRAL_EFFICIENCY_BPS_HZ = None,
+        ACHIEVED_DATA_RATE_BPS = None,
+        ACM_MARGIN_DB = None,
+        ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = None,
+        BLOCK_ERROR_RATE = None,
     ):
         self.RFL_ID = RFL_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -2387,6 +2799,14 @@ class RFLT(object):
         self.COMPUTED_AT = COMPUTED_AT  # type: int
         self.PRODUCER_ID = PRODUCER_ID  # type: Optional[str]
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.CANONICAL_JSON_SIGNATURE = CANONICAL_JSON_SIGNATURE  # type: Optional[List[int]]
+        self.SELECTED_MODCOD_INDEX = SELECTED_MODCOD_INDEX  # type: Optional[List[int]]
+        self.SELECTED_MODCOD_VALID = SELECTED_MODCOD_VALID  # type: Optional[List[bool]]
+        self.SPECTRAL_EFFICIENCY_BPS_HZ = SPECTRAL_EFFICIENCY_BPS_HZ  # type: Optional[List[float]]
+        self.ACHIEVED_DATA_RATE_BPS = ACHIEVED_DATA_RATE_BPS  # type: Optional[List[float]]
+        self.ACM_MARGIN_DB = ACM_MARGIN_DB  # type: Optional[List[float]]
+        self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB  # type: Optional[List[float]]
+        self.BLOCK_ERROR_RATE = BLOCK_ERROR_RATE  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -2716,6 +3136,62 @@ class RFLT(object):
                     self.SIGNATURE.append(RFL.SIGNATURE(i))
             else:
                 self.SIGNATURE = RFL.SIGNATUREAsNumpy()
+        if not RFL.CANONICAL_JSON_SIGNATUREIsNone():
+            if np is None:
+                self.CANONICAL_JSON_SIGNATURE = []
+                for i in range(RFL.CANONICAL_JSON_SIGNATURELength()):
+                    self.CANONICAL_JSON_SIGNATURE.append(RFL.CANONICAL_JSON_SIGNATURE(i))
+            else:
+                self.CANONICAL_JSON_SIGNATURE = RFL.CANONICAL_JSON_SIGNATUREAsNumpy()
+        if not RFL.SELECTED_MODCOD_INDEXIsNone():
+            if np is None:
+                self.SELECTED_MODCOD_INDEX = []
+                for i in range(RFL.SELECTED_MODCOD_INDEXLength()):
+                    self.SELECTED_MODCOD_INDEX.append(RFL.SELECTED_MODCOD_INDEX(i))
+            else:
+                self.SELECTED_MODCOD_INDEX = RFL.SELECTED_MODCOD_INDEXAsNumpy()
+        if not RFL.SELECTED_MODCOD_VALIDIsNone():
+            if np is None:
+                self.SELECTED_MODCOD_VALID = []
+                for i in range(RFL.SELECTED_MODCOD_VALIDLength()):
+                    self.SELECTED_MODCOD_VALID.append(RFL.SELECTED_MODCOD_VALID(i))
+            else:
+                self.SELECTED_MODCOD_VALID = RFL.SELECTED_MODCOD_VALIDAsNumpy()
+        if not RFL.SPECTRAL_EFFICIENCY_BPS_HZIsNone():
+            if np is None:
+                self.SPECTRAL_EFFICIENCY_BPS_HZ = []
+                for i in range(RFL.SPECTRAL_EFFICIENCY_BPS_HZLength()):
+                    self.SPECTRAL_EFFICIENCY_BPS_HZ.append(RFL.SPECTRAL_EFFICIENCY_BPS_HZ(i))
+            else:
+                self.SPECTRAL_EFFICIENCY_BPS_HZ = RFL.SPECTRAL_EFFICIENCY_BPS_HZAsNumpy()
+        if not RFL.ACHIEVED_DATA_RATE_BPSIsNone():
+            if np is None:
+                self.ACHIEVED_DATA_RATE_BPS = []
+                for i in range(RFL.ACHIEVED_DATA_RATE_BPSLength()):
+                    self.ACHIEVED_DATA_RATE_BPS.append(RFL.ACHIEVED_DATA_RATE_BPS(i))
+            else:
+                self.ACHIEVED_DATA_RATE_BPS = RFL.ACHIEVED_DATA_RATE_BPSAsNumpy()
+        if not RFL.ACM_MARGIN_DBIsNone():
+            if np is None:
+                self.ACM_MARGIN_DB = []
+                for i in range(RFL.ACM_MARGIN_DBLength()):
+                    self.ACM_MARGIN_DB.append(RFL.ACM_MARGIN_DB(i))
+            else:
+                self.ACM_MARGIN_DB = RFL.ACM_MARGIN_DBAsNumpy()
+        if not RFL.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBIsNone():
+            if np is None:
+                self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = []
+                for i in range(RFL.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength()):
+                    self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.append(RFL.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(i))
+            else:
+                self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = RFL.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBAsNumpy()
+        if not RFL.BLOCK_ERROR_RATEIsNone():
+            if np is None:
+                self.BLOCK_ERROR_RATE = []
+                for i in range(RFL.BLOCK_ERROR_RATELength()):
+                    self.BLOCK_ERROR_RATE.append(RFL.BLOCK_ERROR_RATE(i))
+            else:
+                self.BLOCK_ERROR_RATE = RFL.BLOCK_ERROR_RATEAsNumpy()
 
     # RFLT
     def Pack(self, builder):
@@ -3067,6 +3543,70 @@ class RFLT(object):
                 for i in reversed(range(len(self.SIGNATURE))):
                     builder.PrependUint8(self.SIGNATURE[i])
                 SIGNATURE = builder.EndVector()
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            if np is not None and type(self.CANONICAL_JSON_SIGNATURE) is np.ndarray:
+                CANONICAL_JSON_SIGNATURE = builder.CreateNumpyVector(self.CANONICAL_JSON_SIGNATURE)
+            else:
+                RFLStartCANONICAL_JSON_SIGNATUREVector(builder, len(self.CANONICAL_JSON_SIGNATURE))
+                for i in reversed(range(len(self.CANONICAL_JSON_SIGNATURE))):
+                    builder.PrependUint8(self.CANONICAL_JSON_SIGNATURE[i])
+                CANONICAL_JSON_SIGNATURE = builder.EndVector()
+        if self.SELECTED_MODCOD_INDEX is not None:
+            if np is not None and type(self.SELECTED_MODCOD_INDEX) is np.ndarray:
+                SELECTED_MODCOD_INDEX = builder.CreateNumpyVector(self.SELECTED_MODCOD_INDEX)
+            else:
+                RFLStartSELECTED_MODCOD_INDEXVector(builder, len(self.SELECTED_MODCOD_INDEX))
+                for i in reversed(range(len(self.SELECTED_MODCOD_INDEX))):
+                    builder.PrependUint32(self.SELECTED_MODCOD_INDEX[i])
+                SELECTED_MODCOD_INDEX = builder.EndVector()
+        if self.SELECTED_MODCOD_VALID is not None:
+            if np is not None and type(self.SELECTED_MODCOD_VALID) is np.ndarray:
+                SELECTED_MODCOD_VALID = builder.CreateNumpyVector(self.SELECTED_MODCOD_VALID)
+            else:
+                RFLStartSELECTED_MODCOD_VALIDVector(builder, len(self.SELECTED_MODCOD_VALID))
+                for i in reversed(range(len(self.SELECTED_MODCOD_VALID))):
+                    builder.PrependBool(self.SELECTED_MODCOD_VALID[i])
+                SELECTED_MODCOD_VALID = builder.EndVector()
+        if self.SPECTRAL_EFFICIENCY_BPS_HZ is not None:
+            if np is not None and type(self.SPECTRAL_EFFICIENCY_BPS_HZ) is np.ndarray:
+                SPECTRAL_EFFICIENCY_BPS_HZ = builder.CreateNumpyVector(self.SPECTRAL_EFFICIENCY_BPS_HZ)
+            else:
+                RFLStartSPECTRAL_EFFICIENCY_BPS_HZVector(builder, len(self.SPECTRAL_EFFICIENCY_BPS_HZ))
+                for i in reversed(range(len(self.SPECTRAL_EFFICIENCY_BPS_HZ))):
+                    builder.PrependFloat64(self.SPECTRAL_EFFICIENCY_BPS_HZ[i])
+                SPECTRAL_EFFICIENCY_BPS_HZ = builder.EndVector()
+        if self.ACHIEVED_DATA_RATE_BPS is not None:
+            if np is not None and type(self.ACHIEVED_DATA_RATE_BPS) is np.ndarray:
+                ACHIEVED_DATA_RATE_BPS = builder.CreateNumpyVector(self.ACHIEVED_DATA_RATE_BPS)
+            else:
+                RFLStartACHIEVED_DATA_RATE_BPSVector(builder, len(self.ACHIEVED_DATA_RATE_BPS))
+                for i in reversed(range(len(self.ACHIEVED_DATA_RATE_BPS))):
+                    builder.PrependFloat64(self.ACHIEVED_DATA_RATE_BPS[i])
+                ACHIEVED_DATA_RATE_BPS = builder.EndVector()
+        if self.ACM_MARGIN_DB is not None:
+            if np is not None and type(self.ACM_MARGIN_DB) is np.ndarray:
+                ACM_MARGIN_DB = builder.CreateNumpyVector(self.ACM_MARGIN_DB)
+            else:
+                RFLStartACM_MARGIN_DBVector(builder, len(self.ACM_MARGIN_DB))
+                for i in reversed(range(len(self.ACM_MARGIN_DB))):
+                    builder.PrependFloat64(self.ACM_MARGIN_DB[i])
+                ACM_MARGIN_DB = builder.EndVector()
+        if self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB is not None:
+            if np is not None and type(self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) is np.ndarray:
+                ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = builder.CreateNumpyVector(self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
+            else:
+                RFLStartENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, len(self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB))
+                for i in reversed(range(len(self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB))):
+                    builder.PrependFloat64(self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB[i])
+                ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = builder.EndVector()
+        if self.BLOCK_ERROR_RATE is not None:
+            if np is not None and type(self.BLOCK_ERROR_RATE) is np.ndarray:
+                BLOCK_ERROR_RATE = builder.CreateNumpyVector(self.BLOCK_ERROR_RATE)
+            else:
+                RFLStartBLOCK_ERROR_RATEVector(builder, len(self.BLOCK_ERROR_RATE))
+                for i in reversed(range(len(self.BLOCK_ERROR_RATE))):
+                    builder.PrependFloat64(self.BLOCK_ERROR_RATE[i])
+                BLOCK_ERROR_RATE = builder.EndVector()
         RFLStart(builder)
         if self.RFL_ID is not None:
             RFLAddRFL_ID(builder, RFL_ID)
@@ -3167,5 +3707,21 @@ class RFLT(object):
             RFLAddPRODUCER_ID(builder, PRODUCER_ID)
         if self.SIGNATURE is not None:
             RFLAddSIGNATURE(builder, SIGNATURE)
+        if self.CANONICAL_JSON_SIGNATURE is not None:
+            RFLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+        if self.SELECTED_MODCOD_INDEX is not None:
+            RFLAddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX)
+        if self.SELECTED_MODCOD_VALID is not None:
+            RFLAddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID)
+        if self.SPECTRAL_EFFICIENCY_BPS_HZ is not None:
+            RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ)
+        if self.ACHIEVED_DATA_RATE_BPS is not None:
+            RFLAddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS)
+        if self.ACM_MARGIN_DB is not None:
+            RFLAddACM_MARGIN_DB(builder, ACM_MARGIN_DB)
+        if self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB is not None:
+            RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
+        if self.BLOCK_ERROR_RATE is not None:
+            RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE)
         RFL = RFLEnd(builder)
         return RFL

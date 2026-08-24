@@ -847,7 +847,9 @@ class RFL : Table() {
     val producerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
     fun producerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
     /**
-     * Ed25519 signature by the producing `$EPM`.
+     * Ed25519 signature by the producing `$EPM` over the size-prefixed
+     * FlatBuffer projection with both 64-byte signature payloads zeroed while
+     * preserving their vectors and offsets.
      */
     fun signature(j: Int) : UByte {
         val o = __offset(104)
@@ -863,6 +865,142 @@ class RFL : Table() {
         }
     val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(104, 1)
     fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 104, 1)
+    /**
+     * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+     * field order, IDL capitalization, no insignificant whitespace, and both
+     * signature fields omitted.
+     */
+    fun canonicalJsonSignature(j: Int) : UByte {
+        val o = __offset(106)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val canonicalJsonSignatureLength : Int
+        get() {
+            val o = __offset(106); return if (o != 0) __vector_len(o) else 0
+        }
+    val canonicalJsonSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(106, 1)
+    fun canonicalJsonSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 106, 1)
+    /**
+     * Index into the selected link's RFLLink.MODCOD_SET for each sample.
+     * SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+     */
+    fun selectedModcodIndex(j: Int) : UInt {
+        val o = __offset(108)
+        return if (o != 0) {
+            bb.getInt(__vector(o) + j * 4).toUInt()
+        } else {
+            0u
+        }
+    }
+    val selectedModcodIndexLength : Int
+        get() {
+            val o = __offset(108); return if (o != 0) __vector_len(o) else 0
+        }
+    val selectedModcodIndexAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(108, 4)
+    fun selectedModcodIndexInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 108, 4)
+    fun selectedModcodValid(j: Int) : Boolean {
+        val o = __offset(110)
+        return if (o != 0) {
+            0.toByte() != bb.get(__vector(o) + j * 1)
+        } else {
+            false
+        }
+    }
+    val selectedModcodValidLength : Int
+        get() {
+            val o = __offset(110); return if (o != 0) __vector_len(o) else 0
+        }
+    val selectedModcodValidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(110, 1)
+    fun selectedModcodValidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 110, 1)
+    /**
+     * Spectral efficiency delivered by the selected entry, bit/s/Hz.
+     */
+    fun spectralEfficiencyBpsHz(j: Int) : Double {
+        val o = __offset(112)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val spectralEfficiencyBpsHzLength : Int
+        get() {
+            val o = __offset(112); return if (o != 0) __vector_len(o) else 0
+        }
+    val spectralEfficiencyBpsHzAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(112, 8)
+    fun spectralEfficiencyBpsHzInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 112, 8)
+    /**
+     * Delivered information rate after adaptive selection, bits per second.
+     */
+    fun achievedDataRateBps(j: Int) : Double {
+        val o = __offset(114)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val achievedDataRateBpsLength : Int
+        get() {
+            val o = __offset(114); return if (o != 0) __vector_len(o) else 0
+        }
+    val achievedDataRateBpsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(114, 8)
+    fun achievedDataRateBpsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 114, 8)
+    /**
+     * Margin above the selected entry's threshold, dB.
+     */
+    fun acmMarginDb(j: Int) : Double {
+        val o = __offset(116)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val acmMarginDbLength : Int
+        get() {
+            val o = __offset(116); return if (o != 0) __vector_len(o) else 0
+        }
+    val acmMarginDbAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(116, 8)
+    fun acmMarginDbInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 116, 8)
+    /**
+     * Symbol energy to noise spectral density, dB.
+     */
+    fun energyPerSymbolToNoiseDensityDb(j: Int) : Double {
+        val o = __offset(118)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val energyPerSymbolToNoiseDensityDbLength : Int
+        get() {
+            val o = __offset(118); return if (o != 0) __vector_len(o) else 0
+        }
+    val energyPerSymbolToNoiseDensityDbAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(118, 8)
+    fun energyPerSymbolToNoiseDensityDbInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 118, 8)
+    /**
+     * Decoded block error probability [0-1].
+     */
+    fun blockErrorRate(j: Int) : Double {
+        val o = __offset(120)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val blockErrorRateLength : Int
+        get() {
+            val o = __offset(120); return if (o != 0) __vector_len(o) else 0
+        }
+    val blockErrorRateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(120, 8)
+    fun blockErrorRateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 120, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFL(_bb: ByteBuffer): RFL = getRootAsRFL(_bb, RFL())
@@ -871,9 +1009,17 @@ class RFL : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFL")
-        fun createRFL(builder: FlatBufferBuilder, rflIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, linksOffset: Int, sampleCount: UInt, sampleLinkIndexesOffset: Int, sampleEpochsOffset: Int, timeSystem: Byte, accessStatesOffset: Int, rangeMOffset: Int, rangeRateMSOffset: Int, azimuthDegOffset: Int, elevationDegOffset: Int, transmitAzimuthDegOffset: Int, transmitElevationDegOffset: Int, dopplerShiftHzOffset: Int, dopplerRateHzSOffset: Int, eirpDbwOffset: Int, transmitAntennaGainDbiOffset: Int, receiveAntennaGainDbiOffset: Int, freeSpacePathLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, rainLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, terrainDiffractionLossDbOffset: Int, obstructionLossDbOffset: Int, polarizationLossDbOffset: Int, pointingLossDbOffset: Int, implementationLossDbOffset: Int, totalPathLossDbOffset: Int, receivedPowerDbwOffset: Int, systemNoiseTemperatureKOffset: Int, gainToNoiseTemperatureDbPerKOffset: Int, carrierToNoiseDensityDbhzOffset: Int, carrierToNoiseDbOffset: Int, energyPerBitToNoiseDensityDbOffset: Int, bitErrorRateOffset: Int, linkMarginDbOffset: Int, channelCapacityBpsOffset: Int, interferencePowerDbwOffset: Int, carrierToNoisePlusInterferenceDbOffset: Int, signalToInterferencePlusNoiseDbOffset: Int, interferenceContributionsOffset: Int, obstructionsOffset: Int, limitingConstraintsOffset: Int, limitingConstraintNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int) : Int {
-            builder.startTable(51)
+        fun createRFL(builder: FlatBufferBuilder, rflIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, linksOffset: Int, sampleCount: UInt, sampleLinkIndexesOffset: Int, sampleEpochsOffset: Int, timeSystem: Byte, accessStatesOffset: Int, rangeMOffset: Int, rangeRateMSOffset: Int, azimuthDegOffset: Int, elevationDegOffset: Int, transmitAzimuthDegOffset: Int, transmitElevationDegOffset: Int, dopplerShiftHzOffset: Int, dopplerRateHzSOffset: Int, eirpDbwOffset: Int, transmitAntennaGainDbiOffset: Int, receiveAntennaGainDbiOffset: Int, freeSpacePathLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, rainLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, terrainDiffractionLossDbOffset: Int, obstructionLossDbOffset: Int, polarizationLossDbOffset: Int, pointingLossDbOffset: Int, implementationLossDbOffset: Int, totalPathLossDbOffset: Int, receivedPowerDbwOffset: Int, systemNoiseTemperatureKOffset: Int, gainToNoiseTemperatureDbPerKOffset: Int, carrierToNoiseDensityDbhzOffset: Int, carrierToNoiseDbOffset: Int, energyPerBitToNoiseDensityDbOffset: Int, bitErrorRateOffset: Int, linkMarginDbOffset: Int, channelCapacityBpsOffset: Int, interferencePowerDbwOffset: Int, carrierToNoisePlusInterferenceDbOffset: Int, signalToInterferencePlusNoiseDbOffset: Int, interferenceContributionsOffset: Int, obstructionsOffset: Int, limitingConstraintsOffset: Int, limitingConstraintNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, selectedModcodIndexOffset: Int, selectedModcodValidOffset: Int, spectralEfficiencyBpsHzOffset: Int, achievedDataRateBpsOffset: Int, acmMarginDbOffset: Int, energyPerSymbolToNoiseDensityDbOffset: Int, blockErrorRateOffset: Int) : Int {
+            builder.startTable(59)
             addCOMPUTEDAT(builder, computedAt)
+            addBLOCKERRORRATE(builder, blockErrorRateOffset)
+            addENERGYPERSYMBOLTONOISEDENSITYDB(builder, energyPerSymbolToNoiseDensityDbOffset)
+            addACMMARGINDB(builder, acmMarginDbOffset)
+            addACHIEVEDDATARATEBPS(builder, achievedDataRateBpsOffset)
+            addSPECTRALEFFICIENCYBPSHZ(builder, spectralEfficiencyBpsHzOffset)
+            addSELECTEDMODCODVALID(builder, selectedModcodValidOffset)
+            addSELECTEDMODCODINDEX(builder, selectedModcodIndexOffset)
+            addCANONICALJSONSIGNATURE(builder, canonicalJsonSignatureOffset)
             addSIGNATURE(builder, signatureOffset)
             addPRODUCERID(builder, producerIdOffset)
             addPROVENANCE(builder, provenanceOffset)
@@ -926,7 +1072,7 @@ class RFL : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endRFL(builder)
         }
-        fun startRFL(builder: FlatBufferBuilder) = builder.startTable(51)
+        fun startRFL(builder: FlatBufferBuilder) = builder.startTable(59)
         fun addRFLID(builder: FlatBufferBuilder, rflId: Int) = builder.addOffset(0, rflId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(2, scenarioId, 0)
@@ -1316,6 +1462,80 @@ class RFL : Table() {
             return builder.endVector()
         }
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addCANONICALJSONSIGNATURE(builder: FlatBufferBuilder, canonicalJsonSignature: Int) = builder.addOffset(51, canonicalJsonSignature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCanonicalJsonSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCanonicalJsonSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addSELECTEDMODCODINDEX(builder: FlatBufferBuilder, selectedModcodIndex: Int) = builder.addOffset(52, selectedModcodIndex, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createSelectedModcodIndexVector(builder: FlatBufferBuilder, data: UIntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addInt(data[i].toInt())
+            }
+            return builder.endVector()
+        }
+        fun startSelectedModcodIndexVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSELECTEDMODCODVALID(builder: FlatBufferBuilder, selectedModcodValid: Int) = builder.addOffset(53, selectedModcodValid, 0)
+        fun createSelectedModcodValidVector(builder: FlatBufferBuilder, data: BooleanArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addBoolean(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSelectedModcodValidVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addSPECTRALEFFICIENCYBPSHZ(builder: FlatBufferBuilder, spectralEfficiencyBpsHz: Int) = builder.addOffset(54, spectralEfficiencyBpsHz, 0)
+        fun createSpectralEfficiencyBpsHzVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSpectralEfficiencyBpsHzVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addACHIEVEDDATARATEBPS(builder: FlatBufferBuilder, achievedDataRateBps: Int) = builder.addOffset(55, achievedDataRateBps, 0)
+        fun createAchievedDataRateBpsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAchievedDataRateBpsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addACMMARGINDB(builder: FlatBufferBuilder, acmMarginDb: Int) = builder.addOffset(56, acmMarginDb, 0)
+        fun createAcmMarginDbVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAcmMarginDbVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addENERGYPERSYMBOLTONOISEDENSITYDB(builder: FlatBufferBuilder, energyPerSymbolToNoiseDensityDb: Int) = builder.addOffset(57, energyPerSymbolToNoiseDensityDb, 0)
+        fun createEnergyPerSymbolToNoiseDensityDbVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEnergyPerSymbolToNoiseDensityDbVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addBLOCKERRORRATE(builder: FlatBufferBuilder, blockErrorRate: Int) = builder.addOffset(58, blockErrorRate, 0)
+        fun createBlockErrorRateVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startBlockErrorRateVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endRFL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

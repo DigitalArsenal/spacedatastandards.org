@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ACIDataVolumeByModCod, ACIDataVolumeByModCodT } from './ACIDataVolumeByModCod.js';
 import { ACIInterval, ACIIntervalT } from './ACIInterval.js';
 import { ACIProvenance, ACIProvenanceT } from './ACIProvenance.js';
 import { timingStandard } from './timingStandard.js';
@@ -140,7 +141,9 @@ PRODUCER_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Ed25519 signature by the producing `$EPM`.
+ * Ed25519 signature by the producing `$EPM` over the size-prefixed
+ * FlatBuffer projection with both 64-byte signature payloads zeroed while
+ * preserving their vectors and offsets.
  */
 SIGNATURE(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
@@ -157,8 +160,42 @@ signatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+ * field order, IDL capitalization, no insignificant whitespace, and both
+ * signature fields omitted.
+ */
+CANONICAL_JSON_SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+canonicalJsonSignatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+canonicalJsonSignatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Per-interval delivered volume grouped by selected modulation-and-coding
+ * entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+ */
+DATA_VOLUME_BY_MODCOD(index: number, obj?:ACIDataVolumeByModCod):ACIDataVolumeByModCod|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new ACIDataVolumeByModCod()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+dataVolumeByModcodLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startACI(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(14);
 }
 
 static addAciId(builder:flatbuffers.Builder, ACI_IDOffset:flatbuffers.Offset) {
@@ -233,6 +270,38 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addCanonicalJsonSignature(builder:flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, CANONICAL_JSON_SIGNATUREOffset, 0);
+}
+
+static createCanonicalJsonSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCanonicalJsonSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addDataVolumeByModcod(builder:flatbuffers.Builder, DATA_VOLUME_BY_MODCODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, DATA_VOLUME_BY_MODCODOffset, 0);
+}
+
+static createDataVolumeByModcodVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDataVolumeByModcodVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endACI(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ACI_ID
@@ -263,7 +332,9 @@ unpack(): ACIT {
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
     this.COMPUTED_AT(),
     this.PRODUCER_ID(),
-    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength()),
+    this.bb!.createObjList<ACIDataVolumeByModCod, ACIDataVolumeByModCodT>(this.DATA_VOLUME_BY_MODCOD.bind(this), this.dataVolumeByModcodLength())
   );
 }
 
@@ -281,6 +352,8 @@ unpackTo(_o: ACIT): void {
   _o.COMPUTED_AT = this.COMPUTED_AT();
   _o.PRODUCER_ID = this.PRODUCER_ID();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.CANONICAL_JSON_SIGNATURE = this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength());
+  _o.DATA_VOLUME_BY_MODCOD = this.bb!.createObjList<ACIDataVolumeByModCod, ACIDataVolumeByModCodT>(this.DATA_VOLUME_BY_MODCOD.bind(this), this.dataVolumeByModcodLength());
 }
 }
 
@@ -297,7 +370,9 @@ constructor(
   public PROVENANCE: ACIProvenanceT|null = null,
   public COMPUTED_AT: bigint = BigInt('0'),
   public PRODUCER_ID: string|Uint8Array|null = null,
-  public SIGNATURE: (number)[] = []
+  public SIGNATURE: (number)[] = [],
+  public CANONICAL_JSON_SIGNATURE: (number)[] = [],
+  public DATA_VOLUME_BY_MODCOD: (ACIDataVolumeByModCodT)[] = []
 ){}
 
 
@@ -310,6 +385,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const PRODUCER_ID = (this.PRODUCER_ID !== null ? builder.createString(this.PRODUCER_ID!) : 0);
   const SIGNATURE = ACI.createSignatureVector(builder, this.SIGNATURE);
+  const CANONICAL_JSON_SIGNATURE = ACI.createCanonicalJsonSignatureVector(builder, this.CANONICAL_JSON_SIGNATURE);
+  const DATA_VOLUME_BY_MODCOD = ACI.createDataVolumeByModcodVector(builder, builder.createObjectOffsetList(this.DATA_VOLUME_BY_MODCOD));
 
   ACI.startACI(builder);
   ACI.addAciId(builder, ACI_ID);
@@ -324,6 +401,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACI.addComputedAt(builder, this.COMPUTED_AT);
   ACI.addProducerId(builder, PRODUCER_ID);
   ACI.addSignature(builder, SIGNATURE);
+  ACI.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATURE);
+  ACI.addDataVolumeByModcod(builder, DATA_VOLUME_BY_MODCOD);
 
   return ACI.endACI(builder);
 }

@@ -4,6 +4,224 @@
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFE_EMISSION_MASK_CLASS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFE_EMISSION_MASK_CLASS: i8 = 8;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFE_EMISSION_MASK_CLASS: [rfeEmissionMaskClass; 9] = [
+  rfeEmissionMaskClass::UNSPECIFIED,
+  rfeEmissionMaskClass::IN_BAND,
+  rfeEmissionMaskClass::OUT_OF_BAND,
+  rfeEmissionMaskClass::SPURIOUS,
+  rfeEmissionMaskClass::HARMONIC,
+  rfeEmissionMaskClass::BROADBAND_NOISE,
+  rfeEmissionMaskClass::CONDUCTED,
+  rfeEmissionMaskClass::RADIATED,
+  rfeEmissionMaskClass::SUSCEPTIBILITY,
+];
+
+/// Capability class represented by an emission-limit curve.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfeEmissionMaskClass(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfeEmissionMaskClass {
+  pub const UNSPECIFIED: Self = Self(0);
+  pub const IN_BAND: Self = Self(1);
+  pub const OUT_OF_BAND: Self = Self(2);
+  pub const SPURIOUS: Self = Self(3);
+  pub const HARMONIC: Self = Self(4);
+  pub const BROADBAND_NOISE: Self = Self(5);
+  pub const CONDUCTED: Self = Self(6);
+  pub const RADIATED: Self = Self(7);
+  pub const SUSCEPTIBILITY: Self = Self(8);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::IN_BAND,
+    Self::OUT_OF_BAND,
+    Self::SPURIOUS,
+    Self::HARMONIC,
+    Self::BROADBAND_NOISE,
+    Self::CONDUCTED,
+    Self::RADIATED,
+    Self::SUSCEPTIBILITY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::IN_BAND => Some("IN_BAND"),
+      Self::OUT_OF_BAND => Some("OUT_OF_BAND"),
+      Self::SPURIOUS => Some("SPURIOUS"),
+      Self::HARMONIC => Some("HARMONIC"),
+      Self::BROADBAND_NOISE => Some("BROADBAND_NOISE"),
+      Self::CONDUCTED => Some("CONDUCTED"),
+      Self::RADIATED => Some("RADIATED"),
+      Self::SUSCEPTIBILITY => Some("SUSCEPTIBILITY"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfeEmissionMaskClass {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfeEmissionMaskClass {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfeEmissionMaskClass {
+    type Output = rfeEmissionMaskClass;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfeEmissionMaskClass {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfeEmissionMaskClass {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfeEmissionMaskClass {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFE_EMISSION_PATH: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFE_EMISSION_PATH: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFE_EMISSION_PATH: [rfeEmissionPath; 7] = [
+  rfeEmissionPath::UNSPECIFIED,
+  rfeEmissionPath::ANTENNA_PORT,
+  rfeEmissionPath::POWER_LEAD,
+  rfeEmissionPath::SIGNAL_LEAD,
+  rfeEmissionPath::ENCLOSURE,
+  rfeEmissionPath::FREE_SPACE,
+  rfeEmissionPath::STRUCTURE,
+];
+
+/// Physical path to which an emission-limit curve applies.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfeEmissionPath(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfeEmissionPath {
+  pub const UNSPECIFIED: Self = Self(0);
+  pub const ANTENNA_PORT: Self = Self(1);
+  pub const POWER_LEAD: Self = Self(2);
+  pub const SIGNAL_LEAD: Self = Self(3);
+  pub const ENCLOSURE: Self = Self(4);
+  pub const FREE_SPACE: Self = Self(5);
+  pub const STRUCTURE: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::ANTENNA_PORT,
+    Self::POWER_LEAD,
+    Self::SIGNAL_LEAD,
+    Self::ENCLOSURE,
+    Self::FREE_SPACE,
+    Self::STRUCTURE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::ANTENNA_PORT => Some("ANTENNA_PORT"),
+      Self::POWER_LEAD => Some("POWER_LEAD"),
+      Self::SIGNAL_LEAD => Some("SIGNAL_LEAD"),
+      Self::ENCLOSURE => Some("ENCLOSURE"),
+      Self::FREE_SPACE => Some("FREE_SPACE"),
+      Self::STRUCTURE => Some("STRUCTURE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfeEmissionPath {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfeEmissionPath {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfeEmissionPath {
+    type Output = rfeEmissionPath;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfeEmissionPath {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfeEmissionPath {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfeEmissionPath {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_EMITTER_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MAX_EMITTER_TYPE: i8 = 9;
@@ -247,6 +465,848 @@ impl<'a> ::flatbuffers::Verifiable for signalModulation {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for signalModulation {}
+pub enum RFEEmissionMaskPointOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is
+/// relative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in
+/// the mask's required UNITS.
+pub struct RFEEmissionMaskPoint<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFEEmissionMaskPoint<'a> {
+  type Inner = RFEEmissionMaskPoint<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFEEmissionMaskPoint<'a> {
+  pub const VT_FREQUENCY_OFFSET_HZ: ::flatbuffers::VOffsetT = 4;
+  pub const VT_VALUE: ::flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFEEmissionMaskPoint { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFEEmissionMaskPointArgs
+  ) -> ::flatbuffers::WIPOffset<RFEEmissionMaskPoint<'bldr>> {
+    let mut builder = RFEEmissionMaskPointBuilder::new(_fbb);
+    builder.add_VALUE(args.VALUE);
+    builder.add_FREQUENCY_OFFSET_HZ(args.FREQUENCY_OFFSET_HZ);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFEEmissionMaskPointT {
+    let FREQUENCY_OFFSET_HZ = self.FREQUENCY_OFFSET_HZ();
+    let VALUE = self.VALUE();
+    RFEEmissionMaskPointT {
+      FREQUENCY_OFFSET_HZ,
+      VALUE,
+    }
+  }
+
+  #[inline]
+  pub fn FREQUENCY_OFFSET_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFEEmissionMaskPoint::VT_FREQUENCY_OFFSET_HZ, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFEEmissionMaskPoint::VT_VALUE, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFEEmissionMaskPoint<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<f64>("FREQUENCY_OFFSET_HZ", Self::VT_FREQUENCY_OFFSET_HZ, false)?
+     .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFEEmissionMaskPointArgs {
+    pub FREQUENCY_OFFSET_HZ: f64,
+    pub VALUE: f64,
+}
+impl<'a> Default for RFEEmissionMaskPointArgs {
+  #[inline]
+  fn default() -> Self {
+    RFEEmissionMaskPointArgs {
+      FREQUENCY_OFFSET_HZ: 0.0,
+      VALUE: 0.0,
+    }
+  }
+}
+
+pub struct RFEEmissionMaskPointBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFEEmissionMaskPointBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_FREQUENCY_OFFSET_HZ(&mut self, FREQUENCY_OFFSET_HZ: f64) {
+    self.fbb_.push_slot::<f64>(RFEEmissionMaskPoint::VT_FREQUENCY_OFFSET_HZ, FREQUENCY_OFFSET_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_VALUE(&mut self, VALUE: f64) {
+    self.fbb_.push_slot::<f64>(RFEEmissionMaskPoint::VT_VALUE, VALUE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFEEmissionMaskPointBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFEEmissionMaskPointBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFEEmissionMaskPoint<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFEEmissionMaskPoint<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFEEmissionMaskPoint");
+      ds.field("FREQUENCY_OFFSET_HZ", &self.FREQUENCY_OFFSET_HZ());
+      ds.field("VALUE", &self.VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFEEmissionMaskPointT {
+  pub FREQUENCY_OFFSET_HZ: f64,
+  pub VALUE: f64,
+}
+impl Default for RFEEmissionMaskPointT {
+  fn default() -> Self {
+    Self {
+      FREQUENCY_OFFSET_HZ: 0.0,
+      VALUE: 0.0,
+    }
+  }
+}
+impl RFEEmissionMaskPointT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFEEmissionMaskPoint<'b>> {
+    let FREQUENCY_OFFSET_HZ = self.FREQUENCY_OFFSET_HZ;
+    let VALUE = self.VALUE;
+    RFEEmissionMaskPoint::create(_fbb, &RFEEmissionMaskPointArgs{
+      FREQUENCY_OFFSET_HZ,
+      VALUE,
+    })
+  }
+}
+pub enum RFEProvenanceOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Provenance of an emitter descriptor or emission mask. Capability schemas
+/// carry model names and citations as data so the IDL remains provider-neutral.
+pub struct RFEProvenance<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFEProvenance<'a> {
+  type Inner = RFEProvenance<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFEProvenance<'a> {
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SOURCE_QUERY: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MODEL_NAME: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MODEL_VERSION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CITATION: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 16;
+  pub const VT_MODULE_CONTENT_HASH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 20;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFEProvenance { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFEProvenanceArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFEProvenance<'bldr>> {
+    let mut builder = RFEProvenanceBuilder::new(_fbb);
+    builder.add_COMPUTED_AT(args.COMPUTED_AT);
+    if let Some(x) = args.MODULE_CONTENT_HASH { builder.add_MODULE_CONTENT_HASH(x); }
+    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    if let Some(x) = args.CITATION { builder.add_CITATION(x); }
+    if let Some(x) = args.MODEL_VERSION { builder.add_MODEL_VERSION(x); }
+    if let Some(x) = args.MODEL_NAME { builder.add_MODEL_NAME(x); }
+    if let Some(x) = args.SOURCE_QUERY { builder.add_SOURCE_QUERY(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFEProvenanceT {
+    let SOURCE = {
+      let x = self.SOURCE();
+      alloc::string::ToString::to_string(x)
+    };
+    let SOURCE_QUERY = self.SOURCE_QUERY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODEL_NAME = self.MODEL_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODEL_VERSION = self.MODEL_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CITATION = self.CITATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT();
+    RFEProvenanceT {
+      SOURCE,
+      SOURCE_QUERY,
+      MODEL_NAME,
+      MODEL_VERSION,
+      CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
+      COMPUTED_AT,
+    }
+  }
+
+  #[inline]
+  pub fn SOURCE(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_SOURCE, None).unwrap()}
+  }
+  #[inline]
+  pub fn SOURCE_QUERY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_SOURCE_QUERY, None)}
+  }
+  #[inline]
+  pub fn MODEL_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_MODEL_NAME, None)}
+  }
+  #[inline]
+  pub fn MODEL_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_MODEL_VERSION, None)}
+  }
+  #[inline]
+  pub fn CITATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_CITATION, None)}
+  }
+  #[inline]
+  pub fn MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_MODULE_ID, None)}
+  }
+  #[inline]
+  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_MODULE_VERSION, None)}
+  }
+  #[inline]
+  pub fn MODULE_CONTENT_HASH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEProvenance::VT_MODULE_CONTENT_HASH, None)}
+  }
+  #[inline]
+  pub fn COMPUTED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(RFEProvenance::VT_COMPUTED_AT, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFEProvenance<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_QUERY", Self::VT_SOURCE_QUERY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_NAME", Self::VT_MODEL_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_VERSION", Self::VT_MODEL_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_CONTENT_HASH", Self::VT_MODULE_CONTENT_HASH, false)?
+     .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFEProvenanceArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_QUERY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COMPUTED_AT: u64,
+}
+impl<'a> Default for RFEProvenanceArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFEProvenanceArgs {
+      SOURCE: None, // required field
+      SOURCE_QUERY: None,
+      MODEL_NAME: None,
+      MODEL_VERSION: None,
+      CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
+      COMPUTED_AT: 0,
+    }
+  }
+}
+
+pub struct RFEProvenanceBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFEProvenanceBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_SOURCE_QUERY(&mut self, SOURCE_QUERY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_SOURCE_QUERY, SOURCE_QUERY);
+  }
+  #[inline]
+  pub fn add_MODEL_NAME(&mut self, MODEL_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_MODEL_NAME, MODEL_NAME);
+  }
+  #[inline]
+  pub fn add_MODEL_VERSION(&mut self, MODEL_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_MODEL_VERSION, MODEL_VERSION);
+  }
+  #[inline]
+  pub fn add_CITATION(&mut self, CITATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_CITATION, CITATION);
+  }
+  #[inline]
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_MODULE_ID, MODULE_ID);
+  }
+  #[inline]
+  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_MODULE_VERSION, MODULE_VERSION);
+  }
+  #[inline]
+  pub fn add_MODULE_CONTENT_HASH(&mut self, MODULE_CONTENT_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEProvenance::VT_MODULE_CONTENT_HASH, MODULE_CONTENT_HASH);
+  }
+  #[inline]
+  pub fn add_COMPUTED_AT(&mut self, COMPUTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(RFEProvenance::VT_COMPUTED_AT, COMPUTED_AT, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFEProvenanceBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFEProvenanceBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFEProvenance<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, RFEProvenance::VT_SOURCE,"SOURCE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFEProvenance<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFEProvenance");
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("SOURCE_QUERY", &self.SOURCE_QUERY());
+      ds.field("MODEL_NAME", &self.MODEL_NAME());
+      ds.field("MODEL_VERSION", &self.MODEL_VERSION());
+      ds.field("CITATION", &self.CITATION());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
+      ds.field("MODULE_CONTENT_HASH", &self.MODULE_CONTENT_HASH());
+      ds.field("COMPUTED_AT", &self.COMPUTED_AT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFEProvenanceT {
+  pub SOURCE: alloc::string::String,
+  pub SOURCE_QUERY: Option<alloc::string::String>,
+  pub MODEL_NAME: Option<alloc::string::String>,
+  pub MODEL_VERSION: Option<alloc::string::String>,
+  pub CITATION: Option<alloc::string::String>,
+  pub MODULE_ID: Option<alloc::string::String>,
+  pub MODULE_VERSION: Option<alloc::string::String>,
+  pub MODULE_CONTENT_HASH: Option<alloc::string::String>,
+  pub COMPUTED_AT: u64,
+}
+impl Default for RFEProvenanceT {
+  fn default() -> Self {
+    Self {
+      SOURCE: alloc::string::ToString::to_string(""),
+      SOURCE_QUERY: None,
+      MODEL_NAME: None,
+      MODEL_VERSION: None,
+      CITATION: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      MODULE_CONTENT_HASH: None,
+      COMPUTED_AT: 0,
+    }
+  }
+}
+impl RFEProvenanceT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFEProvenance<'b>> {
+    let SOURCE = Some({
+      let x = &self.SOURCE;
+      _fbb.create_string(x)
+    });
+    let SOURCE_QUERY = self.SOURCE_QUERY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODEL_NAME = self.MODEL_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODEL_VERSION = self.MODEL_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CITATION = self.CITATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_CONTENT_HASH = self.MODULE_CONTENT_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT;
+    RFEProvenance::create(_fbb, &RFEProvenanceArgs{
+      SOURCE,
+      SOURCE_QUERY,
+      MODEL_NAME,
+      MODEL_VERSION,
+      CITATION,
+      MODULE_ID,
+      MODULE_VERSION,
+      MODULE_CONTENT_HASH,
+      COMPUTED_AT,
+    })
+  }
+}
+pub enum RFEEmissionMaskOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,
+/// or susceptibility limit curve.
+pub struct RFEEmissionMask<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFEEmissionMask<'a> {
+  type Inner = RFEEmissionMask<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFEEmissionMask<'a> {
+  pub const VT_MASK_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CLASS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_PATH: ::flatbuffers::VOffsetT = 10;
+  pub const VT_UNITS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_REFERENCE_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 14;
+  pub const VT_REFERENCE_BANDWIDTH_HZ: ::flatbuffers::VOffsetT = 16;
+  pub const VT_POINTS: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 20;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFEEmissionMask { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFEEmissionMaskArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFEEmissionMask<'bldr>> {
+    let mut builder = RFEEmissionMaskBuilder::new(_fbb);
+    builder.add_REFERENCE_BANDWIDTH_HZ(args.REFERENCE_BANDWIDTH_HZ);
+    builder.add_REFERENCE_FREQUENCY_HZ(args.REFERENCE_FREQUENCY_HZ);
+    if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
+    if let Some(x) = args.POINTS { builder.add_POINTS(x); }
+    if let Some(x) = args.UNITS { builder.add_UNITS(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.MASK_ID { builder.add_MASK_ID(x); }
+    builder.add_PATH(args.PATH);
+    builder.add_CLASS(args.CLASS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFEEmissionMaskT {
+    let MASK_ID = {
+      let x = self.MASK_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CLASS = self.CLASS();
+    let PATH = self.PATH();
+    let UNITS = {
+      let x = self.UNITS();
+      alloc::string::ToString::to_string(x)
+    };
+    let REFERENCE_FREQUENCY_HZ = self.REFERENCE_FREQUENCY_HZ();
+    let REFERENCE_BANDWIDTH_HZ = self.REFERENCE_BANDWIDTH_HZ();
+    let POINTS = {
+      let x = self.POINTS();
+      x.iter().map(|t| t.unpack()).collect()
+    };
+    let PROVENANCE = {
+      let x = self.PROVENANCE();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    RFEEmissionMaskT {
+      MASK_ID,
+      NAME,
+      CLASS,
+      PATH,
+      UNITS,
+      REFERENCE_FREQUENCY_HZ,
+      REFERENCE_BANDWIDTH_HZ,
+      POINTS,
+      PROVENANCE,
+    }
+  }
+
+  #[inline]
+  pub fn MASK_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEEmissionMask::VT_MASK_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEEmissionMask::VT_NAME, None)}
+  }
+  #[inline]
+  pub fn CLASS(&self) -> rfeEmissionMaskClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfeEmissionMaskClass>(RFEEmissionMask::VT_CLASS, Some(rfeEmissionMaskClass::UNSPECIFIED)).unwrap()}
+  }
+  #[inline]
+  pub fn PATH(&self) -> rfeEmissionPath {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfeEmissionPath>(RFEEmissionMask::VT_PATH, Some(rfeEmissionPath::UNSPECIFIED)).unwrap()}
+  }
+  /// Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,
+  /// or dBuA. A point with no unit is not publishable.
+  #[inline]
+  pub fn UNITS(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFEEmissionMask::VT_UNITS, None).unwrap()}
+  }
+  #[inline]
+  pub fn REFERENCE_FREQUENCY_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFEEmissionMask::VT_REFERENCE_FREQUENCY_HZ, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn REFERENCE_BANDWIDTH_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFEEmissionMask::VT_REFERENCE_BANDWIDTH_HZ, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn POINTS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMaskPoint<'a>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMaskPoint>>>>(RFEEmissionMask::VT_POINTS, None).unwrap()}
+  }
+  #[inline]
+  pub fn PROVENANCE(&self) -> RFEProvenance<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFEProvenance>>(RFEEmissionMask::VT_PROVENANCE, None).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFEEmissionMask<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MASK_ID", Self::VT_MASK_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<rfeEmissionMaskClass>("CLASS", Self::VT_CLASS, false)?
+     .visit_field::<rfeEmissionPath>("PATH", Self::VT_PATH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UNITS", Self::VT_UNITS, true)?
+     .visit_field::<f64>("REFERENCE_FREQUENCY_HZ", Self::VT_REFERENCE_FREQUENCY_HZ, false)?
+     .visit_field::<f64>("REFERENCE_BANDWIDTH_HZ", Self::VT_REFERENCE_BANDWIDTH_HZ, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<RFEEmissionMaskPoint>>>>("POINTS", Self::VT_POINTS, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFEProvenance>>("PROVENANCE", Self::VT_PROVENANCE, true)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFEEmissionMaskArgs<'a> {
+    pub MASK_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CLASS: rfeEmissionMaskClass,
+    pub PATH: rfeEmissionPath,
+    pub UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FREQUENCY_HZ: f64,
+    pub REFERENCE_BANDWIDTH_HZ: f64,
+    pub POINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMaskPoint<'a>>>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<RFEProvenance<'a>>>,
+}
+impl<'a> Default for RFEEmissionMaskArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFEEmissionMaskArgs {
+      MASK_ID: None, // required field
+      NAME: None,
+      CLASS: rfeEmissionMaskClass::UNSPECIFIED,
+      PATH: rfeEmissionPath::UNSPECIFIED,
+      UNITS: None, // required field
+      REFERENCE_FREQUENCY_HZ: 0.0,
+      REFERENCE_BANDWIDTH_HZ: 0.0,
+      POINTS: None, // required field
+      PROVENANCE: None, // required field
+    }
+  }
+}
+
+pub struct RFEEmissionMaskBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFEEmissionMaskBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MASK_ID(&mut self, MASK_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEEmissionMask::VT_MASK_ID, MASK_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEEmissionMask::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_CLASS(&mut self, CLASS: rfeEmissionMaskClass) {
+    self.fbb_.push_slot::<rfeEmissionMaskClass>(RFEEmissionMask::VT_CLASS, CLASS, rfeEmissionMaskClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_PATH(&mut self, PATH: rfeEmissionPath) {
+    self.fbb_.push_slot::<rfeEmissionPath>(RFEEmissionMask::VT_PATH, PATH, rfeEmissionPath::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_UNITS(&mut self, UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEEmissionMask::VT_UNITS, UNITS);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FREQUENCY_HZ(&mut self, REFERENCE_FREQUENCY_HZ: f64) {
+    self.fbb_.push_slot::<f64>(RFEEmissionMask::VT_REFERENCE_FREQUENCY_HZ, REFERENCE_FREQUENCY_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_REFERENCE_BANDWIDTH_HZ(&mut self, REFERENCE_BANDWIDTH_HZ: f64) {
+    self.fbb_.push_slot::<f64>(RFEEmissionMask::VT_REFERENCE_BANDWIDTH_HZ, REFERENCE_BANDWIDTH_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_POINTS(&mut self, POINTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<RFEEmissionMaskPoint<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFEEmissionMask::VT_POINTS, POINTS);
+  }
+  #[inline]
+  pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<RFEProvenance<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFEProvenance>>(RFEEmissionMask::VT_PROVENANCE, PROVENANCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFEEmissionMaskBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFEEmissionMaskBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFEEmissionMask<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, RFEEmissionMask::VT_MASK_ID,"MASK_ID");
+    self.fbb_.required(o, RFEEmissionMask::VT_UNITS,"UNITS");
+    self.fbb_.required(o, RFEEmissionMask::VT_POINTS,"POINTS");
+    self.fbb_.required(o, RFEEmissionMask::VT_PROVENANCE,"PROVENANCE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFEEmissionMask<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFEEmissionMask");
+      ds.field("MASK_ID", &self.MASK_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("CLASS", &self.CLASS());
+      ds.field("PATH", &self.PATH());
+      ds.field("UNITS", &self.UNITS());
+      ds.field("REFERENCE_FREQUENCY_HZ", &self.REFERENCE_FREQUENCY_HZ());
+      ds.field("REFERENCE_BANDWIDTH_HZ", &self.REFERENCE_BANDWIDTH_HZ());
+      ds.field("POINTS", &self.POINTS());
+      ds.field("PROVENANCE", &self.PROVENANCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFEEmissionMaskT {
+  pub MASK_ID: alloc::string::String,
+  pub NAME: Option<alloc::string::String>,
+  pub CLASS: rfeEmissionMaskClass,
+  pub PATH: rfeEmissionPath,
+  pub UNITS: alloc::string::String,
+  pub REFERENCE_FREQUENCY_HZ: f64,
+  pub REFERENCE_BANDWIDTH_HZ: f64,
+  pub POINTS: alloc::vec::Vec<RFEEmissionMaskPointT>,
+  pub PROVENANCE: alloc::boxed::Box<RFEProvenanceT>,
+}
+impl Default for RFEEmissionMaskT {
+  fn default() -> Self {
+    Self {
+      MASK_ID: alloc::string::ToString::to_string(""),
+      NAME: None,
+      CLASS: rfeEmissionMaskClass::UNSPECIFIED,
+      PATH: rfeEmissionPath::UNSPECIFIED,
+      UNITS: alloc::string::ToString::to_string(""),
+      REFERENCE_FREQUENCY_HZ: 0.0,
+      REFERENCE_BANDWIDTH_HZ: 0.0,
+      POINTS: Default::default(),
+      PROVENANCE: Default::default(),
+    }
+  }
+}
+impl RFEEmissionMaskT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFEEmissionMask<'b>> {
+    let MASK_ID = Some({
+      let x = &self.MASK_ID;
+      _fbb.create_string(x)
+    });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLASS = self.CLASS;
+    let PATH = self.PATH;
+    let UNITS = Some({
+      let x = &self.UNITS;
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FREQUENCY_HZ = self.REFERENCE_FREQUENCY_HZ;
+    let REFERENCE_BANDWIDTH_HZ = self.REFERENCE_BANDWIDTH_HZ;
+    let POINTS = Some({
+      let x = &self.POINTS;
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PROVENANCE = Some({
+      let x = &self.PROVENANCE;
+      x.pack(_fbb)
+    });
+    RFEEmissionMask::create(_fbb, &RFEEmissionMaskArgs{
+      MASK_ID,
+      NAME,
+      CLASS,
+      PATH,
+      UNITS,
+      REFERENCE_FREQUENCY_HZ,
+      REFERENCE_BANDWIDTH_HZ,
+      POINTS,
+      PROVENANCE,
+    })
+  }
+}
 pub enum rfEmitterDetailOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -279,6 +1339,7 @@ impl<'a> rfEmitterDetail<'a> {
   pub const VT_MODULATION: ::flatbuffers::VOffsetT = 28;
   pub const VT_ANTENNA_PATTERN: ::flatbuffers::VOffsetT = 30;
   pub const VT_BEAMWIDTH: ::flatbuffers::VOffsetT = 32;
+  pub const VT_EMISSION_MASKS: ::flatbuffers::VOffsetT = 34;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -302,6 +1363,7 @@ impl<'a> rfEmitterDetail<'a> {
     builder.add_FREQ_MAX(args.FREQ_MAX);
     builder.add_FREQ_MIN(args.FREQ_MIN);
     builder.add_FREQUENCY(args.FREQUENCY);
+    if let Some(x) = args.EMISSION_MASKS { builder.add_EMISSION_MASKS(x); }
     if let Some(x) = args.ANTENNA_PATTERN { builder.add_ANTENNA_PATTERN(x); }
     if let Some(x) = args.MODE_NAME { builder.add_MODE_NAME(x); }
     builder.add_MODULATION(args.MODULATION);
@@ -328,6 +1390,9 @@ impl<'a> rfEmitterDetail<'a> {
       alloc::string::ToString::to_string(x)
     });
     let BEAMWIDTH = self.BEAMWIDTH();
+    let EMISSION_MASKS = self.EMISSION_MASKS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     rfEmitterDetailT {
       MODE_NAME,
       FREQUENCY,
@@ -344,6 +1409,7 @@ impl<'a> rfEmitterDetail<'a> {
       MODULATION,
       ANTENNA_PATTERN,
       BEAMWIDTH,
+      EMISSION_MASKS,
     }
   }
 
@@ -467,6 +1533,15 @@ impl<'a> rfEmitterDetail<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_BEAMWIDTH, Some(0.0)).unwrap()}
   }
+  /// Emission and susceptibility limit curves applicable to this operating
+  /// mode. Curves are evaluated in point order after sorting by frequency.
+  #[inline]
+  pub fn EMISSION_MASKS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMask<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMask>>>>(rfEmitterDetail::VT_EMISSION_MASKS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for rfEmitterDetail<'_> {
@@ -490,6 +1565,7 @@ impl ::flatbuffers::Verifiable for rfEmitterDetail<'_> {
      .visit_field::<signalModulation>("MODULATION", Self::VT_MODULATION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ANTENNA_PATTERN", Self::VT_ANTENNA_PATTERN, false)?
      .visit_field::<f64>("BEAMWIDTH", Self::VT_BEAMWIDTH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<RFEEmissionMask>>>>("EMISSION_MASKS", Self::VT_EMISSION_MASKS, false)?
      .finish();
     Ok(())
   }
@@ -510,6 +1586,7 @@ pub struct rfEmitterDetailArgs<'a> {
     pub MODULATION: signalModulation,
     pub ANTENNA_PATTERN: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub BEAMWIDTH: f64,
+    pub EMISSION_MASKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RFEEmissionMask<'a>>>>>,
 }
 impl<'a> Default for rfEmitterDetailArgs<'a> {
   #[inline]
@@ -530,6 +1607,7 @@ impl<'a> Default for rfEmitterDetailArgs<'a> {
       MODULATION: signalModulation::CW,
       ANTENNA_PATTERN: None,
       BEAMWIDTH: 0.0,
+      EMISSION_MASKS: None,
     }
   }
 }
@@ -600,6 +1678,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> rfEmitterDetailBuilder<'a, 'b
     self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
   }
   #[inline]
+  pub fn add_EMISSION_MASKS(&mut self, EMISSION_MASKS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<RFEEmissionMask<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(rfEmitterDetail::VT_EMISSION_MASKS, EMISSION_MASKS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> rfEmitterDetailBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     rfEmitterDetailBuilder {
@@ -632,6 +1714,7 @@ impl ::core::fmt::Debug for rfEmitterDetail<'_> {
       ds.field("MODULATION", &self.MODULATION());
       ds.field("ANTENNA_PATTERN", &self.ANTENNA_PATTERN());
       ds.field("BEAMWIDTH", &self.BEAMWIDTH());
+      ds.field("EMISSION_MASKS", &self.EMISSION_MASKS());
       ds.finish()
   }
 }
@@ -653,6 +1736,7 @@ pub struct rfEmitterDetailT {
   pub MODULATION: signalModulation,
   pub ANTENNA_PATTERN: Option<alloc::string::String>,
   pub BEAMWIDTH: f64,
+  pub EMISSION_MASKS: Option<alloc::vec::Vec<RFEEmissionMaskT>>,
 }
 impl Default for rfEmitterDetailT {
   fn default() -> Self {
@@ -672,6 +1756,7 @@ impl Default for rfEmitterDetailT {
       MODULATION: signalModulation::CW,
       ANTENNA_PATTERN: None,
       BEAMWIDTH: 0.0,
+      EMISSION_MASKS: None,
     }
   }
 }
@@ -699,6 +1784,9 @@ impl rfEmitterDetailT {
       _fbb.create_string(x)
     });
     let BEAMWIDTH = self.BEAMWIDTH;
+    let EMISSION_MASKS = self.EMISSION_MASKS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     rfEmitterDetail::create(_fbb, &rfEmitterDetailArgs{
       MODE_NAME,
       FREQUENCY,
@@ -715,6 +1803,7 @@ impl rfEmitterDetailT {
       MODULATION,
       ANTENNA_PATTERN,
       BEAMWIDTH,
+      EMISSION_MASKS,
     })
   }
 }
@@ -755,6 +1844,11 @@ impl<'a> RFE<'a> {
   pub const VT_RF_EMITTER_DETAILS: ::flatbuffers::VOffsetT = 38;
   pub const VT_THREAT_LEVEL: ::flatbuffers::VOffsetT = 40;
   pub const VT_NOTES: ::flatbuffers::VOffsetT = 42;
+  pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_COMPUTED_AT: ::flatbuffers::VOffsetT = 46;
+  pub const VT_PRODUCER_ID: ::flatbuffers::VOffsetT = 48;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 50;
+  pub const VT_CANONICAL_JSON_SIGNATURE: ::flatbuffers::VOffsetT = 52;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -766,11 +1860,16 @@ impl<'a> RFE<'a> {
     args: &'args RFEArgs<'args>
   ) -> ::flatbuffers::WIPOffset<RFE<'bldr>> {
     let mut builder = RFEBuilder::new(_fbb);
+    builder.add_COMPUTED_AT(args.COMPUTED_AT);
     builder.add_ANTENNA_GAIN(args.ANTENNA_GAIN);
     builder.add_AVG_POWER(args.AVG_POWER);
     builder.add_PEAK_POWER(args.PEAK_POWER);
     builder.add_FREQ_MAX(args.FREQ_MAX);
     builder.add_FREQ_MIN(args.FREQ_MIN);
+    if let Some(x) = args.CANONICAL_JSON_SIGNATURE { builder.add_CANONICAL_JSON_SIGNATURE(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.PRODUCER_ID { builder.add_PRODUCER_ID(x); }
+    if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
     if let Some(x) = args.NOTES { builder.add_NOTES(x); }
     if let Some(x) = args.THREAT_LEVEL { builder.add_THREAT_LEVEL(x); }
     if let Some(x) = args.RF_EMITTER_DETAILS { builder.add_RF_EMITTER_DETAILS(x); }
@@ -836,6 +1935,19 @@ impl<'a> RFE<'a> {
     let NOTES = self.NOTES().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let PROVENANCE = self.PROVENANCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let COMPUTED_AT = self.COMPUTED_AT();
+    let PRODUCER_ID = self.PRODUCER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
     RFET {
       ID,
       ID_ENTITY,
@@ -857,6 +1969,11 @@ impl<'a> RFE<'a> {
       RF_EMITTER_DETAILS,
       THREAT_LEVEL,
       NOTES,
+      PROVENANCE,
+      COMPUTED_AT,
+      PRODUCER_ID,
+      SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
     }
   }
 
@@ -1020,6 +2137,49 @@ impl<'a> RFE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFE::VT_NOTES, None)}
   }
+  /// Provenance of the root emitter descriptor.
+  #[inline]
+  pub fn PROVENANCE(&self) -> Option<RFEProvenance<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFEProvenance>>(RFE::VT_PROVENANCE, None)}
+  }
+  /// Unix ms this record was serialized.
+  #[inline]
+  pub fn COMPUTED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(RFE::VT_COMPUTED_AT, Some(0)).unwrap()}
+  }
+  /// `$EPM` identifier of the producing node.
+  #[inline]
+  pub fn PRODUCER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFE::VT_PRODUCER_ID, None)}
+  }
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(RFE::VT_SIGNATURE, None)}
+  }
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  #[inline]
+  pub fn CANONICAL_JSON_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(RFE::VT_CANONICAL_JSON_SIGNATURE, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for RFE<'_> {
@@ -1048,6 +2208,11 @@ impl ::flatbuffers::Verifiable for RFE<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<rfEmitterDetail>>>>("RF_EMITTER_DETAILS", Self::VT_RF_EMITTER_DETAILS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("THREAT_LEVEL", Self::VT_THREAT_LEVEL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFEProvenance>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+     .visit_field::<u64>("COMPUTED_AT", Self::VT_COMPUTED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_ID", Self::VT_PRODUCER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CANONICAL_JSON_SIGNATURE", Self::VT_CANONICAL_JSON_SIGNATURE, false)?
      .finish();
     Ok(())
   }
@@ -1073,6 +2238,11 @@ pub struct RFEArgs<'a> {
     pub RF_EMITTER_DETAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<rfEmitterDetail<'a>>>>>,
     pub THREAT_LEVEL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<RFEProvenance<'a>>>,
+    pub COMPUTED_AT: u64,
+    pub PRODUCER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CANONICAL_JSON_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for RFEArgs<'a> {
   #[inline]
@@ -1098,6 +2268,11 @@ impl<'a> Default for RFEArgs<'a> {
       RF_EMITTER_DETAILS: None,
       THREAT_LEVEL: None,
       NOTES: None,
+      PROVENANCE: None,
+      COMPUTED_AT: 0,
+      PRODUCER_ID: None,
+      SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
     }
   }
 }
@@ -1188,6 +2363,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFE::VT_NOTES, NOTES);
   }
   #[inline]
+  pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<RFEProvenance<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFEProvenance>>(RFE::VT_PROVENANCE, PROVENANCE);
+  }
+  #[inline]
+  pub fn add_COMPUTED_AT(&mut self, COMPUTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(RFE::VT_COMPUTED_AT, COMPUTED_AT, 0);
+  }
+  #[inline]
+  pub fn add_PRODUCER_ID(&mut self, PRODUCER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFE::VT_PRODUCER_ID, PRODUCER_ID);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFE::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_CANONICAL_JSON_SIGNATURE(&mut self, CANONICAL_JSON_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFE::VT_CANONICAL_JSON_SIGNATURE, CANONICAL_JSON_SIGNATURE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFEBuilder {
@@ -1225,6 +2420,11 @@ impl ::core::fmt::Debug for RFE<'_> {
       ds.field("RF_EMITTER_DETAILS", &self.RF_EMITTER_DETAILS());
       ds.field("THREAT_LEVEL", &self.THREAT_LEVEL());
       ds.field("NOTES", &self.NOTES());
+      ds.field("PROVENANCE", &self.PROVENANCE());
+      ds.field("COMPUTED_AT", &self.COMPUTED_AT());
+      ds.field("PRODUCER_ID", &self.PRODUCER_ID());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("CANONICAL_JSON_SIGNATURE", &self.CANONICAL_JSON_SIGNATURE());
       ds.finish()
   }
 }
@@ -1251,6 +2451,11 @@ pub struct RFET {
   pub RF_EMITTER_DETAILS: Option<alloc::vec::Vec<rfEmitterDetailT>>,
   pub THREAT_LEVEL: Option<alloc::string::String>,
   pub NOTES: Option<alloc::string::String>,
+  pub PROVENANCE: Option<alloc::boxed::Box<RFEProvenanceT>>,
+  pub COMPUTED_AT: u64,
+  pub PRODUCER_ID: Option<alloc::string::String>,
+  pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub CANONICAL_JSON_SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for RFET {
   fn default() -> Self {
@@ -1275,6 +2480,11 @@ impl Default for RFET {
       RF_EMITTER_DETAILS: None,
       THREAT_LEVEL: None,
       NOTES: None,
+      PROVENANCE: None,
+      COMPUTED_AT: 0,
+      PRODUCER_ID: None,
+      SIGNATURE: None,
+      CANONICAL_JSON_SIGNATURE: None,
     }
   }
 }
@@ -1329,6 +2539,19 @@ impl RFET {
     let NOTES = self.NOTES.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let COMPUTED_AT = self.COMPUTED_AT;
+    let PRODUCER_ID = self.PRODUCER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CANONICAL_JSON_SIGNATURE = self.CANONICAL_JSON_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     RFE::create(_fbb, &RFEArgs{
       ID,
       ID_ENTITY,
@@ -1350,6 +2573,11 @@ impl RFET {
       RF_EMITTER_DETAILS,
       THREAT_LEVEL,
       NOTES,
+      PROVENANCE,
+      COMPUTED_AT,
+      PRODUCER_ID,
+      SIGNATURE,
+      CANONICAL_JSON_SIGNATURE,
     })
   }
 }

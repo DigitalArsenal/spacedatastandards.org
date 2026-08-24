@@ -1,0 +1,120 @@
+// Hash: de2444052e3e196bda4f5df89ae2d10924f4775229faa9d30c6833a5054fbf42
+// Version: 1.193.1
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Phased Array Pattern Synthesis (PAP)
+// `$BEM` remains the deployed-beam descriptor and hop schedule. This record is
+// the signed synthesis result for an element array and steering state.
+
+/// Physical arrangement of array elements.
+enum papArrayGeometry : byte {
+  UNSPECIFIED = 0,
+  LINEAR,
+  RECTANGULAR,
+  TRIANGULAR,
+  CIRCULAR,
+  CONFORMAL,
+  ARBITRARY
+}
+
+/// Amplitude taper capability class.
+enum papTaperFamily : byte {
+  UNSPECIFIED = 0,
+  UNIFORM,
+  COSINE,
+  RAISED_COSINE,
+  EQUAL_SIDELOBE,
+  CONTROLLED_SIDELOBE,
+  CUSTOM
+}
+
+/// Angular coordinate held fixed by a gain cut.
+enum papGainCutAxis : byte {
+  UNSPECIFIED = 0,
+  AZIMUTH,
+  ELEVATION,
+  CONE,
+  CLOCK
+}
+
+/// One array element and its applied complex weight.
+table PAPElement {
+  ELEMENT_ID: string (required);
+  POSITION_X_M: double;
+  POSITION_Y_M: double;
+  POSITION_Z_M: double;
+  WEIGHT_REAL: double;
+  WEIGHT_IMAGINARY: double;
+  AMPLITUDE: double;
+  PHASE_DEG: double;
+  ELEMENT_PATTERN_ID: string;
+  FAILURE_FLAGS: uint32;
+  FAILED: bool;
+}
+
+/// One one-dimensional gain cut through the synthesized pattern.
+table PAPGainCut {
+  CUT_ID: string (required);
+  AXIS: papGainCutAxis = UNSPECIFIED;
+  FIXED_ANGLE_DEG: double;
+  ANGLES_DEG: [double] (required);
+  GAIN_DBI: [double] (required);
+}
+
+/// One requested adaptive null and its achieved result.
+table PAPNull {
+  NULL_ID: string (required);
+  SOURCE_ID: string;
+  AZIMUTH_DEG: double;
+  ELEVATION_DEG: double;
+  REQUESTED_DEPTH_DB: double;
+  ACHIEVED_DEPTH_DB: double;
+  ANGULAR_ERROR_DEG: double;
+}
+
+/// Phased Array Pattern Synthesis
+table PAP {
+  PAP_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  RFE_ID: string;
+  BEM_ID: string;
+  /// BEMHopSchedule.SCHEDULE_ID evaluated by this synthesis, when applicable.
+  HOP_SCHEDULE_ID: string;
+  GEOMETRY: papArrayGeometry = UNSPECIFIED;
+  ELEMENTS: [PAPElement] (required);
+  TAPER: papTaperFamily = UNSPECIFIED;
+  TAPER_PARAMETERS: [double];
+
+  STEERING_AZIMUTH_DEG: double;
+  STEERING_ELEVATION_DEG: double;
+  STEERING_CONE_DEG: double;
+  STEERING_CLOCK_DEG: double;
+  SCAN_LOSS_DB: double;
+  PEAK_GAIN_DBI: double;
+
+  GAIN_CUTS: [PAPGainCut] (required);
+  AZIMUTH_3DB_BEAMWIDTH_DEG: double;
+  ELEVATION_3DB_BEAMWIDTH_DEG: double;
+  FIRST_SIDELOBE_LEVEL_DB: double;
+  PEAK_SIDELOBE_LEVEL_DB: double;
+  GRATING_LOBE_PRESENT: bool;
+  GRATING_LOBE_AZIMUTH_DEG: [double];
+  GRATING_LOBE_ELEVATION_DEG: [double];
+  NULLS: [PAPNull];
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type PAP;
+file_identifier "$PAP";
