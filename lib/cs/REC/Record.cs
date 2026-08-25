@@ -242,6 +242,7 @@ public struct Record : IFlatbufferObject
   public GEL valueAsGEL() { return value<GEL>().Value; }
   public PAP valueAsPAP() { return value<PAP>().Value; }
   public RSD valueAsRSD() { return value<RSD>().Value; }
+  public IRM valueAsIRM() { return value<IRM>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -945,6 +946,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.RSD:
         _o.value.Value = this.value<RSD>().HasValue ? this.value<RSD>().Value.UnPack() : null;
+        break;
+      case RecordType.IRM:
+        _o.value.Value = this.value<IRM>().HasValue ? this.value<IRM>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

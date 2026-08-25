@@ -1,0 +1,369 @@
+// Hash: ce4a9f4e9a46502e18181b7c1c07ca25c740818294a4eccf03502fa5cd3d5d59
+// Version: 1.195.0
+// -----------------------------------END_HEADER
+// Ingest Resume Mark (IRM)
+// Description
+// The durable checkpoint of ONE bulk-ingest job: where a chunked reader stopped,
+// what it had already stored, and everything a fresh process needs to decode the
+// NEXT chunk without re-reading the ones before it. A resume mark is bookkeeping
+// about an ingest, never a copy of the ingested data: it carries no rows, and a
+// consumer that loses every mark loses only work, never records.
+//
+// WHY THIS IS A RECORD AND NOT A SIDECAR FILE. A bulk source is read in ranged
+// chunks because hosts cap a single response body, so a job is a sequence of
+// partial reads that must survive a crash between any two of them. The mark is
+// therefore written through the same schema-typed storage lane as the records it
+// tracks, on every host class that can run the ingest, rather than through a
+// filesystem capability that some host classes do not implement.
+//
+// THE MARK ADVANCES FROM THE DURABLE RESULT, NEVER AT DISPATCH. A publisher
+// writes a new mark only after the chunk's records are committed. Advancing when
+// a chunk is REQUESTED converts a crash between fetch and store into permanently
+// skipped rows, which no later run can detect. Re-reading one chunk is cheap and
+// the storage lane is content-addressed; skipping one is silent data loss. A
+// chunk that stored nothing therefore emits NO mark.
+//
+// NEXT_OFFSET IS A RECORD BOUNDARY, NEVER A BYTE BUDGET. A ranged read ends
+// wherever the byte budget lands, which is normally mid-record. The publisher
+// corrects BACKWARDS to the end of the last COMPLETE record in the chunk and
+// publishes that corrected position. An uncorrected offset drops the two partial
+// records at the seam — silently, because a truncated record is indistinguishable
+// from a malformed one to a decoder's field guards.
+//
+// DECODE CONTEXT IS PART OF THE MARK. In a delimited text export the column
+// header appears once, at offset 0. Every chunk after the first is headerless, so
+// a resuming reader that has only an offset decodes zero rows and reports a clean
+// empty tail. DECODE_CONTEXT carries the header verbatim, and it is a REQUIRED
+// part of any mark whose NEXT_OFFSET is past the source's own header.
+//
+// A COMPRESSED SOURCE IS RESUMED BY ITS DECODER, NOT BY AN OFFSET. A general
+// stream-compression codec has no restart point: a byte position in the
+// compressed stream means nothing without the decompressor that produced the
+// bytes before it. So when COMPRESSION is non-empty, NEXT_OFFSET is a position in
+// the COMPRESSED stream and resuming additionally requires all three of
+// DECODER_STATE (the serialized, pointer-free decoder struct), WINDOW (the
+// history window that IS the codec's dictionary — tens of kibibytes at typical
+// window sizes), and PARTIAL_RECORD (the record straddling the seam). A mark
+// missing any of them is a mark for a job that must RESTART from offset 0.
+//
+// A DECODER-STATE MISMATCH RESTARTS, IT NEVER RESUMES. DECODER_STATE is an opaque
+// memory image whose layout belongs to one decoder build, so it is stamped:
+// DECODER_STATE_FORMAT, DECODER_STATE_VERSION, DECODER_STATE_BYTE_LENGTH,
+// DECODER_STATE_SHA256 and DECODER_BUILD_ID. A consumer compares EVERY stamp it
+// can before loading the image, and on ANY disagreement — different format token,
+// different version, different byte length, different digest — it discards the
+// mark and restarts from offset 0. Loading a differently shaped struct is not a
+// degraded resume; it is undefined behaviour that decodes to plausible garbage.
+// The stamps exist so that refusal is possible, which is why the length and
+// digest are carried even though the vector already knows its own size.
+//
+// PARTIAL_RECORD GENERALIZES THE HEADER PROBLEM. The header line and the seam
+// line are the same defect seen twice: a record whose bytes are split across the
+// chunk boundary, or a record whose meaning lives in bytes an earlier chunk
+// consumed. Both live in DECODE_CONTEXT, and neither is ever reconstructed by
+// guesswork. A publisher that cannot carry them advances no mark.
+//
+// MUTABILITY. A job's position is mutable state on an append-only wire, so marks
+// are VERSIONED, never edited in place. Each publication is a full record keyed
+// `JOB_ID` + `SEQUENCE`, and the highest `SEQUENCE` from a given publishing key
+// wins. `SEQUENCE` is monotonic per job and is the tiebreaker `UPDATED_AT` cannot
+// be: two chunks may complete inside the same millisecond. Consumers reconcile
+// PER PUBLISHER; two publishers marking the same JOB_ID are two jobs, not a
+// conflict, and ownership is the signing key on the envelope carrying the record,
+// never a field inside it.
+//
+// NEVER-INVENT-DATA. Absent means unpublished. A source that does not state its
+// total length leaves TOTAL_BYTES at 0, which means UNKNOWN LENGTH and never an
+// empty object: a zero-length source completes immediately and never needs a
+// mark. A validator that cannot be re-derived is not carried at all rather than
+// carried as a placeholder.
+//
+// NO VENDOR NAMES. This description and every enum member in this file name
+// capability classes only. PROVIDER_ID, SOURCE_URL and TAG values are publisher
+// DATA and may name any real provider verbatim.
+//
+// TAG GRAMMAR (normative). Every entry in `TAGS` is a single `namespace:value`
+// pair: lowercase ASCII `[a-z0-9._-]` in each part, exactly one colon separator,
+// no whitespace, no empty part. The list is sorted and deduplicated on
+// publication so two publishers describing the same facets emit identical bytes.
+// An entry without a colon is malformed and a conforming consumer ignores that
+// entry, never the record.
+
+/// Lifecycle of the job the mark describes.
+enum irmJobState : byte {
+  UNSPECIFIED = 0,
+  /// Chunks remain; NEXT_OFFSET is where the next read starts.
+  IN_PROGRESS,
+  /// The source was read to its end and every chunk was committed. NEXT_OFFSET
+  /// equals the total length when the length is known.
+  COMPLETE,
+  /// The publisher stopped on an error it did not recover from; FAULT states
+  /// what happened. The mark stays valid as a resume point.
+  FAILED,
+  /// The publisher abandoned the job deliberately; it is not a resume point and
+  /// a consumer restarts from offset 0.
+  ABANDONED,
+  /// The source changed identity underneath the job (VALIDATOR mismatch), so the
+  /// position no longer refers to the same bytes. A conforming consumer restarts
+  /// from offset 0 rather than resuming.
+  INVALIDATED
+}
+
+/// How the reader addresses the source's byte ranges.
+enum irmRangeMode : byte {
+  UNSPECIFIED = 0,
+  /// Half-open ranges expressed as a start offset and a byte count.
+  OFFSET_LENGTH,
+  /// Inclusive first/last byte positions, the convention of ranged transfer
+  /// protocols: a chunk of `RANGE_FIRST_BYTE`..`RANGE_LAST_BYTE` inclusive.
+  INCLUSIVE_BYTE_RANGE,
+  /// The source is delivered as discrete numbered parts and byte offsets are not
+  /// addressable; CHUNK_INDEX is the only position.
+  PART_INDEX
+}
+
+/// What a publisher may conclude when it re-reads the source's validators.
+enum irmValidatorMatch : byte {
+  UNSPECIFIED = 0,
+  /// The publisher compared validators and they agree; resuming is safe.
+  MATCHED,
+  /// The publisher compared validators and they disagree; the bytes behind the
+  /// offset are not the bytes that were read.
+  MISMATCHED,
+  /// The source published no validator to compare. This is NOT a match: a
+  /// publisher that cannot verify identity says so instead of assuming it.
+  UNVERIFIABLE
+}
+
+/// The source object a job is reading, and the validators that prove a resumed
+/// read is reading the same bytes.
+table IRMSource {
+  /// Replayable locator of the source object, verbatim.
+  SOURCE_URL:string (required);
+  /// Source-native object, export, or product identifier verbatim, when the
+  /// provider names one independently of its locator.
+  SOURCE_OBJECT_ID:string;
+  /// Content identifier pinning the exact source bytes, when the source is
+  /// content-addressed.
+  SOURCE_CID:string;
+  /// Media type of the source object verbatim as the provider states it.
+  MEDIA_TYPE:string;
+  /// Total length of the source object in bytes. 0 means the provider did not
+  /// state a length; it never means an empty object.
+  TOTAL_BYTES:ulong;
+  /// Opaque entity validator verbatim as the provider published it.
+  ENTITY_TAG:string;
+  /// Provider-stated last-modification timestamp verbatim.
+  LAST_MODIFIED:string;
+  /// SHA-256 of the complete source object as 64 lowercase hexadecimal
+  /// characters, when the provider publishes one. Never computed from a partial
+  /// read.
+  SOURCE_SHA256:string;
+  /// Provider-stated edition, revision, or release marker verbatim.
+  SOURCE_VERSION:string;
+  /// What the publisher concluded when it last compared validators.
+  VALIDATOR_MATCH:irmValidatorMatch = UNSPECIFIED;
+  /// RFC 3339 UTC fixed-millisecond timestamp of that comparison.
+  VALIDATED_AT:string;
+}
+
+/// Everything a resuming reader needs to decode a chunk that does not begin at
+/// offset 0. Required whenever NEXT_OFFSET is past the source's own header.
+table IRMDecodeContext {
+  /// Format token the decoder dispatches on, verbatim and lowercase, e.g.
+  /// `text/csv`. A consumer that does not implement the format refuses the chunk
+  /// rather than guessing at a layout.
+  FORMAT:string (required);
+  /// The source's header line verbatim, exactly as it appeared at offset 0 and
+  /// excluding its line terminator. This is the field that makes chunk N>0
+  /// decodable; without it a headerless chunk parses to zero rows and looks like
+  /// a clean tail.
+  HEADER_LINE:string;
+  /// Byte length the header occupied at the start of the source, including its
+  /// terminator, so a reader can tell a header-bearing prefix from a data row.
+  HEADER_BYTE_LENGTH:ulong;
+  /// Column names in source order, when the publisher parsed them. Advisory:
+  /// HEADER_LINE is authoritative and a disagreement is resolved in its favour.
+  COLUMN_NAMES:[string];
+  /// Field delimiter verbatim.
+  DELIMITER:string;
+  /// Quote character verbatim.
+  QUOTE:string;
+  /// Escape character verbatim.
+  ESCAPE:string;
+  /// Record terminator verbatim, e.g. `\n` or `\r\n`.
+  LINE_TERMINATOR:string;
+  /// Character encoding label verbatim as the provider states it.
+  CHARSET:string;
+  /// Stream-compression codec applied to the source bytes, verbatim and
+  /// lowercase. Empty means the ranged bytes are read as-is. Non-empty means
+  /// NEXT_OFFSET is a position in the COMPRESSED stream and DECODER_STATE,
+  /// WINDOW and PARTIAL_RECORD are all required to resume.
+  COMPRESSION:string;
+  /// Position in the DECODED stream corresponding to NEXT_OFFSET, when the
+  /// source is compressed. 0 with a non-empty COMPRESSION means the decoded
+  /// stream has not been advanced.
+  DECODED_OFFSET:ulong;
+  /// Serialized, pointer-free image of the decoder at the seam — the state a
+  /// codec with no restart point needs in order to have one. Opaque to every
+  /// consumer but a decoder whose stamps match exactly. Never partially applied.
+  DECODER_STATE:[ubyte];
+  /// Layout identifier of DECODER_STATE, verbatim, naming the decoder struct the
+  /// image was taken from. A consumer that does not know the token restarts.
+  DECODER_STATE_FORMAT:string;
+  /// Version of that layout, verbatim. Any disagreement restarts the job.
+  DECODER_STATE_VERSION:string;
+  /// Byte length DECODER_STATE is expected to have. Carried even though the
+  /// vector knows its own size, so a size disagreement is detectable BEFORE the
+  /// image is loaded into a differently shaped struct.
+  DECODER_STATE_BYTE_LENGTH:ulong;
+  /// SHA-256 of DECODER_STATE as 64 lowercase hexadecimal characters.
+  DECODER_STATE_SHA256:string;
+  /// Build identifier of the decoder that produced DECODER_STATE, verbatim, so
+  /// two builds of one codec version are still distinguishable.
+  DECODER_BUILD_ID:string;
+  /// Media type of DECODER_STATE, so an unrelated decoder refuses it instead of
+  /// misreading it.
+  DECODER_STATE_MEDIA_TYPE:string;
+  /// The decoder's history window at the seam — the bytes that ARE the codec's
+  /// back-reference dictionary. Carried separately from DECODER_STATE because it
+  /// is bulk data of a size the codec fixes, not part of the struct image.
+  WINDOW:[ubyte];
+  /// Byte length WINDOW is expected to have, for the same detect-before-load
+  /// reason as DECODER_STATE_BYTE_LENGTH.
+  WINDOW_BYTE_LENGTH:ulong;
+  /// Offset into WINDOW at which the codec will next write, when the window is
+  /// a circular buffer whose contents cannot be interpreted without it.
+  WINDOW_POSITION:ulong;
+  /// The bytes of the record that straddles the seam: everything the previous
+  /// chunk decoded of a record it could not finish. A resuming decoder prepends
+  /// these to the next chunk's decoded output before parsing. Carried as bytes,
+  /// not text, because a seam may fall inside a multi-byte character.
+  PARTIAL_RECORD:[ubyte];
+}
+
+/// One chunk that was read and durably committed.
+table IRMChunk {
+  /// Zero-based position of the chunk in the job's read sequence.
+  CHUNK_INDEX:uint;
+  /// Publisher-stable batch identifier the chunk's records were stored under,
+  /// verbatim, so a consumer can join the mark to the stored rows.
+  BATCH_ID:string;
+  /// First byte of the range that was read.
+  RANGE_FIRST_BYTE:ulong;
+  /// Last byte of the range that was read. Interpreted per RANGE_MODE:
+  /// inclusive under INCLUSIVE_BYTE_RANGE, exclusive under OFFSET_LENGTH.
+  RANGE_LAST_BYTE:ulong;
+  /// Bytes the read actually returned, which may be shorter than the range
+  /// requested.
+  BYTE_LENGTH:ulong;
+  /// SHA-256 of the chunk's bytes as 64 lowercase hexadecimal characters.
+  CHUNK_SHA256:string;
+  /// Records the decoder produced from the chunk.
+  RECORDS_DECODED:uint;
+  /// Records the storage lane reported as durably committed. A chunk whose
+  /// stored count is 0 is not marked at all.
+  RECORDS_STORED:uint;
+  /// Records the storage lane rejected or collapsed as duplicates.
+  RECORDS_REJECTED:uint;
+  /// Number of read attempts this chunk cost, including the successful one.
+  ATTEMPTS:uint;
+  /// RFC 3339 UTC fixed-millisecond timestamp at which the storage lane
+  /// confirmed the commit.
+  COMMITTED_AT:string;
+}
+
+/// The last unrecovered error, carried so a resumed run can refuse to loop.
+table IRMFault {
+  /// Publisher-stable error code verbatim.
+  CODE:string (required);
+  /// Human-readable message verbatim; never a substitute for CODE.
+  MESSAGE:string;
+  /// Zero-based index of the chunk the fault occurred on.
+  CHUNK_INDEX:uint;
+  /// Consecutive failed attempts at that chunk.
+  CONSECUTIVE_FAILURES:uint;
+  /// RFC 3339 UTC fixed-millisecond timestamp of the fault.
+  OCCURRED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp before which a consumer must not
+  /// retry. Empty means the publisher states no backoff.
+  RETRY_NOT_BEFORE:string;
+}
+
+/// Ingest Resume Mark
+table IRM {
+  /// Publisher-stable identifier of the ingest job. Together with the publishing
+  /// key it is the job's identity across every mark it emits.
+  JOB_ID:string (required);
+  /// Monotonic version of this mark within JOB_ID. Highest wins per publishing
+  /// key. Never reused, never decremented.
+  SEQUENCE:ulong;
+  /// Publisher-stable identifier of the data provider being read, verbatim.
+  /// Publisher data: it may name a real provider.
+  PROVIDER_ID:string (required);
+  /// Reverse-DNS identifier of the ingest module or flow that owns the job, so
+  /// two pipelines reading one provider do not share a resume point.
+  INGESTOR_ID:string;
+  /// The source object and its validators.
+  SOURCE:IRMSource (required);
+  /// Lifecycle of the job.
+  STATE:irmJobState = UNSPECIFIED;
+  /// How byte positions in this mark are addressed.
+  RANGE_MODE:irmRangeMode = UNSPECIFIED;
+  /// Byte offset at which the next read begins, in the SOURCE's own byte stream:
+  /// the compressed stream when DECODE_CONTEXT.COMPRESSION is non-empty, in
+  /// which case it is a record boundary only in company with the decoder state,
+  /// window and partial record. On an uncompressed source it is ALWAYS a
+  /// complete-record boundary, corrected backwards from the previous chunk's
+  /// byte budget. 0 is a valid value and means the job has committed nothing yet.
+  NEXT_OFFSET:ulong;
+  /// Zero-based index of the next chunk to read. With PART_INDEX addressing this
+  /// is the only position.
+  NEXT_CHUNK_INDEX:uint;
+  /// Byte budget the publisher reads per chunk. Records the ceiling the job
+  /// actually ran under, which a host may have clamped below the configured one.
+  CHUNK_BYTE_BUDGET:ulong;
+  /// Everything needed to decode the chunk at NEXT_OFFSET. REQUIRED in practice
+  /// whenever NEXT_OFFSET is past the source's own header; a consumer that finds
+  /// it absent there restarts from offset 0 rather than decoding blind.
+  DECODE_CONTEXT:IRMDecodeContext;
+  /// The chunk this mark was advanced from — the last one durably committed.
+  LAST_CHUNK:IRMChunk;
+  /// Chunks durably committed by this job so far.
+  CHUNKS_COMMITTED:uint;
+  /// Source bytes accounted for by committed chunks.
+  BYTES_COMMITTED:ulong;
+  /// Records durably committed by this job so far, across every chunk.
+  RECORDS_COMMITTED:ulong;
+  /// Four-character standard code of the records this job writes, `$` included,
+  /// e.g. `$TBS`. Never a union ordinal.
+  TARGET_STANDARD:string;
+  /// Reconciliation mode the storage lane was called with, verbatim, e.g.
+  /// `append`. A chunked job never reconciles per batch: reconciling would delete
+  /// every earlier chunk as the next one arrived.
+  RECONCILE_MODE:string;
+  /// Deduplication or merge policy the job applied, verbatim.
+  MERGE_POLICY:string;
+  /// The last unrecovered error, when there is one.
+  FAULT:IRMFault;
+  /// RFC 3339 UTC fixed-millisecond timestamp at which the job was created.
+  CREATED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp at which the first chunk was read.
+  STARTED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp at which this mark was published.
+  /// With JOB_ID and SEQUENCE this is the version key; SEQUENCE breaks ties.
+  UPDATED_AT:string (required);
+  /// RFC 3339 UTC fixed-millisecond timestamp at which the job reached COMPLETE.
+  COMPLETED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp after which a consumer treats the
+  /// mark as stale and re-validates the source before resuming. Empty means the
+  /// publisher states no expiry.
+  EXPIRES_AT:string;
+  /// `namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.
+  TAGS:[string];
+  /// Publisher note about this job; never a substitute for a field.
+  NOTES:string;
+}
+
+root_type IRM;
+file_identifier "$IRM";

@@ -905,6 +905,18 @@
       "type" : "string",
       "enum": ["UPSTREAM_ONLY", "PINNED", "UNPINNED"]
     },
+    "irmJobState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "IN_PROGRESS", "COMPLETE", "FAILED", "ABANDONED", "INVALIDATED"]
+    },
+    "irmRangeMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "OFFSET_LENGTH", "INCLUSIVE_BYTE_RANGE", "PART_INDEX"]
+    },
+    "irmValidatorMatch" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MATCHED", "MISMATCHED", "UNVERIFIABLE"]
+    },
     "irBand" : {
       "type" : "string",
       "enum": ["SWIR", "MWIR", "LWIR", "VLWIR", "BROADBAND"]
@@ -1903,7 +1915,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM"]
     },
     "LKS" : {
       "type" : "object",
@@ -18130,6 +18142,349 @@
                 "description" : "CID of the $IQC this record replaces, when the upstream capture's\nmetadata changed."
               }
       },
+      "additionalProperties" : false
+    },
+    "IRMSource" : {
+      "type" : "object",
+      "description" : "The source object a job is reading, and the validators that prove a resumed\nread is reading the same bytes.",
+      "properties" : {
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable locator of the source object, verbatim."
+              },
+        "SOURCE_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Source-native object, export, or product identifier verbatim, when the\nprovider names one independently of its locator."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "Content identifier pinning the exact source bytes, when the source is\ncontent-addressed."
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of the source object verbatim as the provider states it."
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total length of the source object in bytes. 0 means the provider did not\nstate a length; it never means an empty object."
+              },
+        "ENTITY_TAG" : {
+                "type" : "string",
+                "description" : "Opaque entity validator verbatim as the provider published it."
+              },
+        "LAST_MODIFIED" : {
+                "type" : "string",
+                "description" : "Provider-stated last-modification timestamp verbatim."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the complete source object as 64 lowercase hexadecimal\ncharacters, when the provider publishes one. Never computed from a partial\nread."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Provider-stated edition, revision, or release marker verbatim."
+              },
+        "VALIDATOR_MATCH" : {
+                "$ref" : "#/definitions/irmValidatorMatch",
+                "description" : "What the publisher concluded when it last compared validators."
+              },
+        "VALIDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp of that comparison."
+              }
+      },
+      "required" : ["SOURCE_URL"],
+      "additionalProperties" : false
+    },
+    "IRMDecodeContext" : {
+      "type" : "object",
+      "description" : "Everything a resuming reader needs to decode a chunk that does not begin at\noffset 0. Required whenever NEXT_OFFSET is past the source's own header.",
+      "properties" : {
+        "FORMAT" : {
+                "type" : "string",
+                "description" : "Format token the decoder dispatches on, verbatim and lowercase, e.g.\n`text/csv`. A consumer that does not implement the format refuses the chunk\nrather than guessing at a layout."
+              },
+        "HEADER_LINE" : {
+                "type" : "string",
+                "description" : "The source's header line verbatim, exactly as it appeared at offset 0 and\nexcluding its line terminator. This is the field that makes chunk N>0\ndecodable; without it a headerless chunk parses to zero rows and looks like\na clean tail."
+              },
+        "HEADER_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte length the header occupied at the start of the source, including its\nterminator, so a reader can tell a header-bearing prefix from a data row."
+              },
+        "COLUMN_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Column names in source order, when the publisher parsed them. Advisory:\nHEADER_LINE is authoritative and a disagreement is resolved in its favour."
+              },
+        "DELIMITER" : {
+                "type" : "string",
+                "description" : "Field delimiter verbatim."
+              },
+        "QUOTE" : {
+                "type" : "string",
+                "description" : "Quote character verbatim."
+              },
+        "ESCAPE" : {
+                "type" : "string",
+                "description" : "Escape character verbatim."
+              },
+        "LINE_TERMINATOR" : {
+                "type" : "string",
+                "description" : "Record terminator verbatim, e.g. `\\n` or `\\r\\n`."
+              },
+        "CHARSET" : {
+                "type" : "string",
+                "description" : "Character encoding label verbatim as the provider states it."
+              },
+        "COMPRESSION" : {
+                "type" : "string",
+                "description" : "Stream-compression codec applied to the source bytes, verbatim and\nlowercase. Empty means the ranged bytes are read as-is. Non-empty means\nNEXT_OFFSET is a position in the COMPRESSED stream and DECODER_STATE,\nWINDOW and PARTIAL_RECORD are all required to resume."
+              },
+        "DECODED_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Position in the DECODED stream corresponding to NEXT_OFFSET, when the\nsource is compressed. 0 with a non-empty COMPRESSION means the decoded\nstream has not been advanced."
+              },
+        "DECODER_STATE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Serialized, pointer-free image of the decoder at the seam — the state a\ncodec with no restart point needs in order to have one. Opaque to every\nconsumer but a decoder whose stamps match exactly. Never partially applied."
+              },
+        "DECODER_STATE_FORMAT" : {
+                "type" : "string",
+                "description" : "Layout identifier of DECODER_STATE, verbatim, naming the decoder struct the\nimage was taken from. A consumer that does not know the token restarts."
+              },
+        "DECODER_STATE_VERSION" : {
+                "type" : "string",
+                "description" : "Version of that layout, verbatim. Any disagreement restarts the job."
+              },
+        "DECODER_STATE_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte length DECODER_STATE is expected to have. Carried even though the\nvector knows its own size, so a size disagreement is detectable BEFORE the\nimage is loaded into a differently shaped struct."
+              },
+        "DECODER_STATE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of DECODER_STATE as 64 lowercase hexadecimal characters."
+              },
+        "DECODER_BUILD_ID" : {
+                "type" : "string",
+                "description" : "Build identifier of the decoder that produced DECODER_STATE, verbatim, so\ntwo builds of one codec version are still distinguishable."
+              },
+        "DECODER_STATE_MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of DECODER_STATE, so an unrelated decoder refuses it instead of\nmisreading it."
+              },
+        "WINDOW" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The decoder's history window at the seam — the bytes that ARE the codec's\nback-reference dictionary. Carried separately from DECODER_STATE because it\nis bulk data of a size the codec fixes, not part of the struct image."
+              },
+        "WINDOW_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte length WINDOW is expected to have, for the same detect-before-load\nreason as DECODER_STATE_BYTE_LENGTH."
+              },
+        "WINDOW_POSITION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Offset into WINDOW at which the codec will next write, when the window is\na circular buffer whose contents cannot be interpreted without it."
+              },
+        "PARTIAL_RECORD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The bytes of the record that straddles the seam: everything the previous\nchunk decoded of a record it could not finish. A resuming decoder prepends\nthese to the next chunk's decoded output before parsing. Carried as bytes,\nnot text, because a seam may fall inside a multi-byte character."
+              }
+      },
+      "required" : ["FORMAT"],
+      "additionalProperties" : false
+    },
+    "IRMChunk" : {
+      "type" : "object",
+      "description" : "One chunk that was read and durably committed.",
+      "properties" : {
+        "CHUNK_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based position of the chunk in the job's read sequence."
+              },
+        "BATCH_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable batch identifier the chunk's records were stored under,\nverbatim, so a consumer can join the mark to the stored rows."
+              },
+        "RANGE_FIRST_BYTE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "First byte of the range that was read."
+              },
+        "RANGE_LAST_BYTE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Last byte of the range that was read. Interpreted per RANGE_MODE:\ninclusive under INCLUSIVE_BYTE_RANGE, exclusive under OFFSET_LENGTH."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Bytes the read actually returned, which may be shorter than the range\nrequested."
+              },
+        "CHUNK_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the chunk's bytes as 64 lowercase hexadecimal characters."
+              },
+        "RECORDS_DECODED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Records the decoder produced from the chunk."
+              },
+        "RECORDS_STORED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Records the storage lane reported as durably committed. A chunk whose\nstored count is 0 is not marked at all."
+              },
+        "RECORDS_REJECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Records the storage lane rejected or collapsed as duplicates."
+              },
+        "ATTEMPTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of read attempts this chunk cost, including the successful one."
+              },
+        "COMMITTED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which the storage lane\nconfirmed the commit."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IRMFault" : {
+      "type" : "object",
+      "description" : "The last unrecovered error, carried so a resumed run can refuse to loop.",
+      "properties" : {
+        "CODE" : {
+                "type" : "string",
+                "description" : "Publisher-stable error code verbatim."
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable message verbatim; never a substitute for CODE."
+              },
+        "CHUNK_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based index of the chunk the fault occurred on."
+              },
+        "CONSECUTIVE_FAILURES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Consecutive failed attempts at that chunk."
+              },
+        "OCCURRED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp of the fault."
+              },
+        "RETRY_NOT_BEFORE" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp before which a consumer must not\nretry. Empty means the publisher states no backoff."
+              }
+      },
+      "required" : ["CODE"],
+      "additionalProperties" : false
+    },
+    "IRM" : {
+      "type" : "object",
+      "description" : "Ingest Resume Mark",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier of the ingest job. Together with the publishing\nkey it is the job's identity across every mark it emits."
+              },
+        "SEQUENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Monotonic version of this mark within JOB_ID. Highest wins per publishing\nkey. Never reused, never decremented."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier of the data provider being read, verbatim.\nPublisher data: it may name a real provider."
+              },
+        "INGESTOR_ID" : {
+                "type" : "string",
+                "description" : "Reverse-DNS identifier of the ingest module or flow that owns the job, so\ntwo pipelines reading one provider do not share a resume point."
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/IRMSource",
+                "description" : "The source object and its validators."
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/irmJobState",
+                "description" : "Lifecycle of the job."
+              },
+        "RANGE_MODE" : {
+                "$ref" : "#/definitions/irmRangeMode",
+                "description" : "How byte positions in this mark are addressed."
+              },
+        "NEXT_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte offset at which the next read begins, in the SOURCE's own byte stream:\nthe compressed stream when DECODE_CONTEXT.COMPRESSION is non-empty, in\nwhich case it is a record boundary only in company with the decoder state,\nwindow and partial record. On an uncompressed source it is ALWAYS a\ncomplete-record boundary, corrected backwards from the previous chunk's\nbyte budget. 0 is a valid value and means the job has committed nothing yet."
+              },
+        "NEXT_CHUNK_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based index of the next chunk to read. With PART_INDEX addressing this\nis the only position."
+              },
+        "CHUNK_BYTE_BUDGET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte budget the publisher reads per chunk. Records the ceiling the job\nactually ran under, which a host may have clamped below the configured one."
+              },
+        "DECODE_CONTEXT" : {
+                "$ref" : "#/definitions/IRMDecodeContext",
+                "description" : "Everything needed to decode the chunk at NEXT_OFFSET. REQUIRED in practice\nwhenever NEXT_OFFSET is past the source's own header; a consumer that finds\nit absent there restarts from offset 0 rather than decoding blind."
+              },
+        "LAST_CHUNK" : {
+                "$ref" : "#/definitions/IRMChunk",
+                "description" : "The chunk this mark was advanced from — the last one durably committed."
+              },
+        "CHUNKS_COMMITTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Chunks durably committed by this job so far."
+              },
+        "BYTES_COMMITTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Source bytes accounted for by committed chunks."
+              },
+        "RECORDS_COMMITTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records durably committed by this job so far, across every chunk."
+              },
+        "TARGET_STANDARD" : {
+                "type" : "string",
+                "description" : "Four-character standard code of the records this job writes, `$` included,\ne.g. `$TBS`. Never a union ordinal."
+              },
+        "RECONCILE_MODE" : {
+                "type" : "string",
+                "description" : "Reconciliation mode the storage lane was called with, verbatim, e.g.\n`append`. A chunked job never reconciles per batch: reconciling would delete\nevery earlier chunk as the next one arrived."
+              },
+        "MERGE_POLICY" : {
+                "type" : "string",
+                "description" : "Deduplication or merge policy the job applied, verbatim."
+              },
+        "FAULT" : {
+                "$ref" : "#/definitions/IRMFault",
+                "description" : "The last unrecovered error, when there is one."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which the job was created."
+              },
+        "STARTED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which the first chunk was read."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which this mark was published.\nWith JOB_ID and SEQUENCE this is the version key; SEQUENCE breaks ties."
+              },
+        "COMPLETED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which the job reached COMPLETE."
+              },
+        "EXPIRES_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp after which a consumer treats the\nmark as stale and re-validates the source before resuming. Empty means the\npublisher states no expiry."
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "`namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Publisher note about this job; never a substitute for a field."
+              }
+      },
+      "required" : ["JOB_ID", "PROVIDER_ID", "SOURCE", "UPDATED_AT"],
       "additionalProperties" : false
     },
     "IRO" : {
@@ -38702,7 +39057,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {
