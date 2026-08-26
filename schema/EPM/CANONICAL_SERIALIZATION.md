@@ -53,7 +53,7 @@ of the same content is byte-identical:
 
 | Vector | Total order (ascending, lexicographic byte order) |
 |---|---|
-| `KEYS[]` | (`KEY_TYPE` name, `ADDRESS_TYPE`, `PUBLIC_KEY`, `XPUB`) |
+| `KEYS[]` | (`KEY_TYPE` name, `ALGORITHM`, `PUBLIC_KEY`) |
 | `CHAIN_PROOFS[]` | (`CHAIN`, `ADDRESS`, `KEY_PATH`) |
 | `ALTERNATE_NAMES[]` | element value; exact duplicates (after trim) removed |
 | `MULTIFORMAT_ADDRESS[]` | element value; exact duplicates (after trim) removed |
@@ -61,27 +61,42 @@ of the same content is byte-identical:
 Every sort key participates after rule-2 trimming; absent sort-key fields
 compare as the empty string. The tuples above have no equal-tuple collisions
 for well-formed records (`PUBLIC_KEY` is unique per key; a chain address
-appears once per chain/path).
+appears once per chain/path). Under the literal-key publication profile
+(2026-08-19), a published `KEYS[]` entry carries no `XPUB`, `KEY_PATH` or
+`KEY_ADDRESS`, so the sort tuple reduces to `(`KEY_TYPE` name, ALGORITHM,
+PUBLIC_KEY)` in practice; `ALGORITHM` precedes `PUBLIC_KEY` because absent
+`ALGORITHM` (the ed25519 default) must sort before any named curve.
 
-## 4. Verification procedure — both curves, permanent asymmetry
+## 4. Verification procedure — literal published keys, both curves
 
-The owner ruling (2026-07-27) keeps ed25519 and adds secp256k1. The curves
-differ in **where the verifying key comes from**, and this asymmetry is
-**permanent by design, not a defect**:
+The owner ruling (2026-08-19) flips publication from "xpub + derivation
+paths" to **literal public keys**: a published EPM carries the `PUBLIC_KEY`
+that verifies `SIGNATURE` or encrypts to the entity, and nothing about how
+that key was derived. `XPUB`, `KEY_PATH` and `KEY_ADDRESS` are absent from
+published records (private / operational); a verifier never derives a
+child key.
 
-- **secp256k1** — the verifier DERIVES the verifying key from `XPUB` and the
-  key's derivation path (non-hardened, `m/44'/0'/N'/0/0`). No published key
-  is needed or wanted; a record that carries an xpub carries its own
-  verification material. Signature bytes are DER ECDSA over SHA-256 of the
-  preimage.
-- **ed25519** — the verifier uses the **published key in `KEYS[]`, which is
-  authoritative**. SLIP-10 ed25519 has no public derivation: the key at
-  hardened `m/44'/0'/N'/0'/0'` is not xpub-derivable by anyone. Signature
-  bytes are raw ed25519 over the preimage itself.
+Both curves now verify the same way — against the published `PUBLIC_KEY`:
+
+- **ed25519** — the verifier uses the published `PUBLIC_KEY` in `KEYS[]`.
+  Signature bytes are raw ed25519 over the preimage itself.
+- **secp256k1** — the verifier uses the published `PUBLIC_KEY` in `KEYS[]`
+  (33-byte compressed or 65-byte uncompressed). Signature bytes are DER
+  ECDSA over SHA-256 of the preimage. The 2026-07-27 regime that derived
+  secp256k1 verifying keys from `XPUB` + a non-hardened `KEY_PATH` is
+  **retired**: the xpub and path are no longer published, so the published
+  key is the only verification material, identical to the ed25519 path.
 
 `EPM.SIGNATURE_ALGORITHM` (1.174.0) names the curve; when absent, verifiers
 try ed25519 first, then secp256k1, against each `KEYS[]` entry with
-`KEY_TYPE = Signing`.
+`KEY_TYPE = Signing`. The verifier dispatches on `ALGORITHM`, never on
+`ADDRESS_TYPE` (which is an address-format tag, not a curve designator).
+
+Records published before the flip that carry `XPUB` and no `PUBLIC_KEY` for
+a secp256k1 signing key are not re-verifiable under the new profile — they
+were valid under the regime they were signed in. The flip is a hard cutover
+(no dual-flavor parser); the fleet republishes EPMs with literal keys and
+re-signs idempotently on upgrade.
 
 ## 5. What this annex gates
 

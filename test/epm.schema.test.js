@@ -99,8 +99,13 @@ describe("EPM schema generation", () => {
     // fields must never be (required).
     assert.doesNotMatch(schemaSource, /ALGORITHM:\s*string\s*\(required\)/);
     assert.doesNotMatch(schemaSource, /SIGNATURE_ALGORITHM:\s*string\s*\(required\)/);
-    // The permanent-by-design asymmetry is stated in the spec text.
-    assert.match(schemaSource, /no public derivation/i);
+    // The literal-key publication paradigm (owner ruling 2026-08-19) is stated
+    // in the spec text: published records carry literal PUBLIC_KEY bytes, and
+    // XPUB/KEY_PATH/KEY_ADDRESS are private/operational (absent from published
+    // records). The retired xpub-derivation asymmetry is gone.
+    assert.match(schemaSource, /literal public keys/i);
+    assert.match(schemaSource, /PRIVATE \/ operational/i);
+    assert.doesNotMatch(schemaSource, /PERMANENTLY AND BY DESIGN/i);
 
     assert.match(keyGoSource, /\bKEY_PATH\(\)/);
     assert.match(keyGoSource, /\bALGORITHM\(\)/);

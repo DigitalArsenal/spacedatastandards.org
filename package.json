@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.196.0+1787624265986",
+    "version": "1.197.0+1787773031135",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -100,7 +100,8 @@
         "test:flatsql:encryption": "node test-flatsql-encryption.js",
         "check:ordinals": "node ./scripts/checkRecordTypeOrdinals.mjs",
         "check:enum-names": "node ./scripts/checkReservedEnumNames.mjs",
-        "check:wire": "npm run check:enum-names && npm run check:ordinals",
+        "check:published-epm": "node ./scripts/check-epm-published-profile.mjs --self",
+        "check:wire": "npm run check:enum-names && npm run check:ordinals && npm run check:published-epm",
         "test:watch": "nodemon --exec 'npm test' --watch .",
         "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
         "publish:js": "npm publish",
