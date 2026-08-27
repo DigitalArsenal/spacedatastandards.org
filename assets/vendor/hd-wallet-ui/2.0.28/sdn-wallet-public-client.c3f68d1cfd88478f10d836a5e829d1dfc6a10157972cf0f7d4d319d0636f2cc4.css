@@ -1,0 +1,32 @@
+.sdn-wallet-control {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.sdn-wallet-control__button {
+  appearance: none;
+  background: #0b1f33;
+  border: 1px solid #5ea8ff;
+  border-radius: 0.375rem;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.sdn-wallet-control__button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.sdn-wallet-control__button:focus-visible {
+  outline: 3px solid #f5b942;
+  outline-offset: 2px;
+}
+
+.sdn-wallet-control__status {
+  color: currentColor;
+  font-size: 0.875rem;
+}
