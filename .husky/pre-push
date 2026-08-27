@@ -1,0 +1,8 @@
+# Refuse to push a merge conflict block, an unparseable JSON file, a manifest
+# that disagrees with schema/, or a manifest/package version mismatch.
+#
+# Scope is the commits actually being pushed (git feeds the ref pairs on stdin),
+# so this blocks NEW poison without wedging on defects that already sit on the
+# branch. The whole-tree gate is `npm run check:integrity`, which `npm run
+# deploy` runs before it commits.
+node scripts/check-release-integrity.mjs --pre-push

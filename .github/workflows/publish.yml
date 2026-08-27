@@ -24,9 +24,30 @@ env:
 
 jobs:
   # ============================================
+  # Release integrity - refuse to publish a poisoned tree
+  # (2026-08-27: a merge shipped unresolved conflict blocks in 55 tracked
+  #  files, including dist/manifest.json and package.json)
+  # ============================================
+  release-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Check release integrity
+        run: node ./scripts/check-release-integrity.mjs --all
+
+  # ============================================
   # Build job - creates all artifacts
   # ============================================
   build:
+    needs: release-integrity
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -992,6 +1013,47 @@ jobs:
   # ============================================
   # Summary job
   # ============================================
+  # ============================================
+  # Post-deploy verification - the site must actually render
+  # ============================================
+  verify-live-site:
+    needs:
+      - build
+      - publish-npm
+    runs-on: ubuntu-latest
+    if: always() && needs.build.result == 'success'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify the live site serves and renders this release
+        run: npm run verify:live -- --wait 900 --artifact-dir "$RUNNER_TEMP/verify-live"
+
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-live-site-evidence
+          path: ${{ runner.temp }}/verify-live
+          if-no-files-found: ignore
+          retention-days: 7
+
   publish-summary:
     needs:
       - build
@@ -1003,6 +1065,8 @@ jobs:
       - publish-maven-java
       - publish-go
       - publish-php
+      - release-integrity
+      - verify-live-site
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -1020,3 +1084,8 @@ jobs:
           echo "| Maven Central | ${{ needs.publish-maven-java.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Go Modules | ${{ needs.publish-go.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| PHP/Packagist | ${{ needs.publish-php.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Gate | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Release integrity (pre-build) | ${{ needs.release-integrity.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Live site verification (post-publish) | ${{ needs.verify-live-site.result }} |" >> $GITHUB_STEP_SUMMARY

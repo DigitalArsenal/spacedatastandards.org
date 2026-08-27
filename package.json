@@ -1,10 +1,6 @@
 {
     "name": "spacedatastandards.org",
-<<<<<<< Updated upstream
-    "version": "1.197.0+1787773031135",
-=======
-    "version": "1.141.0+1782237209753",
->>>>>>> Stashed changes
+    "version": "1.196.0+1787624265986",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -106,9 +102,12 @@
         "check:enum-names": "node ./scripts/checkReservedEnumNames.mjs",
         "check:published-epm": "node ./scripts/check-epm-published-profile.mjs --self",
         "check:wire": "npm run check:enum-names && npm run check:ordinals && npm run check:published-epm",
+    "check:integrity": "node ./scripts/check-release-integrity.mjs --all",
+    "check:integrity:staged": "node ./scripts/check-release-integrity.mjs --staged",
+    "verify:live": "node ./scripts/verify-live-site.mjs",
         "test:watch": "nodemon --exec 'npm test' --watch .",
-        "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
-        "publish:js": "npm publish",
+        "deploy": "npm run build && npm run check:integrity && git add -A && git commit -m 'updates' && git push origin main && npm run verify:live",
+        "publish:js": "node -e \"console.error('npm publishes go through the release workflow (.github/workflows/publish.yml), never the CLI: tag the release on GitHub instead'); process.exit(1)\"",
         "start": "node index.js",
         "build:flatbuffers": "node ./scripts/createREC.mjs && npm run check:wire && node ./scripts/generateSource.mjs",
         "build": "npm run build:flatbuffers && python ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:explorer && npm run build:website && npm run build:nav-release",
@@ -149,6 +148,7 @@
         "flatsql": "^1.3.0",
         "husky": "^9.1.7",
         "mocha": "^10.4.0",
+        "playwright": "^1.58.2",
         "pure-ipfs-only-hash": "^4.0.2",
         "sdn-emception": "1.0.0",
         "typescript": "^5.2.2"

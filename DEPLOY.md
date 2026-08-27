@@ -5,6 +5,7 @@ This guide covers how to publish Space Data Standards packages to various packag
 ## Table of Contents
 
 - [Overview](#overview)
+- [Website Deployment Gates](#website-deployment-gates)
 - [Prerequisites](#prerequisites)
 - [JavaScript/TypeScript (npm)](#javascripttypescript-npm)
 - [Python (PyPI)](#python-pypi)
@@ -43,6 +44,133 @@ lib/
 ├── cpp/     # C++
 └── lob/     # Lobster
 ```
+
+---
+
+## Website Deployment Gates
+
+`spacedatastandards.org` is served by GitHub Pages straight from `main`. There is
+no staging step: whatever is committed to `main` is what the world gets, roughly
+two minutes later, cached for 600 seconds. Two gates exist so a broken tree
+cannot become a broken site, and so a broken site cannot go unnoticed.
+
+### What went wrong on 2026-08-27
+
+A stash pop during a merge left unresolved conflict blocks in 55 tracked files.
+They were committed and pushed. `dist/manifest.json` — the registry's data feed —
+was among them, so it was no longer JSON. Pages built green, the site served a
+200, and the Schema Registry rendered nothing:
+
+```
+Failed to load schemas: SyntaxError: Expected property name or '}' at position 2
+```
+
+`package.json` was poisoned in the same commit, so `npm ci` and `npm run build`
+could not even parse it. Nothing in the pipeline noticed. A green push is not a
+working site.
+
+### Pre-deploy gate — `npm run check:integrity`
+
+`scripts/check-release-integrity.mjs` refuses a tree that cannot be safely
+served. It enforces four rules:
+
+| Rule | Refuses |
+| --- | --- |
+| `conflict-markers` | any tracked file containing an unresolved merge conflict block |
+| `json-parse` | any tracked `.json` file that does not parse (`tsconfig`/`jsconfig` are JSONC and exempt) |
+| `manifest-standards` | `dist/manifest.json` `STANDARDS` keys that are not exactly the `schema/<CODE>/main.fbs` set |
+| `version-parity` | `dist/manifest.json` `.version` that differs from `package.json` `.version` |
+
+It runs in four scopes, so it blocks new defects without wedging on old ones:
+
+```bash
+npm run check:integrity                      # whole tree — the release gate
+node scripts/check-release-integrity.mjs --staged        # pre-commit hook
+node scripts/check-release-integrity.mjs --pre-push      # pre-push hook
+node scripts/check-release-integrity.mjs --rev <commit>  # judge a commit, no checkout
+node scripts/check-release-integrity.mjs --all --json    # machine-readable
+```
+
+`--rev` matters here: this repo tracks ~43,000 files, so checking a commit out
+to inspect it costs minutes. `--rev` reads the commit's tree directly.
+
+Both hooks are installed by husky (`.husky/pre-commit`, `.husky/pre-push`).
+`npm run deploy` runs the whole-tree gate *before* it commits.
+
+### Post-deploy gate — `npm run verify:live`
+
+Passing the pre-deploy gate proves the bytes are sane. It does not prove the
+site works. `scripts/verify-live-site.mjs` proves that, against the real origin:
+
+1. polls `https://spacedatastandards.org/dist/manifest.json` (cache-busted) until
+   it is 200, parses as JSON, and reports the version and standard count this
+   checkout just deployed — or fails after `--wait` seconds (default 600);
+2. checks `dist/schema-embeddings.json`, `/`, and every asset `/` references —
+   a script served as HTML is a 404 fallback, not a script;
+3. loads `/#/schemas` in headless Chromium with a fresh profile and asserts the
+   page renders `Showing N of N schemas` with N equal to the manifest count,
+   at least N schema cards in the DOM, no "Failed to load" text, and zero
+   console errors.
+
+```bash
+npm run verify:live                                    # expectations from ./dist/manifest.json
+npm run verify:live -- --since "$(date -u +%FT%TZ)"    # also require a fresh last-modified
+npm run verify:live -- --expect-version 1.196.0+1787624265986 --expect-count 224
+```
+
+Exit 0 = verified live. Exit 1 = **the deploy is failed**, roll back. Exit 2 =
+the gate could not run (needs `npx playwright install chromium`); never read
+exit 2 as a pass.
+
+`npm run deploy` runs it after the push, so a deploy that does not render is a
+failed deploy.
+
+### npm publishing is not part of `npm run deploy`
+
+Packages are published **only** by the release workflow
+(`.github/workflows/publish.yml`), triggered by publishing a GitHub Release.
+`npm run publish:js` refuses, by design. `npm run deploy` ships the site; a
+release ships the packages.
+
+### Rollback a bad deploy
+
+The site is `main`. Rolling back means putting good bytes on `main` now — and
+the fastest safe way is git plumbing, which writes a commit **without touching
+your working tree or index**. That matters when a build is running in the
+checkout, which is exactly when these accidents happen.
+
+```bash
+# 1. Find the last commit whose file was good.
+git log --oneline -- dist/manifest.json
+GOOD=<that commit>
+
+# 2. Take that blob (already in the object store; hash-object -w if it is not).
+BLOB=$(git rev-parse "$GOOD:dist/manifest.json")
+#    from a file instead:  BLOB=$(git hash-object -w /path/to/fixed-manifest.json)
+
+# 3. Build the new tree in a scratch index — the real index is untouched.
+export GIT_INDEX_FILE=$(mktemp -u /tmp/sds-rollback-index.XXXXXX)
+git read-tree origin/main
+git update-index --cacheinfo 100644,"$BLOB",dist/manifest.json
+TREE=$(git write-tree)
+unset GIT_INDEX_FILE
+
+# 4. Commit it on top of the live tip and push.
+COMMIT=$(git commit-tree "$TREE" -p origin/main -m "hotfix: restore a servable dist/manifest.json")
+git push origin "$COMMIT:refs/heads/main"
+
+# 5. Prove it. Do not skip this step.
+npm run verify:live -- --expect-version <version> --expect-count <count>
+```
+
+If the bad tip is the most recent commit and the previous tip was good, the
+rollback is just `git push origin <good-sha>:refs/heads/main` (a fast-forward if
+the good commit is a descendant; otherwise coordinate before force-pushing).
+
+**Never force-push `main` to undo a hotfix.** On 2026-08-27 the manifest hotfix
+was force-pushed away eleven minutes after it landed, Pages rebuilt the poisoned
+commit, and the registry went down a second time. `git reflog show origin/main`
+is how that was proven; `npm run verify:live` is how it was caught.
 
 ---
 

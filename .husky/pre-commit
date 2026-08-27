@@ -1,3 +1,9 @@
+# Refuse to commit an unresolved merge conflict block or an unparseable JSON
+# file. 2026-08-27: a stash pop during a merge put conflict markers into
+# dist/manifest.json and 54 other tracked files; Pages served it and the schema
+# registry rendered nothing for hours.
+node scripts/check-release-integrity.mjs --staged
+
 # Detect case-insensitive name collisions in FlatBuffer schemas
 node scripts/checkSchemaCasing.js
 
