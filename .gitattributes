@@ -1,3 +1,27 @@
 # Generated application bundles are reviewed and hashed as binary artifacts.
 packages/standards-explorer/dist/standards-explorer.js binary
 packages/standards-explorer/dist/standards-explorer.min.js binary
+
+# GENERATED OUTPUT — COMMITTED ON PURPOSE, BUT NOT HAND-REVIEWED.
+#
+# `lib/` and `dist/` are emitted by `npm run build` from `schema/`. They are
+# tracked because consumers fetch them straight from this repository: Go modules
+# resolve `lib/go` from the tag, and the release workflow publishes `dist/`
+# archives, so untracking them would break both. That makes them build OUTPUT
+# that must nonetheless live in git.
+#
+# The cost was review: a one-schema change arrived as a several-thousand-file
+# diff, and the handful of files that actually moved were invisible inside it.
+# `linguist-generated` collapses these paths in GitHub's diff view and excludes
+# them from language stats, so a pull request shows the SOURCE change first and
+# the regenerated output stays one click away rather than in the way.
+#
+# This is a review affordance, not permission to skip the build: the release
+# gate still compares committed output against what CI regenerates, and the Go
+# publish step fails outright when `lib/go` disagrees. Regenerate with the full
+# `npm run build` (never a single step of it) and commit the whole result.
+lib/** linguist-generated=true
+dist/** linguist-generated=true
+
+# The archives are gzip streams; a textual diff of them is noise either way.
+dist/**/*.tar.gz binary
