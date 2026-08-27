@@ -39,6 +39,7 @@
   const sha256 = /^[0-9a-f]{64}$/u;
   const sha384 = /^sha384-[A-Za-z0-9+/]{64}$/u;
   const clientId = /^[a-z0-9]+(?:-[a-z0-9]+)*-v[0-9]+$/u;
+  const vendorPath = /^\/assets\/vendor\/[a-z0-9][a-z0-9.-]*\/[0-9]+(?:\.[0-9]+)*\/[a-z0-9-]+\.[0-9a-f]{64}\.[a-z]+$/u;
 
   function attribute(element, name) {
     if (!element || typeof element.getAttribute !== "function") return null;
@@ -49,23 +50,11 @@
   function immutableAsset(urlValue, integrityValue, extension) {
     if (
       !urlValue
-      || !urlValue.startsWith("https://static.spacedatanetwork.org/assets/")
+      || !vendorPath.test(urlValue)
       || !integrityValue
       || !sha384.test(integrityValue)
     ) return null;
-    let url;
-    try {
-      url = new URL(urlValue);
-    } catch {
-      return null;
-    }
-    if (
-      url.origin !== "https://static.spacedatanetwork.org"
-      || url.search
-      || url.hash
-      || !url.pathname.startsWith("/assets/")
-    ) return null;
-    const filename = url.pathname.slice(url.pathname.lastIndexOf("/") + 1);
+    const filename = urlValue.slice(urlValue.lastIndexOf("/") + 1);
     const digest = filename.split(".").at(-2);
     if (!filename.endsWith(`.${extension}`) || !sha256.test(digest ?? "")) return null;
     return Object.freeze({ integrity: integrityValue, url: urlValue });

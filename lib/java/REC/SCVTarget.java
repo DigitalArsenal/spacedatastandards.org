@@ -37,6 +37,15 @@ public final class SCVTarget extends com.google.flatbuffers.Table {
   public SCVVec3 VELOCITY_MPS() { return VELOCITY_MPS(new SCVVec3()); }
   public SCVVec3 VELOCITY_MPS(SCVVec3 obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public double RADIUS_M() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public int TARGET_KIND() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int DOMAIN() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public SCVVec3 POLYGON_VERTICES(int j) { return POLYGON_VERTICES(new SCVVec3(), j); }
+  public SCVVec3 POLYGON_VERTICES(SCVVec3 obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int POLYGON_VERTICESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public SCVVec3.Vector polygonVerticesVector() { return polygonVerticesVector(new SCVVec3.Vector()); }
+  public SCVVec3.Vector polygonVerticesVector(SCVVec3.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public double MIN_ALTITUDE_M() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_ALTITUDE_M() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createSCVTarget(FlatBufferBuilder builder,
       long TARGET_ID,
@@ -45,19 +54,29 @@ public final class SCVTarget extends com.google.flatbuffers.Table {
       int FRAME,
       int POSITION_MOffset,
       int VELOCITY_MPSOffset,
-      double RADIUS_M) {
-    builder.startTable(7);
+      double RADIUS_M,
+      int TARGET_KIND,
+      int DOMAIN,
+      int POLYGON_VERTICESOffset,
+      double MIN_ALTITUDE_M,
+      double MAX_ALTITUDE_M) {
+    builder.startTable(12);
+    SCVTarget.addMaxAltitudeM(builder, MAX_ALTITUDE_M);
+    SCVTarget.addMinAltitudeM(builder, MIN_ALTITUDE_M);
     SCVTarget.addRadiusM(builder, RADIUS_M);
+    SCVTarget.addPolygonVertices(builder, POLYGON_VERTICESOffset);
     SCVTarget.addVelocityMps(builder, VELOCITY_MPSOffset);
     SCVTarget.addPositionM(builder, POSITION_MOffset);
     SCVTarget.addName(builder, NAMEOffset);
     SCVTarget.addObjectId(builder, OBJECT_IDOffset);
     SCVTarget.addTargetId(builder, TARGET_ID);
+    SCVTarget.addDomain(builder, DOMAIN);
+    SCVTarget.addTargetKind(builder, TARGET_KIND);
     SCVTarget.addFrame(builder, FRAME);
     return SCVTarget.endSCVTarget(builder);
   }
 
-  public static void startSCVTarget(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startSCVTarget(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addTargetId(FlatBufferBuilder builder, long TARGET_ID) { builder.addInt(0, (int) TARGET_ID, (int) 0L); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
@@ -65,6 +84,13 @@ public final class SCVTarget extends com.google.flatbuffers.Table {
   public static void addPositionM(FlatBufferBuilder builder, int POSITION_MOffset) { builder.addOffset(4, POSITION_MOffset, 0); }
   public static void addVelocityMps(FlatBufferBuilder builder, int VELOCITY_MPSOffset) { builder.addOffset(5, VELOCITY_MPSOffset, 0); }
   public static void addRadiusM(FlatBufferBuilder builder, double RADIUS_M) { builder.addDouble(6, RADIUS_M, 0.0); }
+  public static void addTargetKind(FlatBufferBuilder builder, int TARGET_KIND) { builder.addByte(7, (byte) TARGET_KIND, (byte) 0); }
+  public static void addDomain(FlatBufferBuilder builder, int DOMAIN) { builder.addByte(8, (byte) DOMAIN, (byte) 0); }
+  public static void addPolygonVertices(FlatBufferBuilder builder, int POLYGON_VERTICESOffset) { builder.addOffset(9, POLYGON_VERTICESOffset, 0); }
+  public static int createPolygonVerticesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPolygonVerticesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMinAltitudeM(FlatBufferBuilder builder, double MIN_ALTITUDE_M) { builder.addDouble(10, MIN_ALTITUDE_M, 0.0); }
+  public static void addMaxAltitudeM(FlatBufferBuilder builder, double MAX_ALTITUDE_M) { builder.addDouble(11, MAX_ALTITUDE_M, 0.0); }
   public static int endSCVTarget(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

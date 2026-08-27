@@ -3,10 +3,10 @@
   "navVersion": "1.0.0",
   "assets": {
     "navScript": {
-      "bytes": 10169,
-      "sha256": "52fde607eee38ffa116188201f50258ed50bd18c9f06c1af9678f763147a8fe5",
-      "sha384": "sha384-dgeojhJ8vTszHXIbv7O7nZcEzqD10oUYYJjBmPrV7+kLQEUlXLQD4ek5Q7HOFiO5",
-      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.52fde607eee38ffa116188201f50258ed50bd18c9f06c1af9678f763147a8fe5.js"
+      "bytes": 9976,
+      "sha256": "d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c",
+      "sha384": "sha384-nMJ3fIR3tuVLflioLM7yjuLgSCNRN3JcwHtIvZmjmoE2y9n0b+yqkCvQFgnWLpzN",
+      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c.js"
     },
     "navStyle": {
       "bytes": 2217,

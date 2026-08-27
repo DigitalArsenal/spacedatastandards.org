@@ -6,6 +6,8 @@ import * as flatbuffers from 'flatbuffers';
 
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
+import { scvGeometryDomain } from './scvGeometryDomain.js';
+import { scvTargetShape } from './scvTargetShape.js';
 
 
 export class SCVTarget implements flatbuffers.IUnpackableObject<SCVTargetT> {
@@ -65,8 +67,38 @@ RADIUS_M():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+TARGET_KIND():scvTargetShape {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvTargetShape.POINT;
+}
+
+DOMAIN():scvGeometryDomain {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvGeometryDomain.SURFACE;
+}
+
+POLYGON_VERTICES(index: number, obj?:SCVVec3):SCVVec3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new SCVVec3()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+polygonVerticesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+MIN_ALTITUDE_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+MAX_ALTITUDE_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startSCVTarget(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(12);
 }
 
 static addTargetId(builder:flatbuffers.Builder, TARGET_ID:number) {
@@ -97,6 +129,38 @@ static addRadiusM(builder:flatbuffers.Builder, RADIUS_M:number) {
   builder.addFieldFloat64(6, RADIUS_M, 0.0);
 }
 
+static addTargetKind(builder:flatbuffers.Builder, TARGET_KIND:scvTargetShape) {
+  builder.addFieldInt8(7, TARGET_KIND, scvTargetShape.POINT);
+}
+
+static addDomain(builder:flatbuffers.Builder, DOMAIN:scvGeometryDomain) {
+  builder.addFieldInt8(8, DOMAIN, scvGeometryDomain.SURFACE);
+}
+
+static addPolygonVertices(builder:flatbuffers.Builder, POLYGON_VERTICESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, POLYGON_VERTICESOffset, 0);
+}
+
+static createPolygonVerticesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPolygonVerticesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addMinAltitudeM(builder:flatbuffers.Builder, MIN_ALTITUDE_M:number) {
+  builder.addFieldFloat64(10, MIN_ALTITUDE_M, 0.0);
+}
+
+static addMaxAltitudeM(builder:flatbuffers.Builder, MAX_ALTITUDE_M:number) {
+  builder.addFieldFloat64(11, MAX_ALTITUDE_M, 0.0);
+}
+
 static endSCVTarget(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -111,7 +175,12 @@ unpack(): SCVTargetT {
     this.FRAME(),
     (this.POSITION_M() !== null ? this.POSITION_M()!.unpack() : null),
     (this.VELOCITY_MPS() !== null ? this.VELOCITY_MPS()!.unpack() : null),
-    this.RADIUS_M()
+    this.RADIUS_M(),
+    this.TARGET_KIND(),
+    this.DOMAIN(),
+    this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength()),
+    this.MIN_ALTITUDE_M(),
+    this.MAX_ALTITUDE_M()
   );
 }
 
@@ -124,6 +193,11 @@ unpackTo(_o: SCVTargetT): void {
   _o.POSITION_M = (this.POSITION_M() !== null ? this.POSITION_M()!.unpack() : null);
   _o.VELOCITY_MPS = (this.VELOCITY_MPS() !== null ? this.VELOCITY_MPS()!.unpack() : null);
   _o.RADIUS_M = this.RADIUS_M();
+  _o.TARGET_KIND = this.TARGET_KIND();
+  _o.DOMAIN = this.DOMAIN();
+  _o.POLYGON_VERTICES = this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength());
+  _o.MIN_ALTITUDE_M = this.MIN_ALTITUDE_M();
+  _o.MAX_ALTITUDE_M = this.MAX_ALTITUDE_M();
 }
 }
 
@@ -135,7 +209,12 @@ constructor(
   public FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN,
   public POSITION_M: SCVVec3T|null = null,
   public VELOCITY_MPS: SCVVec3T|null = null,
-  public RADIUS_M: number = 0.0
+  public RADIUS_M: number = 0.0,
+  public TARGET_KIND: scvTargetShape = scvTargetShape.POINT,
+  public DOMAIN: scvGeometryDomain = scvGeometryDomain.SURFACE,
+  public POLYGON_VERTICES: (SCVVec3T)[] = [],
+  public MIN_ALTITUDE_M: number = 0.0,
+  public MAX_ALTITUDE_M: number = 0.0
 ){}
 
 
@@ -144,6 +223,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const POSITION_M = (this.POSITION_M !== null ? this.POSITION_M!.pack(builder) : 0);
   const VELOCITY_MPS = (this.VELOCITY_MPS !== null ? this.VELOCITY_MPS!.pack(builder) : 0);
+  const POLYGON_VERTICES = SCVTarget.createPolygonVerticesVector(builder, builder.createObjectOffsetList(this.POLYGON_VERTICES));
 
   SCVTarget.startSCVTarget(builder);
   SCVTarget.addTargetId(builder, this.TARGET_ID);
@@ -153,6 +233,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVTarget.addPositionM(builder, POSITION_M);
   SCVTarget.addVelocityMps(builder, VELOCITY_MPS);
   SCVTarget.addRadiusM(builder, this.RADIUS_M);
+  SCVTarget.addTargetKind(builder, this.TARGET_KIND);
+  SCVTarget.addDomain(builder, this.DOMAIN);
+  SCVTarget.addPolygonVertices(builder, POLYGON_VERTICES);
+  SCVTarget.addMinAltitudeM(builder, this.MIN_ALTITUDE_M);
+  SCVTarget.addMaxAltitudeM(builder, this.MAX_ALTITUDE_M);
 
   return SCVTarget.endSCVTarget(builder);
 }

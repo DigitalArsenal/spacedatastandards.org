@@ -54940,6 +54940,17 @@
                         "CUSTOM_MESH"
                     ]
                 },
+                "scvTargetShape": {
+                    "type": "string",
+                    "enum": [
+                        "POINT",
+                        "POLYGON",
+                        "RECTANGLE",
+                        "BOX",
+                        "SPHERE",
+                        "EXTRUDED_POLYGON"
+                    ]
+                },
                 "scvResultState": {
                     "type": "string",
                     "enum": [
@@ -54989,7 +55000,10 @@
                         "BUCKET_ACTIVE_CELL_COUNT",
                         "PASS_COUNT_RGBA",
                         "CURRENT_ACCESS_RGBA",
-                        "LATITUDE_BAND_COVERAGE"
+                        "LATITUDE_BAND_COVERAGE",
+                        "BUCKET_PASS_START_COUNT",
+                        "WINDOW_START_ACCESS_BITSET",
+                        "WINDOW_STOP_ACCESS_BITSET"
                     ]
                 },
                 "scvRasterProductEncoding": {
@@ -89717,6 +89731,24 @@
                         },
                         "RADIUS_M": {
                             "type": "number"
+                        },
+                        "TARGET_KIND": {
+                            "$ref": "#/definitions/scvTargetShape"
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "POLYGON_VERTICES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVVec3"
+                            }
+                        },
+                        "MIN_ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "MAX_ALTITUDE_M": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -90450,6 +90482,67 @@
                     },
                     "additionalProperties": false
                 },
+                "SCVTargetResult": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "ACCESS_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVISIT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_ACCESS_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "INTERVAL_START_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "INTERVAL_STOP_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "PASS_START_BUCKETS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "ACCESS_BITSET": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCVResult": {
                     "type": "object",
                     "properties": {
@@ -90503,6 +90596,12 @@
                         },
                         "AGGREGATE_STATISTICS": {
                             "$ref": "#/definitions/SCVAggregateStatistics"
+                        },
+                        "TARGET_RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTargetResult"
+                            }
                         }
                     },
                     "additionalProperties": false
@@ -131623,6 +131722,17 @@
                         "CUSTOM_MESH"
                     ]
                 },
+                "scvTargetShape": {
+                    "type": "string",
+                    "enum": [
+                        "POINT",
+                        "POLYGON",
+                        "RECTANGLE",
+                        "BOX",
+                        "SPHERE",
+                        "EXTRUDED_POLYGON"
+                    ]
+                },
                 "scvResultState": {
                     "type": "string",
                     "enum": [
@@ -131672,7 +131782,10 @@
                         "BUCKET_ACTIVE_CELL_COUNT",
                         "PASS_COUNT_RGBA",
                         "CURRENT_ACCESS_RGBA",
-                        "LATITUDE_BAND_COVERAGE"
+                        "LATITUDE_BAND_COVERAGE",
+                        "BUCKET_PASS_START_COUNT",
+                        "WINDOW_START_ACCESS_BITSET",
+                        "WINDOW_STOP_ACCESS_BITSET"
                     ]
                 },
                 "scvRasterProductEncoding": {
@@ -131906,6 +132019,24 @@
                             "$ref": "#/definitions/SCVVec3"
                         },
                         "RADIUS_M": {
+                            "type": "number"
+                        },
+                        "TARGET_KIND": {
+                            "$ref": "#/definitions/scvTargetShape"
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "POLYGON_VERTICES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVVec3"
+                            }
+                        },
+                        "MIN_ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "MAX_ALTITUDE_M": {
                             "type": "number"
                         }
                     },
@@ -132640,6 +132771,67 @@
                     },
                     "additionalProperties": false
                 },
+                "SCVTargetResult": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "ACCESS_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVISIT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_ACCESS_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "INTERVAL_START_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "INTERVAL_STOP_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "PASS_START_BUCKETS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "ACCESS_BITSET": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCVResult": {
                     "type": "object",
                     "properties": {
@@ -132693,6 +132885,12 @@
                         },
                         "AGGREGATE_STATISTICS": {
                             "$ref": "#/definitions/SCVAggregateStatistics"
+                        },
+                        "TARGET_RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTargetResult"
+                            }
                         }
                     },
                     "additionalProperties": false

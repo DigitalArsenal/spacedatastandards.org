@@ -159,8 +159,119 @@ func (rcv *SCVTarget) MutateRadiusM(n float64) bool {
 	return rcv.MutateRADIUS_M(n)
 }
 
+func (rcv *SCVTarget) TARGET_KIND() scvTargetShape {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return scvTargetShape(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *SCVTarget) TargetKind() scvTargetShape {
+	return rcv.TARGET_KIND()
+}
+
+func (rcv *SCVTarget) MutateTARGET_KIND(n scvTargetShape) bool {
+	return rcv._tab.MutateByteSlot(18, byte(n))
+}
+
+func (rcv *SCVTarget) MutateTargetKind(n scvTargetShape) bool {
+	return rcv.MutateTARGET_KIND(n)
+}
+
+func (rcv *SCVTarget) DOMAIN() scvGeometryDomain {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return scvGeometryDomain(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *SCVTarget) Domain() scvGeometryDomain {
+	return rcv.DOMAIN()
+}
+
+func (rcv *SCVTarget) MutateDOMAIN(n scvGeometryDomain) bool {
+	return rcv._tab.MutateByteSlot(20, byte(n))
+}
+
+func (rcv *SCVTarget) MutateDomain(n scvGeometryDomain) bool {
+	return rcv.MutateDOMAIN(n)
+}
+
+func (rcv *SCVTarget) POLYGON_VERTICES(obj *SCVVec3, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SCVVec3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SCVTarget) PolygonVertices(obj *SCVVec3, j int) bool {
+	return rcv.POLYGON_VERTICES(obj, j)
+}
+
+func (rcv *SCVTarget) POLYGON_VERTICESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SCVTarget) PolygonVerticesLength() int {
+	return rcv.POLYGON_VERTICESLength()
+}
+
+func (rcv *SCVTarget) MIN_ALTITUDE_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *SCVTarget) MinAltitudeM() float64 {
+	return rcv.MIN_ALTITUDE_M()
+}
+
+func (rcv *SCVTarget) MutateMIN_ALTITUDE_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *SCVTarget) MutateMinAltitudeM(n float64) bool {
+	return rcv.MutateMIN_ALTITUDE_M(n)
+}
+
+func (rcv *SCVTarget) MAX_ALTITUDE_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *SCVTarget) MaxAltitudeM() float64 {
+	return rcv.MAX_ALTITUDE_M()
+}
+
+func (rcv *SCVTarget) MutateMAX_ALTITUDE_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *SCVTarget) MutateMaxAltitudeM(n float64) bool {
+	return rcv.MutateMAX_ALTITUDE_M(n)
+}
+
 func SCVTargetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(12)
 }
 func SCVTargetAddTARGET_ID(builder *flatbuffers.Builder, TARGET_ID uint32) {
 	builder.PrependUint32Slot(0, TARGET_ID, 0)
@@ -203,6 +314,42 @@ func SCVTargetAddRADIUS_M(builder *flatbuffers.Builder, RADIUS_M float64) {
 }
 func SCVTargetAddRadiusM(builder *flatbuffers.Builder, RADIUS_M float64) {
 	SCVTargetAddRADIUS_M(builder, RADIUS_M)
+}
+func SCVTargetAddTARGET_KIND(builder *flatbuffers.Builder, TARGET_KIND scvTargetShape) {
+	builder.PrependByteSlot(7, byte(TARGET_KIND), 0)
+}
+func SCVTargetAddTargetKind(builder *flatbuffers.Builder, TARGET_KIND scvTargetShape) {
+	SCVTargetAddTARGET_KIND(builder, TARGET_KIND)
+}
+func SCVTargetAddDOMAIN(builder *flatbuffers.Builder, DOMAIN scvGeometryDomain) {
+	builder.PrependByteSlot(8, byte(DOMAIN), 0)
+}
+func SCVTargetAddDomain(builder *flatbuffers.Builder, DOMAIN scvGeometryDomain) {
+	SCVTargetAddDOMAIN(builder, DOMAIN)
+}
+func SCVTargetAddPOLYGON_VERTICES(builder *flatbuffers.Builder, POLYGON_VERTICES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(POLYGON_VERTICES), 0)
+}
+func SCVTargetAddPolygonVertices(builder *flatbuffers.Builder, POLYGON_VERTICES flatbuffers.UOffsetT) {
+	SCVTargetAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
+}
+func SCVTargetStartPOLYGON_VERTICESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SCVTargetStartPolygonVerticesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCVTargetStartPOLYGON_VERTICESVector(builder, numElems)
+}
+func SCVTargetAddMIN_ALTITUDE_M(builder *flatbuffers.Builder, MIN_ALTITUDE_M float64) {
+	builder.PrependFloat64Slot(10, MIN_ALTITUDE_M, 0.0)
+}
+func SCVTargetAddMinAltitudeM(builder *flatbuffers.Builder, MIN_ALTITUDE_M float64) {
+	SCVTargetAddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M)
+}
+func SCVTargetAddMAX_ALTITUDE_M(builder *flatbuffers.Builder, MAX_ALTITUDE_M float64) {
+	builder.PrependFloat64Slot(11, MAX_ALTITUDE_M, 0.0)
+}
+func SCVTargetAddMaxAltitudeM(builder *flatbuffers.Builder, MAX_ALTITUDE_M float64) {
+	SCVTargetAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M)
 }
 func SCVTargetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
