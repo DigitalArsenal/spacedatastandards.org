@@ -17737,6 +17737,128 @@
         }
       }
     },
+    "vcfCardForm": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FULL",
+        "COMPACT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FULL": {
+          "value": 1,
+          "description": "The complete downloadable card: contact rows, the full verification chain, and the photo when one is published."
+        },
+        "COMPACT": {
+          "value": 2,
+          "description": "The density-limited card meant for optical scanning: contact rows plus the minimum verification chain, and nothing whose absence is recoverable from the profile the signature binds."
+        }
+      }
+    },
+    "vcfAliasKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SIGNING_KEY",
+        "ENCRYPTION_KEY",
+        "PROFILE_SIGNATURE",
+        "PROFILE_SIGNATURE_TIMESTAMP",
+        "PROFILE_CONTENT_ID",
+        "LEDGER_ACCOUNT",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SIGNING_KEY": {
+          "value": 1,
+          "description": "The literal public key that produced the profile's signature."
+        },
+        "ENCRYPTION_KEY": {
+          "value": 2,
+          "description": "The literal public key a correspondent encrypts to."
+        },
+        "PROFILE_SIGNATURE": {
+          "value": 3,
+          "description": "The profile's own signature value, so a scanner can verify without a second fetch."
+        },
+        "PROFILE_SIGNATURE_TIMESTAMP": {
+          "value": 4,
+          "description": "The profile's signature timestamp, as the publisher stated it."
+        },
+        "PROFILE_CONTENT_ID": {
+          "value": 5,
+          "description": "Content identifier of the exact profile bytes the card projects."
+        },
+        "LEDGER_ACCOUNT": {
+          "value": 6,
+          "description": "A distributed-ledger account the profile proves control of. CHAIN names which ledger."
+        },
+        "OTHER": {
+          "value": 7,
+          "description": "A row whose kind this standard does not model. KIND_TOKEN is authoritative."
+        }
+      }
+    },
+    "vcfLineEnding": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CRLF",
+        "LF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CRLF": {
+          "value": 1,
+          "description": "Carriage return + line feed. The only canonical value."
+        },
+        "LF": {
+          "value": 2,
+          "description": "Line feed only. Non-canonical; importers in the strict class reject it."
+        }
+      }
+    },
+    "vcfPhotoPolicy": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ABSENT",
+        "URI_REFERENCE",
+        "INLINE_ENCODED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ABSENT": {
+          "value": 1,
+          "description": "No portrait row is emitted."
+        },
+        "URI_REFERENCE": {
+          "value": 2,
+          "description": "A portrait row referencing content by locator rather than embedding it. The canonical form, because an embedded image dominates the octet budget."
+        },
+        "INLINE_ENCODED": {
+          "value": 3,
+          "description": "A portrait row embedding transport-encoded image bytes inline."
+        }
+      }
+    },
     "elementType": {
       "type": "string",
       "enum": [
@@ -19036,7 +19158,8 @@
         "GEL",
         "PAP",
         "RSD",
-        "IRM"
+        "IRM",
+        "VCF"
       ]
     },
     "LKS": {
@@ -80830,6 +80953,455 @@
       ],
       "additionalProperties": false
     },
+    "VCFProperty": {
+      "type": "object",
+      "description": "One emitted card property, as the publisher parsed its own output.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Property name verbatim and upper-case, e.g. `EMAIL`.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Parameter tokens verbatim in emission order, each a single `name=value`\npair. A parameter the emitter wrote without a value is carried verbatim.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Property value with the text format's escaping REMOVED, so a consumer\nreads a value rather than re-implementing an unescaper. `CARD` retains the\nescaped form.",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUP": {
+          "type": "string",
+          "description": "Grouping prefix the property was emitted under, when the emitter used one.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based position of this property in the canonical emission order for\nthis FORM. Two conforming emitters agree on this number.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OCTET_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet length of the property's complete UNFOLDED content line, excluding\nthe line terminator. This is the number folding is applied against.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "VCFAlias": {
+      "type": "object",
+      "description": "One identity address row: the machine-readable half of the card.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/vcfAliasKind",
+          "description": "What the row carries.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SIGNING_KEY": {
+              "value": 1,
+              "description": "The literal public key that produced the profile's signature."
+            },
+            "ENCRYPTION_KEY": {
+              "value": 2,
+              "description": "The literal public key a correspondent encrypts to."
+            },
+            "PROFILE_SIGNATURE": {
+              "value": 3,
+              "description": "The profile's own signature value, so a scanner can verify without a second fetch."
+            },
+            "PROFILE_SIGNATURE_TIMESTAMP": {
+              "value": 4,
+              "description": "The profile's signature timestamp, as the publisher stated it."
+            },
+            "PROFILE_CONTENT_ID": {
+              "value": 5,
+              "description": "Content identifier of the exact profile bytes the card projects."
+            },
+            "LEDGER_ACCOUNT": {
+              "value": 6,
+              "description": "A distributed-ledger account the profile proves control of. CHAIN names which ledger."
+            },
+            "OTHER": {
+              "value": 7,
+              "description": "A row whose kind this standard does not model. KIND_TOKEN is authoritative."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "KIND_TOKEN": {
+          "type": "string",
+          "description": "The row's kind label verbatim as emitted \u2014 the leftmost domain label.\nAuthoritative when KIND is OTHER.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LOCAL_PART": {
+          "type": "string",
+          "description": "Everything left of the separator in the emitted address, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DOMAIN": {
+          "type": "string",
+          "description": "Everything right of the separator in the emitted address, verbatim. This\nis publisher data: the identity domain of the deployment that produced the\ncard, never a value this standard fixes.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ADDRESS": {
+          "type": "string",
+          "description": "The complete emitted address, `LOCAL_PART` then the separator then\n`DOMAIN`, verbatim. Carried whole because it is what the importer stores\nand what a consumer matches on.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ENCODING": {
+          "type": "string",
+          "description": "Transport encoding of LOCAL_PART verbatim and lowercase. An address\nlocal part has a hard octet cap, so raw hexadecimal key material does not\nfit and a compact binary-to-text encoding is REQUIRED for key rows.",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Cryptographic algorithm the row's key or signature belongs to, verbatim as\nthe profile states it. A key without a named algorithm is not verifiable.",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLIC_KEY": {
+          "type": "string",
+          "description": "The profile's published public key value verbatim, for key rows. The SAME\nbytes LOCAL_PART transport-encodes, carried in the profile's own spelling\nso a consumer can join card to profile without decoding. NEVER an extended\npublic key and NEVER a derivation path.",
+          "x-flatbuffer-type": "string"
+        },
+        "CHAIN": {
+          "type": "string",
+          "description": "Ledger token verbatim for LEDGER_ACCOUNT rows.",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_COMPACT_CARD": {
+          "type": "boolean",
+          "description": "Whether this row survives into the COMPACT form.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "OCTET_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet length of the complete UNFOLDED row as emitted.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "required": [
+        "KIND_TOKEN",
+        "LOCAL_PART",
+        "DOMAIN",
+        "ADDRESS"
+      ],
+      "additionalProperties": false
+    },
+    "VCFSubject": {
+      "type": "object",
+      "description": "The profile this card projects, and the provenance that binds them.",
+      "properties": {
+        "PEER_ID": {
+          "type": "string",
+          "description": "Network peer identifier the profile is anchored to, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "DN": {
+          "type": "string",
+          "description": "The profile's distinguished name verbatim, as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact, size-prefixed profile bytes projected.\nWith PROFILE_SHA256 this is what makes a card re-derivable.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of those same profile bytes as 64 lowercase hexadecimal\ncharacters.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE_SIGNATURE": {
+          "type": "string",
+          "description": "The profile's signature value verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE_SIGNATURE_ALGORITHM": {
+          "type": "string",
+          "description": "Algorithm of that signature verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE_SIGNATURE_TIMESTAMP": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "The profile's signature timestamp as the publisher stated it, in\nmilliseconds since the Unix epoch. 0 means unpublished.",
+          "x-flatbuffer-type": "long"
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Literal public key that produced PROFILE_SIGNATURE, verbatim from the\nprofile. Never an extended public key, never a derivation path.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTION_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Literal public key a correspondent encrypts to, verbatim from the profile.\nNever an extended public key, never a derivation path.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_STANDARD": {
+          "type": "string",
+          "description": "Four-character standard code of the projected profile record, `$`\nincluded. Carried so the projection is not silently assumed.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VCFConformance": {
+      "type": "object",
+      "description": "Everything needed to decide whether this card is servable, and whether two\nimplementations produced the same bytes.",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "Card format version token verbatim as emitted, e.g. `3.0`.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROFILE": {
+          "type": "string",
+          "description": "Identifier of the emission profile the card conforms to, verbatim, naming\nthe annex revision the publisher implemented.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINE_ENDING": {
+          "$ref": "#/definitions/vcfLineEnding",
+          "description": "Line terminator the card text uses.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CRLF": {
+              "value": 1,
+              "description": "Carriage return + line feed. The only canonical value."
+            },
+            "LF": {
+              "value": 2,
+              "description": "Line feed only. Non-canonical; importers in the strict class reject it."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "FOLD_OCTET_WIDTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet width beyond which a content line is folded onto continuation lines.\n0 means the publisher folded nothing, which is non-canonical.",
+          "x-flatbuffer-type": "uint"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet length of `CARD` exactly as emitted, folding and terminators\nincluded. This is the number a serving surface budgets against.",
+          "x-flatbuffer-type": "uint"
+        },
+        "UNFOLDED_BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet length the same card would have with folding removed. Carried so a\nfolding disagreement is detectable without unfolding the text.",
+          "x-flatbuffer-type": "uint"
+        },
+        "BYTE_BUDGET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Octet ceiling of the surface this card was produced for. 0 means the\npublisher states no ceiling; it never means a ceiling of zero.",
+          "x-flatbuffer-type": "uint"
+        },
+        "WITHIN_BYTE_BUDGET": {
+          "type": "boolean",
+          "description": "Whether BYTE_LENGTH is within BYTE_BUDGET. False with a non-zero budget\nmeans the card is a valid record that is NOT servable on that surface.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "CARD_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of `CARD` as 64 lowercase hexadecimal characters. This is the\nvalue two implementations compare to prove byte-identical projection.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPERTY_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of property rows emitted, unfolded. Carried so a truncated card is\ndetectable before parsing.",
+          "x-flatbuffer-type": "uint"
+        },
+        "CARRIES_VERIFICATION_CHAIN": {
+          "type": "boolean",
+          "description": "Whether the card carries a complete verification chain: a signing-key row,\nan encryption-key row, and a profile-signature row, all present in the\nUNFOLDED text. A card without all three cannot verify its own subject and\nis not servable as an identity card.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "required": [
+        "VERSION"
+      ],
+      "additionalProperties": false
+    },
+    "VCF": {
+      "type": "object",
+      "description": "vCard Projection Card",
+      "properties": {
+        "CARD_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of this card. Together with the publishing key\nit is the card's identity across every republication.",
+          "x-flatbuffer-type": "string"
+        },
+        "FORM": {
+          "$ref": "#/definitions/vcfCardForm",
+          "description": "Which canonical emission form this record carries.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FULL": {
+              "value": 1,
+              "description": "The complete downloadable card: contact rows, the full verification chain, and the photo when one is published."
+            },
+            "COMPACT": {
+              "value": 2,
+              "description": "The density-limited card meant for optical scanning: contact rows plus the minimum verification chain, and nothing whose absence is recoverable from the profile the signature binds."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CARD": {
+          "type": "string",
+          "description": "The emitted card text VERBATIM: every octet an importer will read,\nincluding folding and line terminators. Authoritative over PROPERTIES and\nALIASES in every disagreement.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MEDIA_TYPE": {
+          "type": "string",
+          "description": "Media type the card is served as, verbatim, including its charset\nparameter.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT": {
+          "$ref": "#/definitions/VCFSubject",
+          "description": "The profile this card projects and the provenance binding them.",
+          "x-flatbuffer-type": "VCFSubject"
+        },
+        "PROPERTIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VCFProperty"
+          },
+          "description": "The publisher's parse of `CARD`, in canonical emission order.",
+          "x-flatbuffer-type": "[VCFProperty]"
+        },
+        "ALIASES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VCFAlias"
+          },
+          "description": "The identity address rows carried by `CARD`, in canonical emission order.",
+          "x-flatbuffer-type": "[VCFAlias]"
+        },
+        "PHOTO_POLICY": {
+          "$ref": "#/definitions/vcfPhotoPolicy",
+          "description": "How the card carries a portrait, if at all.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ABSENT": {
+              "value": 1,
+              "description": "No portrait row is emitted."
+            },
+            "URI_REFERENCE": {
+              "value": 2,
+              "description": "A portrait row referencing content by locator rather than embedding it. The canonical form, because an embedded image dominates the octet budget."
+            },
+            "INLINE_ENCODED": {
+              "value": 3,
+              "description": "A portrait row embedding transport-encoded image bytes inline."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PHOTO_URI": {
+          "type": "string",
+          "description": "Locator of the portrait content under URI_REFERENCE, verbatim as emitted.\nEmpty under every other policy.",
+          "x-flatbuffer-type": "string"
+        },
+        "PHOTO_MEDIA_TYPE": {
+          "type": "string",
+          "description": "Media type of the portrait content verbatim, when one is carried.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONFORMANCE": {
+          "$ref": "#/definitions/VCFConformance",
+          "description": "Emission facts and the digest two implementations compare.",
+          "x-flatbuffer-type": "VCFConformance"
+        },
+        "PRODUCER_ID": {
+          "type": "string",
+          "description": "Reverse-DNS identifier of the component that produced the card, so two\nprojectors are distinguishable when their bytes differ.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER_VERSION": {
+          "type": "string",
+          "description": "Build or release identifier of that component verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp at which the card was projected.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXPIRES_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp after which a consumer re-projects\nfrom the profile rather than serving this card. Empty means no expiry.",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "`namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Publisher note about this card; never a substitute for a field.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "CARD"
+      ],
+      "additionalProperties": false
+    },
     "propagatorConfig": {
       "type": "object",
       "description": "Propagator configuration structure to describe propagation settings",
@@ -86007,6 +86579,9 @@
             },
             {
               "$ref": "#/definitions/IRM"
+            },
+            {
+              "$ref": "#/definitions/VCF"
             }
           ],
           "description": "The record data (union of all supported standards)",

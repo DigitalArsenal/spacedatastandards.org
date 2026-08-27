@@ -1,0 +1,322 @@
+// Hash: f21f2b53d358dac756879dc475761813b35ca4f37b51106892a529ca84d8fa71
+// Version: 1.196.0
+// -----------------------------------END_HEADER
+// vCard Projection Card (VCF)
+// Description
+// The canonical contact-card projection of ONE published entity profile record:
+// the exact card text a directory serves for that entity, together with the
+// structured rows that text encodes and the provenance that binds the card back
+// to the profile it was projected from. A projection card is a DERIVED artifact
+// about a profile, never a second copy of one: it holds no private key material,
+// no derivation path, and no field a consumer could not recompute from the
+// signed profile plus this standard.
+//
+// WHY THIS IS A RECORD AND NOT A LOOSE TEXT FILE. The card is a line-oriented
+// text format consumed by general-purpose address-book importers, so the wire
+// artifact really is the text — but the text alone cannot be verified, routed,
+// or compared. A consumer needs to know which profile it projects, which
+// emission form it is, whether it fits the density budget of the surface that
+// serves it, and whether two implementations produced the SAME bytes. Those
+// answers are not expressible in a contact-card property, so they ride here,
+// around the text, in the same schema-typed storage lane as every other record.
+//
+// THE CARD TEXT IS AUTHORITATIVE; THE STRUCTURE IS DERIVED. `CARD` carries the
+// emitted octets VERBATIM, including every line terminator and every folded
+// continuation. `PROPERTIES` and `ALIASES` are the publisher's parse of those
+// same octets, carried so a consumer never has to re-implement a text parser to
+// route a card. When the two disagree the TEXT WINS, always: `CARD` is what an
+// importer will actually read, and a structure that contradicts it is a
+// publisher defect, not an alternate reading.
+//
+// BYTE-IDENTICAL OUTPUT IS THE POINT. Two conforming implementations projecting
+// the same profile in the same form MUST emit identical `CARD` octets. That is
+// why the emission order, the folding width, the line terminator and the digest
+// are all carried explicitly rather than left to an encoder's habits: a
+// difference that cannot be named cannot be diffed. The byte-level emission
+// contract — field map, canonical total emission order for each form, folding,
+// line endings and the density budget — is the normative annex
+// `schema/VCF/CANONICAL_SERIALIZATION.md`, which is part of this standard and is
+// versioned with it.
+//
+// PUBLISHED IDENTITY IS LITERAL PUBLIC KEYS, NEVER A DERIVATION PATH. The
+// identity rows carry the LITERAL public key bytes of the profile's signing and
+// encryption keys. An extended-public-key row and a derivation-path row are NOT
+// representable in this standard and never will be: publishing a derivation
+// ancestor lets any holder of one child key walk an entity's whole key tree,
+// which is a disclosure a contact card must never make. `PUBLIC_KEY` on an alias
+// is the profile's own published key value verbatim, and `LOCAL_PART` is that
+// same key transport-encoded — the same bytes twice, never two different facts.
+// Rotation is republication: a new profile, re-signed, projected to a new card.
+//
+// IDENTITY RIDES IN ADDRESS ROWS BECAUSE EXTENSION PROPERTIES DO NOT SURVIVE.
+// The widely deployed importer class silently discards vendor-extension
+// properties, so a card that carried its key material in an extension property
+// would arrive at the consumer empty and still look well-formed. The keys
+// therefore ride as ordinary address rows shaped `<local-part>@<kind>.<domain>`,
+// which every importer preserves. The identity domain is publisher DATA carried
+// in `DOMAIN`; this standard fixes the SHAPE of the row, never one deployment's
+// domain.
+//
+// ONE ROW PER IDENTITY KIND. A card carries at most ONE signing row and at most
+// ONE encryption row: the key that actually produced the profile's signature,
+// and the key a correspondent must actually encrypt to. Emitting every key of a
+// kind gives a verifier a set to guess from, and a verifier that guesses is a
+// verifier that can be steered. `ON_COMPACT_CARD` states which rows survive into
+// the density-limited form; rows dropped there are recoverable from the profile
+// the signature binds, which is why dropping them costs nothing.
+//
+// A DENSITY BUDGET IS A REFUSAL, NOT A HINT. A card meant for optical scanning
+// has a hard octet ceiling set by the scanning surface. `BYTE_BUDGET` records the
+// ceiling the card was produced under and `WITHIN_BYTE_BUDGET` records the
+// verdict. A card over budget is still a valid record — it is simply not
+// servable on that surface, and saying so is the whole point of carrying the
+// number.
+//
+// NEVER-INVENT-DATA. Absent means unpublished. A profile field the entity did
+// not publish produces NO property row, never an empty or placeholder one, and a
+// digest or length that cannot be computed is omitted rather than guessed.
+// `BYTE_BUDGET` of 0 means the publisher states no budget; it never means a
+// budget of zero octets.
+//
+// NO VENDOR NAMES. This description and every enum member in this file name
+// capability classes only. `DOMAIN`, `PRODUCER_ID`, `PROFILE`, `MEDIA_TYPE` and
+// `TAGS` values are publisher DATA and may name any real product or domain
+// verbatim.
+//
+// TAG GRAMMAR (normative). Every entry in `TAGS` is a single `namespace:value`
+// pair: lowercase ASCII `[a-z0-9._-]` in each part, exactly one colon separator,
+// no whitespace, no empty part. The list is sorted and deduplicated on
+// publication so two publishers describing the same facets emit identical bytes.
+// An entry without a colon is malformed and a conforming consumer ignores that
+// entry, never the record.
+
+/// Which canonical emission form the card text was produced in. APPEND ONLY.
+enum vcfCardForm : byte {
+  UNSPECIFIED = 0,
+  /// The complete downloadable card: contact rows, the full verification chain,
+  /// and the photo when one is published.
+  FULL,
+  /// The density-limited card meant for optical scanning: contact rows plus the
+  /// minimum verification chain, and nothing whose absence is recoverable from
+  /// the profile the signature binds.
+  COMPACT
+}
+
+/// What an identity address row carries. APPEND ONLY; a member is never removed
+/// and never reused, so a consumer that does not know a token can still route
+/// the row by KIND_TOKEN.
+enum vcfAliasKind : byte {
+  UNSPECIFIED = 0,
+  /// The literal public key that produced the profile's signature.
+  SIGNING_KEY,
+  /// The literal public key a correspondent encrypts to.
+  ENCRYPTION_KEY,
+  /// The profile's own signature value, so a scanner can verify without a
+  /// second fetch.
+  PROFILE_SIGNATURE,
+  /// The profile's signature timestamp, as the publisher stated it.
+  PROFILE_SIGNATURE_TIMESTAMP,
+  /// Content identifier of the exact profile bytes the card projects.
+  PROFILE_CONTENT_ID,
+  /// A distributed-ledger account the profile proves control of. CHAIN names
+  /// which ledger.
+  LEDGER_ACCOUNT,
+  /// A row whose kind this standard does not model. KIND_TOKEN is authoritative.
+  OTHER
+}
+
+/// Line terminator the card text actually uses. Carried so a non-conforming
+/// emission is DESCRIBABLE rather than silently mislabelled as canonical.
+enum vcfLineEnding : byte {
+  UNSPECIFIED = 0,
+  /// Carriage return + line feed. The only canonical value.
+  CRLF,
+  /// Line feed only. Non-canonical; importers in the strict class reject it.
+  LF
+}
+
+/// How the card carries a portrait image, if at all.
+enum vcfPhotoPolicy : byte {
+  UNSPECIFIED = 0,
+  /// No portrait row is emitted.
+  ABSENT,
+  /// A portrait row referencing content by locator rather than embedding it.
+  /// The canonical form, because an embedded image dominates the octet budget.
+  URI_REFERENCE,
+  /// A portrait row embedding transport-encoded image bytes inline.
+  INLINE_ENCODED
+}
+
+/// One emitted card property, as the publisher parsed its own output.
+table VCFProperty {
+  /// Property name verbatim and upper-case, e.g. `EMAIL`.
+  NAME:string (required);
+  /// Parameter tokens verbatim in emission order, each a single `name=value`
+  /// pair. A parameter the emitter wrote without a value is carried verbatim.
+  PARAMETERS:[string];
+  /// Property value with the text format's escaping REMOVED, so a consumer
+  /// reads a value rather than re-implementing an unescaper. `CARD` retains the
+  /// escaped form.
+  VALUE:string;
+  /// Grouping prefix the property was emitted under, when the emitter used one.
+  GROUP:string;
+  /// Zero-based position of this property in the canonical emission order for
+  /// this FORM. Two conforming emitters agree on this number.
+  ORDER:uint;
+  /// Octet length of the property's complete UNFOLDED content line, excluding
+  /// the line terminator. This is the number folding is applied against.
+  OCTET_LENGTH:uint;
+}
+
+/// One identity address row: the machine-readable half of the card.
+table VCFAlias {
+  /// What the row carries.
+  KIND:vcfAliasKind = UNSPECIFIED;
+  /// The row's kind label verbatim as emitted — the leftmost domain label.
+  /// Authoritative when KIND is OTHER.
+  KIND_TOKEN:string (required);
+  /// Everything left of the separator in the emitted address, verbatim.
+  LOCAL_PART:string (required);
+  /// Everything right of the separator in the emitted address, verbatim. This
+  /// is publisher data: the identity domain of the deployment that produced the
+  /// card, never a value this standard fixes.
+  DOMAIN:string (required);
+  /// The complete emitted address, `LOCAL_PART` then the separator then
+  /// `DOMAIN`, verbatim. Carried whole because it is what the importer stores
+  /// and what a consumer matches on.
+  ADDRESS:string (required);
+  /// Transport encoding of LOCAL_PART verbatim and lowercase. An address
+  /// local part has a hard octet cap, so raw hexadecimal key material does not
+  /// fit and a compact binary-to-text encoding is REQUIRED for key rows.
+  ENCODING:string;
+  /// Cryptographic algorithm the row's key or signature belongs to, verbatim as
+  /// the profile states it. A key without a named algorithm is not verifiable.
+  ALGORITHM:string;
+  /// The profile's published public key value verbatim, for key rows. The SAME
+  /// bytes LOCAL_PART transport-encodes, carried in the profile's own spelling
+  /// so a consumer can join card to profile without decoding. NEVER an extended
+  /// public key and NEVER a derivation path.
+  PUBLIC_KEY:string;
+  /// Ledger token verbatim for LEDGER_ACCOUNT rows.
+  CHAIN:string;
+  /// Whether this row survives into the COMPACT form.
+  ON_COMPACT_CARD:bool = false;
+  /// Octet length of the complete UNFOLDED row as emitted.
+  OCTET_LENGTH:uint;
+}
+
+/// The profile this card projects, and the provenance that binds them.
+table VCFSubject {
+  /// Network peer identifier the profile is anchored to, verbatim.
+  PEER_ID:string;
+  /// The profile's distinguished name verbatim, as published.
+  DN:string;
+  /// Content identifier of the exact, size-prefixed profile bytes projected.
+  /// With PROFILE_SHA256 this is what makes a card re-derivable.
+  PROFILE_CID:string;
+  /// SHA-256 of those same profile bytes as 64 lowercase hexadecimal
+  /// characters.
+  PROFILE_SHA256:string;
+  /// The profile's signature value verbatim.
+  PROFILE_SIGNATURE:string;
+  /// Algorithm of that signature verbatim.
+  PROFILE_SIGNATURE_ALGORITHM:string;
+  /// The profile's signature timestamp as the publisher stated it, in
+  /// milliseconds since the Unix epoch. 0 means unpublished.
+  PROFILE_SIGNATURE_TIMESTAMP:long;
+  /// Literal public key that produced PROFILE_SIGNATURE, verbatim from the
+  /// profile. Never an extended public key, never a derivation path.
+  SIGNING_PUBLIC_KEY:string;
+  /// Literal public key a correspondent encrypts to, verbatim from the profile.
+  /// Never an extended public key, never a derivation path.
+  ENCRYPTION_PUBLIC_KEY:string;
+  /// Four-character standard code of the projected profile record, `$`
+  /// included. Carried so the projection is not silently assumed.
+  SOURCE_STANDARD:string;
+}
+
+/// Everything needed to decide whether this card is servable, and whether two
+/// implementations produced the same bytes.
+table VCFConformance {
+  /// Card format version token verbatim as emitted, e.g. `3.0`.
+  VERSION:string (required);
+  /// Identifier of the emission profile the card conforms to, verbatim, naming
+  /// the annex revision the publisher implemented.
+  PROFILE:string;
+  /// Line terminator the card text uses.
+  LINE_ENDING:vcfLineEnding = UNSPECIFIED;
+  /// Octet width beyond which a content line is folded onto continuation lines.
+  /// 0 means the publisher folded nothing, which is non-canonical.
+  FOLD_OCTET_WIDTH:uint;
+  /// Octet length of `CARD` exactly as emitted, folding and terminators
+  /// included. This is the number a serving surface budgets against.
+  BYTE_LENGTH:uint;
+  /// Octet length the same card would have with folding removed. Carried so a
+  /// folding disagreement is detectable without unfolding the text.
+  UNFOLDED_BYTE_LENGTH:uint;
+  /// Octet ceiling of the surface this card was produced for. 0 means the
+  /// publisher states no ceiling; it never means a ceiling of zero.
+  BYTE_BUDGET:uint;
+  /// Whether BYTE_LENGTH is within BYTE_BUDGET. False with a non-zero budget
+  /// means the card is a valid record that is NOT servable on that surface.
+  WITHIN_BYTE_BUDGET:bool = false;
+  /// SHA-256 of `CARD` as 64 lowercase hexadecimal characters. This is the
+  /// value two implementations compare to prove byte-identical projection.
+  CARD_SHA256:string;
+  /// Number of property rows emitted, unfolded. Carried so a truncated card is
+  /// detectable before parsing.
+  PROPERTY_COUNT:uint;
+  /// Whether the card carries a complete verification chain: a signing-key row,
+  /// an encryption-key row, and a profile-signature row, all present in the
+  /// UNFOLDED text. A card without all three cannot verify its own subject and
+  /// is not servable as an identity card.
+  CARRIES_VERIFICATION_CHAIN:bool = false;
+}
+
+/// vCard Projection Card
+table VCF {
+  /// Publisher-stable identifier of this card. Together with the publishing key
+  /// it is the card's identity across every republication.
+  CARD_ID:string;
+  /// Which canonical emission form this record carries.
+  FORM:vcfCardForm = UNSPECIFIED;
+  /// The emitted card text VERBATIM: every octet an importer will read,
+  /// including folding and line terminators. Authoritative over PROPERTIES and
+  /// ALIASES in every disagreement.
+  CARD:string (required);
+  /// Media type the card is served as, verbatim, including its charset
+  /// parameter.
+  MEDIA_TYPE:string;
+  /// The profile this card projects and the provenance binding them.
+  SUBJECT:VCFSubject;
+  /// The publisher's parse of `CARD`, in canonical emission order.
+  PROPERTIES:[VCFProperty];
+  /// The identity address rows carried by `CARD`, in canonical emission order.
+  ALIASES:[VCFAlias];
+  /// How the card carries a portrait, if at all.
+  PHOTO_POLICY:vcfPhotoPolicy = UNSPECIFIED;
+  /// Locator of the portrait content under URI_REFERENCE, verbatim as emitted.
+  /// Empty under every other policy.
+  PHOTO_URI:string;
+  /// Media type of the portrait content verbatim, when one is carried.
+  PHOTO_MEDIA_TYPE:string;
+  /// Emission facts and the digest two implementations compare.
+  CONFORMANCE:VCFConformance;
+  /// Reverse-DNS identifier of the component that produced the card, so two
+  /// projectors are distinguishable when their bytes differ.
+  PRODUCER_ID:string;
+  /// Build or release identifier of that component verbatim.
+  PRODUCER_VERSION:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp at which the card was projected.
+  GENERATED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp after which a consumer re-projects
+  /// from the profile rather than serving this card. Empty means no expiry.
+  EXPIRES_AT:string;
+  /// `namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.
+  TAGS:[string];
+  /// Publisher note about this card; never a substitute for a field.
+  NOTES:string;
+}
+
+root_type VCF;
+file_identifier "$VCF";

@@ -242,6 +242,7 @@ public enum RecordType : byte
   PAP = 221,
   RSD = 222,
   IRM = 223,
+  VCF = 224,
 };
 
 public class RecordTypeUnion {
@@ -700,6 +701,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromRSD(RSDT _rsd) { return new RecordTypeUnion{ Type = RecordType.RSD, Value = _rsd }; }
   public IRMT AsIRM() { return this.As<IRMT>(); }
   public static RecordTypeUnion FromIRM(IRMT _irm) { return new RecordTypeUnion{ Type = RecordType.IRM, Value = _irm }; }
+  public VCFT AsVCF() { return this.As<VCFT>(); }
+  public static RecordTypeUnion FromVCF(VCFT _vcf) { return new RecordTypeUnion{ Type = RecordType.VCF, Value = _vcf }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -927,6 +930,7 @@ public class RecordTypeUnion {
       case RecordType.PAP: return PAP.Pack(builder, _o.AsPAP()).Value;
       case RecordType.RSD: return RSD.Pack(builder, _o.AsRSD()).Value;
       case RecordType.IRM: return IRM.Pack(builder, _o.AsIRM()).Value;
+      case RecordType.VCF: return VCF.Pack(builder, _o.AsVCF()).Value;
     }
   }
 }
@@ -1608,6 +1612,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.IRM:
         result = IRMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.VCF:
+        result = VCFVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

@@ -215,6 +215,7 @@ export * as TRK from './TRK/main.js';
 export * as TRN from './TRN/main.js';
 export * as TRS from './TRS/main.js';
 export * as VAM from './VAM/main.js';
+export * as VCF from './VCF/main.js';
 export * as VCM from './VCM/main.js';
 export * as VEP from './VEP/main.js';
 export * as VST from './VST/main.js';

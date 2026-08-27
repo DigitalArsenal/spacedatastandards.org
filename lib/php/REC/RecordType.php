@@ -241,6 +241,7 @@ class RecordType
     const PAP = 221;
     const RSD = 222;
     const IRM = 223;
+    const VCF = 224;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -467,6 +468,7 @@ class RecordType
         RecordType::PAP=>"PAP",
         RecordType::RSD=>"RSD",
         RecordType::IRM=>"IRM",
+        RecordType::VCF=>"VCF",
     );
 
     public static function Name($e)

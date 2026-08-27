@@ -1785,6 +1785,22 @@
       "type" : "string",
       "enum": ["VIEWER", "REVIEWER", "ADMIN"]
     },
+    "vcfCardForm" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FULL", "COMPACT"]
+    },
+    "vcfAliasKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SIGNING_KEY", "ENCRYPTION_KEY", "PROFILE_SIGNATURE", "PROFILE_SIGNATURE_TIMESTAMP", "PROFILE_CONTENT_ID", "LEDGER_ACCOUNT", "OTHER"]
+    },
+    "vcfLineEnding" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CRLF", "LF"]
+    },
+    "vcfPhotoPolicy" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ABSENT", "URI_REFERENCE", "INLINE_ENCODED"]
+    },
     "elementType" : {
       "type" : "string",
       "enum": ["OSCULATING", "MEAN"]
@@ -1915,7 +1931,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF"]
     },
     "LKS" : {
       "type" : "object",
@@ -36198,6 +36214,265 @@
       "required" : ["ID", "ENTITY_ID"],
       "additionalProperties" : false
     },
+    "VCFProperty" : {
+      "type" : "object",
+      "description" : "One emitted card property, as the publisher parsed its own output.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Property name verbatim and upper-case, e.g. `EMAIL`."
+              },
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Parameter tokens verbatim in emission order, each a single `name=value`\npair. A parameter the emitter wrote without a value is carried verbatim."
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Property value with the text format's escaping REMOVED, so a consumer\nreads a value rather than re-implementing an unescaper. `CARD` retains the\nescaped form."
+              },
+        "GROUP" : {
+                "type" : "string",
+                "description" : "Grouping prefix the property was emitted under, when the emitter used one."
+              },
+        "ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based position of this property in the canonical emission order for\nthis FORM. Two conforming emitters agree on this number."
+              },
+        "OCTET_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet length of the property's complete UNFOLDED content line, excluding\nthe line terminator. This is the number folding is applied against."
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "VCFAlias" : {
+      "type" : "object",
+      "description" : "One identity address row: the machine-readable half of the card.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/vcfAliasKind",
+                "description" : "What the row carries."
+              },
+        "KIND_TOKEN" : {
+                "type" : "string",
+                "description" : "The row's kind label verbatim as emitted — the leftmost domain label.\nAuthoritative when KIND is OTHER."
+              },
+        "LOCAL_PART" : {
+                "type" : "string",
+                "description" : "Everything left of the separator in the emitted address, verbatim."
+              },
+        "DOMAIN" : {
+                "type" : "string",
+                "description" : "Everything right of the separator in the emitted address, verbatim. This\nis publisher data: the identity domain of the deployment that produced the\ncard, never a value this standard fixes."
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "The complete emitted address, `LOCAL_PART` then the separator then\n`DOMAIN`, verbatim. Carried whole because it is what the importer stores\nand what a consumer matches on."
+              },
+        "ENCODING" : {
+                "type" : "string",
+                "description" : "Transport encoding of LOCAL_PART verbatim and lowercase. An address\nlocal part has a hard octet cap, so raw hexadecimal key material does not\nfit and a compact binary-to-text encoding is REQUIRED for key rows."
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Cryptographic algorithm the row's key or signature belongs to, verbatim as\nthe profile states it. A key without a named algorithm is not verifiable."
+              },
+        "PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "The profile's published public key value verbatim, for key rows. The SAME\nbytes LOCAL_PART transport-encodes, carried in the profile's own spelling\nso a consumer can join card to profile without decoding. NEVER an extended\npublic key and NEVER a derivation path."
+              },
+        "CHAIN" : {
+                "type" : "string",
+                "description" : "Ledger token verbatim for LEDGER_ACCOUNT rows."
+              },
+        "ON_COMPACT_CARD" : {
+                "type" : "boolean",
+                "description" : "Whether this row survives into the COMPACT form."
+              },
+        "OCTET_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet length of the complete UNFOLDED row as emitted."
+              }
+      },
+      "required" : ["KIND_TOKEN", "LOCAL_PART", "DOMAIN", "ADDRESS"],
+      "additionalProperties" : false
+    },
+    "VCFSubject" : {
+      "type" : "object",
+      "description" : "The profile this card projects, and the provenance that binds them.",
+      "properties" : {
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Network peer identifier the profile is anchored to, verbatim."
+              },
+        "DN" : {
+                "type" : "string",
+                "description" : "The profile's distinguished name verbatim, as published."
+              },
+        "PROFILE_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the exact, size-prefixed profile bytes projected.\nWith PROFILE_SHA256 this is what makes a card re-derivable."
+              },
+        "PROFILE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of those same profile bytes as 64 lowercase hexadecimal\ncharacters."
+              },
+        "PROFILE_SIGNATURE" : {
+                "type" : "string",
+                "description" : "The profile's signature value verbatim."
+              },
+        "PROFILE_SIGNATURE_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Algorithm of that signature verbatim."
+              },
+        "PROFILE_SIGNATURE_TIMESTAMP" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "The profile's signature timestamp as the publisher stated it, in\nmilliseconds since the Unix epoch. 0 means unpublished."
+              },
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Literal public key that produced PROFILE_SIGNATURE, verbatim from the\nprofile. Never an extended public key, never a derivation path."
+              },
+        "ENCRYPTION_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Literal public key a correspondent encrypts to, verbatim from the profile.\nNever an extended public key, never a derivation path."
+              },
+        "SOURCE_STANDARD" : {
+                "type" : "string",
+                "description" : "Four-character standard code of the projected profile record, `$`\nincluded. Carried so the projection is not silently assumed."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VCFConformance" : {
+      "type" : "object",
+      "description" : "Everything needed to decide whether this card is servable, and whether two\nimplementations produced the same bytes.",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Card format version token verbatim as emitted, e.g. `3.0`."
+              },
+        "PROFILE" : {
+                "type" : "string",
+                "description" : "Identifier of the emission profile the card conforms to, verbatim, naming\nthe annex revision the publisher implemented."
+              },
+        "LINE_ENDING" : {
+                "$ref" : "#/definitions/vcfLineEnding",
+                "description" : "Line terminator the card text uses."
+              },
+        "FOLD_OCTET_WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet width beyond which a content line is folded onto continuation lines.\n0 means the publisher folded nothing, which is non-canonical."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet length of `CARD` exactly as emitted, folding and terminators\nincluded. This is the number a serving surface budgets against."
+              },
+        "UNFOLDED_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet length the same card would have with folding removed. Carried so a\nfolding disagreement is detectable without unfolding the text."
+              },
+        "BYTE_BUDGET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Octet ceiling of the surface this card was produced for. 0 means the\npublisher states no ceiling; it never means a ceiling of zero."
+              },
+        "WITHIN_BYTE_BUDGET" : {
+                "type" : "boolean",
+                "description" : "Whether BYTE_LENGTH is within BYTE_BUDGET. False with a non-zero budget\nmeans the card is a valid record that is NOT servable on that surface."
+              },
+        "CARD_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of `CARD` as 64 lowercase hexadecimal characters. This is the\nvalue two implementations compare to prove byte-identical projection."
+              },
+        "PROPERTY_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of property rows emitted, unfolded. Carried so a truncated card is\ndetectable before parsing."
+              },
+        "CARRIES_VERIFICATION_CHAIN" : {
+                "type" : "boolean",
+                "description" : "Whether the card carries a complete verification chain: a signing-key row,\nan encryption-key row, and a profile-signature row, all present in the\nUNFOLDED text. A card without all three cannot verify its own subject and\nis not servable as an identity card."
+              }
+      },
+      "required" : ["VERSION"],
+      "additionalProperties" : false
+    },
+    "VCF" : {
+      "type" : "object",
+      "description" : "vCard Projection Card",
+      "properties" : {
+        "CARD_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier of this card. Together with the publishing key\nit is the card's identity across every republication."
+              },
+        "FORM" : {
+                "$ref" : "#/definitions/vcfCardForm",
+                "description" : "Which canonical emission form this record carries."
+              },
+        "CARD" : {
+                "type" : "string",
+                "description" : "The emitted card text VERBATIM: every octet an importer will read,\nincluding folding and line terminators. Authoritative over PROPERTIES and\nALIASES in every disagreement."
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type the card is served as, verbatim, including its charset\nparameter."
+              },
+        "SUBJECT" : {
+                "$ref" : "#/definitions/VCFSubject",
+                "description" : "The profile this card projects and the provenance binding them."
+              },
+        "PROPERTIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/VCFProperty"},
+                "description" : "The publisher's parse of `CARD`, in canonical emission order."
+              },
+        "ALIASES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/VCFAlias"},
+                "description" : "The identity address rows carried by `CARD`, in canonical emission order."
+              },
+        "PHOTO_POLICY" : {
+                "$ref" : "#/definitions/vcfPhotoPolicy",
+                "description" : "How the card carries a portrait, if at all."
+              },
+        "PHOTO_URI" : {
+                "type" : "string",
+                "description" : "Locator of the portrait content under URI_REFERENCE, verbatim as emitted.\nEmpty under every other policy."
+              },
+        "PHOTO_MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of the portrait content verbatim, when one is carried."
+              },
+        "CONFORMANCE" : {
+                "$ref" : "#/definitions/VCFConformance",
+                "description" : "Emission facts and the digest two implementations compare."
+              },
+        "PRODUCER_ID" : {
+                "type" : "string",
+                "description" : "Reverse-DNS identifier of the component that produced the card, so two\nprojectors are distinguishable when their bytes differ."
+              },
+        "PRODUCER_VERSION" : {
+                "type" : "string",
+                "description" : "Build or release identifier of that component verbatim."
+              },
+        "GENERATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp at which the card was projected."
+              },
+        "EXPIRES_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp after which a consumer re-projects\nfrom the profile rather than serving this card. Empty means no expiry."
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "`namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Publisher note about this card; never a substitute for a field."
+              }
+      },
+      "required" : ["CARD"],
+      "additionalProperties" : false
+    },
     "propagatorConfig" : {
       "type" : "object",
       "description" : "Propagator configuration structure to describe propagation settings",
@@ -39057,7 +39332,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

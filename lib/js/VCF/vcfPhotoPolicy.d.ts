@@ -1,0 +1,20 @@
+/**
+ * How the card carries a portrait image, if at all.
+ */
+export declare enum vcfPhotoPolicy {
+    UNSPECIFIED = 0,
+    /**
+     * No portrait row is emitted.
+     */
+    ABSENT = 1,
+    /**
+     * A portrait row referencing content by locator rather than embedding it.
+     * The canonical form, because an embedded image dominates the octet budget.
+     */
+    URI_REFERENCE = 2,
+    /**
+     * A portrait row embedding transport-encoded image bytes inline.
+     */
+    INLINE_ENCODED = 3
+}
+//# sourceMappingURL=vcfPhotoPolicy.d.ts.map

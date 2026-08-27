@@ -243,5 +243,6 @@ class RecordType private constructor() {
         const val PAP: UByte = 221u
         const val RSD: UByte = 222u
         const val IRM: UByte = 223u
+        const val VCF: UByte = 224u
     }
 }
