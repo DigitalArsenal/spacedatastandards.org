@@ -337,7 +337,8 @@ describe("SCV sensor coverage schema", () => {
     assert.match(manifest.STANDARDS.SCV.IDL, new RegExp(`// Hash: ${actualHash}`));
   });
 
-  it("keeps SCV and REC distribution archives in generated binding parity", async () => {
+  it("keeps SCV and REC distribution archives in generated binding parity", async function () {
+    this.timeout(120000); // reads the whole dist/ tar.gz set; 2s default is not enough
     const requiredTokens = [
       "SCVSensorShapeContract",
       "scvSensorAxisConvention",
@@ -521,12 +522,24 @@ describe("SCV sensor coverage schema", () => {
       return Number(match[1]);
     };
 
-    assert.equal(valueFor("SDF"), 132);
-    assert.equal(valueFor("SDL"), 133);
-    assert.equal(valueFor("SDR"), 134);
-    assert.equal(valueFor("SEN"), 135);
-    assert.equal(valueFor("SEO"), 136);
-    assert.equal(valueFor("XTC"), 165);
+    // The ONE authoritative ordinal contract is schema/REC/RECORDTYPE_ORDINALS.json,
+    // enforced by scripts/checkRecordTypeOrdinals.mjs. Hardcoding a second copy here
+    // gave us a stale duplicate that claimed SDF=132 while the frozen contract and
+    // every generated binding since have said 134. Read the contract instead.
+    const frozen = JSON.parse(
+      await fs.readFile(
+        path.join(repoRoot, "schema", "REC", "RECORDTYPE_ORDINALS.json"),
+        "utf8",
+      ),
+    );
+    const frozenOrdinals = frozen.ordinals ?? frozen.members ?? frozen;
+    for (const code of ["SDF", "SDL", "SDR", "SEN", "SEO", "XTC", "SCV"]) {
+      assert.equal(
+        valueFor(code),
+        frozenOrdinals[code],
+        `${code} must keep its frozen RecordType ordinal (wire data)`,
+      );
+    }
     assert.ok(valueFor("SCV") > valueFor("XTC"));
     assert.match(
       recSchemaSource,
