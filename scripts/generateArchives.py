@@ -1,5 +1,6 @@
 import os
 import tarfile
+import gzip
 import shutil
 import flatbuffers
 import json
@@ -110,10 +111,53 @@ def collect_schema_dependencies(schema_name, schema_dir, visited=None):
 
 
 def create_tar_gz_of_directories(directories, output_dir):
-    """Create a tar.gz file from one or more generated standard directories."""
-    with tarfile.open(output_dir, "w:gz") as tar:
-        for directory in directories:
-            tar.add(directory, arcname=os.path.basename(directory))
+    """Create a REPRODUCIBLE tar.gz from one or more generated standard directories.
+
+    `tarfile.open(path, "w:gz")` stamps wall-clock time into the gzip header AND
+    into every tar entry, so a rebuild produced different BYTES for byte-identical
+    CONTENT. With ~230 standards x ~14 language targets in dist/, that meant every
+    build rewrote ~3,200 tracked files whether or not a single schema had changed:
+    a one-schema fix arrived as a 3,265-file diff in which 96% was timestamp
+    churn, and a reviewer had no way to see the ten files that actually moved.
+
+    Two clocks have to be silenced, not one:
+      * the gzip header's mtime  -> GzipFile(mtime=0), and filename="" so the
+        source name is not embedded either
+      * each tar entry's metadata -> the filter below, which also flattens
+        uid/gid/uname/gname; otherwise the archive records whoever ran the build
+
+    Entry ORDER is already deterministic: tarfile.add walks sorted(os.listdir()).
+
+    The result is content-addressable by construction — identical inputs give an
+    identical archive on any machine, so `git status` after a no-op rebuild is
+    clean and a diff shows only what genuinely changed.
+    """
+
+    def _strip_nondeterminism(info):
+        # Compiled Python is a build dropping, not a distributable: a .pyc
+        # embeds both a timestamp and the compiling interpreter's magic number,
+        # so archiving it made the two Python standards that happen to get
+        # imported during the build (REC, SCM) churn on every run even after
+        # every other clock was silenced. Consumers compile their own.
+        base = os.path.basename(info.name)
+        if base == "__pycache__" or info.name.endswith(".pyc"):
+            return None
+        info.mtime = 0
+        info.uid = 0
+        info.gid = 0
+        info.uname = ""
+        info.gname = ""
+        return info
+
+    with open(output_dir, "wb") as raw:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as gz:
+            with tarfile.open(fileobj=gz, mode="w") as tar:
+                for directory in directories:
+                    tar.add(
+                        directory,
+                        arcname=os.path.basename(directory),
+                        filter=_strip_nondeterminism,
+                    )
 
 
 def main():
