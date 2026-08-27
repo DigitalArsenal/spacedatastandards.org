@@ -2,11 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './IRM.js';
-export * from './IRMChunk.js';
-export * from './IRMDecodeContext.js';
-export * from './IRMFault.js';
-export * from './irmJobState.js';
-export * from './irmRangeMode.js';
-export * from './IRMSource.js';
-export * from './irmValidatorMatch.js';
+export { IRM, IRMT } from './IRM.js';
+export { IRMChunk, IRMChunkT } from './IRMChunk.js';
+export { IRMDecodeContext, IRMDecodeContextT } from './IRMDecodeContext.js';
+export { IRMFault, IRMFaultT } from './IRMFault.js';
+export { IRMSource, IRMSourceT } from './IRMSource.js';
+export { irmJobState } from './irmJobState.js';
+export { irmRangeMode } from './irmRangeMode.js';
+export { irmValidatorMatch } from './irmValidatorMatch.js';

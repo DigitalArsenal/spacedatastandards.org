@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './SHC.js';
-export * from './shcNormalization.js';
-export * from './shcTideSystem.js';
-export * from './SHCVariableTerm.js';
+export { SHC, SHCT } from './SHC.js';
+export { SHCVariableTerm, SHCVariableTermT } from './SHCVariableTerm.js';
+export { shcNormalization } from './shcNormalization.js';
+export { shcTideSystem } from './shcTideSystem.js';

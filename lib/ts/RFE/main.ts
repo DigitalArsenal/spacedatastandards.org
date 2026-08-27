@@ -2,12 +2,12 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './emitterType.js';
-export * from './RFE.js';
-export * from './RFEEmissionMask.js';
-export * from './rfeEmissionMaskClass.js';
-export * from './RFEEmissionMaskPoint.js';
-export * from './rfeEmissionPath.js';
-export * from './rfEmitterDetail.js';
-export * from './RFEProvenance.js';
-export * from './signalModulation.js';
+export { RFE, RFET } from './RFE.js';
+export { RFEEmissionMask, RFEEmissionMaskT } from './RFEEmissionMask.js';
+export { RFEEmissionMaskPoint, RFEEmissionMaskPointT } from './RFEEmissionMaskPoint.js';
+export { RFEProvenance, RFEProvenanceT } from './RFEProvenance.js';
+export { emitterType } from './emitterType.js';
+export { rfEmitterDetail, rfEmitterDetailT } from './rfEmitterDetail.js';
+export { rfeEmissionMaskClass } from './rfeEmissionMaskClass.js';
+export { rfeEmissionPath } from './rfeEmissionPath.js';
+export { signalModulation } from './signalModulation.js';

@@ -2,4 +2,4 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './PNM.js';
+export { PNM, PNMT } from './PNM.js';

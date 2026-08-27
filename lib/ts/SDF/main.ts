@@ -2,18 +2,18 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './SDF.js';
-export * from './SDFBatchRequest.js';
-export * from './SDFBatchResponse.js';
-export * from './SDFComponent.js';
-export * from './SDFComposition.js';
-export * from './SDFConfig.js';
-export * from './SDFConical.js';
-export * from './SDFCustom.js';
-export * from './SDFCylindrical.js';
-export * from './sdfOperation.js';
-export * from './sdfPrimitive.js';
-export * from './SDFRectangular.js';
-export * from './sdfResult.js';
-export * from './SDFSpherical.js';
-export * from './sdfTimeRangeResult.js';
+export { SDF, SDFT } from './SDF.js';
+export { SDFBatchRequest, SDFBatchRequestT } from './SDFBatchRequest.js';
+export { SDFBatchResponse, SDFBatchResponseT } from './SDFBatchResponse.js';
+export { SDFComponent, SDFComponentT } from './SDFComponent.js';
+export { SDFComposition, SDFCompositionT } from './SDFComposition.js';
+export { SDFConfig, SDFConfigT } from './SDFConfig.js';
+export { SDFConical, SDFConicalT } from './SDFConical.js';
+export { SDFCustom, SDFCustomT } from './SDFCustom.js';
+export { SDFCylindrical, SDFCylindricalT } from './SDFCylindrical.js';
+export { SDFRectangular, SDFRectangularT } from './SDFRectangular.js';
+export { SDFSpherical, SDFSphericalT } from './SDFSpherical.js';
+export { sdfOperation } from './sdfOperation.js';
+export { sdfPrimitive } from './sdfPrimitive.js';
+export { sdfResult, sdfResultT } from './sdfResult.js';
+export { sdfTimeRangeResult, sdfTimeRangeResultT } from './sdfTimeRangeResult.js';

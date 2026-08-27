@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './brokerCustodyModel.js';
-export * from './brokerLiveness.js';
-export * from './PKB.js';
+export { PKB, PKBT } from './PKB.js';
+export { brokerCustodyModel } from './brokerCustodyModel.js';
+export { brokerLiveness } from './brokerLiveness.js';

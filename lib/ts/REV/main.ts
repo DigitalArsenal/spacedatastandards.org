@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DataQualityMetrics.js';
-export * from './REV.js';
-export * from './reviewLifecycleStatus.js';
+export { DataQualityMetrics, DataQualityMetricsT } from './DataQualityMetrics.js';
+export { REV, REVT } from './REV.js';
+export { reviewLifecycleStatus } from './reviewLifecycleStatus.js';

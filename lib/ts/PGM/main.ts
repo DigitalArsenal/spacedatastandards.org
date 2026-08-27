@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './peerGroupTrustCategory.js';
-export * from './PGM.js';
-export * from './PGMMetadataEntry.js';
+export { PGM, PGMT } from './PGM.js';
+export { PGMMetadataEntry, PGMMetadataEntryT } from './PGMMetadataEntry.js';
+export { peerGroupTrustCategory } from './peerGroupTrustCategory.js';

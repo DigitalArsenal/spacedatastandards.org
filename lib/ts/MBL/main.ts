@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CanonicalizationRule.js';
-export * from './MBL.js';
-export * from './ModuleBundleEntry.js';
-export * from './ModuleBundleEntryRole.js';
-export * from './ModulePayloadEncoding.js';
+export { CanonicalizationRule, CanonicalizationRuleT } from './CanonicalizationRule.js';
+export { MBL, MBLT } from './MBL.js';
+export { ModuleBundleEntry, ModuleBundleEntryT } from './ModuleBundleEntry.js';
+export { ModuleBundleEntryRole } from './ModuleBundleEntryRole.js';
+export { ModulePayloadEncoding } from './ModulePayloadEncoding.js';

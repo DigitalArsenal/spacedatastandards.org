@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CFP.js';
-export * from './pduKind.js';
-export * from './transmissionClass.js';
+export { CFP, CFPT } from './CFP.js';
+export { pduKind } from './pduKind.js';
+export { transmissionClass } from './transmissionClass.js';

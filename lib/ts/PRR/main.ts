@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './peerRegistryTrustCategory.js';
-export * from './PRR.js';
-export * from './PRRMetadataEntry.js';
+export { PRR, PRRT } from './PRR.js';
+export { PRRMetadataEntry, PRRMetadataEntryT } from './PRRMetadataEntry.js';
+export { peerRegistryTrustCategory } from './peerRegistryTrustCategory.js';

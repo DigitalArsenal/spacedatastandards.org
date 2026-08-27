@@ -2,11 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DTT.js';
-export * from './dttPayloadFormat.js';
-export * from './DTTPayloadRef.js';
-export * from './DTTProvenance.js';
-export * from './dttSourceClass.js';
-export * from './dttTilingScheme.js';
-export * from './dttVerticalDatum.js';
-export * from './dttWaterMask.js';
+export { DTT, DTTT } from './DTT.js';
+export { DTTPayloadRef, DTTPayloadRefT } from './DTTPayloadRef.js';
+export { DTTProvenance, DTTProvenanceT } from './DTTProvenance.js';
+export { dttPayloadFormat } from './dttPayloadFormat.js';
+export { dttSourceClass } from './dttSourceClass.js';
+export { dttTilingScheme } from './dttTilingScheme.js';
+export { dttVerticalDatum } from './dttVerticalDatum.js';
+export { dttWaterMask } from './dttWaterMask.js';

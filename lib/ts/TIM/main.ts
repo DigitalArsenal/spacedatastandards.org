@@ -2,12 +2,12 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './TIM.js';
-export * from './TIMCcsdsTimeCode.js';
-export * from './timCcsdsTimeCodeKind.js';
-export * from './TIMConversionRequest.js';
-export * from './TIMConversionResult.js';
-export * from './timConversionStatus.js';
-export * from './timEpochRepresentation.js';
-export * from './timingStandard.js';
-export * from './TIMInstant.js';
+export { TIM, TIMT } from './TIM.js';
+export { TIMCcsdsTimeCode, TIMCcsdsTimeCodeT } from './TIMCcsdsTimeCode.js';
+export { TIMConversionRequest, TIMConversionRequestT } from './TIMConversionRequest.js';
+export { TIMConversionResult, TIMConversionResultT } from './TIMConversionResult.js';
+export { TIMInstant, TIMInstantT } from './TIMInstant.js';
+export { timCcsdsTimeCodeKind } from './timCcsdsTimeCodeKind.js';
+export { timConversionStatus } from './timConversionStatus.js';
+export { timEpochRepresentation } from './timEpochRepresentation.js';
+export { timingStandard } from './timingStandard.js';

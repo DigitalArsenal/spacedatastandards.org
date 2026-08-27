@@ -2,18 +2,18 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './NUM.js';
-export * from './numDiscretizeRoundDirection.js';
-export * from './numFunctionCode.js';
-export * from './NUMGaussMarkovRequest.js';
-export * from './NUMGaussMarkovResult.js';
-export * from './numOperationCode.js';
-export * from './numResultStatus.js';
-export * from './NUMRootSolveRequest.js';
-export * from './NUMRootSolveResult.js';
-export * from './NUMScalarInterpolationRequest.js';
-export * from './NUMScalarInterpolationResult.js';
-export * from './NUMVectorDiscretizeRequest.js';
-export * from './NUMVectorDiscretizeResult.js';
-export * from './NUMVectorSaturateRequest.js';
-export * from './NUMVectorSaturateResult.js';
+export { NUM, NUMT } from './NUM.js';
+export { NUMGaussMarkovRequest, NUMGaussMarkovRequestT } from './NUMGaussMarkovRequest.js';
+export { NUMGaussMarkovResult, NUMGaussMarkovResultT } from './NUMGaussMarkovResult.js';
+export { NUMRootSolveRequest, NUMRootSolveRequestT } from './NUMRootSolveRequest.js';
+export { NUMRootSolveResult, NUMRootSolveResultT } from './NUMRootSolveResult.js';
+export { NUMScalarInterpolationRequest, NUMScalarInterpolationRequestT } from './NUMScalarInterpolationRequest.js';
+export { NUMScalarInterpolationResult, NUMScalarInterpolationResultT } from './NUMScalarInterpolationResult.js';
+export { NUMVectorDiscretizeRequest, NUMVectorDiscretizeRequestT } from './NUMVectorDiscretizeRequest.js';
+export { NUMVectorDiscretizeResult, NUMVectorDiscretizeResultT } from './NUMVectorDiscretizeResult.js';
+export { NUMVectorSaturateRequest, NUMVectorSaturateRequestT } from './NUMVectorSaturateRequest.js';
+export { NUMVectorSaturateResult, NUMVectorSaturateResultT } from './NUMVectorSaturateResult.js';
+export { numDiscretizeRoundDirection } from './numDiscretizeRoundDirection.js';
+export { numFunctionCode } from './numFunctionCode.js';
+export { numOperationCode } from './numOperationCode.js';
+export { numResultStatus } from './numResultStatus.js';

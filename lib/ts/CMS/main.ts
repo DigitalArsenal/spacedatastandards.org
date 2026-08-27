@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CMS.js';
-export * from './CmsModulationType.js';
-export * from './commsChannel.js';
-export * from './commsTransponder.js';
-export * from './encryptionType.js';
+export { CMS, CMST } from './CMS.js';
+export { CmsModulationType } from './CmsModulationType.js';
+export { commsChannel, commsChannelT } from './commsChannel.js';
+export { commsTransponder, commsTransponderT } from './commsTransponder.js';
+export { encryptionType } from './encryptionType.js';

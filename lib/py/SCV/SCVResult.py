@@ -201,11 +201,7 @@ class SCVResult(object):
         return o == 0
 
 def SCVResultStart(builder):
-<<<<<<< Updated upstream
     builder.StartObject(14)
-=======
-    builder.StartObject(13)
->>>>>>> Stashed changes
 
 def Start(builder):
     SCVResultStart(builder)

@@ -104,7 +104,7 @@ unpack(): RFMT {
   return new RFMT(
     this.REFERENCE_FRAME_type(),
     (() => {
-      const temp = unionToRfmunion(this.REFERENCE_FRAME_type(), this.REFERENCE_FRAME.bind(this));
+      const temp = unionToRfmunion(this.referenceFrameType(), this.REFERENCE_FRAME.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })(),
@@ -117,7 +117,7 @@ unpack(): RFMT {
 unpackTo(_o: RFMT): void {
   _o.REFERENCE_FRAME_type = this.REFERENCE_FRAME_type();
   _o.REFERENCE_FRAME = (() => {
-      const temp = unionToRfmunion(this.REFERENCE_FRAME_type(), this.REFERENCE_FRAME.bind(this));
+      const temp = unionToRfmunion(this.referenceFrameType(), this.REFERENCE_FRAME.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })();

@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './lambertTransferPath.js';
-export * from './LMS.js';
+export { LMS, LMST } from './LMS.js';
+export { lambertTransferPath } from './lambertTransferPath.js';

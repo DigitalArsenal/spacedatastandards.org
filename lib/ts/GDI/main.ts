@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './GDI.js';
-export * from './imageFormat.js';
+export { GDI, GDIT } from './GDI.js';
+export { imageFormat } from './imageFormat.js';

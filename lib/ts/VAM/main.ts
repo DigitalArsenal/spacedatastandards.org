@@ -2,24 +2,24 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './VAM.js';
-export * from './VAMAnnotation.js';
-export * from './VAMApprovedAlternate.js';
-export * from './VAMMetadataOnlyReview.js';
-export * from './VAMMetrics.js';
-export * from './VAMQualityDimension.js';
-export * from './VAMQuaternion.js';
-export * from './VAMReview.js';
-export * from './VAMScale3.js';
-export * from './VAMSource.js';
-export * from './VAMTransform.js';
-export * from './VAMValidation.js';
-export * from './VAMVariant.js';
-export * from './VAMVector3.js';
-export * from './visualAssetDecisionKind.js';
-export * from './visualAssetLicenseClass.js';
-export * from './visualAssetPermissionDecision.js';
-export * from './visualAssetReviewerRole.js';
-export * from './visualAssetReviewState.js';
-export * from './visualAssetUpAxis.js';
-export * from './visualAssetVariantKind.js';
+export { VAM, VAMT } from './VAM.js';
+export { VAMAnnotation, VAMAnnotationT } from './VAMAnnotation.js';
+export { VAMApprovedAlternate, VAMApprovedAlternateT } from './VAMApprovedAlternate.js';
+export { VAMMetadataOnlyReview, VAMMetadataOnlyReviewT } from './VAMMetadataOnlyReview.js';
+export { VAMMetrics, VAMMetricsT } from './VAMMetrics.js';
+export { VAMQualityDimension, VAMQualityDimensionT } from './VAMQualityDimension.js';
+export { VAMQuaternion, VAMQuaternionT } from './VAMQuaternion.js';
+export { VAMReview, VAMReviewT } from './VAMReview.js';
+export { VAMScale3, VAMScale3T } from './VAMScale3.js';
+export { VAMSource, VAMSourceT } from './VAMSource.js';
+export { VAMTransform, VAMTransformT } from './VAMTransform.js';
+export { VAMValidation, VAMValidationT } from './VAMValidation.js';
+export { VAMVariant, VAMVariantT } from './VAMVariant.js';
+export { VAMVector3, VAMVector3T } from './VAMVector3.js';
+export { visualAssetDecisionKind } from './visualAssetDecisionKind.js';
+export { visualAssetLicenseClass } from './visualAssetLicenseClass.js';
+export { visualAssetPermissionDecision } from './visualAssetPermissionDecision.js';
+export { visualAssetReviewState } from './visualAssetReviewState.js';
+export { visualAssetReviewerRole } from './visualAssetReviewerRole.js';
+export { visualAssetUpAxis } from './visualAssetUpAxis.js';
+export { visualAssetVariantKind } from './visualAssetVariantKind.js';

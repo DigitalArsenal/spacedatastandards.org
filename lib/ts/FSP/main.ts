@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './FieldStreamAudience.js';
-export * from './fieldStreamAudienceCategory.js';
-export * from './fieldStreamDecisionCategory.js';
-export * from './fieldStreamOperationCategory.js';
-export * from './fieldStreamRevocationCategory.js';
-export * from './FieldStreamRule.js';
-export * from './FSP.js';
+export { FSP, FSPT } from './FSP.js';
+export { FieldStreamAudience, FieldStreamAudienceT } from './FieldStreamAudience.js';
+export { FieldStreamRule, FieldStreamRuleT } from './FieldStreamRule.js';
+export { fieldStreamAudienceCategory } from './fieldStreamAudienceCategory.js';
+export { fieldStreamDecisionCategory } from './fieldStreamDecisionCategory.js';
+export { fieldStreamOperationCategory } from './fieldStreamOperationCategory.js';
+export { fieldStreamRevocationCategory } from './fieldStreamRevocationCategory.js';

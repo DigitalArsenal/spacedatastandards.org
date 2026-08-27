@@ -90,21 +90,25 @@ inline const char *EnumNameEntityType(EntityType e) {
 
 /// Represents cryptographic key information.
 ///
-/// The publication paradigm is "xpub + derivation paths, not key material":
-/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
-/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+/// The publication paradigm is "literal public keys, not derivation
+/// material": a published EPM carries the PUBLIC_KEY bytes that verify
+/// the record's SIGNATURE (signing) or encrypt to the entity (encryption),
+/// and NOTHING about how those keys were derived. XPUB, KEY_PATH and
+/// KEY_ADDRESS are PRIVATE / operational — they belong to the wallet that
+/// produced the keys, never to the record a peer resolves.
 ///
-/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
-///   from XPUB via BIP-32 public derivation, so such an entry may omit
-///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
-/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
-///   child is hardened — so NO xpub can yield an ed25519 child public key,
-///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
-///   authoritative and MUST remain present.
+/// Requiredness is PROFILE-ENFORCED, never a flatc `(required)` attribute:
+/// a `(required)` on PUBLIC_KEY would make the flatbuffers Verifier reject
+/// every pre-flip secp256k1 record that legitimately omitted it (the
+/// 2026-07-27 dual-curve regime allowed xpub-derivation for secp at
+/// non-hardened paths). A published record is self-describing instead —
+/// PUBLIC_KEY present, XPUB/KEY_PATH/KEY_ADDRESS absent — and a conformance
+/// checker asserts that profile (see scripts/check-epm-published-profile.mjs).
 ///
-/// A future revision that removes the published ed25519 PUBLIC_KEY would make
-/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
-/// not a transitional leftover.
+/// Rotation is by republish: a new signing or encryption key means a new
+/// PUBLIC_KEY, a re-signed SIGNATURE, and a re-published EPM at the same
+/// peer-addressed location. The PeerID (multihash of the libp2p identity
+/// pubkey) is the stable anchor across rotations.
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CryptoKeyBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -119,13 +123,18 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ALGORITHM = 20,
     VT_ENCODING = 22
   };
-  /// Public part of the cryptographic key, in hexidecimal format. Optional for
-  /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
-  /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
+  /// Public part of the cryptographic key, in hexadecimal format. AUTHORITATIVE
+  /// in a published record: this is the verifying/encrypting key, and no other
+  /// field yields it. Required-in-practice (profile-enforced, not flatc
+  /// `(required)`) so that pre-flip secp256k1 records without it still decode.
   const ::flatbuffers::String *PUBLIC_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PUBLIC_KEY);
   }
-  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic
+  /// wallets), "Extended keys". PRIVATE / operational: present only in the
+  /// wallet that derived the keys, ABSENT from published records. A verifier
+  /// never derives a child key from XPUB — the PUBLIC_KEY is the verification
+  /// material.
   const ::flatbuffers::String *XPUB() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPUB);
   }
@@ -137,8 +146,10 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }
-  /// Address generated from the cryptographic key. An address only — NOT a
-  /// derivation path; the derivation path lives in KEY_PATH
+  /// Address generated from the cryptographic key. PRIVATE / operational in a
+  /// published EPM: a chain address is bound through a ChainProof attestation,
+  /// not carried as a standalone KEY_ADDRESS on the CryptoKey. ABSENT from
+  /// published records.
   const ::flatbuffers::String *KEY_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
@@ -154,13 +165,15 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// BIP-32 / SLIP-10 derivation path of this key from the entity root
   /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
-  /// ed25519 hardened)
+  /// ed25519 hardened). PRIVATE / operational: how the key was derived belongs
+  /// to the wallet, not to a published record. ABSENT from published records.
   const ::flatbuffers::String *KEY_PATH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_PATH);
   }
   /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
   /// ed25519: every record published before this field existed verifies
-  /// unchanged under that default
+  /// unchanged under that default. The verifier dispatches on ALGORITHM (not
+  /// on ADDRESS_TYPE, which is an address-format tag only).
   const ::flatbuffers::String *ALGORITHM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
   }

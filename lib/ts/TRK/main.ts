@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './trackEnvironment.js';
-export * from './TRK.js';
-export * from './TrkTrackStatus.js';
+export { TRK, TRKT } from './TRK.js';
+export { TrkTrackStatus } from './TrkTrackStatus.js';
+export { trackEnvironment } from './trackEnvironment.js';

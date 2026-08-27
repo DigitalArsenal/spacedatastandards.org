@@ -2,14 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CMT.js';
-export * from './commissionEnforcement.js';
-export * from './commissionScope.js';
-export * from './memoBindingScheme.js';
-export * from './RevenueSplit.js';
-export * from './SCX.js';
-export * from './settlementMechanism.js';
-export * from './SplitRecipient.js';
-export * from './splitRole.js';
-export * from './STO.js';
-export * from './STOModuleRef.js';
+export { SCX, SCXT } from './SCX.js';
+export { SplitRecipient, SplitRecipientT } from './SplitRecipient.js';
+export { memoBindingScheme } from './memoBindingScheme.js';
+export { settlementMechanism } from './settlementMechanism.js';

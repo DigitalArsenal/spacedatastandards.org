@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './RCF.js';
-export * from './rcfPduType.js';
+export { RCF, RCFT } from './RCF.js';
+export { rcfPduType } from './rcfPduType.js';

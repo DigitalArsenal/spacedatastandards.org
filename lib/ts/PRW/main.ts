@@ -2,13 +2,13 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './propagatorErrorCode.js';
-export * from './propagatorStateFlags.js';
-export * from './PRW.js';
-export * from './PRWBatchRequest.js';
-export * from './PRWBatchResponse.js';
-export * from './PRWInit.js';
-export * from './PRWInitSource.js';
-export * from './PRWKeplerianElements.js';
-export * from './prwSourceKind.js';
-export * from './PRWTleLines.js';
+export { PRW, PRWT } from './PRW.js';
+export { PRWBatchRequest, PRWBatchRequestT } from './PRWBatchRequest.js';
+export { PRWBatchResponse, PRWBatchResponseT } from './PRWBatchResponse.js';
+export { PRWInit, PRWInitT } from './PRWInit.js';
+export { PRWInitSource, PRWInitSourceT } from './PRWInitSource.js';
+export { PRWKeplerianElements, PRWKeplerianElementsT } from './PRWKeplerianElements.js';
+export { PRWTleLines, PRWTleLinesT } from './PRWTleLines.js';
+export { propagatorErrorCode } from './propagatorErrorCode.js';
+export { propagatorStateFlags } from './propagatorStateFlags.js';
+export { prwSourceKind } from './prwSourceKind.js';

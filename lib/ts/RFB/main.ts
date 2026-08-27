@@ -2,10 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './linkCategory.js';
-export * from './linkCondition.js';
-export * from './LKS.js';
-export * from './RFB.js';
-export * from './rfBandDesignation.js';
-export * from './rfPolarization.js';
-export * from './rfTransmitterState.js';
+export { LKS, LKST } from './LKS.js';
+export { linkCategory } from './linkCategory.js';
+export { linkCondition } from './linkCondition.js';

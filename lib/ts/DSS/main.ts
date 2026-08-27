@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DSS.js';
-export * from './dssSyncState.js';
+export { DSS, DSST } from './DSS.js';
+export { dssSyncState } from './dssSyncState.js';

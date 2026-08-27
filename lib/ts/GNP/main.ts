@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './GNP.js';
-export * from './gnpFeatureClass.js';
-export * from './GNPName.js';
-export * from './GNPProvenance.js';
+export { GNP, GNPT } from './GNP.js';
+export { GNPName, GNPNameT } from './GNPName.js';
+export { GNPProvenance, GNPProvenanceT } from './GNPProvenance.js';
+export { gnpFeatureClass } from './gnpFeatureClass.js';

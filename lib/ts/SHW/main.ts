@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './glslStage.js';
-export * from './shaderHookPoint.js';
-export * from './shaderUniformType.js';
-export * from './SHW.js';
-export * from './SHWCompileRequest.js';
-export * from './SHWCompileResponse.js';
-export * from './SHWUniform.js';
+export { SHW, SHWT } from './SHW.js';
+export { SHWCompileRequest, SHWCompileRequestT } from './SHWCompileRequest.js';
+export { SHWCompileResponse, SHWCompileResponseT } from './SHWCompileResponse.js';
+export { SHWUniform, SHWUniformT } from './SHWUniform.js';
+export { glslStage } from './glslStage.js';
+export { shaderHookPoint } from './shaderHookPoint.js';
+export { shaderUniformType } from './shaderUniformType.js';

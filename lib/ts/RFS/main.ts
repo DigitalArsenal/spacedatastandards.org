@@ -2,21 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './linkCategory.js';
-export * from './linkCondition.js';
-export * from './LKS.js';
-export * from './RFB.js';
-export * from './rfBandDesignation.js';
-export * from './rfPolarization.js';
-export * from './RFS.js';
-export * from './rfsAnalyticShape.js';
-export * from './RFSFrequencySample.js';
-export * from './rfsGeometryKind.js';
-export * from './RFSGeometryRef.js';
-export * from './rfsIncidencePolarization.js';
-export * from './rfsMaterialClass.js';
-export * from './rfsPropertyMethod.js';
-export * from './RFSProvenance.js';
-export * from './RFSReflectionEntry.js';
-export * from './rfsScatteringClass.js';
-export * from './rfTransmitterState.js';
+export { LKS, LKST } from './LKS.js';
+export { linkCategory } from './linkCategory.js';
+export { linkCondition } from './linkCondition.js';

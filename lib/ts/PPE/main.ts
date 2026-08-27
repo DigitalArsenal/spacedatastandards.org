@@ -2,45 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './Band.js';
-export * from './CAT.js';
-export * from './CelestialFrame.js';
-export * from './CelestialFrameWrapper.js';
-export * from './CustomFrame.js';
-export * from './CustomFrameWrapper.js';
-export * from './dataAvailability.js';
-export * from './DataMode.js';
-export * from './DeviceType.js';
-export * from './FrequencyRange.js';
-export * from './IDM.js';
-export * from './LCC.js';
-export * from './legacyCountryCode.js';
-export * from './massCategory.js';
-export * from './operationalState.js';
-export * from './OrbitFrame.js';
-export * from './OrbitFrameWrapper.js';
-export * from './orbitRegime.js';
-export * from './PLD.js';
-export * from './PolarizationType.js';
-export * from './polynomialBasisType.js';
-export * from './PPE.js';
-export * from './ppeAnomalyType.js';
-export * from './PPEOrbitalElementRecord.js';
-export * from './PPEPositionRecord.js';
-export * from './RFM.js';
-export * from './RFMUnion.js';
-export * from './SimplePolarization.js';
-export * from './sizeShapeProfile.js';
-export * from './SpacecraftFrame.js';
-export * from './SpacecraftFrameWrapper.js';
-export * from './spaceObjectClass.js';
-export * from './StokesParameters.js';
-export * from './TIM.js';
-export * from './TIMCcsdsTimeCode.js';
-export * from './timCcsdsTimeCodeKind.js';
-export * from './TIMConversionRequest.js';
-export * from './TIMConversionResult.js';
-export * from './timConversionStatus.js';
-export * from './timEpochRepresentation.js';
-export * from './timingStandard.js';
-export * from './TIMInstant.js';
+export { LCC, LCCT } from './LCC.js';
+export { legacyCountryCode } from './legacyCountryCode.js';

@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './SNW.js';
-export * from './SNWBatchRequest.js';
-export * from './SNWBatchResponse.js';
-export * from './snwErrorCode.js';
+export { SNW, SNWT } from './SNW.js';
+export { SNWBatchRequest, SNWBatchRequestT } from './SNWBatchRequest.js';
+export { SNWBatchResponse, SNWBatchResponseT } from './SNWBatchResponse.js';
+export { snwErrorCode } from './snwErrorCode.js';

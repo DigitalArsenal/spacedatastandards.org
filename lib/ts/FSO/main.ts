@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './flatSqlNodeOperation.js';
-export * from './flatSqlNodeStatus.js';
-export * from './FSO.js';
-export * from './FSOTableBinding.js';
+export { FSO, FSOT } from './FSO.js';
+export { FSOTableBinding, FSOTableBindingT } from './FSOTableBinding.js';
+export { flatSqlNodeOperation } from './flatSqlNodeOperation.js';
+export { flatSqlNodeStatus } from './flatSqlNodeStatus.js';

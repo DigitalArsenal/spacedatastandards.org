@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './memoBindingScheme.js';
-export * from './SCX.js';
-export * from './settlementMechanism.js';
-export * from './SplitRecipient.js';
+export { SCX, SCXT } from './SCX.js';
+export { SplitRecipient, SplitRecipientT } from './SplitRecipient.js';
+export { memoBindingScheme } from './memoBindingScheme.js';
+export { settlementMechanism } from './settlementMechanism.js';

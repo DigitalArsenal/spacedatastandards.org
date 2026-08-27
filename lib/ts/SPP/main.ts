@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './packetKind.js';
-export * from './SPP.js';
+export { SPP, SPPT } from './SPP.js';
+export { packetKind } from './packetKind.js';

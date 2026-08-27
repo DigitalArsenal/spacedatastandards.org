@@ -2,9 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CAQ.js';
-export * from './CAQRequest.js';
-export * from './CAQResult.js';
-export * from './catalogQueryKind.js';
-export * from './entityKind.js';
-export * from './ETM.js';
+export { ETM, ETMT } from './ETM.js';
+export { entityKind } from './entityKind.js';

@@ -2,15 +2,15 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './ACW.js';
-export * from './ACWAccessWindow.js';
-export * from './ACWBlackoutWindow.js';
-export * from './ACWElevationMaskPoint.js';
-export * from './ACWGroundStation.js';
-export * from './acwOperationCode.js';
-export * from './ACWRefractionModel.js';
-export * from './acwRefractionModelKind.js';
-export * from './ACWRequest.js';
-export * from './ACWResult.js';
-export * from './acwResultStatus.js';
-export * from './ACWStateSample.js';
+export { ACW, ACWT } from './ACW.js';
+export { ACWAccessWindow, ACWAccessWindowT } from './ACWAccessWindow.js';
+export { ACWBlackoutWindow, ACWBlackoutWindowT } from './ACWBlackoutWindow.js';
+export { ACWElevationMaskPoint, ACWElevationMaskPointT } from './ACWElevationMaskPoint.js';
+export { ACWGroundStation, ACWGroundStationT } from './ACWGroundStation.js';
+export { ACWRefractionModel, ACWRefractionModelT } from './ACWRefractionModel.js';
+export { ACWRequest, ACWRequestT } from './ACWRequest.js';
+export { ACWResult, ACWResultT } from './ACWResult.js';
+export { ACWStateSample, ACWStateSampleT } from './ACWStateSample.js';
+export { acwOperationCode } from './acwOperationCode.js';
+export { acwRefractionModelKind } from './acwRefractionModelKind.js';
+export { acwResultStatus } from './acwResultStatus.js';

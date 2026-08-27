@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './SEO.js';
-export * from './seoDataType.js';
-export * from './seoObservatoryType.js';
-export * from './seoParticleType.js';
+export { SEO, SEOT } from './SEO.js';
+export { seoDataType } from './seoDataType.js';
+export { seoObservatoryType } from './seoObservatoryType.js';
+export { seoParticleType } from './seoParticleType.js';

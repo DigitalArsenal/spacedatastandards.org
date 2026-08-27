@@ -2,12 +2,12 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './RBK.js';
-export * from './rbkEulerSequenceCode.js';
-export * from './RBKMatrix3.js';
-export * from './rbkOperationCode.js';
-export * from './RBKQuaternion.js';
-export * from './rbkResultStatus.js';
-export * from './RBKRigidBodyKinematicsRequest.js';
-export * from './RBKRigidBodyKinematicsResult.js';
-export * from './RBKVector3.js';
+export { RBK, RBKT } from './RBK.js';
+export { RBKMatrix3, RBKMatrix3T } from './RBKMatrix3.js';
+export { RBKQuaternion, RBKQuaternionT } from './RBKQuaternion.js';
+export { RBKRigidBodyKinematicsRequest, RBKRigidBodyKinematicsRequestT } from './RBKRigidBodyKinematicsRequest.js';
+export { RBKRigidBodyKinematicsResult, RBKRigidBodyKinematicsResultT } from './RBKRigidBodyKinematicsResult.js';
+export { RBKVector3, RBKVector3T } from './RBKVector3.js';
+export { rbkEulerSequenceCode } from './rbkEulerSequenceCode.js';
+export { rbkOperationCode } from './rbkOperationCode.js';
+export { rbkResultStatus } from './rbkResultStatus.js';

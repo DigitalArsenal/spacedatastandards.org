@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './aouCategory.js';
-export * from './OBT.js';
-export * from './orbitObjectType.js';
+export { OBT, OBTT } from './OBT.js';
+export { aouCategory } from './aouCategory.js';
+export { orbitObjectType } from './orbitObjectType.js';

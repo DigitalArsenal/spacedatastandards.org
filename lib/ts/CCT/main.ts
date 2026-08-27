@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './capabilityClass.js';
-export * from './CCT.js';
-export * from './CCTCategory.js';
-export * from './CCTCategoryRollup.js';
+export { CCT, CCTT } from './CCT.js';
+export { CCTCategory, CCTCategoryT } from './CCTCategory.js';
+export { CCTCategoryRollup, CCTCategoryRollupT } from './CCTCategoryRollup.js';
+export { capabilityClass } from './capabilityClass.js';

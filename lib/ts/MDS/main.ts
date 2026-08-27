@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './MDS.js';
-export * from './MDSCandidate.js';
-export * from './MDSDeepSpaceManeuver.js';
-export * from './MDSEncounter.js';
+export { MDS, MDST } from './MDS.js';
+export { MDSCandidate, MDSCandidateT } from './MDSCandidate.js';
+export { MDSDeepSpaceManeuver, MDSDeepSpaceManeuverT } from './MDSDeepSpaceManeuver.js';
+export { MDSEncounter, MDSEncounterT } from './MDSEncounter.js';

@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './EGP.js';
-export * from './EGPMember.js';
-export * from './egpMembershipMode.js';
-export * from './EGPProvenance.js';
-export * from './EGPQuery.js';
+export { EGP, EGPT } from './EGP.js';
+export { EGPMember, EGPMemberT } from './EGPMember.js';
+export { EGPProvenance, EGPProvenanceT } from './EGPProvenance.js';
+export { EGPQuery, EGPQueryT } from './EGPQuery.js';
+export { egpMembershipMode } from './egpMembershipMode.js';

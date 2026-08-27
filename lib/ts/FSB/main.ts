@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './flatSqlByteStreamKind.js';
-export * from './FSB.js';
+export { FSB, FSBT } from './FSB.js';
+export { flatSqlByteStreamKind } from './flatSqlByteStreamKind.js';

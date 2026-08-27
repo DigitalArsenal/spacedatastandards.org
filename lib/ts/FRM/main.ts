@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './FRM.js';
-export * from './FRMFrameTransformRequest.js';
-export * from './FRMFrameTransformResult.js';
-export * from './FRMMatrix3.js';
-export * from './frmOperationCode.js';
-export * from './frmResultStatus.js';
-export * from './FRMVector3.js';
+export { FRM, FRMT } from './FRM.js';
+export { FRMFrameTransformRequest, FRMFrameTransformRequestT } from './FRMFrameTransformRequest.js';
+export { FRMFrameTransformResult, FRMFrameTransformResultT } from './FRMFrameTransformResult.js';
+export { FRMMatrix3, FRMMatrix3T } from './FRMMatrix3.js';
+export { FRMVector3, FRMVector3T } from './FRMVector3.js';
+export { frmOperationCode } from './frmOperationCode.js';
+export { frmResultStatus } from './frmResultStatus.js';

@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DataType.js';
-export * from './EOP.js';
-export * from './eopSeries.js';
-export * from './iauPrecessionNutationModel.js';
+export { DataType } from './DataType.js';
+export { EOP, EOPT } from './EOP.js';
+export { eopSeries } from './eopSeries.js';
+export { iauPrecessionNutationModel } from './iauPrecessionNutationModel.js';

@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './ENT.js';
-export * from './entitlementLifecycleStatus.js';
+export { ENT, ENTT } from './ENT.js';
+export { entitlementLifecycleStatus } from './entitlementLifecycleStatus.js';

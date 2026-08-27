@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './licensingProofMessageType.js';
-export * from './LPF.js';
+export { LPF, LPFT } from './LPF.js';
+export { licensingProofMessageType } from './licensingProofMessageType.js';

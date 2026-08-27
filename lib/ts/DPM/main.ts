@@ -2,11 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DPM.js';
-export * from './DPMAsset.js';
-export * from './DPMCompletenessIndex.js';
-export * from './DPMEncryptionBinding.js';
-export * from './DPMQueryBinding.js';
-export * from './DPMSourceBatch.js';
-export * from './dpmTransportKind.js';
-export * from './publicationAssetKind.js';
+export { DPM, DPMT } from './DPM.js';
+export { DPMAsset, DPMAssetT } from './DPMAsset.js';
+export { DPMCompletenessIndex, DPMCompletenessIndexT } from './DPMCompletenessIndex.js';
+export { DPMEncryptionBinding, DPMEncryptionBindingT } from './DPMEncryptionBinding.js';
+export { DPMQueryBinding, DPMQueryBindingT } from './DPMQueryBinding.js';
+export { DPMSourceBatch, DPMSourceBatchT } from './DPMSourceBatch.js';
+export { dpmTransportKind } from './dpmTransportKind.js';
+export { publicationAssetKind } from './publicationAssetKind.js';

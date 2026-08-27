@@ -2,15 +2,15 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './detectionResult.js';
-export * from './detectionResultFlags.js';
-export * from './SDR.js';
-export * from './SDRBatchRequest.js';
-export * from './SDRBatchResponse.js';
-export * from './SDRRadarConfig.js';
-export * from './SDRSensorConfig.js';
-export * from './SDRSingleInput.js';
-export * from './SDRSingleResult.js';
-export * from './sensorCategory.js';
-export * from './sensorOperationalFlags.js';
-export * from './targetState.js';
+export { SDR, SDRT } from './SDR.js';
+export { SDRBatchRequest, SDRBatchRequestT } from './SDRBatchRequest.js';
+export { SDRBatchResponse, SDRBatchResponseT } from './SDRBatchResponse.js';
+export { SDRRadarConfig, SDRRadarConfigT } from './SDRRadarConfig.js';
+export { SDRSensorConfig, SDRSensorConfigT } from './SDRSensorConfig.js';
+export { SDRSingleInput, SDRSingleInputT } from './SDRSingleInput.js';
+export { SDRSingleResult, SDRSingleResultT } from './SDRSingleResult.js';
+export { detectionResult, detectionResultT } from './detectionResult.js';
+export { detectionResultFlags } from './detectionResultFlags.js';
+export { sensorCategory } from './sensorCategory.js';
+export { sensorOperationalFlags } from './sensorOperationalFlags.js';
+export { targetState, targetStateT } from './targetState.js';

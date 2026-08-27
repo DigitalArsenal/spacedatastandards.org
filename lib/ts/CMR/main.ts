@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CMR.js';
-export * from './cmrEvidenceRole.js';
-export * from './cmrMembershipState.js';
-export * from './CMRProvenance.js';
+export { CMR, CMRT } from './CMR.js';
+export { CMRProvenance, CMRProvenanceT } from './CMRProvenance.js';
+export { cmrEvidenceRole } from './cmrEvidenceRole.js';
+export { cmrMembershipState } from './cmrMembershipState.js';

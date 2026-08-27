@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './STV.js';
-export * from './STVReferenceFrame.js';
+export { STV, STVT } from './STV.js';
+export { STVReferenceFrame } from './STVReferenceFrame.js';

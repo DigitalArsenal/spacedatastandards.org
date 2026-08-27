@@ -2,9 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './AVL.js';
-export * from './avlAirspaceClass.js';
-export * from './AVLProvenance.js';
-export * from './avlRingRole.js';
-export * from './avlVerticalDatum.js';
-export * from './avlVolumeType.js';
+export { AVL, AVLT } from './AVL.js';
+export { AVLProvenance, AVLProvenanceT } from './AVLProvenance.js';
+export { avlAirspaceClass } from './avlAirspaceClass.js';
+export { avlRingRole } from './avlRingRole.js';
+export { avlVerticalDatum } from './avlVerticalDatum.js';
+export { avlVolumeType } from './avlVolumeType.js';

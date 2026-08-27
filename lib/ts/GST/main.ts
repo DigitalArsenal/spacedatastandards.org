@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './GST.js';
-export * from './gstAntennaAxisType.js';
-export * from './gstFrameRealization.js';
-export * from './gstNetwork.js';
+export { GST, GSTT } from './GST.js';
+export { gstAntennaAxisType } from './gstAntennaAxisType.js';
+export { gstFrameRealization } from './gstFrameRealization.js';
+export { gstNetwork } from './gstNetwork.js';

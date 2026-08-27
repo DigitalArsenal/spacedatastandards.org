@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './BSP.js';
-export * from './BSPInterpolationRequest.js';
-export * from './BSPInterpolationResult.js';
-export * from './bspInterpolationStatus.js';
-export * from './BSPVector3Series.js';
+export { BSP, BSPT } from './BSP.js';
+export { BSPInterpolationRequest, BSPInterpolationRequestT } from './BSPInterpolationRequest.js';
+export { BSPInterpolationResult, BSPInterpolationResultT } from './BSPInterpolationResult.js';
+export { BSPVector3Series, BSPVector3SeriesT } from './BSPVector3Series.js';
+export { bspInterpolationStatus } from './bspInterpolationStatus.js';

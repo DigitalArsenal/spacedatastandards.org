@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './MDP.js';
-export * from './mdpDsmMode.js';
-export * from './MDPEncounterStage.js';
-export * from './MDPFlightTimeBound.js';
-export * from './mdpTransferDirection.js';
+export { MDP, MDPT } from './MDP.js';
+export { MDPEncounterStage, MDPEncounterStageT } from './MDPEncounterStage.js';
+export { MDPFlightTimeBound, MDPFlightTimeBoundT } from './MDPFlightTimeBound.js';
+export { mdpDsmMode } from './mdpDsmMode.js';
+export { mdpTransferDirection } from './mdpTransferDirection.js';

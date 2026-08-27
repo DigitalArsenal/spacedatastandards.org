@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './bufferMutability.js';
-export * from './bufferOwnership.js';
-export * from './FlatBufferTypeRef.js';
-export * from './payloadWireFormat.js';
-export * from './TAB.js';
+export { FlatBufferTypeRef, FlatBufferTypeRefT } from './FlatBufferTypeRef.js';
+export { TAB, TABT } from './TAB.js';
+export { bufferMutability } from './bufferMutability.js';
+export { bufferOwnership } from './bufferOwnership.js';
+export { payloadWireFormat } from './payloadWireFormat.js';

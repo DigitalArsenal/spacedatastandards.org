@@ -2,13 +2,13 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './FPC.js';
-export * from './FPCCSRGraph.js';
-export * from './FPCGraphDefinition.js';
-export * from './FPCPathRequest.js';
-export * from './FPCPathResult.js';
-export * from './FPCShortestPathRequest.js';
-export * from './FPCShortestPathResult.js';
-export * from './FPCWeightedEdgeList.js';
-export * from './shortestPathAlgorithm.js';
-export * from './weightedEdge.js';
+export { FPC, FPCT } from './FPC.js';
+export { FPCCSRGraph, FPCCSRGraphT } from './FPCCSRGraph.js';
+export { FPCGraphDefinition, FPCGraphDefinitionT } from './FPCGraphDefinition.js';
+export { FPCPathRequest, FPCPathRequestT } from './FPCPathRequest.js';
+export { FPCPathResult, FPCPathResultT } from './FPCPathResult.js';
+export { FPCShortestPathRequest, FPCShortestPathRequestT } from './FPCShortestPathRequest.js';
+export { FPCShortestPathResult, FPCShortestPathResultT } from './FPCShortestPathResult.js';
+export { FPCWeightedEdgeList, FPCWeightedEdgeListT } from './FPCWeightedEdgeList.js';
+export { shortestPathAlgorithm } from './shortestPathAlgorithm.js';
+export { weightedEdge, weightedEdgeT } from './weightedEdge.js';

@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './keyReferenceAlgorithm.js';
-export * from './keyReferenceRole.js';
-export * from './KRF.js';
+export { KRF, KRFT } from './KRF.js';
+export { keyReferenceAlgorithm } from './keyReferenceAlgorithm.js';
+export { keyReferenceRole } from './keyReferenceRole.js';

@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './SBM.js';
-export * from './sbmEventType.js';
-export * from './sbmFragment.js';
-export * from './sbmFragmentOrigin.js';
-export * from './sbmObjectClass.js';
+export { SBM, SBMT } from './SBM.js';
+export { sbmEventType } from './sbmEventType.js';
+export { sbmFragment, sbmFragmentT } from './sbmFragment.js';
+export { sbmFragmentOrigin } from './sbmFragmentOrigin.js';
+export { sbmObjectClass } from './sbmObjectClass.js';

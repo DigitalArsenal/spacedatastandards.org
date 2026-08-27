@@ -2,41 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './bufferMutability.js';
-export * from './bufferOwnership.js';
-export * from './capabilityClass.js';
-export * from './CCT.js';
-export * from './CCTCategory.js';
-export * from './CCTCategoryRollup.js';
-export * from './drainBehavior.js';
-export * from './ENC.js';
-export * from './EntryFunction.js';
-export * from './FlatBufferTypeRef.js';
-export * from './flowEdgeRoutePolicy.js';
-export * from './hostCapabilityKind.js';
-export * from './invokeSurfaceKind.js';
-export * from './KDF.js';
-export * from './KeyExchange.js';
-export * from './LGR.js';
-export * from './licensingGrantMessageType.js';
-export * from './payloadWireFormat.js';
-export * from './PLG.js';
-export * from './PLGAcceptedTypeSet.js';
-export * from './PLGBuildArtifact.js';
-export * from './PLGFlowEdge.js';
-export * from './PLGFlowEdgeContract.js';
-export * from './PLGFlowNode.js';
-export * from './PLGFlowTrigger.js';
-export * from './PLGFlowTriggerBinding.js';
-export * from './PLGHostCapability.js';
-export * from './PLGMethodManifest.js';
-export * from './PLGPortManifest.js';
-export * from './PLGProtocolSpec.js';
-export * from './PLGTimerSpec.js';
-export * from './PluginCapability.js';
-export * from './pluginCategory.js';
-export * from './PluginDependency.js';
-export * from './publicationState.js';
-export * from './purchaseTier.js';
-export * from './SymmetricAlgo.js';
-export * from './TAB.js';
+export { ENC, ENCT } from './ENC.js';
+export { KDF } from './KDF.js';
+export { KeyExchange } from './KeyExchange.js';
+export { SymmetricAlgo } from './SymmetricAlgo.js';

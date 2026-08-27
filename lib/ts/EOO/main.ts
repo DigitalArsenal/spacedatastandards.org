@@ -2,24 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './Band.js';
-export * from './CelestialFrame.js';
-export * from './CelestialFrameWrapper.js';
-export * from './CollectMethod.js';
-export * from './CustomFrame.js';
-export * from './CustomFrameWrapper.js';
-export * from './DataMode.js';
-export * from './DeviceType.js';
-export * from './EOO.js';
-export * from './FrequencyRange.js';
-export * from './IDM.js';
-export * from './ObservationPosition.js';
-export * from './OrbitFrame.js';
-export * from './OrbitFrameWrapper.js';
-export * from './PolarizationType.js';
-export * from './RFM.js';
-export * from './RFMUnion.js';
-export * from './SimplePolarization.js';
-export * from './SpacecraftFrame.js';
-export * from './SpacecraftFrameWrapper.js';
-export * from './StokesParameters.js';
+export { Band, BandT } from './Band.js';
+export { DataMode } from './DataMode.js';
+export { DeviceType } from './DeviceType.js';
+export { FrequencyRange, FrequencyRangeT } from './FrequencyRange.js';
+export { IDM, IDMT } from './IDM.js';
+export { PolarizationType } from './PolarizationType.js';
+export { SimplePolarization } from './SimplePolarization.js';
+export { StokesParameters, StokesParametersT } from './StokesParameters.js';

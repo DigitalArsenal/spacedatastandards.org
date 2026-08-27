@@ -2,16 +2,16 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './OPP.js';
-export * from './OPPAreas.js';
-export * from './OPPAssetRef.js';
-export * from './oppDeterminationMethod.js';
-export * from './OPPDimensions.js';
-export * from './OPPMass.js';
-export * from './oppMaterialClass.js';
-export * from './OPPProvenance.js';
-export * from './OPPQuantity.js';
-export * from './OPPRadarCrossSection.js';
-export * from './oppRcsAspect.js';
-export * from './OPPSurface.js';
-export * from './oppSurfaceKind.js';
+export { OPP, OPPT } from './OPP.js';
+export { OPPAreas, OPPAreasT } from './OPPAreas.js';
+export { OPPAssetRef, OPPAssetRefT } from './OPPAssetRef.js';
+export { OPPDimensions, OPPDimensionsT } from './OPPDimensions.js';
+export { OPPMass, OPPMassT } from './OPPMass.js';
+export { OPPProvenance, OPPProvenanceT } from './OPPProvenance.js';
+export { OPPQuantity, OPPQuantityT } from './OPPQuantity.js';
+export { OPPRadarCrossSection, OPPRadarCrossSectionT } from './OPPRadarCrossSection.js';
+export { OPPSurface, OPPSurfaceT } from './OPPSurface.js';
+export { oppDeterminationMethod } from './oppDeterminationMethod.js';
+export { oppMaterialClass } from './oppMaterialClass.js';
+export { oppRcsAspect } from './oppRcsAspect.js';
+export { oppSurfaceKind } from './oppSurfaceKind.js';

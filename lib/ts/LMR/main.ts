@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './licensingModuleRequestAction.js';
-export * from './LMR.js';
+export { LMR, LMRT } from './LMR.js';
+export { licensingModuleRequestAction } from './licensingModuleRequestAction.js';

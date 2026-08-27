@@ -159,13 +159,8 @@ class SCVResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-<<<<<<< Updated upstream
         fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int, targetResultsOffset: Int) : Int {
             builder.startTable(14)
-=======
-        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
-            builder.startTable(13)
->>>>>>> Stashed changes
             addTRACEID(builder, traceId)
             addTARGETRESULTS(builder, targetResultsOffset)
             addAGGREGATESTATISTICS(builder, aggregateStatisticsOffset)
@@ -182,11 +177,7 @@ class SCVResult : Table() {
             addSTATUS(builder, status)
             return endSCVResult(builder)
         }
-<<<<<<< Updated upstream
         fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(14)
-=======
-        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(13)
->>>>>>> Stashed changes
         fun addJOBID(builder: FlatBufferBuilder, jobId: Int) = builder.addOffset(0, jobId, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: ULong) = builder.addLong(1, traceId.toLong(), 0)
         fun addSTATUS(builder: FlatBufferBuilder, status: UByte) = builder.addByte(2, status.toByte(), 0)
@@ -216,7 +207,6 @@ class SCVResult : Table() {
         fun addRASTERPRODUCTS(builder: FlatBufferBuilder, rasterProducts: Int) = builder.addOffset(10, rasterProducts, 0)
         fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(11, message, 0)
         fun addAGGREGATESTATISTICS(builder: FlatBufferBuilder, aggregateStatistics: Int) = builder.addOffset(12, aggregateStatistics, 0)
-<<<<<<< Updated upstream
         fun addTARGETRESULTS(builder: FlatBufferBuilder, targetResults: Int) = builder.addOffset(13, targetResults, 0)
         fun createTargetResultsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -226,8 +216,6 @@ class SCVResult : Table() {
             return builder.endVector()
         }
         fun startTargetResultsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-=======
->>>>>>> Stashed changes
         fun endSCVResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

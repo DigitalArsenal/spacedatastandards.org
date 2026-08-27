@@ -2,9 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './TFN.js';
-export * from './TFNDesignator.js';
-export * from './tfnFacilityType.js';
-export * from './TFNOperatingSurface.js';
-export * from './TFNProvenance.js';
-export * from './tfnSurfaceKind.js';
+export { TFN, TFNT } from './TFN.js';
+export { TFNDesignator, TFNDesignatorT } from './TFNDesignator.js';
+export { TFNOperatingSurface, TFNOperatingSurfaceT } from './TFNOperatingSurface.js';
+export { TFNProvenance, TFNProvenanceT } from './TFNProvenance.js';
+export { tfnFacilityType } from './tfnFacilityType.js';
+export { tfnSurfaceKind } from './tfnSurfaceKind.js';

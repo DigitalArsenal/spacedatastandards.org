@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './Address.js';
-export * from './ChainProof.js';
-export * from './CryptoKey.js';
-export * from './DomainProof.js';
-export * from './EntityType.js';
-export * from './EPM.js';
-export * from './KeyType.js';
+export { Address, AddressT } from './Address.js';
+export { ChainProof, ChainProofT } from './ChainProof.js';
+export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+export { DomainProof, DomainProofT } from './DomainProof.js';
+export { EPM, EPMT } from './EPM.js';
+export { EntityType } from './EntityType.js';
+export { KeyType } from './KeyType.js';

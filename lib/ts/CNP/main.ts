@@ -2,13 +2,13 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CNP.js';
-export * from './cnpMethod.js';
-export * from './CNPMetric.js';
-export * from './cnpMetricKind.js';
-export * from './cnpPeriod.js';
-export * from './CNPProvenance.js';
-export * from './cnpReduction.js';
-export * from './CNPRegion.js';
-export * from './cnpRegionKind.js';
-export * from './CNPStatistic.js';
+export { CNP, CNPT } from './CNP.js';
+export { CNPMetric, CNPMetricT } from './CNPMetric.js';
+export { CNPProvenance, CNPProvenanceT } from './CNPProvenance.js';
+export { CNPRegion, CNPRegionT } from './CNPRegion.js';
+export { CNPStatistic, CNPStatisticT } from './CNPStatistic.js';
+export { cnpMethod } from './cnpMethod.js';
+export { cnpMetricKind } from './cnpMetricKind.js';
+export { cnpPeriod } from './cnpPeriod.js';
+export { cnpReduction } from './cnpReduction.js';
+export { cnpRegionKind } from './cnpRegionKind.js';

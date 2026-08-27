@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './FieldStreamValue.js';
-export * from './fieldStreamValueEncodingCategory.js';
-export * from './fieldStreamValueStateCategory.js';
-export * from './FSM.js';
+export { FSM, FSMT } from './FSM.js';
+export { FieldStreamValue, FieldStreamValueT } from './FieldStreamValue.js';
+export { fieldStreamValueEncodingCategory } from './fieldStreamValueEncodingCategory.js';
+export { fieldStreamValueStateCategory } from './fieldStreamValueStateCategory.js';

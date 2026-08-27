@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './viewerCameraFrameMode.js';
-export * from './viewerMapMode.js';
-export * from './viewerSatelliteAlignmentMode.js';
-export * from './VST.js';
-export * from './VSTCameraOptions.js';
-export * from './VSTCameraRotation.js';
-export * from './VSTDisplaySettings.js';
+export { VST, VSTT } from './VST.js';
+export { VSTCameraOptions, VSTCameraOptionsT } from './VSTCameraOptions.js';
+export { VSTCameraRotation, VSTCameraRotationT } from './VSTCameraRotation.js';
+export { VSTDisplaySettings, VSTDisplaySettingsT } from './VSTDisplaySettings.js';
+export { viewerCameraFrameMode } from './viewerCameraFrameMode.js';
+export { viewerMapMode } from './viewerMapMode.js';
+export { viewerSatelliteAlignmentMode } from './viewerSatelliteAlignmentMode.js';

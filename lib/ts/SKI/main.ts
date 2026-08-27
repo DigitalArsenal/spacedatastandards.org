@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './imageCategory.js';
-export * from './SKI.js';
+export { SKI, SKIT } from './SKI.js';
+export { imageCategory } from './imageCategory.js';

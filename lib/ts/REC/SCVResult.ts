@@ -123,11 +123,7 @@ targetResultsLength():number {
 }
 
 static startSCVResult(builder:flatbuffers.Builder) {
-<<<<<<< Updated upstream
   builder.startObject(14);
-=======
-  builder.startObject(13);
->>>>>>> Stashed changes
 }
 
 static addJobId(builder:flatbuffers.Builder, JOB_IDOffset:flatbuffers.Offset) {
@@ -204,7 +200,6 @@ static addMessage(builder:flatbuffers.Builder, MESSAGEOffset:flatbuffers.Offset)
 
 static addAggregateStatistics(builder:flatbuffers.Builder, AGGREGATE_STATISTICSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(12, AGGREGATE_STATISTICSOffset, 0);
-<<<<<<< Updated upstream
 }
 
 static addTargetResults(builder:flatbuffers.Builder, TARGET_RESULTSOffset:flatbuffers.Offset) {
@@ -221,8 +216,6 @@ static createTargetResultsVector(builder:flatbuffers.Builder, data:flatbuffers.O
 
 static startTargetResultsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-=======
->>>>>>> Stashed changes
 }
 
 static endSCVResult(builder:flatbuffers.Builder):flatbuffers.Offset {

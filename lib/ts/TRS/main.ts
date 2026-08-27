@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './TRS.js';
-export * from './trsPathClass.js';
-export * from './trsPropagationModel.js';
-export * from './TRSRequest.js';
-export * from './TRSResult.js';
-export * from './trsResultStatus.js';
-export * from './trsSolverTier.js';
+export { TRS, TRST } from './TRS.js';
+export { TRSRequest, TRSRequestT } from './TRSRequest.js';
+export { TRSResult, TRSResultT } from './TRSResult.js';
+export { trsPathClass } from './trsPathClass.js';
+export { trsPropagationModel } from './trsPropagationModel.js';
+export { trsResultStatus } from './trsResultStatus.js';
+export { trsSolverTier } from './trsSolverTier.js';

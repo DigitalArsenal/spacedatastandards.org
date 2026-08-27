@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './OBD.js';
-export * from './odMethod.js';
-export * from './odSensorContribution.js';
+export { OBD, OBDT } from './OBD.js';
+export { odMethod } from './odMethod.js';
+export { odSensorContribution, odSensorContributionT } from './odSensorContribution.js';

@@ -2,11 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CES.js';
-export * from './cesNormalizationKind.js';
-export * from './CESObjectVector.js';
-export * from './cesPoolingKind.js';
-export * from './cesSimilarityKind.js';
-export * from './cesVectorEncoding.js';
-export * from './QEM.js';
-export * from './QEMTokenVector.js';
+export { CES, CEST } from './CES.js';
+export { CESObjectVector, CESObjectVectorT } from './CESObjectVector.js';
+export { cesNormalizationKind } from './cesNormalizationKind.js';
+export { cesPoolingKind } from './cesPoolingKind.js';
+export { cesSimilarityKind } from './cesSimilarityKind.js';
+export { cesVectorEncoding } from './cesVectorEncoding.js';

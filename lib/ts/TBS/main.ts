@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './TBS.js';
-export * from './TBSConsensus.js';
-export * from './tbsMergeMethod.js';
-export * from './TBSProvenance.js';
-export * from './tbsRadioClass.js';
+export { TBS, TBST } from './TBS.js';
+export { TBSConsensus, TBSConsensusT } from './TBSConsensus.js';
+export { TBSProvenance, TBSProvenanceT } from './TBSProvenance.js';
+export { tbsMergeMethod } from './tbsMergeMethod.js';
+export { tbsRadioClass } from './tbsRadioClass.js';

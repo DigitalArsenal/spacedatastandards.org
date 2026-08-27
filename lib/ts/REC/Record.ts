@@ -307,7 +307,7 @@ unpack(): RecordT {
   return new RecordT(
     this.value_type(),
     (() => {
-      const temp = unionToRecordType(this.value_type(), this.value.bind(this));
+      const temp = unionToRecordType(this.valueType(), this.value.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })(),
@@ -319,7 +319,7 @@ unpack(): RecordT {
 unpackTo(_o: RecordT): void {
   _o.value_type = this.value_type();
   _o.value = (() => {
-      const temp = unionToRecordType(this.value_type(), this.value.bind(this));
+      const temp = unionToRecordType(this.valueType(), this.value.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })();

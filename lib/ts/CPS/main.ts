@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './CPS.js';
-export * from './packetCompressionAlgorithm.js';
+export { CPS, CPST } from './CPS.js';
+export { packetCompressionAlgorithm } from './packetCompressionAlgorithm.js';

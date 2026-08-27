@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './DOA.js';
-export * from './doaCollectionMode.js';
+export { DOA, DOAT } from './DOA.js';
+export { doaCollectionMode } from './doaCollectionMode.js';

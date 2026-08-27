@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './lambertBranchKind.js';
-export * from './lambertSolutionBranch.js';
-export * from './lambertSolveState.js';
-export * from './lambertVector3.js';
-export * from './LMO.js';
+export { LMO, LMOT } from './LMO.js';
+export { lambertBranchKind } from './lambertBranchKind.js';
+export { lambertSolutionBranch, lambertSolutionBranchT } from './lambertSolutionBranch.js';
+export { lambertSolveState } from './lambertSolveState.js';
+export { lambertVector3, lambertVector3T } from './lambertVector3.js';
