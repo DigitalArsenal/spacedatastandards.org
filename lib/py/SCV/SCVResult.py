@@ -175,37 +175,8 @@ class SCVResult(object):
             return obj
         return None
 
-    # SCVResult
-    def TARGET_RESULTS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVTargetResult import SCVTargetResult
-            obj = SCVTargetResult()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def TARGET_RESULTSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def TARGET_RESULTSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        return o == 0
-
 def SCVResultStart(builder):
-<<<<<<< Updated upstream
-    builder.StartObject(14)
-=======
     builder.StartObject(13)
->>>>>>> Stashed changes
 
 def Start(builder):
     SCVResultStart(builder)
@@ -312,24 +283,6 @@ def SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
 def AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
     SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
 
-def SCVResultAddTARGET_RESULTS(builder, TARGET_RESULTS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_RESULTS), 0)
-
-def AddTARGET_RESULTS(builder, TARGET_RESULTS):
-    SCVResultAddTARGET_RESULTS(builder, TARGET_RESULTS)
-
-def SCVResultStartTARGET_RESULTSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartTARGET_RESULTSVector(builder, numElems):
-    return SCVResultStartTARGET_RESULTSVector(builder, numElems)
-
-def SCVResultCreateTARGET_RESULTSVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateTARGET_RESULTSVector(builder, data):
-    SCVResultCreateTARGET_RESULTSVector(builder, data)
-
 def SCVResultEnd(builder):
     return builder.EndObject()
 
@@ -342,7 +295,6 @@ import SCVHistogramBin
 import SCVPackedGeometryChunk
 import SCVPackedRasterProducts
 import SCVSensorContribution
-import SCVTargetResult
 import SCVTimeGrid
 try:
     from typing import List, Optional
@@ -367,7 +319,6 @@ class SCVResultT(object):
         RASTER_PRODUCTS = None,
         MESSAGE = None,
         AGGREGATE_STATISTICS = None,
-        TARGET_RESULTS = None,
     ):
         self.JOB_ID = JOB_ID  # type: Optional[str]
         self.TRACE_ID = TRACE_ID  # type: int
@@ -382,7 +333,6 @@ class SCVResultT(object):
         self.RASTER_PRODUCTS = RASTER_PRODUCTS  # type: Optional[SCVPackedRasterProducts.SCVPackedRasterProductsT]
         self.MESSAGE = MESSAGE  # type: Optional[str]
         self.AGGREGATE_STATISTICS = AGGREGATE_STATISTICS  # type: Optional[SCVAggregateStatistics.SCVAggregateStatisticsT]
-        self.TARGET_RESULTS = TARGET_RESULTS  # type: Optional[List[SCVTargetResult.SCVTargetResultT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -437,14 +387,6 @@ class SCVResultT(object):
         self.MESSAGE = SCVResult.MESSAGE()
         if SCVResult.AGGREGATE_STATISTICS() is not None:
             self.AGGREGATE_STATISTICS = SCVAggregateStatistics.SCVAggregateStatisticsT.InitFromObj(SCVResult.AGGREGATE_STATISTICS())
-        if not SCVResult.TARGET_RESULTSIsNone():
-            self.TARGET_RESULTS = []
-            for i in range(SCVResult.TARGET_RESULTSLength()):
-                if SCVResult.TARGET_RESULTS(i) is None:
-                    self.TARGET_RESULTS.append(None)
-                else:
-                    sCVTargetResult_ = SCVTargetResult.SCVTargetResultT.InitFromObj(SCVResult.TARGET_RESULTS(i))
-                    self.TARGET_RESULTS.append(sCVTargetResult_)
 
     # SCVResultT
     def Pack(self, builder):
@@ -478,14 +420,6 @@ class SCVResultT(object):
             MESSAGE = builder.CreateString(self.MESSAGE)
         if self.AGGREGATE_STATISTICS is not None:
             AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.Pack(builder)
-        if self.TARGET_RESULTS is not None:
-            TARGET_RESULTSlist = []
-            for i in range(len(self.TARGET_RESULTS)):
-                TARGET_RESULTSlist.append(self.TARGET_RESULTS[i].Pack(builder))
-            SCVResultStartTARGET_RESULTSVector(builder, len(self.TARGET_RESULTS))
-            for i in reversed(range(len(self.TARGET_RESULTS))):
-                builder.PrependUOffsetTRelative(TARGET_RESULTSlist[i])
-            TARGET_RESULTS = builder.EndVector()
         SCVResultStart(builder)
         if self.JOB_ID is not None:
             SCVResultAddJOB_ID(builder, JOB_ID)
@@ -509,7 +443,5 @@ class SCVResultT(object):
             SCVResultAddMESSAGE(builder, MESSAGE)
         if self.AGGREGATE_STATISTICS is not None:
             SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
-        if self.TARGET_RESULTS is not None:
-            SCVResultAddTARGET_RESULTS(builder, TARGET_RESULTS)
         SCVResult = SCVResultEnd(builder)
         return SCVResult

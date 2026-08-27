@@ -67,15 +67,15 @@
     },
     "CryptoKey" : {
       "type" : "object",
-      "description" : "Represents cryptographic key information.\n\nThe publication paradigm is \"xpub + derivation paths, not key material\":\na verifier derives child public keys from XPUB and KEY_PATH wherever the\ncurve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:\n\n- secp256k1 at a NON-hardened path (e.g., \"m/44'/0'/0'/0/0\") IS derivable\nfrom XPUB via BIP-32 public derivation, so such an entry may omit\nPUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.\n- ed25519 under SLIP-10 has NO public derivation at all — every ed25519\nchild is hardened — so NO xpub can yield an ed25519 child public key,\nfor anyone, ever. For ed25519 entries the published PUBLIC_KEY is\nauthoritative and MUST remain present.\n\nA future revision that removes the published ed25519 PUBLIC_KEY would make\nevery ed25519-signed EPM unverifiable; the retained key is deliberate,\nnot a transitional leftover.",
+      "description" : "Represents cryptographic key information.\n\nThe publication paradigm is \"literal public keys, not derivation\nmaterial\": a published EPM carries the PUBLIC_KEY bytes that verify\nthe record's SIGNATURE (signing) or encrypt to the entity (encryption),\nand NOTHING about how those keys were derived. XPUB, KEY_PATH and\nKEY_ADDRESS are PRIVATE / operational — they belong to the wallet that\nproduced the keys, never to the record a peer resolves.\n\nRequiredness is PROFILE-ENFORCED, never a flatc `(required)` attribute:\na `(required)` on PUBLIC_KEY would make the flatbuffers Verifier reject\nevery pre-flip secp256k1 record that legitimately omitted it (the\n2026-07-27 dual-curve regime allowed xpub-derivation for secp at\nnon-hardened paths). A published record is self-describing instead —\nPUBLIC_KEY present, XPUB/KEY_PATH/KEY_ADDRESS absent — and a conformance\nchecker asserts that profile (see scripts/check-epm-published-profile.mjs).\n\nRotation is by republish: a new signing or encryption key means a new\nPUBLIC_KEY, a re-signed SIGNATURE, and a re-published EPM at the same\npeer-addressed location. The PeerID (multihash of the libp2p identity\npubkey) is the stable anchor across rotations.",
       "properties" : {
         "PUBLIC_KEY" : {
                 "type" : "string",
-                "description" : "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
+                "description" : "Public part of the cryptographic key, in hexadecimal format. AUTHORITATIVE\nin a published record: this is the verifying/encrypting key, and no other\nfield yields it. Required-in-practice (profile-enforced, not flatc\n`(required)`) so that pre-flip secp256k1 records without it still decode."
               },
         "XPUB" : {
                 "type" : "string",
-                "description" : "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
+                "description" : "Extended public key, as specified by BIP-32 (hierarchical deterministic\nwallets), \"Extended keys\". PRIVATE / operational: present only in the\nwallet that derived the keys, ABSENT from published records. A verifier\nnever derives a child key from XPUB — the PUBLIC_KEY is the verification\nmaterial."
               },
         "PRIVATE_KEY" : {
                 "type" : "string",
@@ -87,7 +87,7 @@
               },
         "KEY_ADDRESS" : {
                 "type" : "string",
-                "description" : "Address generated from the cryptographic key. An address only — NOT a\nderivation path; the derivation path lives in KEY_PATH"
+                "description" : "Address generated from the cryptographic key. PRIVATE / operational in a\npublished EPM: a chain address is bound through a ChainProof attestation,\nnot carried as a standalone KEY_ADDRESS on the CryptoKey. ABSENT from\npublished records."
               },
         "ADDRESS_TYPE" : {
                 "type" : "string",
@@ -99,11 +99,11 @@
               },
         "KEY_PATH" : {
                 "type" : "string",
-                "description" : "BIP-32 / SLIP-10 derivation path of this key from the entity root\n(e.g., \"m/44'/0'/0'/0/0\" secp256k1 non-hardened, \"m/44'/0'/0'/0'/0'\"\ned25519 hardened)"
+                "description" : "BIP-32 / SLIP-10 derivation path of this key from the entity root\n(e.g., \"m/44'/0'/0'/0/0\" secp256k1 non-hardened, \"m/44'/0'/0'/0'/0'\"\ned25519 hardened). PRIVATE / operational: how the key was derived belongs\nto the wallet, not to a published record. ABSENT from published records."
               },
         "ALGORITHM" : {
                 "type" : "string",
-                "description" : "Key algorithm/curve (e.g., \"ed25519\", \"secp256k1\"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default"
+                "description" : "Key algorithm/curve (e.g., \"ed25519\", \"secp256k1\"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default. The verifier dispatches on ALGORITHM (not\non ADDRESS_TYPE, which is an address-format tag only)."
               },
         "ENCODING" : {
                 "type" : "string",

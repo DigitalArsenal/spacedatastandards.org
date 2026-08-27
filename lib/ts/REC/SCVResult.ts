@@ -10,7 +10,6 @@ import { SCVHistogramBin, SCVHistogramBinT } from './SCVHistogramBin.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
 import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVSensorContribution, SCVSensorContributionT } from './SCVSensorContribution.js';
-import { SCVTargetResult, SCVTargetResultT } from './SCVTargetResult.js';
 import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
 import { scvResultState } from './scvResultState.js';
 
@@ -112,22 +111,8 @@ AGGREGATE_STATISTICS(obj?:SCVAggregateStatistics):SCVAggregateStatistics|null {
   return offset ? (obj || new SCVAggregateStatistics()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-TARGET_RESULTS(index: number, obj?:SCVTargetResult):SCVTargetResult|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? (obj || new SCVTargetResult()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-targetResultsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 static startSCVResult(builder:flatbuffers.Builder) {
-<<<<<<< Updated upstream
-  builder.startObject(14);
-=======
   builder.startObject(13);
->>>>>>> Stashed changes
 }
 
 static addJobId(builder:flatbuffers.Builder, JOB_IDOffset:flatbuffers.Offset) {
@@ -204,25 +189,6 @@ static addMessage(builder:flatbuffers.Builder, MESSAGEOffset:flatbuffers.Offset)
 
 static addAggregateStatistics(builder:flatbuffers.Builder, AGGREGATE_STATISTICSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(12, AGGREGATE_STATISTICSOffset, 0);
-<<<<<<< Updated upstream
-}
-
-static addTargetResults(builder:flatbuffers.Builder, TARGET_RESULTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, TARGET_RESULTSOffset, 0);
-}
-
-static createTargetResultsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startTargetResultsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-=======
->>>>>>> Stashed changes
 }
 
 static endSCVResult(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -245,8 +211,7 @@ unpack(): SCVResultT {
     (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
     (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null),
     this.MESSAGE(),
-    (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null),
-    this.bb!.createObjList<SCVTargetResult, SCVTargetResultT>(this.TARGET_RESULTS.bind(this), this.targetResultsLength())
+    (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null)
   );
 }
 
@@ -265,7 +230,6 @@ unpackTo(_o: SCVResultT): void {
   _o.RASTER_PRODUCTS = (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null);
   _o.MESSAGE = this.MESSAGE();
   _o.AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null);
-  _o.TARGET_RESULTS = this.bb!.createObjList<SCVTargetResult, SCVTargetResultT>(this.TARGET_RESULTS.bind(this), this.targetResultsLength());
 }
 }
 
@@ -283,8 +247,7 @@ constructor(
   public GEOMETRY: SCVPackedGeometryChunkT|null = null,
   public RASTER_PRODUCTS: SCVPackedRasterProductsT|null = null,
   public MESSAGE: string|Uint8Array|null = null,
-  public AGGREGATE_STATISTICS: SCVAggregateStatisticsT|null = null,
-  public TARGET_RESULTS: (SCVTargetResultT)[] = []
+  public AGGREGATE_STATISTICS: SCVAggregateStatisticsT|null = null
 ){}
 
 
@@ -298,7 +261,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RASTER_PRODUCTS = (this.RASTER_PRODUCTS !== null ? this.RASTER_PRODUCTS!.pack(builder) : 0);
   const MESSAGE = (this.MESSAGE !== null ? builder.createString(this.MESSAGE!) : 0);
   const AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS !== null ? this.AGGREGATE_STATISTICS!.pack(builder) : 0);
-  const TARGET_RESULTS = SCVResult.createTargetResultsVector(builder, builder.createObjectOffsetList(this.TARGET_RESULTS));
 
   SCVResult.startSCVResult(builder);
   SCVResult.addJobId(builder, JOB_ID);
@@ -314,7 +276,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVResult.addRasterProducts(builder, RASTER_PRODUCTS);
   SCVResult.addMessage(builder, MESSAGE);
   SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICS);
-  SCVResult.addTargetResults(builder, TARGET_RESULTS);
 
   return SCVResult.endSCVResult(builder);
 }

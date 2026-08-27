@@ -17,12 +17,5 @@ export enum scvRasterProductKind {
   BUCKET_ACTIVE_CELL_COUNT = 11,
   PASS_COUNT_RGBA = 12,
   CURRENT_ACCESS_RGBA = 13,
-<<<<<<< Updated upstream
-  LATITUDE_BAND_COVERAGE = 14,
-  BUCKET_PASS_START_COUNT = 15,
-  WINDOW_START_ACCESS_BITSET = 16,
-  WINDOW_STOP_ACCESS_BITSET = 17
-=======
   LATITUDE_BAND_COVERAGE = 14
->>>>>>> Stashed changes
 }
