@@ -7,57 +7,66 @@ import "strconv"
 type scvRasterProductKind uint16
 
 const (
-	scvRasterProductKindCELL_BOUNDS_DEG          scvRasterProductKind = 0
-	scvRasterProductKindCELL_CENTERS_DEG         scvRasterProductKind = 1
-	scvRasterProductKindPERCENT_COVERAGE         scvRasterProductKind = 2
-	scvRasterProductKindPASS_COUNT               scvRasterProductKind = 3
-	scvRasterProductKindCONTACT_DURATION_SECONDS scvRasterProductKind = 4
-	scvRasterProductKindREVISIT_SECONDS          scvRasterProductKind = 5
-	scvRasterProductKindGAP_SECONDS              scvRasterProductKind = 6
-	scvRasterProductKindREDUNDANCY               scvRasterProductKind = 7
-	scvRasterProductKindCURRENT_ACCESS_BITSET    scvRasterProductKind = 8
-	scvRasterProductKindBUCKET_START_SECONDS     scvRasterProductKind = 9
-	scvRasterProductKindBUCKET_STOP_SECONDS      scvRasterProductKind = 10
-	scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT scvRasterProductKind = 11
-	scvRasterProductKindPASS_COUNT_RGBA          scvRasterProductKind = 12
-	scvRasterProductKindCURRENT_ACCESS_RGBA      scvRasterProductKind = 13
-	scvRasterProductKindLATITUDE_BAND_COVERAGE   scvRasterProductKind = 14
+	scvRasterProductKindCELL_BOUNDS_DEG            scvRasterProductKind = 0
+	scvRasterProductKindCELL_CENTERS_DEG           scvRasterProductKind = 1
+	scvRasterProductKindPERCENT_COVERAGE           scvRasterProductKind = 2
+	scvRasterProductKindPASS_COUNT                 scvRasterProductKind = 3
+	scvRasterProductKindCONTACT_DURATION_SECONDS   scvRasterProductKind = 4
+	scvRasterProductKindREVISIT_SECONDS            scvRasterProductKind = 5
+	scvRasterProductKindGAP_SECONDS                scvRasterProductKind = 6
+	scvRasterProductKindREDUNDANCY                 scvRasterProductKind = 7
+	scvRasterProductKindCURRENT_ACCESS_BITSET      scvRasterProductKind = 8
+	scvRasterProductKindBUCKET_START_SECONDS       scvRasterProductKind = 9
+	scvRasterProductKindBUCKET_STOP_SECONDS        scvRasterProductKind = 10
+	scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT   scvRasterProductKind = 11
+	scvRasterProductKindPASS_COUNT_RGBA            scvRasterProductKind = 12
+	scvRasterProductKindCURRENT_ACCESS_RGBA        scvRasterProductKind = 13
+	scvRasterProductKindLATITUDE_BAND_COVERAGE     scvRasterProductKind = 14
+	scvRasterProductKindBUCKET_PASS_START_COUNT    scvRasterProductKind = 15
+	scvRasterProductKindWINDOW_START_ACCESS_BITSET scvRasterProductKind = 16
+	scvRasterProductKindWINDOW_STOP_ACCESS_BITSET  scvRasterProductKind = 17
 )
 
 var EnumNamesscvRasterProductKind = map[scvRasterProductKind]string{
-	scvRasterProductKindCELL_BOUNDS_DEG:          "CELL_BOUNDS_DEG",
-	scvRasterProductKindCELL_CENTERS_DEG:         "CELL_CENTERS_DEG",
-	scvRasterProductKindPERCENT_COVERAGE:         "PERCENT_COVERAGE",
-	scvRasterProductKindPASS_COUNT:               "PASS_COUNT",
-	scvRasterProductKindCONTACT_DURATION_SECONDS: "CONTACT_DURATION_SECONDS",
-	scvRasterProductKindREVISIT_SECONDS:          "REVISIT_SECONDS",
-	scvRasterProductKindGAP_SECONDS:              "GAP_SECONDS",
-	scvRasterProductKindREDUNDANCY:               "REDUNDANCY",
-	scvRasterProductKindCURRENT_ACCESS_BITSET:    "CURRENT_ACCESS_BITSET",
-	scvRasterProductKindBUCKET_START_SECONDS:     "BUCKET_START_SECONDS",
-	scvRasterProductKindBUCKET_STOP_SECONDS:      "BUCKET_STOP_SECONDS",
-	scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT: "BUCKET_ACTIVE_CELL_COUNT",
-	scvRasterProductKindPASS_COUNT_RGBA:          "PASS_COUNT_RGBA",
-	scvRasterProductKindCURRENT_ACCESS_RGBA:      "CURRENT_ACCESS_RGBA",
-	scvRasterProductKindLATITUDE_BAND_COVERAGE:   "LATITUDE_BAND_COVERAGE",
+	scvRasterProductKindCELL_BOUNDS_DEG:            "CELL_BOUNDS_DEG",
+	scvRasterProductKindCELL_CENTERS_DEG:           "CELL_CENTERS_DEG",
+	scvRasterProductKindPERCENT_COVERAGE:           "PERCENT_COVERAGE",
+	scvRasterProductKindPASS_COUNT:                 "PASS_COUNT",
+	scvRasterProductKindCONTACT_DURATION_SECONDS:   "CONTACT_DURATION_SECONDS",
+	scvRasterProductKindREVISIT_SECONDS:            "REVISIT_SECONDS",
+	scvRasterProductKindGAP_SECONDS:                "GAP_SECONDS",
+	scvRasterProductKindREDUNDANCY:                 "REDUNDANCY",
+	scvRasterProductKindCURRENT_ACCESS_BITSET:      "CURRENT_ACCESS_BITSET",
+	scvRasterProductKindBUCKET_START_SECONDS:       "BUCKET_START_SECONDS",
+	scvRasterProductKindBUCKET_STOP_SECONDS:        "BUCKET_STOP_SECONDS",
+	scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT:   "BUCKET_ACTIVE_CELL_COUNT",
+	scvRasterProductKindPASS_COUNT_RGBA:            "PASS_COUNT_RGBA",
+	scvRasterProductKindCURRENT_ACCESS_RGBA:        "CURRENT_ACCESS_RGBA",
+	scvRasterProductKindLATITUDE_BAND_COVERAGE:     "LATITUDE_BAND_COVERAGE",
+	scvRasterProductKindBUCKET_PASS_START_COUNT:    "BUCKET_PASS_START_COUNT",
+	scvRasterProductKindWINDOW_START_ACCESS_BITSET: "WINDOW_START_ACCESS_BITSET",
+	scvRasterProductKindWINDOW_STOP_ACCESS_BITSET:  "WINDOW_STOP_ACCESS_BITSET",
 }
 
 var EnumValuesscvRasterProductKind = map[string]scvRasterProductKind{
-	"CELL_BOUNDS_DEG":          scvRasterProductKindCELL_BOUNDS_DEG,
-	"CELL_CENTERS_DEG":         scvRasterProductKindCELL_CENTERS_DEG,
-	"PERCENT_COVERAGE":         scvRasterProductKindPERCENT_COVERAGE,
-	"PASS_COUNT":               scvRasterProductKindPASS_COUNT,
-	"CONTACT_DURATION_SECONDS": scvRasterProductKindCONTACT_DURATION_SECONDS,
-	"REVISIT_SECONDS":          scvRasterProductKindREVISIT_SECONDS,
-	"GAP_SECONDS":              scvRasterProductKindGAP_SECONDS,
-	"REDUNDANCY":               scvRasterProductKindREDUNDANCY,
-	"CURRENT_ACCESS_BITSET":    scvRasterProductKindCURRENT_ACCESS_BITSET,
-	"BUCKET_START_SECONDS":     scvRasterProductKindBUCKET_START_SECONDS,
-	"BUCKET_STOP_SECONDS":      scvRasterProductKindBUCKET_STOP_SECONDS,
-	"BUCKET_ACTIVE_CELL_COUNT": scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT,
-	"PASS_COUNT_RGBA":          scvRasterProductKindPASS_COUNT_RGBA,
-	"CURRENT_ACCESS_RGBA":      scvRasterProductKindCURRENT_ACCESS_RGBA,
-	"LATITUDE_BAND_COVERAGE":   scvRasterProductKindLATITUDE_BAND_COVERAGE,
+	"CELL_BOUNDS_DEG":            scvRasterProductKindCELL_BOUNDS_DEG,
+	"CELL_CENTERS_DEG":           scvRasterProductKindCELL_CENTERS_DEG,
+	"PERCENT_COVERAGE":           scvRasterProductKindPERCENT_COVERAGE,
+	"PASS_COUNT":                 scvRasterProductKindPASS_COUNT,
+	"CONTACT_DURATION_SECONDS":   scvRasterProductKindCONTACT_DURATION_SECONDS,
+	"REVISIT_SECONDS":            scvRasterProductKindREVISIT_SECONDS,
+	"GAP_SECONDS":                scvRasterProductKindGAP_SECONDS,
+	"REDUNDANCY":                 scvRasterProductKindREDUNDANCY,
+	"CURRENT_ACCESS_BITSET":      scvRasterProductKindCURRENT_ACCESS_BITSET,
+	"BUCKET_START_SECONDS":       scvRasterProductKindBUCKET_START_SECONDS,
+	"BUCKET_STOP_SECONDS":        scvRasterProductKindBUCKET_STOP_SECONDS,
+	"BUCKET_ACTIVE_CELL_COUNT":   scvRasterProductKindBUCKET_ACTIVE_CELL_COUNT,
+	"PASS_COUNT_RGBA":            scvRasterProductKindPASS_COUNT_RGBA,
+	"CURRENT_ACCESS_RGBA":        scvRasterProductKindCURRENT_ACCESS_RGBA,
+	"LATITUDE_BAND_COVERAGE":     scvRasterProductKindLATITUDE_BAND_COVERAGE,
+	"BUCKET_PASS_START_COUNT":    scvRasterProductKindBUCKET_PASS_START_COUNT,
+	"WINDOW_START_ACCESS_BITSET": scvRasterProductKindWINDOW_START_ACCESS_BITSET,
+	"WINDOW_STOP_ACCESS_BITSET":  scvRasterProductKindWINDOW_STOP_ACCESS_BITSET,
 }
 
 func (v scvRasterProductKind) String() string {

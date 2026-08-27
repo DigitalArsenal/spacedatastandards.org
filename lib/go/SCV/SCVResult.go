@@ -292,8 +292,39 @@ func (rcv *SCVResult) AggregateStatistics(obj *SCVAggregateStatistics) *SCVAggre
 	return rcv.AGGREGATE_STATISTICS(obj)
 }
 
+func (rcv *SCVResult) TARGET_RESULTS(obj *SCVTargetResult, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SCVTargetResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SCVResult) TargetResults(obj *SCVTargetResult, j int) bool {
+	return rcv.TARGET_RESULTS(obj, j)
+}
+
+func (rcv *SCVResult) TARGET_RESULTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SCVResult) TargetResultsLength() int {
+	return rcv.TARGET_RESULTSLength()
+}
+
 func SCVResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func SCVResultAddJOB_ID(builder *flatbuffers.Builder, JOB_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(JOB_ID), 0)
@@ -384,6 +415,18 @@ func SCVResultAddAGGREGATE_STATISTICS(builder *flatbuffers.Builder, AGGREGATE_ST
 }
 func SCVResultAddAggregateStatistics(builder *flatbuffers.Builder, AGGREGATE_STATISTICS flatbuffers.UOffsetT) {
 	SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
+}
+func SCVResultAddTARGET_RESULTS(builder *flatbuffers.Builder, TARGET_RESULTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TARGET_RESULTS), 0)
+}
+func SCVResultAddTargetResults(builder *flatbuffers.Builder, TARGET_RESULTS flatbuffers.UOffsetT) {
+	SCVResultAddTARGET_RESULTS(builder, TARGET_RESULTS)
+}
+func SCVResultStartTARGET_RESULTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SCVResultStartTargetResultsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCVResultStartTARGET_RESULTSVector(builder, numElems)
 }
 func SCVResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

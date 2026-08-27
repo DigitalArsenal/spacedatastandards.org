@@ -27,6 +27,88 @@ const archiveLanguages = [
 
 const headerMarker = "// -----------------------------------END_HEADER";
 
+const rasterProductKindEntries = [
+  ["CELL_BOUNDS_DEG", 0],
+  ["CELL_CENTERS_DEG", 1],
+  ["PERCENT_COVERAGE", 2],
+  ["PASS_COUNT", 3],
+  ["CONTACT_DURATION_SECONDS", 4],
+  ["REVISIT_SECONDS", 5],
+  ["GAP_SECONDS", 6],
+  ["REDUNDANCY", 7],
+  ["CURRENT_ACCESS_BITSET", 8],
+  ["BUCKET_START_SECONDS", 9],
+  ["BUCKET_STOP_SECONDS", 10],
+  ["BUCKET_ACTIVE_CELL_COUNT", 11],
+  ["PASS_COUNT_RGBA", 12],
+  ["CURRENT_ACCESS_RGBA", 13],
+  ["LATITUDE_BAND_COVERAGE", 14],
+  ["BUCKET_PASS_START_COUNT", 15],
+  ["WINDOW_START_ACCESS_BITSET", 16],
+  ["WINDOW_STOP_ACCESS_BITSET", 17],
+];
+
+const targetShapeEntries = [
+  ["POINT", 0],
+  ["POLYGON", 1],
+  ["RECTANGLE", 2],
+  ["BOX", 3],
+  ["SPHERE", 4],
+  ["EXTRUDED_POLYGON", 5],
+];
+
+function parseSchemaEnum(source, enumName) {
+  const enumMatch = source.match(
+    new RegExp(`enum\\s+${enumName}\\s*:\\s*\\w+\\s*\\{([\\s\\S]*?)\\}`),
+  );
+  assert.ok(enumMatch, `schema should define ${enumName}`);
+
+  let nextValue = 0;
+  return enumMatch[1]
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const entryMatch = entry.match(/^([A-Z][A-Z0-9_]*)(?:\s*=\s*(\d+))?$/);
+      assert.ok(entryMatch, `could not parse ${enumName} entry: ${entry}`);
+      const value = entryMatch[2] === undefined ? nextValue : Number(entryMatch[2]);
+      nextValue = value + 1;
+      return [entryMatch[1], value];
+    });
+}
+
+function parseGeneratedJsEnum(source, enumName) {
+  const entryPattern = new RegExp(
+    `${enumName}\\[${enumName}\\["([A-Z][A-Z0-9_]*)"\\]\\s*=\\s*(\\d+)\\]`,
+    "g",
+  );
+  return [...source.matchAll(entryPattern)].map((match) => [match[1], Number(match[2])]);
+}
+
+function parseGeneratedCppEnum(source, enumName) {
+  const enumMatch = source.match(
+    new RegExp(`enum\\s+${enumName}\\s*:\\s*\\w+\\s*\\{([\\s\\S]*?)\\};`),
+  );
+  assert.ok(enumMatch, `C++ binding should define ${enumName}`);
+  const entryPattern = new RegExp(`${enumName}_([A-Z][A-Z0-9_]*)\\s*=\\s*(\\d+)`, "g");
+  return [...enumMatch[1].matchAll(entryPattern)].map((match) => [
+    match[1],
+    Number(match[2]),
+  ]);
+}
+
+function parseSchemaTableFields(source, tableName) {
+  const tableMatch = source.match(
+    new RegExp(`\\ntable\\s+${tableName}\\s*\\{([\\s\\S]*?)\\n\\}`),
+  );
+  assert.ok(tableMatch, `schema should define table ${tableName}`);
+  return tableMatch[1]
+    .split("\n")
+    .map((line) => line.replace(/\/\/.*$/, "").trim())
+    .filter((line) => line.endsWith(";"))
+    .map((line) => line.slice(0, -1).split(":").map((part) => part.trim()));
+}
+
 function parseSchemaHeader(schemaSource) {
   const [header, body] = schemaSource.split(headerMarker);
   assert.ok(body, "schema should contain a generated header marker");
@@ -265,6 +347,99 @@ describe("SCV sensor coverage schema", () => {
         "scvRasterProductKind must expose LATITUDE_BAND_COVERAGE in schema and generated bindings",
       );
     }
+  });
+
+  it("appends exact pass continuity raster products without renumbering existing values", async () => {
+    const schemaSource = await fs.readFile(
+      path.join(repoRoot, "schema", "SCV", "main.fbs"),
+      "utf8",
+    );
+
+    assert.deepEqual(
+      parseSchemaEnum(schemaSource, "scvRasterProductKind"),
+      rasterProductKindEntries,
+    );
+  });
+
+  it("generates exact pass continuity raster product values in JS and C++ bindings", async () => {
+    const [scvJsSource, scvCppSource, recJsSource] = await Promise.all([
+      fs.readFile(path.join(repoRoot, "lib", "js", "SCV", "scvRasterProductKind.js"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "cpp", "SCV", "main_generated.h"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "js", "REC", "scvRasterProductKind.js"), "utf8"),
+    ]);
+
+    for (const [label, entries] of [
+      ["SCV JavaScript", parseGeneratedJsEnum(scvJsSource, "scvRasterProductKind")],
+      ["SCV C++", parseGeneratedCppEnum(scvCppSource, "scvRasterProductKind")],
+      ["REC JavaScript", parseGeneratedJsEnum(recJsSource, "scvRasterProductKind")],
+    ]) {
+      assert.deepEqual(entries, rasterProductKindEntries, `${label} enum values`);
+    }
+  });
+
+  it("keeps the ratified area/point/volume target ABI in the schema", async () => {
+    const schemaSource = await fs.readFile(
+      path.join(repoRoot, "schema", "SCV", "main.fbs"),
+      "utf8",
+    );
+
+    assert.deepEqual(parseSchemaEnum(schemaSource, "scvTargetShape"), targetShapeEntries);
+
+    assert.deepEqual(parseSchemaTableFields(schemaSource, "SCVTarget"), [
+      ["TARGET_ID", "uint32"],
+      ["OBJECT_ID", "string"],
+      ["NAME", "string"],
+      ["FRAME", "scvCoordinateFrame"],
+      ["POSITION_M", "SCVVec3"],
+      ["VELOCITY_MPS", "SCVVec3"],
+      ["RADIUS_M", "double"],
+      ["TARGET_KIND", "scvTargetShape"],
+      ["DOMAIN", "scvGeometryDomain"],
+      ["POLYGON_VERTICES", "[SCVVec3]"],
+      ["MIN_ALTITUDE_M", "double"],
+      ["MAX_ALTITUDE_M", "double"],
+    ]);
+
+    assert.deepEqual(parseSchemaTableFields(schemaSource, "SCVTargetResult"), [
+      ["TARGET_ID", "uint32"],
+      ["NAME", "string"],
+      ["ACCESS_COUNT", "uint32"],
+      ["REVISIT_COUNT", "uint32"],
+      ["TOTAL_ACCESS_DURATION_SEC", "double"],
+      ["MEAN_REVISIT_TIME_SEC", "double"],
+      ["MAX_GAP_SEC", "double"],
+      ["INTERVAL_START_SEC", "[double]"],
+      ["INTERVAL_STOP_SEC", "[double]"],
+      ["PASS_START_BUCKETS", "[uint32]"],
+      ["ACCESS_BITSET", "[uint32]"],
+    ]);
+
+    const resultFields = parseSchemaTableFields(schemaSource, "SCVResult");
+    assert.deepEqual(
+      resultFields.at(-1),
+      ["TARGET_RESULTS", "[SCVTargetResult]"],
+      "TARGET_RESULTS must stay the LAST SCVResult field (field-order append)",
+    );
+  });
+
+  it("generates the target geometry ABI in JS and C++ bindings", async () => {
+    const [scvJsShape, scvCppSource, scvJsTarget, scvJsTargetResult] = await Promise.all([
+      fs.readFile(path.join(repoRoot, "lib", "js", "SCV", "scvTargetShape.js"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "cpp", "SCV", "main_generated.h"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "js", "SCV", "SCVTarget.js"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "js", "SCV", "SCVTargetResult.js"), "utf8"),
+    ]);
+
+    assert.deepEqual(parseGeneratedJsEnum(scvJsShape, "scvTargetShape"), targetShapeEntries);
+    assert.deepEqual(parseGeneratedCppEnum(scvCppSource, "scvTargetShape"), targetShapeEntries);
+
+    for (const accessor of ["TARGET_KIND", "DOMAIN", "POLYGON_VERTICES", "MIN_ALTITUDE_M", "MAX_ALTITUDE_M"]) {
+      assert.match(scvJsTarget, new RegExp(accessor), `SCVTarget binding must expose ${accessor}`);
+    }
+    for (const accessor of ["ACCESS_COUNT", "REVISIT_COUNT", "MAX_GAP_SEC", "ACCESS_BITSET"]) {
+      assert.match(scvJsTargetResult, new RegExp(accessor), `SCVTargetResult binding must expose ${accessor}`);
+    }
+    assert.match(scvCppSource, /struct SCVTargetResult\b/);
   });
 
   it("does not preserve retired inline result-vector schemas", async () => {
