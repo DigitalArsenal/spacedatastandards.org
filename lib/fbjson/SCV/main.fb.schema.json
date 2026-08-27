@@ -346,10 +346,14 @@
         "BUCKET_ACTIVE_CELL_COUNT",
         "PASS_COUNT_RGBA",
         "CURRENT_ACCESS_RGBA",
+<<<<<<< Updated upstream
         "LATITUDE_BAND_COVERAGE",
         "BUCKET_PASS_START_COUNT",
         "WINDOW_START_ACCESS_BITSET",
         "WINDOW_STOP_ACCESS_BITSET"
+=======
+        "LATITUDE_BAND_COVERAGE"
+>>>>>>> Stashed changes
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -398,6 +402,7 @@
         },
         "LATITUDE_BAND_COVERAGE": {
           "value": 14
+<<<<<<< Updated upstream
         },
         "BUCKET_PASS_START_COUNT": {
           "value": 15
@@ -407,6 +412,8 @@
         },
         "WINDOW_STOP_ACCESS_BITSET": {
           "value": 17
+=======
+>>>>>>> Stashed changes
         }
       }
     },
@@ -1893,6 +1900,7 @@
             },
             "LATITUDE_BAND_COVERAGE": {
               "value": 14
+<<<<<<< Updated upstream
             },
             "BUCKET_PASS_START_COUNT": {
               "value": 15
@@ -1902,6 +1910,8 @@
             },
             "WINDOW_STOP_ACCESS_BITSET": {
               "value": 17
+=======
+>>>>>>> Stashed changes
             }
           }
         },

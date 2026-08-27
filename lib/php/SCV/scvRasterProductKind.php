@@ -18,9 +18,12 @@ class scvRasterProductKind
     const PASS_COUNT_RGBA = 12;
     const CURRENT_ACCESS_RGBA = 13;
     const LATITUDE_BAND_COVERAGE = 14;
+<<<<<<< Updated upstream
     const BUCKET_PASS_START_COUNT = 15;
     const WINDOW_START_ACCESS_BITSET = 16;
     const WINDOW_STOP_ACCESS_BITSET = 17;
+=======
+>>>>>>> Stashed changes
 
     private static $names = array(
         scvRasterProductKind::CELL_BOUNDS_DEG=>"CELL_BOUNDS_DEG",
@@ -38,9 +41,12 @@ class scvRasterProductKind
         scvRasterProductKind::PASS_COUNT_RGBA=>"PASS_COUNT_RGBA",
         scvRasterProductKind::CURRENT_ACCESS_RGBA=>"CURRENT_ACCESS_RGBA",
         scvRasterProductKind::LATITUDE_BAND_COVERAGE=>"LATITUDE_BAND_COVERAGE",
+<<<<<<< Updated upstream
         scvRasterProductKind::BUCKET_PASS_START_COUNT=>"BUCKET_PASS_START_COUNT",
         scvRasterProductKind::WINDOW_START_ACCESS_BITSET=>"WINDOW_START_ACCESS_BITSET",
         scvRasterProductKind::WINDOW_STOP_ACCESS_BITSET=>"WINDOW_STOP_ACCESS_BITSET",
+=======
+>>>>>>> Stashed changes
     );
 
     public static function Name($e)

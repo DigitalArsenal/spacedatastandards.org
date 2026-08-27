@@ -186,16 +186,26 @@ class SCVResult extends Table
      */
     public static function startSCVResult(FlatBufferBuilder $builder)
     {
+<<<<<<< Updated upstream
         $builder->StartObject(14);
+=======
+        $builder->StartObject(13);
+>>>>>>> Stashed changes
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVResult
      */
+<<<<<<< Updated upstream
     public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS, $TARGET_RESULTS)
     {
         $builder->startObject(14);
+=======
+    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS)
+    {
+        $builder->startObject(13);
+>>>>>>> Stashed changes
         self::addJOB_ID($builder, $JOB_ID);
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addSTATUS($builder, $STATUS);
@@ -390,6 +400,7 @@ class SCVResult extends Table
     public static function addAGGREGATE_STATISTICS(FlatBufferBuilder $builder, $AGGREGATE_STATISTICS)
     {
         $builder->addOffsetX(12, $AGGREGATE_STATISTICS, 0);
+<<<<<<< Updated upstream
     }
 
     /**
@@ -424,6 +435,8 @@ class SCVResult extends Table
     public static function startTARGET_RESULTSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+=======
+>>>>>>> Stashed changes
     }
 
     /**

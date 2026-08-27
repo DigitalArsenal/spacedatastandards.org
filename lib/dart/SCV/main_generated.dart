@@ -494,10 +494,14 @@ enum scvRasterProductKind {
   BUCKET_ACTIVE_CELL_COUNT(11),
   PASS_COUNT_RGBA(12),
   CURRENT_ACCESS_RGBA(13),
+<<<<<<< Updated upstream
   LATITUDE_BAND_COVERAGE(14),
   BUCKET_PASS_START_COUNT(15),
   WINDOW_START_ACCESS_BITSET(16),
   WINDOW_STOP_ACCESS_BITSET(17);
+=======
+  LATITUDE_BAND_COVERAGE(14);
+>>>>>>> Stashed changes
 
   final int value;
   const scvRasterProductKind(this.value);
@@ -519,9 +523,12 @@ enum scvRasterProductKind {
       case 12: return scvRasterProductKind.PASS_COUNT_RGBA;
       case 13: return scvRasterProductKind.CURRENT_ACCESS_RGBA;
       case 14: return scvRasterProductKind.LATITUDE_BAND_COVERAGE;
+<<<<<<< Updated upstream
       case 15: return scvRasterProductKind.BUCKET_PASS_START_COUNT;
       case 16: return scvRasterProductKind.WINDOW_START_ACCESS_BITSET;
       case 17: return scvRasterProductKind.WINDOW_STOP_ACCESS_BITSET;
+=======
+>>>>>>> Stashed changes
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -530,7 +537,11 @@ enum scvRasterProductKind {
       value == null ? null : scvRasterProductKind.fromValue(value);
 
   static const int minValue = 0;
+<<<<<<< Updated upstream
   static const int maxValue = 17;
+=======
+  static const int maxValue = 14;
+>>>>>>> Stashed changes
   static const fb.Reader<scvRasterProductKind> reader = _scvRasterProductKindReader();
 }
 
@@ -4385,7 +4396,11 @@ class SCVResult {
 
   @override
   String toString() {
+<<<<<<< Updated upstream
     return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, HISTOGRAMS: ${HISTOGRAMS}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, rasterProducts: ${rasterProducts}, MESSAGE: ${MESSAGE}, aggregateStatistics: ${aggregateStatistics}, targetResults: ${targetResults}}';
+=======
+    return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, HISTOGRAMS: ${HISTOGRAMS}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, rasterProducts: ${rasterProducts}, MESSAGE: ${MESSAGE}, aggregateStatistics: ${aggregateStatistics}}';
+>>>>>>> Stashed changes
   }
 }
 
@@ -4403,7 +4418,11 @@ class SCVResultBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
+<<<<<<< Updated upstream
     fbBuilder.startTable(14);
+=======
+    fbBuilder.startTable(13);
+>>>>>>> Stashed changes
   }
 
   int addJobIdOffset(int? offset) {
@@ -4458,10 +4477,13 @@ class SCVResultBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+<<<<<<< Updated upstream
   int addTargetResultsOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
+=======
+>>>>>>> Stashed changes
 
   int finish() {
     return fbBuilder.endTable();
@@ -4540,9 +4562,13 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     final int? MESSAGEOffset = _MESSAGE == null ? null
         : fbBuilder.writeString(_MESSAGE!);
     final int? AGGREGATE_STATISTICSOffset = _AGGREGATE_STATISTICS?.getOrCreateOffset(fbBuilder);
+<<<<<<< Updated upstream
     final int? TARGET_RESULTSOffset = _TARGET_RESULTS == null ? null
         : fbBuilder.writeList(_TARGET_RESULTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     fbBuilder.startTable(14);
+=======
+    fbBuilder.startTable(13);
+>>>>>>> Stashed changes
     fbBuilder.addOffset(0, JOB_IDOffset);
     fbBuilder.addUint64(1, _TRACE_ID);
     fbBuilder.addUint8(2, _STATUS?.value);
@@ -4556,7 +4582,10 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, RASTER_PRODUCTSOffset);
     fbBuilder.addOffset(11, MESSAGEOffset);
     fbBuilder.addOffset(12, AGGREGATE_STATISTICSOffset);
+<<<<<<< Updated upstream
     fbBuilder.addOffset(13, TARGET_RESULTSOffset);
+=======
+>>>>>>> Stashed changes
     return fbBuilder.endTable();
   }
 

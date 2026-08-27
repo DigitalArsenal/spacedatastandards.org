@@ -1,6 +1,10 @@
 {
     "name": "spacedatastandards.org",
+<<<<<<< Updated upstream
     "version": "1.197.0+1787773031135",
+=======
+    "version": "1.141.0+1782237209753",
+>>>>>>> Stashed changes
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",

@@ -72,8 +72,12 @@ export declare class SCVResultT implements flatbuffers.IGeneratedObject {
     RASTER_PRODUCTS: SCVPackedRasterProductsT | null;
     MESSAGE: string | Uint8Array | null;
     AGGREGATE_STATISTICS: SCVAggregateStatisticsT | null;
+<<<<<<< Updated upstream
     TARGET_RESULTS: (SCVTargetResultT)[];
     constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, HISTOGRAMS?: (SCVHistogramBinT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null, TARGET_RESULTS?: (SCVTargetResultT)[]);
+=======
+    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, HISTOGRAMS?: (SCVHistogramBinT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null);
+>>>>>>> Stashed changes
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVResult.d.ts.map

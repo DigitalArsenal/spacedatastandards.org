@@ -99,9 +99,12 @@ enum scvRasterProductKind:
     scvRasterProductKind_PASS_COUNT_RGBA = 12
     scvRasterProductKind_CURRENT_ACCESS_RGBA = 13
     scvRasterProductKind_LATITUDE_BAND_COVERAGE = 14
+<<<<<<< Updated upstream
     scvRasterProductKind_BUCKET_PASS_START_COUNT = 15
     scvRasterProductKind_WINDOW_START_ACCESS_BITSET = 16
     scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET = 17
+=======
+>>>>>>> Stashed changes
 
 enum scvRasterProductEncoding:
     scvRasterProductEncoding_FLOAT32 = 0
@@ -1814,7 +1817,11 @@ def GetRootAsSCVResult(buf:string): return SCVResult { buf, flatbuffers.indirect
 struct SCVResultBuilder:
     b_:flatbuffers.builder
     def start():
+<<<<<<< Updated upstream
         b_.StartObject(14)
+=======
+        b_.StartObject(13)
+>>>>>>> Stashed changes
         return this
     def add_JOB_ID(JOB_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, JOB_ID)
@@ -1854,9 +1861,12 @@ struct SCVResultBuilder:
         return this
     def add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, AGGREGATE_STATISTICS)
+<<<<<<< Updated upstream
         return this
     def add_TARGET_RESULTS(TARGET_RESULTS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, TARGET_RESULTS)
+=======
+>>>>>>> Stashed changes
         return this
     def end():
         return b_.EndObject()

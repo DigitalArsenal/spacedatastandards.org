@@ -205,11 +205,16 @@ public enum scvRasterProductKind: UInt16, FlatbuffersVectorInitializable, Enum, 
   case passCountRgba = 12
   case currentAccessRgba = 13
   case latitudeBandCoverage = 14
+<<<<<<< Updated upstream
   case bucketPassStartCount = 15
   case windowStartAccessBitset = 16
   case windowStopAccessBitset = 17
 
   public static var max: scvRasterProductKind { return .windowStopAccessBitset }
+=======
+
+  public static var max: scvRasterProductKind { return .latitudeBandCoverage }
+>>>>>>> Stashed changes
   public static var min: scvRasterProductKind { return .cellBoundsDeg }
 }
 
@@ -2229,7 +2234,10 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let RASTER_PRODUCTS: VOffset = 24
     static let MESSAGE: VOffset = 26
     static let AGGREGATE_STATISTICS: VOffset = 28
+<<<<<<< Updated upstream
     static let TARGET_RESULTS: VOffset = 30
+=======
+>>>>>>> Stashed changes
   }
 
   public var JOB_ID: String? { let o = _accessor.offset(VT.JOB_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -2247,8 +2255,12 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
   public var AGGREGATE_STATISTICS: SCVAggregateStatistics? { let o = _accessor.offset(VT.AGGREGATE_STATISTICS); return o == 0 ? nil : SCVAggregateStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+<<<<<<< Updated upstream
   public var TARGET_RESULTS: FlatbufferVector<SCVTargetResult> { return _accessor.vector(at: VT.TARGET_RESULTS, byteSize: 4) }
   public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+=======
+  public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+>>>>>>> Stashed changes
   public static func add(JOB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_ID, at: VT.JOB_ID) }
   public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
   public static func add(STATUS: scvResultState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }

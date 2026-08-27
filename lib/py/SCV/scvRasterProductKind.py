@@ -18,6 +18,9 @@ class scvRasterProductKind(object):
     PASS_COUNT_RGBA = 12
     CURRENT_ACCESS_RGBA = 13
     LATITUDE_BAND_COVERAGE = 14
+<<<<<<< Updated upstream
     BUCKET_PASS_START_COUNT = 15
     WINDOW_START_ACCESS_BITSET = 16
     WINDOW_STOP_ACCESS_BITSET = 17
+=======
+>>>>>>> Stashed changes

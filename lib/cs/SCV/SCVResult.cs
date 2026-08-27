@@ -43,8 +43,11 @@ public struct SCVResult : IFlatbufferObject
 #endif
   public byte[] GetMESSAGEArray() { return __p.__vector_as_array<byte>(26); }
   public SCVAggregateStatistics? AGGREGATE_STATISTICS { get { int o = __p.__offset(28); return o != 0 ? (SCVAggregateStatistics?)(new SCVAggregateStatistics()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+<<<<<<< Updated upstream
   public SCVTargetResult? TARGET_RESULTS(int j) { int o = __p.__offset(30); return o != 0 ? (SCVTargetResult?)(new SCVTargetResult()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int TARGET_RESULTSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+=======
+>>>>>>> Stashed changes
 
   public static Offset<SCVResult> CreateSCVResult(FlatBufferBuilder builder,
       StringOffset JOB_IDOffset = default(StringOffset),
@@ -59,9 +62,14 @@ public struct SCVResult : IFlatbufferObject
       Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>),
       Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset = default(Offset<SCVPackedRasterProducts>),
       StringOffset MESSAGEOffset = default(StringOffset),
+<<<<<<< Updated upstream
       Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>),
       VectorOffset TARGET_RESULTSOffset = default(VectorOffset)) {
     builder.StartTable(14);
+=======
+      Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>)) {
+    builder.StartTable(13);
+>>>>>>> Stashed changes
     SCVResult.AddTRACE_ID(builder, TRACE_ID);
     SCVResult.AddTARGET_RESULTS(builder, TARGET_RESULTSOffset);
     SCVResult.AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICSOffset);
@@ -79,7 +87,11 @@ public struct SCVResult : IFlatbufferObject
     return SCVResult.EndSCVResult(builder);
   }
 
+<<<<<<< Updated upstream
   public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(14); }
+=======
+  public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(13); }
+>>>>>>> Stashed changes
   public static void AddJOB_ID(FlatBufferBuilder builder, StringOffset JOB_IDOffset) { builder.AddOffset(0, JOB_IDOffset.Value, 0); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, ulong TRACE_ID) { builder.AddUlong(1, TRACE_ID, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, scvResultState STATUS) { builder.AddByte(2, (byte)STATUS, 0); }
@@ -103,12 +115,15 @@ public struct SCVResult : IFlatbufferObject
   public static void AddRASTER_PRODUCTS(FlatBufferBuilder builder, Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset) { builder.AddOffset(10, RASTER_PRODUCTSOffset.Value, 0); }
   public static void AddMESSAGE(FlatBufferBuilder builder, StringOffset MESSAGEOffset) { builder.AddOffset(11, MESSAGEOffset.Value, 0); }
   public static void AddAGGREGATE_STATISTICS(FlatBufferBuilder builder, Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset) { builder.AddOffset(12, AGGREGATE_STATISTICSOffset.Value, 0); }
+<<<<<<< Updated upstream
   public static void AddTARGET_RESULTS(FlatBufferBuilder builder, VectorOffset TARGET_RESULTSOffset) { builder.AddOffset(13, TARGET_RESULTSOffset.Value, 0); }
   public static VectorOffset CreateTARGET_RESULTSVector(FlatBufferBuilder builder, Offset<SCVTargetResult>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, Offset<SCVTargetResult>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVTargetResult>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVTargetResult>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTARGET_RESULTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+=======
+>>>>>>> Stashed changes
   public static Offset<SCVResult> EndSCVResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVResult>(o);
@@ -237,7 +252,10 @@ static public class SCVResultVerify
       && verifier.VerifyTable(tablePos, 24 /*RASTER_PRODUCTS*/, SCVPackedRasterProductsVerify.Verify, false)
       && verifier.VerifyString(tablePos, 26 /*MESSAGE*/, false)
       && verifier.VerifyTable(tablePos, 28 /*AGGREGATE_STATISTICS*/, SCVAggregateStatisticsVerify.Verify, false)
+<<<<<<< Updated upstream
       && verifier.VerifyVectorOfTables(tablePos, 30 /*TARGET_RESULTS*/, SCVTargetResultVerify.Verify, false)
+=======
+>>>>>>> Stashed changes
       && verifier.VerifyTableEnd(tablePos);
   }
 }

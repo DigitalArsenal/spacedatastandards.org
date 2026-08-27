@@ -1,6 +1,10 @@
 {
     "name": "@digitalarsenal/standards",
+<<<<<<< Updated upstream
     "version": "1.196.0+1787624265986",
+=======
+    "version": "1.141.0+1782237209753",
+>>>>>>> Stashed changes
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",

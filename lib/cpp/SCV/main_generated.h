@@ -554,6 +554,7 @@ enum scvRasterProductKind : uint16_t {
   scvRasterProductKind_PASS_COUNT_RGBA = 12,
   scvRasterProductKind_CURRENT_ACCESS_RGBA = 13,
   scvRasterProductKind_LATITUDE_BAND_COVERAGE = 14,
+<<<<<<< Updated upstream
   scvRasterProductKind_BUCKET_PASS_START_COUNT = 15,
   scvRasterProductKind_WINDOW_START_ACCESS_BITSET = 16,
   scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET = 17,
@@ -562,6 +563,13 @@ enum scvRasterProductKind : uint16_t {
 };
 
 inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[18] {
+=======
+  scvRasterProductKind_MIN = scvRasterProductKind_CELL_BOUNDS_DEG,
+  scvRasterProductKind_MAX = scvRasterProductKind_LATITUDE_BAND_COVERAGE
+};
+
+inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[15] {
+>>>>>>> Stashed changes
   static const scvRasterProductKind values[] = {
     scvRasterProductKind_CELL_BOUNDS_DEG,
     scvRasterProductKind_CELL_CENTERS_DEG,
@@ -577,16 +585,24 @@ inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[18] {
     scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT,
     scvRasterProductKind_PASS_COUNT_RGBA,
     scvRasterProductKind_CURRENT_ACCESS_RGBA,
+<<<<<<< Updated upstream
     scvRasterProductKind_LATITUDE_BAND_COVERAGE,
     scvRasterProductKind_BUCKET_PASS_START_COUNT,
     scvRasterProductKind_WINDOW_START_ACCESS_BITSET,
     scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET
+=======
+    scvRasterProductKind_LATITUDE_BAND_COVERAGE
+>>>>>>> Stashed changes
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvRasterProductKind() {
+<<<<<<< Updated upstream
   static const char * const names[19] = {
+=======
+  static const char * const names[16] = {
+>>>>>>> Stashed changes
     "CELL_BOUNDS_DEG",
     "CELL_CENTERS_DEG",
     "PERCENT_COVERAGE",
@@ -602,16 +618,23 @@ inline const char * const *EnumNamesscvRasterProductKind() {
     "PASS_COUNT_RGBA",
     "CURRENT_ACCESS_RGBA",
     "LATITUDE_BAND_COVERAGE",
+<<<<<<< Updated upstream
     "BUCKET_PASS_START_COUNT",
     "WINDOW_START_ACCESS_BITSET",
     "WINDOW_STOP_ACCESS_BITSET",
+=======
+>>>>>>> Stashed changes
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescvRasterProductKind(scvRasterProductKind e) {
+<<<<<<< Updated upstream
   if (::flatbuffers::IsOutRange(e, scvRasterProductKind_CELL_BOUNDS_DEG, scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET)) return "";
+=======
+  if (::flatbuffers::IsOutRange(e, scvRasterProductKind_CELL_BOUNDS_DEG, scvRasterProductKind_LATITUDE_BAND_COVERAGE)) return "";
+>>>>>>> Stashed changes
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvRasterProductKind()[index];
 }
@@ -4116,8 +4139,12 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GEOMETRY = 22,
     VT_RASTER_PRODUCTS = 24,
     VT_MESSAGE = 26,
+<<<<<<< Updated upstream
     VT_AGGREGATE_STATISTICS = 28,
     VT_TARGET_RESULTS = 30
+=======
+    VT_AGGREGATE_STATISTICS = 28
+>>>>>>> Stashed changes
   };
   const ::flatbuffers::String *JOB_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_JOB_ID);

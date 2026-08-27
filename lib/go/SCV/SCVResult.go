@@ -324,7 +324,11 @@ func (rcv *SCVResult) TargetResultsLength() int {
 }
 
 func SCVResultStart(builder *flatbuffers.Builder) {
+<<<<<<< Updated upstream
 	builder.StartObject(14)
+=======
+	builder.StartObject(13)
+>>>>>>> Stashed changes
 }
 func SCVResultAddJOB_ID(builder *flatbuffers.Builder, JOB_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(JOB_ID), 0)
