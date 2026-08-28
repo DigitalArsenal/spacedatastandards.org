@@ -1,0 +1,104 @@
+/**
+ * Radiocommunication service class a transmitting facility operates under.
+ *
+ * Members name interoperable service classes only, never an operator, a
+ * programme, or a network. A publisher encodes the class ITS SOURCE STATES
+ * and never re-derives one from frequency alone. Ordinals are wire values:
+ * append only; never reorder or reuse.
+ */
+export declare enum txsServiceClass {
+    /**
+     * The source publishes no service class. Every service field defaults here
+     * so an unset field can never be read as a real class.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Sound broadcasting on the low-frequency broadcasting allocations.
+     */
+    LONG_WAVE_BROADCAST = 1,
+    /**
+     * Sound broadcasting on the medium-frequency broadcasting allocations.
+     */
+    MEDIUM_WAVE_BROADCAST = 2,
+    /**
+     * Sound broadcasting on the high-frequency broadcasting allocations,
+     * including transmissions directed at audiences outside the transmitting
+     * administration.
+     */
+    SHORT_WAVE_BROADCAST = 3,
+    /**
+     * Frequency-modulated sound broadcasting on the very-high-frequency
+     * broadcasting allocations.
+     */
+    FM_SOUND_BROADCAST = 4,
+    /**
+     * Digitally multiplexed sound broadcasting, terrestrial.
+     */
+    DIGITAL_SOUND_BROADCAST = 5,
+    /**
+     * Terrestrial television broadcasting, analogue or digital.
+     */
+    TELEVISION_BROADCAST = 6,
+    /**
+     * Fixed service operated by or for an armed service.
+     */
+    MILITARY_FIXED = 7,
+    /**
+     * Fixed service operated by a non-broadcast, non-military user for its own
+     * operational traffic.
+     */
+    UTILITY_FIXED = 8,
+    /**
+     * Aeronautical mobile or aeronautical fixed service.
+     */
+    AERONAUTICAL = 9,
+    /**
+     * Maritime mobile or maritime fixed service.
+     */
+    MARITIME = 10,
+    /**
+     * Land mobile service supporting emergency response and public protection.
+     */
+    PUBLIC_SAFETY_LAND_MOBILE = 11,
+    /**
+     * Land mobile service operated by a private or commercial user.
+     */
+    LAND_MOBILE_PRIVATE = 12,
+    /**
+     * Amateur service, including unattended propagation beacons.
+     */
+    AMATEUR = 13,
+    /**
+     * Standard-frequency and time-signal service.
+     */
+    TIME_AND_FREQUENCY_STANDARD = 14,
+    /**
+     * Radionavigation service, including terrestrial hyperbolic and
+     * non-directional navigation aids.
+     */
+    RADIONAVIGATION = 15,
+    /**
+     * Radiolocation service, including over-the-horizon and surface-wave
+     * installations.
+     */
+    RADIOLOCATION = 16,
+    /**
+     * Meteorological aids or meteorological broadcast.
+     */
+    METEOROLOGICAL = 17,
+    /**
+     * Space operations, space research or satellite feeder-link earth-station
+     * transmission from a terrestrial facility.
+     */
+    SPACE_OPERATIONS_UPLINK = 18,
+    /**
+     * Service authorized for experiment or development.
+     */
+    EXPERIMENTAL = 19,
+    /**
+     * The source states a service this enum does not model. The source's own
+     * term is retained verbatim in the provenance entry, never discarded.
+     */
+    OTHER = 20
+}
+//# sourceMappingURL=txsServiceClass.d.ts.map

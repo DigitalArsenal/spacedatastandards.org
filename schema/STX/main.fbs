@@ -1,0 +1,223 @@
+// Hash: 6a8d2848b1dd410bec41b426eb79ab1f772a318f9d5a65602e3ae60af735dd74
+// Version: 1.197.0
+// -----------------------------------END_HEADER
+include "../TXS/main.fbs";
+
+// Scheduled Transmission (STX)
+// Description
+// One record describes ONE scheduled transmission: a single frequency radiated
+// from a single facility over a single daily time window, on stated days, for a
+// stated target area and language or content class, for a stated season or
+// validity period.
+//
+// The row IS the unit. Frequency-coordination registers, broadcaster schedules
+// and monitoring compilations are all published as transmission rows — station,
+// frequency, start and stop time, days, target, language, transmitter facility
+// — where the facility is a LOOKUP. Nesting the schedule inside the facility
+// record would be wrong on the wire and wrong operationally: a facility carries
+// hundreds to thousands of rows, the rows turn over every season while the
+// facility does not, and every schedule edit would force the whole facility
+// record — including its position, its provenance and its signature — to be
+// re-serialized and re-signed. SITE_ID joins to `$TXS`.ID.
+//
+// Division of labour. `$TXS` is the FACILITY: where it stands, on whose
+// authority, and what it is documented to radiate. `$STX` is the USE of a
+// frequency in time. `$RFL` is a computed link budget, `$RFO` is an observation
+// of an emission, and `$ACI` is an access interval derived from geometry. A
+// schedule row is none of those: it is a published intention or a compiled
+// observation of when a carrier is on the air.
+//
+// A row is publishable with NO facility at all. Many transmissions are
+// documented by frequency, time and content with the originating facility
+// unidentified or disputed; SITE_ID is then absent and the row still carries
+// full provenance. Unknown values are ABSENT — never zero, never a placeholder.
+//
+// The standard names no broadcaster, register, compilation, or transmission.
+
+/// Days of the week on which a transmission runs. Bit flags so an
+/// irregular weekly pattern needs no per-day rows. ALL DAYS is every bit set;
+/// an unset field means the source publishes no day pattern, which is NOT the
+/// same as "no days".
+enum stxDayMask : ubyte (bit_flags) {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY
+}
+
+/// The class of authority behind a schedule row. Ordinals are wire values:
+/// append only; never reorder or reuse.
+enum stxScheduleAuthorityClass : byte {
+  /// The publisher does not state where the row came from. AUTHORITY defaults
+  /// here so an unset field can never be read as a coordination register.
+  UNSPECIFIED = 0,
+  /// An international frequency coordination register or seasonal
+  /// requirement-notification process carries the row.
+  COORDINATION_REGISTER,
+  /// A spectrum regulator or licensing administration publishes the row.
+  REGULATOR_PUBLISHED,
+  /// The broadcaster, operator or licensee publishes its own schedule.
+  BROADCASTER_PUBLISHED,
+  /// A monitoring service or organized observation programme logged the
+  /// transmission and published the row from what it heard.
+  MONITORING_OBSERVATION,
+  /// An observer community or enthusiast compilation asserts the row with no
+  /// register, regulator or broadcaster behind it.
+  COMMUNITY_COMPILED
+}
+
+/// State of a scheduled transmission as its sources state it. Ordinals are wire
+/// values: append only; never reorder or reuse.
+enum stxScheduleStatus : byte {
+  UNSPECIFIED = 0,
+  /// Registered or announced for the stated period.
+  REGISTERED,
+  /// Registered and confirmed on the air within the stated period.
+  ACTIVE,
+  /// Registered subject to coordination, or announced provisionally.
+  PROVISIONAL,
+  /// Documented but not heard within the period observers cover.
+  UNCONFIRMED,
+  /// Registered and stated to be off the air for the period.
+  INACTIVE,
+  /// Withdrawn before or during the period.
+  CANCELLED,
+  /// Known only from observation; no registration is claimed.
+  OBSERVED_ONLY
+}
+
+/// Content class carried by a transmission. Capability classes only: this
+/// enum never encodes a programme, a broadcaster, or an editorial judgement.
+/// Ordinals are wire values: append only; never reorder or reuse.
+enum stxContentClass : byte {
+  UNSPECIFIED = 0,
+  /// Sound programming intended for a general audience.
+  SOUND_PROGRAMME,
+  /// Television programming.
+  TELEVISION_PROGRAMME,
+  /// Digitally multiplexed data or sound carriage.
+  DIGITAL_MULTIPLEX,
+  /// Continuous or intermittent carrier radiated for identification,
+  /// propagation assessment or channel marking, with no programme content.
+  BEACON_OR_MARKER,
+  /// Keyed or spoken sequences of letters, digits or words with no published
+  /// meaning, radiated on a fixed frequency by an unidentified or
+  /// non-broadcast user.
+  FORMATTED_NUMERIC_OR_VOICE,
+  /// Data, telemetry or telecommand traffic.
+  DATA_OR_TELEMETRY,
+  /// Standard time or frequency dissemination.
+  TIME_SIGNAL,
+  /// Meteorological, navigational or safety broadcast to a service.
+  SERVICE_BULLETIN,
+  /// The source states a content class this enum does not model. The source's
+  /// own term is retained verbatim in the provenance entry.
+  OTHER
+}
+
+/// Scheduled Transmission.
+table STX {
+  /// Publisher-stable identifier for this schedule row, unique within its
+  /// record set.
+  ID:string (required);
+  /// `$TXS`.ID of the facility radiating this transmission. ABSENT when the
+  /// originating facility is unidentified or disputed; a row is publishable
+  /// without one and a consumer must not fabricate a join.
+  SITE_ID:string;
+  /// The source's own identifier for the transmitting facility, verbatim —
+  /// a register site code or a compilation's site abbreviation. Retained so a
+  /// row whose SITE_ID could not be resolved is still traceable.
+  SITE_NATIVE_ID:string;
+  /// Station or service name verbatim as the source states it. A display name,
+  /// never an identifier.
+  STATION_NAME:string;
+  /// Station identification radiated on this transmission, verbatim: a
+  /// callsign, a keyed or spoken identifier, or the identity string the source
+  /// publishes. Never synthesized and never inferred from frequency.
+  STATION_IDENTITY:string;
+  /// Assigned frequency in kilohertz, following the `$TXS` convention. Zero
+  /// means unpublished; a row whose frequency is unpublished is a facility
+  /// record, not a schedule row.
+  FREQUENCY_KHZ:double;
+  /// Necessary or occupied bandwidth in kilohertz when the source states one
+  /// for this transmission. Zero means unpublished.
+  BANDWIDTH_KHZ:double;
+  /// ITU emission designator verbatim. Authoritative over MODULATION whenever
+  /// both are present.
+  EMISSION_DESIGNATOR:string;
+  MODULATION:txsModulationClass = UNSPECIFIED;
+  POLARIZATION:txsPolarization = UNSPECIFIED;
+  SERVICE:txsServiceClass = UNSPECIFIED;
+  CONTENT:stxContentClass = UNSPECIFIED;
+  /// Daily on-air window in Coordinated Universal Time, as four decimal digits
+  /// "HHMM". A window whose stop is not later than its start crosses midnight
+  /// and is read as continuing into the following day. Strings because the
+  /// register form is four digits with significant leading zeros and no date;
+  /// an integer would invite a consumer to treat 0000 as absence.
+  TIME_START_UTC:string;
+  TIME_STOP_UTC:string;
+  /// Days on which the window runs. An unset field means the source publishes
+  /// no day pattern.
+  DAYS:stxDayMask;
+  /// The transmission runs without a fixed daily window — as required, on
+  /// occurrence, or continuously. TIME_START_UTC and TIME_STOP_UTC are absent
+  /// in that case and are never filled with 0000/2400 to stand in for it.
+  IRREGULAR:bool = false;
+  /// RFC 3339 UTC bounds over which this row is valid — the seasonal or
+  /// licence period. Either bound is absent when unpublished.
+  VALID_FROM:string;
+  VALID_UNTIL:string;
+  /// The source's own name for the validity period, verbatim: a season code, a
+  /// schedule edition, or a period label. Never parsed into VALID_FROM by this
+  /// standard.
+  SEASON:string;
+  /// Target area verbatim as the source states it, including its own zone or
+  /// region notation.
+  TARGET_AREA:string;
+  /// Individual target zone identifiers verbatim when the source publishes a
+  /// list, one entry per zone, in source order.
+  TARGET_ZONES:[string];
+  /// Language of the transmission. A BCP 47 tag when the source publishes one;
+  /// otherwise the source's own language term verbatim, never translated and
+  /// never guessed from the target area.
+  LANGUAGE:string;
+  /// Transmitter output power for this transmission, kilowatts. Zero means
+  /// unpublished.
+  TRANSMITTER_POWER_KW:double;
+  /// Main-lobe bearing for this transmission, degrees clockwise from true
+  /// north. Absent for a non-directional transmission, which is stated by
+  /// OMNIDIRECTIONAL and never by a bearing of zero.
+  ANTENNA_AZIMUTH_DEG:double;
+  /// Secondary lobe bearing when the source publishes a slewed or dual-beam
+  /// antenna, degrees clockwise from true north.
+  ANTENNA_AZIMUTH_SECONDARY_DEG:double;
+  /// The transmission is radiated without a preferred bearing.
+  OMNIDIRECTIONAL:bool = false;
+  /// Antenna designation verbatim as the source states it — a curtain-array
+  /// code, an antenna number, or a pattern identifier.
+  ANTENNA_DESIGNATION:string;
+  /// `$TXS`.EMISSIONS[].EMISSION_ID this row exercises, when the facility
+  /// record enumerates it.
+  EMISSION_ID:string;
+  AUTHORITY:stxScheduleAuthorityClass = UNSPECIFIED;
+  STATUS:stxScheduleStatus = UNSPECIFIED;
+  /// RFC 3339 UTC fixed-millisecond bounds of the observation window backing
+  /// the row, when observers rather than a register established it.
+  FIRST_OBSERVED:string;
+  LAST_OBSERVED:string;
+  /// Independent observation reports behind the row. Zero means the source
+  /// publishes no count, never that the transmission was never heard.
+  OBSERVATION_COUNT:uint;
+  /// Every source consulted for this row, including sources that returned
+  /// nothing. Required: a schedule row with no named sources is not
+  /// publishable. The provenance table is the one this family already
+  /// publishes in `$TXS`; a schedule row and a facility carry provenance of
+  /// the same shape and are frequently reconciled from the same fetch.
+  SOURCES:[TXSProvenance] (required);
+}
+
+root_type STX;
+file_identifier "$STX";

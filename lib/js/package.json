@@ -1,6 +1,6 @@
 {
     "name": "@digitalarsenal/standards",
-    "version": "1.197.0+1787851622862",
+    "version": "1.198.0+1787916261957",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",

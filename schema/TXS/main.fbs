@@ -1,0 +1,495 @@
+// Hash: 71f1faf48968806d432809e871c417ca430e72cf4f9a80cd013e36b1068c10dd
+// Version: 1.197.0
+// -----------------------------------END_HEADER
+// Terrestrial Transmitter Site (TXS)
+// Description
+// One record describes ONE fixed terrestrial radio TRANSMITTING FACILITY as
+// reconciled from every source the publisher consulted: where the facility
+// stands and on whose authority that position is asserted, what structure
+// carries the antennas, and every emission the facility is documented to
+// radiate — frequency, bandwidth, emission designator, power, antenna
+// bearing and polarization.
+//
+// Division of labour. `$TBS` is a terrestrial CELLULAR base-station site and
+// is addressed by a mobile numbering plan (country, network, area and cell
+// codes) that a broadcast, utility or public-safety transmitter does not
+// possess; it is not this record and this record is not it. `$RFE` is an
+// emission-LIMIT mask curve, `$RFB` is an emitter's static band capability
+// with no position, `$RFL` is a computed link-budget time series, `$GST` is a
+// geodetic tracking station, `$SIT` is an operational site in the
+// space-operations sense, and `$RFO`/`$DOA`/`$GEL` are observations and fused
+// geolocation solutions of an emitter. None of them can hold a licensed
+// terrestrial transmitter's position, service class, station identity and
+// emission list together. `$STX` carries the SCHEDULE — one row per
+// transmission window — and joins to this record by SITE_ID.
+//
+// POSITION AUTHORITY IS FIRST CLASS. A regulator-published coordinate, an
+// international coordination filing, a survey, a direction-finding fix and a
+// listener community's assertion are different epistemic objects, and a
+// consumer that cannot tell them apart will render an OSINT-grade guess with
+// the same weight as a licence record. POSITION_AUTHORITY states the class of
+// the assertion, POSITION_UNCERTAINTY_M states the envelope, POSITION_DISPUTED
+// states that credible sources disagree, and PRIOR_POSITIONS retains positions
+// the facility is asserted to have vacated. Provider agreement counts in
+// CONSENSUS measure corroboration, never authority; both are published.
+//
+// Unknown values are ABSENT — never zero, never a placeholder, never carried
+// across from a neighbouring facility. A facility cannot be re-serialized
+// unattributed: SOURCES and CONSENSUS are both required.
+//
+// The standard names no provider, dataset, operator, or facility. Source and
+// authority identity is DATA, carried verbatim in provenance entries.
+
+/// Radiocommunication service class a transmitting facility operates under.
+///
+/// Members name interoperable service classes only, never an operator, a
+/// programme, or a network. A publisher encodes the class ITS SOURCE STATES
+/// and never re-derives one from frequency alone. Ordinals are wire values:
+/// append only; never reorder or reuse.
+enum txsServiceClass : byte {
+  /// The source publishes no service class. Every service field defaults here
+  /// so an unset field can never be read as a real class.
+  UNSPECIFIED = 0,
+  /// Sound broadcasting on the low-frequency broadcasting allocations.
+  LONG_WAVE_BROADCAST,
+  /// Sound broadcasting on the medium-frequency broadcasting allocations.
+  MEDIUM_WAVE_BROADCAST,
+  /// Sound broadcasting on the high-frequency broadcasting allocations,
+  /// including transmissions directed at audiences outside the transmitting
+  /// administration.
+  SHORT_WAVE_BROADCAST,
+  /// Frequency-modulated sound broadcasting on the very-high-frequency
+  /// broadcasting allocations.
+  FM_SOUND_BROADCAST,
+  /// Digitally multiplexed sound broadcasting, terrestrial.
+  DIGITAL_SOUND_BROADCAST,
+  /// Terrestrial television broadcasting, analogue or digital.
+  TELEVISION_BROADCAST,
+  /// Fixed service operated by or for an armed service.
+  MILITARY_FIXED,
+  /// Fixed service operated by a non-broadcast, non-military user for its own
+  /// operational traffic.
+  UTILITY_FIXED,
+  /// Aeronautical mobile or aeronautical fixed service.
+  AERONAUTICAL,
+  /// Maritime mobile or maritime fixed service.
+  MARITIME,
+  /// Land mobile service supporting emergency response and public protection.
+  PUBLIC_SAFETY_LAND_MOBILE,
+  /// Land mobile service operated by a private or commercial user.
+  LAND_MOBILE_PRIVATE,
+  /// Amateur service, including unattended propagation beacons.
+  AMATEUR,
+  /// Standard-frequency and time-signal service.
+  TIME_AND_FREQUENCY_STANDARD,
+  /// Radionavigation service, including terrestrial hyperbolic and
+  /// non-directional navigation aids.
+  RADIONAVIGATION,
+  /// Radiolocation service, including over-the-horizon and surface-wave
+  /// installations.
+  RADIOLOCATION,
+  /// Meteorological aids or meteorological broadcast.
+  METEOROLOGICAL,
+  /// Space operations, space research or satellite feeder-link earth-station
+  /// transmission from a terrestrial facility.
+  SPACE_OPERATIONS_UPLINK,
+  /// Service authorized for experiment or development.
+  EXPERIMENTAL,
+  /// The source states a service this enum does not model. The source's own
+  /// term is retained verbatim in the provenance entry, never discarded.
+  OTHER
+}
+
+/// The class of authority behind the published position of a facility.
+///
+/// This is an EPISTEMIC statement, not a quality score: it says who asserted
+/// the coordinate and in what capacity. Ordinals are wire values: append only;
+/// never reorder or reuse.
+enum txsPositionAuthorityClass : byte {
+  /// The publisher does not state how the position was established. POSITION
+  /// AUTHORITY defaults here so an unset field can never be read as a
+  /// regulator's coordinate.
+  UNSPECIFIED = 0,
+  /// A spectrum regulator or licensing administration publishes the coordinate
+  /// in its own licence or assignment record.
+  REGULATOR_PUBLISHED,
+  /// An international frequency coordination register or notification filing
+  /// carries the coordinate.
+  COORDINATION_FILING,
+  /// The licensee or facility operator publishes the coordinate itself.
+  LICENSEE_PUBLISHED,
+  /// The coordinate was surveyed or measured on site by a party independent of
+  /// the licensee.
+  SURVEYED_INDEPENDENT,
+  /// The coordinate was read off imagery or a mapping product by the publisher
+  /// or a cited source.
+  DERIVED_FROM_IMAGERY,
+  /// The coordinate is the result of radio direction finding, time- or
+  /// frequency-difference-of-arrival geolocation, or another observation-based
+  /// fix. The fused solution itself belongs in `$GEL`.
+  INFERRED_FROM_OBSERVATION,
+  /// The coordinate is asserted by an observer community or an enthusiast
+  /// compilation with no regulator, licensee or survey behind it. It is
+  /// publishable and it is never interchangeable with a licence coordinate.
+  COMMUNITY_ASSERTED,
+  /// A community assertion the sources themselves report as superseded — the
+  /// facility is believed to have moved, and the coordinate describes where it
+  /// formerly stood.
+  COMMUNITY_ASSERTED_HISTORICAL,
+  /// The facility is documented to exist and no party publishes a position at
+  /// all. LATITUDE and LONGITUDE are ABSENT in this case; they are never
+  /// filled with a region centroid.
+  UNDISCLOSED
+}
+
+/// Antenna-supporting structure capability class. Ordinals are wire values:
+/// append only; never reorder or reuse.
+enum txsStructureClass : byte {
+  UNSPECIFIED = 0,
+  GUYED_MAST,
+  SELF_SUPPORTING_TOWER,
+  MONOPOLE,
+  ROOFTOP_OR_BUILDING,
+  CURTAIN_ARRAY,
+  LOG_PERIODIC,
+  DIPOLE_OR_WIRE,
+  VERTICAL_RADIATOR,
+  DISH_REFLECTOR,
+  LOOP_OR_LOADED_ELEMENT,
+  UNDERGROUND_OR_CONCEALED,
+  TRANSPORTABLE,
+  OTHER
+}
+
+/// Operating state of a facility as its sources state it. Ordinals are wire
+/// values: append only; never reorder or reuse.
+enum txsOperationalStatus : byte {
+  UNSPECIFIED = 0,
+  /// Radiating on a regular or continuous basis.
+  OPERATIONAL,
+  /// Radiating irregularly or only for part of the year.
+  INTERMITTENT,
+  /// Licensed and standing, but not currently radiating.
+  SILENT,
+  /// Authorization withdrawn or surrendered; structure may still stand.
+  DECOMMISSIONED,
+  /// Structure removed.
+  DEMOLISHED,
+  /// Authorized or announced, not yet radiating.
+  PLANNED,
+  /// Sources agree the operation moved to a different facility.
+  RELOCATED
+}
+
+/// Modulation capability class of one emission. The ITU emission designator in
+/// EMISSION_DESIGNATOR is authoritative whenever both are present; this enum
+/// exists so a consumer can filter without parsing designators. Ordinals are
+/// wire values: append only; never reorder or reuse.
+enum txsModulationClass : byte {
+  UNSPECIFIED = 0,
+  UNMODULATED_CARRIER,
+  ON_OFF_KEYED_CARRIER,
+  AMPLITUDE_DOUBLE_SIDEBAND,
+  AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER,
+  AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER,
+  AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER,
+  AMPLITUDE_VESTIGIAL_SIDEBAND,
+  AMPLITUDE_INDEPENDENT_SIDEBAND,
+  FREQUENCY_MODULATION,
+  PHASE_MODULATION,
+  FREQUENCY_SHIFT_KEYING,
+  PHASE_SHIFT_KEYING,
+  QUADRATURE_AMPLITUDE,
+  ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX,
+  PULSED,
+  SPREAD_SPECTRUM,
+  OTHER
+}
+
+/// Polarization of the radiated field. Ordinals are wire values: append only;
+/// never reorder or reuse.
+enum txsPolarization : byte {
+  UNSPECIFIED = 0,
+  VERTICAL,
+  HORIZONTAL,
+  MIXED,
+  SLANT,
+  CIRCULAR_RIGHT_HAND,
+  CIRCULAR_LEFT_HAND,
+  ELLIPTICAL
+}
+
+/// How independent source reports for one facility were reduced to the one
+/// published position. Ordinals are wire values: append only; never reorder or
+/// reuse.
+enum txsMergeMethod : byte {
+  /// The publisher does not state how the reports were reduced. METHOD
+  /// defaults here so an unset field can never be read as a real method.
+  UNSPECIFIED = 0,
+  /// Exactly one source reported the facility; nothing was reconciled.
+  SINGLE_SOURCE,
+  /// A declared precedence ranking over publishing authorities selected the
+  /// winning report.
+  AUTHORITY_PRECEDENCE,
+  /// The report with the most recent publication or observation window won.
+  MOST_RECENT,
+  /// The report backed by the largest independent observation count won.
+  HIGHEST_SAMPLE_COUNT,
+  /// The published position is computed from the agreeing reports and belongs
+  /// to no single source.
+  CENTROID
+}
+
+/// Replayable provenance for ONE source's report of ONE facility, emission, or
+/// scheduled transmission.
+///
+/// Every source consulted gets its own entry, including sources that returned
+/// nothing, so a consumer can tell "not looked for" from "looked for and
+/// returned nothing". Source identity is DATA: PROVIDER_ID and AUTHORITY carry
+/// verbatim what that source states about itself.
+table TXSProvenance {
+  /// Publisher-stable, lowercase identifier for the consulted source, unique
+  /// within the publisher's own source registry. Never a display name and
+  /// never a URL.
+  PROVIDER_ID:string (required);
+  /// The authority under which that source publishes, verbatim as the source
+  /// states it: a spectrum regulator, an international coordination register,
+  /// a licensee, a monitoring service, or an observer compilation. Never
+  /// inferred by the publisher.
+  AUTHORITY:string;
+  /// Replayable URL identifying the source material.
+  SOURCE_URL:string;
+  /// The exact query, filter, or request parameters used, so the same rows can
+  /// be recovered by repeating the fetch.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Required: there is no encoding for a
+  /// redistributed record whose terms are unstated. A source that publishes no
+  /// terms is recorded as publishing no terms; unknown terms are never public
+  /// domain and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as that source publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use. Rides PER SOURCE because one record
+  /// may merge an open-terms lane beside a non-commercial cross-check, and the
+  /// strictest consulted lane governs any derived product.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// This source's own row, record, licence or file identifier, verbatim.
+  NATIVE_ID:string;
+  /// The class of authority this particular source speaks with about position.
+  /// Published per source because a record may merge a regulator lane with a
+  /// community lane; the record-level POSITION_AUTHORITY states which class the
+  /// PUBLISHED coordinate came from.
+  POSITION_AUTHORITY:txsPositionAuthorityClass = UNSPECIFIED;
+  /// Position this source reported, in decimal degrees on WGS 84, before
+  /// reconciliation. Retained unrounded so the merge stays auditable. Absent
+  /// when the source was consulted and reported no position.
+  REPORTED_LATITUDE:double;
+  REPORTED_LONGITUDE:double;
+  /// This source's report materially contributed to the published record.
+  /// False marks a source that was consulted and either returned nothing or
+  /// was outvoted; its entry is published either way.
+  CONTRIBUTED:bool = false;
+}
+
+/// How one facility's independent source reports were reduced to the single
+/// published position, and how strongly those reports agreed.
+///
+/// Agreement is CORROBORATION and is never authority: five compilations that
+/// copied one another agree perfectly and establish nothing. Read this table
+/// beside POSITION_AUTHORITY, never instead of it.
+table TXSConsensus {
+  METHOD:txsMergeMethod = UNSPECIFIED;
+  /// Sources queried for this facility, including those that returned nothing.
+  /// Never fewer than the number of SOURCES entries.
+  PROVIDERS_CONSULTED:uint;
+  /// Sources whose reported position fell within the publisher's agreement
+  /// threshold. A value of 1 means the published position rests on a single
+  /// report and was never independently corroborated.
+  PROVIDERS_AGREEING:uint;
+  /// Sources whose reported position fell OUTSIDE that threshold and were not
+  /// reconciled. Non-zero is the machine-readable form of a contested
+  /// position and is published alongside POSITION_DISPUTED.
+  PROVIDERS_DISAGREEING:uint;
+  /// PROVIDER_ID of the report the merge selected, copied verbatim from the
+  /// matching SOURCES entry. Absent when METHOD is CENTROID: a computed
+  /// position belongs to no single source.
+  WINNING_PROVIDER_ID:string;
+  /// Greatest surface distance in metres between any two agreeing reported
+  /// positions. Zero is meaningful only when PROVIDERS_AGREEING is 1.
+  POSITION_SPREAD_M:double;
+  /// The publisher's own confidence in the merged position, on [0,1]. Never a
+  /// source's figure and never a probability from a model this standard does
+  /// not name.
+  CONFIDENCE:double;
+  /// RFC 3339 UTC fixed-millisecond instant at which the merge was performed.
+  MERGED_AT:string;
+}
+
+/// A position the facility is asserted to have occupied and vacated, retained
+/// so a relocation never silently rewrites history.
+table TXSPriorPosition {
+  /// Decimal degrees on WGS 84.
+  LATITUDE:double;
+  LONGITUDE:double;
+  /// Class of authority behind THIS coordinate, which is frequently weaker
+  /// than the authority behind the current one.
+  POSITION_AUTHORITY:txsPositionAuthorityClass = UNSPECIFIED;
+  /// One-sigma-equivalent horizontal envelope in metres, as the source states
+  /// it. Zero means unpublished.
+  POSITION_UNCERTAINTY_M:double;
+  /// RFC 3339 UTC bounds over which the facility is asserted to have occupied
+  /// this position. Either bound is absent when unpublished.
+  VALID_FROM:string;
+  VALID_UNTIL:string;
+  /// PROVIDER_ID of the SOURCES entry asserting this position.
+  PROVIDER_ID:string;
+}
+
+/// One documented emission of one facility: a carrier or channel the facility
+/// is stated to radiate, with the power and antenna terms published for it.
+///
+/// A facility radiating many carriers carries many entries; a facility whose
+/// frequency changes by season or hour carries the documented set here and the
+/// time-bounded usage in `$STX`. Unknown terms are ABSENT.
+table TXSEmission {
+  /// Publisher-stable identifier for this emission within its facility record.
+  EMISSION_ID:string;
+  /// Assigned or nominal centre frequency in kilohertz. Kilohertz is the base
+  /// unit for this family because it spans the low-frequency broadcasting
+  /// allocations to the microwave allocations without unit switching; a
+  /// consumer joining to `$RFB` or `$TBS`, which carry megahertz, or to
+  /// `$IQC`, which carries hertz, converts at the join, explicitly. Zero means
+  /// unpublished.
+  FREQUENCY_KHZ:double;
+  /// Necessary or occupied bandwidth in kilohertz as the source states it.
+  /// Zero means unpublished.
+  BANDWIDTH_KHZ:double;
+  /// ITU emission designator verbatim, e.g. the necessary-bandwidth and
+  /// class-of-emission string a licence record carries. Authoritative over
+  /// MODULATION whenever both are present.
+  EMISSION_DESIGNATOR:string;
+  MODULATION:txsModulationClass = UNSPECIFIED;
+  POLARIZATION:txsPolarization = UNSPECIFIED;
+  /// Service class of THIS emission when it differs from the facility's.
+  SERVICE:txsServiceClass = UNSPECIFIED;
+  /// Transmitter output power at the antenna feed, kilowatts. Zero means
+  /// unpublished. Never derived from radiated power.
+  TRANSMITTER_POWER_KW:double;
+  /// Effective radiated power referenced to a half-wave dipole, kilowatts.
+  /// Zero means unpublished.
+  EFFECTIVE_RADIATED_POWER_KW:double;
+  /// Equivalent isotropically radiated power, kilowatts. Zero means
+  /// unpublished. Published alongside, never instead of, the dipole-referenced
+  /// figure: the two differ by the dipole gain and this standard never
+  /// converts between them.
+  EIRP_KW:double;
+  /// Antenna centre of radiation above ground level, metres. Zero means
+  /// unpublished.
+  ANTENNA_HEIGHT_AGL_M:double;
+  /// Main-lobe bearing, degrees clockwise from true north. Absent for a
+  /// non-directional emission; a non-directional emission is stated by
+  /// OMNIDIRECTIONAL, never by a bearing of zero.
+  ANTENNA_AZIMUTH_DEG:double;
+  /// The emission is radiated without a preferred bearing.
+  OMNIDIRECTIONAL:bool = false;
+  /// Half-power beamwidth in degrees. Zero means unpublished.
+  BEAMWIDTH_DEG:double;
+  /// Antenna gain in decibels referenced to an isotropic radiator. Zero means
+  /// unpublished; a real 0 dBi figure is published as a source term in
+  /// provenance rather than being indistinguishable from absence.
+  ANTENNA_GAIN_DBI:double;
+  /// Station identification radiated on this emission, verbatim: a callsign, a
+  /// spoken or keyed identifier, or the identity string the source publishes.
+  /// Never synthesized.
+  STATION_IDENTITY:string;
+  STATUS:txsOperationalStatus = UNSPECIFIED;
+  /// RFC 3339 UTC bounds of the authorization or documented use of this
+  /// emission. Either bound is absent when unpublished.
+  VALID_FROM:string;
+  VALID_UNTIL:string;
+}
+
+/// Terrestrial Transmitter Site.
+table TXS {
+  /// Publisher-stable identifier for this facility, unique within its record
+  /// set. Never a source's own identifier and never a coordinate string.
+  ID:string (required);
+  /// Winning source's native facility identifier, copied verbatim from the
+  /// SOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute
+  /// for ID and never stable across sources.
+  NATIVE_ID:string;
+  /// Facility or structure name verbatim when a source publishes one. Never
+  /// synthesized from coordinates, licensee, or nearest settlement.
+  SITE_NAME:string;
+  /// Station identification the facility as a whole answers to, verbatim: a
+  /// callsign, an assigned station identifier, or the identifier an observer
+  /// community records. Per-emission identity lives in
+  /// EMISSIONS[].STATION_IDENTITY.
+  STATION_IDENTITY:string;
+  /// Licensee, operator or responsible administration name verbatim as the
+  /// cited source states it. A display name, never an identifier: consumers
+  /// must not treat it as a stable key.
+  LICENSEE:string;
+  /// Licence, assignment or authorization identifier verbatim.
+  LICENSE_ID:string;
+  /// Primary service class of the facility. Individual emissions may state
+  /// their own.
+  SERVICE:txsServiceClass = UNSPECIFIED;
+  STATUS:txsOperationalStatus = UNSPECIFIED;
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the source states it.
+  COUNTRY_CODE:string;
+  /// Administrative subdivision or locality verbatim as the source states it.
+  ADMIN_AREA:string;
+  /// Published facility position, decimal degrees on WGS 84, produced by the
+  /// merge described in CONSENSUS. ABSENT when no source publishes a position:
+  /// a region centroid is never substituted. Per-source positions before
+  /// reconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and
+  /// are never overwritten by this value.
+  LATITUDE:double;
+  LONGITUDE:double;
+  /// The class of authority behind LATITUDE/LONGITUDE. A consumer that renders
+  /// a position without reading this field is rendering an unlabelled claim.
+  POSITION_AUTHORITY:txsPositionAuthorityClass = UNSPECIFIED;
+  /// Horizontal envelope in metres within which the facility is asserted to
+  /// lie, as the publisher states it. Zero means unpublished — never that the
+  /// position is exact.
+  POSITION_UNCERTAINTY_M:double;
+  /// Credible consulted sources place the facility in materially different
+  /// locations, or a source states the position is contested. The published
+  /// coordinate remains the publisher's best merge; this flag forbids a
+  /// consumer from presenting it as settled.
+  POSITION_DISPUTED:bool = false;
+  /// Positions the facility is asserted to have vacated, most recent first.
+  PRIOR_POSITIONS:[TXSPriorPosition];
+  /// Ground elevation at the facility, metres above mean sea level as the
+  /// source states it. Zero means unpublished.
+  GROUND_ELEVATION_AMSL_M:double;
+  /// Overall height of the antenna-supporting structure above ground level,
+  /// metres. Distinct from any emission's antenna height. Zero means
+  /// unpublished.
+  STRUCTURE_HEIGHT_AGL_M:double;
+  STRUCTURE:txsStructureClass = UNSPECIFIED;
+  /// Number of antenna-supporting structures at the facility. Zero means
+  /// unpublished.
+  STRUCTURE_COUNT:uint;
+  /// Every emission the facility is documented to radiate.
+  EMISSIONS:[TXSEmission];
+  /// RFC 3339 UTC fixed-millisecond bounds of the documentation or observation
+  /// window backing the published record.
+  FIRST_OBSERVED:string;
+  LAST_OBSERVED:string;
+  /// Every source consulted for this facility, including sources that returned
+  /// nothing. Required: a facility with no named sources is not publishable.
+  SOURCES:[TXSProvenance] (required);
+  /// How the entries in SOURCES were reduced to the published position.
+  /// Required: a published position always states the rule that produced it,
+  /// including SINGLE_SOURCE.
+  CONSENSUS:TXSConsensus (required);
+}
+
+root_type TXS;
+file_identifier "$TXS";

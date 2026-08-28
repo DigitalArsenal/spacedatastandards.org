@@ -144,9 +144,10 @@ describe("VCF vCard projection card schema", () => {
     );
     assert.equal(frozen.ordinals.VCF, 224);
 
-    // Appended at the end: no other member may share or exceed its ordinal.
+    // Appended, and never reused: ordinals are unique. VCF is NOT asserted to
+    // be the highest — later standards append above it, and a max-is-224 test
+    // fails on every future mint instead of on a real wire defect.
     const ordinals = Object.values(frozen.ordinals);
-    assert.equal(Math.max(...ordinals), 224);
     assert.equal(new Set(ordinals).size, ordinals.length);
 
     // ...and the union really carries it, in that position.
@@ -157,7 +158,7 @@ describe("VCF vCard projection card schema", () => {
       .map((entry) => entry.trim())
       .filter((entry) => /^[A-Z][A-Z0-9]{2}$/.test(entry));
     assert.equal(members.indexOf("VCF") + 1, 224);
-    assert.equal(members.length, 224);
+    assert.equal(members.length, Object.keys(frozen.ordinals).length);
   });
 
   it("emits JSON keys with the IDL's exact capitalization", async () => {

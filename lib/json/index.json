@@ -15891,6 +15891,474 @@
             },
             "$ref": "#/definitions/HFC"
         },
+        "TXS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "txsServiceClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LONG_WAVE_BROADCAST",
+                        "MEDIUM_WAVE_BROADCAST",
+                        "SHORT_WAVE_BROADCAST",
+                        "FM_SOUND_BROADCAST",
+                        "DIGITAL_SOUND_BROADCAST",
+                        "TELEVISION_BROADCAST",
+                        "MILITARY_FIXED",
+                        "UTILITY_FIXED",
+                        "AERONAUTICAL",
+                        "MARITIME",
+                        "PUBLIC_SAFETY_LAND_MOBILE",
+                        "LAND_MOBILE_PRIVATE",
+                        "AMATEUR",
+                        "TIME_AND_FREQUENCY_STANDARD",
+                        "RADIONAVIGATION",
+                        "RADIOLOCATION",
+                        "METEOROLOGICAL",
+                        "SPACE_OPERATIONS_UPLINK",
+                        "EXPERIMENTAL",
+                        "OTHER"
+                    ]
+                },
+                "txsPositionAuthorityClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "REGULATOR_PUBLISHED",
+                        "COORDINATION_FILING",
+                        "LICENSEE_PUBLISHED",
+                        "SURVEYED_INDEPENDENT",
+                        "DERIVED_FROM_IMAGERY",
+                        "INFERRED_FROM_OBSERVATION",
+                        "COMMUNITY_ASSERTED",
+                        "COMMUNITY_ASSERTED_HISTORICAL",
+                        "UNDISCLOSED"
+                    ]
+                },
+                "txsStructureClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GUYED_MAST",
+                        "SELF_SUPPORTING_TOWER",
+                        "MONOPOLE",
+                        "ROOFTOP_OR_BUILDING",
+                        "CURTAIN_ARRAY",
+                        "LOG_PERIODIC",
+                        "DIPOLE_OR_WIRE",
+                        "VERTICAL_RADIATOR",
+                        "DISH_REFLECTOR",
+                        "LOOP_OR_LOADED_ELEMENT",
+                        "UNDERGROUND_OR_CONCEALED",
+                        "TRANSPORTABLE",
+                        "OTHER"
+                    ]
+                },
+                "txsOperationalStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OPERATIONAL",
+                        "INTERMITTENT",
+                        "SILENT",
+                        "DECOMMISSIONED",
+                        "DEMOLISHED",
+                        "PLANNED",
+                        "RELOCATED"
+                    ]
+                },
+                "txsModulationClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "UNMODULATED_CARRIER",
+                        "ON_OFF_KEYED_CARRIER",
+                        "AMPLITUDE_DOUBLE_SIDEBAND",
+                        "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER",
+                        "AMPLITUDE_VESTIGIAL_SIDEBAND",
+                        "AMPLITUDE_INDEPENDENT_SIDEBAND",
+                        "FREQUENCY_MODULATION",
+                        "PHASE_MODULATION",
+                        "FREQUENCY_SHIFT_KEYING",
+                        "PHASE_SHIFT_KEYING",
+                        "QUADRATURE_AMPLITUDE",
+                        "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX",
+                        "PULSED",
+                        "SPREAD_SPECTRUM",
+                        "OTHER"
+                    ]
+                },
+                "txsPolarization": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "VERTICAL",
+                        "HORIZONTAL",
+                        "MIXED",
+                        "SLANT",
+                        "CIRCULAR_RIGHT_HAND",
+                        "CIRCULAR_LEFT_HAND",
+                        "ELLIPTICAL"
+                    ]
+                },
+                "txsMergeMethod": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SINGLE_SOURCE",
+                        "AUTHORITY_PRECEDENCE",
+                        "MOST_RECENT",
+                        "HIGHEST_SAMPLE_COUNT",
+                        "CENTROID"
+                    ]
+                },
+                "TXSProvenance": {
+                    "type": "object",
+                    "description": "Replayable provenance for ONE source's report of ONE facility, emission, or\nscheduled transmission.\n\nEvery source consulted gets its own entry, including sources that returned\nnothing, so a consumer can tell \"not looked for\" from \"looked for and\nreturned nothing\". Source identity is DATA: PROVIDER_ID and AUTHORITY carry\nverbatim what that source states about itself.",
+                    "properties": {
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier for the consulted source, unique\nwithin the publisher's own source registry. Never a display name and\nnever a URL."
+                        },
+                        "AUTHORITY": {
+                            "type": "string",
+                            "description": "The authority under which that source publishes, verbatim as the source\nstates it: a spectrum regulator, an international coordination register,\na licensee, a monitoring service, or an observer compilation. Never\ninferred by the publisher."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL identifying the source material."
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed record whose terms are unstated. A source that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the full licence text as that source publishes it."
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution text the licence requires a redistributor to display."
+                        },
+                        "NON_COMMERCIAL_ONLY": {
+                            "type": "boolean",
+                            "description": "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "This source's own row, record, licence or file identifier, verbatim."
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority this particular source speaks with about position.\nPublished per source because a record may merge a regulator lane with a\ncommunity lane; the record-level POSITION_AUTHORITY states which class the\nPUBLISHED coordinate came from."
+                        },
+                        "REPORTED_LATITUDE": {
+                            "type": "number",
+                            "description": "Position this source reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the source was consulted and reported no position."
+                        },
+                        "REPORTED_LONGITUDE": {
+                            "type": "number"
+                        },
+                        "CONTRIBUTED": {
+                            "type": "boolean",
+                            "description": "This source's report materially contributed to the published record.\nFalse marks a source that was consulted and either returned nothing or\nwas outvoted; its entry is published either way."
+                        }
+                    },
+                    "required": [
+                        "PROVIDER_ID",
+                        "RETRIEVED_AT",
+                        "LICENSE"
+                    ],
+                    "additionalProperties": false
+                },
+                "TXSConsensus": {
+                    "type": "object",
+                    "description": "How one facility's independent source reports were reduced to the single\npublished position, and how strongly those reports agreed.\n\nAgreement is CORROBORATION and is never authority: five compilations that\ncopied one another agree perfectly and establish nothing. Read this table\nbeside POSITION_AUTHORITY, never instead of it.",
+                    "properties": {
+                        "METHOD": {
+                            "$ref": "#/definitions/txsMergeMethod"
+                        },
+                        "PROVIDERS_CONSULTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources queried for this facility, including those that returned nothing.\nNever fewer than the number of SOURCES entries."
+                        },
+                        "PROVIDERS_AGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated."
+                        },
+                        "PROVIDERS_DISAGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell OUTSIDE that threshold and were not\nreconciled. Non-zero is the machine-readable form of a contested\nposition and is published alongside POSITION_DISPUTED."
+                        },
+                        "WINNING_PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single source."
+                        },
+                        "POSITION_SPREAD_M": {
+                            "type": "number",
+                            "description": "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1."
+                        },
+                        "CONFIDENCE": {
+                            "type": "number",
+                            "description": "The publisher's own confidence in the merged position, on [0,1]. Never a\nsource's figure and never a probability from a model this standard does\nnot name."
+                        },
+                        "MERGED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond instant at which the merge was performed."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSPriorPosition": {
+                    "type": "object",
+                    "description": "A position the facility is asserted to have occupied and vacated, retained\nso a relocation never silently rewrites history.",
+                    "properties": {
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Decimal degrees on WGS 84."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "Class of authority behind THIS coordinate, which is frequently weaker\nthan the authority behind the current one."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma-equivalent horizontal envelope in metres, as the source states\nit. Zero means unpublished."
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds over which the facility is asserted to have occupied\nthis position. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the SOURCES entry asserting this position."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSEmission": {
+                    "type": "object",
+                    "description": "One documented emission of one facility: a carrier or channel the facility\nis stated to radiate, with the power and antenna terms published for it.\n\nA facility radiating many carriers carries many entries; a facility whose\nfrequency changes by season or hour carries the documented set here and the\ntime-bounded usage in `$STX`. Unknown terms are ABSENT.",
+                    "properties": {
+                        "EMISSION_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this emission within its facility record."
+                        },
+                        "FREQUENCY_KHZ": {
+                            "type": "number",
+                            "description": "Assigned or nominal centre frequency in kilohertz. Kilohertz is the base\nunit for this family because it spans the low-frequency broadcasting\nallocations to the microwave allocations without unit switching; a\nconsumer joining to `$RFB` or `$TBS`, which carry megahertz, or to\n`$IQC`, which carries hertz, converts at the join, explicitly. Zero means\nunpublished."
+                        },
+                        "BANDWIDTH_KHZ": {
+                            "type": "number",
+                            "description": "Necessary or occupied bandwidth in kilohertz as the source states it.\nZero means unpublished."
+                        },
+                        "EMISSION_DESIGNATOR": {
+                            "type": "string",
+                            "description": "ITU emission designator verbatim, e.g. the necessary-bandwidth and\nclass-of-emission string a licence record carries. Authoritative over\nMODULATION whenever both are present."
+                        },
+                        "MODULATION": {
+                            "$ref": "#/definitions/txsModulationClass"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/txsPolarization"
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Service class of THIS emission when it differs from the facility's."
+                        },
+                        "TRANSMITTER_POWER_KW": {
+                            "type": "number",
+                            "description": "Transmitter output power at the antenna feed, kilowatts. Zero means\nunpublished. Never derived from radiated power."
+                        },
+                        "EFFECTIVE_RADIATED_POWER_KW": {
+                            "type": "number",
+                            "description": "Effective radiated power referenced to a half-wave dipole, kilowatts.\nZero means unpublished."
+                        },
+                        "EIRP_KW": {
+                            "type": "number",
+                            "description": "Equivalent isotropically radiated power, kilowatts. Zero means\nunpublished. Published alongside, never instead of, the dipole-referenced\nfigure: the two differ by the dipole gain and this standard never\nconverts between them."
+                        },
+                        "ANTENNA_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Antenna centre of radiation above ground level, metres. Zero means\nunpublished."
+                        },
+                        "ANTENNA_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Main-lobe bearing, degrees clockwise from true north. Absent for a\nnon-directional emission; a non-directional emission is stated by\nOMNIDIRECTIONAL, never by a bearing of zero."
+                        },
+                        "OMNIDIRECTIONAL": {
+                            "type": "boolean",
+                            "description": "The emission is radiated without a preferred bearing."
+                        },
+                        "BEAMWIDTH_DEG": {
+                            "type": "number",
+                            "description": "Half-power beamwidth in degrees. Zero means unpublished."
+                        },
+                        "ANTENNA_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Antenna gain in decibels referenced to an isotropic radiator. Zero means\nunpublished; a real 0 dBi figure is published as a source term in\nprovenance rather than being indistinguishable from absence."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification radiated on this emission, verbatim: a callsign, a\nspoken or keyed identifier, or the identity string the source publishes.\nNever synthesized."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds of the authorization or documented use of this\nemission. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXS": {
+                    "type": "object",
+                    "description": "Terrestrial Transmitter Site.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this facility, unique within its record\nset. Never a source's own identifier and never a coordinate string."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "Winning source's native facility identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across sources."
+                        },
+                        "SITE_NAME": {
+                            "type": "string",
+                            "description": "Facility or structure name verbatim when a source publishes one. Never\nsynthesized from coordinates, licensee, or nearest settlement."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification the facility as a whole answers to, verbatim: a\ncallsign, an assigned station identifier, or the identifier an observer\ncommunity records. Per-emission identity lives in\nEMISSIONS[].STATION_IDENTITY."
+                        },
+                        "LICENSEE": {
+                            "type": "string",
+                            "description": "Licensee, operator or responsible administration name verbatim as the\ncited source states it. A display name, never an identifier: consumers\nmust not treat it as a stable key."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Licence, assignment or authorization identifier verbatim."
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Primary service class of the facility. Individual emissions may state\ntheir own."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "COUNTRY_CODE": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it."
+                        },
+                        "ADMIN_AREA": {
+                            "type": "string",
+                            "description": "Administrative subdivision or locality verbatim as the source states it."
+                        },
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Published facility position, decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. ABSENT when no source publishes a position:\na region centroid is never substituted. Per-source positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority behind LATITUDE/LONGITUDE. A consumer that renders\na position without reading this field is rendering an unlabelled claim."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "Horizontal envelope in metres within which the facility is asserted to\nlie, as the publisher states it. Zero means unpublished \u2014 never that the\nposition is exact."
+                        },
+                        "POSITION_DISPUTED": {
+                            "type": "boolean",
+                            "description": "Credible consulted sources place the facility in materially different\nlocations, or a source states the position is contested. The published\ncoordinate remains the publisher's best merge; this flag forbids a\nconsumer from presenting it as settled."
+                        },
+                        "PRIOR_POSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSPriorPosition"
+                            },
+                            "description": "Positions the facility is asserted to have vacated, most recent first."
+                        },
+                        "GROUND_ELEVATION_AMSL_M": {
+                            "type": "number",
+                            "description": "Ground elevation at the facility, metres above mean sea level as the\nsource states it. Zero means unpublished."
+                        },
+                        "STRUCTURE_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Overall height of the antenna-supporting structure above ground level,\nmetres. Distinct from any emission's antenna height. Zero means\nunpublished."
+                        },
+                        "STRUCTURE": {
+                            "$ref": "#/definitions/txsStructureClass"
+                        },
+                        "STRUCTURE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of antenna-supporting structures at the facility. Zero means\nunpublished."
+                        },
+                        "EMISSIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSEmission"
+                            },
+                            "description": "Every emission the facility is documented to radiate."
+                        },
+                        "FIRST_OBSERVED": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond bounds of the documentation or observation\nwindow backing the published record."
+                        },
+                        "LAST_OBSERVED": {
+                            "type": "string"
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSProvenance"
+                            },
+                            "description": "Every source consulted for this facility, including sources that returned\nnothing. Required: a facility with no named sources is not publishable."
+                        },
+                        "CONSENSUS": {
+                            "$ref": "#/definitions/TXSConsensus",
+                            "description": "How the entries in SOURCES were reduced to the published position.\nRequired: a published position always states the rule that produced it,\nincluding SINGLE_SOURCE."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SOURCES",
+                        "CONSENSUS"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TXS"
+        },
         "CVP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -34455,6 +34923,671 @@
                 }
             },
             "$ref": "#/definitions/GEO"
+        },
+        "STX": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "txsServiceClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LONG_WAVE_BROADCAST",
+                        "MEDIUM_WAVE_BROADCAST",
+                        "SHORT_WAVE_BROADCAST",
+                        "FM_SOUND_BROADCAST",
+                        "DIGITAL_SOUND_BROADCAST",
+                        "TELEVISION_BROADCAST",
+                        "MILITARY_FIXED",
+                        "UTILITY_FIXED",
+                        "AERONAUTICAL",
+                        "MARITIME",
+                        "PUBLIC_SAFETY_LAND_MOBILE",
+                        "LAND_MOBILE_PRIVATE",
+                        "AMATEUR",
+                        "TIME_AND_FREQUENCY_STANDARD",
+                        "RADIONAVIGATION",
+                        "RADIOLOCATION",
+                        "METEOROLOGICAL",
+                        "SPACE_OPERATIONS_UPLINK",
+                        "EXPERIMENTAL",
+                        "OTHER"
+                    ]
+                },
+                "txsPositionAuthorityClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "REGULATOR_PUBLISHED",
+                        "COORDINATION_FILING",
+                        "LICENSEE_PUBLISHED",
+                        "SURVEYED_INDEPENDENT",
+                        "DERIVED_FROM_IMAGERY",
+                        "INFERRED_FROM_OBSERVATION",
+                        "COMMUNITY_ASSERTED",
+                        "COMMUNITY_ASSERTED_HISTORICAL",
+                        "UNDISCLOSED"
+                    ]
+                },
+                "txsStructureClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GUYED_MAST",
+                        "SELF_SUPPORTING_TOWER",
+                        "MONOPOLE",
+                        "ROOFTOP_OR_BUILDING",
+                        "CURTAIN_ARRAY",
+                        "LOG_PERIODIC",
+                        "DIPOLE_OR_WIRE",
+                        "VERTICAL_RADIATOR",
+                        "DISH_REFLECTOR",
+                        "LOOP_OR_LOADED_ELEMENT",
+                        "UNDERGROUND_OR_CONCEALED",
+                        "TRANSPORTABLE",
+                        "OTHER"
+                    ]
+                },
+                "txsOperationalStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OPERATIONAL",
+                        "INTERMITTENT",
+                        "SILENT",
+                        "DECOMMISSIONED",
+                        "DEMOLISHED",
+                        "PLANNED",
+                        "RELOCATED"
+                    ]
+                },
+                "txsModulationClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "UNMODULATED_CARRIER",
+                        "ON_OFF_KEYED_CARRIER",
+                        "AMPLITUDE_DOUBLE_SIDEBAND",
+                        "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER",
+                        "AMPLITUDE_VESTIGIAL_SIDEBAND",
+                        "AMPLITUDE_INDEPENDENT_SIDEBAND",
+                        "FREQUENCY_MODULATION",
+                        "PHASE_MODULATION",
+                        "FREQUENCY_SHIFT_KEYING",
+                        "PHASE_SHIFT_KEYING",
+                        "QUADRATURE_AMPLITUDE",
+                        "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX",
+                        "PULSED",
+                        "SPREAD_SPECTRUM",
+                        "OTHER"
+                    ]
+                },
+                "txsPolarization": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "VERTICAL",
+                        "HORIZONTAL",
+                        "MIXED",
+                        "SLANT",
+                        "CIRCULAR_RIGHT_HAND",
+                        "CIRCULAR_LEFT_HAND",
+                        "ELLIPTICAL"
+                    ]
+                },
+                "txsMergeMethod": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SINGLE_SOURCE",
+                        "AUTHORITY_PRECEDENCE",
+                        "MOST_RECENT",
+                        "HIGHEST_SAMPLE_COUNT",
+                        "CENTROID"
+                    ]
+                },
+                "stxDayMask": {
+                    "type": "string",
+                    "enum": [
+                        "MONDAY",
+                        "TUESDAY",
+                        "WEDNESDAY",
+                        "THURSDAY",
+                        "FRIDAY",
+                        "SATURDAY",
+                        "SUNDAY"
+                    ]
+                },
+                "stxScheduleAuthorityClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "COORDINATION_REGISTER",
+                        "REGULATOR_PUBLISHED",
+                        "BROADCASTER_PUBLISHED",
+                        "MONITORING_OBSERVATION",
+                        "COMMUNITY_COMPILED"
+                    ]
+                },
+                "stxScheduleStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "REGISTERED",
+                        "ACTIVE",
+                        "PROVISIONAL",
+                        "UNCONFIRMED",
+                        "INACTIVE",
+                        "CANCELLED",
+                        "OBSERVED_ONLY"
+                    ]
+                },
+                "stxContentClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SOUND_PROGRAMME",
+                        "TELEVISION_PROGRAMME",
+                        "DIGITAL_MULTIPLEX",
+                        "BEACON_OR_MARKER",
+                        "FORMATTED_NUMERIC_OR_VOICE",
+                        "DATA_OR_TELEMETRY",
+                        "TIME_SIGNAL",
+                        "SERVICE_BULLETIN",
+                        "OTHER"
+                    ]
+                },
+                "TXSProvenance": {
+                    "type": "object",
+                    "description": "Replayable provenance for ONE source's report of ONE facility, emission, or\nscheduled transmission.\n\nEvery source consulted gets its own entry, including sources that returned\nnothing, so a consumer can tell \"not looked for\" from \"looked for and\nreturned nothing\". Source identity is DATA: PROVIDER_ID and AUTHORITY carry\nverbatim what that source states about itself.",
+                    "properties": {
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier for the consulted source, unique\nwithin the publisher's own source registry. Never a display name and\nnever a URL."
+                        },
+                        "AUTHORITY": {
+                            "type": "string",
+                            "description": "The authority under which that source publishes, verbatim as the source\nstates it: a spectrum regulator, an international coordination register,\na licensee, a monitoring service, or an observer compilation. Never\ninferred by the publisher."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL identifying the source material."
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed record whose terms are unstated. A source that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the full licence text as that source publishes it."
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution text the licence requires a redistributor to display."
+                        },
+                        "NON_COMMERCIAL_ONLY": {
+                            "type": "boolean",
+                            "description": "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "This source's own row, record, licence or file identifier, verbatim."
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority this particular source speaks with about position.\nPublished per source because a record may merge a regulator lane with a\ncommunity lane; the record-level POSITION_AUTHORITY states which class the\nPUBLISHED coordinate came from."
+                        },
+                        "REPORTED_LATITUDE": {
+                            "type": "number",
+                            "description": "Position this source reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the source was consulted and reported no position."
+                        },
+                        "REPORTED_LONGITUDE": {
+                            "type": "number"
+                        },
+                        "CONTRIBUTED": {
+                            "type": "boolean",
+                            "description": "This source's report materially contributed to the published record.\nFalse marks a source that was consulted and either returned nothing or\nwas outvoted; its entry is published either way."
+                        }
+                    },
+                    "required": [
+                        "PROVIDER_ID",
+                        "RETRIEVED_AT",
+                        "LICENSE"
+                    ],
+                    "additionalProperties": false
+                },
+                "TXSConsensus": {
+                    "type": "object",
+                    "description": "How one facility's independent source reports were reduced to the single\npublished position, and how strongly those reports agreed.\n\nAgreement is CORROBORATION and is never authority: five compilations that\ncopied one another agree perfectly and establish nothing. Read this table\nbeside POSITION_AUTHORITY, never instead of it.",
+                    "properties": {
+                        "METHOD": {
+                            "$ref": "#/definitions/txsMergeMethod"
+                        },
+                        "PROVIDERS_CONSULTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources queried for this facility, including those that returned nothing.\nNever fewer than the number of SOURCES entries."
+                        },
+                        "PROVIDERS_AGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated."
+                        },
+                        "PROVIDERS_DISAGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell OUTSIDE that threshold and were not\nreconciled. Non-zero is the machine-readable form of a contested\nposition and is published alongside POSITION_DISPUTED."
+                        },
+                        "WINNING_PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single source."
+                        },
+                        "POSITION_SPREAD_M": {
+                            "type": "number",
+                            "description": "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1."
+                        },
+                        "CONFIDENCE": {
+                            "type": "number",
+                            "description": "The publisher's own confidence in the merged position, on [0,1]. Never a\nsource's figure and never a probability from a model this standard does\nnot name."
+                        },
+                        "MERGED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond instant at which the merge was performed."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSPriorPosition": {
+                    "type": "object",
+                    "description": "A position the facility is asserted to have occupied and vacated, retained\nso a relocation never silently rewrites history.",
+                    "properties": {
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Decimal degrees on WGS 84."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "Class of authority behind THIS coordinate, which is frequently weaker\nthan the authority behind the current one."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma-equivalent horizontal envelope in metres, as the source states\nit. Zero means unpublished."
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds over which the facility is asserted to have occupied\nthis position. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the SOURCES entry asserting this position."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSEmission": {
+                    "type": "object",
+                    "description": "One documented emission of one facility: a carrier or channel the facility\nis stated to radiate, with the power and antenna terms published for it.\n\nA facility radiating many carriers carries many entries; a facility whose\nfrequency changes by season or hour carries the documented set here and the\ntime-bounded usage in `$STX`. Unknown terms are ABSENT.",
+                    "properties": {
+                        "EMISSION_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this emission within its facility record."
+                        },
+                        "FREQUENCY_KHZ": {
+                            "type": "number",
+                            "description": "Assigned or nominal centre frequency in kilohertz. Kilohertz is the base\nunit for this family because it spans the low-frequency broadcasting\nallocations to the microwave allocations without unit switching; a\nconsumer joining to `$RFB` or `$TBS`, which carry megahertz, or to\n`$IQC`, which carries hertz, converts at the join, explicitly. Zero means\nunpublished."
+                        },
+                        "BANDWIDTH_KHZ": {
+                            "type": "number",
+                            "description": "Necessary or occupied bandwidth in kilohertz as the source states it.\nZero means unpublished."
+                        },
+                        "EMISSION_DESIGNATOR": {
+                            "type": "string",
+                            "description": "ITU emission designator verbatim, e.g. the necessary-bandwidth and\nclass-of-emission string a licence record carries. Authoritative over\nMODULATION whenever both are present."
+                        },
+                        "MODULATION": {
+                            "$ref": "#/definitions/txsModulationClass"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/txsPolarization"
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Service class of THIS emission when it differs from the facility's."
+                        },
+                        "TRANSMITTER_POWER_KW": {
+                            "type": "number",
+                            "description": "Transmitter output power at the antenna feed, kilowatts. Zero means\nunpublished. Never derived from radiated power."
+                        },
+                        "EFFECTIVE_RADIATED_POWER_KW": {
+                            "type": "number",
+                            "description": "Effective radiated power referenced to a half-wave dipole, kilowatts.\nZero means unpublished."
+                        },
+                        "EIRP_KW": {
+                            "type": "number",
+                            "description": "Equivalent isotropically radiated power, kilowatts. Zero means\nunpublished. Published alongside, never instead of, the dipole-referenced\nfigure: the two differ by the dipole gain and this standard never\nconverts between them."
+                        },
+                        "ANTENNA_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Antenna centre of radiation above ground level, metres. Zero means\nunpublished."
+                        },
+                        "ANTENNA_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Main-lobe bearing, degrees clockwise from true north. Absent for a\nnon-directional emission; a non-directional emission is stated by\nOMNIDIRECTIONAL, never by a bearing of zero."
+                        },
+                        "OMNIDIRECTIONAL": {
+                            "type": "boolean",
+                            "description": "The emission is radiated without a preferred bearing."
+                        },
+                        "BEAMWIDTH_DEG": {
+                            "type": "number",
+                            "description": "Half-power beamwidth in degrees. Zero means unpublished."
+                        },
+                        "ANTENNA_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Antenna gain in decibels referenced to an isotropic radiator. Zero means\nunpublished; a real 0 dBi figure is published as a source term in\nprovenance rather than being indistinguishable from absence."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification radiated on this emission, verbatim: a callsign, a\nspoken or keyed identifier, or the identity string the source publishes.\nNever synthesized."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds of the authorization or documented use of this\nemission. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXS": {
+                    "type": "object",
+                    "description": "Terrestrial Transmitter Site.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this facility, unique within its record\nset. Never a source's own identifier and never a coordinate string."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "Winning source's native facility identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across sources."
+                        },
+                        "SITE_NAME": {
+                            "type": "string",
+                            "description": "Facility or structure name verbatim when a source publishes one. Never\nsynthesized from coordinates, licensee, or nearest settlement."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification the facility as a whole answers to, verbatim: a\ncallsign, an assigned station identifier, or the identifier an observer\ncommunity records. Per-emission identity lives in\nEMISSIONS[].STATION_IDENTITY."
+                        },
+                        "LICENSEE": {
+                            "type": "string",
+                            "description": "Licensee, operator or responsible administration name verbatim as the\ncited source states it. A display name, never an identifier: consumers\nmust not treat it as a stable key."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Licence, assignment or authorization identifier verbatim."
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Primary service class of the facility. Individual emissions may state\ntheir own."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "COUNTRY_CODE": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it."
+                        },
+                        "ADMIN_AREA": {
+                            "type": "string",
+                            "description": "Administrative subdivision or locality verbatim as the source states it."
+                        },
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Published facility position, decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. ABSENT when no source publishes a position:\na region centroid is never substituted. Per-source positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority behind LATITUDE/LONGITUDE. A consumer that renders\na position without reading this field is rendering an unlabelled claim."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "Horizontal envelope in metres within which the facility is asserted to\nlie, as the publisher states it. Zero means unpublished \u2014 never that the\nposition is exact."
+                        },
+                        "POSITION_DISPUTED": {
+                            "type": "boolean",
+                            "description": "Credible consulted sources place the facility in materially different\nlocations, or a source states the position is contested. The published\ncoordinate remains the publisher's best merge; this flag forbids a\nconsumer from presenting it as settled."
+                        },
+                        "PRIOR_POSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSPriorPosition"
+                            },
+                            "description": "Positions the facility is asserted to have vacated, most recent first."
+                        },
+                        "GROUND_ELEVATION_AMSL_M": {
+                            "type": "number",
+                            "description": "Ground elevation at the facility, metres above mean sea level as the\nsource states it. Zero means unpublished."
+                        },
+                        "STRUCTURE_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Overall height of the antenna-supporting structure above ground level,\nmetres. Distinct from any emission's antenna height. Zero means\nunpublished."
+                        },
+                        "STRUCTURE": {
+                            "$ref": "#/definitions/txsStructureClass"
+                        },
+                        "STRUCTURE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of antenna-supporting structures at the facility. Zero means\nunpublished."
+                        },
+                        "EMISSIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSEmission"
+                            },
+                            "description": "Every emission the facility is documented to radiate."
+                        },
+                        "FIRST_OBSERVED": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond bounds of the documentation or observation\nwindow backing the published record."
+                        },
+                        "LAST_OBSERVED": {
+                            "type": "string"
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSProvenance"
+                            },
+                            "description": "Every source consulted for this facility, including sources that returned\nnothing. Required: a facility with no named sources is not publishable."
+                        },
+                        "CONSENSUS": {
+                            "$ref": "#/definitions/TXSConsensus",
+                            "description": "How the entries in SOURCES were reduced to the published position.\nRequired: a published position always states the rule that produced it,\nincluding SINGLE_SOURCE."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SOURCES",
+                        "CONSENSUS"
+                    ],
+                    "additionalProperties": false
+                },
+                "STX": {
+                    "type": "object",
+                    "description": "Scheduled Transmission.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this schedule row, unique within its\nrecord set."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "`$TXS`.ID of the facility radiating this transmission. ABSENT when the\noriginating facility is unidentified or disputed; a row is publishable\nwithout one and a consumer must not fabricate a join."
+                        },
+                        "SITE_NATIVE_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the transmitting facility, verbatim \u2014\na register site code or a compilation's site abbreviation. Retained so a\nrow whose SITE_ID could not be resolved is still traceable."
+                        },
+                        "STATION_NAME": {
+                            "type": "string",
+                            "description": "Station or service name verbatim as the source states it. A display name,\nnever an identifier."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification radiated on this transmission, verbatim: a\ncallsign, a keyed or spoken identifier, or the identity string the source\npublishes. Never synthesized and never inferred from frequency."
+                        },
+                        "FREQUENCY_KHZ": {
+                            "type": "number",
+                            "description": "Assigned frequency in kilohertz, following the `$TXS` convention. Zero\nmeans unpublished; a row whose frequency is unpublished is a facility\nrecord, not a schedule row."
+                        },
+                        "BANDWIDTH_KHZ": {
+                            "type": "number",
+                            "description": "Necessary or occupied bandwidth in kilohertz when the source states one\nfor this transmission. Zero means unpublished."
+                        },
+                        "EMISSION_DESIGNATOR": {
+                            "type": "string",
+                            "description": "ITU emission designator verbatim. Authoritative over MODULATION whenever\nboth are present."
+                        },
+                        "MODULATION": {
+                            "$ref": "#/definitions/txsModulationClass"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/txsPolarization"
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass"
+                        },
+                        "CONTENT": {
+                            "$ref": "#/definitions/stxContentClass"
+                        },
+                        "TIME_START_UTC": {
+                            "type": "string",
+                            "description": "Daily on-air window in Coordinated Universal Time, as four decimal digits\n\"HHMM\". A window whose stop is not later than its start crosses midnight\nand is read as continuing into the following day. Strings because the\nregister form is four digits with significant leading zeros and no date;\nan integer would invite a consumer to treat 0000 as absence."
+                        },
+                        "TIME_STOP_UTC": {
+                            "type": "string"
+                        },
+                        "DAYS": {
+                            "$ref": "#/definitions/stxDayMask",
+                            "description": "Days on which the window runs. An unset field means the source publishes\nno day pattern."
+                        },
+                        "IRREGULAR": {
+                            "type": "boolean",
+                            "description": "The transmission runs without a fixed daily window \u2014 as required, on\noccurrence, or continuously. TIME_START_UTC and TIME_STOP_UTC are absent\nin that case and are never filled with 0000/2400 to stand in for it."
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds over which this row is valid \u2014 the seasonal or\nlicence period. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        },
+                        "SEASON": {
+                            "type": "string",
+                            "description": "The source's own name for the validity period, verbatim: a season code, a\nschedule edition, or a period label. Never parsed into VALID_FROM by this\nstandard."
+                        },
+                        "TARGET_AREA": {
+                            "type": "string",
+                            "description": "Target area verbatim as the source states it, including its own zone or\nregion notation."
+                        },
+                        "TARGET_ZONES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Individual target zone identifiers verbatim when the source publishes a\nlist, one entry per zone, in source order."
+                        },
+                        "LANGUAGE": {
+                            "type": "string",
+                            "description": "Language of the transmission. A BCP 47 tag when the source publishes one;\notherwise the source's own language term verbatim, never translated and\nnever guessed from the target area."
+                        },
+                        "TRANSMITTER_POWER_KW": {
+                            "type": "number",
+                            "description": "Transmitter output power for this transmission, kilowatts. Zero means\nunpublished."
+                        },
+                        "ANTENNA_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Main-lobe bearing for this transmission, degrees clockwise from true\nnorth. Absent for a non-directional transmission, which is stated by\nOMNIDIRECTIONAL and never by a bearing of zero."
+                        },
+                        "ANTENNA_AZIMUTH_SECONDARY_DEG": {
+                            "type": "number",
+                            "description": "Secondary lobe bearing when the source publishes a slewed or dual-beam\nantenna, degrees clockwise from true north."
+                        },
+                        "OMNIDIRECTIONAL": {
+                            "type": "boolean",
+                            "description": "The transmission is radiated without a preferred bearing."
+                        },
+                        "ANTENNA_DESIGNATION": {
+                            "type": "string",
+                            "description": "Antenna designation verbatim as the source states it \u2014 a curtain-array\ncode, an antenna number, or a pattern identifier."
+                        },
+                        "EMISSION_ID": {
+                            "type": "string",
+                            "description": "`$TXS`.EMISSIONS[].EMISSION_ID this row exercises, when the facility\nrecord enumerates it."
+                        },
+                        "AUTHORITY": {
+                            "$ref": "#/definitions/stxScheduleAuthorityClass"
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/stxScheduleStatus"
+                        },
+                        "FIRST_OBSERVED": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe row, when observers rather than a register established it."
+                        },
+                        "LAST_OBSERVED": {
+                            "type": "string"
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Independent observation reports behind the row. Zero means the source\npublishes no count, never that the transmission was never heard."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSProvenance"
+                            },
+                            "description": "Every source consulted for this row, including sources that returned\nnothing. Required: a schedule row with no named sources is not\npublishable. The provenance table is the one this family already\npublishes in `$TXS`; a schedule row and a facility carry provenance of\nthe same shape and are frequently reconciled from the same fetch."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SOURCES"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/STX"
         },
         "PKB": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -55393,6 +56526,177 @@
                         "PRM"
                     ]
                 },
+                "txsServiceClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LONG_WAVE_BROADCAST",
+                        "MEDIUM_WAVE_BROADCAST",
+                        "SHORT_WAVE_BROADCAST",
+                        "FM_SOUND_BROADCAST",
+                        "DIGITAL_SOUND_BROADCAST",
+                        "TELEVISION_BROADCAST",
+                        "MILITARY_FIXED",
+                        "UTILITY_FIXED",
+                        "AERONAUTICAL",
+                        "MARITIME",
+                        "PUBLIC_SAFETY_LAND_MOBILE",
+                        "LAND_MOBILE_PRIVATE",
+                        "AMATEUR",
+                        "TIME_AND_FREQUENCY_STANDARD",
+                        "RADIONAVIGATION",
+                        "RADIOLOCATION",
+                        "METEOROLOGICAL",
+                        "SPACE_OPERATIONS_UPLINK",
+                        "EXPERIMENTAL",
+                        "OTHER"
+                    ]
+                },
+                "txsPositionAuthorityClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "REGULATOR_PUBLISHED",
+                        "COORDINATION_FILING",
+                        "LICENSEE_PUBLISHED",
+                        "SURVEYED_INDEPENDENT",
+                        "DERIVED_FROM_IMAGERY",
+                        "INFERRED_FROM_OBSERVATION",
+                        "COMMUNITY_ASSERTED",
+                        "COMMUNITY_ASSERTED_HISTORICAL",
+                        "UNDISCLOSED"
+                    ]
+                },
+                "txsStructureClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GUYED_MAST",
+                        "SELF_SUPPORTING_TOWER",
+                        "MONOPOLE",
+                        "ROOFTOP_OR_BUILDING",
+                        "CURTAIN_ARRAY",
+                        "LOG_PERIODIC",
+                        "DIPOLE_OR_WIRE",
+                        "VERTICAL_RADIATOR",
+                        "DISH_REFLECTOR",
+                        "LOOP_OR_LOADED_ELEMENT",
+                        "UNDERGROUND_OR_CONCEALED",
+                        "TRANSPORTABLE",
+                        "OTHER"
+                    ]
+                },
+                "txsOperationalStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OPERATIONAL",
+                        "INTERMITTENT",
+                        "SILENT",
+                        "DECOMMISSIONED",
+                        "DEMOLISHED",
+                        "PLANNED",
+                        "RELOCATED"
+                    ]
+                },
+                "txsModulationClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "UNMODULATED_CARRIER",
+                        "ON_OFF_KEYED_CARRIER",
+                        "AMPLITUDE_DOUBLE_SIDEBAND",
+                        "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER",
+                        "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER",
+                        "AMPLITUDE_VESTIGIAL_SIDEBAND",
+                        "AMPLITUDE_INDEPENDENT_SIDEBAND",
+                        "FREQUENCY_MODULATION",
+                        "PHASE_MODULATION",
+                        "FREQUENCY_SHIFT_KEYING",
+                        "PHASE_SHIFT_KEYING",
+                        "QUADRATURE_AMPLITUDE",
+                        "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX",
+                        "PULSED",
+                        "SPREAD_SPECTRUM",
+                        "OTHER"
+                    ]
+                },
+                "txsPolarization": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "VERTICAL",
+                        "HORIZONTAL",
+                        "MIXED",
+                        "SLANT",
+                        "CIRCULAR_RIGHT_HAND",
+                        "CIRCULAR_LEFT_HAND",
+                        "ELLIPTICAL"
+                    ]
+                },
+                "txsMergeMethod": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SINGLE_SOURCE",
+                        "AUTHORITY_PRECEDENCE",
+                        "MOST_RECENT",
+                        "HIGHEST_SAMPLE_COUNT",
+                        "CENTROID"
+                    ]
+                },
+                "stxDayMask": {
+                    "type": "string",
+                    "enum": [
+                        "MONDAY",
+                        "TUESDAY",
+                        "WEDNESDAY",
+                        "THURSDAY",
+                        "FRIDAY",
+                        "SATURDAY",
+                        "SUNDAY"
+                    ]
+                },
+                "stxScheduleAuthorityClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "COORDINATION_REGISTER",
+                        "REGULATOR_PUBLISHED",
+                        "BROADCASTER_PUBLISHED",
+                        "MONITORING_OBSERVATION",
+                        "COMMUNITY_COMPILED"
+                    ]
+                },
+                "stxScheduleStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "REGISTERED",
+                        "ACTIVE",
+                        "PROVISIONAL",
+                        "UNCONFIRMED",
+                        "INACTIVE",
+                        "CANCELLED",
+                        "OBSERVED_ONLY"
+                    ]
+                },
+                "stxContentClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SOUND_PROGRAMME",
+                        "TELEVISION_PROGRAMME",
+                        "DIGITAL_MULTIPLEX",
+                        "BEACON_OR_MARKER",
+                        "FORMATTED_NUMERIC_OR_VOICE",
+                        "DATA_OR_TELEMETRY",
+                        "TIME_SIGNAL",
+                        "SERVICE_BULLETIN",
+                        "OTHER"
+                    ]
+                },
                 "recurringChargeMethod": {
                     "type": "string",
                     "enum": [
@@ -56362,7 +57666,9 @@
                         "PAP",
                         "RSD",
                         "IRM",
-                        "VCF"
+                        "VCF",
+                        "STX",
+                        "TXS"
                     ]
                 },
                 "LKS": {
@@ -93141,6 +94447,494 @@
                     },
                     "additionalProperties": false
                 },
+                "TXSProvenance": {
+                    "type": "object",
+                    "description": "Replayable provenance for ONE source's report of ONE facility, emission, or\nscheduled transmission.\n\nEvery source consulted gets its own entry, including sources that returned\nnothing, so a consumer can tell \"not looked for\" from \"looked for and\nreturned nothing\". Source identity is DATA: PROVIDER_ID and AUTHORITY carry\nverbatim what that source states about itself.",
+                    "properties": {
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier for the consulted source, unique\nwithin the publisher's own source registry. Never a display name and\nnever a URL."
+                        },
+                        "AUTHORITY": {
+                            "type": "string",
+                            "description": "The authority under which that source publishes, verbatim as the source\nstates it: a spectrum regulator, an international coordination register,\na licensee, a monitoring service, or an observer compilation. Never\ninferred by the publisher."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL identifying the source material."
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed record whose terms are unstated. A source that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the full licence text as that source publishes it."
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution text the licence requires a redistributor to display."
+                        },
+                        "NON_COMMERCIAL_ONLY": {
+                            "type": "boolean",
+                            "description": "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "This source's own row, record, licence or file identifier, verbatim."
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority this particular source speaks with about position.\nPublished per source because a record may merge a regulator lane with a\ncommunity lane; the record-level POSITION_AUTHORITY states which class the\nPUBLISHED coordinate came from."
+                        },
+                        "REPORTED_LATITUDE": {
+                            "type": "number",
+                            "description": "Position this source reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the source was consulted and reported no position."
+                        },
+                        "REPORTED_LONGITUDE": {
+                            "type": "number"
+                        },
+                        "CONTRIBUTED": {
+                            "type": "boolean",
+                            "description": "This source's report materially contributed to the published record.\nFalse marks a source that was consulted and either returned nothing or\nwas outvoted; its entry is published either way."
+                        }
+                    },
+                    "required": [
+                        "PROVIDER_ID",
+                        "RETRIEVED_AT",
+                        "LICENSE"
+                    ],
+                    "additionalProperties": false
+                },
+                "TXSConsensus": {
+                    "type": "object",
+                    "description": "How one facility's independent source reports were reduced to the single\npublished position, and how strongly those reports agreed.\n\nAgreement is CORROBORATION and is never authority: five compilations that\ncopied one another agree perfectly and establish nothing. Read this table\nbeside POSITION_AUTHORITY, never instead of it.",
+                    "properties": {
+                        "METHOD": {
+                            "$ref": "#/definitions/txsMergeMethod"
+                        },
+                        "PROVIDERS_CONSULTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources queried for this facility, including those that returned nothing.\nNever fewer than the number of SOURCES entries."
+                        },
+                        "PROVIDERS_AGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated."
+                        },
+                        "PROVIDERS_DISAGREEING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sources whose reported position fell OUTSIDE that threshold and were not\nreconciled. Non-zero is the machine-readable form of a contested\nposition and is published alongside POSITION_DISPUTED."
+                        },
+                        "WINNING_PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single source."
+                        },
+                        "POSITION_SPREAD_M": {
+                            "type": "number",
+                            "description": "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1."
+                        },
+                        "CONFIDENCE": {
+                            "type": "number",
+                            "description": "The publisher's own confidence in the merged position, on [0,1]. Never a\nsource's figure and never a probability from a model this standard does\nnot name."
+                        },
+                        "MERGED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond instant at which the merge was performed."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSPriorPosition": {
+                    "type": "object",
+                    "description": "A position the facility is asserted to have occupied and vacated, retained\nso a relocation never silently rewrites history.",
+                    "properties": {
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Decimal degrees on WGS 84."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "Class of authority behind THIS coordinate, which is frequently weaker\nthan the authority behind the current one."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma-equivalent horizontal envelope in metres, as the source states\nit. Zero means unpublished."
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds over which the facility is asserted to have occupied\nthis position. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "PROVIDER_ID of the SOURCES entry asserting this position."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXSEmission": {
+                    "type": "object",
+                    "description": "One documented emission of one facility: a carrier or channel the facility\nis stated to radiate, with the power and antenna terms published for it.\n\nA facility radiating many carriers carries many entries; a facility whose\nfrequency changes by season or hour carries the documented set here and the\ntime-bounded usage in `$STX`. Unknown terms are ABSENT.",
+                    "properties": {
+                        "EMISSION_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this emission within its facility record."
+                        },
+                        "FREQUENCY_KHZ": {
+                            "type": "number",
+                            "description": "Assigned or nominal centre frequency in kilohertz. Kilohertz is the base\nunit for this family because it spans the low-frequency broadcasting\nallocations to the microwave allocations without unit switching; a\nconsumer joining to `$RFB` or `$TBS`, which carry megahertz, or to\n`$IQC`, which carries hertz, converts at the join, explicitly. Zero means\nunpublished."
+                        },
+                        "BANDWIDTH_KHZ": {
+                            "type": "number",
+                            "description": "Necessary or occupied bandwidth in kilohertz as the source states it.\nZero means unpublished."
+                        },
+                        "EMISSION_DESIGNATOR": {
+                            "type": "string",
+                            "description": "ITU emission designator verbatim, e.g. the necessary-bandwidth and\nclass-of-emission string a licence record carries. Authoritative over\nMODULATION whenever both are present."
+                        },
+                        "MODULATION": {
+                            "$ref": "#/definitions/txsModulationClass"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/txsPolarization"
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Service class of THIS emission when it differs from the facility's."
+                        },
+                        "TRANSMITTER_POWER_KW": {
+                            "type": "number",
+                            "description": "Transmitter output power at the antenna feed, kilowatts. Zero means\nunpublished. Never derived from radiated power."
+                        },
+                        "EFFECTIVE_RADIATED_POWER_KW": {
+                            "type": "number",
+                            "description": "Effective radiated power referenced to a half-wave dipole, kilowatts.\nZero means unpublished."
+                        },
+                        "EIRP_KW": {
+                            "type": "number",
+                            "description": "Equivalent isotropically radiated power, kilowatts. Zero means\nunpublished. Published alongside, never instead of, the dipole-referenced\nfigure: the two differ by the dipole gain and this standard never\nconverts between them."
+                        },
+                        "ANTENNA_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Antenna centre of radiation above ground level, metres. Zero means\nunpublished."
+                        },
+                        "ANTENNA_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Main-lobe bearing, degrees clockwise from true north. Absent for a\nnon-directional emission; a non-directional emission is stated by\nOMNIDIRECTIONAL, never by a bearing of zero."
+                        },
+                        "OMNIDIRECTIONAL": {
+                            "type": "boolean",
+                            "description": "The emission is radiated without a preferred bearing."
+                        },
+                        "BEAMWIDTH_DEG": {
+                            "type": "number",
+                            "description": "Half-power beamwidth in degrees. Zero means unpublished."
+                        },
+                        "ANTENNA_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Antenna gain in decibels referenced to an isotropic radiator. Zero means\nunpublished; a real 0 dBi figure is published as a source term in\nprovenance rather than being indistinguishable from absence."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification radiated on this emission, verbatim: a callsign, a\nspoken or keyed identifier, or the identity string the source publishes.\nNever synthesized."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds of the authorization or documented use of this\nemission. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TXS": {
+                    "type": "object",
+                    "description": "Terrestrial Transmitter Site.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this facility, unique within its record\nset. Never a source's own identifier and never a coordinate string."
+                        },
+                        "NATIVE_ID": {
+                            "type": "string",
+                            "description": "Winning source's native facility identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across sources."
+                        },
+                        "SITE_NAME": {
+                            "type": "string",
+                            "description": "Facility or structure name verbatim when a source publishes one. Never\nsynthesized from coordinates, licensee, or nearest settlement."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification the facility as a whole answers to, verbatim: a\ncallsign, an assigned station identifier, or the identifier an observer\ncommunity records. Per-emission identity lives in\nEMISSIONS[].STATION_IDENTITY."
+                        },
+                        "LICENSEE": {
+                            "type": "string",
+                            "description": "Licensee, operator or responsible administration name verbatim as the\ncited source states it. A display name, never an identifier: consumers\nmust not treat it as a stable key."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Licence, assignment or authorization identifier verbatim."
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass",
+                            "description": "Primary service class of the facility. Individual emissions may state\ntheir own."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/txsOperationalStatus"
+                        },
+                        "COUNTRY_CODE": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it."
+                        },
+                        "ADMIN_AREA": {
+                            "type": "string",
+                            "description": "Administrative subdivision or locality verbatim as the source states it."
+                        },
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Published facility position, decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. ABSENT when no source publishes a position:\na region centroid is never substituted. Per-source positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value."
+                        },
+                        "LONGITUDE": {
+                            "type": "number"
+                        },
+                        "POSITION_AUTHORITY": {
+                            "$ref": "#/definitions/txsPositionAuthorityClass",
+                            "description": "The class of authority behind LATITUDE/LONGITUDE. A consumer that renders\na position without reading this field is rendering an unlabelled claim."
+                        },
+                        "POSITION_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "Horizontal envelope in metres within which the facility is asserted to\nlie, as the publisher states it. Zero means unpublished \u2014 never that the\nposition is exact."
+                        },
+                        "POSITION_DISPUTED": {
+                            "type": "boolean",
+                            "description": "Credible consulted sources place the facility in materially different\nlocations, or a source states the position is contested. The published\ncoordinate remains the publisher's best merge; this flag forbids a\nconsumer from presenting it as settled."
+                        },
+                        "PRIOR_POSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSPriorPosition"
+                            },
+                            "description": "Positions the facility is asserted to have vacated, most recent first."
+                        },
+                        "GROUND_ELEVATION_AMSL_M": {
+                            "type": "number",
+                            "description": "Ground elevation at the facility, metres above mean sea level as the\nsource states it. Zero means unpublished."
+                        },
+                        "STRUCTURE_HEIGHT_AGL_M": {
+                            "type": "number",
+                            "description": "Overall height of the antenna-supporting structure above ground level,\nmetres. Distinct from any emission's antenna height. Zero means\nunpublished."
+                        },
+                        "STRUCTURE": {
+                            "$ref": "#/definitions/txsStructureClass"
+                        },
+                        "STRUCTURE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of antenna-supporting structures at the facility. Zero means\nunpublished."
+                        },
+                        "EMISSIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSEmission"
+                            },
+                            "description": "Every emission the facility is documented to radiate."
+                        },
+                        "FIRST_OBSERVED": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond bounds of the documentation or observation\nwindow backing the published record."
+                        },
+                        "LAST_OBSERVED": {
+                            "type": "string"
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSProvenance"
+                            },
+                            "description": "Every source consulted for this facility, including sources that returned\nnothing. Required: a facility with no named sources is not publishable."
+                        },
+                        "CONSENSUS": {
+                            "$ref": "#/definitions/TXSConsensus",
+                            "description": "How the entries in SOURCES were reduced to the published position.\nRequired: a published position always states the rule that produced it,\nincluding SINGLE_SOURCE."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SOURCES",
+                        "CONSENSUS"
+                    ],
+                    "additionalProperties": false
+                },
+                "STX": {
+                    "type": "object",
+                    "description": "Scheduled Transmission.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Publisher-stable identifier for this schedule row, unique within its\nrecord set."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "`$TXS`.ID of the facility radiating this transmission. ABSENT when the\noriginating facility is unidentified or disputed; a row is publishable\nwithout one and a consumer must not fabricate a join."
+                        },
+                        "SITE_NATIVE_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the transmitting facility, verbatim \u2014\na register site code or a compilation's site abbreviation. Retained so a\nrow whose SITE_ID could not be resolved is still traceable."
+                        },
+                        "STATION_NAME": {
+                            "type": "string",
+                            "description": "Station or service name verbatim as the source states it. A display name,\nnever an identifier."
+                        },
+                        "STATION_IDENTITY": {
+                            "type": "string",
+                            "description": "Station identification radiated on this transmission, verbatim: a\ncallsign, a keyed or spoken identifier, or the identity string the source\npublishes. Never synthesized and never inferred from frequency."
+                        },
+                        "FREQUENCY_KHZ": {
+                            "type": "number",
+                            "description": "Assigned frequency in kilohertz, following the `$TXS` convention. Zero\nmeans unpublished; a row whose frequency is unpublished is a facility\nrecord, not a schedule row."
+                        },
+                        "BANDWIDTH_KHZ": {
+                            "type": "number",
+                            "description": "Necessary or occupied bandwidth in kilohertz when the source states one\nfor this transmission. Zero means unpublished."
+                        },
+                        "EMISSION_DESIGNATOR": {
+                            "type": "string",
+                            "description": "ITU emission designator verbatim. Authoritative over MODULATION whenever\nboth are present."
+                        },
+                        "MODULATION": {
+                            "$ref": "#/definitions/txsModulationClass"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/txsPolarization"
+                        },
+                        "SERVICE": {
+                            "$ref": "#/definitions/txsServiceClass"
+                        },
+                        "CONTENT": {
+                            "$ref": "#/definitions/stxContentClass"
+                        },
+                        "TIME_START_UTC": {
+                            "type": "string",
+                            "description": "Daily on-air window in Coordinated Universal Time, as four decimal digits\n\"HHMM\". A window whose stop is not later than its start crosses midnight\nand is read as continuing into the following day. Strings because the\nregister form is four digits with significant leading zeros and no date;\nan integer would invite a consumer to treat 0000 as absence."
+                        },
+                        "TIME_STOP_UTC": {
+                            "type": "string"
+                        },
+                        "DAYS": {
+                            "$ref": "#/definitions/stxDayMask",
+                            "description": "Days on which the window runs. An unset field means the source publishes\nno day pattern."
+                        },
+                        "IRREGULAR": {
+                            "type": "boolean",
+                            "description": "The transmission runs without a fixed daily window \u2014 as required, on\noccurrence, or continuously. TIME_START_UTC and TIME_STOP_UTC are absent\nin that case and are never filled with 0000/2400 to stand in for it."
+                        },
+                        "VALID_FROM": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC bounds over which this row is valid \u2014 the seasonal or\nlicence period. Either bound is absent when unpublished."
+                        },
+                        "VALID_UNTIL": {
+                            "type": "string"
+                        },
+                        "SEASON": {
+                            "type": "string",
+                            "description": "The source's own name for the validity period, verbatim: a season code, a\nschedule edition, or a period label. Never parsed into VALID_FROM by this\nstandard."
+                        },
+                        "TARGET_AREA": {
+                            "type": "string",
+                            "description": "Target area verbatim as the source states it, including its own zone or\nregion notation."
+                        },
+                        "TARGET_ZONES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Individual target zone identifiers verbatim when the source publishes a\nlist, one entry per zone, in source order."
+                        },
+                        "LANGUAGE": {
+                            "type": "string",
+                            "description": "Language of the transmission. A BCP 47 tag when the source publishes one;\notherwise the source's own language term verbatim, never translated and\nnever guessed from the target area."
+                        },
+                        "TRANSMITTER_POWER_KW": {
+                            "type": "number",
+                            "description": "Transmitter output power for this transmission, kilowatts. Zero means\nunpublished."
+                        },
+                        "ANTENNA_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Main-lobe bearing for this transmission, degrees clockwise from true\nnorth. Absent for a non-directional transmission, which is stated by\nOMNIDIRECTIONAL and never by a bearing of zero."
+                        },
+                        "ANTENNA_AZIMUTH_SECONDARY_DEG": {
+                            "type": "number",
+                            "description": "Secondary lobe bearing when the source publishes a slewed or dual-beam\nantenna, degrees clockwise from true north."
+                        },
+                        "OMNIDIRECTIONAL": {
+                            "type": "boolean",
+                            "description": "The transmission is radiated without a preferred bearing."
+                        },
+                        "ANTENNA_DESIGNATION": {
+                            "type": "string",
+                            "description": "Antenna designation verbatim as the source states it \u2014 a curtain-array\ncode, an antenna number, or a pattern identifier."
+                        },
+                        "EMISSION_ID": {
+                            "type": "string",
+                            "description": "`$TXS`.EMISSIONS[].EMISSION_ID this row exercises, when the facility\nrecord enumerates it."
+                        },
+                        "AUTHORITY": {
+                            "$ref": "#/definitions/stxScheduleAuthorityClass"
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/stxScheduleStatus"
+                        },
+                        "FIRST_OBSERVED": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe row, when observers rather than a register established it."
+                        },
+                        "LAST_OBSERVED": {
+                            "type": "string"
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Independent observation reports behind the row. Zero means the source\npublishes no count, never that the transmission was never heard."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TXSProvenance"
+                            },
+                            "description": "Every source consulted for this row, including sources that returned\nnothing. Required: a schedule row with no named sources is not\npublishable. The provenance table is the one this family already\npublishes in `$TXS`; a schedule row and a facility carry provenance of\nthe same shape and are frequently reconciled from the same fetch."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SOURCES"
+                    ],
+                    "additionalProperties": false
+                },
                 "SUB": {
                     "type": "object",
                     "description": "Crypto-native Subscription Authorization",
@@ -100204,6 +101998,12 @@
                                 },
                                 {
                                     "$ref": "#/definitions/VCF"
+                                },
+                                {
+                                    "$ref": "#/definitions/STX"
+                                },
+                                {
+                                    "$ref": "#/definitions/TXS"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)"

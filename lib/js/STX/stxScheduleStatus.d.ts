@@ -1,0 +1,36 @@
+/**
+ * State of a scheduled transmission as its sources state it. Ordinals are wire
+ * values: append only; never reorder or reuse.
+ */
+export declare enum stxScheduleStatus {
+    UNSPECIFIED = 0,
+    /**
+     * Registered or announced for the stated period.
+     */
+    REGISTERED = 1,
+    /**
+     * Registered and confirmed on the air within the stated period.
+     */
+    ACTIVE = 2,
+    /**
+     * Registered subject to coordination, or announced provisionally.
+     */
+    PROVISIONAL = 3,
+    /**
+     * Documented but not heard within the period observers cover.
+     */
+    UNCONFIRMED = 4,
+    /**
+     * Registered and stated to be off the air for the period.
+     */
+    INACTIVE = 5,
+    /**
+     * Withdrawn before or during the period.
+     */
+    CANCELLED = 6,
+    /**
+     * Known only from observation; no registration is claimed.
+     */
+    OBSERVED_ONLY = 7
+}
+//# sourceMappingURL=stxScheduleStatus.d.ts.map

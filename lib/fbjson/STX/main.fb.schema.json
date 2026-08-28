@@ -1,0 +1,2039 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "txsServiceClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "LONG_WAVE_BROADCAST",
+        "MEDIUM_WAVE_BROADCAST",
+        "SHORT_WAVE_BROADCAST",
+        "FM_SOUND_BROADCAST",
+        "DIGITAL_SOUND_BROADCAST",
+        "TELEVISION_BROADCAST",
+        "MILITARY_FIXED",
+        "UTILITY_FIXED",
+        "AERONAUTICAL",
+        "MARITIME",
+        "PUBLIC_SAFETY_LAND_MOBILE",
+        "LAND_MOBILE_PRIVATE",
+        "AMATEUR",
+        "TIME_AND_FREQUENCY_STANDARD",
+        "RADIONAVIGATION",
+        "RADIOLOCATION",
+        "METEOROLOGICAL",
+        "SPACE_OPERATIONS_UPLINK",
+        "EXPERIMENTAL",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source publishes no service class. Every service field defaults here so an unset field can never be read as a real class."
+        },
+        "LONG_WAVE_BROADCAST": {
+          "value": 1,
+          "description": "Sound broadcasting on the low-frequency broadcasting allocations."
+        },
+        "MEDIUM_WAVE_BROADCAST": {
+          "value": 2,
+          "description": "Sound broadcasting on the medium-frequency broadcasting allocations."
+        },
+        "SHORT_WAVE_BROADCAST": {
+          "value": 3,
+          "description": "Sound broadcasting on the high-frequency broadcasting allocations, including transmissions directed at audiences outside the transmitting administration."
+        },
+        "FM_SOUND_BROADCAST": {
+          "value": 4,
+          "description": "Frequency-modulated sound broadcasting on the very-high-frequency broadcasting allocations."
+        },
+        "DIGITAL_SOUND_BROADCAST": {
+          "value": 5,
+          "description": "Digitally multiplexed sound broadcasting, terrestrial."
+        },
+        "TELEVISION_BROADCAST": {
+          "value": 6,
+          "description": "Terrestrial television broadcasting, analogue or digital."
+        },
+        "MILITARY_FIXED": {
+          "value": 7,
+          "description": "Fixed service operated by or for an armed service."
+        },
+        "UTILITY_FIXED": {
+          "value": 8,
+          "description": "Fixed service operated by a non-broadcast, non-military user for its own operational traffic."
+        },
+        "AERONAUTICAL": {
+          "value": 9,
+          "description": "Aeronautical mobile or aeronautical fixed service."
+        },
+        "MARITIME": {
+          "value": 10,
+          "description": "Maritime mobile or maritime fixed service."
+        },
+        "PUBLIC_SAFETY_LAND_MOBILE": {
+          "value": 11,
+          "description": "Land mobile service supporting emergency response and public protection."
+        },
+        "LAND_MOBILE_PRIVATE": {
+          "value": 12,
+          "description": "Land mobile service operated by a private or commercial user."
+        },
+        "AMATEUR": {
+          "value": 13,
+          "description": "Amateur service, including unattended propagation beacons."
+        },
+        "TIME_AND_FREQUENCY_STANDARD": {
+          "value": 14,
+          "description": "Standard-frequency and time-signal service."
+        },
+        "RADIONAVIGATION": {
+          "value": 15,
+          "description": "Radionavigation service, including terrestrial hyperbolic and non-directional navigation aids."
+        },
+        "RADIOLOCATION": {
+          "value": 16,
+          "description": "Radiolocation service, including over-the-horizon and surface-wave installations."
+        },
+        "METEOROLOGICAL": {
+          "value": 17,
+          "description": "Meteorological aids or meteorological broadcast."
+        },
+        "SPACE_OPERATIONS_UPLINK": {
+          "value": 18,
+          "description": "Space operations, space research or satellite feeder-link earth-station transmission from a terrestrial facility."
+        },
+        "EXPERIMENTAL": {
+          "value": 19,
+          "description": "Service authorized for experiment or development."
+        },
+        "OTHER": {
+          "value": 20,
+          "description": "The source states a service this enum does not model. The source's own term is retained verbatim in the provenance entry, never discarded."
+        }
+      }
+    },
+    "txsPositionAuthorityClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "REGULATOR_PUBLISHED",
+        "COORDINATION_FILING",
+        "LICENSEE_PUBLISHED",
+        "SURVEYED_INDEPENDENT",
+        "DERIVED_FROM_IMAGERY",
+        "INFERRED_FROM_OBSERVATION",
+        "COMMUNITY_ASSERTED",
+        "COMMUNITY_ASSERTED_HISTORICAL",
+        "UNDISCLOSED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The publisher does not state how the position was established. POSITION AUTHORITY defaults here so an unset field can never be read as a regulator's coordinate."
+        },
+        "REGULATOR_PUBLISHED": {
+          "value": 1,
+          "description": "A spectrum regulator or licensing administration publishes the coordinate in its own licence or assignment record."
+        },
+        "COORDINATION_FILING": {
+          "value": 2,
+          "description": "An international frequency coordination register or notification filing carries the coordinate."
+        },
+        "LICENSEE_PUBLISHED": {
+          "value": 3,
+          "description": "The licensee or facility operator publishes the coordinate itself."
+        },
+        "SURVEYED_INDEPENDENT": {
+          "value": 4,
+          "description": "The coordinate was surveyed or measured on site by a party independent of the licensee."
+        },
+        "DERIVED_FROM_IMAGERY": {
+          "value": 5,
+          "description": "The coordinate was read off imagery or a mapping product by the publisher or a cited source."
+        },
+        "INFERRED_FROM_OBSERVATION": {
+          "value": 6,
+          "description": "The coordinate is the result of radio direction finding, time- or frequency-difference-of-arrival geolocation, or another observation-based fix. The fused solution itself belongs in `$GEL`."
+        },
+        "COMMUNITY_ASSERTED": {
+          "value": 7,
+          "description": "The coordinate is asserted by an observer community or an enthusiast compilation with no regulator, licensee or survey behind it. It is publishable and it is never interchangeable with a licence coordinate."
+        },
+        "COMMUNITY_ASSERTED_HISTORICAL": {
+          "value": 8,
+          "description": "A community assertion the sources themselves report as superseded \u2014 the facility is believed to have moved, and the coordinate describes where it formerly stood."
+        },
+        "UNDISCLOSED": {
+          "value": 9,
+          "description": "The facility is documented to exist and no party publishes a position at all. LATITUDE and LONGITUDE are ABSENT in this case; they are never filled with a region centroid."
+        }
+      }
+    },
+    "txsStructureClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GUYED_MAST",
+        "SELF_SUPPORTING_TOWER",
+        "MONOPOLE",
+        "ROOFTOP_OR_BUILDING",
+        "CURTAIN_ARRAY",
+        "LOG_PERIODIC",
+        "DIPOLE_OR_WIRE",
+        "VERTICAL_RADIATOR",
+        "DISH_REFLECTOR",
+        "LOOP_OR_LOADED_ELEMENT",
+        "UNDERGROUND_OR_CONCEALED",
+        "TRANSPORTABLE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "GUYED_MAST": {
+          "value": 1
+        },
+        "SELF_SUPPORTING_TOWER": {
+          "value": 2
+        },
+        "MONOPOLE": {
+          "value": 3
+        },
+        "ROOFTOP_OR_BUILDING": {
+          "value": 4
+        },
+        "CURTAIN_ARRAY": {
+          "value": 5
+        },
+        "LOG_PERIODIC": {
+          "value": 6
+        },
+        "DIPOLE_OR_WIRE": {
+          "value": 7
+        },
+        "VERTICAL_RADIATOR": {
+          "value": 8
+        },
+        "DISH_REFLECTOR": {
+          "value": 9
+        },
+        "LOOP_OR_LOADED_ELEMENT": {
+          "value": 10
+        },
+        "UNDERGROUND_OR_CONCEALED": {
+          "value": 11
+        },
+        "TRANSPORTABLE": {
+          "value": 12
+        },
+        "OTHER": {
+          "value": 13
+        }
+      }
+    },
+    "txsOperationalStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "OPERATIONAL",
+        "INTERMITTENT",
+        "SILENT",
+        "DECOMMISSIONED",
+        "DEMOLISHED",
+        "PLANNED",
+        "RELOCATED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "OPERATIONAL": {
+          "value": 1,
+          "description": "Radiating on a regular or continuous basis."
+        },
+        "INTERMITTENT": {
+          "value": 2,
+          "description": "Radiating irregularly or only for part of the year."
+        },
+        "SILENT": {
+          "value": 3,
+          "description": "Licensed and standing, but not currently radiating."
+        },
+        "DECOMMISSIONED": {
+          "value": 4,
+          "description": "Authorization withdrawn or surrendered; structure may still stand."
+        },
+        "DEMOLISHED": {
+          "value": 5,
+          "description": "Structure removed."
+        },
+        "PLANNED": {
+          "value": 6,
+          "description": "Authorized or announced, not yet radiating."
+        },
+        "RELOCATED": {
+          "value": 7,
+          "description": "Sources agree the operation moved to a different facility."
+        }
+      }
+    },
+    "txsModulationClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "UNMODULATED_CARRIER",
+        "ON_OFF_KEYED_CARRIER",
+        "AMPLITUDE_DOUBLE_SIDEBAND",
+        "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER",
+        "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER",
+        "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER",
+        "AMPLITUDE_VESTIGIAL_SIDEBAND",
+        "AMPLITUDE_INDEPENDENT_SIDEBAND",
+        "FREQUENCY_MODULATION",
+        "PHASE_MODULATION",
+        "FREQUENCY_SHIFT_KEYING",
+        "PHASE_SHIFT_KEYING",
+        "QUADRATURE_AMPLITUDE",
+        "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX",
+        "PULSED",
+        "SPREAD_SPECTRUM",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "UNMODULATED_CARRIER": {
+          "value": 1
+        },
+        "ON_OFF_KEYED_CARRIER": {
+          "value": 2
+        },
+        "AMPLITUDE_DOUBLE_SIDEBAND": {
+          "value": 3
+        },
+        "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER": {
+          "value": 4
+        },
+        "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER": {
+          "value": 5
+        },
+        "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER": {
+          "value": 6
+        },
+        "AMPLITUDE_VESTIGIAL_SIDEBAND": {
+          "value": 7
+        },
+        "AMPLITUDE_INDEPENDENT_SIDEBAND": {
+          "value": 8
+        },
+        "FREQUENCY_MODULATION": {
+          "value": 9
+        },
+        "PHASE_MODULATION": {
+          "value": 10
+        },
+        "FREQUENCY_SHIFT_KEYING": {
+          "value": 11
+        },
+        "PHASE_SHIFT_KEYING": {
+          "value": 12
+        },
+        "QUADRATURE_AMPLITUDE": {
+          "value": 13
+        },
+        "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX": {
+          "value": 14
+        },
+        "PULSED": {
+          "value": 15
+        },
+        "SPREAD_SPECTRUM": {
+          "value": 16
+        },
+        "OTHER": {
+          "value": 17
+        }
+      }
+    },
+    "txsPolarization": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "VERTICAL",
+        "HORIZONTAL",
+        "MIXED",
+        "SLANT",
+        "CIRCULAR_RIGHT_HAND",
+        "CIRCULAR_LEFT_HAND",
+        "ELLIPTICAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "VERTICAL": {
+          "value": 1
+        },
+        "HORIZONTAL": {
+          "value": 2
+        },
+        "MIXED": {
+          "value": 3
+        },
+        "SLANT": {
+          "value": 4
+        },
+        "CIRCULAR_RIGHT_HAND": {
+          "value": 5
+        },
+        "CIRCULAR_LEFT_HAND": {
+          "value": 6
+        },
+        "ELLIPTICAL": {
+          "value": 7
+        }
+      }
+    },
+    "txsMergeMethod": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SINGLE_SOURCE",
+        "AUTHORITY_PRECEDENCE",
+        "MOST_RECENT",
+        "HIGHEST_SAMPLE_COUNT",
+        "CENTROID"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as a real method."
+        },
+        "SINGLE_SOURCE": {
+          "value": 1,
+          "description": "Exactly one source reported the facility; nothing was reconciled."
+        },
+        "AUTHORITY_PRECEDENCE": {
+          "value": 2,
+          "description": "A declared precedence ranking over publishing authorities selected the winning report."
+        },
+        "MOST_RECENT": {
+          "value": 3,
+          "description": "The report with the most recent publication or observation window won."
+        },
+        "HIGHEST_SAMPLE_COUNT": {
+          "value": 4,
+          "description": "The report backed by the largest independent observation count won."
+        },
+        "CENTROID": {
+          "value": 5,
+          "description": "The published position is computed from the agreeing reports and belongs to no single source."
+        }
+      }
+    },
+    "stxDayMask": {
+      "type": "string",
+      "enum": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"
+      ]
+    },
+    "stxScheduleAuthorityClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "COORDINATION_REGISTER",
+        "REGULATOR_PUBLISHED",
+        "BROADCASTER_PUBLISHED",
+        "MONITORING_OBSERVATION",
+        "COMMUNITY_COMPILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The publisher does not state where the row came from. AUTHORITY defaults here so an unset field can never be read as a coordination register."
+        },
+        "COORDINATION_REGISTER": {
+          "value": 1,
+          "description": "An international frequency coordination register or seasonal requirement-notification process carries the row."
+        },
+        "REGULATOR_PUBLISHED": {
+          "value": 2,
+          "description": "A spectrum regulator or licensing administration publishes the row."
+        },
+        "BROADCASTER_PUBLISHED": {
+          "value": 3,
+          "description": "The broadcaster, operator or licensee publishes its own schedule."
+        },
+        "MONITORING_OBSERVATION": {
+          "value": 4,
+          "description": "A monitoring service or organized observation programme logged the transmission and published the row from what it heard."
+        },
+        "COMMUNITY_COMPILED": {
+          "value": 5,
+          "description": "An observer community or enthusiast compilation asserts the row with no register, regulator or broadcaster behind it."
+        }
+      }
+    },
+    "stxScheduleStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "REGISTERED",
+        "ACTIVE",
+        "PROVISIONAL",
+        "UNCONFIRMED",
+        "INACTIVE",
+        "CANCELLED",
+        "OBSERVED_ONLY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "REGISTERED": {
+          "value": 1,
+          "description": "Registered or announced for the stated period."
+        },
+        "ACTIVE": {
+          "value": 2,
+          "description": "Registered and confirmed on the air within the stated period."
+        },
+        "PROVISIONAL": {
+          "value": 3,
+          "description": "Registered subject to coordination, or announced provisionally."
+        },
+        "UNCONFIRMED": {
+          "value": 4,
+          "description": "Documented but not heard within the period observers cover."
+        },
+        "INACTIVE": {
+          "value": 5,
+          "description": "Registered and stated to be off the air for the period."
+        },
+        "CANCELLED": {
+          "value": 6,
+          "description": "Withdrawn before or during the period."
+        },
+        "OBSERVED_ONLY": {
+          "value": 7,
+          "description": "Known only from observation; no registration is claimed."
+        }
+      }
+    },
+    "stxContentClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SOUND_PROGRAMME",
+        "TELEVISION_PROGRAMME",
+        "DIGITAL_MULTIPLEX",
+        "BEACON_OR_MARKER",
+        "FORMATTED_NUMERIC_OR_VOICE",
+        "DATA_OR_TELEMETRY",
+        "TIME_SIGNAL",
+        "SERVICE_BULLETIN",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SOUND_PROGRAMME": {
+          "value": 1,
+          "description": "Sound programming intended for a general audience."
+        },
+        "TELEVISION_PROGRAMME": {
+          "value": 2,
+          "description": "Television programming."
+        },
+        "DIGITAL_MULTIPLEX": {
+          "value": 3,
+          "description": "Digitally multiplexed data or sound carriage."
+        },
+        "BEACON_OR_MARKER": {
+          "value": 4,
+          "description": "Continuous or intermittent carrier radiated for identification, propagation assessment or channel marking, with no programme content."
+        },
+        "FORMATTED_NUMERIC_OR_VOICE": {
+          "value": 5,
+          "description": "Keyed or spoken sequences of letters, digits or words with no published meaning, radiated on a fixed frequency by an unidentified or non-broadcast user."
+        },
+        "DATA_OR_TELEMETRY": {
+          "value": 6,
+          "description": "Data, telemetry or telecommand traffic."
+        },
+        "TIME_SIGNAL": {
+          "value": 7,
+          "description": "Standard time or frequency dissemination."
+        },
+        "SERVICE_BULLETIN": {
+          "value": 8,
+          "description": "Meteorological, navigational or safety broadcast to a service."
+        },
+        "OTHER": {
+          "value": 9,
+          "description": "The source states a content class this enum does not model. The source's own term is retained verbatim in the provenance entry."
+        }
+      }
+    },
+    "TXSProvenance": {
+      "type": "object",
+      "description": "Replayable provenance for ONE source's report of ONE facility, emission, or\nscheduled transmission.\n\nEvery source consulted gets its own entry, including sources that returned\nnothing, so a consumer can tell \"not looked for\" from \"looked for and\nreturned nothing\". Source identity is DATA: PROVIDER_ID and AUTHORITY carry\nverbatim what that source states about itself.",
+      "properties": {
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the consulted source, unique\nwithin the publisher's own source registry. Never a display name and\nnever a URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "AUTHORITY": {
+          "type": "string",
+          "description": "The authority under which that source publishes, verbatim as the source\nstates it: a spectrum regulator, an international coordination register,\na licensee, a monitoring service, or an observer compilation. Never\ninferred by the publisher.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed record whose terms are unstated. A source that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as that source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "This source's own row, record, licence or file identifier, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_AUTHORITY": {
+          "$ref": "#/definitions/txsPositionAuthorityClass",
+          "description": "The class of authority this particular source speaks with about position.\nPublished per source because a record may merge a regulator lane with a\ncommunity lane; the record-level POSITION_AUTHORITY states which class the\nPUBLISHED coordinate came from.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The publisher does not state how the position was established. POSITION AUTHORITY defaults here so an unset field can never be read as a regulator's coordinate."
+            },
+            "REGULATOR_PUBLISHED": {
+              "value": 1,
+              "description": "A spectrum regulator or licensing administration publishes the coordinate in its own licence or assignment record."
+            },
+            "COORDINATION_FILING": {
+              "value": 2,
+              "description": "An international frequency coordination register or notification filing carries the coordinate."
+            },
+            "LICENSEE_PUBLISHED": {
+              "value": 3,
+              "description": "The licensee or facility operator publishes the coordinate itself."
+            },
+            "SURVEYED_INDEPENDENT": {
+              "value": 4,
+              "description": "The coordinate was surveyed or measured on site by a party independent of the licensee."
+            },
+            "DERIVED_FROM_IMAGERY": {
+              "value": 5,
+              "description": "The coordinate was read off imagery or a mapping product by the publisher or a cited source."
+            },
+            "INFERRED_FROM_OBSERVATION": {
+              "value": 6,
+              "description": "The coordinate is the result of radio direction finding, time- or frequency-difference-of-arrival geolocation, or another observation-based fix. The fused solution itself belongs in `$GEL`."
+            },
+            "COMMUNITY_ASSERTED": {
+              "value": 7,
+              "description": "The coordinate is asserted by an observer community or an enthusiast compilation with no regulator, licensee or survey behind it. It is publishable and it is never interchangeable with a licence coordinate."
+            },
+            "COMMUNITY_ASSERTED_HISTORICAL": {
+              "value": 8,
+              "description": "A community assertion the sources themselves report as superseded \u2014 the facility is believed to have moved, and the coordinate describes where it formerly stood."
+            },
+            "UNDISCLOSED": {
+              "value": 9,
+              "description": "The facility is documented to exist and no party publishes a position at all. LATITUDE and LONGITUDE are ABSENT in this case; they are never filled with a region centroid."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REPORTED_LATITUDE": {
+          "type": "number",
+          "description": "Position this source reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the source was consulted and reported no position.",
+          "x-flatbuffer-type": "double"
+        },
+        "REPORTED_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CONTRIBUTED": {
+          "type": "boolean",
+          "description": "This source's report materially contributed to the published record.\nFalse marks a source that was consulted and either returned nothing or\nwas outvoted; its entry is published either way.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "required": [
+        "PROVIDER_ID",
+        "RETRIEVED_AT",
+        "LICENSE"
+      ],
+      "additionalProperties": false
+    },
+    "TXSConsensus": {
+      "type": "object",
+      "description": "How one facility's independent source reports were reduced to the single\npublished position, and how strongly those reports agreed.\n\nAgreement is CORROBORATION and is never authority: five compilations that\ncopied one another agree perfectly and establish nothing. Read this table\nbeside POSITION_AUTHORITY, never instead of it.",
+      "properties": {
+        "METHOD": {
+          "$ref": "#/definitions/txsMergeMethod",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as a real method."
+            },
+            "SINGLE_SOURCE": {
+              "value": 1,
+              "description": "Exactly one source reported the facility; nothing was reconciled."
+            },
+            "AUTHORITY_PRECEDENCE": {
+              "value": 2,
+              "description": "A declared precedence ranking over publishing authorities selected the winning report."
+            },
+            "MOST_RECENT": {
+              "value": 3,
+              "description": "The report with the most recent publication or observation window won."
+            },
+            "HIGHEST_SAMPLE_COUNT": {
+              "value": 4,
+              "description": "The report backed by the largest independent observation count won."
+            },
+            "CENTROID": {
+              "value": 5,
+              "description": "The published position is computed from the agreeing reports and belongs to no single source."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDERS_CONSULTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Sources queried for this facility, including those that returned nothing.\nNever fewer than the number of SOURCES entries.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PROVIDERS_AGREEING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Sources whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PROVIDERS_DISAGREEING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Sources whose reported position fell OUTSIDE that threshold and were not\nreconciled. Non-zero is the machine-readable form of a contested\nposition and is published alongside POSITION_DISPUTED.",
+          "x-flatbuffer-type": "uint"
+        },
+        "WINNING_PROVIDER_ID": {
+          "type": "string",
+          "description": "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single source.",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_SPREAD_M": {
+          "type": "number",
+          "description": "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1.",
+          "x-flatbuffer-type": "double"
+        },
+        "CONFIDENCE": {
+          "type": "number",
+          "description": "The publisher's own confidence in the merged position, on [0,1]. Never a\nsource's figure and never a probability from a model this standard does\nnot name.",
+          "x-flatbuffer-type": "double"
+        },
+        "MERGED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond instant at which the merge was performed.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TXSPriorPosition": {
+      "type": "object",
+      "description": "A position the facility is asserted to have occupied and vacated, retained\nso a relocation never silently rewrites history.",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Decimal degrees on WGS 84.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_AUTHORITY": {
+          "$ref": "#/definitions/txsPositionAuthorityClass",
+          "description": "Class of authority behind THIS coordinate, which is frequently weaker\nthan the authority behind the current one.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The publisher does not state how the position was established. POSITION AUTHORITY defaults here so an unset field can never be read as a regulator's coordinate."
+            },
+            "REGULATOR_PUBLISHED": {
+              "value": 1,
+              "description": "A spectrum regulator or licensing administration publishes the coordinate in its own licence or assignment record."
+            },
+            "COORDINATION_FILING": {
+              "value": 2,
+              "description": "An international frequency coordination register or notification filing carries the coordinate."
+            },
+            "LICENSEE_PUBLISHED": {
+              "value": 3,
+              "description": "The licensee or facility operator publishes the coordinate itself."
+            },
+            "SURVEYED_INDEPENDENT": {
+              "value": 4,
+              "description": "The coordinate was surveyed or measured on site by a party independent of the licensee."
+            },
+            "DERIVED_FROM_IMAGERY": {
+              "value": 5,
+              "description": "The coordinate was read off imagery or a mapping product by the publisher or a cited source."
+            },
+            "INFERRED_FROM_OBSERVATION": {
+              "value": 6,
+              "description": "The coordinate is the result of radio direction finding, time- or frequency-difference-of-arrival geolocation, or another observation-based fix. The fused solution itself belongs in `$GEL`."
+            },
+            "COMMUNITY_ASSERTED": {
+              "value": 7,
+              "description": "The coordinate is asserted by an observer community or an enthusiast compilation with no regulator, licensee or survey behind it. It is publishable and it is never interchangeable with a licence coordinate."
+            },
+            "COMMUNITY_ASSERTED_HISTORICAL": {
+              "value": 8,
+              "description": "A community assertion the sources themselves report as superseded \u2014 the facility is believed to have moved, and the coordinate describes where it formerly stood."
+            },
+            "UNDISCLOSED": {
+              "value": 9,
+              "description": "The facility is documented to exist and no party publishes a position at all. LATITUDE and LONGITUDE are ABSENT in this case; they are never filled with a region centroid."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "POSITION_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "One-sigma-equivalent horizontal envelope in metres, as the source states\nit. Zero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALID_FROM": {
+          "type": "string",
+          "description": "RFC 3339 UTC bounds over which the facility is asserted to have occupied\nthis position. Either bound is absent when unpublished.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_UNTIL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "PROVIDER_ID of the SOURCES entry asserting this position.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TXSEmission": {
+      "type": "object",
+      "description": "One documented emission of one facility: a carrier or channel the facility\nis stated to radiate, with the power and antenna terms published for it.\n\nA facility radiating many carriers carries many entries; a facility whose\nfrequency changes by season or hour carries the documented set here and the\ntime-bounded usage in `$STX`. Unknown terms are ABSENT.",
+      "properties": {
+        "EMISSION_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this emission within its facility record.",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_KHZ": {
+          "type": "number",
+          "description": "Assigned or nominal centre frequency in kilohertz. Kilohertz is the base\nunit for this family because it spans the low-frequency broadcasting\nallocations to the microwave allocations without unit switching; a\nconsumer joining to `$RFB` or `$TBS`, which carry megahertz, or to\n`$IQC`, which carries hertz, converts at the join, explicitly. Zero means\nunpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_KHZ": {
+          "type": "number",
+          "description": "Necessary or occupied bandwidth in kilohertz as the source states it.\nZero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "EMISSION_DESIGNATOR": {
+          "type": "string",
+          "description": "ITU emission designator verbatim, e.g. the necessary-bandwidth and\nclass-of-emission string a licence record carries. Authoritative over\nMODULATION whenever both are present.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULATION": {
+          "$ref": "#/definitions/txsModulationClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "UNMODULATED_CARRIER": {
+              "value": 1
+            },
+            "ON_OFF_KEYED_CARRIER": {
+              "value": 2
+            },
+            "AMPLITUDE_DOUBLE_SIDEBAND": {
+              "value": 3
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER": {
+              "value": 4
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER": {
+              "value": 5
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER": {
+              "value": 6
+            },
+            "AMPLITUDE_VESTIGIAL_SIDEBAND": {
+              "value": 7
+            },
+            "AMPLITUDE_INDEPENDENT_SIDEBAND": {
+              "value": 8
+            },
+            "FREQUENCY_MODULATION": {
+              "value": 9
+            },
+            "PHASE_MODULATION": {
+              "value": 10
+            },
+            "FREQUENCY_SHIFT_KEYING": {
+              "value": 11
+            },
+            "PHASE_SHIFT_KEYING": {
+              "value": 12
+            },
+            "QUADRATURE_AMPLITUDE": {
+              "value": 13
+            },
+            "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX": {
+              "value": 14
+            },
+            "PULSED": {
+              "value": 15
+            },
+            "SPREAD_SPECTRUM": {
+              "value": 16
+            },
+            "OTHER": {
+              "value": 17
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "POLARIZATION": {
+          "$ref": "#/definitions/txsPolarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VERTICAL": {
+              "value": 1
+            },
+            "HORIZONTAL": {
+              "value": 2
+            },
+            "MIXED": {
+              "value": 3
+            },
+            "SLANT": {
+              "value": 4
+            },
+            "CIRCULAR_RIGHT_HAND": {
+              "value": 5
+            },
+            "CIRCULAR_LEFT_HAND": {
+              "value": 6
+            },
+            "ELLIPTICAL": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SERVICE": {
+          "$ref": "#/definitions/txsServiceClass",
+          "description": "Service class of THIS emission when it differs from the facility's.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no service class. Every service field defaults here so an unset field can never be read as a real class."
+            },
+            "LONG_WAVE_BROADCAST": {
+              "value": 1,
+              "description": "Sound broadcasting on the low-frequency broadcasting allocations."
+            },
+            "MEDIUM_WAVE_BROADCAST": {
+              "value": 2,
+              "description": "Sound broadcasting on the medium-frequency broadcasting allocations."
+            },
+            "SHORT_WAVE_BROADCAST": {
+              "value": 3,
+              "description": "Sound broadcasting on the high-frequency broadcasting allocations, including transmissions directed at audiences outside the transmitting administration."
+            },
+            "FM_SOUND_BROADCAST": {
+              "value": 4,
+              "description": "Frequency-modulated sound broadcasting on the very-high-frequency broadcasting allocations."
+            },
+            "DIGITAL_SOUND_BROADCAST": {
+              "value": 5,
+              "description": "Digitally multiplexed sound broadcasting, terrestrial."
+            },
+            "TELEVISION_BROADCAST": {
+              "value": 6,
+              "description": "Terrestrial television broadcasting, analogue or digital."
+            },
+            "MILITARY_FIXED": {
+              "value": 7,
+              "description": "Fixed service operated by or for an armed service."
+            },
+            "UTILITY_FIXED": {
+              "value": 8,
+              "description": "Fixed service operated by a non-broadcast, non-military user for its own operational traffic."
+            },
+            "AERONAUTICAL": {
+              "value": 9,
+              "description": "Aeronautical mobile or aeronautical fixed service."
+            },
+            "MARITIME": {
+              "value": 10,
+              "description": "Maritime mobile or maritime fixed service."
+            },
+            "PUBLIC_SAFETY_LAND_MOBILE": {
+              "value": 11,
+              "description": "Land mobile service supporting emergency response and public protection."
+            },
+            "LAND_MOBILE_PRIVATE": {
+              "value": 12,
+              "description": "Land mobile service operated by a private or commercial user."
+            },
+            "AMATEUR": {
+              "value": 13,
+              "description": "Amateur service, including unattended propagation beacons."
+            },
+            "TIME_AND_FREQUENCY_STANDARD": {
+              "value": 14,
+              "description": "Standard-frequency and time-signal service."
+            },
+            "RADIONAVIGATION": {
+              "value": 15,
+              "description": "Radionavigation service, including terrestrial hyperbolic and non-directional navigation aids."
+            },
+            "RADIOLOCATION": {
+              "value": 16,
+              "description": "Radiolocation service, including over-the-horizon and surface-wave installations."
+            },
+            "METEOROLOGICAL": {
+              "value": 17,
+              "description": "Meteorological aids or meteorological broadcast."
+            },
+            "SPACE_OPERATIONS_UPLINK": {
+              "value": 18,
+              "description": "Space operations, space research or satellite feeder-link earth-station transmission from a terrestrial facility."
+            },
+            "EXPERIMENTAL": {
+              "value": 19,
+              "description": "Service authorized for experiment or development."
+            },
+            "OTHER": {
+              "value": 20,
+              "description": "The source states a service this enum does not model. The source's own term is retained verbatim in the provenance entry, never discarded."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TRANSMITTER_POWER_KW": {
+          "type": "number",
+          "description": "Transmitter output power at the antenna feed, kilowatts. Zero means\nunpublished. Never derived from radiated power.",
+          "x-flatbuffer-type": "double"
+        },
+        "EFFECTIVE_RADIATED_POWER_KW": {
+          "type": "number",
+          "description": "Effective radiated power referenced to a half-wave dipole, kilowatts.\nZero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP_KW": {
+          "type": "number",
+          "description": "Equivalent isotropically radiated power, kilowatts. Zero means\nunpublished. Published alongside, never instead of, the dipole-referenced\nfigure: the two differ by the dipole gain and this standard never\nconverts between them.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_HEIGHT_AGL_M": {
+          "type": "number",
+          "description": "Antenna centre of radiation above ground level, metres. Zero means\nunpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_AZIMUTH_DEG": {
+          "type": "number",
+          "description": "Main-lobe bearing, degrees clockwise from true north. Absent for a\nnon-directional emission; a non-directional emission is stated by\nOMNIDIRECTIONAL, never by a bearing of zero.",
+          "x-flatbuffer-type": "double"
+        },
+        "OMNIDIRECTIONAL": {
+          "type": "boolean",
+          "description": "The emission is radiated without a preferred bearing.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "BEAMWIDTH_DEG": {
+          "type": "number",
+          "description": "Half-power beamwidth in degrees. Zero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_GAIN_DBI": {
+          "type": "number",
+          "description": "Antenna gain in decibels referenced to an isotropic radiator. Zero means\nunpublished; a real 0 dBi figure is published as a source term in\nprovenance rather than being indistinguishable from absence.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATION_IDENTITY": {
+          "type": "string",
+          "description": "Station identification radiated on this emission, verbatim: a callsign, a\nspoken or keyed identifier, or the identity string the source publishes.\nNever synthesized.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/txsOperationalStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "OPERATIONAL": {
+              "value": 1,
+              "description": "Radiating on a regular or continuous basis."
+            },
+            "INTERMITTENT": {
+              "value": 2,
+              "description": "Radiating irregularly or only for part of the year."
+            },
+            "SILENT": {
+              "value": 3,
+              "description": "Licensed and standing, but not currently radiating."
+            },
+            "DECOMMISSIONED": {
+              "value": 4,
+              "description": "Authorization withdrawn or surrendered; structure may still stand."
+            },
+            "DEMOLISHED": {
+              "value": 5,
+              "description": "Structure removed."
+            },
+            "PLANNED": {
+              "value": 6,
+              "description": "Authorized or announced, not yet radiating."
+            },
+            "RELOCATED": {
+              "value": 7,
+              "description": "Sources agree the operation moved to a different facility."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VALID_FROM": {
+          "type": "string",
+          "description": "RFC 3339 UTC bounds of the authorization or documented use of this\nemission. Either bound is absent when unpublished.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_UNTIL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TXS": {
+      "type": "object",
+      "description": "Terrestrial Transmitter Site.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this facility, unique within its record\nset. Never a source's own identifier and never a coordinate string.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "Winning source's native facility identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_NAME": {
+          "type": "string",
+          "description": "Facility or structure name verbatim when a source publishes one. Never\nsynthesized from coordinates, licensee, or nearest settlement.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATION_IDENTITY": {
+          "type": "string",
+          "description": "Station identification the facility as a whole answers to, verbatim: a\ncallsign, an assigned station identifier, or the identifier an observer\ncommunity records. Per-emission identity lives in\nEMISSIONS[].STATION_IDENTITY.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSEE": {
+          "type": "string",
+          "description": "Licensee, operator or responsible administration name verbatim as the\ncited source states it. A display name, never an identifier: consumers\nmust not treat it as a stable key.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Licence, assignment or authorization identifier verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "SERVICE": {
+          "$ref": "#/definitions/txsServiceClass",
+          "description": "Primary service class of the facility. Individual emissions may state\ntheir own.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no service class. Every service field defaults here so an unset field can never be read as a real class."
+            },
+            "LONG_WAVE_BROADCAST": {
+              "value": 1,
+              "description": "Sound broadcasting on the low-frequency broadcasting allocations."
+            },
+            "MEDIUM_WAVE_BROADCAST": {
+              "value": 2,
+              "description": "Sound broadcasting on the medium-frequency broadcasting allocations."
+            },
+            "SHORT_WAVE_BROADCAST": {
+              "value": 3,
+              "description": "Sound broadcasting on the high-frequency broadcasting allocations, including transmissions directed at audiences outside the transmitting administration."
+            },
+            "FM_SOUND_BROADCAST": {
+              "value": 4,
+              "description": "Frequency-modulated sound broadcasting on the very-high-frequency broadcasting allocations."
+            },
+            "DIGITAL_SOUND_BROADCAST": {
+              "value": 5,
+              "description": "Digitally multiplexed sound broadcasting, terrestrial."
+            },
+            "TELEVISION_BROADCAST": {
+              "value": 6,
+              "description": "Terrestrial television broadcasting, analogue or digital."
+            },
+            "MILITARY_FIXED": {
+              "value": 7,
+              "description": "Fixed service operated by or for an armed service."
+            },
+            "UTILITY_FIXED": {
+              "value": 8,
+              "description": "Fixed service operated by a non-broadcast, non-military user for its own operational traffic."
+            },
+            "AERONAUTICAL": {
+              "value": 9,
+              "description": "Aeronautical mobile or aeronautical fixed service."
+            },
+            "MARITIME": {
+              "value": 10,
+              "description": "Maritime mobile or maritime fixed service."
+            },
+            "PUBLIC_SAFETY_LAND_MOBILE": {
+              "value": 11,
+              "description": "Land mobile service supporting emergency response and public protection."
+            },
+            "LAND_MOBILE_PRIVATE": {
+              "value": 12,
+              "description": "Land mobile service operated by a private or commercial user."
+            },
+            "AMATEUR": {
+              "value": 13,
+              "description": "Amateur service, including unattended propagation beacons."
+            },
+            "TIME_AND_FREQUENCY_STANDARD": {
+              "value": 14,
+              "description": "Standard-frequency and time-signal service."
+            },
+            "RADIONAVIGATION": {
+              "value": 15,
+              "description": "Radionavigation service, including terrestrial hyperbolic and non-directional navigation aids."
+            },
+            "RADIOLOCATION": {
+              "value": 16,
+              "description": "Radiolocation service, including over-the-horizon and surface-wave installations."
+            },
+            "METEOROLOGICAL": {
+              "value": 17,
+              "description": "Meteorological aids or meteorological broadcast."
+            },
+            "SPACE_OPERATIONS_UPLINK": {
+              "value": 18,
+              "description": "Space operations, space research or satellite feeder-link earth-station transmission from a terrestrial facility."
+            },
+            "EXPERIMENTAL": {
+              "value": 19,
+              "description": "Service authorized for experiment or development."
+            },
+            "OTHER": {
+              "value": 20,
+              "description": "The source states a service this enum does not model. The source's own term is retained verbatim in the provenance entry, never discarded."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/txsOperationalStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "OPERATIONAL": {
+              "value": 1,
+              "description": "Radiating on a regular or continuous basis."
+            },
+            "INTERMITTENT": {
+              "value": 2,
+              "description": "Radiating irregularly or only for part of the year."
+            },
+            "SILENT": {
+              "value": 3,
+              "description": "Licensed and standing, but not currently radiating."
+            },
+            "DECOMMISSIONED": {
+              "value": 4,
+              "description": "Authorization withdrawn or surrendered; structure may still stand."
+            },
+            "DEMOLISHED": {
+              "value": 5,
+              "description": "Structure removed."
+            },
+            "PLANNED": {
+              "value": 6,
+              "description": "Authorized or announced, not yet radiating."
+            },
+            "RELOCATED": {
+              "value": 7,
+              "description": "Sources agree the operation moved to a different facility."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADMIN_AREA": {
+          "type": "string",
+          "description": "Administrative subdivision or locality verbatim as the source states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Published facility position, decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. ABSENT when no source publishes a position:\na region centroid is never substituted. Per-source positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_AUTHORITY": {
+          "$ref": "#/definitions/txsPositionAuthorityClass",
+          "description": "The class of authority behind LATITUDE/LONGITUDE. A consumer that renders\na position without reading this field is rendering an unlabelled claim.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The publisher does not state how the position was established. POSITION AUTHORITY defaults here so an unset field can never be read as a regulator's coordinate."
+            },
+            "REGULATOR_PUBLISHED": {
+              "value": 1,
+              "description": "A spectrum regulator or licensing administration publishes the coordinate in its own licence or assignment record."
+            },
+            "COORDINATION_FILING": {
+              "value": 2,
+              "description": "An international frequency coordination register or notification filing carries the coordinate."
+            },
+            "LICENSEE_PUBLISHED": {
+              "value": 3,
+              "description": "The licensee or facility operator publishes the coordinate itself."
+            },
+            "SURVEYED_INDEPENDENT": {
+              "value": 4,
+              "description": "The coordinate was surveyed or measured on site by a party independent of the licensee."
+            },
+            "DERIVED_FROM_IMAGERY": {
+              "value": 5,
+              "description": "The coordinate was read off imagery or a mapping product by the publisher or a cited source."
+            },
+            "INFERRED_FROM_OBSERVATION": {
+              "value": 6,
+              "description": "The coordinate is the result of radio direction finding, time- or frequency-difference-of-arrival geolocation, or another observation-based fix. The fused solution itself belongs in `$GEL`."
+            },
+            "COMMUNITY_ASSERTED": {
+              "value": 7,
+              "description": "The coordinate is asserted by an observer community or an enthusiast compilation with no regulator, licensee or survey behind it. It is publishable and it is never interchangeable with a licence coordinate."
+            },
+            "COMMUNITY_ASSERTED_HISTORICAL": {
+              "value": 8,
+              "description": "A community assertion the sources themselves report as superseded \u2014 the facility is believed to have moved, and the coordinate describes where it formerly stood."
+            },
+            "UNDISCLOSED": {
+              "value": 9,
+              "description": "The facility is documented to exist and no party publishes a position at all. LATITUDE and LONGITUDE are ABSENT in this case; they are never filled with a region centroid."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "POSITION_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "Horizontal envelope in metres within which the facility is asserted to\nlie, as the publisher states it. Zero means unpublished \u2014 never that the\nposition is exact.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_DISPUTED": {
+          "type": "boolean",
+          "description": "Credible consulted sources place the facility in materially different\nlocations, or a source states the position is contested. The published\ncoordinate remains the publisher's best merge; this flag forbids a\nconsumer from presenting it as settled.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "PRIOR_POSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TXSPriorPosition"
+          },
+          "description": "Positions the facility is asserted to have vacated, most recent first.",
+          "x-flatbuffer-type": "[TXSPriorPosition]"
+        },
+        "GROUND_ELEVATION_AMSL_M": {
+          "type": "number",
+          "description": "Ground elevation at the facility, metres above mean sea level as the\nsource states it. Zero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "STRUCTURE_HEIGHT_AGL_M": {
+          "type": "number",
+          "description": "Overall height of the antenna-supporting structure above ground level,\nmetres. Distinct from any emission's antenna height. Zero means\nunpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "STRUCTURE": {
+          "$ref": "#/definitions/txsStructureClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GUYED_MAST": {
+              "value": 1
+            },
+            "SELF_SUPPORTING_TOWER": {
+              "value": 2
+            },
+            "MONOPOLE": {
+              "value": 3
+            },
+            "ROOFTOP_OR_BUILDING": {
+              "value": 4
+            },
+            "CURTAIN_ARRAY": {
+              "value": 5
+            },
+            "LOG_PERIODIC": {
+              "value": 6
+            },
+            "DIPOLE_OR_WIRE": {
+              "value": 7
+            },
+            "VERTICAL_RADIATOR": {
+              "value": 8
+            },
+            "DISH_REFLECTOR": {
+              "value": 9
+            },
+            "LOOP_OR_LOADED_ELEMENT": {
+              "value": 10
+            },
+            "UNDERGROUND_OR_CONCEALED": {
+              "value": 11
+            },
+            "TRANSPORTABLE": {
+              "value": 12
+            },
+            "OTHER": {
+              "value": 13
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "STRUCTURE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of antenna-supporting structures at the facility. Zero means\nunpublished.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EMISSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TXSEmission"
+          },
+          "description": "Every emission the facility is documented to radiate.",
+          "x-flatbuffer-type": "[TXSEmission]"
+        },
+        "FIRST_OBSERVED": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond bounds of the documentation or observation\nwindow backing the published record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OBSERVED": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TXSProvenance"
+          },
+          "description": "Every source consulted for this facility, including sources that returned\nnothing. Required: a facility with no named sources is not publishable.",
+          "x-flatbuffer-type": "[TXSProvenance]",
+          "x-flatbuffer-required": true
+        },
+        "CONSENSUS": {
+          "$ref": "#/definitions/TXSConsensus",
+          "description": "How the entries in SOURCES were reduced to the published position.\nRequired: a published position always states the rule that produced it,\nincluding SINGLE_SOURCE.",
+          "x-flatbuffer-type": "TXSConsensus",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "SOURCES",
+        "CONSENSUS"
+      ],
+      "additionalProperties": false
+    },
+    "STX": {
+      "type": "object",
+      "description": "Scheduled Transmission.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier for this schedule row, unique within its\nrecord set.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "`$TXS`.ID of the facility radiating this transmission. ABSENT when the\noriginating facility is unidentified or disputed; a row is publishable\nwithout one and a consumer must not fabricate a join.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_NATIVE_ID": {
+          "type": "string",
+          "description": "The source's own identifier for the transmitting facility, verbatim \u2014\na register site code or a compilation's site abbreviation. Retained so a\nrow whose SITE_ID could not be resolved is still traceable.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATION_NAME": {
+          "type": "string",
+          "description": "Station or service name verbatim as the source states it. A display name,\nnever an identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATION_IDENTITY": {
+          "type": "string",
+          "description": "Station identification radiated on this transmission, verbatim: a\ncallsign, a keyed or spoken identifier, or the identity string the source\npublishes. Never synthesized and never inferred from frequency.",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_KHZ": {
+          "type": "number",
+          "description": "Assigned frequency in kilohertz, following the `$TXS` convention. Zero\nmeans unpublished; a row whose frequency is unpublished is a facility\nrecord, not a schedule row.",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_KHZ": {
+          "type": "number",
+          "description": "Necessary or occupied bandwidth in kilohertz when the source states one\nfor this transmission. Zero means unpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "EMISSION_DESIGNATOR": {
+          "type": "string",
+          "description": "ITU emission designator verbatim. Authoritative over MODULATION whenever\nboth are present.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULATION": {
+          "$ref": "#/definitions/txsModulationClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "UNMODULATED_CARRIER": {
+              "value": 1
+            },
+            "ON_OFF_KEYED_CARRIER": {
+              "value": 2
+            },
+            "AMPLITUDE_DOUBLE_SIDEBAND": {
+              "value": 3
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_FULL_CARRIER": {
+              "value": 4
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_REDUCED_CARRIER": {
+              "value": 5
+            },
+            "AMPLITUDE_SINGLE_SIDEBAND_SUPPRESSED_CARRIER": {
+              "value": 6
+            },
+            "AMPLITUDE_VESTIGIAL_SIDEBAND": {
+              "value": 7
+            },
+            "AMPLITUDE_INDEPENDENT_SIDEBAND": {
+              "value": 8
+            },
+            "FREQUENCY_MODULATION": {
+              "value": 9
+            },
+            "PHASE_MODULATION": {
+              "value": 10
+            },
+            "FREQUENCY_SHIFT_KEYING": {
+              "value": 11
+            },
+            "PHASE_SHIFT_KEYING": {
+              "value": 12
+            },
+            "QUADRATURE_AMPLITUDE": {
+              "value": 13
+            },
+            "ORTHOGONAL_FREQUENCY_DIVISION_MULTIPLEX": {
+              "value": 14
+            },
+            "PULSED": {
+              "value": 15
+            },
+            "SPREAD_SPECTRUM": {
+              "value": 16
+            },
+            "OTHER": {
+              "value": 17
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "POLARIZATION": {
+          "$ref": "#/definitions/txsPolarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VERTICAL": {
+              "value": 1
+            },
+            "HORIZONTAL": {
+              "value": 2
+            },
+            "MIXED": {
+              "value": 3
+            },
+            "SLANT": {
+              "value": 4
+            },
+            "CIRCULAR_RIGHT_HAND": {
+              "value": 5
+            },
+            "CIRCULAR_LEFT_HAND": {
+              "value": 6
+            },
+            "ELLIPTICAL": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SERVICE": {
+          "$ref": "#/definitions/txsServiceClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source publishes no service class. Every service field defaults here so an unset field can never be read as a real class."
+            },
+            "LONG_WAVE_BROADCAST": {
+              "value": 1,
+              "description": "Sound broadcasting on the low-frequency broadcasting allocations."
+            },
+            "MEDIUM_WAVE_BROADCAST": {
+              "value": 2,
+              "description": "Sound broadcasting on the medium-frequency broadcasting allocations."
+            },
+            "SHORT_WAVE_BROADCAST": {
+              "value": 3,
+              "description": "Sound broadcasting on the high-frequency broadcasting allocations, including transmissions directed at audiences outside the transmitting administration."
+            },
+            "FM_SOUND_BROADCAST": {
+              "value": 4,
+              "description": "Frequency-modulated sound broadcasting on the very-high-frequency broadcasting allocations."
+            },
+            "DIGITAL_SOUND_BROADCAST": {
+              "value": 5,
+              "description": "Digitally multiplexed sound broadcasting, terrestrial."
+            },
+            "TELEVISION_BROADCAST": {
+              "value": 6,
+              "description": "Terrestrial television broadcasting, analogue or digital."
+            },
+            "MILITARY_FIXED": {
+              "value": 7,
+              "description": "Fixed service operated by or for an armed service."
+            },
+            "UTILITY_FIXED": {
+              "value": 8,
+              "description": "Fixed service operated by a non-broadcast, non-military user for its own operational traffic."
+            },
+            "AERONAUTICAL": {
+              "value": 9,
+              "description": "Aeronautical mobile or aeronautical fixed service."
+            },
+            "MARITIME": {
+              "value": 10,
+              "description": "Maritime mobile or maritime fixed service."
+            },
+            "PUBLIC_SAFETY_LAND_MOBILE": {
+              "value": 11,
+              "description": "Land mobile service supporting emergency response and public protection."
+            },
+            "LAND_MOBILE_PRIVATE": {
+              "value": 12,
+              "description": "Land mobile service operated by a private or commercial user."
+            },
+            "AMATEUR": {
+              "value": 13,
+              "description": "Amateur service, including unattended propagation beacons."
+            },
+            "TIME_AND_FREQUENCY_STANDARD": {
+              "value": 14,
+              "description": "Standard-frequency and time-signal service."
+            },
+            "RADIONAVIGATION": {
+              "value": 15,
+              "description": "Radionavigation service, including terrestrial hyperbolic and non-directional navigation aids."
+            },
+            "RADIOLOCATION": {
+              "value": 16,
+              "description": "Radiolocation service, including over-the-horizon and surface-wave installations."
+            },
+            "METEOROLOGICAL": {
+              "value": 17,
+              "description": "Meteorological aids or meteorological broadcast."
+            },
+            "SPACE_OPERATIONS_UPLINK": {
+              "value": 18,
+              "description": "Space operations, space research or satellite feeder-link earth-station transmission from a terrestrial facility."
+            },
+            "EXPERIMENTAL": {
+              "value": 19,
+              "description": "Service authorized for experiment or development."
+            },
+            "OTHER": {
+              "value": 20,
+              "description": "The source states a service this enum does not model. The source's own term is retained verbatim in the provenance entry, never discarded."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CONTENT": {
+          "$ref": "#/definitions/stxContentClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SOUND_PROGRAMME": {
+              "value": 1,
+              "description": "Sound programming intended for a general audience."
+            },
+            "TELEVISION_PROGRAMME": {
+              "value": 2,
+              "description": "Television programming."
+            },
+            "DIGITAL_MULTIPLEX": {
+              "value": 3,
+              "description": "Digitally multiplexed data or sound carriage."
+            },
+            "BEACON_OR_MARKER": {
+              "value": 4,
+              "description": "Continuous or intermittent carrier radiated for identification, propagation assessment or channel marking, with no programme content."
+            },
+            "FORMATTED_NUMERIC_OR_VOICE": {
+              "value": 5,
+              "description": "Keyed or spoken sequences of letters, digits or words with no published meaning, radiated on a fixed frequency by an unidentified or non-broadcast user."
+            },
+            "DATA_OR_TELEMETRY": {
+              "value": 6,
+              "description": "Data, telemetry or telecommand traffic."
+            },
+            "TIME_SIGNAL": {
+              "value": 7,
+              "description": "Standard time or frequency dissemination."
+            },
+            "SERVICE_BULLETIN": {
+              "value": 8,
+              "description": "Meteorological, navigational or safety broadcast to a service."
+            },
+            "OTHER": {
+              "value": 9,
+              "description": "The source states a content class this enum does not model. The source's own term is retained verbatim in the provenance entry."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TIME_START_UTC": {
+          "type": "string",
+          "description": "Daily on-air window in Coordinated Universal Time, as four decimal digits\n\"HHMM\". A window whose stop is not later than its start crosses midnight\nand is read as continuing into the following day. Strings because the\nregister form is four digits with significant leading zeros and no date;\nan integer would invite a consumer to treat 0000 as absence.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_STOP_UTC": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DAYS": {
+          "$ref": "#/definitions/stxDayMask",
+          "description": "Days on which the window runs. An unset field means the source publishes\nno day pattern.",
+          "x-flatbuffer-type": "stxDayMask"
+        },
+        "IRREGULAR": {
+          "type": "boolean",
+          "description": "The transmission runs without a fixed daily window \u2014 as required, on\noccurrence, or continuously. TIME_START_UTC and TIME_STOP_UTC are absent\nin that case and are never filled with 0000/2400 to stand in for it.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "VALID_FROM": {
+          "type": "string",
+          "description": "RFC 3339 UTC bounds over which this row is valid \u2014 the seasonal or\nlicence period. Either bound is absent when unpublished.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_UNTIL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEASON": {
+          "type": "string",
+          "description": "The source's own name for the validity period, verbatim: a season code, a\nschedule edition, or a period label. Never parsed into VALID_FROM by this\nstandard.",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_AREA": {
+          "type": "string",
+          "description": "Target area verbatim as the source states it, including its own zone or\nregion notation.",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ZONES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Individual target zone identifiers verbatim when the source publishes a\nlist, one entry per zone, in source order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LANGUAGE": {
+          "type": "string",
+          "description": "Language of the transmission. A BCP 47 tag when the source publishes one;\notherwise the source's own language term verbatim, never translated and\nnever guessed from the target area.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMITTER_POWER_KW": {
+          "type": "number",
+          "description": "Transmitter output power for this transmission, kilowatts. Zero means\nunpublished.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_AZIMUTH_DEG": {
+          "type": "number",
+          "description": "Main-lobe bearing for this transmission, degrees clockwise from true\nnorth. Absent for a non-directional transmission, which is stated by\nOMNIDIRECTIONAL and never by a bearing of zero.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_AZIMUTH_SECONDARY_DEG": {
+          "type": "number",
+          "description": "Secondary lobe bearing when the source publishes a slewed or dual-beam\nantenna, degrees clockwise from true north.",
+          "x-flatbuffer-type": "double"
+        },
+        "OMNIDIRECTIONAL": {
+          "type": "boolean",
+          "description": "The transmission is radiated without a preferred bearing.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ANTENNA_DESIGNATION": {
+          "type": "string",
+          "description": "Antenna designation verbatim as the source states it \u2014 a curtain-array\ncode, an antenna number, or a pattern identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "EMISSION_ID": {
+          "type": "string",
+          "description": "`$TXS`.EMISSIONS[].EMISSION_ID this row exercises, when the facility\nrecord enumerates it.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHORITY": {
+          "$ref": "#/definitions/stxScheduleAuthorityClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The publisher does not state where the row came from. AUTHORITY defaults here so an unset field can never be read as a coordination register."
+            },
+            "COORDINATION_REGISTER": {
+              "value": 1,
+              "description": "An international frequency coordination register or seasonal requirement-notification process carries the row."
+            },
+            "REGULATOR_PUBLISHED": {
+              "value": 2,
+              "description": "A spectrum regulator or licensing administration publishes the row."
+            },
+            "BROADCASTER_PUBLISHED": {
+              "value": 3,
+              "description": "The broadcaster, operator or licensee publishes its own schedule."
+            },
+            "MONITORING_OBSERVATION": {
+              "value": 4,
+              "description": "A monitoring service or organized observation programme logged the transmission and published the row from what it heard."
+            },
+            "COMMUNITY_COMPILED": {
+              "value": 5,
+              "description": "An observer community or enthusiast compilation asserts the row with no register, regulator or broadcaster behind it."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/stxScheduleStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "REGISTERED": {
+              "value": 1,
+              "description": "Registered or announced for the stated period."
+            },
+            "ACTIVE": {
+              "value": 2,
+              "description": "Registered and confirmed on the air within the stated period."
+            },
+            "PROVISIONAL": {
+              "value": 3,
+              "description": "Registered subject to coordination, or announced provisionally."
+            },
+            "UNCONFIRMED": {
+              "value": 4,
+              "description": "Documented but not heard within the period observers cover."
+            },
+            "INACTIVE": {
+              "value": 5,
+              "description": "Registered and stated to be off the air for the period."
+            },
+            "CANCELLED": {
+              "value": 6,
+              "description": "Withdrawn before or during the period."
+            },
+            "OBSERVED_ONLY": {
+              "value": 7,
+              "description": "Known only from observation; no registration is claimed."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "FIRST_OBSERVED": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe row, when observers rather than a register established it.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OBSERVED": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Independent observation reports behind the row. Zero means the source\npublishes no count, never that the transmission was never heard.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TXSProvenance"
+          },
+          "description": "Every source consulted for this row, including sources that returned\nnothing. Required: a schedule row with no named sources is not\npublishable. The provenance table is the one this family already\npublishes in `$TXS`; a schedule row and a facility carry provenance of\nthe same shape and are frequently reconciled from the same fetch.",
+          "x-flatbuffer-type": "[TXSProvenance]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ID",
+        "SOURCES"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/STX",
+  "x-flatbuffer-root-type": "STX",
+  "x-flatbuffer-file-identifier": "$STX"
+}
