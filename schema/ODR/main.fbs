@@ -1,0 +1,121 @@
+// Hash: 3d34c09d7c9a0d5b93e8bb15f622714c1105da9e05ee8ea8658f269aee31700c
+// Version: 1.202.0
+// -----------------------------------END_HEADER
+include "../FRM/main.fbs";
+include "../PCE/main.fbs";
+
+enum odrEstimatorKind : ubyte {
+  UNSPECIFIED = 0,
+  BATCH_WEIGHTED_LEAST_SQUARES = 1,
+  EXTENDED_KALMAN_FILTER = 2,
+  UNSCENTED_KALMAN_FILTER = 3,
+  EXTENDED_KALMAN_FILTER_WITH_SMOOTHER = 4
+}
+
+enum odrProcessNoiseKind : ubyte {
+  UNSPECIFIED = 0,
+  NONE = 1,
+  STATE_NOISE_COMPENSATION = 2,
+  DYNAMIC_MODEL_COMPENSATION = 3
+}
+
+enum odrConvergenceReason : ubyte {
+  UNSPECIFIED = 0,
+  CONVERGED = 1,
+  MAXIMUM_ITERATIONS = 2,
+  SINGULAR_NORMAL_MATRIX = 3,
+  DIVERGED = 4,
+  INSUFFICIENT_OBSERVATIONS = 5,
+  INVALID_INPUT = 6
+}
+
+enum odrParameterDisposition : ubyte {
+  UNSPECIFIED = 0,
+  ESTIMATED = 1,
+  CONSIDERED = 2,
+  FIXED = 3
+}
+
+table ODRSolverConfiguration {
+  ESTIMATOR: odrEstimatorKind = UNSPECIFIED;
+  MAXIMUM_ITERATIONS: uint;
+  STATE_CONVERGENCE_TOLERANCE: double;
+  RMS_CONVERGENCE_TOLERANCE: double;
+  SIGMA_EDIT_THRESHOLD: double;
+  PROCESS_NOISE: odrProcessNoiseKind = UNSPECIFIED;
+  PROCESS_NOISE_SPECTRAL_DENSITY: [double];
+  DYNAMIC_MODEL_CORRELATION_TIME_SECONDS: double;
+  PROPAGATOR_PORT_ID: string (required);
+  PROPAGATOR_CAPABILITY: string (required);
+}
+
+table ODRIterationStatistics {
+  ITERATION: uint;
+  ACCEPTED_OBSERVATION_COUNT: uint;
+  REJECTED_OBSERVATION_COUNT: uint;
+  PREFIT_RMS: double;
+  POSTFIT_RMS: double;
+  WEIGHTED_RMS: double;
+  STATE_CORRECTION_NORM: double;
+  NORMAL_MATRIX_CONDITION_NUMBER: double;
+}
+
+table ODREditedObservation {
+  OBSERVATION_ID: string (required);
+  ITERATION: uint;
+  PREFIT_RESIDUAL: double;
+  NORMALIZED_RESIDUAL: double;
+  REASON: string;
+}
+
+table ODREstimatedParameter {
+  PARAMETER: PCEParameterRef;
+  DISPOSITION: odrParameterDisposition = UNSPECIFIED;
+  A_PRIORI_VALUE: double;
+  A_PRIORI_SIGMA: double;
+  FINAL_VALUE: double;
+  FINAL_SIGMA: double;
+  UNIT: pceUnit = UNSPECIFIED;
+}
+
+table ODRFilterEpoch {
+  EPOCH: string;
+  FILTERED_STATE: FRMStateVector;
+  FILTERED_COVARIANCE: [double];
+  SMOOTHED_STATE: FRMStateVector;
+  SMOOTHED_COVARIANCE: [double];
+  NORMALIZED_INNOVATION_SQUARED: double;
+}
+
+table ODRAttestation {
+  SIGNING_PUBLIC_KEY: string (required);
+  SIGNED_AT: string;
+  SIGNATURE: [ubyte] (required);
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+/// Estimation Run Report. This is the canonical estimation-family result
+/// model. STATE_COVARIANCE is row-major with COVARIANCE_DIMENSION squared
+/// entries and is also published as the $OCM named by OCM_CONTENT_ID. The
+/// estimator report never substitutes a propagator name for its input port.
+table ODR {
+  RUN_ID: string (required);
+  STARTED_AT: string;
+  COMPLETED_AT: string;
+  CONFIGURATION: ODRSolverConfiguration;
+  CONVERGENCE_REASON: odrConvergenceReason = UNSPECIFIED;
+  ITERATIONS: [ODRIterationStatistics];
+  EDITED_OBSERVATIONS: [ODREditedObservation];
+  ESTIMATED_PARAMETERS: [ODREstimatedParameter];
+  ESTIMATED_EPOCH_STATE: FRMStateVector;
+  COVARIANCE_DIMENSION: uint;
+  STATE_COVARIANCE: [double];
+  OCM_CONTENT_ID: string (required);
+  FILTER_HISTORY: [ODRFilterEpoch];
+  RESIDUAL_RMS: double;
+  TRACE_ID: string;
+  ATTESTATION: ODRAttestation;
+}
+
+root_type ODR;
+file_identifier "$ODR";
