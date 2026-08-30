@@ -3,6 +3,7 @@
   import { onMount, tick } from "svelte";
   import { schemaTagMap } from "./schemaTaxonomy";
   import { parseSchemaFieldDefinitions } from "./schemaFields.js";
+  import DescriptionPager from "./DescriptionPager.svelte";
 
   export let params: { name: string } = { name: "" };
 
@@ -338,9 +339,10 @@
             {schemaTagMap[params.name] || "Other"}
           </span>
         </div>
-        <p class="schema-detail-desc">
-          {schemaDescriptions[params.name] || schema?.definitions?.[params.name]?.description || "Space Data Standard schema"}
-        </p>
+        <DescriptionPager
+          text={schemaDescriptions[params.name] || schema?.definitions?.[params.name]?.description || "Space Data Standard schema"}
+          label={`${params.name} description`}
+        />
       </div>
 
       <!-- SCHEMA SECTION -->
@@ -639,12 +641,6 @@
     font-size: 14px;
     font-weight: 500;
     color: white;
-  }
-
-  .schema-detail-desc {
-    font-size: 18px;
-    color: var(--text-secondary);
-    line-height: 1.6;
   }
 
   /* Section Styles */
