@@ -195,7 +195,10 @@ describe("AEM/TDM/OEM message-format extensions and the NCD container descriptor
     // standards must follow it instead of preserving a stale "last" claim.
     assert.equal(members.indexOf("NCD") + 1, 230);
     assert.equal(ordinals.ordinals.NCD, 230);
-    assert.deepEqual(members.slice(230), ["MEM", "ODR", "TRH"]);
+    assert.deepEqual(members.slice(230, 233), ["MEM", "ODR", "TRH"]);
+    assert.equal(ordinals.ordinals.MEM, 231);
+    assert.equal(ordinals.ordinals.ODR, 232);
+    assert.equal(ordinals.ordinals.TRH, 233);
     assert.equal(ordinals.ordinals.PCE, 229);
     assert.equal(ordinals.ordinals.EVL, 228);
     assert.equal(ordinals.ordinals.BPF, 227);
