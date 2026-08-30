@@ -248,6 +248,11 @@ class RecordType(object):
     EVL = 228
     PCE = 229
     NCD = 230
+    MEM = 231
+    ODR = 232
+    TRH = 233
+    SLP = 234
+    PSS = 235
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -943,4 +948,19 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.NCD:
         import NCD
         return NCD.NCDT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MEM:
+        import MEM
+        return MEM.MEMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ODR:
+        import ODR
+        return ODR.ODRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TRH:
+        import TRH
+        return TRH.TRHT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SLP:
+        import SLP
+        return SLP.SLPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PSS:
+        import PSS
+        return PSS.PSST.InitFromBuf(table.Bytes, table.Pos)
     return None

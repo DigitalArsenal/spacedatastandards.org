@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pssSolutionStatus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FEASIBLE", "INFEASIBLE", "EVALUATION_FAILED"]
+    },
+    "PSSVariableValue" : {
+      "type" : "object",
+      "properties" : {
+        "VARIABLE_ID" : {
+                "type" : "string"
+              },
+        "VALUE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["VARIABLE_ID"],
+      "additionalProperties" : false
+    },
+    "PSSObjectiveValue" : {
+      "type" : "object",
+      "properties" : {
+        "OBJECTIVE_ID" : {
+                "type" : "string"
+              },
+        "VALUE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["OBJECTIVE_ID"],
+      "additionalProperties" : false
+    },
+    "PSSConstraintValue" : {
+      "type" : "object",
+      "properties" : {
+        "CONSTRAINT_ID" : {
+                "type" : "string"
+              },
+        "VALUE" : {
+                "type" : "number"
+              },
+        "VIOLATION" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["CONSTRAINT_ID"],
+      "additionalProperties" : false
+    },
+    "PSSProvenance" : {
+      "type" : "object",
+      "properties" : {
+        "SOLVER_MODULE_ID" : {
+                "type" : "string"
+              },
+        "SOLVER_MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "SOLVER_ARTIFACT_SHA256" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_MODULE_ID" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_ARTIFACT_SHA256" : {
+                "type" : "string"
+              },
+        "SOURCE_SDS_TYPE" : {
+                "type" : "string"
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string"
+              },
+        "CREATED_AT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PSSSolution" : {
+      "type" : "object",
+      "properties" : {
+        "SOLUTION_ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/pssSolutionStatus"
+              },
+        "VARIABLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PSSVariableValue"}
+              },
+        "OBJECTIVES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PSSObjectiveValue"}
+              },
+        "CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PSSConstraintValue"}
+              },
+        "DOMINANCE_RANK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CROWDING_DISTANCE" : {
+                "type" : "number"
+              },
+        "VERIFY_BY_PROPAGATION_RESIDUAL" : {
+                "type" : "number"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PSSProvenance"
+              }
+      },
+      "required" : ["SOLUTION_ID"],
+      "additionalProperties" : false
+    },
+    "PSSAttestation" : {
+      "type" : "object",
+      "properties" : {
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters."
+              },
+        "SIGNED_AT" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both signature\npayloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON in IDL field order and capitalization,\nwith both signature fields omitted."
+              }
+      },
+      "required" : ["SIGNING_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
+    "PSS" : {
+      "type" : "object",
+      "properties" : {
+        "SOLUTION_SET_ID" : {
+                "type" : "string"
+              },
+        "PROBLEM_ID" : {
+                "type" : "string"
+              },
+        "OBJECTIVE_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SOLUTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PSSSolution"}
+              },
+        "GENERATED_AT" : {
+                "type" : "string"
+              },
+        "ATTESTATION" : {
+                "$ref" : "#/definitions/PSSAttestation"
+              }
+      },
+      "required" : ["SOLUTION_SET_ID", "PROBLEM_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PSS"
+}

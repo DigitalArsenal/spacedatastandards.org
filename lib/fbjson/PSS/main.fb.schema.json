@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pssSolutionStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FEASIBLE",
+        "INFEASIBLE",
+        "EVALUATION_FAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FEASIBLE": {
+          "value": 1
+        },
+        "INFEASIBLE": {
+          "value": 2
+        },
+        "EVALUATION_FAILED": {
+          "value": 3
+        }
+      }
+    },
+    "PSSVariableValue": {
+      "type": "object",
+      "properties": {
+        "VARIABLE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "VARIABLE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSObjectiveValue": {
+      "type": "object",
+      "properties": {
+        "OBJECTIVE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "OBJECTIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSConstraintValue": {
+      "type": "object",
+      "properties": {
+        "CONSTRAINT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VIOLATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "CONSTRAINT_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSProvenance": {
+      "type": "object",
+      "properties": {
+        "SOLVER_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLVER_MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLVER_ARTIFACT_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_ARTIFACT_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SDS_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PSSSolution": {
+      "type": "object",
+      "properties": {
+        "SOLUTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STATUS": {
+          "$ref": "#/definitions/pssSolutionStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FEASIBLE": {
+              "value": 1
+            },
+            "INFEASIBLE": {
+              "value": 2
+            },
+            "EVALUATION_FAILED": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSVariableValue"
+          },
+          "x-flatbuffer-type": "[PSSVariableValue]"
+        },
+        "OBJECTIVES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSObjectiveValue"
+          },
+          "x-flatbuffer-type": "[PSSObjectiveValue]"
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSConstraintValue"
+          },
+          "x-flatbuffer-type": "[PSSConstraintValue]"
+        },
+        "DOMINANCE_RANK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CROWDING_DISTANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VERIFY_BY_PROPAGATION_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PSSProvenance",
+          "x-flatbuffer-type": "PSSProvenance"
+        }
+      },
+      "required": [
+        "SOLUTION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both signature\npayloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON in IDL field order and capitalization,\nwith both signature fields omitted.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "PSS": {
+      "type": "object",
+      "properties": {
+        "SOLUTION_SET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROBLEM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBJECTIVE_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOLUTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSSolution"
+          },
+          "x-flatbuffer-type": "[PSSSolution]"
+        },
+        "GENERATED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/PSSAttestation",
+          "x-flatbuffer-type": "PSSAttestation"
+        }
+      },
+      "required": [
+        "SOLUTION_SET_ID",
+        "PROBLEM_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PSS",
+  "x-flatbuffer-root-type": "PSS",
+  "x-flatbuffer-file-identifier": "$PSS"
+}

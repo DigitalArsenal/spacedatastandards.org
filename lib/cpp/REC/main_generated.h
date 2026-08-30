@@ -243,6 +243,11 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -496,11 +501,16 @@ enum RecordType : uint8_t {
   RecordType_EVL = 228,
   RecordType_PCE = 229,
   RecordType_NCD = 230,
+  RecordType_MEM = 231,
+  RecordType_ODR = 232,
+  RecordType_TRH = 233,
+  RecordType_SLP = 234,
+  RecordType_PSS = 235,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_NCD
+  RecordType_MAX = RecordType_PSS
 };
 
-inline const RecordType (&EnumValuesRecordType())[231] {
+inline const RecordType (&EnumValuesRecordType())[236] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -732,13 +742,18 @@ inline const RecordType (&EnumValuesRecordType())[231] {
     RecordType_BPF,
     RecordType_EVL,
     RecordType_PCE,
-    RecordType_NCD
+    RecordType_NCD,
+    RecordType_MEM,
+    RecordType_ODR,
+    RecordType_TRH,
+    RecordType_SLP,
+    RecordType_PSS
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[232] = {
+  static const char * const names[237] = {
     "NONE",
     "ACL",
     "ACM",
@@ -970,13 +985,18 @@ inline const char * const *EnumNamesRecordType() {
     "EVL",
     "PCE",
     "NCD",
+    "MEM",
+    "ODR",
+    "TRH",
+    "SLP",
+    "PSS",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_NCD)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_PSS)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1905,6 +1925,26 @@ template<> struct RecordTypeTraits<NCD> {
   static const RecordType enum_value = RecordType_NCD;
 };
 
+template<> struct RecordTypeTraits<MEM> {
+  static const RecordType enum_value = RecordType_MEM;
+};
+
+template<> struct RecordTypeTraits<ODR> {
+  static const RecordType enum_value = RecordType_ODR;
+};
+
+template<> struct RecordTypeTraits<TRH> {
+  static const RecordType enum_value = RecordType_TRH;
+};
+
+template<> struct RecordTypeTraits<SLP> {
+  static const RecordType enum_value = RecordType_SLP;
+};
+
+template<> struct RecordTypeTraits<PSS> {
+  static const RecordType enum_value = RecordType_PSS;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2615,6 +2655,21 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const NCD *value_as_NCD() const {
     return value_type() == RecordType_NCD ? static_cast<const NCD *>(value()) : nullptr;
+  }
+  const MEM *value_as_MEM() const {
+    return value_type() == RecordType_MEM ? static_cast<const MEM *>(value()) : nullptr;
+  }
+  const ODR *value_as_ODR() const {
+    return value_type() == RecordType_ODR ? static_cast<const ODR *>(value()) : nullptr;
+  }
+  const TRH *value_as_TRH() const {
+    return value_type() == RecordType_TRH ? static_cast<const TRH *>(value()) : nullptr;
+  }
+  const SLP *value_as_SLP() const {
+    return value_type() == RecordType_SLP ? static_cast<const SLP *>(value()) : nullptr;
+  }
+  const PSS *value_as_PSS() const {
+    return value_type() == RecordType_PSS ? static_cast<const PSS *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3550,6 +3605,26 @@ template<> inline const PCE *Record::value_as<PCE>() const {
 
 template<> inline const NCD *Record::value_as<NCD>() const {
   return value_as_NCD();
+}
+
+template<> inline const MEM *Record::value_as<MEM>() const {
+  return value_as_MEM();
+}
+
+template<> inline const ODR *Record::value_as<ODR>() const {
+  return value_as_ODR();
+}
+
+template<> inline const TRH *Record::value_as<TRH>() const {
+  return value_as_TRH();
+}
+
+template<> inline const SLP *Record::value_as<SLP>() const {
+  return value_as_SLP();
+}
+
+template<> inline const PSS *Record::value_as<PSS>() const {
+  return value_as_PSS();
 }
 
 struct RecordBuilder {
@@ -4595,6 +4670,26 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_NCD: {
       auto ptr = reinterpret_cast<const NCD *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_MEM: {
+      auto ptr = reinterpret_cast<const MEM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ODR: {
+      auto ptr = reinterpret_cast<const ODR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TRH: {
+      auto ptr = reinterpret_cast<const TRH *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SLP: {
+      auto ptr = reinterpret_cast<const SLP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PSS: {
+      auto ptr = reinterpret_cast<const PSS *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

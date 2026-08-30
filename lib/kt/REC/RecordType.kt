@@ -250,5 +250,10 @@ class RecordType private constructor() {
         const val EVL: UByte = 228u
         const val PCE: UByte = 229u
         const val NCD: UByte = 230u
+        const val MEM: UByte = 231u
+        const val ODR: UByte = 232u
+        const val TRH: UByte = 233u
+        const val SLP: UByte = 234u
+        const val PSS: UByte = 235u
     }
 }

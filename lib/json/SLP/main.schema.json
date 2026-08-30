@@ -1,0 +1,1274 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
+    "frmOperationCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "PCI_TO_PCPF", "PCPF_TO_PCI", "LLA_TO_PCPF", "PCPF_TO_LLA", "STATE_TRANSFORM", "FRAME_ROTATION", "STATE_REPRESENTATION_CONVERT"]
+    },
+    "frmResultStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION", "UNSUPPORTED_AXIS_TYPE", "UNSUPPORTED_STATE_REPRESENTATION", "MISSING_EOP_DATA", "SINGULAR_ELEMENT_SET"]
+    },
+    "frmStateRepresentation" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CARTESIAN", "KEPLERIAN", "MODIFIED_KEPLERIAN", "SPHERICAL_AZFPA", "SPHERICAL_RADEC", "EQUINOCTIAL", "MODIFIED_EQUINOCTIAL", "ALTERNATE_EQUINOCTIAL", "DELAUNAY", "PLANETODETIC", "INCOMING_ASYMPTOTE", "OUTGOING_ASYMPTOTE", "BROUWER_MEAN_SHORT", "BROUWER_MEAN_LONG"]
+    },
+    "pceOwnerClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPACE_OBJECT", "SPACE_POINT", "GROUND_SITE", "THRUSTER", "FUEL_TANK", "IMPULSIVE_BURN", "FINITE_BURN", "POWER_SYSTEM", "ATTITUDE_SYSTEM", "SOLVER", "OBJECT_GROUP"]
+    },
+    "pceDataType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "REAL_SCALAR", "REAL_VECTOR", "REAL_MATRIX", "INTEGER_SCALAR", "STRING", "EPOCH", "BOOLEAN"]
+    },
+    "pceUnit" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DIMENSIONLESS", "METRE", "METRE_PER_SECOND", "METRE_PER_SECOND_SQUARED", "METRE_SQUARED", "METRE_SQUARED_PER_SECOND", "METRE_SQUARED_PER_SECOND_SQUARED", "METRE_CUBED", "RADIAN", "RADIAN_PER_SECOND", "SECOND", "DAY", "KILOGRAM", "KILOGRAM_PER_SECOND", "KILOGRAM_PER_METRE_CUBED", "KILOGRAM_METRE_SQUARED", "NEWTON", "NEWTON_METRE", "WATT", "PASCAL", "KELVIN", "METRE_SQUARED_PER_KILOGRAM", "PROVIDER_DEFINED"]
+    },
+    "pceFrameDependency" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FRAME_INDEPENDENT", "COORDINATE_SYSTEM_DEPENDENT", "CENTRAL_BODY_DEPENDENT", "SURFACE_SITE_DEPENDENT", "SECOND_OBJECT_DEPENDENT"]
+    },
+    "pceAvailability" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "IMPLEMENTED", "DECLARED_UNAVAILABLE", "DEPRECATED"]
+    },
+    "pceResultStatus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "OK", "INVALID_INPUT", "UNKNOWN_PARAMETER", "NOT_IMPLEMENTED", "MISSING_DEPENDENCY", "MISSING_OWNER_OBJECT", "MISSING_EOP_DATA", "SINGULAR_AT_STATE", "OUT_OF_DOMAIN", "GOAL_NOT_ATTAINED", "ROOT_REFINEMENT_FAILED", "BUDGET_EXCEEDED"]
+    },
+    "pceConditionDirection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ANY_CROSSING", "INCREASING", "DECREASING"]
+    },
+    "pcePropagationDirection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FORWARD", "BACKWARD"]
+    },
+    "pceParameter" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "POSITION_X", "POSITION_Y", "POSITION_Z", "VELOCITY_X", "VELOCITY_Y", "VELOCITY_Z", "POSITION_MAGNITUDE", "VELOCITY_MAGNITUDE", "RIGHT_ASCENSION", "DECLINATION", "VELOCITY_RIGHT_ASCENSION", "VELOCITY_DECLINATION", "FLIGHT_PATH_ANGLE", "AZIMUTH_ANGLE", "HORIZONTAL_FLIGHT_PATH_ANGLE", "RADIAL_VELOCITY", "ANGULAR_MOMENTUM_MAGNITUDE", "ANGULAR_MOMENTUM_X", "ANGULAR_MOMENTUM_Y", "ANGULAR_MOMENTUM_Z", "SEMI_MAJOR_AXIS", "ECCENTRICITY", "INCLINATION", "RIGHT_ASCENSION_OF_ASCENDING_NODE", "ARGUMENT_OF_PERIAPSIS", "TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY", "HYPERBOLIC_ANOMALY", "RADIUS_OF_PERIAPSIS", "RADIUS_OF_APOAPSIS", "ALTITUDE_OF_PERIAPSIS", "ALTITUDE_OF_APOAPSIS", "SEMILATUS_RECTUM", "ORBIT_PERIOD", "MEAN_MOTION", "SPECIFIC_ORBITAL_ENERGY", "CHARACTERISTIC_ENERGY", "VELOCITY_AT_PERIAPSIS", "VELOCITY_AT_APOAPSIS", "ARGUMENT_OF_LATITUDE", "TRUE_LONGITUDE", "MEAN_LONGITUDE", "BETA_ANGLE", "ECCENTRICITY_VECTOR_X", "ECCENTRICITY_VECTOR_Y", "ECCENTRICITY_VECTOR_Z", "SEMI_MINOR_AXIS", "EQUINOCTIAL_H", "EQUINOCTIAL_K", "EQUINOCTIAL_P", "EQUINOCTIAL_Q", "EQUINOCTIAL_MEAN_LONGITUDE", "MODIFIED_EQUINOCTIAL_F", "MODIFIED_EQUINOCTIAL_G", "MODIFIED_EQUINOCTIAL_H", "MODIFIED_EQUINOCTIAL_K", "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE", "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM", "ALTERNATE_EQUINOCTIAL_P", "ALTERNATE_EQUINOCTIAL_Q", "ALTERNATE_EQUINOCTIAL_MEAN_MOTION", "DELAUNAY_MEAN_ANOMALY", "DELAUNAY_ARGUMENT_OF_PERIAPSIS", "DELAUNAY_ASCENDING_NODE", "DELAUNAY_ACTION_TOTAL", "DELAUNAY_ACTION_ANGULAR_MOMENTUM", "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM", "GEODETIC_LATITUDE", "GEODETIC_LONGITUDE", "GEODETIC_ALTITUDE", "GEOCENTRIC_LATITUDE", "PLANETODETIC_RADIUS_MAGNITUDE", "PLANETODETIC_VELOCITY_MAGNITUDE", "PLANETODETIC_AZIMUTH", "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE", "LOCAL_SIDEREAL_TIME", "PRIME_MERIDIAN_HOUR_ANGLE", "B_DOT_T", "B_DOT_R", "B_VECTOR_MAGNITUDE", "B_VECTOR_ANGLE", "DECLINATION_OF_DEPARTURE_ASYMPTOTE", "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE", "INCOMING_RADIUS_OF_PERIAPSIS", "INCOMING_CHARACTERISTIC_ENERGY", "INCOMING_ASYMPTOTE_RIGHT_ASCENSION", "INCOMING_ASYMPTOTE_DECLINATION", "INCOMING_B_VECTOR_AZIMUTH", "OUTGOING_RADIUS_OF_PERIAPSIS", "OUTGOING_CHARACTERISTIC_ENERGY", "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION", "OUTGOING_ASYMPTOTE_DECLINATION", "OUTGOING_B_VECTOR_AZIMUTH", "HYPERBOLIC_EXCESS_VELOCITY", "BROUWER_SHORT_SEMI_MAJOR_AXIS", "BROUWER_SHORT_ECCENTRICITY", "BROUWER_SHORT_INCLINATION", "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS", "BROUWER_SHORT_MEAN_ANOMALY", "BROUWER_LONG_SEMI_MAJOR_AXIS", "BROUWER_LONG_ECCENTRICITY", "BROUWER_LONG_INCLINATION", "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS", "BROUWER_LONG_MEAN_ANOMALY", "ORBIT_STATE_TRANSITION_MATRIX", "ORBIT_STATE_TRANSITION_MATRIX_A", "ORBIT_STATE_TRANSITION_MATRIX_B", "ORBIT_STATE_TRANSITION_MATRIX_C", "ORBIT_STATE_TRANSITION_MATRIX_D", "ORBIT_ERROR_COVARIANCE_MATRIX", "EPOCH_A1_GREGORIAN", "EPOCH_A1_MODIFIED_JULIAN", "EPOCH_TAI_GREGORIAN", "EPOCH_TAI_MODIFIED_JULIAN", "EPOCH_TT_GREGORIAN", "EPOCH_TT_MODIFIED_JULIAN", "EPOCH_TDB_GREGORIAN", "EPOCH_TDB_MODIFIED_JULIAN", "EPOCH_UTC_GREGORIAN", "EPOCH_UTC_MODIFIED_JULIAN", "EPOCH_UT1_GREGORIAN", "EPOCH_UT1_MODIFIED_JULIAN", "EPOCH_GPS_GREGORIAN", "EPOCH_GPS_MODIFIED_JULIAN", "ELAPSED_DAYS", "ELAPSED_SECONDS", "DRY_MASS", "TOTAL_MASS", "DRAG_COEFFICIENT", "DRAG_AREA", "REFLECTIVITY_COEFFICIENT", "SOLAR_RADIATION_PRESSURE_AREA", "ATMOSPHERIC_DENSITY_SCALE_FACTOR", "DRAG_SCALE_FACTOR", "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR", "BALLISTIC_COEFFICIENT", "AREA_TO_MASS_RATIO", "CENTER_OF_MASS_X", "CENTER_OF_MASS_Y", "CENTER_OF_MASS_Z", "MOMENT_OF_INERTIA_MATRIX", "ATTITUDE_QUATERNION_1", "ATTITUDE_QUATERNION_2", "ATTITUDE_QUATERNION_3", "ATTITUDE_QUATERNION_4", "ATTITUDE_DIRECTION_COSINE_MATRIX", "EULER_ANGLE_1", "EULER_ANGLE_2", "EULER_ANGLE_3", "EULER_ANGLE_RATE_1", "EULER_ANGLE_RATE_2", "EULER_ANGLE_RATE_3", "MODIFIED_RODRIGUES_PARAMETER_1", "MODIFIED_RODRIGUES_PARAMETER_2", "MODIFIED_RODRIGUES_PARAMETER_3", "ANGULAR_VELOCITY_X", "ANGULAR_VELOCITY_Y", "ANGULAR_VELOCITY_Z", "EULER_AXIS_X", "EULER_AXIS_Y", "EULER_AXIS_Z", "PRINCIPAL_ROTATION_ANGLE", "TANK_FUEL_MASS", "TANK_PRESSURE", "TANK_TEMPERATURE", "TANK_REFERENCE_TEMPERATURE", "TANK_VOLUME", "TANK_FUEL_DENSITY", "THRUSTER_DUTY_CYCLE", "THRUSTER_THRUST_SCALE_FACTOR", "THRUSTER_GRAVITATIONAL_ACCELERATION", "THRUSTER_MIXTURE_RATIO", "THRUSTER_SPECIFIC_IMPULSE", "THRUSTER_THRUST_MAGNITUDE", "THRUSTER_MASS_FLOW_RATE", "THRUSTER_DIRECTION_X", "THRUSTER_DIRECTION_Y", "THRUSTER_DIRECTION_Z", "THRUSTER_THRUST_COEFFICIENTS", "THRUSTER_IMPULSE_COEFFICIENTS", "IMPULSIVE_BURN_ELEMENT_1", "IMPULSIVE_BURN_ELEMENT_2", "IMPULSIVE_BURN_ELEMENT_3", "IMPULSIVE_BURN_DELTA_V_MAGNITUDE", "IMPULSIVE_BURN_MASS_CONSUMED", "FINITE_BURN_THRUST_MAGNITUDE", "FINITE_BURN_MASS_FLOW_RATE", "FINITE_BURN_THRUST_X", "FINITE_BURN_THRUST_Y", "FINITE_BURN_THRUST_Z", "FINITE_BURN_ACCELERATION_MAGNITUDE", "FINITE_BURN_MASS_CONSUMED", "TOTAL_POWER_AVAILABLE", "REQUIRED_BUS_POWER", "THRUST_POWER_AVAILABLE", "GENERATED_POWER", "TOTAL_TORQUE_X", "TOTAL_TORQUE_Y", "TOTAL_TORQUE_Z", "TOTAL_TORQUE_MAGNITUDE", "SOLVER_STATUS", "SOLVER_ITERATION_COUNT", "SOLVER_OBJECTIVE_VALUE", "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION", "RELATIVE_RANGE", "RELATIVE_RANGE_RATE", "RELATIVE_POSITION_X", "RELATIVE_POSITION_Y", "RELATIVE_POSITION_Z", "RELATIVE_VELOCITY_X", "RELATIVE_VELOCITY_Y", "RELATIVE_VELOCITY_Z", "TOPOCENTRIC_AZIMUTH", "TOPOCENTRIC_ELEVATION", "ANGULAR_SEPARATION", "SOLAR_PHASE_ANGLE", "LOCAL_SOLAR_ELEVATION_ANGLE", "ILLUMINATION_FRACTION", "LIGHT_TIME_DELAY", "PROVIDER_DEFINED"]
+    },
+    "slpProblemKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TARGET", "OPTIMIZE"]
+    },
+    "slpAlgorithm" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NEWTON_RAPHSON", "BROYDEN", "MODIFIED_BROYDEN", "SEQUENTIAL_QUADRATIC_PROGRAMMING"]
+    },
+    "slpDifferenceMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FORWARD", "CENTRAL", "ANALYTIC_STATE_TRANSITION_MATRIX"]
+    },
+    "slpObjectiveDirection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MINIMIZE", "MAXIMIZE"]
+    },
+    "slpConstraintRelation" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "EQUAL", "LESS_THAN_OR_EQUAL", "GREATER_THAN_OR_EQUAL", "INTERVAL"]
+    },
+    "slpSolveStatus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CONVERGED", "INVALID_PROBLEM", "EVALUATION_FAILED", "SINGULAR_JACOBIAN", "BUDGET_EXCEEDED", "STALLED", "INFEASIBLE"]
+    },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMVector3" : {
+      "type" : "object",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMMatrix3" : {
+      "type" : "object",
+      "properties" : {
+        "M11" : {
+                "type" : "number"
+              },
+        "M12" : {
+                "type" : "number"
+              },
+        "M13" : {
+                "type" : "number"
+              },
+        "M21" : {
+                "type" : "number"
+              },
+        "M22" : {
+                "type" : "number"
+              },
+        "M23" : {
+                "type" : "number"
+              },
+        "M31" : {
+                "type" : "number"
+              },
+        "M32" : {
+                "type" : "number"
+              },
+        "M33" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMStateVector" : {
+      "type" : "object",
+      "description" : "A state in a named element set at a named epoch. ELEMENTS is the element\nset's own 6 values in the order documented on frmStateRepresentation.\nPOSITION and VELOCITY are the Cartesian projection of the same state and\nare populated when REPRESENTATION is CARTESIAN or when the provider can\nsupply them; a consumer MUST NOT infer velocity from POSITION alone.",
+      "properties" : {
+        "REPRESENTATION" : {
+                "$ref" : "#/definitions/frmStateRepresentation"
+              },
+        "ELEMENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The 6 element values of REPRESENTATION, SI units and radians."
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Cartesian position, metres."
+              },
+        "VELOCITY" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Cartesian velocity, metres per second."
+              },
+        "COORDINATE_SYSTEM_NAME" : {
+                "type" : "string",
+                "description" : "Name of the coordinate system these elements are expressed in; resolves\nagainst RFMCoordinateSystem.NAME."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this state, ISO 8601."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "GRAVITATIONAL_PARAMETER" : {
+                "type" : "number",
+                "description" : "Gravitational parameter, m^3/s^2, of the origin body when the element\nset requires one. Absent means the provider's default for the origin."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMFrameTransformRequest" : {
+      "type" : "object",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/frmOperationCode"
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3"
+              },
+        "TRANSFORM_DCM" : {
+                "$ref" : "#/definitions/FRMMatrix3"
+              },
+        "EQUATORIAL_RADIUS_M" : {
+                "type" : "number"
+              },
+        "POLAR_RADIUS_M" : {
+                "type" : "number"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "Coordinate system the request's state is expressed in."
+              },
+        "TARGET_COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "Coordinate system the result is required in."
+              },
+        "SOURCE_STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "The full input state, carrying velocity as well as position. POSITION\nabove is position-only and remains the input for operations 1-4."
+              },
+        "TARGET_REPRESENTATION" : {
+                "$ref" : "#/definitions/frmStateRepresentation",
+                "description" : "Element set the result must be expressed in."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the transform is evaluated at, ISO 8601. Required for every\ntime-dependent axis chain."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set the caller requires\nthe provider to use. A provider that cannot honour it returns\nMISSING_EOP_DATA rather than substituting another table."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMFrameTransformResult" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/frmResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "TARGET_STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and\nTARGET_REPRESENTATION."
+              },
+        "ROTATION_DCM" : {
+                "$ref" : "#/definitions/FRMMatrix3",
+                "description" : "Rotation from the source axes to the target axes at EPOCH."
+              },
+        "ROTATION_DCM_RATE" : {
+                "$ref" : "#/definitions/FRMMatrix3",
+                "description" : "Time derivative of ROTATION_DCM, per second. Required for a velocity\ntransform between relatively rotating axis sets."
+              },
+        "ANGULAR_VELOCITY_RAD_S" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Angular velocity of the target axes with respect to the source axes,\nradians per second, expressed in the source axes."
+              },
+        "EOP_DATA_SET_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the Earth-orientation data set actually used, ISO 8601."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set actually used."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRM" : {
+      "type" : "object",
+      "properties" : {
+        "FRAME_TRANSFORM_REQUEST" : {
+                "$ref" : "#/definitions/FRMFrameTransformRequest"
+              },
+        "FRAME_TRANSFORM_RESULT" : {
+                "$ref" : "#/definitions/FRMFrameTransformResult"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterRef" : {
+      "type" : "object",
+      "description" : "A reference to one parameter, with the dependencies that make it evaluable.\nThis is what a request, a stopping condition and a report column all name.",
+      "properties" : {
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter",
+                "description" : "Roster member, or PROVIDER_DEFINED."
+              },
+        "PROVIDER_DEFINED_NAME" : {
+                "type" : "string",
+                "description" : "REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise."
+              },
+        "ELEMENT_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Component of a vector or matrix parameter, zero-based and row-major.\nNegative selects the whole value."
+              },
+        "COORDINATE_SYSTEM_NAME" : {
+                "type" : "string",
+                "description" : "Coordinate system this evaluation is expressed in; resolves against\nRFMCoordinateSystem.NAME in PCEEvaluationContext.COORDINATE_SYSTEMS.\nAbsent means the context default."
+              },
+        "CENTRAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the central body, when the parameter is\nCENTRAL_BODY_DEPENDENT and the context default is not wanted."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Site the parameter is evaluated from, when it is SURFACE_SITE_DEPENDENT."
+              },
+        "SECOND_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Second object, when the parameter is SECOND_OBJECT_DEPENDENT."
+              },
+        "OWNER_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Owning object, when the request evaluates more than one."
+              },
+        "OWNER_HARDWARE_NAME" : {
+                "type" : "string",
+                "description" : "Owning hardware item, when the owner class is THRUSTER, FUEL_TANK or a\nburn."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system for an EPOCH-typed parameter, named by the $TIM\ntimingStandard member name. Absent means the context default."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterDescriptor" : {
+      "type" : "object",
+      "description" : "One roster entry as a named publisher implements it. The catalog is the\nauthority a consumer resolves a name through BEFORE it asks for a value.",
+      "properties" : {
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_NAME" : {
+                "type" : "string",
+                "description" : "REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise."
+              },
+        "OWNER_CLASS" : {
+                "$ref" : "#/definitions/pceOwnerClass"
+              },
+        "DATA_TYPE" : {
+                "$ref" : "#/definitions/pceDataType"
+              },
+        "UNIT" : {
+                "$ref" : "#/definitions/pceUnit"
+              },
+        "PROVIDER_DEFINED_UNIT_SYMBOL" : {
+                "type" : "string",
+                "description" : "REQUIRED when UNIT is PROVIDER_DEFINED, absent otherwise."
+              },
+        "ELEMENT_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of values for REAL_VECTOR, and rows times columns for\nREAL_MATRIX. Absent or 1 for a scalar."
+              },
+        "ROW_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Matrix shape, REQUIRED when DATA_TYPE is REAL_MATRIX."
+              },
+        "COLUMN_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FRAME_DEPENDENCY" : {
+                "$ref" : "#/definitions/pceFrameDependency"
+              },
+        "REQUIRED_AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "The one axis set this parameter is defined for, when it is defined for\nonly one: planetodetic quantities require BODY_FIXED. UNSPECIFIED means\nany axis set the request names."
+              },
+        "REQUIRED_ORIGIN_KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind",
+                "description" : "The one origin kind this parameter is defined for, when it is defined\nfor only one. UNSPECIFIED means any origin the request names."
+              },
+        "TIME_SYSTEM_DEPENDENT" : {
+                "type" : "boolean",
+                "description" : "The value changes with the time system it is asked for, independently of\nthe frame."
+              },
+        "STATE_REPRESENTATION" : {
+                "$ref" : "#/definitions/frmStateRepresentation",
+                "description" : "The element set this parameter is a member of, when it is a member of\none; UNSPECIFIED for a derived scalar that belongs to no set."
+              },
+        "AVAILABILITY" : {
+                "$ref" : "#/definitions/pceAvailability"
+              },
+        "UNAVAILABLE_REASON" : {
+                "type" : "string",
+                "description" : "REQUIRED when AVAILABILITY is DECLARED_UNAVAILABLE: what is missing,\nstated as a capability, so a consumer can report the refusal."
+              },
+        "SUPERSEDED_BY" : {
+                "$ref" : "#/definitions/pceParameter",
+                "description" : "REQUIRED when AVAILABILITY is DEPRECATED: the parameter to migrate to."
+              },
+        "SUPPORTS_STOPPING_CONDITION" : {
+                "type" : "boolean",
+                "description" : "The publisher can bracket and refine a root of this parameter, so it may\nbe used as a stopping condition or a generic event function. A parameter\nthat is not continuous in time MUST declare false."
+              },
+        "IS_SETTABLE" : {
+                "type" : "boolean",
+                "description" : "The parameter can be written as well as read, so it may be a targeting\nvariable."
+              },
+        "IS_CYCLIC" : {
+                "type" : "boolean",
+                "description" : "The value wraps: a goal crossing must be tested modulo the cycle."
+              },
+        "CYCLE_LOWER_BOUND" : {
+                "type" : "number",
+                "description" : "Inclusive lower and exclusive upper bound of the cycle, REQUIRED when\nIS_CYCLIC is true."
+              },
+        "CYCLE_UPPER_BOUND" : {
+                "type" : "number"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "One sentence, capability language, no product or organization names."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterCatalog" : {
+      "type" : "object",
+      "description" : "The roster a named publisher offers, resolved as a whole. A consumer\ncaches this and resolves every later name against it.",
+      "properties" : {
+        "CATALOG_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the catalog itself."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the publisher that evaluates these parameters."
+              },
+        "PUBLISHED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 instant this catalog was published."
+              },
+        "ENTRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterDescriptor"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEEvaluationContext" : {
+      "type" : "object",
+      "description" : "Everything an evaluation needs besides the state itself.",
+      "properties" : {
+        "OWNER_CLASS" : {
+                "$ref" : "#/definitions/pceOwnerClass"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the object the parameters are evaluated on."
+              },
+        "HARDWARE_NAME" : {
+                "type" : "string",
+                "description" : "Hardware item, when the owner class names one."
+              },
+        "CENTRAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the default central body."
+              },
+        "GRAVITATIONAL_PARAMETER" : {
+                "type" : "number",
+                "description" : "Gravitational parameter of the central body, m^3/s^2. Absent means the\nprovider's own value for CENTRAL_BODY_ID."
+              },
+        "EQUATORIAL_RADIUS_M" : {
+                "type" : "number",
+                "description" : "Shape of the central body, REQUIRED for planetodetic parameters."
+              },
+        "FLATTENING" : {
+                "type" : "number"
+              },
+        "COORDINATE_SYSTEMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFMCoordinateSystem"},
+                "description" : "Fully specified coordinate systems, each named through\nRFMCoordinateSystem.NAME."
+              },
+        "DEFAULT_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string",
+                "description" : "Which of COORDINATE_SYSTEMS a parameter reference falls back to."
+              },
+        "DEFAULT_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system a parameter reference falls back to, named by the $TIM\ntimingStandard member name."
+              },
+        "REFERENCE_EPOCH" : {
+                "type" : "string",
+                "description" : "Zero of ELAPSED_DAYS and ELAPSED_SECONDS, ISO 8601."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set the caller requires.\nA provider that cannot honour it returns MISSING_EOP_DATA rather than\nsubstituting another table."
+              },
+        "ILLUMINATING_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the illuminating body for lighting parameters."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEEvaluationRequest" : {
+      "type" : "object",
+      "description" : "Evaluate these parameters on these states. One state is a point query; a\nrun of states is a report or a plot series, and carries the same shape.",
+      "properties" : {
+        "CONTEXT" : {
+                "$ref" : "#/definitions/PCEEvaluationContext"
+              },
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterRef"}
+              },
+        "STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FRMStateVector"},
+                "description" : "States to evaluate at, in chronological order. Each carries its own\nepoch and coordinate system name."
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterValue" : {
+      "type" : "object",
+      "description" : "One parameter's value at one state. STATUS is per value: a request never\nfails as a whole because one name is unavailable.",
+      "properties" : {
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_NAME" : {
+                "type" : "string",
+                "description" : "REQUIRED when PARAMETER is PROVIDER_DEFINED."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/pceResultStatus"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Scalar, integer or boolean value. Absent for vector and matrix types."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Vector or matrix values, row-major. Absent for scalar types; a scalar is\nNEVER also written here."
+              },
+        "ROW_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Matrix shape, REQUIRED when the descriptor's DATA_TYPE is REAL_MATRIX."
+              },
+        "COLUMN_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "STRING_VALUE" : {
+                "type" : "string",
+                "description" : "Text or ISO 8601 epoch value."
+              },
+        "UNIT" : {
+                "$ref" : "#/definitions/pceUnit",
+                "description" : "Unit the value is expressed in, restating the descriptor so a value is\nself-describing when it travels without its catalog."
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "Why STATUS is not OK, in capability language."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterSample" : {
+      "type" : "object",
+      "description" : "The evaluated parameters at ONE epoch.",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this sample, ISO 8601."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "PARAMETER_VALUES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterValue"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEEvaluationResult" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/pceResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "SAMPLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterSample"},
+                "description" : "One sample per requested state, in the requested order."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set actually used."
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEParameterCondition" : {
+      "type" : "object",
+      "description" : "A predicate on a named parameter: the parameter attains GOAL_VALUE, in\nDIRECTION, for the OCCURRENCE-th time. This is the ONE spelling of a\nstopping condition and of a generic event function; $EVL references it\nrather than minting a second one.",
+      "properties" : {
+        "PARAMETER" : {
+                "$ref" : "#/definitions/PCEParameterRef"
+              },
+        "GOAL_VALUE" : {
+                "type" : "number",
+                "description" : "Value the parameter must attain, in the parameter's own SI unit."
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/pceConditionDirection"
+              },
+        "GOAL_TOLERANCE" : {
+                "type" : "number",
+                "description" : "Convergence bar on the parameter value at the reported epoch, in the\nparameter's own unit. A provider that cannot meet it returns\nROOT_REFINEMENT_FAILED rather than reporting an unconverged root."
+              },
+        "OCCURRENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Which attainment satisfies the condition, one-based. 0 and 1 both mean\nthe first."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEStopRequest" : {
+      "type" : "object",
+      "description" : "Propagate until a condition is attained. The propagator itself is NOT named\nhere: it is a port the caller supplies, per the pluggable-propagation law.\nThis record carries only the condition, the interval and the tolerances.",
+      "properties" : {
+        "CONTEXT" : {
+                "$ref" : "#/definitions/PCEEvaluationContext"
+              },
+        "INITIAL_STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "State the propagation starts from."
+              },
+        "CONDITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterCondition"},
+                "description" : "Conditions evaluated together; the run stops at whichever is attained\nfirst in time."
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/pcePropagationDirection"
+              },
+        "MAXIMUM_ELAPSED_SECONDS" : {
+                "type" : "number",
+                "description" : "Upper bound on the propagated interval. Reaching it without attaining a\ncondition is GOAL_NOT_ATTAINED, never a silent stop."
+              },
+        "EPOCH_TOLERANCE_SECONDS" : {
+                "type" : "number",
+                "description" : "Convergence bar on the stop epoch. The same scenario run at different\nstep sizes MUST land inside this bar."
+              },
+        "SYNCHRONIZED_OBJECT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Objects propagated in step with the owner and reported at the same stop\nepoch."
+              },
+        "REPORT_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCEParameterRef"},
+                "description" : "Parameters to evaluate at the stop epoch, beyond the condition itself."
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCEStopReport" : {
+      "type" : "object",
+      "description" : "Where a propagate-to-condition run actually landed.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/pceResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "ATTAINED_CONDITION_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index into PCEStopRequest.CONDITIONS of the condition that stopped the\nrun; negative when none did."
+              },
+        "ATTAINED_OCCURRENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Which attainment this was, one-based."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the run stopped at, ISO 8601."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "ELAPSED_SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds of propagated time from the initial state to EPOCH; negative for\na BACKWARD run."
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "State at EPOCH."
+              },
+        "ACHIEVED_VALUE" : {
+                "type" : "number",
+                "description" : "Value the condition parameter actually had at EPOCH."
+              },
+        "GOAL_RESIDUAL" : {
+                "type" : "number",
+                "description" : "ACHIEVED_VALUE minus GOAL_VALUE, in the parameter's own unit. This is\nthe residual a consumer gates on; it is NOT assumed to be zero."
+              },
+        "SYNCHRONIZED_STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FRMStateVector"},
+                "description" : "States of SYNCHRONIZED_OBJECT_IDS at the same epoch, in that order."
+              },
+        "SAMPLE" : {
+                "$ref" : "#/definitions/PCEParameterSample",
+                "description" : "Parameters evaluated at the stop epoch."
+              },
+        "FUNCTION_EVALUATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Root-refinement work actually done, for the step-independence evidence."
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCE" : {
+      "type" : "object",
+      "description" : "Parameter Catalog and Evaluation\n\nThe named calculation parameters an analysis resolves through: their owner\nclass, unit, data type, frame dependency and per-publisher availability\n(CATALOG), a request and result for evaluating named parameters on states\nat epochs in a stated coordinate system (EVALUATION_REQUEST /\nEVALUATION_RESULT), and propagate-to-condition, which is a predicate on one\nof those same names rather than a vocabulary of its own (STOP_REQUEST /\nSTOP_REPORT). Stopping conditions, targeting goals, report columns and plot\nseries all resolve names here, so a name means one thing everywhere.\n\nAngles are radians, lengths metres, durations seconds, masses kilograms.\nA buffer carries the members its exchange needs; a catalog publication and\nan evaluation exchange are both complete $PCE records.",
+      "properties" : {
+        "CATALOG" : {
+                "$ref" : "#/definitions/PCEParameterCatalog"
+              },
+        "EVALUATION_REQUEST" : {
+                "$ref" : "#/definitions/PCEEvaluationRequest"
+              },
+        "EVALUATION_RESULT" : {
+                "$ref" : "#/definitions/PCEEvaluationResult"
+              },
+        "STOP_REQUEST" : {
+                "$ref" : "#/definitions/PCEStopRequest"
+              },
+        "STOP_REPORT" : {
+                "$ref" : "#/definitions/PCEStopReport"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SLPVariable" : {
+      "type" : "object",
+      "properties" : {
+        "VARIABLE_ID" : {
+                "type" : "string"
+              },
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_PARAMETER_NAME" : {
+                "type" : "string"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "number"
+              },
+        "LOWER_BOUND" : {
+                "type" : "number"
+              },
+        "UPPER_BOUND" : {
+                "type" : "number"
+              },
+        "PERTURBATION" : {
+                "type" : "number"
+              },
+        "SCALE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["VARIABLE_ID"],
+      "additionalProperties" : false
+    },
+    "SLPGoal" : {
+      "type" : "object",
+      "properties" : {
+        "GOAL_ID" : {
+                "type" : "string"
+              },
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_PARAMETER_NAME" : {
+                "type" : "string"
+              },
+        "TARGET_VALUE" : {
+                "type" : "number"
+              },
+        "TOLERANCE" : {
+                "type" : "number"
+              },
+        "SCALE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["GOAL_ID"],
+      "additionalProperties" : false
+    },
+    "SLPObjective" : {
+      "type" : "object",
+      "properties" : {
+        "OBJECTIVE_ID" : {
+                "type" : "string"
+              },
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_PARAMETER_NAME" : {
+                "type" : "string"
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/slpObjectiveDirection"
+              },
+        "SCALE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["OBJECTIVE_ID"],
+      "additionalProperties" : false
+    },
+    "SLPNonlinearConstraint" : {
+      "type" : "object",
+      "properties" : {
+        "CONSTRAINT_ID" : {
+                "type" : "string"
+              },
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter"
+              },
+        "PROVIDER_DEFINED_PARAMETER_NAME" : {
+                "type" : "string"
+              },
+        "RELATION" : {
+                "$ref" : "#/definitions/slpConstraintRelation"
+              },
+        "LOWER_BOUND" : {
+                "type" : "number"
+              },
+        "UPPER_BOUND" : {
+                "type" : "number"
+              },
+        "TOLERANCE" : {
+                "type" : "number"
+              },
+        "SCALE" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["CONSTRAINT_ID"],
+      "additionalProperties" : false
+    },
+    "SLPSolverSettings" : {
+      "type" : "object",
+      "properties" : {
+        "ALGORITHM" : {
+                "$ref" : "#/definitions/slpAlgorithm"
+              },
+        "DIFFERENCE_MODE" : {
+                "$ref" : "#/definitions/slpDifferenceMode"
+              },
+        "MAXIMUM_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MAXIMUM_EVALUATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "RESIDUAL_TOLERANCE" : {
+                "type" : "number"
+              },
+        "STEP_TOLERANCE" : {
+                "type" : "number"
+              },
+        "OBJECTIVE_TOLERANCE" : {
+                "type" : "number"
+              },
+        "CONSTRAINT_TOLERANCE" : {
+                "type" : "number"
+              },
+        "KKT_TOLERANCE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SLPIteration" : {
+      "type" : "object",
+      "properties" : {
+        "ITERATION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "VARIABLES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "RESIDUAL_NORM" : {
+                "type" : "number"
+              },
+        "OBJECTIVE_VALUE" : {
+                "type" : "number"
+              },
+        "MAXIMUM_CONSTRAINT_VIOLATION" : {
+                "type" : "number"
+              },
+        "JACOBIAN_CONDITION_ESTIMATE" : {
+                "type" : "number"
+              },
+        "KKT_RESIDUAL" : {
+                "type" : "number"
+              },
+        "EVALUATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SLPSolverReport" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/slpSolveStatus"
+              },
+        "MESSAGE" : {
+                "type" : "string"
+              },
+        "ITERATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SLPIteration"}
+              },
+        "FINAL_VARIABLES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "FINAL_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "OBJECTIVE_VALUE" : {
+                "type" : "number"
+              },
+        "RESIDUAL_NORM" : {
+                "type" : "number"
+              },
+        "MAXIMUM_CONSTRAINT_VIOLATION" : {
+                "type" : "number"
+              },
+        "KKT_RESIDUAL" : {
+                "type" : "number"
+              },
+        "EVALUATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SLPAttestation" : {
+      "type" : "object",
+      "properties" : {
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters."
+              },
+        "SIGNED_AT" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both signature\npayloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON in IDL field order and capitalization,\nwith both signature fields omitted."
+              }
+      },
+      "required" : ["SIGNING_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
+    "SLP" : {
+      "type" : "object",
+      "properties" : {
+        "PROBLEM_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/slpProblemKind"
+              },
+        "PROPAGATOR_PORT_ID" : {
+                "type" : "string"
+              },
+        "OBJECTIVE_EVALUATOR_PORT_ID" : {
+                "type" : "string"
+              },
+        "VARIABLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SLPVariable"}
+              },
+        "GOALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SLPGoal"}
+              },
+        "OBJECTIVE" : {
+                "$ref" : "#/definitions/SLPObjective"
+              },
+        "CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SLPNonlinearConstraint"}
+              },
+        "SETTINGS" : {
+                "$ref" : "#/definitions/SLPSolverSettings"
+              },
+        "REPORT" : {
+                "$ref" : "#/definitions/SLPSolverReport"
+              },
+        "CREATED_AT" : {
+                "type" : "string"
+              },
+        "ATTESTATION" : {
+                "$ref" : "#/definitions/SLPAttestation"
+              }
+      },
+      "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SLP"
+}

@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "trhHardwareKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ANTENNA",
+        "TRANSMITTER",
+        "RECEIVER",
+        "TRANSPONDER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ANTENNA": {
+          "value": 1
+        },
+        "TRANSMITTER": {
+          "value": 2
+        },
+        "RECEIVER": {
+          "value": 3
+        },
+        "TRANSPONDER": {
+          "value": 4
+        }
+      }
+    },
+    "trhTurnaroundMode": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "COHERENT",
+        "NONCOHERENT",
+        "REGENERATIVE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "COHERENT": {
+          "value": 1
+        },
+        "NONCOHERENT": {
+          "value": 2
+        },
+        "REGENERATIVE": {
+          "value": 3
+        }
+      }
+    },
+    "TRHAntenna": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN_DBI": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PHASE_CENTER_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHTransmitter": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_WATTS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MODULATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HARDWARE_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHReceiver": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CENTER_FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SYSTEM_NOISE_TEMPERATURE_KELVIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HARDWARE_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHTransponder": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TURNAROUND_MODE": {
+          "$ref": "#/definitions/trhTurnaroundMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "COHERENT": {
+              "value": 1
+            },
+            "NONCOHERENT": {
+              "value": 2
+            },
+            "REGENERATIVE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TURNAROUND_NUMERATOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "TURNAROUND_DENOMINATOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "GROUP_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMITTER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHHardwareRef": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_KIND": {
+          "$ref": "#/definitions/trhHardwareKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ANTENNA": {
+              "value": 1
+            },
+            "TRANSMITTER": {
+              "value": 2
+            },
+            "RECEIVER": {
+              "value": 3
+            },
+            "TRANSPONDER": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHInstallation": {
+      "type": "object",
+      "properties": {
+        "OWNER_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "HARDWARE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHHardwareRef"
+          },
+          "x-flatbuffer-type": "[TRHHardwareRef]"
+        },
+        "CLOCK_BIAS_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT_SECONDS_PER_SECOND": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "OWNER_OBJECT_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "TRH": {
+      "type": "object",
+      "description": "Tracking Hardware. Installations attach antennas, transmitters, receivers\nand transponders to either a surface site or a tracked object. Delays are\nseconds, frequencies hertz, temperatures kelvin and powers watts. JSON\nprojections preserve these IDL-capitalized field names exactly.",
+      "properties": {
+        "ANTENNAS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHAntenna"
+          },
+          "x-flatbuffer-type": "[TRHAntenna]"
+        },
+        "TRANSMITTERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHTransmitter"
+          },
+          "x-flatbuffer-type": "[TRHTransmitter]"
+        },
+        "RECEIVERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHReceiver"
+          },
+          "x-flatbuffer-type": "[TRHReceiver]"
+        },
+        "TRANSPONDERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHTransponder"
+          },
+          "x-flatbuffer-type": "[TRHTransponder]"
+        },
+        "INSTALLATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHInstallation"
+          },
+          "x-flatbuffer-type": "[TRHInstallation]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/TRHAttestation",
+          "x-flatbuffer-type": "TRHAttestation"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TRH",
+  "x-flatbuffer-root-type": "TRH",
+  "x-flatbuffer-file-identifier": "$TRH"
+}

@@ -1,0 +1,560 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "memMeasurementType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RANGE",
+        "RANGE_RATE",
+        "DOPPLER",
+        "AZIMUTH_ELEVATION",
+        "X_EAST_Y_NORTH",
+        "X_SOUTH_Y_EAST",
+        "RIGHT_ASCENSION_DECLINATION",
+        "POSITION_VECTOR",
+        "SEQUENTIAL_RANGE",
+        "PSEUDONOISE_RANGE",
+        "TIME_CORRELATED_PHASE",
+        "RELAY_RANGE",
+        "RELAY_DOPPLER",
+        "RELAY_DIFFERENCED_DOPPLER",
+        "BISTATIC_RANGE",
+        "SKIN_RANGE",
+        "CROSSLINK_RANGE",
+        "CROSSLINK_RANGE_RATE",
+        "LASER_RANGE",
+        "TIME_DIFFERENCE_OF_ARRIVAL",
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RANGE": {
+          "value": 1
+        },
+        "RANGE_RATE": {
+          "value": 2
+        },
+        "DOPPLER": {
+          "value": 3
+        },
+        "AZIMUTH_ELEVATION": {
+          "value": 4
+        },
+        "X_EAST_Y_NORTH": {
+          "value": 5
+        },
+        "X_SOUTH_Y_EAST": {
+          "value": 6
+        },
+        "RIGHT_ASCENSION_DECLINATION": {
+          "value": 7
+        },
+        "POSITION_VECTOR": {
+          "value": 8
+        },
+        "SEQUENTIAL_RANGE": {
+          "value": 9
+        },
+        "PSEUDONOISE_RANGE": {
+          "value": 10
+        },
+        "TIME_CORRELATED_PHASE": {
+          "value": 11
+        },
+        "RELAY_RANGE": {
+          "value": 12
+        },
+        "RELAY_DOPPLER": {
+          "value": 13
+        },
+        "RELAY_DIFFERENCED_DOPPLER": {
+          "value": 14
+        },
+        "BISTATIC_RANGE": {
+          "value": 15
+        },
+        "SKIN_RANGE": {
+          "value": 16
+        },
+        "CROSSLINK_RANGE": {
+          "value": 17
+        },
+        "CROSSLINK_RANGE_RATE": {
+          "value": 18
+        },
+        "LASER_RANGE": {
+          "value": 19
+        },
+        "TIME_DIFFERENCE_OF_ARRIVAL": {
+          "value": 20
+        },
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+          "value": 21
+        }
+      }
+    },
+    "memEditingAction": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPT",
+        "REJECT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPT": {
+          "value": 1
+        },
+        "REJECT": {
+          "value": 2
+        }
+      }
+    },
+    "memEditingReason": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPTED",
+        "OUTSIDE_EPOCH_WINDOW",
+        "OUTSIDE_VALUE_WINDOW",
+        "SIGMA_THRESHOLD",
+        "INVALID_GEOMETRY",
+        "MISSING_MEDIA_INPUT",
+        "HARDWARE_UNAVAILABLE",
+        "DUPLICATE",
+        "PROVIDER_FLAGGED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPTED": {
+          "value": 1
+        },
+        "OUTSIDE_EPOCH_WINDOW": {
+          "value": 2
+        },
+        "OUTSIDE_VALUE_WINDOW": {
+          "value": 3
+        },
+        "SIGMA_THRESHOLD": {
+          "value": 4
+        },
+        "INVALID_GEOMETRY": {
+          "value": 5
+        },
+        "MISSING_MEDIA_INPUT": {
+          "value": 6
+        },
+        "HARDWARE_UNAVAILABLE": {
+          "value": 7
+        },
+        "DUPLICATE": {
+          "value": 8
+        },
+        "PROVIDER_FLAGGED": {
+          "value": 9
+        }
+      }
+    },
+    "memTroposphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "HOPFIELD_SAASTAMOINEN",
+        "MARINI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "HOPFIELD_SAASTAMOINEN": {
+          "value": 2
+        },
+        "MARINI": {
+          "value": 3
+        }
+      }
+    },
+    "memIonosphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "TOTAL_ELECTRON_CONTENT",
+        "REFERENCE_PROFILE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "TOTAL_ELECTRON_CONTENT": {
+          "value": 2
+        },
+        "REFERENCE_PROFILE": {
+          "value": 3
+        }
+      }
+    },
+    "MEMErrorModel": {
+      "type": "object",
+      "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+      "properties": {
+        "MODEL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MEASUREMENT_TYPE": {
+          "$ref": "#/definitions/memMeasurementType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RANGE": {
+              "value": 1
+            },
+            "RANGE_RATE": {
+              "value": 2
+            },
+            "DOPPLER": {
+              "value": 3
+            },
+            "AZIMUTH_ELEVATION": {
+              "value": 4
+            },
+            "X_EAST_Y_NORTH": {
+              "value": 5
+            },
+            "X_SOUTH_Y_EAST": {
+              "value": 6
+            },
+            "RIGHT_ASCENSION_DECLINATION": {
+              "value": 7
+            },
+            "POSITION_VECTOR": {
+              "value": 8
+            },
+            "SEQUENTIAL_RANGE": {
+              "value": 9
+            },
+            "PSEUDONOISE_RANGE": {
+              "value": 10
+            },
+            "TIME_CORRELATED_PHASE": {
+              "value": 11
+            },
+            "RELAY_RANGE": {
+              "value": 12
+            },
+            "RELAY_DOPPLER": {
+              "value": 13
+            },
+            "RELAY_DIFFERENCED_DOPPLER": {
+              "value": 14
+            },
+            "BISTATIC_RANGE": {
+              "value": 15
+            },
+            "SKIN_RANGE": {
+              "value": 16
+            },
+            "CROSSLINK_RANGE": {
+              "value": 17
+            },
+            "CROSSLINK_RANGE_RATE": {
+              "value": 18
+            },
+            "LASER_RANGE": {
+              "value": 19
+            },
+            "TIME_DIFFERENCE_OF_ARRIVAL": {
+              "value": 20
+            },
+            "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+              "value": 21
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NOISE_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRELATION_TIME_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MINIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_EDIT_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCEPT_START_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCEPT_STOP_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TROPOSPHERE_MODEL": {
+          "$ref": "#/definitions/memTroposphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "HOPFIELD_SAASTAMOINEN": {
+              "value": 2
+            },
+            "MARINI": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "IONOSPHERE_MODEL": {
+          "$ref": "#/definitions/memIonosphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "TOTAL_ELECTRON_CONTENT": {
+              "value": 2
+            },
+            "REFERENCE_PROFILE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "APPLY_LIGHT_TIME": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "APPLY_BODY_ROTATION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "required": [
+        "MODEL_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMEditingDecision": {
+      "type": "object",
+      "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+      "properties": {
+        "OBSERVATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ACTION": {
+          "$ref": "#/definitions/memEditingAction",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPT": {
+              "value": 1
+            },
+            "REJECT": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REASON": {
+          "$ref": "#/definitions/memEditingReason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPTED": {
+              "value": 1
+            },
+            "OUTSIDE_EPOCH_WINDOW": {
+              "value": 2
+            },
+            "OUTSIDE_VALUE_WINDOW": {
+              "value": 3
+            },
+            "SIGMA_THRESHOLD": {
+              "value": 4
+            },
+            "INVALID_GEOMETRY": {
+              "value": 5
+            },
+            "MISSING_MEDIA_INPUT": {
+              "value": 6
+            },
+            "HARDWARE_UNAVAILABLE": {
+              "value": 7
+            },
+            "DUPLICATE": {
+              "value": 8
+            },
+            "PROVIDER_FLAGGED": {
+              "value": 9
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PREFIT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMALIZED_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "required": [
+        "OBSERVATION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMAttestation": {
+      "type": "object",
+      "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "MEM": {
+      "type": "object",
+      "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+      "properties": {
+        "ERROR_MODELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMErrorModel"
+          },
+          "x-flatbuffer-type": "[MEMErrorModel]"
+        },
+        "EDITING_LEDGER": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMEditingDecision"
+          },
+          "x-flatbuffer-type": "[MEMEditingDecision]"
+        },
+        "RANDOM_SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/MEMAttestation",
+          "x-flatbuffer-type": "MEMAttestation"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MEM",
+  "x-flatbuffer-root-type": "MEM",
+  "x-flatbuffer-file-identifier": "$MEM"
+}

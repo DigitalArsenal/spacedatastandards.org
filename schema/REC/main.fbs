@@ -1,5 +1,5 @@
-// Hash: 6e27a1c08d71951d327fb3434b6acd44d88c82b8ce2af42f6cdd4727faadb865
-// Version: 1.44.66
+// Hash: b31bc5f6eb30c9eabaa45f0ceddc239b2624cea5412829f9367bb6537d47f26f
+// Version: 1.44.67
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -158,6 +158,7 @@ include "../PPE/main.fbs";
 include "../PRG/main.fbs";
 include "../PRR/main.fbs";
 include "../PRW/main.fbs";
+include "../PSS/main.fbs";
 include "../PUR/main.fbs";
 include "../QEM/main.fbs";
 include "../RAF/main.fbs";
@@ -193,6 +194,7 @@ include "../SHC/main.fbs";
 include "../SHW/main.fbs";
 include "../SIT/main.fbs";
 include "../SKI/main.fbs";
+include "../SLP/main.fbs";
 include "../SNR/main.fbs";
 include "../SNW/main.fbs";
 include "../SOI/main.fbs";
@@ -308,7 +310,7 @@ union RecordType {
   PAP, RSD, IRM, VCF,
   STX, TXS, BPF, EVL,
   PCE, NCD, MEM, ODR,
-  TRH
+  TRH, SLP, PSS
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

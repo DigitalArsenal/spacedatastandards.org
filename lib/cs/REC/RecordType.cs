@@ -249,6 +249,11 @@ public enum RecordType : byte
   EVL = 228,
   PCE = 229,
   NCD = 230,
+  MEM = 231,
+  ODR = 232,
+  TRH = 233,
+  SLP = 234,
+  PSS = 235,
 };
 
 public class RecordTypeUnion {
@@ -721,6 +726,16 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPCE(PCET _pce) { return new RecordTypeUnion{ Type = RecordType.PCE, Value = _pce }; }
   public NCDT AsNCD() { return this.As<NCDT>(); }
   public static RecordTypeUnion FromNCD(NCDT _ncd) { return new RecordTypeUnion{ Type = RecordType.NCD, Value = _ncd }; }
+  public MEMT AsMEM() { return this.As<MEMT>(); }
+  public static RecordTypeUnion FromMEM(MEMT _mem) { return new RecordTypeUnion{ Type = RecordType.MEM, Value = _mem }; }
+  public ODRT AsODR() { return this.As<ODRT>(); }
+  public static RecordTypeUnion FromODR(ODRT _odr) { return new RecordTypeUnion{ Type = RecordType.ODR, Value = _odr }; }
+  public TRHT AsTRH() { return this.As<TRHT>(); }
+  public static RecordTypeUnion FromTRH(TRHT _trh) { return new RecordTypeUnion{ Type = RecordType.TRH, Value = _trh }; }
+  public SLPT AsSLP() { return this.As<SLPT>(); }
+  public static RecordTypeUnion FromSLP(SLPT _slp) { return new RecordTypeUnion{ Type = RecordType.SLP, Value = _slp }; }
+  public PSST AsPSS() { return this.As<PSST>(); }
+  public static RecordTypeUnion FromPSS(PSST _pss) { return new RecordTypeUnion{ Type = RecordType.PSS, Value = _pss }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -955,6 +970,11 @@ public class RecordTypeUnion {
       case RecordType.EVL: return EVL.Pack(builder, _o.AsEVL()).Value;
       case RecordType.PCE: return PCE.Pack(builder, _o.AsPCE()).Value;
       case RecordType.NCD: return NCD.Pack(builder, _o.AsNCD()).Value;
+      case RecordType.MEM: return MEM.Pack(builder, _o.AsMEM()).Value;
+      case RecordType.ODR: return ODR.Pack(builder, _o.AsODR()).Value;
+      case RecordType.TRH: return TRH.Pack(builder, _o.AsTRH()).Value;
+      case RecordType.SLP: return SLP.Pack(builder, _o.AsSLP()).Value;
+      case RecordType.PSS: return PSS.Pack(builder, _o.AsPSS()).Value;
     }
   }
 }
@@ -1657,6 +1677,21 @@ static public class RecordTypeVerify
         break;
       case RecordType.NCD:
         result = NCDVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MEM:
+        result = MEMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ODR:
+        result = ODRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRH:
+        result = TRHVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SLP:
+        result = SLPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PSS:
+        result = PSSVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

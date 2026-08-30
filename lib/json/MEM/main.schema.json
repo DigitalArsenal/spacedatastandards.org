@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "memMeasurementType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "DOPPLER", "AZIMUTH_ELEVATION", "X_EAST_Y_NORTH", "X_SOUTH_Y_EAST", "RIGHT_ASCENSION_DECLINATION", "POSITION_VECTOR", "SEQUENTIAL_RANGE", "PSEUDONOISE_RANGE", "TIME_CORRELATED_PHASE", "RELAY_RANGE", "RELAY_DOPPLER", "RELAY_DIFFERENCED_DOPPLER", "BISTATIC_RANGE", "SKIN_RANGE", "CROSSLINK_RANGE", "CROSSLINK_RANGE_RATE", "LASER_RANGE", "TIME_DIFFERENCE_OF_ARRIVAL", "FREQUENCY_DIFFERENCE_OF_ARRIVAL"]
+    },
+    "memEditingAction" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPT", "REJECT"]
+    },
+    "memEditingReason" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPTED", "OUTSIDE_EPOCH_WINDOW", "OUTSIDE_VALUE_WINDOW", "SIGMA_THRESHOLD", "INVALID_GEOMETRY", "MISSING_MEDIA_INPUT", "HARDWARE_UNAVAILABLE", "DUPLICATE", "PROVIDER_FLAGGED"]
+    },
+    "memTroposphereModel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NONE", "HOPFIELD_SAASTAMOINEN", "MARINI"]
+    },
+    "memIonosphereModel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NONE", "TOTAL_ELECTRON_CONTENT", "REFERENCE_PROFILE"]
+    },
+    "MEMErrorModel" : {
+      "type" : "object",
+      "description" : "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+      "properties" : {
+        "MODEL_ID" : {
+                "type" : "string"
+              },
+        "MEASUREMENT_TYPE" : {
+                "$ref" : "#/definitions/memMeasurementType"
+              },
+        "NOISE_SIGMA" : {
+                "type" : "number"
+              },
+        "BIAS" : {
+                "type" : "number"
+              },
+        "BIAS_SIGMA" : {
+                "type" : "number"
+              },
+        "CORRELATION_TIME_SECONDS" : {
+                "type" : "number"
+              },
+        "MINIMUM_ACCEPTED_VALUE" : {
+                "type" : "number"
+              },
+        "MAXIMUM_ACCEPTED_VALUE" : {
+                "type" : "number"
+              },
+        "SIGMA_EDIT_THRESHOLD" : {
+                "type" : "number"
+              },
+        "ACCEPT_START_EPOCH" : {
+                "type" : "string"
+              },
+        "ACCEPT_STOP_EPOCH" : {
+                "type" : "string"
+              },
+        "TROPOSPHERE_MODEL" : {
+                "$ref" : "#/definitions/memTroposphereModel"
+              },
+        "IONOSPHERE_MODEL" : {
+                "$ref" : "#/definitions/memIonosphereModel"
+              },
+        "APPLY_LIGHT_TIME" : {
+                "type" : "boolean"
+              },
+        "APPLY_BODY_ROTATION" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["MODEL_ID"],
+      "additionalProperties" : false
+    },
+    "MEMEditingDecision" : {
+      "type" : "object",
+      "description" : "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+      "properties" : {
+        "OBSERVATION_ID" : {
+                "type" : "string"
+              },
+        "ACTION" : {
+                "$ref" : "#/definitions/memEditingAction"
+              },
+        "REASON" : {
+                "$ref" : "#/definitions/memEditingReason"
+              },
+        "PREFIT_RESIDUAL" : {
+                "type" : "number"
+              },
+        "NORMALIZED_RESIDUAL" : {
+                "type" : "number"
+              },
+        "ITERATION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["OBSERVATION_ID"],
+      "additionalProperties" : false
+    },
+    "MEMAttestation" : {
+      "type" : "object",
+      "description" : "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+      "properties" : {
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "SIGNED_AT" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "required" : ["SIGNING_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
+    "MEM" : {
+      "type" : "object",
+      "description" : "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+      "properties" : {
+        "ERROR_MODELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MEMErrorModel"}
+              },
+        "EDITING_LEDGER" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MEMEditingDecision"}
+              },
+        "RANDOM_SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "ATTESTATION" : {
+                "$ref" : "#/definitions/MEMAttestation"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MEM"
+}

@@ -248,6 +248,11 @@ class RecordType
     const EVL = 228;
     const PCE = 229;
     const NCD = 230;
+    const MEM = 231;
+    const ODR = 232;
+    const TRH = 233;
+    const SLP = 234;
+    const PSS = 235;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -481,6 +486,11 @@ class RecordType
         RecordType::EVL=>"EVL",
         RecordType::PCE=>"PCE",
         RecordType::NCD=>"NCD",
+        RecordType::MEM=>"MEM",
+        RecordType::ODR=>"ODR",
+        RecordType::TRH=>"TRH",
+        RecordType::SLP=>"SLP",
+        RecordType::PSS=>"PSS",
     );
 
     public static function Name($e)

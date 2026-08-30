@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "trhHardwareKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ANTENNA", "TRANSMITTER", "RECEIVER", "TRANSPONDER"]
+    },
+    "trhTurnaroundMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "COHERENT", "NONCOHERENT", "REGENERATIVE"]
+    },
+    "TRHAntenna" : {
+      "type" : "object",
+      "properties" : {
+        "HARDWARE_ID" : {
+                "type" : "string"
+              },
+        "FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "BANDWIDTH_HZ" : {
+                "type" : "number"
+              },
+        "GAIN_DBI" : {
+                "type" : "number"
+              },
+        "PHASE_CENTER_DELAY_SECONDS" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["HARDWARE_ID"],
+      "additionalProperties" : false
+    },
+    "TRHTransmitter" : {
+      "type" : "object",
+      "properties" : {
+        "HARDWARE_ID" : {
+                "type" : "string"
+              },
+        "FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "POWER_WATTS" : {
+                "type" : "number"
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "HARDWARE_DELAY_SECONDS" : {
+                "type" : "number"
+              },
+        "ANTENNA_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["HARDWARE_ID"],
+      "additionalProperties" : false
+    },
+    "TRHReceiver" : {
+      "type" : "object",
+      "properties" : {
+        "HARDWARE_ID" : {
+                "type" : "string"
+              },
+        "CENTER_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "BANDWIDTH_HZ" : {
+                "type" : "number"
+              },
+        "SYSTEM_NOISE_TEMPERATURE_KELVIN" : {
+                "type" : "number"
+              },
+        "HARDWARE_DELAY_SECONDS" : {
+                "type" : "number"
+              },
+        "ANTENNA_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["HARDWARE_ID"],
+      "additionalProperties" : false
+    },
+    "TRHTransponder" : {
+      "type" : "object",
+      "properties" : {
+        "HARDWARE_ID" : {
+                "type" : "string"
+              },
+        "TURNAROUND_MODE" : {
+                "$ref" : "#/definitions/trhTurnaroundMode"
+              },
+        "TURNAROUND_NUMERATOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TURNAROUND_DENOMINATOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GROUP_DELAY_SECONDS" : {
+                "type" : "number"
+              },
+        "RECEIVER_ID" : {
+                "type" : "string"
+              },
+        "TRANSMITTER_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["HARDWARE_ID"],
+      "additionalProperties" : false
+    },
+    "TRHHardwareRef" : {
+      "type" : "object",
+      "properties" : {
+        "HARDWARE_KIND" : {
+                "$ref" : "#/definitions/trhHardwareKind"
+              },
+        "HARDWARE_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["HARDWARE_ID"],
+      "additionalProperties" : false
+    },
+    "TRHInstallation" : {
+      "type" : "object",
+      "properties" : {
+        "OWNER_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "HARDWARE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHHardwareRef"}
+              },
+        "CLOCK_BIAS_SECONDS" : {
+                "type" : "number"
+              },
+        "CLOCK_DRIFT_SECONDS_PER_SECOND" : {
+                "type" : "number"
+              }
+      },
+      "required" : ["OWNER_OBJECT_ID"],
+      "additionalProperties" : false
+    },
+    "TRHAttestation" : {
+      "type" : "object",
+      "properties" : {
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "SIGNED_AT" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "required" : ["SIGNING_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
+    "TRH" : {
+      "type" : "object",
+      "description" : "Tracking Hardware. Installations attach antennas, transmitters, receivers\nand transponders to either a surface site or a tracked object. Delays are\nseconds, frequencies hertz, temperatures kelvin and powers watts. JSON\nprojections preserve these IDL-capitalized field names exactly.",
+      "properties" : {
+        "ANTENNAS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHAntenna"}
+              },
+        "TRANSMITTERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHTransmitter"}
+              },
+        "RECEIVERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHReceiver"}
+              },
+        "TRANSPONDERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHTransponder"}
+              },
+        "INSTALLATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRHInstallation"}
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "ATTESTATION" : {
+                "$ref" : "#/definitions/TRHAttestation"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TRH"
+}

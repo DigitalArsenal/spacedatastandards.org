@@ -13555,6 +13555,223 @@
         }
       }
     },
+    "memMeasurementType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RANGE",
+        "RANGE_RATE",
+        "DOPPLER",
+        "AZIMUTH_ELEVATION",
+        "X_EAST_Y_NORTH",
+        "X_SOUTH_Y_EAST",
+        "RIGHT_ASCENSION_DECLINATION",
+        "POSITION_VECTOR",
+        "SEQUENTIAL_RANGE",
+        "PSEUDONOISE_RANGE",
+        "TIME_CORRELATED_PHASE",
+        "RELAY_RANGE",
+        "RELAY_DOPPLER",
+        "RELAY_DIFFERENCED_DOPPLER",
+        "BISTATIC_RANGE",
+        "SKIN_RANGE",
+        "CROSSLINK_RANGE",
+        "CROSSLINK_RANGE_RATE",
+        "LASER_RANGE",
+        "TIME_DIFFERENCE_OF_ARRIVAL",
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RANGE": {
+          "value": 1
+        },
+        "RANGE_RATE": {
+          "value": 2
+        },
+        "DOPPLER": {
+          "value": 3
+        },
+        "AZIMUTH_ELEVATION": {
+          "value": 4
+        },
+        "X_EAST_Y_NORTH": {
+          "value": 5
+        },
+        "X_SOUTH_Y_EAST": {
+          "value": 6
+        },
+        "RIGHT_ASCENSION_DECLINATION": {
+          "value": 7
+        },
+        "POSITION_VECTOR": {
+          "value": 8
+        },
+        "SEQUENTIAL_RANGE": {
+          "value": 9
+        },
+        "PSEUDONOISE_RANGE": {
+          "value": 10
+        },
+        "TIME_CORRELATED_PHASE": {
+          "value": 11
+        },
+        "RELAY_RANGE": {
+          "value": 12
+        },
+        "RELAY_DOPPLER": {
+          "value": 13
+        },
+        "RELAY_DIFFERENCED_DOPPLER": {
+          "value": 14
+        },
+        "BISTATIC_RANGE": {
+          "value": 15
+        },
+        "SKIN_RANGE": {
+          "value": 16
+        },
+        "CROSSLINK_RANGE": {
+          "value": 17
+        },
+        "CROSSLINK_RANGE_RATE": {
+          "value": 18
+        },
+        "LASER_RANGE": {
+          "value": 19
+        },
+        "TIME_DIFFERENCE_OF_ARRIVAL": {
+          "value": 20
+        },
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+          "value": 21
+        }
+      }
+    },
+    "memEditingAction": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPT",
+        "REJECT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPT": {
+          "value": 1
+        },
+        "REJECT": {
+          "value": 2
+        }
+      }
+    },
+    "memEditingReason": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPTED",
+        "OUTSIDE_EPOCH_WINDOW",
+        "OUTSIDE_VALUE_WINDOW",
+        "SIGMA_THRESHOLD",
+        "INVALID_GEOMETRY",
+        "MISSING_MEDIA_INPUT",
+        "HARDWARE_UNAVAILABLE",
+        "DUPLICATE",
+        "PROVIDER_FLAGGED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPTED": {
+          "value": 1
+        },
+        "OUTSIDE_EPOCH_WINDOW": {
+          "value": 2
+        },
+        "OUTSIDE_VALUE_WINDOW": {
+          "value": 3
+        },
+        "SIGMA_THRESHOLD": {
+          "value": 4
+        },
+        "INVALID_GEOMETRY": {
+          "value": 5
+        },
+        "MISSING_MEDIA_INPUT": {
+          "value": 6
+        },
+        "HARDWARE_UNAVAILABLE": {
+          "value": 7
+        },
+        "DUPLICATE": {
+          "value": 8
+        },
+        "PROVIDER_FLAGGED": {
+          "value": 9
+        }
+      }
+    },
+    "memTroposphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "HOPFIELD_SAASTAMOINEN",
+        "MARINI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "HOPFIELD_SAASTAMOINEN": {
+          "value": 2
+        },
+        "MARINI": {
+          "value": 3
+        }
+      }
+    },
+    "memIonosphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "TOTAL_ELECTRON_CONTENT",
+        "REFERENCE_PROFILE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "TOTAL_ELECTRON_CONTENT": {
+          "value": 2
+        },
+        "REFERENCE_PROFILE": {
+          "value": 3
+        }
+      }
+    },
     "meanElementSource": {
       "type": "string",
       "enum": [
@@ -14417,6 +14634,122 @@
           "value": 2
         },
         "NONE": {
+          "value": 3
+        }
+      }
+    },
+    "odrEstimatorKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "BATCH_WEIGHTED_LEAST_SQUARES",
+        "EXTENDED_KALMAN_FILTER",
+        "UNSCENTED_KALMAN_FILTER",
+        "EXTENDED_KALMAN_FILTER_WITH_SMOOTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "BATCH_WEIGHTED_LEAST_SQUARES": {
+          "value": 1
+        },
+        "EXTENDED_KALMAN_FILTER": {
+          "value": 2
+        },
+        "UNSCENTED_KALMAN_FILTER": {
+          "value": 3
+        },
+        "EXTENDED_KALMAN_FILTER_WITH_SMOOTHER": {
+          "value": 4
+        }
+      }
+    },
+    "odrProcessNoiseKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "STATE_NOISE_COMPENSATION",
+        "DYNAMIC_MODEL_COMPENSATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "STATE_NOISE_COMPENSATION": {
+          "value": 2
+        },
+        "DYNAMIC_MODEL_COMPENSATION": {
+          "value": 3
+        }
+      }
+    },
+    "odrConvergenceReason": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONVERGED",
+        "MAXIMUM_ITERATIONS",
+        "SINGULAR_NORMAL_MATRIX",
+        "DIVERGED",
+        "INSUFFICIENT_OBSERVATIONS",
+        "INVALID_INPUT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CONVERGED": {
+          "value": 1
+        },
+        "MAXIMUM_ITERATIONS": {
+          "value": 2
+        },
+        "SINGULAR_NORMAL_MATRIX": {
+          "value": 3
+        },
+        "DIVERGED": {
+          "value": 4
+        },
+        "INSUFFICIENT_OBSERVATIONS": {
+          "value": 5
+        },
+        "INVALID_INPUT": {
+          "value": 6
+        }
+      }
+    },
+    "odrParameterDisposition": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ESTIMATED",
+        "CONSIDERED",
+        "FIXED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ESTIMATED": {
+          "value": 1
+        },
+        "CONSIDERED": {
+          "value": 2
+        },
+        "FIXED": {
           "value": 3
         }
       }
@@ -15610,6 +15943,31 @@
         "KEPLERIAN": {
           "value": 5,
           "description": "Source is a single classical Keplerian element set."
+        }
+      }
+    },
+    "pssSolutionStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FEASIBLE",
+        "INFEASIBLE",
+        "EVALUATION_FAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FEASIBLE": {
+          "value": 1
+        },
+        "INFEASIBLE": {
+          "value": 2
+        },
+        "EVALUATION_FAILED": {
+          "value": 3
         }
       }
     },
@@ -18143,6 +18501,172 @@
         }
       }
     },
+    "slpProblemKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TARGET",
+        "OPTIMIZE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "TARGET": {
+          "value": 1
+        },
+        "OPTIMIZE": {
+          "value": 2
+        }
+      }
+    },
+    "slpAlgorithm": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NEWTON_RAPHSON",
+        "BROYDEN",
+        "MODIFIED_BROYDEN",
+        "SEQUENTIAL_QUADRATIC_PROGRAMMING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NEWTON_RAPHSON": {
+          "value": 1
+        },
+        "BROYDEN": {
+          "value": 2
+        },
+        "MODIFIED_BROYDEN": {
+          "value": 3
+        },
+        "SEQUENTIAL_QUADRATIC_PROGRAMMING": {
+          "value": 4
+        }
+      }
+    },
+    "slpDifferenceMode": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FORWARD",
+        "CENTRAL",
+        "ANALYTIC_STATE_TRANSITION_MATRIX"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FORWARD": {
+          "value": 1
+        },
+        "CENTRAL": {
+          "value": 2
+        },
+        "ANALYTIC_STATE_TRANSITION_MATRIX": {
+          "value": 3
+        }
+      }
+    },
+    "slpObjectiveDirection": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MINIMIZE",
+        "MAXIMIZE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MINIMIZE": {
+          "value": 1
+        },
+        "MAXIMIZE": {
+          "value": 2
+        }
+      }
+    },
+    "slpConstraintRelation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "EQUAL",
+        "LESS_THAN_OR_EQUAL",
+        "GREATER_THAN_OR_EQUAL",
+        "INTERVAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "EQUAL": {
+          "value": 1
+        },
+        "LESS_THAN_OR_EQUAL": {
+          "value": 2
+        },
+        "GREATER_THAN_OR_EQUAL": {
+          "value": 3
+        },
+        "INTERVAL": {
+          "value": 4
+        }
+      }
+    },
+    "slpSolveStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONVERGED",
+        "INVALID_PROBLEM",
+        "EVALUATION_FAILED",
+        "SINGULAR_JACOBIAN",
+        "BUDGET_EXCEEDED",
+        "STALLED",
+        "INFEASIBLE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CONVERGED": {
+          "value": 1
+        },
+        "INVALID_PROBLEM": {
+          "value": 2
+        },
+        "EVALUATION_FAILED": {
+          "value": 3
+        },
+        "SINGULAR_JACOBIAN": {
+          "value": 4
+        },
+        "BUDGET_EXCEEDED": {
+          "value": 5
+        },
+        "STALLED": {
+          "value": 6
+        },
+        "INFEASIBLE": {
+          "value": 7
+        }
+      }
+    },
     "SensorType": {
       "type": "string",
       "enum": [
@@ -20079,6 +20603,60 @@
         }
       }
     },
+    "trhHardwareKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ANTENNA",
+        "TRANSMITTER",
+        "RECEIVER",
+        "TRANSPONDER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ANTENNA": {
+          "value": 1
+        },
+        "TRANSMITTER": {
+          "value": 2
+        },
+        "RECEIVER": {
+          "value": 3
+        },
+        "TRANSPONDER": {
+          "value": 4
+        }
+      }
+    },
+    "trhTurnaroundMode": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "COHERENT",
+        "NONCOHERENT",
+        "REGENERATIVE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "COHERENT": {
+          "value": 1
+        },
+        "NONCOHERENT": {
+          "value": 2
+        },
+        "REGENERATIVE": {
+          "value": 3
+        }
+      }
+    },
     "TerrainDataSource": {
       "type": "string",
       "enum": [
@@ -21991,7 +22569,12 @@
         "BPF",
         "EVL",
         "PCE",
-        "NCD"
+        "NCD",
+        "MEM",
+        "ODR",
+        "TRH",
+        "SLP",
+        "PSS"
       ]
     },
     "LKS": {
@@ -68615,6 +69198,341 @@
       ],
       "additionalProperties": false
     },
+    "MEMErrorModel": {
+      "type": "object",
+      "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+      "properties": {
+        "MODEL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MEASUREMENT_TYPE": {
+          "$ref": "#/definitions/memMeasurementType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RANGE": {
+              "value": 1
+            },
+            "RANGE_RATE": {
+              "value": 2
+            },
+            "DOPPLER": {
+              "value": 3
+            },
+            "AZIMUTH_ELEVATION": {
+              "value": 4
+            },
+            "X_EAST_Y_NORTH": {
+              "value": 5
+            },
+            "X_SOUTH_Y_EAST": {
+              "value": 6
+            },
+            "RIGHT_ASCENSION_DECLINATION": {
+              "value": 7
+            },
+            "POSITION_VECTOR": {
+              "value": 8
+            },
+            "SEQUENTIAL_RANGE": {
+              "value": 9
+            },
+            "PSEUDONOISE_RANGE": {
+              "value": 10
+            },
+            "TIME_CORRELATED_PHASE": {
+              "value": 11
+            },
+            "RELAY_RANGE": {
+              "value": 12
+            },
+            "RELAY_DOPPLER": {
+              "value": 13
+            },
+            "RELAY_DIFFERENCED_DOPPLER": {
+              "value": 14
+            },
+            "BISTATIC_RANGE": {
+              "value": 15
+            },
+            "SKIN_RANGE": {
+              "value": 16
+            },
+            "CROSSLINK_RANGE": {
+              "value": 17
+            },
+            "CROSSLINK_RANGE_RATE": {
+              "value": 18
+            },
+            "LASER_RANGE": {
+              "value": 19
+            },
+            "TIME_DIFFERENCE_OF_ARRIVAL": {
+              "value": 20
+            },
+            "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+              "value": 21
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NOISE_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRELATION_TIME_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MINIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_EDIT_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCEPT_START_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCEPT_STOP_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TROPOSPHERE_MODEL": {
+          "$ref": "#/definitions/memTroposphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "HOPFIELD_SAASTAMOINEN": {
+              "value": 2
+            },
+            "MARINI": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "IONOSPHERE_MODEL": {
+          "$ref": "#/definitions/memIonosphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "TOTAL_ELECTRON_CONTENT": {
+              "value": 2
+            },
+            "REFERENCE_PROFILE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "APPLY_LIGHT_TIME": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "APPLY_BODY_ROTATION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "required": [
+        "MODEL_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMEditingDecision": {
+      "type": "object",
+      "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+      "properties": {
+        "OBSERVATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ACTION": {
+          "$ref": "#/definitions/memEditingAction",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPT": {
+              "value": 1
+            },
+            "REJECT": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REASON": {
+          "$ref": "#/definitions/memEditingReason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPTED": {
+              "value": 1
+            },
+            "OUTSIDE_EPOCH_WINDOW": {
+              "value": 2
+            },
+            "OUTSIDE_VALUE_WINDOW": {
+              "value": 3
+            },
+            "SIGMA_THRESHOLD": {
+              "value": 4
+            },
+            "INVALID_GEOMETRY": {
+              "value": 5
+            },
+            "MISSING_MEDIA_INPUT": {
+              "value": 6
+            },
+            "HARDWARE_UNAVAILABLE": {
+              "value": 7
+            },
+            "DUPLICATE": {
+              "value": 8
+            },
+            "PROVIDER_FLAGGED": {
+              "value": 9
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PREFIT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMALIZED_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "required": [
+        "OBSERVATION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMAttestation": {
+      "type": "object",
+      "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "MEM": {
+      "type": "object",
+      "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+      "properties": {
+        "ERROR_MODELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMErrorModel"
+          },
+          "x-flatbuffer-type": "[MEMErrorModel]"
+        },
+        "EDITING_LEDGER": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMEditingDecision"
+          },
+          "x-flatbuffer-type": "[MEMEditingDecision]"
+        },
+        "RANDOM_SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/MEMAttestation",
+          "x-flatbuffer-type": "MEMAttestation"
+        }
+      },
+      "additionalProperties": false
+    },
     "MET": {
       "type": "object",
       "description": "Mean Element Theory",
@@ -71735,6 +72653,502 @@
           "x-flatbuffer-type": "[string]"
         }
       },
+      "additionalProperties": false
+    },
+    "ODRSolverConfiguration": {
+      "type": "object",
+      "properties": {
+        "ESTIMATOR": {
+          "$ref": "#/definitions/odrEstimatorKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "BATCH_WEIGHTED_LEAST_SQUARES": {
+              "value": 1
+            },
+            "EXTENDED_KALMAN_FILTER": {
+              "value": 2
+            },
+            "UNSCENTED_KALMAN_FILTER": {
+              "value": 3
+            },
+            "EXTENDED_KALMAN_FILTER_WITH_SMOOTHER": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MAXIMUM_ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "STATE_CONVERGENCE_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RMS_CONVERGENCE_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_EDIT_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/odrProcessNoiseKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "STATE_NOISE_COMPENSATION": {
+              "value": 2
+            },
+            "DYNAMIC_MODEL_COMPENSATION": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROCESS_NOISE_SPECTRAL_DENSITY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "DYNAMIC_MODEL_CORRELATION_TIME_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PROPAGATOR_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROPAGATOR_CAPABILITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "PROPAGATOR_PORT_ID",
+        "PROPAGATOR_CAPABILITY"
+      ],
+      "additionalProperties": false
+    },
+    "ODRIterationStatistics": {
+      "type": "object",
+      "properties": {
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "ACCEPTED_OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "REJECTED_OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "PREFIT_RMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSTFIT_RMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHTED_RMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STATE_CORRECTION_NORM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMAL_MATRIX_CONDITION_NUMBER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ODREditedObservation": {
+      "type": "object",
+      "properties": {
+        "OBSERVATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "PREFIT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMALIZED_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "OBSERVATION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "ODREstimatedParameter": {
+      "type": "object",
+      "properties": {
+        "PARAMETER": {
+          "$ref": "#/definitions/PCEParameterRef",
+          "x-flatbuffer-type": "PCEParameterRef"
+        },
+        "DISPOSITION": {
+          "$ref": "#/definitions/odrParameterDisposition",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ESTIMATED": {
+              "value": 1
+            },
+            "CONSIDERED": {
+              "value": 2
+            },
+            "FIXED": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "A_PRIORI_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "A_PRIORI_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FINAL_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FINAL_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "UNIT": {
+          "$ref": "#/definitions/pceUnit",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "DIMENSIONLESS": {
+              "value": 1,
+              "description": "A pure number."
+            },
+            "METRE": {
+              "value": 2
+            },
+            "METRE_PER_SECOND": {
+              "value": 3
+            },
+            "METRE_PER_SECOND_SQUARED": {
+              "value": 4
+            },
+            "METRE_SQUARED": {
+              "value": 5
+            },
+            "METRE_SQUARED_PER_SECOND": {
+              "value": 6,
+              "description": "Specific angular momentum."
+            },
+            "METRE_SQUARED_PER_SECOND_SQUARED": {
+              "value": 7,
+              "description": "Specific energy, including characteristic energy."
+            },
+            "METRE_CUBED": {
+              "value": 8
+            },
+            "RADIAN": {
+              "value": 9
+            },
+            "RADIAN_PER_SECOND": {
+              "value": 10
+            },
+            "SECOND": {
+              "value": 11
+            },
+            "DAY": {
+              "value": 12,
+              "description": "Day of 86400 SI seconds; the unit of a modified Julian day count."
+            },
+            "KILOGRAM": {
+              "value": 13
+            },
+            "KILOGRAM_PER_SECOND": {
+              "value": 14
+            },
+            "KILOGRAM_PER_METRE_CUBED": {
+              "value": 15
+            },
+            "KILOGRAM_METRE_SQUARED": {
+              "value": 16,
+              "description": "Moment of inertia."
+            },
+            "NEWTON": {
+              "value": 17
+            },
+            "NEWTON_METRE": {
+              "value": 18
+            },
+            "WATT": {
+              "value": 19
+            },
+            "PASCAL": {
+              "value": 20
+            },
+            "KELVIN": {
+              "value": 21
+            },
+            "METRE_SQUARED_PER_KILOGRAM": {
+              "value": 22,
+              "description": "Area-to-mass ratio and ballistic coefficient reciprocal."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 100,
+              "description": "The unit is outside this vocabulary and is named in PCEParameterDescriptor.PROVIDER_DEFINED_UNIT_SYMBOL, which is then REQUIRED. A consumer that cannot resolve the symbol MUST refuse the value rather than assume DIMENSIONLESS."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ODRFilterEpoch": {
+      "type": "object",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILTERED_STATE": {
+          "$ref": "#/definitions/FRMStateVector",
+          "x-flatbuffer-type": "FRMStateVector"
+        },
+        "FILTERED_COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "SMOOTHED_STATE": {
+          "$ref": "#/definitions/FRMStateVector",
+          "x-flatbuffer-type": "FRMStateVector"
+        },
+        "SMOOTHED_COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "NORMALIZED_INNOVATION_SQUARED": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ODRAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "ODR": {
+      "type": "object",
+      "description": "Estimation Run Report. This is the canonical estimation-family result\nmodel. STATE_COVARIANCE is row-major with COVARIANCE_DIMENSION squared\nentries and is also published as the $OCM named by OCM_CONTENT_ID. The\nestimator report never substitutes a propagator name for its input port.",
+      "properties": {
+        "RUN_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STARTED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPLETED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONFIGURATION": {
+          "$ref": "#/definitions/ODRSolverConfiguration",
+          "x-flatbuffer-type": "ODRSolverConfiguration"
+        },
+        "CONVERGENCE_REASON": {
+          "$ref": "#/definitions/odrConvergenceReason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CONVERGED": {
+              "value": 1
+            },
+            "MAXIMUM_ITERATIONS": {
+              "value": 2
+            },
+            "SINGULAR_NORMAL_MATRIX": {
+              "value": 3
+            },
+            "DIVERGED": {
+              "value": 4
+            },
+            "INSUFFICIENT_OBSERVATIONS": {
+              "value": 5
+            },
+            "INVALID_INPUT": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ITERATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ODRIterationStatistics"
+          },
+          "x-flatbuffer-type": "[ODRIterationStatistics]"
+        },
+        "EDITED_OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ODREditedObservation"
+          },
+          "x-flatbuffer-type": "[ODREditedObservation]"
+        },
+        "ESTIMATED_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ODREstimatedParameter"
+          },
+          "x-flatbuffer-type": "[ODREstimatedParameter]"
+        },
+        "ESTIMATED_EPOCH_STATE": {
+          "$ref": "#/definitions/FRMStateVector",
+          "x-flatbuffer-type": "FRMStateVector"
+        },
+        "COVARIANCE_DIMENSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "STATE_COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "OCM_CONTENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FILTER_HISTORY": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ODRFilterEpoch"
+          },
+          "x-flatbuffer-type": "[ODRFilterEpoch]"
+        },
+        "RESIDUAL_RMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/ODRAttestation",
+          "x-flatbuffer-type": "ODRAttestation"
+        }
+      },
+      "required": [
+        "RUN_ID",
+        "OCM_CONTENT_ID"
+      ],
       "additionalProperties": false
     },
     "OMM": {
@@ -76568,6 +77982,264 @@
           "x-flatbuffer-type": "PRWBatchResponse"
         }
       },
+      "additionalProperties": false
+    },
+    "PSSVariableValue": {
+      "type": "object",
+      "properties": {
+        "VARIABLE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "VARIABLE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSObjectiveValue": {
+      "type": "object",
+      "properties": {
+        "OBJECTIVE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "OBJECTIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSConstraintValue": {
+      "type": "object",
+      "properties": {
+        "CONSTRAINT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VIOLATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "CONSTRAINT_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSProvenance": {
+      "type": "object",
+      "properties": {
+        "SOLVER_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLVER_MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLVER_ARTIFACT_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_ARTIFACT_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SDS_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PSSSolution": {
+      "type": "object",
+      "properties": {
+        "SOLUTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STATUS": {
+          "$ref": "#/definitions/pssSolutionStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FEASIBLE": {
+              "value": 1
+            },
+            "INFEASIBLE": {
+              "value": 2
+            },
+            "EVALUATION_FAILED": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSVariableValue"
+          },
+          "x-flatbuffer-type": "[PSSVariableValue]"
+        },
+        "OBJECTIVES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSObjectiveValue"
+          },
+          "x-flatbuffer-type": "[PSSObjectiveValue]"
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSConstraintValue"
+          },
+          "x-flatbuffer-type": "[PSSConstraintValue]"
+        },
+        "DOMINANCE_RANK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CROWDING_DISTANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VERIFY_BY_PROPAGATION_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PSSProvenance",
+          "x-flatbuffer-type": "PSSProvenance"
+        }
+      },
+      "required": [
+        "SOLUTION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "PSSAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both signature\npayloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON in IDL field order and capitalization,\nwith both signature fields omitted.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "PSS": {
+      "type": "object",
+      "properties": {
+        "SOLUTION_SET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROBLEM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBJECTIVE_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOLUTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PSSSolution"
+          },
+          "x-flatbuffer-type": "[PSSSolution]"
+        },
+        "GENERATED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/PSSAttestation",
+          "x-flatbuffer-type": "PSSAttestation"
+        }
+      },
+      "required": [
+        "SOLUTION_SET_ID",
+        "PROBLEM_ID"
+      ],
       "additionalProperties": false
     },
     "PUR": {
@@ -86102,6 +87774,3472 @@
       },
       "additionalProperties": false
     },
+    "SLPVariable": {
+      "type": "object",
+      "properties": {
+        "VARIABLE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARAMETER": {
+          "$ref": "#/definitions/pceParameter",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POSITION_X": {
+              "value": 1,
+              "description": "--- 1..29 Cartesian state and its direct magnitudes --------------------"
+            },
+            "POSITION_Y": {
+              "value": 2
+            },
+            "POSITION_Z": {
+              "value": 3
+            },
+            "VELOCITY_X": {
+              "value": 4
+            },
+            "VELOCITY_Y": {
+              "value": 5
+            },
+            "VELOCITY_Z": {
+              "value": 6
+            },
+            "POSITION_MAGNITUDE": {
+              "value": 7
+            },
+            "VELOCITY_MAGNITUDE": {
+              "value": 8
+            },
+            "RIGHT_ASCENSION": {
+              "value": 9,
+              "description": "Right ascension of the position vector."
+            },
+            "DECLINATION": {
+              "value": 10,
+              "description": "Declination of the position vector."
+            },
+            "VELOCITY_RIGHT_ASCENSION": {
+              "value": 11,
+              "description": "Right ascension of the velocity vector."
+            },
+            "VELOCITY_DECLINATION": {
+              "value": 12,
+              "description": "Declination of the velocity vector."
+            },
+            "FLIGHT_PATH_ANGLE": {
+              "value": 13,
+              "description": "Angle between the velocity vector and the local horizontal plane."
+            },
+            "AZIMUTH_ANGLE": {
+              "value": 14,
+              "description": "Azimuth of the velocity vector, measured from local north."
+            },
+            "HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 15,
+              "description": "Flight path angle measured from the local horizontal."
+            },
+            "RADIAL_VELOCITY": {
+              "value": 16,
+              "description": "Component of velocity along the position unit vector. Its zero crossing IS the apsis condition; a stop at apoapsis is this parameter with goal 0 and direction DECREASING."
+            },
+            "ANGULAR_MOMENTUM_MAGNITUDE": {
+              "value": 17
+            },
+            "ANGULAR_MOMENTUM_X": {
+              "value": 18
+            },
+            "ANGULAR_MOMENTUM_Y": {
+              "value": 19
+            },
+            "ANGULAR_MOMENTUM_Z": {
+              "value": 20
+            },
+            "SEMI_MAJOR_AXIS": {
+              "value": 30,
+              "description": "--- 30..69 Keplerian elements and derived orbit scalars ----------------"
+            },
+            "ECCENTRICITY": {
+              "value": 31
+            },
+            "INCLINATION": {
+              "value": 32
+            },
+            "RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 33
+            },
+            "ARGUMENT_OF_PERIAPSIS": {
+              "value": 34
+            },
+            "TRUE_ANOMALY": {
+              "value": 35
+            },
+            "MEAN_ANOMALY": {
+              "value": 36
+            },
+            "ECCENTRIC_ANOMALY": {
+              "value": 37
+            },
+            "HYPERBOLIC_ANOMALY": {
+              "value": 38
+            },
+            "RADIUS_OF_PERIAPSIS": {
+              "value": 39
+            },
+            "RADIUS_OF_APOAPSIS": {
+              "value": 40
+            },
+            "ALTITUDE_OF_PERIAPSIS": {
+              "value": 41
+            },
+            "ALTITUDE_OF_APOAPSIS": {
+              "value": 42
+            },
+            "SEMILATUS_RECTUM": {
+              "value": 43
+            },
+            "ORBIT_PERIOD": {
+              "value": 44
+            },
+            "MEAN_MOTION": {
+              "value": 45
+            },
+            "SPECIFIC_ORBITAL_ENERGY": {
+              "value": 46,
+              "description": "Specific orbital energy."
+            },
+            "CHARACTERISTIC_ENERGY": {
+              "value": 47,
+              "description": "Twice the specific orbital energy; the square of the hyperbolic excess speed on an escape trajectory."
+            },
+            "VELOCITY_AT_PERIAPSIS": {
+              "value": 48
+            },
+            "VELOCITY_AT_APOAPSIS": {
+              "value": 49
+            },
+            "ARGUMENT_OF_LATITUDE": {
+              "value": 50,
+              "description": "Argument of periapsis plus true anomaly."
+            },
+            "TRUE_LONGITUDE": {
+              "value": 51
+            },
+            "MEAN_LONGITUDE": {
+              "value": 52
+            },
+            "BETA_ANGLE": {
+              "value": 53,
+              "description": "Angle between the orbit plane and the direction to the illuminating body."
+            },
+            "ECCENTRICITY_VECTOR_X": {
+              "value": 54
+            },
+            "ECCENTRICITY_VECTOR_Y": {
+              "value": 55
+            },
+            "ECCENTRICITY_VECTOR_Z": {
+              "value": 56
+            },
+            "SEMI_MINOR_AXIS": {
+              "value": 57
+            },
+            "EQUINOCTIAL_H": {
+              "value": 70,
+              "description": "--- 70..89 equinoctial families ----------------------------------------"
+            },
+            "EQUINOCTIAL_K": {
+              "value": 71
+            },
+            "EQUINOCTIAL_P": {
+              "value": 72
+            },
+            "EQUINOCTIAL_Q": {
+              "value": 73
+            },
+            "EQUINOCTIAL_MEAN_LONGITUDE": {
+              "value": 74
+            },
+            "MODIFIED_EQUINOCTIAL_F": {
+              "value": 75
+            },
+            "MODIFIED_EQUINOCTIAL_G": {
+              "value": 76
+            },
+            "MODIFIED_EQUINOCTIAL_H": {
+              "value": 77
+            },
+            "MODIFIED_EQUINOCTIAL_K": {
+              "value": 78
+            },
+            "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE": {
+              "value": 79
+            },
+            "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM": {
+              "value": 80
+            },
+            "ALTERNATE_EQUINOCTIAL_P": {
+              "value": 81
+            },
+            "ALTERNATE_EQUINOCTIAL_Q": {
+              "value": 82
+            },
+            "ALTERNATE_EQUINOCTIAL_MEAN_MOTION": {
+              "value": 83
+            },
+            "DELAUNAY_MEAN_ANOMALY": {
+              "value": 90,
+              "description": "--- 90..99 Delaunay canonical variables --------------------------------"
+            },
+            "DELAUNAY_ARGUMENT_OF_PERIAPSIS": {
+              "value": 91
+            },
+            "DELAUNAY_ASCENDING_NODE": {
+              "value": 92
+            },
+            "DELAUNAY_ACTION_TOTAL": {
+              "value": 93
+            },
+            "DELAUNAY_ACTION_ANGULAR_MOMENTUM": {
+              "value": 94
+            },
+            "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM": {
+              "value": 95
+            },
+            "GEODETIC_LATITUDE": {
+              "value": 100,
+              "description": "--- 100..119 planetodetic and body-fixed -------------------------------"
+            },
+            "GEODETIC_LONGITUDE": {
+              "value": 101
+            },
+            "GEODETIC_ALTITUDE": {
+              "value": 102
+            },
+            "GEOCENTRIC_LATITUDE": {
+              "value": 103
+            },
+            "PLANETODETIC_RADIUS_MAGNITUDE": {
+              "value": 104
+            },
+            "PLANETODETIC_VELOCITY_MAGNITUDE": {
+              "value": 105
+            },
+            "PLANETODETIC_AZIMUTH": {
+              "value": 106
+            },
+            "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 107
+            },
+            "LOCAL_SIDEREAL_TIME": {
+              "value": 108,
+              "description": "Local sidereal time at the sub-object meridian."
+            },
+            "PRIME_MERIDIAN_HOUR_ANGLE": {
+              "value": 109,
+              "description": "Hour angle of the body prime meridian."
+            },
+            "B_DOT_T": {
+              "value": 120,
+              "description": "--- 120..139 B-plane and asymptote sets --------------------------------"
+            },
+            "B_DOT_R": {
+              "value": 121
+            },
+            "B_VECTOR_MAGNITUDE": {
+              "value": 122
+            },
+            "B_VECTOR_ANGLE": {
+              "value": 123
+            },
+            "DECLINATION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 124,
+              "description": "Declination of the departure asymptote."
+            },
+            "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 125,
+              "description": "Right ascension of the departure asymptote."
+            },
+            "INCOMING_RADIUS_OF_PERIAPSIS": {
+              "value": 126
+            },
+            "INCOMING_CHARACTERISTIC_ENERGY": {
+              "value": 127
+            },
+            "INCOMING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 128
+            },
+            "INCOMING_ASYMPTOTE_DECLINATION": {
+              "value": 129
+            },
+            "INCOMING_B_VECTOR_AZIMUTH": {
+              "value": 130
+            },
+            "OUTGOING_RADIUS_OF_PERIAPSIS": {
+              "value": 131
+            },
+            "OUTGOING_CHARACTERISTIC_ENERGY": {
+              "value": 132
+            },
+            "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 133
+            },
+            "OUTGOING_ASYMPTOTE_DECLINATION": {
+              "value": 134
+            },
+            "OUTGOING_B_VECTOR_AZIMUTH": {
+              "value": 135
+            },
+            "HYPERBOLIC_EXCESS_VELOCITY": {
+              "value": 136
+            },
+            "BROUWER_SHORT_SEMI_MAJOR_AXIS": {
+              "value": 140,
+              "description": "--- 140..159 Brouwer-Lyddane mean elements -----------------------------"
+            },
+            "BROUWER_SHORT_ECCENTRICITY": {
+              "value": 141
+            },
+            "BROUWER_SHORT_INCLINATION": {
+              "value": 142
+            },
+            "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 143
+            },
+            "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS": {
+              "value": 144
+            },
+            "BROUWER_SHORT_MEAN_ANOMALY": {
+              "value": 145
+            },
+            "BROUWER_LONG_SEMI_MAJOR_AXIS": {
+              "value": 146
+            },
+            "BROUWER_LONG_ECCENTRICITY": {
+              "value": 147
+            },
+            "BROUWER_LONG_INCLINATION": {
+              "value": 148
+            },
+            "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 149
+            },
+            "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS": {
+              "value": 150
+            },
+            "BROUWER_LONG_MEAN_ANOMALY": {
+              "value": 151
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX": {
+              "value": 160,
+              "description": "--- 160..179 state transition and covariance matrices ------------------ Six by six orbit state transition matrix, row-major."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_A": {
+              "value": 161,
+              "description": "Position-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_B": {
+              "value": 162,
+              "description": "Velocity-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_C": {
+              "value": 163,
+              "description": "Position-to-velocity three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_D": {
+              "value": 164,
+              "description": "Velocity-to-velocity three by three block."
+            },
+            "ORBIT_ERROR_COVARIANCE_MATRIX": {
+              "value": 165,
+              "description": "Six by six orbit error covariance, row-major, in the request's coordinate system."
+            },
+            "EPOCH_A1_GREGORIAN": {
+              "value": 180,
+              "description": "--- 180..219 time ------------------------------------------------------ Each EPOCH_ member is the owner epoch expressed in one time system. GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day count. The time system is named by the $TIM timingStandard member."
+            },
+            "EPOCH_A1_MODIFIED_JULIAN": {
+              "value": 181
+            },
+            "EPOCH_TAI_GREGORIAN": {
+              "value": 182
+            },
+            "EPOCH_TAI_MODIFIED_JULIAN": {
+              "value": 183
+            },
+            "EPOCH_TT_GREGORIAN": {
+              "value": 184
+            },
+            "EPOCH_TT_MODIFIED_JULIAN": {
+              "value": 185
+            },
+            "EPOCH_TDB_GREGORIAN": {
+              "value": 186
+            },
+            "EPOCH_TDB_MODIFIED_JULIAN": {
+              "value": 187
+            },
+            "EPOCH_UTC_GREGORIAN": {
+              "value": 188
+            },
+            "EPOCH_UTC_MODIFIED_JULIAN": {
+              "value": 189
+            },
+            "EPOCH_UT1_GREGORIAN": {
+              "value": 190
+            },
+            "EPOCH_UT1_MODIFIED_JULIAN": {
+              "value": 191
+            },
+            "EPOCH_GPS_GREGORIAN": {
+              "value": 192
+            },
+            "EPOCH_GPS_MODIFIED_JULIAN": {
+              "value": 193
+            },
+            "ELAPSED_DAYS": {
+              "value": 194,
+              "description": "Days since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "ELAPSED_SECONDS": {
+              "value": 195,
+              "description": "Seconds since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "DRY_MASS": {
+              "value": 220,
+              "description": "--- 220..249 mass, ballistic and physical properties -------------------"
+            },
+            "TOTAL_MASS": {
+              "value": 221
+            },
+            "DRAG_COEFFICIENT": {
+              "value": 222
+            },
+            "DRAG_AREA": {
+              "value": 223
+            },
+            "REFLECTIVITY_COEFFICIENT": {
+              "value": 224
+            },
+            "SOLAR_RADIATION_PRESSURE_AREA": {
+              "value": 225
+            },
+            "ATMOSPHERIC_DENSITY_SCALE_FACTOR": {
+              "value": 226
+            },
+            "DRAG_SCALE_FACTOR": {
+              "value": 227
+            },
+            "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR": {
+              "value": 228
+            },
+            "BALLISTIC_COEFFICIENT": {
+              "value": 229
+            },
+            "AREA_TO_MASS_RATIO": {
+              "value": 230
+            },
+            "CENTER_OF_MASS_X": {
+              "value": 231
+            },
+            "CENTER_OF_MASS_Y": {
+              "value": 232
+            },
+            "CENTER_OF_MASS_Z": {
+              "value": 233
+            },
+            "MOMENT_OF_INERTIA_MATRIX": {
+              "value": 234,
+              "description": "Three by three inertia tensor, row-major, in body axes."
+            },
+            "ATTITUDE_QUATERNION_1": {
+              "value": 250,
+              "description": "--- 250..289 attitude --------------------------------------------------"
+            },
+            "ATTITUDE_QUATERNION_2": {
+              "value": 251
+            },
+            "ATTITUDE_QUATERNION_3": {
+              "value": 252
+            },
+            "ATTITUDE_QUATERNION_4": {
+              "value": 253,
+              "description": "Scalar component of the attitude quaternion."
+            },
+            "ATTITUDE_DIRECTION_COSINE_MATRIX": {
+              "value": 254,
+              "description": "Three by three direction cosine matrix, row-major."
+            },
+            "EULER_ANGLE_1": {
+              "value": 255
+            },
+            "EULER_ANGLE_2": {
+              "value": 256
+            },
+            "EULER_ANGLE_3": {
+              "value": 257
+            },
+            "EULER_ANGLE_RATE_1": {
+              "value": 258
+            },
+            "EULER_ANGLE_RATE_2": {
+              "value": 259
+            },
+            "EULER_ANGLE_RATE_3": {
+              "value": 260
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_1": {
+              "value": 261
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_2": {
+              "value": 262
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_3": {
+              "value": 263
+            },
+            "ANGULAR_VELOCITY_X": {
+              "value": 264
+            },
+            "ANGULAR_VELOCITY_Y": {
+              "value": 265
+            },
+            "ANGULAR_VELOCITY_Z": {
+              "value": 266
+            },
+            "EULER_AXIS_X": {
+              "value": 267
+            },
+            "EULER_AXIS_Y": {
+              "value": 268
+            },
+            "EULER_AXIS_Z": {
+              "value": 269
+            },
+            "PRINCIPAL_ROTATION_ANGLE": {
+              "value": 270
+            },
+            "TANK_FUEL_MASS": {
+              "value": 300,
+              "description": "--- 300..319 propellant reservoir --------------------------------------"
+            },
+            "TANK_PRESSURE": {
+              "value": 301
+            },
+            "TANK_TEMPERATURE": {
+              "value": 302
+            },
+            "TANK_REFERENCE_TEMPERATURE": {
+              "value": 303
+            },
+            "TANK_VOLUME": {
+              "value": 304
+            },
+            "TANK_FUEL_DENSITY": {
+              "value": 305
+            },
+            "THRUSTER_DUTY_CYCLE": {
+              "value": 320,
+              "description": "--- 320..369 thrust-producing device -----------------------------------"
+            },
+            "THRUSTER_THRUST_SCALE_FACTOR": {
+              "value": 321
+            },
+            "THRUSTER_GRAVITATIONAL_ACCELERATION": {
+              "value": 322
+            },
+            "THRUSTER_MIXTURE_RATIO": {
+              "value": 323
+            },
+            "THRUSTER_SPECIFIC_IMPULSE": {
+              "value": 324
+            },
+            "THRUSTER_THRUST_MAGNITUDE": {
+              "value": 325
+            },
+            "THRUSTER_MASS_FLOW_RATE": {
+              "value": 326
+            },
+            "THRUSTER_DIRECTION_X": {
+              "value": 327
+            },
+            "THRUSTER_DIRECTION_Y": {
+              "value": 328
+            },
+            "THRUSTER_DIRECTION_Z": {
+              "value": 329
+            },
+            "THRUSTER_THRUST_COEFFICIENTS": {
+              "value": 330,
+              "description": "Coefficient vector of the thrust polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "THRUSTER_IMPULSE_COEFFICIENTS": {
+              "value": 331,
+              "description": "Coefficient vector of the specific-impulse polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "IMPULSIVE_BURN_ELEMENT_1": {
+              "value": 370,
+              "description": "--- 370..389 impulsive velocity change --------------------------------- First component of the velocity change in the burn coordinate system."
+            },
+            "IMPULSIVE_BURN_ELEMENT_2": {
+              "value": 371
+            },
+            "IMPULSIVE_BURN_ELEMENT_3": {
+              "value": 372
+            },
+            "IMPULSIVE_BURN_DELTA_V_MAGNITUDE": {
+              "value": 373
+            },
+            "IMPULSIVE_BURN_MASS_CONSUMED": {
+              "value": 374
+            },
+            "FINITE_BURN_THRUST_MAGNITUDE": {
+              "value": 390,
+              "description": "--- 390..409 finite thrust arc -----------------------------------------"
+            },
+            "FINITE_BURN_MASS_FLOW_RATE": {
+              "value": 391
+            },
+            "FINITE_BURN_THRUST_X": {
+              "value": 392
+            },
+            "FINITE_BURN_THRUST_Y": {
+              "value": 393
+            },
+            "FINITE_BURN_THRUST_Z": {
+              "value": 394
+            },
+            "FINITE_BURN_ACCELERATION_MAGNITUDE": {
+              "value": 395
+            },
+            "FINITE_BURN_MASS_CONSUMED": {
+              "value": 396
+            },
+            "TOTAL_POWER_AVAILABLE": {
+              "value": 410,
+              "description": "--- 410..429 electrical power ------------------------------------------"
+            },
+            "REQUIRED_BUS_POWER": {
+              "value": 411
+            },
+            "THRUST_POWER_AVAILABLE": {
+              "value": 412
+            },
+            "GENERATED_POWER": {
+              "value": 413
+            },
+            "TOTAL_TORQUE_X": {
+              "value": 430,
+              "description": "--- 430..449 torque ----------------------------------------------------"
+            },
+            "TOTAL_TORQUE_Y": {
+              "value": 431
+            },
+            "TOTAL_TORQUE_Z": {
+              "value": 432
+            },
+            "TOTAL_TORQUE_MAGNITUDE": {
+              "value": 433
+            },
+            "SOLVER_STATUS": {
+              "value": 450,
+              "description": "--- 450..469 solver ---------------------------------------------------- Run state of the solver, as an integer code the solver family defines."
+            },
+            "SOLVER_ITERATION_COUNT": {
+              "value": 451
+            },
+            "SOLVER_OBJECTIVE_VALUE": {
+              "value": 452
+            },
+            "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION": {
+              "value": 453
+            },
+            "RELATIVE_RANGE": {
+              "value": 470,
+              "description": "--- 470..499 relative geometry and observation ------------------------- Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID."
+            },
+            "RELATIVE_RANGE_RATE": {
+              "value": 471
+            },
+            "RELATIVE_POSITION_X": {
+              "value": 472
+            },
+            "RELATIVE_POSITION_Y": {
+              "value": 473
+            },
+            "RELATIVE_POSITION_Z": {
+              "value": 474
+            },
+            "RELATIVE_VELOCITY_X": {
+              "value": 475
+            },
+            "RELATIVE_VELOCITY_Y": {
+              "value": 476
+            },
+            "RELATIVE_VELOCITY_Z": {
+              "value": 477
+            },
+            "TOPOCENTRIC_AZIMUTH": {
+              "value": 478,
+              "description": "Azimuth of the owner as seen from the site named on the request."
+            },
+            "TOPOCENTRIC_ELEVATION": {
+              "value": 479,
+              "description": "Elevation of the owner as seen from the site named on the request."
+            },
+            "ANGULAR_SEPARATION": {
+              "value": 480,
+              "description": "Angle subtended at the owner between two named directions."
+            },
+            "SOLAR_PHASE_ANGLE": {
+              "value": 481,
+              "description": "Angle at the owner between the illuminating body and the observer."
+            },
+            "LOCAL_SOLAR_ELEVATION_ANGLE": {
+              "value": 482,
+              "description": "Elevation of the illuminating body at the site named on the request."
+            },
+            "ILLUMINATION_FRACTION": {
+              "value": 483,
+              "description": "Fraction of the illuminating body disc visible from the owner: 1 in full sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the eclipse entry and exit conditions."
+            },
+            "LIGHT_TIME_DELAY": {
+              "value": 484,
+              "description": "One-way signal propagation time between the owner and the observer."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 65535,
+              "description": "The parameter is outside this roster and is named in PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST refuse the entry; it never guesses a neighbouring member."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDER_DEFINED_PARAMETER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_BOUND": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "-1.7976931348623157e+308"
+        },
+        "UPPER_BOUND": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.7976931348623157e+308"
+        },
+        "PERTURBATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "required": [
+        "VARIABLE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SLPGoal": {
+      "type": "object",
+      "properties": {
+        "GOAL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARAMETER": {
+          "$ref": "#/definitions/pceParameter",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POSITION_X": {
+              "value": 1,
+              "description": "--- 1..29 Cartesian state and its direct magnitudes --------------------"
+            },
+            "POSITION_Y": {
+              "value": 2
+            },
+            "POSITION_Z": {
+              "value": 3
+            },
+            "VELOCITY_X": {
+              "value": 4
+            },
+            "VELOCITY_Y": {
+              "value": 5
+            },
+            "VELOCITY_Z": {
+              "value": 6
+            },
+            "POSITION_MAGNITUDE": {
+              "value": 7
+            },
+            "VELOCITY_MAGNITUDE": {
+              "value": 8
+            },
+            "RIGHT_ASCENSION": {
+              "value": 9,
+              "description": "Right ascension of the position vector."
+            },
+            "DECLINATION": {
+              "value": 10,
+              "description": "Declination of the position vector."
+            },
+            "VELOCITY_RIGHT_ASCENSION": {
+              "value": 11,
+              "description": "Right ascension of the velocity vector."
+            },
+            "VELOCITY_DECLINATION": {
+              "value": 12,
+              "description": "Declination of the velocity vector."
+            },
+            "FLIGHT_PATH_ANGLE": {
+              "value": 13,
+              "description": "Angle between the velocity vector and the local horizontal plane."
+            },
+            "AZIMUTH_ANGLE": {
+              "value": 14,
+              "description": "Azimuth of the velocity vector, measured from local north."
+            },
+            "HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 15,
+              "description": "Flight path angle measured from the local horizontal."
+            },
+            "RADIAL_VELOCITY": {
+              "value": 16,
+              "description": "Component of velocity along the position unit vector. Its zero crossing IS the apsis condition; a stop at apoapsis is this parameter with goal 0 and direction DECREASING."
+            },
+            "ANGULAR_MOMENTUM_MAGNITUDE": {
+              "value": 17
+            },
+            "ANGULAR_MOMENTUM_X": {
+              "value": 18
+            },
+            "ANGULAR_MOMENTUM_Y": {
+              "value": 19
+            },
+            "ANGULAR_MOMENTUM_Z": {
+              "value": 20
+            },
+            "SEMI_MAJOR_AXIS": {
+              "value": 30,
+              "description": "--- 30..69 Keplerian elements and derived orbit scalars ----------------"
+            },
+            "ECCENTRICITY": {
+              "value": 31
+            },
+            "INCLINATION": {
+              "value": 32
+            },
+            "RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 33
+            },
+            "ARGUMENT_OF_PERIAPSIS": {
+              "value": 34
+            },
+            "TRUE_ANOMALY": {
+              "value": 35
+            },
+            "MEAN_ANOMALY": {
+              "value": 36
+            },
+            "ECCENTRIC_ANOMALY": {
+              "value": 37
+            },
+            "HYPERBOLIC_ANOMALY": {
+              "value": 38
+            },
+            "RADIUS_OF_PERIAPSIS": {
+              "value": 39
+            },
+            "RADIUS_OF_APOAPSIS": {
+              "value": 40
+            },
+            "ALTITUDE_OF_PERIAPSIS": {
+              "value": 41
+            },
+            "ALTITUDE_OF_APOAPSIS": {
+              "value": 42
+            },
+            "SEMILATUS_RECTUM": {
+              "value": 43
+            },
+            "ORBIT_PERIOD": {
+              "value": 44
+            },
+            "MEAN_MOTION": {
+              "value": 45
+            },
+            "SPECIFIC_ORBITAL_ENERGY": {
+              "value": 46,
+              "description": "Specific orbital energy."
+            },
+            "CHARACTERISTIC_ENERGY": {
+              "value": 47,
+              "description": "Twice the specific orbital energy; the square of the hyperbolic excess speed on an escape trajectory."
+            },
+            "VELOCITY_AT_PERIAPSIS": {
+              "value": 48
+            },
+            "VELOCITY_AT_APOAPSIS": {
+              "value": 49
+            },
+            "ARGUMENT_OF_LATITUDE": {
+              "value": 50,
+              "description": "Argument of periapsis plus true anomaly."
+            },
+            "TRUE_LONGITUDE": {
+              "value": 51
+            },
+            "MEAN_LONGITUDE": {
+              "value": 52
+            },
+            "BETA_ANGLE": {
+              "value": 53,
+              "description": "Angle between the orbit plane and the direction to the illuminating body."
+            },
+            "ECCENTRICITY_VECTOR_X": {
+              "value": 54
+            },
+            "ECCENTRICITY_VECTOR_Y": {
+              "value": 55
+            },
+            "ECCENTRICITY_VECTOR_Z": {
+              "value": 56
+            },
+            "SEMI_MINOR_AXIS": {
+              "value": 57
+            },
+            "EQUINOCTIAL_H": {
+              "value": 70,
+              "description": "--- 70..89 equinoctial families ----------------------------------------"
+            },
+            "EQUINOCTIAL_K": {
+              "value": 71
+            },
+            "EQUINOCTIAL_P": {
+              "value": 72
+            },
+            "EQUINOCTIAL_Q": {
+              "value": 73
+            },
+            "EQUINOCTIAL_MEAN_LONGITUDE": {
+              "value": 74
+            },
+            "MODIFIED_EQUINOCTIAL_F": {
+              "value": 75
+            },
+            "MODIFIED_EQUINOCTIAL_G": {
+              "value": 76
+            },
+            "MODIFIED_EQUINOCTIAL_H": {
+              "value": 77
+            },
+            "MODIFIED_EQUINOCTIAL_K": {
+              "value": 78
+            },
+            "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE": {
+              "value": 79
+            },
+            "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM": {
+              "value": 80
+            },
+            "ALTERNATE_EQUINOCTIAL_P": {
+              "value": 81
+            },
+            "ALTERNATE_EQUINOCTIAL_Q": {
+              "value": 82
+            },
+            "ALTERNATE_EQUINOCTIAL_MEAN_MOTION": {
+              "value": 83
+            },
+            "DELAUNAY_MEAN_ANOMALY": {
+              "value": 90,
+              "description": "--- 90..99 Delaunay canonical variables --------------------------------"
+            },
+            "DELAUNAY_ARGUMENT_OF_PERIAPSIS": {
+              "value": 91
+            },
+            "DELAUNAY_ASCENDING_NODE": {
+              "value": 92
+            },
+            "DELAUNAY_ACTION_TOTAL": {
+              "value": 93
+            },
+            "DELAUNAY_ACTION_ANGULAR_MOMENTUM": {
+              "value": 94
+            },
+            "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM": {
+              "value": 95
+            },
+            "GEODETIC_LATITUDE": {
+              "value": 100,
+              "description": "--- 100..119 planetodetic and body-fixed -------------------------------"
+            },
+            "GEODETIC_LONGITUDE": {
+              "value": 101
+            },
+            "GEODETIC_ALTITUDE": {
+              "value": 102
+            },
+            "GEOCENTRIC_LATITUDE": {
+              "value": 103
+            },
+            "PLANETODETIC_RADIUS_MAGNITUDE": {
+              "value": 104
+            },
+            "PLANETODETIC_VELOCITY_MAGNITUDE": {
+              "value": 105
+            },
+            "PLANETODETIC_AZIMUTH": {
+              "value": 106
+            },
+            "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 107
+            },
+            "LOCAL_SIDEREAL_TIME": {
+              "value": 108,
+              "description": "Local sidereal time at the sub-object meridian."
+            },
+            "PRIME_MERIDIAN_HOUR_ANGLE": {
+              "value": 109,
+              "description": "Hour angle of the body prime meridian."
+            },
+            "B_DOT_T": {
+              "value": 120,
+              "description": "--- 120..139 B-plane and asymptote sets --------------------------------"
+            },
+            "B_DOT_R": {
+              "value": 121
+            },
+            "B_VECTOR_MAGNITUDE": {
+              "value": 122
+            },
+            "B_VECTOR_ANGLE": {
+              "value": 123
+            },
+            "DECLINATION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 124,
+              "description": "Declination of the departure asymptote."
+            },
+            "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 125,
+              "description": "Right ascension of the departure asymptote."
+            },
+            "INCOMING_RADIUS_OF_PERIAPSIS": {
+              "value": 126
+            },
+            "INCOMING_CHARACTERISTIC_ENERGY": {
+              "value": 127
+            },
+            "INCOMING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 128
+            },
+            "INCOMING_ASYMPTOTE_DECLINATION": {
+              "value": 129
+            },
+            "INCOMING_B_VECTOR_AZIMUTH": {
+              "value": 130
+            },
+            "OUTGOING_RADIUS_OF_PERIAPSIS": {
+              "value": 131
+            },
+            "OUTGOING_CHARACTERISTIC_ENERGY": {
+              "value": 132
+            },
+            "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 133
+            },
+            "OUTGOING_ASYMPTOTE_DECLINATION": {
+              "value": 134
+            },
+            "OUTGOING_B_VECTOR_AZIMUTH": {
+              "value": 135
+            },
+            "HYPERBOLIC_EXCESS_VELOCITY": {
+              "value": 136
+            },
+            "BROUWER_SHORT_SEMI_MAJOR_AXIS": {
+              "value": 140,
+              "description": "--- 140..159 Brouwer-Lyddane mean elements -----------------------------"
+            },
+            "BROUWER_SHORT_ECCENTRICITY": {
+              "value": 141
+            },
+            "BROUWER_SHORT_INCLINATION": {
+              "value": 142
+            },
+            "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 143
+            },
+            "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS": {
+              "value": 144
+            },
+            "BROUWER_SHORT_MEAN_ANOMALY": {
+              "value": 145
+            },
+            "BROUWER_LONG_SEMI_MAJOR_AXIS": {
+              "value": 146
+            },
+            "BROUWER_LONG_ECCENTRICITY": {
+              "value": 147
+            },
+            "BROUWER_LONG_INCLINATION": {
+              "value": 148
+            },
+            "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 149
+            },
+            "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS": {
+              "value": 150
+            },
+            "BROUWER_LONG_MEAN_ANOMALY": {
+              "value": 151
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX": {
+              "value": 160,
+              "description": "--- 160..179 state transition and covariance matrices ------------------ Six by six orbit state transition matrix, row-major."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_A": {
+              "value": 161,
+              "description": "Position-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_B": {
+              "value": 162,
+              "description": "Velocity-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_C": {
+              "value": 163,
+              "description": "Position-to-velocity three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_D": {
+              "value": 164,
+              "description": "Velocity-to-velocity three by three block."
+            },
+            "ORBIT_ERROR_COVARIANCE_MATRIX": {
+              "value": 165,
+              "description": "Six by six orbit error covariance, row-major, in the request's coordinate system."
+            },
+            "EPOCH_A1_GREGORIAN": {
+              "value": 180,
+              "description": "--- 180..219 time ------------------------------------------------------ Each EPOCH_ member is the owner epoch expressed in one time system. GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day count. The time system is named by the $TIM timingStandard member."
+            },
+            "EPOCH_A1_MODIFIED_JULIAN": {
+              "value": 181
+            },
+            "EPOCH_TAI_GREGORIAN": {
+              "value": 182
+            },
+            "EPOCH_TAI_MODIFIED_JULIAN": {
+              "value": 183
+            },
+            "EPOCH_TT_GREGORIAN": {
+              "value": 184
+            },
+            "EPOCH_TT_MODIFIED_JULIAN": {
+              "value": 185
+            },
+            "EPOCH_TDB_GREGORIAN": {
+              "value": 186
+            },
+            "EPOCH_TDB_MODIFIED_JULIAN": {
+              "value": 187
+            },
+            "EPOCH_UTC_GREGORIAN": {
+              "value": 188
+            },
+            "EPOCH_UTC_MODIFIED_JULIAN": {
+              "value": 189
+            },
+            "EPOCH_UT1_GREGORIAN": {
+              "value": 190
+            },
+            "EPOCH_UT1_MODIFIED_JULIAN": {
+              "value": 191
+            },
+            "EPOCH_GPS_GREGORIAN": {
+              "value": 192
+            },
+            "EPOCH_GPS_MODIFIED_JULIAN": {
+              "value": 193
+            },
+            "ELAPSED_DAYS": {
+              "value": 194,
+              "description": "Days since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "ELAPSED_SECONDS": {
+              "value": 195,
+              "description": "Seconds since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "DRY_MASS": {
+              "value": 220,
+              "description": "--- 220..249 mass, ballistic and physical properties -------------------"
+            },
+            "TOTAL_MASS": {
+              "value": 221
+            },
+            "DRAG_COEFFICIENT": {
+              "value": 222
+            },
+            "DRAG_AREA": {
+              "value": 223
+            },
+            "REFLECTIVITY_COEFFICIENT": {
+              "value": 224
+            },
+            "SOLAR_RADIATION_PRESSURE_AREA": {
+              "value": 225
+            },
+            "ATMOSPHERIC_DENSITY_SCALE_FACTOR": {
+              "value": 226
+            },
+            "DRAG_SCALE_FACTOR": {
+              "value": 227
+            },
+            "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR": {
+              "value": 228
+            },
+            "BALLISTIC_COEFFICIENT": {
+              "value": 229
+            },
+            "AREA_TO_MASS_RATIO": {
+              "value": 230
+            },
+            "CENTER_OF_MASS_X": {
+              "value": 231
+            },
+            "CENTER_OF_MASS_Y": {
+              "value": 232
+            },
+            "CENTER_OF_MASS_Z": {
+              "value": 233
+            },
+            "MOMENT_OF_INERTIA_MATRIX": {
+              "value": 234,
+              "description": "Three by three inertia tensor, row-major, in body axes."
+            },
+            "ATTITUDE_QUATERNION_1": {
+              "value": 250,
+              "description": "--- 250..289 attitude --------------------------------------------------"
+            },
+            "ATTITUDE_QUATERNION_2": {
+              "value": 251
+            },
+            "ATTITUDE_QUATERNION_3": {
+              "value": 252
+            },
+            "ATTITUDE_QUATERNION_4": {
+              "value": 253,
+              "description": "Scalar component of the attitude quaternion."
+            },
+            "ATTITUDE_DIRECTION_COSINE_MATRIX": {
+              "value": 254,
+              "description": "Three by three direction cosine matrix, row-major."
+            },
+            "EULER_ANGLE_1": {
+              "value": 255
+            },
+            "EULER_ANGLE_2": {
+              "value": 256
+            },
+            "EULER_ANGLE_3": {
+              "value": 257
+            },
+            "EULER_ANGLE_RATE_1": {
+              "value": 258
+            },
+            "EULER_ANGLE_RATE_2": {
+              "value": 259
+            },
+            "EULER_ANGLE_RATE_3": {
+              "value": 260
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_1": {
+              "value": 261
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_2": {
+              "value": 262
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_3": {
+              "value": 263
+            },
+            "ANGULAR_VELOCITY_X": {
+              "value": 264
+            },
+            "ANGULAR_VELOCITY_Y": {
+              "value": 265
+            },
+            "ANGULAR_VELOCITY_Z": {
+              "value": 266
+            },
+            "EULER_AXIS_X": {
+              "value": 267
+            },
+            "EULER_AXIS_Y": {
+              "value": 268
+            },
+            "EULER_AXIS_Z": {
+              "value": 269
+            },
+            "PRINCIPAL_ROTATION_ANGLE": {
+              "value": 270
+            },
+            "TANK_FUEL_MASS": {
+              "value": 300,
+              "description": "--- 300..319 propellant reservoir --------------------------------------"
+            },
+            "TANK_PRESSURE": {
+              "value": 301
+            },
+            "TANK_TEMPERATURE": {
+              "value": 302
+            },
+            "TANK_REFERENCE_TEMPERATURE": {
+              "value": 303
+            },
+            "TANK_VOLUME": {
+              "value": 304
+            },
+            "TANK_FUEL_DENSITY": {
+              "value": 305
+            },
+            "THRUSTER_DUTY_CYCLE": {
+              "value": 320,
+              "description": "--- 320..369 thrust-producing device -----------------------------------"
+            },
+            "THRUSTER_THRUST_SCALE_FACTOR": {
+              "value": 321
+            },
+            "THRUSTER_GRAVITATIONAL_ACCELERATION": {
+              "value": 322
+            },
+            "THRUSTER_MIXTURE_RATIO": {
+              "value": 323
+            },
+            "THRUSTER_SPECIFIC_IMPULSE": {
+              "value": 324
+            },
+            "THRUSTER_THRUST_MAGNITUDE": {
+              "value": 325
+            },
+            "THRUSTER_MASS_FLOW_RATE": {
+              "value": 326
+            },
+            "THRUSTER_DIRECTION_X": {
+              "value": 327
+            },
+            "THRUSTER_DIRECTION_Y": {
+              "value": 328
+            },
+            "THRUSTER_DIRECTION_Z": {
+              "value": 329
+            },
+            "THRUSTER_THRUST_COEFFICIENTS": {
+              "value": 330,
+              "description": "Coefficient vector of the thrust polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "THRUSTER_IMPULSE_COEFFICIENTS": {
+              "value": 331,
+              "description": "Coefficient vector of the specific-impulse polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "IMPULSIVE_BURN_ELEMENT_1": {
+              "value": 370,
+              "description": "--- 370..389 impulsive velocity change --------------------------------- First component of the velocity change in the burn coordinate system."
+            },
+            "IMPULSIVE_BURN_ELEMENT_2": {
+              "value": 371
+            },
+            "IMPULSIVE_BURN_ELEMENT_3": {
+              "value": 372
+            },
+            "IMPULSIVE_BURN_DELTA_V_MAGNITUDE": {
+              "value": 373
+            },
+            "IMPULSIVE_BURN_MASS_CONSUMED": {
+              "value": 374
+            },
+            "FINITE_BURN_THRUST_MAGNITUDE": {
+              "value": 390,
+              "description": "--- 390..409 finite thrust arc -----------------------------------------"
+            },
+            "FINITE_BURN_MASS_FLOW_RATE": {
+              "value": 391
+            },
+            "FINITE_BURN_THRUST_X": {
+              "value": 392
+            },
+            "FINITE_BURN_THRUST_Y": {
+              "value": 393
+            },
+            "FINITE_BURN_THRUST_Z": {
+              "value": 394
+            },
+            "FINITE_BURN_ACCELERATION_MAGNITUDE": {
+              "value": 395
+            },
+            "FINITE_BURN_MASS_CONSUMED": {
+              "value": 396
+            },
+            "TOTAL_POWER_AVAILABLE": {
+              "value": 410,
+              "description": "--- 410..429 electrical power ------------------------------------------"
+            },
+            "REQUIRED_BUS_POWER": {
+              "value": 411
+            },
+            "THRUST_POWER_AVAILABLE": {
+              "value": 412
+            },
+            "GENERATED_POWER": {
+              "value": 413
+            },
+            "TOTAL_TORQUE_X": {
+              "value": 430,
+              "description": "--- 430..449 torque ----------------------------------------------------"
+            },
+            "TOTAL_TORQUE_Y": {
+              "value": 431
+            },
+            "TOTAL_TORQUE_Z": {
+              "value": 432
+            },
+            "TOTAL_TORQUE_MAGNITUDE": {
+              "value": 433
+            },
+            "SOLVER_STATUS": {
+              "value": 450,
+              "description": "--- 450..469 solver ---------------------------------------------------- Run state of the solver, as an integer code the solver family defines."
+            },
+            "SOLVER_ITERATION_COUNT": {
+              "value": 451
+            },
+            "SOLVER_OBJECTIVE_VALUE": {
+              "value": 452
+            },
+            "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION": {
+              "value": 453
+            },
+            "RELATIVE_RANGE": {
+              "value": 470,
+              "description": "--- 470..499 relative geometry and observation ------------------------- Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID."
+            },
+            "RELATIVE_RANGE_RATE": {
+              "value": 471
+            },
+            "RELATIVE_POSITION_X": {
+              "value": 472
+            },
+            "RELATIVE_POSITION_Y": {
+              "value": 473
+            },
+            "RELATIVE_POSITION_Z": {
+              "value": 474
+            },
+            "RELATIVE_VELOCITY_X": {
+              "value": 475
+            },
+            "RELATIVE_VELOCITY_Y": {
+              "value": 476
+            },
+            "RELATIVE_VELOCITY_Z": {
+              "value": 477
+            },
+            "TOPOCENTRIC_AZIMUTH": {
+              "value": 478,
+              "description": "Azimuth of the owner as seen from the site named on the request."
+            },
+            "TOPOCENTRIC_ELEVATION": {
+              "value": 479,
+              "description": "Elevation of the owner as seen from the site named on the request."
+            },
+            "ANGULAR_SEPARATION": {
+              "value": 480,
+              "description": "Angle subtended at the owner between two named directions."
+            },
+            "SOLAR_PHASE_ANGLE": {
+              "value": 481,
+              "description": "Angle at the owner between the illuminating body and the observer."
+            },
+            "LOCAL_SOLAR_ELEVATION_ANGLE": {
+              "value": 482,
+              "description": "Elevation of the illuminating body at the site named on the request."
+            },
+            "ILLUMINATION_FRACTION": {
+              "value": 483,
+              "description": "Fraction of the illuminating body disc visible from the owner: 1 in full sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the eclipse entry and exit conditions."
+            },
+            "LIGHT_TIME_DELAY": {
+              "value": 484,
+              "description": "One-way signal propagation time between the owner and the observer."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 65535,
+              "description": "The parameter is outside this roster and is named in PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST refuse the entry; it never guesses a neighbouring member."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDER_DEFINED_PARAMETER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "required": [
+        "GOAL_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SLPObjective": {
+      "type": "object",
+      "properties": {
+        "OBJECTIVE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARAMETER": {
+          "$ref": "#/definitions/pceParameter",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POSITION_X": {
+              "value": 1,
+              "description": "--- 1..29 Cartesian state and its direct magnitudes --------------------"
+            },
+            "POSITION_Y": {
+              "value": 2
+            },
+            "POSITION_Z": {
+              "value": 3
+            },
+            "VELOCITY_X": {
+              "value": 4
+            },
+            "VELOCITY_Y": {
+              "value": 5
+            },
+            "VELOCITY_Z": {
+              "value": 6
+            },
+            "POSITION_MAGNITUDE": {
+              "value": 7
+            },
+            "VELOCITY_MAGNITUDE": {
+              "value": 8
+            },
+            "RIGHT_ASCENSION": {
+              "value": 9,
+              "description": "Right ascension of the position vector."
+            },
+            "DECLINATION": {
+              "value": 10,
+              "description": "Declination of the position vector."
+            },
+            "VELOCITY_RIGHT_ASCENSION": {
+              "value": 11,
+              "description": "Right ascension of the velocity vector."
+            },
+            "VELOCITY_DECLINATION": {
+              "value": 12,
+              "description": "Declination of the velocity vector."
+            },
+            "FLIGHT_PATH_ANGLE": {
+              "value": 13,
+              "description": "Angle between the velocity vector and the local horizontal plane."
+            },
+            "AZIMUTH_ANGLE": {
+              "value": 14,
+              "description": "Azimuth of the velocity vector, measured from local north."
+            },
+            "HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 15,
+              "description": "Flight path angle measured from the local horizontal."
+            },
+            "RADIAL_VELOCITY": {
+              "value": 16,
+              "description": "Component of velocity along the position unit vector. Its zero crossing IS the apsis condition; a stop at apoapsis is this parameter with goal 0 and direction DECREASING."
+            },
+            "ANGULAR_MOMENTUM_MAGNITUDE": {
+              "value": 17
+            },
+            "ANGULAR_MOMENTUM_X": {
+              "value": 18
+            },
+            "ANGULAR_MOMENTUM_Y": {
+              "value": 19
+            },
+            "ANGULAR_MOMENTUM_Z": {
+              "value": 20
+            },
+            "SEMI_MAJOR_AXIS": {
+              "value": 30,
+              "description": "--- 30..69 Keplerian elements and derived orbit scalars ----------------"
+            },
+            "ECCENTRICITY": {
+              "value": 31
+            },
+            "INCLINATION": {
+              "value": 32
+            },
+            "RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 33
+            },
+            "ARGUMENT_OF_PERIAPSIS": {
+              "value": 34
+            },
+            "TRUE_ANOMALY": {
+              "value": 35
+            },
+            "MEAN_ANOMALY": {
+              "value": 36
+            },
+            "ECCENTRIC_ANOMALY": {
+              "value": 37
+            },
+            "HYPERBOLIC_ANOMALY": {
+              "value": 38
+            },
+            "RADIUS_OF_PERIAPSIS": {
+              "value": 39
+            },
+            "RADIUS_OF_APOAPSIS": {
+              "value": 40
+            },
+            "ALTITUDE_OF_PERIAPSIS": {
+              "value": 41
+            },
+            "ALTITUDE_OF_APOAPSIS": {
+              "value": 42
+            },
+            "SEMILATUS_RECTUM": {
+              "value": 43
+            },
+            "ORBIT_PERIOD": {
+              "value": 44
+            },
+            "MEAN_MOTION": {
+              "value": 45
+            },
+            "SPECIFIC_ORBITAL_ENERGY": {
+              "value": 46,
+              "description": "Specific orbital energy."
+            },
+            "CHARACTERISTIC_ENERGY": {
+              "value": 47,
+              "description": "Twice the specific orbital energy; the square of the hyperbolic excess speed on an escape trajectory."
+            },
+            "VELOCITY_AT_PERIAPSIS": {
+              "value": 48
+            },
+            "VELOCITY_AT_APOAPSIS": {
+              "value": 49
+            },
+            "ARGUMENT_OF_LATITUDE": {
+              "value": 50,
+              "description": "Argument of periapsis plus true anomaly."
+            },
+            "TRUE_LONGITUDE": {
+              "value": 51
+            },
+            "MEAN_LONGITUDE": {
+              "value": 52
+            },
+            "BETA_ANGLE": {
+              "value": 53,
+              "description": "Angle between the orbit plane and the direction to the illuminating body."
+            },
+            "ECCENTRICITY_VECTOR_X": {
+              "value": 54
+            },
+            "ECCENTRICITY_VECTOR_Y": {
+              "value": 55
+            },
+            "ECCENTRICITY_VECTOR_Z": {
+              "value": 56
+            },
+            "SEMI_MINOR_AXIS": {
+              "value": 57
+            },
+            "EQUINOCTIAL_H": {
+              "value": 70,
+              "description": "--- 70..89 equinoctial families ----------------------------------------"
+            },
+            "EQUINOCTIAL_K": {
+              "value": 71
+            },
+            "EQUINOCTIAL_P": {
+              "value": 72
+            },
+            "EQUINOCTIAL_Q": {
+              "value": 73
+            },
+            "EQUINOCTIAL_MEAN_LONGITUDE": {
+              "value": 74
+            },
+            "MODIFIED_EQUINOCTIAL_F": {
+              "value": 75
+            },
+            "MODIFIED_EQUINOCTIAL_G": {
+              "value": 76
+            },
+            "MODIFIED_EQUINOCTIAL_H": {
+              "value": 77
+            },
+            "MODIFIED_EQUINOCTIAL_K": {
+              "value": 78
+            },
+            "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE": {
+              "value": 79
+            },
+            "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM": {
+              "value": 80
+            },
+            "ALTERNATE_EQUINOCTIAL_P": {
+              "value": 81
+            },
+            "ALTERNATE_EQUINOCTIAL_Q": {
+              "value": 82
+            },
+            "ALTERNATE_EQUINOCTIAL_MEAN_MOTION": {
+              "value": 83
+            },
+            "DELAUNAY_MEAN_ANOMALY": {
+              "value": 90,
+              "description": "--- 90..99 Delaunay canonical variables --------------------------------"
+            },
+            "DELAUNAY_ARGUMENT_OF_PERIAPSIS": {
+              "value": 91
+            },
+            "DELAUNAY_ASCENDING_NODE": {
+              "value": 92
+            },
+            "DELAUNAY_ACTION_TOTAL": {
+              "value": 93
+            },
+            "DELAUNAY_ACTION_ANGULAR_MOMENTUM": {
+              "value": 94
+            },
+            "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM": {
+              "value": 95
+            },
+            "GEODETIC_LATITUDE": {
+              "value": 100,
+              "description": "--- 100..119 planetodetic and body-fixed -------------------------------"
+            },
+            "GEODETIC_LONGITUDE": {
+              "value": 101
+            },
+            "GEODETIC_ALTITUDE": {
+              "value": 102
+            },
+            "GEOCENTRIC_LATITUDE": {
+              "value": 103
+            },
+            "PLANETODETIC_RADIUS_MAGNITUDE": {
+              "value": 104
+            },
+            "PLANETODETIC_VELOCITY_MAGNITUDE": {
+              "value": 105
+            },
+            "PLANETODETIC_AZIMUTH": {
+              "value": 106
+            },
+            "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 107
+            },
+            "LOCAL_SIDEREAL_TIME": {
+              "value": 108,
+              "description": "Local sidereal time at the sub-object meridian."
+            },
+            "PRIME_MERIDIAN_HOUR_ANGLE": {
+              "value": 109,
+              "description": "Hour angle of the body prime meridian."
+            },
+            "B_DOT_T": {
+              "value": 120,
+              "description": "--- 120..139 B-plane and asymptote sets --------------------------------"
+            },
+            "B_DOT_R": {
+              "value": 121
+            },
+            "B_VECTOR_MAGNITUDE": {
+              "value": 122
+            },
+            "B_VECTOR_ANGLE": {
+              "value": 123
+            },
+            "DECLINATION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 124,
+              "description": "Declination of the departure asymptote."
+            },
+            "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 125,
+              "description": "Right ascension of the departure asymptote."
+            },
+            "INCOMING_RADIUS_OF_PERIAPSIS": {
+              "value": 126
+            },
+            "INCOMING_CHARACTERISTIC_ENERGY": {
+              "value": 127
+            },
+            "INCOMING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 128
+            },
+            "INCOMING_ASYMPTOTE_DECLINATION": {
+              "value": 129
+            },
+            "INCOMING_B_VECTOR_AZIMUTH": {
+              "value": 130
+            },
+            "OUTGOING_RADIUS_OF_PERIAPSIS": {
+              "value": 131
+            },
+            "OUTGOING_CHARACTERISTIC_ENERGY": {
+              "value": 132
+            },
+            "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 133
+            },
+            "OUTGOING_ASYMPTOTE_DECLINATION": {
+              "value": 134
+            },
+            "OUTGOING_B_VECTOR_AZIMUTH": {
+              "value": 135
+            },
+            "HYPERBOLIC_EXCESS_VELOCITY": {
+              "value": 136
+            },
+            "BROUWER_SHORT_SEMI_MAJOR_AXIS": {
+              "value": 140,
+              "description": "--- 140..159 Brouwer-Lyddane mean elements -----------------------------"
+            },
+            "BROUWER_SHORT_ECCENTRICITY": {
+              "value": 141
+            },
+            "BROUWER_SHORT_INCLINATION": {
+              "value": 142
+            },
+            "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 143
+            },
+            "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS": {
+              "value": 144
+            },
+            "BROUWER_SHORT_MEAN_ANOMALY": {
+              "value": 145
+            },
+            "BROUWER_LONG_SEMI_MAJOR_AXIS": {
+              "value": 146
+            },
+            "BROUWER_LONG_ECCENTRICITY": {
+              "value": 147
+            },
+            "BROUWER_LONG_INCLINATION": {
+              "value": 148
+            },
+            "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 149
+            },
+            "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS": {
+              "value": 150
+            },
+            "BROUWER_LONG_MEAN_ANOMALY": {
+              "value": 151
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX": {
+              "value": 160,
+              "description": "--- 160..179 state transition and covariance matrices ------------------ Six by six orbit state transition matrix, row-major."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_A": {
+              "value": 161,
+              "description": "Position-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_B": {
+              "value": 162,
+              "description": "Velocity-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_C": {
+              "value": 163,
+              "description": "Position-to-velocity three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_D": {
+              "value": 164,
+              "description": "Velocity-to-velocity three by three block."
+            },
+            "ORBIT_ERROR_COVARIANCE_MATRIX": {
+              "value": 165,
+              "description": "Six by six orbit error covariance, row-major, in the request's coordinate system."
+            },
+            "EPOCH_A1_GREGORIAN": {
+              "value": 180,
+              "description": "--- 180..219 time ------------------------------------------------------ Each EPOCH_ member is the owner epoch expressed in one time system. GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day count. The time system is named by the $TIM timingStandard member."
+            },
+            "EPOCH_A1_MODIFIED_JULIAN": {
+              "value": 181
+            },
+            "EPOCH_TAI_GREGORIAN": {
+              "value": 182
+            },
+            "EPOCH_TAI_MODIFIED_JULIAN": {
+              "value": 183
+            },
+            "EPOCH_TT_GREGORIAN": {
+              "value": 184
+            },
+            "EPOCH_TT_MODIFIED_JULIAN": {
+              "value": 185
+            },
+            "EPOCH_TDB_GREGORIAN": {
+              "value": 186
+            },
+            "EPOCH_TDB_MODIFIED_JULIAN": {
+              "value": 187
+            },
+            "EPOCH_UTC_GREGORIAN": {
+              "value": 188
+            },
+            "EPOCH_UTC_MODIFIED_JULIAN": {
+              "value": 189
+            },
+            "EPOCH_UT1_GREGORIAN": {
+              "value": 190
+            },
+            "EPOCH_UT1_MODIFIED_JULIAN": {
+              "value": 191
+            },
+            "EPOCH_GPS_GREGORIAN": {
+              "value": 192
+            },
+            "EPOCH_GPS_MODIFIED_JULIAN": {
+              "value": 193
+            },
+            "ELAPSED_DAYS": {
+              "value": 194,
+              "description": "Days since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "ELAPSED_SECONDS": {
+              "value": 195,
+              "description": "Seconds since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "DRY_MASS": {
+              "value": 220,
+              "description": "--- 220..249 mass, ballistic and physical properties -------------------"
+            },
+            "TOTAL_MASS": {
+              "value": 221
+            },
+            "DRAG_COEFFICIENT": {
+              "value": 222
+            },
+            "DRAG_AREA": {
+              "value": 223
+            },
+            "REFLECTIVITY_COEFFICIENT": {
+              "value": 224
+            },
+            "SOLAR_RADIATION_PRESSURE_AREA": {
+              "value": 225
+            },
+            "ATMOSPHERIC_DENSITY_SCALE_FACTOR": {
+              "value": 226
+            },
+            "DRAG_SCALE_FACTOR": {
+              "value": 227
+            },
+            "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR": {
+              "value": 228
+            },
+            "BALLISTIC_COEFFICIENT": {
+              "value": 229
+            },
+            "AREA_TO_MASS_RATIO": {
+              "value": 230
+            },
+            "CENTER_OF_MASS_X": {
+              "value": 231
+            },
+            "CENTER_OF_MASS_Y": {
+              "value": 232
+            },
+            "CENTER_OF_MASS_Z": {
+              "value": 233
+            },
+            "MOMENT_OF_INERTIA_MATRIX": {
+              "value": 234,
+              "description": "Three by three inertia tensor, row-major, in body axes."
+            },
+            "ATTITUDE_QUATERNION_1": {
+              "value": 250,
+              "description": "--- 250..289 attitude --------------------------------------------------"
+            },
+            "ATTITUDE_QUATERNION_2": {
+              "value": 251
+            },
+            "ATTITUDE_QUATERNION_3": {
+              "value": 252
+            },
+            "ATTITUDE_QUATERNION_4": {
+              "value": 253,
+              "description": "Scalar component of the attitude quaternion."
+            },
+            "ATTITUDE_DIRECTION_COSINE_MATRIX": {
+              "value": 254,
+              "description": "Three by three direction cosine matrix, row-major."
+            },
+            "EULER_ANGLE_1": {
+              "value": 255
+            },
+            "EULER_ANGLE_2": {
+              "value": 256
+            },
+            "EULER_ANGLE_3": {
+              "value": 257
+            },
+            "EULER_ANGLE_RATE_1": {
+              "value": 258
+            },
+            "EULER_ANGLE_RATE_2": {
+              "value": 259
+            },
+            "EULER_ANGLE_RATE_3": {
+              "value": 260
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_1": {
+              "value": 261
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_2": {
+              "value": 262
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_3": {
+              "value": 263
+            },
+            "ANGULAR_VELOCITY_X": {
+              "value": 264
+            },
+            "ANGULAR_VELOCITY_Y": {
+              "value": 265
+            },
+            "ANGULAR_VELOCITY_Z": {
+              "value": 266
+            },
+            "EULER_AXIS_X": {
+              "value": 267
+            },
+            "EULER_AXIS_Y": {
+              "value": 268
+            },
+            "EULER_AXIS_Z": {
+              "value": 269
+            },
+            "PRINCIPAL_ROTATION_ANGLE": {
+              "value": 270
+            },
+            "TANK_FUEL_MASS": {
+              "value": 300,
+              "description": "--- 300..319 propellant reservoir --------------------------------------"
+            },
+            "TANK_PRESSURE": {
+              "value": 301
+            },
+            "TANK_TEMPERATURE": {
+              "value": 302
+            },
+            "TANK_REFERENCE_TEMPERATURE": {
+              "value": 303
+            },
+            "TANK_VOLUME": {
+              "value": 304
+            },
+            "TANK_FUEL_DENSITY": {
+              "value": 305
+            },
+            "THRUSTER_DUTY_CYCLE": {
+              "value": 320,
+              "description": "--- 320..369 thrust-producing device -----------------------------------"
+            },
+            "THRUSTER_THRUST_SCALE_FACTOR": {
+              "value": 321
+            },
+            "THRUSTER_GRAVITATIONAL_ACCELERATION": {
+              "value": 322
+            },
+            "THRUSTER_MIXTURE_RATIO": {
+              "value": 323
+            },
+            "THRUSTER_SPECIFIC_IMPULSE": {
+              "value": 324
+            },
+            "THRUSTER_THRUST_MAGNITUDE": {
+              "value": 325
+            },
+            "THRUSTER_MASS_FLOW_RATE": {
+              "value": 326
+            },
+            "THRUSTER_DIRECTION_X": {
+              "value": 327
+            },
+            "THRUSTER_DIRECTION_Y": {
+              "value": 328
+            },
+            "THRUSTER_DIRECTION_Z": {
+              "value": 329
+            },
+            "THRUSTER_THRUST_COEFFICIENTS": {
+              "value": 330,
+              "description": "Coefficient vector of the thrust polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "THRUSTER_IMPULSE_COEFFICIENTS": {
+              "value": 331,
+              "description": "Coefficient vector of the specific-impulse polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "IMPULSIVE_BURN_ELEMENT_1": {
+              "value": 370,
+              "description": "--- 370..389 impulsive velocity change --------------------------------- First component of the velocity change in the burn coordinate system."
+            },
+            "IMPULSIVE_BURN_ELEMENT_2": {
+              "value": 371
+            },
+            "IMPULSIVE_BURN_ELEMENT_3": {
+              "value": 372
+            },
+            "IMPULSIVE_BURN_DELTA_V_MAGNITUDE": {
+              "value": 373
+            },
+            "IMPULSIVE_BURN_MASS_CONSUMED": {
+              "value": 374
+            },
+            "FINITE_BURN_THRUST_MAGNITUDE": {
+              "value": 390,
+              "description": "--- 390..409 finite thrust arc -----------------------------------------"
+            },
+            "FINITE_BURN_MASS_FLOW_RATE": {
+              "value": 391
+            },
+            "FINITE_BURN_THRUST_X": {
+              "value": 392
+            },
+            "FINITE_BURN_THRUST_Y": {
+              "value": 393
+            },
+            "FINITE_BURN_THRUST_Z": {
+              "value": 394
+            },
+            "FINITE_BURN_ACCELERATION_MAGNITUDE": {
+              "value": 395
+            },
+            "FINITE_BURN_MASS_CONSUMED": {
+              "value": 396
+            },
+            "TOTAL_POWER_AVAILABLE": {
+              "value": 410,
+              "description": "--- 410..429 electrical power ------------------------------------------"
+            },
+            "REQUIRED_BUS_POWER": {
+              "value": 411
+            },
+            "THRUST_POWER_AVAILABLE": {
+              "value": 412
+            },
+            "GENERATED_POWER": {
+              "value": 413
+            },
+            "TOTAL_TORQUE_X": {
+              "value": 430,
+              "description": "--- 430..449 torque ----------------------------------------------------"
+            },
+            "TOTAL_TORQUE_Y": {
+              "value": 431
+            },
+            "TOTAL_TORQUE_Z": {
+              "value": 432
+            },
+            "TOTAL_TORQUE_MAGNITUDE": {
+              "value": 433
+            },
+            "SOLVER_STATUS": {
+              "value": 450,
+              "description": "--- 450..469 solver ---------------------------------------------------- Run state of the solver, as an integer code the solver family defines."
+            },
+            "SOLVER_ITERATION_COUNT": {
+              "value": 451
+            },
+            "SOLVER_OBJECTIVE_VALUE": {
+              "value": 452
+            },
+            "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION": {
+              "value": 453
+            },
+            "RELATIVE_RANGE": {
+              "value": 470,
+              "description": "--- 470..499 relative geometry and observation ------------------------- Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID."
+            },
+            "RELATIVE_RANGE_RATE": {
+              "value": 471
+            },
+            "RELATIVE_POSITION_X": {
+              "value": 472
+            },
+            "RELATIVE_POSITION_Y": {
+              "value": 473
+            },
+            "RELATIVE_POSITION_Z": {
+              "value": 474
+            },
+            "RELATIVE_VELOCITY_X": {
+              "value": 475
+            },
+            "RELATIVE_VELOCITY_Y": {
+              "value": 476
+            },
+            "RELATIVE_VELOCITY_Z": {
+              "value": 477
+            },
+            "TOPOCENTRIC_AZIMUTH": {
+              "value": 478,
+              "description": "Azimuth of the owner as seen from the site named on the request."
+            },
+            "TOPOCENTRIC_ELEVATION": {
+              "value": 479,
+              "description": "Elevation of the owner as seen from the site named on the request."
+            },
+            "ANGULAR_SEPARATION": {
+              "value": 480,
+              "description": "Angle subtended at the owner between two named directions."
+            },
+            "SOLAR_PHASE_ANGLE": {
+              "value": 481,
+              "description": "Angle at the owner between the illuminating body and the observer."
+            },
+            "LOCAL_SOLAR_ELEVATION_ANGLE": {
+              "value": 482,
+              "description": "Elevation of the illuminating body at the site named on the request."
+            },
+            "ILLUMINATION_FRACTION": {
+              "value": 483,
+              "description": "Fraction of the illuminating body disc visible from the owner: 1 in full sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the eclipse entry and exit conditions."
+            },
+            "LIGHT_TIME_DELAY": {
+              "value": 484,
+              "description": "One-way signal propagation time between the owner and the observer."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 65535,
+              "description": "The parameter is outside this roster and is named in PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST refuse the entry; it never guesses a neighbouring member."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDER_DEFINED_PARAMETER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DIRECTION": {
+          "$ref": "#/definitions/slpObjectiveDirection",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MINIMIZE": {
+              "value": 1
+            },
+            "MAXIMIZE": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SCALE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "required": [
+        "OBJECTIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SLPNonlinearConstraint": {
+      "type": "object",
+      "properties": {
+        "CONSTRAINT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARAMETER": {
+          "$ref": "#/definitions/pceParameter",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POSITION_X": {
+              "value": 1,
+              "description": "--- 1..29 Cartesian state and its direct magnitudes --------------------"
+            },
+            "POSITION_Y": {
+              "value": 2
+            },
+            "POSITION_Z": {
+              "value": 3
+            },
+            "VELOCITY_X": {
+              "value": 4
+            },
+            "VELOCITY_Y": {
+              "value": 5
+            },
+            "VELOCITY_Z": {
+              "value": 6
+            },
+            "POSITION_MAGNITUDE": {
+              "value": 7
+            },
+            "VELOCITY_MAGNITUDE": {
+              "value": 8
+            },
+            "RIGHT_ASCENSION": {
+              "value": 9,
+              "description": "Right ascension of the position vector."
+            },
+            "DECLINATION": {
+              "value": 10,
+              "description": "Declination of the position vector."
+            },
+            "VELOCITY_RIGHT_ASCENSION": {
+              "value": 11,
+              "description": "Right ascension of the velocity vector."
+            },
+            "VELOCITY_DECLINATION": {
+              "value": 12,
+              "description": "Declination of the velocity vector."
+            },
+            "FLIGHT_PATH_ANGLE": {
+              "value": 13,
+              "description": "Angle between the velocity vector and the local horizontal plane."
+            },
+            "AZIMUTH_ANGLE": {
+              "value": 14,
+              "description": "Azimuth of the velocity vector, measured from local north."
+            },
+            "HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 15,
+              "description": "Flight path angle measured from the local horizontal."
+            },
+            "RADIAL_VELOCITY": {
+              "value": 16,
+              "description": "Component of velocity along the position unit vector. Its zero crossing IS the apsis condition; a stop at apoapsis is this parameter with goal 0 and direction DECREASING."
+            },
+            "ANGULAR_MOMENTUM_MAGNITUDE": {
+              "value": 17
+            },
+            "ANGULAR_MOMENTUM_X": {
+              "value": 18
+            },
+            "ANGULAR_MOMENTUM_Y": {
+              "value": 19
+            },
+            "ANGULAR_MOMENTUM_Z": {
+              "value": 20
+            },
+            "SEMI_MAJOR_AXIS": {
+              "value": 30,
+              "description": "--- 30..69 Keplerian elements and derived orbit scalars ----------------"
+            },
+            "ECCENTRICITY": {
+              "value": 31
+            },
+            "INCLINATION": {
+              "value": 32
+            },
+            "RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 33
+            },
+            "ARGUMENT_OF_PERIAPSIS": {
+              "value": 34
+            },
+            "TRUE_ANOMALY": {
+              "value": 35
+            },
+            "MEAN_ANOMALY": {
+              "value": 36
+            },
+            "ECCENTRIC_ANOMALY": {
+              "value": 37
+            },
+            "HYPERBOLIC_ANOMALY": {
+              "value": 38
+            },
+            "RADIUS_OF_PERIAPSIS": {
+              "value": 39
+            },
+            "RADIUS_OF_APOAPSIS": {
+              "value": 40
+            },
+            "ALTITUDE_OF_PERIAPSIS": {
+              "value": 41
+            },
+            "ALTITUDE_OF_APOAPSIS": {
+              "value": 42
+            },
+            "SEMILATUS_RECTUM": {
+              "value": 43
+            },
+            "ORBIT_PERIOD": {
+              "value": 44
+            },
+            "MEAN_MOTION": {
+              "value": 45
+            },
+            "SPECIFIC_ORBITAL_ENERGY": {
+              "value": 46,
+              "description": "Specific orbital energy."
+            },
+            "CHARACTERISTIC_ENERGY": {
+              "value": 47,
+              "description": "Twice the specific orbital energy; the square of the hyperbolic excess speed on an escape trajectory."
+            },
+            "VELOCITY_AT_PERIAPSIS": {
+              "value": 48
+            },
+            "VELOCITY_AT_APOAPSIS": {
+              "value": 49
+            },
+            "ARGUMENT_OF_LATITUDE": {
+              "value": 50,
+              "description": "Argument of periapsis plus true anomaly."
+            },
+            "TRUE_LONGITUDE": {
+              "value": 51
+            },
+            "MEAN_LONGITUDE": {
+              "value": 52
+            },
+            "BETA_ANGLE": {
+              "value": 53,
+              "description": "Angle between the orbit plane and the direction to the illuminating body."
+            },
+            "ECCENTRICITY_VECTOR_X": {
+              "value": 54
+            },
+            "ECCENTRICITY_VECTOR_Y": {
+              "value": 55
+            },
+            "ECCENTRICITY_VECTOR_Z": {
+              "value": 56
+            },
+            "SEMI_MINOR_AXIS": {
+              "value": 57
+            },
+            "EQUINOCTIAL_H": {
+              "value": 70,
+              "description": "--- 70..89 equinoctial families ----------------------------------------"
+            },
+            "EQUINOCTIAL_K": {
+              "value": 71
+            },
+            "EQUINOCTIAL_P": {
+              "value": 72
+            },
+            "EQUINOCTIAL_Q": {
+              "value": 73
+            },
+            "EQUINOCTIAL_MEAN_LONGITUDE": {
+              "value": 74
+            },
+            "MODIFIED_EQUINOCTIAL_F": {
+              "value": 75
+            },
+            "MODIFIED_EQUINOCTIAL_G": {
+              "value": 76
+            },
+            "MODIFIED_EQUINOCTIAL_H": {
+              "value": 77
+            },
+            "MODIFIED_EQUINOCTIAL_K": {
+              "value": 78
+            },
+            "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE": {
+              "value": 79
+            },
+            "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM": {
+              "value": 80
+            },
+            "ALTERNATE_EQUINOCTIAL_P": {
+              "value": 81
+            },
+            "ALTERNATE_EQUINOCTIAL_Q": {
+              "value": 82
+            },
+            "ALTERNATE_EQUINOCTIAL_MEAN_MOTION": {
+              "value": 83
+            },
+            "DELAUNAY_MEAN_ANOMALY": {
+              "value": 90,
+              "description": "--- 90..99 Delaunay canonical variables --------------------------------"
+            },
+            "DELAUNAY_ARGUMENT_OF_PERIAPSIS": {
+              "value": 91
+            },
+            "DELAUNAY_ASCENDING_NODE": {
+              "value": 92
+            },
+            "DELAUNAY_ACTION_TOTAL": {
+              "value": 93
+            },
+            "DELAUNAY_ACTION_ANGULAR_MOMENTUM": {
+              "value": 94
+            },
+            "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM": {
+              "value": 95
+            },
+            "GEODETIC_LATITUDE": {
+              "value": 100,
+              "description": "--- 100..119 planetodetic and body-fixed -------------------------------"
+            },
+            "GEODETIC_LONGITUDE": {
+              "value": 101
+            },
+            "GEODETIC_ALTITUDE": {
+              "value": 102
+            },
+            "GEOCENTRIC_LATITUDE": {
+              "value": 103
+            },
+            "PLANETODETIC_RADIUS_MAGNITUDE": {
+              "value": 104
+            },
+            "PLANETODETIC_VELOCITY_MAGNITUDE": {
+              "value": 105
+            },
+            "PLANETODETIC_AZIMUTH": {
+              "value": 106
+            },
+            "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 107
+            },
+            "LOCAL_SIDEREAL_TIME": {
+              "value": 108,
+              "description": "Local sidereal time at the sub-object meridian."
+            },
+            "PRIME_MERIDIAN_HOUR_ANGLE": {
+              "value": 109,
+              "description": "Hour angle of the body prime meridian."
+            },
+            "B_DOT_T": {
+              "value": 120,
+              "description": "--- 120..139 B-plane and asymptote sets --------------------------------"
+            },
+            "B_DOT_R": {
+              "value": 121
+            },
+            "B_VECTOR_MAGNITUDE": {
+              "value": 122
+            },
+            "B_VECTOR_ANGLE": {
+              "value": 123
+            },
+            "DECLINATION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 124,
+              "description": "Declination of the departure asymptote."
+            },
+            "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 125,
+              "description": "Right ascension of the departure asymptote."
+            },
+            "INCOMING_RADIUS_OF_PERIAPSIS": {
+              "value": 126
+            },
+            "INCOMING_CHARACTERISTIC_ENERGY": {
+              "value": 127
+            },
+            "INCOMING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 128
+            },
+            "INCOMING_ASYMPTOTE_DECLINATION": {
+              "value": 129
+            },
+            "INCOMING_B_VECTOR_AZIMUTH": {
+              "value": 130
+            },
+            "OUTGOING_RADIUS_OF_PERIAPSIS": {
+              "value": 131
+            },
+            "OUTGOING_CHARACTERISTIC_ENERGY": {
+              "value": 132
+            },
+            "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 133
+            },
+            "OUTGOING_ASYMPTOTE_DECLINATION": {
+              "value": 134
+            },
+            "OUTGOING_B_VECTOR_AZIMUTH": {
+              "value": 135
+            },
+            "HYPERBOLIC_EXCESS_VELOCITY": {
+              "value": 136
+            },
+            "BROUWER_SHORT_SEMI_MAJOR_AXIS": {
+              "value": 140,
+              "description": "--- 140..159 Brouwer-Lyddane mean elements -----------------------------"
+            },
+            "BROUWER_SHORT_ECCENTRICITY": {
+              "value": 141
+            },
+            "BROUWER_SHORT_INCLINATION": {
+              "value": 142
+            },
+            "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 143
+            },
+            "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS": {
+              "value": 144
+            },
+            "BROUWER_SHORT_MEAN_ANOMALY": {
+              "value": 145
+            },
+            "BROUWER_LONG_SEMI_MAJOR_AXIS": {
+              "value": 146
+            },
+            "BROUWER_LONG_ECCENTRICITY": {
+              "value": 147
+            },
+            "BROUWER_LONG_INCLINATION": {
+              "value": 148
+            },
+            "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 149
+            },
+            "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS": {
+              "value": 150
+            },
+            "BROUWER_LONG_MEAN_ANOMALY": {
+              "value": 151
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX": {
+              "value": 160,
+              "description": "--- 160..179 state transition and covariance matrices ------------------ Six by six orbit state transition matrix, row-major."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_A": {
+              "value": 161,
+              "description": "Position-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_B": {
+              "value": 162,
+              "description": "Velocity-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_C": {
+              "value": 163,
+              "description": "Position-to-velocity three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_D": {
+              "value": 164,
+              "description": "Velocity-to-velocity three by three block."
+            },
+            "ORBIT_ERROR_COVARIANCE_MATRIX": {
+              "value": 165,
+              "description": "Six by six orbit error covariance, row-major, in the request's coordinate system."
+            },
+            "EPOCH_A1_GREGORIAN": {
+              "value": 180,
+              "description": "--- 180..219 time ------------------------------------------------------ Each EPOCH_ member is the owner epoch expressed in one time system. GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day count. The time system is named by the $TIM timingStandard member."
+            },
+            "EPOCH_A1_MODIFIED_JULIAN": {
+              "value": 181
+            },
+            "EPOCH_TAI_GREGORIAN": {
+              "value": 182
+            },
+            "EPOCH_TAI_MODIFIED_JULIAN": {
+              "value": 183
+            },
+            "EPOCH_TT_GREGORIAN": {
+              "value": 184
+            },
+            "EPOCH_TT_MODIFIED_JULIAN": {
+              "value": 185
+            },
+            "EPOCH_TDB_GREGORIAN": {
+              "value": 186
+            },
+            "EPOCH_TDB_MODIFIED_JULIAN": {
+              "value": 187
+            },
+            "EPOCH_UTC_GREGORIAN": {
+              "value": 188
+            },
+            "EPOCH_UTC_MODIFIED_JULIAN": {
+              "value": 189
+            },
+            "EPOCH_UT1_GREGORIAN": {
+              "value": 190
+            },
+            "EPOCH_UT1_MODIFIED_JULIAN": {
+              "value": 191
+            },
+            "EPOCH_GPS_GREGORIAN": {
+              "value": 192
+            },
+            "EPOCH_GPS_MODIFIED_JULIAN": {
+              "value": 193
+            },
+            "ELAPSED_DAYS": {
+              "value": 194,
+              "description": "Days since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "ELAPSED_SECONDS": {
+              "value": 195,
+              "description": "Seconds since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "DRY_MASS": {
+              "value": 220,
+              "description": "--- 220..249 mass, ballistic and physical properties -------------------"
+            },
+            "TOTAL_MASS": {
+              "value": 221
+            },
+            "DRAG_COEFFICIENT": {
+              "value": 222
+            },
+            "DRAG_AREA": {
+              "value": 223
+            },
+            "REFLECTIVITY_COEFFICIENT": {
+              "value": 224
+            },
+            "SOLAR_RADIATION_PRESSURE_AREA": {
+              "value": 225
+            },
+            "ATMOSPHERIC_DENSITY_SCALE_FACTOR": {
+              "value": 226
+            },
+            "DRAG_SCALE_FACTOR": {
+              "value": 227
+            },
+            "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR": {
+              "value": 228
+            },
+            "BALLISTIC_COEFFICIENT": {
+              "value": 229
+            },
+            "AREA_TO_MASS_RATIO": {
+              "value": 230
+            },
+            "CENTER_OF_MASS_X": {
+              "value": 231
+            },
+            "CENTER_OF_MASS_Y": {
+              "value": 232
+            },
+            "CENTER_OF_MASS_Z": {
+              "value": 233
+            },
+            "MOMENT_OF_INERTIA_MATRIX": {
+              "value": 234,
+              "description": "Three by three inertia tensor, row-major, in body axes."
+            },
+            "ATTITUDE_QUATERNION_1": {
+              "value": 250,
+              "description": "--- 250..289 attitude --------------------------------------------------"
+            },
+            "ATTITUDE_QUATERNION_2": {
+              "value": 251
+            },
+            "ATTITUDE_QUATERNION_3": {
+              "value": 252
+            },
+            "ATTITUDE_QUATERNION_4": {
+              "value": 253,
+              "description": "Scalar component of the attitude quaternion."
+            },
+            "ATTITUDE_DIRECTION_COSINE_MATRIX": {
+              "value": 254,
+              "description": "Three by three direction cosine matrix, row-major."
+            },
+            "EULER_ANGLE_1": {
+              "value": 255
+            },
+            "EULER_ANGLE_2": {
+              "value": 256
+            },
+            "EULER_ANGLE_3": {
+              "value": 257
+            },
+            "EULER_ANGLE_RATE_1": {
+              "value": 258
+            },
+            "EULER_ANGLE_RATE_2": {
+              "value": 259
+            },
+            "EULER_ANGLE_RATE_3": {
+              "value": 260
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_1": {
+              "value": 261
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_2": {
+              "value": 262
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_3": {
+              "value": 263
+            },
+            "ANGULAR_VELOCITY_X": {
+              "value": 264
+            },
+            "ANGULAR_VELOCITY_Y": {
+              "value": 265
+            },
+            "ANGULAR_VELOCITY_Z": {
+              "value": 266
+            },
+            "EULER_AXIS_X": {
+              "value": 267
+            },
+            "EULER_AXIS_Y": {
+              "value": 268
+            },
+            "EULER_AXIS_Z": {
+              "value": 269
+            },
+            "PRINCIPAL_ROTATION_ANGLE": {
+              "value": 270
+            },
+            "TANK_FUEL_MASS": {
+              "value": 300,
+              "description": "--- 300..319 propellant reservoir --------------------------------------"
+            },
+            "TANK_PRESSURE": {
+              "value": 301
+            },
+            "TANK_TEMPERATURE": {
+              "value": 302
+            },
+            "TANK_REFERENCE_TEMPERATURE": {
+              "value": 303
+            },
+            "TANK_VOLUME": {
+              "value": 304
+            },
+            "TANK_FUEL_DENSITY": {
+              "value": 305
+            },
+            "THRUSTER_DUTY_CYCLE": {
+              "value": 320,
+              "description": "--- 320..369 thrust-producing device -----------------------------------"
+            },
+            "THRUSTER_THRUST_SCALE_FACTOR": {
+              "value": 321
+            },
+            "THRUSTER_GRAVITATIONAL_ACCELERATION": {
+              "value": 322
+            },
+            "THRUSTER_MIXTURE_RATIO": {
+              "value": 323
+            },
+            "THRUSTER_SPECIFIC_IMPULSE": {
+              "value": 324
+            },
+            "THRUSTER_THRUST_MAGNITUDE": {
+              "value": 325
+            },
+            "THRUSTER_MASS_FLOW_RATE": {
+              "value": 326
+            },
+            "THRUSTER_DIRECTION_X": {
+              "value": 327
+            },
+            "THRUSTER_DIRECTION_Y": {
+              "value": 328
+            },
+            "THRUSTER_DIRECTION_Z": {
+              "value": 329
+            },
+            "THRUSTER_THRUST_COEFFICIENTS": {
+              "value": 330,
+              "description": "Coefficient vector of the thrust polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "THRUSTER_IMPULSE_COEFFICIENTS": {
+              "value": 331,
+              "description": "Coefficient vector of the specific-impulse polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "IMPULSIVE_BURN_ELEMENT_1": {
+              "value": 370,
+              "description": "--- 370..389 impulsive velocity change --------------------------------- First component of the velocity change in the burn coordinate system."
+            },
+            "IMPULSIVE_BURN_ELEMENT_2": {
+              "value": 371
+            },
+            "IMPULSIVE_BURN_ELEMENT_3": {
+              "value": 372
+            },
+            "IMPULSIVE_BURN_DELTA_V_MAGNITUDE": {
+              "value": 373
+            },
+            "IMPULSIVE_BURN_MASS_CONSUMED": {
+              "value": 374
+            },
+            "FINITE_BURN_THRUST_MAGNITUDE": {
+              "value": 390,
+              "description": "--- 390..409 finite thrust arc -----------------------------------------"
+            },
+            "FINITE_BURN_MASS_FLOW_RATE": {
+              "value": 391
+            },
+            "FINITE_BURN_THRUST_X": {
+              "value": 392
+            },
+            "FINITE_BURN_THRUST_Y": {
+              "value": 393
+            },
+            "FINITE_BURN_THRUST_Z": {
+              "value": 394
+            },
+            "FINITE_BURN_ACCELERATION_MAGNITUDE": {
+              "value": 395
+            },
+            "FINITE_BURN_MASS_CONSUMED": {
+              "value": 396
+            },
+            "TOTAL_POWER_AVAILABLE": {
+              "value": 410,
+              "description": "--- 410..429 electrical power ------------------------------------------"
+            },
+            "REQUIRED_BUS_POWER": {
+              "value": 411
+            },
+            "THRUST_POWER_AVAILABLE": {
+              "value": 412
+            },
+            "GENERATED_POWER": {
+              "value": 413
+            },
+            "TOTAL_TORQUE_X": {
+              "value": 430,
+              "description": "--- 430..449 torque ----------------------------------------------------"
+            },
+            "TOTAL_TORQUE_Y": {
+              "value": 431
+            },
+            "TOTAL_TORQUE_Z": {
+              "value": 432
+            },
+            "TOTAL_TORQUE_MAGNITUDE": {
+              "value": 433
+            },
+            "SOLVER_STATUS": {
+              "value": 450,
+              "description": "--- 450..469 solver ---------------------------------------------------- Run state of the solver, as an integer code the solver family defines."
+            },
+            "SOLVER_ITERATION_COUNT": {
+              "value": 451
+            },
+            "SOLVER_OBJECTIVE_VALUE": {
+              "value": 452
+            },
+            "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION": {
+              "value": 453
+            },
+            "RELATIVE_RANGE": {
+              "value": 470,
+              "description": "--- 470..499 relative geometry and observation ------------------------- Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID."
+            },
+            "RELATIVE_RANGE_RATE": {
+              "value": 471
+            },
+            "RELATIVE_POSITION_X": {
+              "value": 472
+            },
+            "RELATIVE_POSITION_Y": {
+              "value": 473
+            },
+            "RELATIVE_POSITION_Z": {
+              "value": 474
+            },
+            "RELATIVE_VELOCITY_X": {
+              "value": 475
+            },
+            "RELATIVE_VELOCITY_Y": {
+              "value": 476
+            },
+            "RELATIVE_VELOCITY_Z": {
+              "value": 477
+            },
+            "TOPOCENTRIC_AZIMUTH": {
+              "value": 478,
+              "description": "Azimuth of the owner as seen from the site named on the request."
+            },
+            "TOPOCENTRIC_ELEVATION": {
+              "value": 479,
+              "description": "Elevation of the owner as seen from the site named on the request."
+            },
+            "ANGULAR_SEPARATION": {
+              "value": 480,
+              "description": "Angle subtended at the owner between two named directions."
+            },
+            "SOLAR_PHASE_ANGLE": {
+              "value": 481,
+              "description": "Angle at the owner between the illuminating body and the observer."
+            },
+            "LOCAL_SOLAR_ELEVATION_ANGLE": {
+              "value": 482,
+              "description": "Elevation of the illuminating body at the site named on the request."
+            },
+            "ILLUMINATION_FRACTION": {
+              "value": 483,
+              "description": "Fraction of the illuminating body disc visible from the owner: 1 in full sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the eclipse entry and exit conditions."
+            },
+            "LIGHT_TIME_DELAY": {
+              "value": 484,
+              "description": "One-way signal propagation time between the owner and the observer."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 65535,
+              "description": "The parameter is outside this roster and is named in PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST refuse the entry; it never guesses a neighbouring member."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDER_DEFINED_PARAMETER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RELATION": {
+          "$ref": "#/definitions/slpConstraintRelation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "EQUAL": {
+              "value": 1
+            },
+            "LESS_THAN_OR_EQUAL": {
+              "value": 2
+            },
+            "GREATER_THAN_OR_EQUAL": {
+              "value": 3
+            },
+            "INTERVAL": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LOWER_BOUND": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "-1.7976931348623157e+308"
+        },
+        "UPPER_BOUND": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.7976931348623157e+308"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "required": [
+        "CONSTRAINT_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SLPSolverSettings": {
+      "type": "object",
+      "properties": {
+        "ALGORITHM": {
+          "$ref": "#/definitions/slpAlgorithm",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1
+            },
+            "BROYDEN": {
+              "value": 2
+            },
+            "MODIFIED_BROYDEN": {
+              "value": 3
+            },
+            "SEQUENTIAL_QUADRATIC_PROGRAMMING": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DIFFERENCE_MODE": {
+          "$ref": "#/definitions/slpDifferenceMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FORWARD": {
+              "value": 1
+            },
+            "CENTRAL": {
+              "value": 2
+            },
+            "ANALYTIC_STATE_TRANSITION_MATRIX": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MAXIMUM_ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "50"
+        },
+        "MAXIMUM_EVALUATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1000"
+        },
+        "RESIDUAL_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-9"
+        },
+        "STEP_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-12"
+        },
+        "OBJECTIVE_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-10"
+        },
+        "CONSTRAINT_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-8"
+        },
+        "KKT_TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-6"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SLPIteration": {
+      "type": "object",
+      "properties": {
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESIDUAL_NORM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OBJECTIVE_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_CONSTRAINT_VIOLATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "JACOBIAN_CONDITION_ESTIMATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "KKT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EVALUATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SLPSolverReport": {
+      "type": "object",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/slpSolveStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CONVERGED": {
+              "value": 1
+            },
+            "INVALID_PROBLEM": {
+              "value": 2
+            },
+            "EVALUATION_FAILED": {
+              "value": 3
+            },
+            "SINGULAR_JACOBIAN": {
+              "value": 4
+            },
+            "BUDGET_EXCEEDED": {
+              "value": 5
+            },
+            "STALLED": {
+              "value": 6
+            },
+            "INFEASIBLE": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ITERATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SLPIteration"
+          },
+          "x-flatbuffer-type": "[SLPIteration]"
+        },
+        "FINAL_VARIABLES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "FINAL_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "OBJECTIVE_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RESIDUAL_NORM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_CONSTRAINT_VIOLATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "KKT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EVALUATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SLPAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both signature\npayloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON in IDL field order and capitalization,\nwith both signature fields omitted.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "SLP": {
+      "type": "object",
+      "properties": {
+        "PROBLEM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/slpProblemKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "TARGET": {
+              "value": 1
+            },
+            "OPTIMIZE": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROPAGATOR_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBJECTIVE_EVALUATOR_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SLPVariable"
+          },
+          "x-flatbuffer-type": "[SLPVariable]"
+        },
+        "GOALS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SLPGoal"
+          },
+          "x-flatbuffer-type": "[SLPGoal]"
+        },
+        "OBJECTIVE": {
+          "$ref": "#/definitions/SLPObjective",
+          "x-flatbuffer-type": "SLPObjective"
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SLPNonlinearConstraint"
+          },
+          "x-flatbuffer-type": "[SLPNonlinearConstraint]"
+        },
+        "SETTINGS": {
+          "$ref": "#/definitions/SLPSolverSettings",
+          "x-flatbuffer-type": "SLPSolverSettings"
+        },
+        "REPORT": {
+          "$ref": "#/definitions/SLPSolverReport",
+          "x-flatbuffer-type": "SLPSolverReport"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/SLPAttestation",
+          "x-flatbuffer-type": "SLPAttestation"
+        }
+      },
+      "required": [
+        "PROBLEM_ID",
+        "PROPAGATOR_PORT_ID"
+      ],
+      "additionalProperties": false
+    },
     "SNR": {
       "type": "object",
       "description": "Sensor Systems",
@@ -92005,6 +97143,318 @@
         "TRUSTER_ID",
         "TRUSTEE_ID"
       ],
+      "additionalProperties": false
+    },
+    "TRHAntenna": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN_DBI": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PHASE_CENTER_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHTransmitter": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_WATTS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MODULATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HARDWARE_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHReceiver": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CENTER_FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SYSTEM_NOISE_TEMPERATURE_KELVIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HARDWARE_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHTransponder": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TURNAROUND_MODE": {
+          "$ref": "#/definitions/trhTurnaroundMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "COHERENT": {
+              "value": 1
+            },
+            "NONCOHERENT": {
+              "value": 2
+            },
+            "REGENERATIVE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TURNAROUND_NUMERATOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "TURNAROUND_DENOMINATOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "GROUP_DELAY_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMITTER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHHardwareRef": {
+      "type": "object",
+      "properties": {
+        "HARDWARE_KIND": {
+          "$ref": "#/definitions/trhHardwareKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ANTENNA": {
+              "value": 1
+            },
+            "TRANSMITTER": {
+              "value": 2
+            },
+            "RECEIVER": {
+              "value": 3
+            },
+            "TRANSPONDER": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "HARDWARE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "HARDWARE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHInstallation": {
+      "type": "object",
+      "properties": {
+        "OWNER_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "HARDWARE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHHardwareRef"
+          },
+          "x-flatbuffer-type": "[TRHHardwareRef]"
+        },
+        "CLOCK_BIAS_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT_SECONDS_PER_SECOND": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "OWNER_OBJECT_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TRHAttestation": {
+      "type": "object",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "TRH": {
+      "type": "object",
+      "description": "Tracking Hardware. Installations attach antennas, transmitters, receivers\nand transponders to either a surface site or a tracked object. Delays are\nseconds, frequencies hertz, temperatures kelvin and powers watts. JSON\nprojections preserve these IDL-capitalized field names exactly.",
+      "properties": {
+        "ANTENNAS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHAntenna"
+          },
+          "x-flatbuffer-type": "[TRHAntenna]"
+        },
+        "TRANSMITTERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHTransmitter"
+          },
+          "x-flatbuffer-type": "[TRHTransmitter]"
+        },
+        "RECEIVERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHReceiver"
+          },
+          "x-flatbuffer-type": "[TRHReceiver]"
+        },
+        "TRANSPONDERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHTransponder"
+          },
+          "x-flatbuffer-type": "[TRHTransponder]"
+        },
+        "INSTALLATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRHInstallation"
+          },
+          "x-flatbuffer-type": "[TRHInstallation]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/TRHAttestation",
+          "x-flatbuffer-type": "TRHAttestation"
+        }
+      },
       "additionalProperties": false
     },
     "TRN": {
@@ -99200,6 +104650,21 @@
             },
             {
               "$ref": "#/definitions/NCD"
+            },
+            {
+              "$ref": "#/definitions/MEM"
+            },
+            {
+              "$ref": "#/definitions/ODR"
+            },
+            {
+              "$ref": "#/definitions/TRH"
+            },
+            {
+              "$ref": "#/definitions/SLP"
+            },
+            {
+              "$ref": "#/definitions/PSS"
             }
           ],
           "description": "The record data (union of all supported standards)",
