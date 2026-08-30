@@ -1,0 +1,79 @@
+// Hash: ed06f68102ec86309cb49d360a2f4e805ec1adabeb144e16b610f54e7d523837
+// Version: 1.202.0
+// -----------------------------------END_HEADER
+/// Pareto Solution Set ($PSS)
+///
+/// A portable set of feasible and infeasible candidates for one search or
+/// optimization problem. Objective vectors retain every objective separately;
+/// no hidden scalar weighting is implied by this record.
+
+enum pssSolutionStatus : ubyte {
+  UNSPECIFIED = 0,
+  FEASIBLE = 1,
+  INFEASIBLE = 2,
+  EVALUATION_FAILED = 3
+}
+
+table PSSVariableValue {
+  VARIABLE_ID: string (required, key);
+  VALUE: double;
+}
+
+table PSSObjectiveValue {
+  OBJECTIVE_ID: string (required, key);
+  VALUE: double;
+}
+
+table PSSConstraintValue {
+  CONSTRAINT_ID: string (required, key);
+  VALUE: double;
+  VIOLATION: double;
+}
+
+table PSSProvenance {
+  SOLVER_MODULE_ID: string;
+  SOLVER_MODULE_VERSION: string;
+  SOLVER_ARTIFACT_SHA256: string;
+  PROPAGATOR_MODULE_ID: string;
+  PROPAGATOR_MODULE_VERSION: string;
+  PROPAGATOR_ARTIFACT_SHA256: string;
+  SOURCE_SDS_TYPE: string;
+  SOURCE_RECORD_ID: string;
+  CREATED_AT: string;
+}
+
+table PSSSolution {
+  SOLUTION_ID: string (required, key);
+  STATUS: pssSolutionStatus = UNSPECIFIED;
+  VARIABLES: [PSSVariableValue];
+  OBJECTIVES: [PSSObjectiveValue];
+  CONSTRAINTS: [PSSConstraintValue];
+  DOMINANCE_RANK: uint32;
+  CROWDING_DISTANCE: double;
+  VERIFY_BY_PROPAGATION_RESIDUAL: double;
+  PROVENANCE: PSSProvenance;
+}
+
+table PSSAttestation {
+  /// Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.
+  SIGNING_PUBLIC_KEY: string (required);
+  SIGNED_AT: string;
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both signature
+  /// payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON in IDL field order and capitalization,
+  /// with both signature fields omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+table PSS {
+  SOLUTION_SET_ID: string (required);
+  PROBLEM_ID: string (required);
+  OBJECTIVE_IDS: [string];
+  SOLUTIONS: [PSSSolution];
+  GENERATED_AT: string;
+  ATTESTATION: PSSAttestation;
+}
+
+root_type PSS;
+file_identifier "$PSS";

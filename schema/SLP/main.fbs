@@ -1,0 +1,163 @@
+// Hash: 073ad2c2ef944e6f805a810b341483ec9ea260ee2407607a5a678be272857a97
+// Version: 1.202.0
+// -----------------------------------END_HEADER
+include "../PCE/main.fbs";
+
+/// Solver Problem Definition ($SLP)
+///
+/// A portable targeting or constrained-optimization problem. The evaluator and
+/// propagator are named as ports rather than implementations: a solver may be
+/// connected to any module that supplies the requested parameter values.
+
+enum slpProblemKind : ubyte {
+  UNSPECIFIED = 0,
+  TARGET = 1,
+  OPTIMIZE = 2
+}
+
+enum slpAlgorithm : ubyte {
+  UNSPECIFIED = 0,
+  NEWTON_RAPHSON = 1,
+  BROYDEN = 2,
+  MODIFIED_BROYDEN = 3,
+  SEQUENTIAL_QUADRATIC_PROGRAMMING = 4
+}
+
+enum slpDifferenceMode : ubyte {
+  UNSPECIFIED = 0,
+  FORWARD = 1,
+  CENTRAL = 2,
+  ANALYTIC_STATE_TRANSITION_MATRIX = 3
+}
+
+enum slpObjectiveDirection : ubyte {
+  UNSPECIFIED = 0,
+  MINIMIZE = 1,
+  MAXIMIZE = 2
+}
+
+enum slpConstraintRelation : ubyte {
+  UNSPECIFIED = 0,
+  EQUAL = 1,
+  LESS_THAN_OR_EQUAL = 2,
+  GREATER_THAN_OR_EQUAL = 3,
+  INTERVAL = 4
+}
+
+enum slpSolveStatus : ubyte {
+  UNSPECIFIED = 0,
+  CONVERGED = 1,
+  INVALID_PROBLEM = 2,
+  EVALUATION_FAILED = 3,
+  SINGULAR_JACOBIAN = 4,
+  BUDGET_EXCEEDED = 5,
+  STALLED = 6,
+  INFEASIBLE = 7
+}
+
+table SLPVariable {
+  VARIABLE_ID: string (required, key);
+  PARAMETER: pceParameter = UNSPECIFIED;
+  PROVIDER_DEFINED_PARAMETER_NAME: string;
+  INITIAL_VALUE: double;
+  LOWER_BOUND: double = -1.7976931348623157e+308;
+  UPPER_BOUND: double = 1.7976931348623157e+308;
+  PERTURBATION: double;
+  SCALE: double = 1.0;
+}
+
+table SLPGoal {
+  GOAL_ID: string (required, key);
+  PARAMETER: pceParameter = UNSPECIFIED;
+  PROVIDER_DEFINED_PARAMETER_NAME: string;
+  TARGET_VALUE: double;
+  TOLERANCE: double;
+  SCALE: double = 1.0;
+}
+
+table SLPObjective {
+  OBJECTIVE_ID: string (required, key);
+  PARAMETER: pceParameter = UNSPECIFIED;
+  PROVIDER_DEFINED_PARAMETER_NAME: string;
+  DIRECTION: slpObjectiveDirection = UNSPECIFIED;
+  SCALE: double = 1.0;
+}
+
+table SLPNonlinearConstraint {
+  CONSTRAINT_ID: string (required, key);
+  PARAMETER: pceParameter = UNSPECIFIED;
+  PROVIDER_DEFINED_PARAMETER_NAME: string;
+  RELATION: slpConstraintRelation = UNSPECIFIED;
+  LOWER_BOUND: double = -1.7976931348623157e+308;
+  UPPER_BOUND: double = 1.7976931348623157e+308;
+  TOLERANCE: double;
+  SCALE: double = 1.0;
+}
+
+table SLPSolverSettings {
+  ALGORITHM: slpAlgorithm = UNSPECIFIED;
+  DIFFERENCE_MODE: slpDifferenceMode = UNSPECIFIED;
+  MAXIMUM_ITERATIONS: uint32 = 50;
+  MAXIMUM_EVALUATIONS: uint32 = 1000;
+  RESIDUAL_TOLERANCE: double = 1e-9;
+  STEP_TOLERANCE: double = 1e-12;
+  OBJECTIVE_TOLERANCE: double = 1e-10;
+  CONSTRAINT_TOLERANCE: double = 1e-8;
+  KKT_TOLERANCE: double = 1e-6;
+}
+
+table SLPIteration {
+  ITERATION: uint32;
+  VARIABLES: [double];
+  VALUES: [double];
+  RESIDUAL_NORM: double;
+  OBJECTIVE_VALUE: double;
+  MAXIMUM_CONSTRAINT_VIOLATION: double;
+  JACOBIAN_CONDITION_ESTIMATE: double;
+  KKT_RESIDUAL: double;
+  EVALUATION_COUNT: uint32;
+}
+
+table SLPSolverReport {
+  STATUS: slpSolveStatus = UNSPECIFIED;
+  MESSAGE: string;
+  ITERATIONS: [SLPIteration];
+  FINAL_VARIABLES: [double];
+  FINAL_VALUES: [double];
+  OBJECTIVE_VALUE: double;
+  RESIDUAL_NORM: double;
+  MAXIMUM_CONSTRAINT_VIOLATION: double;
+  KKT_RESIDUAL: double;
+  EVALUATION_COUNT: uint32;
+}
+
+table SLPAttestation {
+  /// Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.
+  SIGNING_PUBLIC_KEY: string (required);
+  SIGNED_AT: string;
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both signature
+  /// payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON in IDL field order and capitalization,
+  /// with both signature fields omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+table SLP {
+  PROBLEM_ID: string (required);
+  NAME: string;
+  KIND: slpProblemKind = UNSPECIFIED;
+  PROPAGATOR_PORT_ID: string (required);
+  OBJECTIVE_EVALUATOR_PORT_ID: string;
+  VARIABLES: [SLPVariable];
+  GOALS: [SLPGoal];
+  OBJECTIVE: SLPObjective;
+  CONSTRAINTS: [SLPNonlinearConstraint];
+  SETTINGS: SLPSolverSettings;
+  REPORT: SLPSolverReport;
+  CREATED_AT: string;
+  ATTESTATION: SLPAttestation;
+}
+
+root_type SLP;
+file_identifier "$SLP";
