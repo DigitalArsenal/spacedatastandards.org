@@ -70,12 +70,14 @@ describe("BPF build profile schema", () => {
     const table = ordinals.ordinals ?? ordinals;
     assert.equal(table.BPF, 227);
 
-    // Appended, never inserted: no member that existed before BPF may share
-    // or exceed its ordinal.
-    const higher = Object.entries(table).filter(
-      ([code, ordinal]) => code !== "BPF" && ordinal >= 227,
+    // Appended, never inserted: no other member may share BPF's ordinal, and
+    // nothing that predates it may sit at or above it. A LATER mint appending
+    // 228, 229, ... is the law working, not a violation, so this asserts the
+    // ordinal BPF holds rather than that BPF is forever the newest standard.
+    const collisions = Object.entries(table).filter(
+      ([code, ordinal]) => code !== "BPF" && ordinal === 227,
     );
-    assert.deepEqual(higher, []);
+    assert.deepEqual(collisions, []);
 
     const rec = await fs.readFile(
       path.join(repoRoot, "schema", "REC", "main.fbs"),
@@ -86,7 +88,6 @@ describe("BPF build profile schema", () => {
       .split(",")
       .map((entry) => entry.trim())
       .filter((entry) => /^[A-Z][A-Z0-9]{2}$/.test(entry));
-    assert.equal(members[members.length - 1], "BPF");
     assert.equal(members.indexOf("BPF") + 1, 227);
   });
 

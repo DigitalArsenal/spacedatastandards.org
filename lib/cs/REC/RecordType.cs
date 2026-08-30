@@ -246,6 +246,8 @@ public enum RecordType : byte
   STX = 225,
   TXS = 226,
   BPF = 227,
+  EVL = 228,
+  PCE = 229,
 };
 
 public class RecordTypeUnion {
@@ -712,6 +714,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTXS(TXST _txs) { return new RecordTypeUnion{ Type = RecordType.TXS, Value = _txs }; }
   public BPFT AsBPF() { return this.As<BPFT>(); }
   public static RecordTypeUnion FromBPF(BPFT _bpf) { return new RecordTypeUnion{ Type = RecordType.BPF, Value = _bpf }; }
+  public EVLT AsEVL() { return this.As<EVLT>(); }
+  public static RecordTypeUnion FromEVL(EVLT _evl) { return new RecordTypeUnion{ Type = RecordType.EVL, Value = _evl }; }
+  public PCET AsPCE() { return this.As<PCET>(); }
+  public static RecordTypeUnion FromPCE(PCET _pce) { return new RecordTypeUnion{ Type = RecordType.PCE, Value = _pce }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -943,6 +949,8 @@ public class RecordTypeUnion {
       case RecordType.STX: return STX.Pack(builder, _o.AsSTX()).Value;
       case RecordType.TXS: return TXS.Pack(builder, _o.AsTXS()).Value;
       case RecordType.BPF: return BPF.Pack(builder, _o.AsBPF()).Value;
+      case RecordType.EVL: return EVL.Pack(builder, _o.AsEVL()).Value;
+      case RecordType.PCE: return PCE.Pack(builder, _o.AsPCE()).Value;
     }
   }
 }
@@ -1636,6 +1644,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.BPF:
         result = BPFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EVL:
+        result = EVLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PCE:
+        result = PCEVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

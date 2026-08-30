@@ -1,0 +1,413 @@
+// Hash: 52cb36e4c6c531e40be8247ba2b24789de85898e149a9715196715f4c3af11e1
+// Version: 1.200.0
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../FRM/main.fbs";
+include "../PCE/main.fbs";
+
+/// What kind of event is being located. Every class is one instance of the
+/// same pair: an event function of time, and a refined root. Append new values
+/// only; never reorder or reuse existing values.
+enum evlLocatorClass : ubyte {
+  UNSPECIFIED = 0,
+  /// Passage of the target through the shadow of one or more occulting
+  /// bodies.
+  ECLIPSE = 1,
+  /// Visibility of the target from a surface site, subject to a horizon or
+  /// mask constraint.
+  CONTACT = 2,
+  /// Entry of a body or object into a sensor field of view.
+  INTRUSION = 3,
+  /// Passage of the target through an apsis of its orbit.
+  APSIDES = 4,
+  /// Passage of the target through the node line of a stated coordinate
+  /// system.
+  NODE_CROSSING = 5,
+  /// The generic locator: a condition on any $PCE catalog parameter. Altitude
+  /// crossings, latitude crossings and beta-angle limits are this class, not
+  /// classes of their own.
+  PARAMETER_CONDITION = 6
+}
+
+/// What was found. Append new values only.
+enum evlEventType : ubyte {
+  UNSPECIFIED = 0,
+  /// Total occultation of the illuminating body.
+  UMBRA = 1,
+  /// Partial occultation of the illuminating body.
+  PENUMBRA = 2,
+  /// The occulting body is fully inside the illuminating body disc.
+  ANTUMBRA = 3,
+  /// The target crossed the constraint boundary into visibility.
+  RISE = 4,
+  /// The target crossed the constraint boundary out of visibility.
+  SET = 5,
+  /// Entry into a bounded volume or field of view.
+  ENTRY = 6,
+  /// Exit from a bounded volume or field of view.
+  EXIT = 7,
+  /// Maximum orbital radius.
+  APOAPSIS = 8,
+  /// Minimum orbital radius.
+  PERIAPSIS = 9,
+  /// Node crossing with the out-of-plane component increasing.
+  ASCENDING_NODE = 10,
+  /// Node crossing with the out-of-plane component decreasing.
+  DESCENDING_NODE = 11,
+  /// A $PCE parameter condition was attained.
+  CONDITION_SATISFIED = 12
+}
+
+/// Geometry used to decide whether the target is illuminated. Append new
+/// values only.
+enum evlShadowModel : ubyte {
+  UNSPECIFIED = 0,
+  /// The occulting body casts a cylinder; no penumbra exists.
+  CYLINDRICAL = 1,
+  /// A single cone; umbra and penumbra are distinguished.
+  CONICAL = 2,
+  /// Umbra and penumbra cones evaluated separately, admitting antumbra.
+  DUAL_CONE = 3
+}
+
+/// Whether the geometry is evaluated at the observed instant or corrected for
+/// signal travel. Append new values only.
+enum evlAberrationCorrection : ubyte {
+  UNSPECIFIED = 0,
+  /// Geometric positions at the same instant.
+  NO_CORRECTION = 1,
+  /// Positions corrected for one-way signal travel time.
+  LIGHT_TIME = 2,
+  /// Light time and the observer's transverse motion.
+  LIGHT_TIME_AND_STELLAR_ABERRATION = 3
+}
+
+/// Boundary of a sensor acceptance volume. Append new values only.
+enum evlFieldOfViewShape : ubyte {
+  UNSPECIFIED = 0,
+  /// A circular cone about the boresight, bounded by CONE_HALF_ANGLE_RAD.
+  CONIC = 1,
+  /// A rectangular pyramid about the boresight, bounded by the two
+  /// half-angles.
+  RECTANGULAR = 2,
+  /// A custom boundary carried as a boresight-relative angular mask.
+  CUSTOM_MASK = 3
+}
+
+/// Which instant inside an event a sample belongs to. Append new values only.
+enum evlSamplePoint : ubyte {
+  UNSPECIFIED = 0,
+  EVENT_START = 1,
+  EVENT_STOP = 2,
+  /// The instant of the event's extremum: deepest obscuration, peak
+  /// elevation, closest approach.
+  EVENT_EXTREMUM = 3,
+  /// A sample inside the event that is none of the above.
+  INTERIOR = 4
+}
+
+/// Outcome of a location run. 0 is UNSPECIFIED so an unset byte never decodes
+/// as success. An empty event list with STATUS OK is a complete answer: no
+/// events occurred. Append new values only.
+enum evlResultStatus : ubyte {
+  UNSPECIFIED = 0,
+  OK = 1,
+  INVALID_INPUT = 2,
+  /// The provider does not implement the requested locator class.
+  UNSUPPORTED_LOCATOR_CLASS = 3,
+  /// The configuration table matching LOCATOR_CLASS was absent.
+  MISSING_CONFIGURATION = 4,
+  /// The state source did not span the requested interval.
+  MISSING_EPHEMERIS = 5,
+  /// The geometry needs Earth-orientation data that was not supplied or does
+  /// not span the interval.
+  MISSING_EOP_DATA = 6,
+  /// A generic condition names a parameter the provider cannot evaluate, or
+  /// one that does not support a stopping condition.
+  PARAMETER_UNAVAILABLE = 7,
+  /// A crossing was bracketed but the refinement did not converge to
+  /// REFINEMENT_TOLERANCE_SECONDS. The provider MUST report this rather than
+  /// emit an unconverged epoch.
+  ROOT_REFINEMENT_FAILED = 8,
+  /// The run hit MAXIMUM_EVENTS or its evaluation budget before reaching
+  /// SCAN_STOP_EPOCH; the events reported are a prefix, not the whole answer.
+  BUDGET_EXCEEDED = 9
+}
+
+/// Configuration for ECLIPSE.
+table EVLEclipseConfiguration {
+  /// Ephemeris body codes of the bodies allowed to occult, in the order they
+  /// are tested. More than one is normal.
+  OCCULTING_BODY_IDS: [int];
+
+  /// Ephemeris body code of the illuminating body.
+  ILLUMINATING_BODY_ID: int;
+
+  SHADOW_MODEL: evlShadowModel = UNSPECIFIED;
+
+  /// Which shadow regions to report. A model that cannot distinguish a region
+  /// MUST refuse the request rather than fold it into a neighbour.
+  REPORT_UMBRA: bool = true;
+  REPORT_PENUMBRA: bool = true;
+  REPORT_ANTUMBRA: bool = true;
+
+  /// Events shorter than this are not reported. 0 reports every event.
+  MINIMUM_DURATION_SECONDS: double;
+
+  /// Correct the illuminating-body direction for signal travel time.
+  ABERRATION_CORRECTION: evlAberrationCorrection = UNSPECIFIED;
+}
+
+/// Configuration for CONTACT.
+table EVLContactConfiguration {
+  /// The observing point, normally a GROUND_SITE origin.
+  OBSERVER: RFMOrigin;
+
+  /// Identifier of the observing site or sensor; resolves against $SEN.ID
+  /// when the observer is an instrumented site.
+  SENSOR_ID: string;
+
+  /// Elevation the target must exceed, radians, when no mask is supplied.
+  MINIMUM_ELEVATION_RAD: double;
+
+  /// Horizon mask as azimuth and minimum-elevation pairs, radians, in
+  /// ascending azimuth: [az0, el0, az1, el1, ...]. Present, it supersedes
+  /// MINIMUM_ELEVATION_RAD. An odd length is INVALID_INPUT.
+  AZIMUTH_ELEVATION_MASK_RAD: [double];
+
+  /// Bodies allowed to block the line of sight.
+  OCCULTING_BODY_IDS: [int];
+
+  ABERRATION_CORRECTION: evlAberrationCorrection = UNSPECIFIED;
+
+  /// Events shorter than this are not reported.
+  MINIMUM_DURATION_SECONDS: double;
+}
+
+/// Configuration for INTRUSION.
+table EVLIntrusionConfiguration {
+  /// Identifier of the sensor whose field of view is tested; resolves against
+  /// $SEN.ID. The sensor's site data is NOT restated here.
+  SENSOR_ID: string;
+
+  FIELD_OF_VIEW_SHAPE: evlFieldOfViewShape = UNSPECIFIED;
+
+  /// Boresight direction, expressed in BORESIGHT_COORDINATE_SYSTEM_NAME.
+  BORESIGHT: FRMVector3;
+
+  /// Coordinate system BORESIGHT is expressed in; resolves against
+  /// RFMCoordinateSystem.NAME on the request context.
+  BORESIGHT_COORDINATE_SYSTEM_NAME: string;
+
+  /// Half-angle of a CONIC field of view, radians.
+  CONE_HALF_ANGLE_RAD: double;
+
+  /// Half-angles of a RECTANGULAR field of view about the boresight, radians.
+  RECTANGULAR_HALF_ANGLE_X_RAD: double;
+  RECTANGULAR_HALF_ANGLE_Y_RAD: double;
+
+  /// Boundary of a CUSTOM_MASK field of view as clock and cone angle pairs
+  /// about the boresight, radians: [clock0, cone0, clock1, cone1, ...]. An
+  /// odd length is INVALID_INPUT.
+  CUSTOM_MASK_RAD: [double];
+
+  /// Ephemeris body codes of the bodies tested for intrusion.
+  INTRUDING_BODY_IDS: [int];
+
+  /// Identifiers of the tracked objects tested for intrusion.
+  INTRUDING_OBJECT_IDS: [string];
+
+  /// Test the intruder's apparent disc rather than its centre, so an event
+  /// begins when the limb enters the field of view.
+  USE_APPARENT_BODY_RADIUS: bool = false;
+
+  MINIMUM_DURATION_SECONDS: double;
+}
+
+/// Configuration for APSIDES.
+table EVLApsidesConfiguration {
+  /// Ephemeris body code the radius is measured from. The apsis is the root
+  /// of the RADIAL_VELOCITY parameter about this body, NOT an extremum of
+  /// geodetic height; the two differ by tens of degrees of true anomaly on an
+  /// oblate body.
+  CENTRAL_BODY_ID: int;
+
+  REPORT_APOAPSIS: bool = true;
+  REPORT_PERIAPSIS: bool = true;
+}
+
+/// Configuration for NODE_CROSSING.
+table EVLNodeCrossingConfiguration {
+  /// Coordinate system whose reference plane defines the node line; resolves
+  /// against RFMCoordinateSystem.NAME on the request context.
+  REFERENCE_COORDINATE_SYSTEM_NAME: string;
+
+  REPORT_ASCENDING: bool = true;
+  REPORT_DESCENDING: bool = true;
+}
+
+/// Configuration for PARAMETER_CONDITION, the generic locator.
+table EVLParameterConditionConfiguration {
+  /// Conditions on $PCE catalog parameters. The predicate vocabulary is
+  /// PCEParameterCondition and is NOT restated here.
+  CONDITIONS: [PCEParameterCondition];
+
+  /// True reports the interval BETWEEN a satisfying crossing and the next
+  /// unsatisfying one; false reports each crossing as an instantaneous event
+  /// with equal start and stop epochs.
+  REPORT_AS_INTERVAL: bool = true;
+
+  MINIMUM_DURATION_SECONDS: double;
+}
+
+/// Parameter values captured at one instant inside an event.
+table EVLEventSample {
+  POINT: evlSamplePoint = UNSPECIFIED;
+  SAMPLE: PCEParameterSample;
+}
+
+/// One located event. An instantaneous event has STOP_EPOCH equal to
+/// START_EPOCH and DURATION_SECONDS equal to 0.
+table EVLEvent {
+  EVENT_TYPE: evlEventType = UNSPECIFIED;
+
+  /// Entry epoch, ISO 8601.
+  START_EPOCH: string;
+
+  /// Exit epoch, ISO 8601.
+  STOP_EPOCH: string;
+
+  /// Time system of the epochs, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// STOP_EPOCH minus START_EPOCH in seconds. Carried because it is the
+  /// reported quantity of an event report and MUST agree with the epochs.
+  DURATION_SECONDS: double;
+
+  /// The object the event happened to.
+  TARGET_OBJECT_ID: string;
+
+  /// Ephemeris body code of the body that occulted or intruded, when one did.
+  OCCULTING_BODY_ID: int;
+
+  /// Identifier of the observing site or sensor, when the class has one.
+  OBSERVER_ID: string;
+
+  /// Identifier of the observed body or object, when the class has one.
+  OBSERVED_OBJECT_ID: string;
+
+  /// Epoch of the event's extremum, ISO 8601: deepest obscuration, peak
+  /// elevation, closest approach. Absent when the class has no extremum.
+  EXTREMUM_EPOCH: string;
+
+  /// Value at EXTREMUM_EPOCH, in the unit of EXTREMUM_PARAMETER.
+  EXTREMUM_VALUE: double;
+
+  /// Which catalog parameter EXTREMUM_VALUE is a value of.
+  EXTREMUM_PARAMETER: pceParameter = UNSPECIFIED;
+
+  /// Index into EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION's
+  /// CONDITIONS for a generic event; negative for every other class.
+  CONDITION_INDEX: int = -1;
+
+  /// Requested parameters, evaluated at the instants of this event.
+  SAMPLES: [EVLEventSample];
+}
+
+/// Locate events of one class over one interval.
+table EVLEventLocationRequest {
+  LOCATOR_CLASS: evlLocatorClass = UNSPECIFIED;
+
+  /// Object the events are located for.
+  TARGET_OBJECT_ID: string;
+
+  /// Bodies, coordinate systems, epoch reference and Earth-orientation data
+  /// set the geometry is evaluated in. The state source itself is a port the
+  /// caller supplies and is NOT named here.
+  CONTEXT: PCEEvaluationContext;
+
+  /// Interval to search, ISO 8601.
+  SCAN_START_EPOCH: string;
+  SCAN_STOP_EPOCH: string;
+
+  /// Time system of the interval, named by the $TIM timingStandard member
+  /// name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Coarse step the event function is sampled at before refinement. A
+  /// provider MAY choose its own step when this is absent, and the located
+  /// epochs MUST NOT depend on it beyond REFINEMENT_TOLERANCE_SECONDS.
+  SCAN_STEP_SECONDS: double;
+
+  /// Convergence bar on a located epoch. A provider that cannot meet it
+  /// returns ROOT_REFINEMENT_FAILED.
+  REFINEMENT_TOLERANCE_SECONDS: double;
+
+  /// Upper bound on reported events. 0 means no bound.
+  MAXIMUM_EVENTS: uint;
+
+  /// Parameters to evaluate at each event's instants.
+  REPORT_PARAMETERS: [PCEParameterRef];
+
+  /// Exactly the configuration matching LOCATOR_CLASS is present; any other
+  /// combination is MISSING_CONFIGURATION.
+  ECLIPSE_CONFIGURATION: EVLEclipseConfiguration;
+  CONTACT_CONFIGURATION: EVLContactConfiguration;
+  INTRUSION_CONFIGURATION: EVLIntrusionConfiguration;
+  APSIDES_CONFIGURATION: EVLApsidesConfiguration;
+  NODE_CROSSING_CONFIGURATION: EVLNodeCrossingConfiguration;
+  PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfiguration;
+
+  TRACE_ID: string;
+}
+
+/// The events found, and the interval they were actually searched over.
+table EVLEventReport {
+  STATUS: evlResultStatus = UNSPECIFIED;
+  ERROR_MESSAGE: string;
+
+  LOCATOR_CLASS: evlLocatorClass = UNSPECIFIED;
+  TARGET_OBJECT_ID: string;
+
+  /// Interval actually searched, ISO 8601. A BUDGET_EXCEEDED run reports the
+  /// interval it reached, not the interval it was asked for.
+  SCAN_START_EPOCH: string;
+  SCAN_STOP_EPOCH: string;
+
+  /// Time system of the epochs, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Events in chronological order of START_EPOCH.
+  EVENTS: [EVLEvent];
+
+  /// Event-function evaluations actually performed, for step-independence
+  /// evidence.
+  FUNCTION_EVALUATION_COUNT: uint;
+
+  /// Content identifier of the Earth-orientation data set actually used.
+  EOP_DATA_SET_CID: string;
+
+  TRACE_ID: string;
+}
+
+/// Event Locator
+///
+/// One request and one report for every class of located event: shadow
+/// passage, site visibility, sensor-field-of-view intrusion, apsis passage,
+/// node crossing, and the generic condition on any $PCE catalog parameter.
+/// Every class is the same pair of an event function and a refined root, so a
+/// new class is a configuration table and a vocabulary member, never a new
+/// record. Entry and exit epochs, duration, the occulting or observed body and
+/// the parameter values captured at each event's instants are reported in one
+/// shape, and the predicate of the generic class is $PCE's
+/// PCEParameterCondition rather than a second spelling of the same idea.
+///
+/// Angles are radians, durations seconds, epochs ISO 8601 in a named time
+/// system.
+table EVL {
+  LOCATION_REQUEST: EVLEventLocationRequest;
+  EVENT_REPORT: EVLEventReport;
+}
+
+root_type EVL;
+file_identifier "$EVL";

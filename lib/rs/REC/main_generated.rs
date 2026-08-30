@@ -228,6 +228,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -362,10 +364,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 227;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 229;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 228] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 230] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -594,6 +596,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 228] = [
   RecordType::STX,
   RecordType::TXS,
   RecordType::BPF,
+  RecordType::EVL,
+  RecordType::PCE,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -843,9 +847,11 @@ impl RecordType {
   pub const STX: Self = Self(225);
   pub const TXS: Self = Self(226);
   pub const BPF: Self = Self(227);
+  pub const EVL: Self = Self(228);
+  pub const PCE: Self = Self(229);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 227;
+  pub const ENUM_MAX: u8 = 229;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1075,6 +1081,8 @@ impl RecordType {
     Self::STX,
     Self::TXS,
     Self::BPF,
+    Self::EVL,
+    Self::PCE,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1307,6 +1315,8 @@ impl RecordType {
       Self::STX => Some("STX"),
       Self::TXS => Some("TXS"),
       Self::BPF => Some("BPF"),
+      Self::EVL => Some("EVL"),
+      Self::PCE => Some("PCE"),
       _ => None,
     }
   }
@@ -1595,6 +1605,8 @@ pub enum RecordTypeT {
   STX(alloc::boxed::Box<STXT>),
   TXS(alloc::boxed::Box<TXST>),
   BPF(alloc::boxed::Box<BPFT>),
+  EVL(alloc::boxed::Box<EVLT>),
+  PCE(alloc::boxed::Box<PCET>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1832,6 +1844,8 @@ impl RecordTypeT {
       Self::STX(_) => RecordType::STX,
       Self::TXS(_) => RecordType::TXS,
       Self::BPF(_) => RecordType::BPF,
+      Self::EVL(_) => RecordType::EVL,
+      Self::PCE(_) => RecordType::PCE,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2064,6 +2078,8 @@ impl RecordTypeT {
       Self::STX(v) => Some(v.pack(fbb).as_union_value()),
       Self::TXS(v) => Some(v.pack(fbb).as_union_value()),
       Self::BPF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::EVL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PCE(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6833,6 +6849,48 @@ impl RecordTypeT {
   pub fn as_bpf_mut(&mut self) -> Option<&mut BPFT> {
     if let Self::BPF(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned EVLT, setting the union to NONE.
+  pub fn take_evl(&mut self) -> Option<alloc::boxed::Box<EVLT>> {
+    if let Self::EVL(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::EVL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the EVLT.
+  pub fn as_evl(&self) -> Option<&EVLT> {
+    if let Self::EVL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the EVLT.
+  pub fn as_evl_mut(&mut self) -> Option<&mut EVLT> {
+    if let Self::EVL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PCET, setting the union to NONE.
+  pub fn take_pce(&mut self) -> Option<alloc::boxed::Box<PCET>> {
+    if let Self::PCE(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PCE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PCET.
+  pub fn as_pce(&self) -> Option<&PCET> {
+    if let Self::PCE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PCET.
+  pub fn as_pce_mut(&mut self) -> Option<&mut PCET> {
+    if let Self::PCE(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8007,6 +8065,16 @@ impl<'a> Record<'a> {
       RecordType::BPF => RecordTypeT::BPF(alloc::boxed::Box::new(
         self.value_as_bpf()
             .expect("Invalid union table, expected `RecordType::BPF`.")
+            .unpack()
+      )),
+      RecordType::EVL => RecordTypeT::EVL(alloc::boxed::Box::new(
+        self.value_as_evl()
+            .expect("Invalid union table, expected `RecordType::EVL`.")
+            .unpack()
+      )),
+      RecordType::PCE => RecordTypeT::PCE(alloc::boxed::Box::new(
+        self.value_as_pce()
+            .expect("Invalid union table, expected `RecordType::PCE`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -11448,6 +11516,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_evl(&self) -> Option<EVL<'a>> {
+    if self.value_type() == RecordType::EVL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { EVL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_pce(&self) -> Option<PCE<'a>> {
+    if self.value_type() == RecordType::PCE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PCE::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -11685,6 +11783,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::STX => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<STX>>("RecordType::STX", pos),
           RecordType::TXS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TXS>>("RecordType::TXS", pos),
           RecordType::BPF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<BPF>>("RecordType::BPF", pos),
+          RecordType::EVL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<EVL>>("RecordType::EVL", pos),
+          RecordType::PCE => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PCE>>("RecordType::PCE", pos),
           _ => Ok(()),
         }
      })?
@@ -13330,6 +13430,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::BPF => {
           if let Some(x) = self.value_as_bpf() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::EVL => {
+          if let Some(x) = self.value_as_evl() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PCE => {
+          if let Some(x) = self.value_as_pce() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
