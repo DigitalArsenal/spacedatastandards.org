@@ -10,6 +10,8 @@
   const SENTENCE_SPLIT_MIN = 320;
   const MAX_SENTENCES_PER_PARAGRAPH = 4;
   const TARGET_SENTENCES_PER_PARAGRAPH = 3;
+  /** Width below which the numbered strip collapses around the current page. */
+  const CONDENSED_MAX_WIDTH = 639.98;
   /** Tokens that end in a period without ending a sentence. */
   const NON_TERMINAL = /(?:\b[A-Za-z]|\be\.g|\bi\.e|\bvs|\bcf|\betc|\bNo|\bFig|\bapprox)\.$/;
 
@@ -23,6 +25,15 @@
   let lastWidth = -1;
   let frame = 0;
   let observer: ResizeObserver | null = null;
+  let condensed = false;
+  let mediaQuery: MediaQueryList | null = null;
+
+  interface Segment {
+    text: string;
+    code: boolean;
+  }
+
+  const GAP = -1;
 
   $: paragraphs = toParagraphs(text);
   $: pageCount = offsets.length;
@@ -109,6 +120,46 @@
   }
 
   /**
+   * Split a paragraph into plain and `backticked` runs. Only a BALANCED pair on
+   * one line opens code; a lone backtick stays an ordinary character. Both kinds
+   * of run are rendered through normal Svelte interpolation, never {@html}, so
+   * every character outside a code span is escaped by construction.
+   */
+  function parseInline(paragraph: string): Segment[] {
+    const pattern = /`([^`\n]+)`/g;
+    const segments: Segment[] = [];
+    let cursor = 0;
+    let match = pattern.exec(paragraph);
+    while (match) {
+      if (match.index > cursor) segments.push({ text: paragraph.slice(cursor, match.index), code: false });
+      segments.push({ text: match[1], code: true });
+      cursor = match.index + match[0].length;
+      match = pattern.exec(paragraph);
+    }
+    if (cursor < paragraph.length) segments.push({ text: paragraph.slice(cursor), code: false });
+    return segments.length ? segments : [{ text: paragraph, code: false }];
+  }
+
+  /**
+   * The collapsed strip: first, last, and the current page with a neighbour on
+   * each side, with GAP standing in for every elided run.
+   */
+  function condensedItems(current: number, total: number): number[] {
+    const keep = [0, total - 1, current - 1, current, current + 1]
+      .filter((index) => index >= 0 && index < total)
+      .sort((a, b) => a - b);
+    const items: number[] = [];
+    let previous = -1;
+    for (const index of keep) {
+      if (index === previous) continue;
+      if (previous >= 0 && index - previous > 1) items.push(GAP);
+      items.push(index);
+      previous = index;
+    }
+    return items;
+  }
+
+  /**
    * Every line box in the flow, positioned relative to the flow's own top.
    * Line rects are what make a page break land between lines, never mid-word,
    * and they carry inter-paragraph margins implicitly through their positions.
@@ -129,7 +180,21 @@
       node = walker.nextNode();
     }
     boxes.sort((a, b) => a.top - b.top || a.bottom - b.bottom);
-    return boxes;
+
+    // A <code> span is its own text node, so one VISUAL line can yield several
+    // rects at slightly different heights. Merge vertically overlapping rects,
+    // otherwise a page break could land inside a line that contains inline code.
+    const lines: { top: number; bottom: number }[] = [];
+    for (const box of boxes) {
+      const current = lines[lines.length - 1];
+      if (current && box.top < current.bottom - 1) {
+        current.top = Math.min(current.top, box.top);
+        current.bottom = Math.max(current.bottom, box.bottom);
+      } else {
+        lines.push({ ...box });
+      }
+    }
+    return lines;
   }
 
   function measure(): void {
@@ -197,16 +262,29 @@
       observer.observe(node);
     }
     if (typeof document !== "undefined" && (document as any).fonts?.ready) {
+      // Inline code introduces a second font; its metrics decide line boxes, so
+      // pages are re-measured once both faces have actually loaded.
       void (document as any).fonts.ready.then(scheduleMeasure);
+    }
+    if (typeof window !== "undefined" && window.matchMedia) {
+      mediaQuery = window.matchMedia(`(max-width: ${CONDENSED_MAX_WIDTH}px)`);
+      condensed = mediaQuery.matches;
+      mediaQuery.addEventListener("change", onMediaChange);
     }
     scheduleMeasure();
     return {
       destroy() {
         observer?.disconnect();
         observer = null;
+        mediaQuery?.removeEventListener("change", onMediaChange);
+        mediaQuery = null;
         flowEl = null;
       },
     };
+  }
+
+  function onMediaChange(event: MediaQueryListEvent): void {
+    condensed = event.matches;
   }
 
   function goto(next: number): void {
@@ -229,9 +307,16 @@
     goto(target);
   }
 
+  $: pagerItems = paged
+    ? condensed
+      ? condensedItems(page, pageCount)
+      : offsets.map((_, index) => index)
+    : [];
+
   onDestroy(() => {
     if (frame) cancelAnimationFrame(frame);
     observer?.disconnect();
+    mediaQuery?.removeEventListener("change", onMediaChange);
   });
 </script>
 
@@ -252,7 +337,7 @@
   >
     <div class="desc-flow" use:attach style={flowStyle}>
       {#each paragraphs as paragraph}
-        <p class="desc-para">{paragraph}</p>
+        <p class="desc-para">{#each parseInline(paragraph) as segment}{#if segment.code}<code class="desc-code">{segment.text}</code>{:else}{segment.text}{/if}{/each}</p>
       {/each}
     </div>
   </div>
@@ -271,17 +356,21 @@
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </button>
-      {#each offsets as _, index}
-        <button
-          type="button"
-          class="desc-page-btn"
-          class:active={index === page}
-          aria-current={index === page ? "true" : undefined}
-          aria-label={`Page ${index + 1} of ${pageCount}`}
-          on:click={() => goto(index)}
-        >
-          {index + 1}
-        </button>
+      {#each pagerItems as item}
+        {#if item === GAP}
+          <span class="desc-page-gap" aria-hidden="true">…</span>
+        {:else}
+          <button
+            type="button"
+            class="desc-page-btn"
+            class:active={item === page}
+            aria-current={item === page ? "true" : undefined}
+            aria-label={`Page ${item + 1} of ${pageCount}`}
+            on:click={() => goto(item)}
+          >
+            {item + 1}
+          </button>
+        {/if}
       {/each}
       <button
         type="button"
@@ -294,6 +383,9 @@
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </button>
+      {#if condensed}
+        <span class="desc-page-readout" aria-hidden="true">{page + 1} / {pageCount}</span>
+      {/if}
     </div>
   {/if}
 </div>
@@ -336,6 +428,19 @@
 
   .desc-para + .desc-para {
     margin-top: 14px;
+  }
+
+  /* Inline code: the site's own mono face, a touch smaller so it does not
+     stretch the line box, on the existing code surface token. */
+  .desc-code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    padding: 0.1em 0.34em;
+    background: var(--code-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    white-space: nowrap;
   }
 
   .desc-pagination {
@@ -383,6 +488,24 @@
   .desc-page-btn:disabled {
     opacity: 0.35;
     cursor: default;
+  }
+
+  .desc-page-gap {
+    min-width: 14px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .desc-page-readout {
+    margin-left: 4px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
