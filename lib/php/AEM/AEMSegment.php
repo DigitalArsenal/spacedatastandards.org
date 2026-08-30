@@ -139,22 +139,135 @@ class AEMSegment extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+    /// One entry per COMMENT line, in file order.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCOMMENT($j)
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOMMENTLength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+    /// (504.0-B-2 table 4-3, optional).
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Classification marking of the data in portion-marked format
+    /// (504.0-B-2 table 4-3, optional).
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Start of the USEABLE time span covered by the data, ISO 8601.
+    public function getUSEABLE_START_TIME()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// End of the USEABLE time span covered by the data, ISO 8601.
+    public function getUSEABLE_STOP_TIME()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+    /// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+    public function getEULER_ROT_SEQ()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference frame in which the ANGVEL_* components are expressed; the value
+    /// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+    /// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+    /// is the ratified spelling and is the one carried here.
+    public function getANGVEL_FRAME()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+    public function getINTERPOLATION_METHOD()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Recommended interpolation degree.
+    /**
+     * @return uint
+     */
+    public function getINTERPOLATION_DEGREE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+    ///
+    /// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+    /// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+    ///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+    /// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+    ///    and ATTITUDE_DATA must be empty or ignored by parsers.
+    /// 3. Do NOT populate both formats simultaneously.
+    /**
+     * @returnVectorOffset
+     */
+    public function getATTITUDE_DATA_LINES($j)
+    {
+        $o = $this->__offset(46);
+        $obj = new AttitudeDataLine();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getATTITUDE_DATA_LINESLength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAEMSegment(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return AEMSegment
      */
-    public static function createAEMSegment(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $REF_FRAME_A, $REF_FRAME_B, $ATTITUDE_DIR, $TIME_SYSTEM, $ATTITUDE_TYPE, $START_TIME, $STOP_TIME, $STEP_SIZE, $ATTITUDE_COMPONENTS, $ATTITUDE_DATA)
+    public static function createAEMSegment(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $REF_FRAME_A, $REF_FRAME_B, $ATTITUDE_DIR, $TIME_SYSTEM, $ATTITUDE_TYPE, $START_TIME, $STOP_TIME, $STEP_SIZE, $ATTITUDE_COMPONENTS, $ATTITUDE_DATA, $COMMENT, $CENTER_NAME, $CLASSIFICATION, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $EULER_ROT_SEQ, $ANGVEL_FRAME, $INTERPOLATION_METHOD, $INTERPOLATION_DEGREE, $ATTITUDE_DATA_LINES)
     {
-        $builder->startObject(12);
+        $builder->startObject(22);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addREF_FRAME_A($builder, $REF_FRAME_A);
@@ -167,6 +280,16 @@ class AEMSegment extends Table
         self::addSTEP_SIZE($builder, $STEP_SIZE);
         self::addATTITUDE_COMPONENTS($builder, $ATTITUDE_COMPONENTS);
         self::addATTITUDE_DATA($builder, $ATTITUDE_DATA);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
+        self::addUSEABLE_START_TIME($builder, $USEABLE_START_TIME);
+        self::addUSEABLE_STOP_TIME($builder, $USEABLE_STOP_TIME);
+        self::addEULER_ROT_SEQ($builder, $EULER_ROT_SEQ);
+        self::addANGVEL_FRAME($builder, $ANGVEL_FRAME);
+        self::addINTERPOLATION_METHOD($builder, $INTERPOLATION_METHOD);
+        self::addINTERPOLATION_DEGREE($builder, $INTERPOLATION_DEGREE);
+        self::addATTITUDE_DATA_LINES($builder, $ATTITUDE_DATA_LINES);
         $o = $builder->endObject();
         return $o;
     }
@@ -313,6 +436,154 @@ class AEMSegment extends Table
     public static function startATTITUDE_DATAVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(12, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOMMENTVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOMMENTVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(13, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(14, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUSEABLE_START_TIME(FlatBufferBuilder $builder, $USEABLE_START_TIME)
+    {
+        $builder->addOffsetX(15, $USEABLE_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUSEABLE_STOP_TIME(FlatBufferBuilder $builder, $USEABLE_STOP_TIME)
+    {
+        $builder->addOffsetX(16, $USEABLE_STOP_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEULER_ROT_SEQ(FlatBufferBuilder $builder, $EULER_ROT_SEQ)
+    {
+        $builder->addOffsetX(17, $EULER_ROT_SEQ, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addANGVEL_FRAME(FlatBufferBuilder $builder, $ANGVEL_FRAME)
+    {
+        $builder->addOffsetX(18, $ANGVEL_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addINTERPOLATION_METHOD(FlatBufferBuilder $builder, $INTERPOLATION_METHOD)
+    {
+        $builder->addOffsetX(19, $INTERPOLATION_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addINTERPOLATION_DEGREE(FlatBufferBuilder $builder, $INTERPOLATION_DEGREE)
+    {
+        $builder->addUintX(20, $INTERPOLATION_DEGREE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addATTITUDE_DATA_LINES(FlatBufferBuilder $builder, $ATTITUDE_DATA_LINES)
+    {
+        $builder->addOffsetX(21, $ATTITUDE_DATA_LINES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createATTITUDE_DATA_LINESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startATTITUDE_DATA_LINESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

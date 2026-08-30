@@ -3,6 +3,814 @@
 
 extern crate alloc;
 
+pub enum attitudeDataLineOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A single attitude data line with an EXPLICIT epoch (non-uniform steps).
+///
+/// CCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs
+/// are not on a uniform grid: the published example (504.0-B-2 figure G-4)
+/// steps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.
+/// 2339 s then 1 s. Such a segment CANNOT be expressed by the compact
+/// ATTITUDE_DATA array, whose epochs are reconstructed as
+/// START_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have
+/// the same irregular shape.
+///
+/// The populated columns are selected by the segment's ATTITUDE_TYPE exactly
+/// as in CCSDS 504.0-B-2 table 4-4:
+///   QUATERNION              Q1 Q2 Q3 QC
+///   QUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT
+///   QUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   EULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3
+///   EULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT
+///   EULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   SPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL
+///   SPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE
+///   SPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL
+///
+/// Quaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,
+/// vector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2
+/// (annex, change 7) and is deliberately NOT carried here.
+///
+/// Units per 504.0-B-2 4.2.4.6: quaternion components dimensionless;
+/// Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
+/// ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
+/// NUTATION_PER s.
+pub struct attitudeDataLine<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for attitudeDataLine<'a> {
+  type Inner = attitudeDataLine<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> attitudeDataLine<'a> {
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 4;
+  pub const VT_Q1: ::flatbuffers::VOffsetT = 6;
+  pub const VT_Q2: ::flatbuffers::VOffsetT = 8;
+  pub const VT_Q3: ::flatbuffers::VOffsetT = 10;
+  pub const VT_QC: ::flatbuffers::VOffsetT = 12;
+  pub const VT_Q1_DOT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_Q2_DOT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_Q3_DOT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_QC_DOT: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ANGLE_1: ::flatbuffers::VOffsetT = 22;
+  pub const VT_ANGLE_2: ::flatbuffers::VOffsetT = 24;
+  pub const VT_ANGLE_3: ::flatbuffers::VOffsetT = 26;
+  pub const VT_ANGLE_1_DOT: ::flatbuffers::VOffsetT = 28;
+  pub const VT_ANGLE_2_DOT: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ANGLE_3_DOT: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ANGVEL_X: ::flatbuffers::VOffsetT = 34;
+  pub const VT_ANGVEL_Y: ::flatbuffers::VOffsetT = 36;
+  pub const VT_ANGVEL_Z: ::flatbuffers::VOffsetT = 38;
+  pub const VT_SPIN_ALPHA: ::flatbuffers::VOffsetT = 40;
+  pub const VT_SPIN_DELTA: ::flatbuffers::VOffsetT = 42;
+  pub const VT_SPIN_ANGLE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_SPIN_ANGLE_VEL: ::flatbuffers::VOffsetT = 46;
+  pub const VT_NUTATION: ::flatbuffers::VOffsetT = 48;
+  pub const VT_NUTATION_PER: ::flatbuffers::VOffsetT = 50;
+  pub const VT_NUTATION_PHASE: ::flatbuffers::VOffsetT = 52;
+  pub const VT_MOMENTUM_ALPHA: ::flatbuffers::VOffsetT = 54;
+  pub const VT_MOMENTUM_DELTA: ::flatbuffers::VOffsetT = 56;
+  pub const VT_NUTATION_VEL: ::flatbuffers::VOffsetT = 58;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    attitudeDataLine { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args attitudeDataLineArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<attitudeDataLine<'bldr>> {
+    let mut builder = attitudeDataLineBuilder::new(_fbb);
+    builder.add_NUTATION_VEL(args.NUTATION_VEL);
+    builder.add_MOMENTUM_DELTA(args.MOMENTUM_DELTA);
+    builder.add_MOMENTUM_ALPHA(args.MOMENTUM_ALPHA);
+    builder.add_NUTATION_PHASE(args.NUTATION_PHASE);
+    builder.add_NUTATION_PER(args.NUTATION_PER);
+    builder.add_NUTATION(args.NUTATION);
+    builder.add_SPIN_ANGLE_VEL(args.SPIN_ANGLE_VEL);
+    builder.add_SPIN_ANGLE(args.SPIN_ANGLE);
+    builder.add_SPIN_DELTA(args.SPIN_DELTA);
+    builder.add_SPIN_ALPHA(args.SPIN_ALPHA);
+    builder.add_ANGVEL_Z(args.ANGVEL_Z);
+    builder.add_ANGVEL_Y(args.ANGVEL_Y);
+    builder.add_ANGVEL_X(args.ANGVEL_X);
+    builder.add_ANGLE_3_DOT(args.ANGLE_3_DOT);
+    builder.add_ANGLE_2_DOT(args.ANGLE_2_DOT);
+    builder.add_ANGLE_1_DOT(args.ANGLE_1_DOT);
+    builder.add_ANGLE_3(args.ANGLE_3);
+    builder.add_ANGLE_2(args.ANGLE_2);
+    builder.add_ANGLE_1(args.ANGLE_1);
+    builder.add_QC_DOT(args.QC_DOT);
+    builder.add_Q3_DOT(args.Q3_DOT);
+    builder.add_Q2_DOT(args.Q2_DOT);
+    builder.add_Q1_DOT(args.Q1_DOT);
+    builder.add_QC(args.QC);
+    builder.add_Q3(args.Q3);
+    builder.add_Q2(args.Q2);
+    builder.add_Q1(args.Q1);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> attitudeDataLineT {
+    let EPOCH = self.EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let Q1 = self.Q1();
+    let Q2 = self.Q2();
+    let Q3 = self.Q3();
+    let QC = self.QC();
+    let Q1_DOT = self.Q1_DOT();
+    let Q2_DOT = self.Q2_DOT();
+    let Q3_DOT = self.Q3_DOT();
+    let QC_DOT = self.QC_DOT();
+    let ANGLE_1 = self.ANGLE_1();
+    let ANGLE_2 = self.ANGLE_2();
+    let ANGLE_3 = self.ANGLE_3();
+    let ANGLE_1_DOT = self.ANGLE_1_DOT();
+    let ANGLE_2_DOT = self.ANGLE_2_DOT();
+    let ANGLE_3_DOT = self.ANGLE_3_DOT();
+    let ANGVEL_X = self.ANGVEL_X();
+    let ANGVEL_Y = self.ANGVEL_Y();
+    let ANGVEL_Z = self.ANGVEL_Z();
+    let SPIN_ALPHA = self.SPIN_ALPHA();
+    let SPIN_DELTA = self.SPIN_DELTA();
+    let SPIN_ANGLE = self.SPIN_ANGLE();
+    let SPIN_ANGLE_VEL = self.SPIN_ANGLE_VEL();
+    let NUTATION = self.NUTATION();
+    let NUTATION_PER = self.NUTATION_PER();
+    let NUTATION_PHASE = self.NUTATION_PHASE();
+    let MOMENTUM_ALPHA = self.MOMENTUM_ALPHA();
+    let MOMENTUM_DELTA = self.MOMENTUM_DELTA();
+    let NUTATION_VEL = self.NUTATION_VEL();
+    attitudeDataLineT {
+      EPOCH,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      Q1_DOT,
+      Q2_DOT,
+      Q3_DOT,
+      QC_DOT,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      ANGLE_1_DOT,
+      ANGLE_2_DOT,
+      ANGLE_3_DOT,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PER,
+      NUTATION_PHASE,
+      MOMENTUM_ALPHA,
+      MOMENTUM_DELTA,
+      NUTATION_VEL,
+    }
+  }
+
+  /// Epoch of this attitude state (required for non-uniform steps).
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(attitudeDataLine::VT_EPOCH, None)}
+  }
+  /// Quaternion vector component 1 (dimensionless).
+  #[inline]
+  pub fn Q1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q1, Some(0.0)).unwrap()}
+  }
+  /// Quaternion vector component 2 (dimensionless).
+  #[inline]
+  pub fn Q2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q2, Some(0.0)).unwrap()}
+  }
+  /// Quaternion vector component 3 (dimensionless).
+  #[inline]
+  pub fn Q3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q3, Some(0.0)).unwrap()}
+  }
+  /// Quaternion scalar component (dimensionless).
+  #[inline]
+  pub fn QC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_QC, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of Q1, 1/s.
+  #[inline]
+  pub fn Q1_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q1_DOT, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of Q2, 1/s.
+  #[inline]
+  pub fn Q2_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q2_DOT, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of Q3, 1/s.
+  #[inline]
+  pub fn Q3_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_Q3_DOT, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of QC, 1/s.
+  #[inline]
+  pub fn QC_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_QC_DOT, Some(0.0)).unwrap()}
+  }
+  /// Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.
+  #[inline]
+  pub fn ANGLE_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_1, Some(0.0)).unwrap()}
+  }
+  /// Euler angle 2, deg.
+  #[inline]
+  pub fn ANGLE_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_2, Some(0.0)).unwrap()}
+  }
+  /// Euler angle 3, deg.
+  #[inline]
+  pub fn ANGLE_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_3, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of ANGLE_1, deg/s.
+  #[inline]
+  pub fn ANGLE_1_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_1_DOT, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of ANGLE_2, deg/s.
+  #[inline]
+  pub fn ANGLE_2_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_2_DOT, Some(0.0)).unwrap()}
+  }
+  /// Time derivative of ANGLE_3, deg/s.
+  #[inline]
+  pub fn ANGLE_3_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGLE_3_DOT, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.
+  #[inline]
+  pub fn ANGVEL_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGVEL_X, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.
+  #[inline]
+  pub fn ANGVEL_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGVEL_Y, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.
+  #[inline]
+  pub fn ANGVEL_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_ANGVEL_Z, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of the spin axis, deg.
+  #[inline]
+  pub fn SPIN_ALPHA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_SPIN_ALPHA, Some(0.0)).unwrap()}
+  }
+  /// Declination of the spin axis, deg.
+  #[inline]
+  pub fn SPIN_DELTA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_SPIN_DELTA, Some(0.0)).unwrap()}
+  }
+  /// Phase of the satellite about the spin axis, deg.
+  #[inline]
+  pub fn SPIN_ANGLE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_SPIN_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity about the spin axis, deg/s.
+  #[inline]
+  pub fn SPIN_ANGLE_VEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_SPIN_ANGLE_VEL, Some(0.0)).unwrap()}
+  }
+  /// Nutation angle, deg.
+  #[inline]
+  pub fn NUTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_NUTATION, Some(0.0)).unwrap()}
+  }
+  /// Nutation period, s.
+  #[inline]
+  pub fn NUTATION_PER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_NUTATION_PER, Some(0.0)).unwrap()}
+  }
+  /// Nutation phase, deg.
+  #[inline]
+  pub fn NUTATION_PHASE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_NUTATION_PHASE, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of the angular momentum vector, deg.
+  #[inline]
+  pub fn MOMENTUM_ALPHA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_MOMENTUM_ALPHA, Some(0.0)).unwrap()}
+  }
+  /// Declination of the angular momentum vector, deg.
+  #[inline]
+  pub fn MOMENTUM_DELTA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_MOMENTUM_DELTA, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity of the nutation, deg/s.
+  #[inline]
+  pub fn NUTATION_VEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeDataLine::VT_NUTATION_VEL, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for attitudeDataLine<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("Q1", Self::VT_Q1, false)?
+     .visit_field::<f64>("Q2", Self::VT_Q2, false)?
+     .visit_field::<f64>("Q3", Self::VT_Q3, false)?
+     .visit_field::<f64>("QC", Self::VT_QC, false)?
+     .visit_field::<f64>("Q1_DOT", Self::VT_Q1_DOT, false)?
+     .visit_field::<f64>("Q2_DOT", Self::VT_Q2_DOT, false)?
+     .visit_field::<f64>("Q3_DOT", Self::VT_Q3_DOT, false)?
+     .visit_field::<f64>("QC_DOT", Self::VT_QC_DOT, false)?
+     .visit_field::<f64>("ANGLE_1", Self::VT_ANGLE_1, false)?
+     .visit_field::<f64>("ANGLE_2", Self::VT_ANGLE_2, false)?
+     .visit_field::<f64>("ANGLE_3", Self::VT_ANGLE_3, false)?
+     .visit_field::<f64>("ANGLE_1_DOT", Self::VT_ANGLE_1_DOT, false)?
+     .visit_field::<f64>("ANGLE_2_DOT", Self::VT_ANGLE_2_DOT, false)?
+     .visit_field::<f64>("ANGLE_3_DOT", Self::VT_ANGLE_3_DOT, false)?
+     .visit_field::<f64>("ANGVEL_X", Self::VT_ANGVEL_X, false)?
+     .visit_field::<f64>("ANGVEL_Y", Self::VT_ANGVEL_Y, false)?
+     .visit_field::<f64>("ANGVEL_Z", Self::VT_ANGVEL_Z, false)?
+     .visit_field::<f64>("SPIN_ALPHA", Self::VT_SPIN_ALPHA, false)?
+     .visit_field::<f64>("SPIN_DELTA", Self::VT_SPIN_DELTA, false)?
+     .visit_field::<f64>("SPIN_ANGLE", Self::VT_SPIN_ANGLE, false)?
+     .visit_field::<f64>("SPIN_ANGLE_VEL", Self::VT_SPIN_ANGLE_VEL, false)?
+     .visit_field::<f64>("NUTATION", Self::VT_NUTATION, false)?
+     .visit_field::<f64>("NUTATION_PER", Self::VT_NUTATION_PER, false)?
+     .visit_field::<f64>("NUTATION_PHASE", Self::VT_NUTATION_PHASE, false)?
+     .visit_field::<f64>("MOMENTUM_ALPHA", Self::VT_MOMENTUM_ALPHA, false)?
+     .visit_field::<f64>("MOMENTUM_DELTA", Self::VT_MOMENTUM_DELTA, false)?
+     .visit_field::<f64>("NUTATION_VEL", Self::VT_NUTATION_VEL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct attitudeDataLineArgs<'a> {
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub Q1: f64,
+    pub Q2: f64,
+    pub Q3: f64,
+    pub QC: f64,
+    pub Q1_DOT: f64,
+    pub Q2_DOT: f64,
+    pub Q3_DOT: f64,
+    pub QC_DOT: f64,
+    pub ANGLE_1: f64,
+    pub ANGLE_2: f64,
+    pub ANGLE_3: f64,
+    pub ANGLE_1_DOT: f64,
+    pub ANGLE_2_DOT: f64,
+    pub ANGLE_3_DOT: f64,
+    pub ANGVEL_X: f64,
+    pub ANGVEL_Y: f64,
+    pub ANGVEL_Z: f64,
+    pub SPIN_ALPHA: f64,
+    pub SPIN_DELTA: f64,
+    pub SPIN_ANGLE: f64,
+    pub SPIN_ANGLE_VEL: f64,
+    pub NUTATION: f64,
+    pub NUTATION_PER: f64,
+    pub NUTATION_PHASE: f64,
+    pub MOMENTUM_ALPHA: f64,
+    pub MOMENTUM_DELTA: f64,
+    pub NUTATION_VEL: f64,
+}
+impl<'a> Default for attitudeDataLineArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    attitudeDataLineArgs {
+      EPOCH: None,
+      Q1: 0.0,
+      Q2: 0.0,
+      Q3: 0.0,
+      QC: 0.0,
+      Q1_DOT: 0.0,
+      Q2_DOT: 0.0,
+      Q3_DOT: 0.0,
+      QC_DOT: 0.0,
+      ANGLE_1: 0.0,
+      ANGLE_2: 0.0,
+      ANGLE_3: 0.0,
+      ANGLE_1_DOT: 0.0,
+      ANGLE_2_DOT: 0.0,
+      ANGLE_3_DOT: 0.0,
+      ANGVEL_X: 0.0,
+      ANGVEL_Y: 0.0,
+      ANGVEL_Z: 0.0,
+      SPIN_ALPHA: 0.0,
+      SPIN_DELTA: 0.0,
+      SPIN_ANGLE: 0.0,
+      SPIN_ANGLE_VEL: 0.0,
+      NUTATION: 0.0,
+      NUTATION_PER: 0.0,
+      NUTATION_PHASE: 0.0,
+      MOMENTUM_ALPHA: 0.0,
+      MOMENTUM_DELTA: 0.0,
+      NUTATION_VEL: 0.0,
+    }
+  }
+}
+
+pub struct attitudeDataLineBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> attitudeDataLineBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(attitudeDataLine::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_Q1(&mut self, Q1: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q1, Q1, 0.0);
+  }
+  #[inline]
+  pub fn add_Q2(&mut self, Q2: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q2, Q2, 0.0);
+  }
+  #[inline]
+  pub fn add_Q3(&mut self, Q3: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q3, Q3, 0.0);
+  }
+  #[inline]
+  pub fn add_QC(&mut self, QC: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_QC, QC, 0.0);
+  }
+  #[inline]
+  pub fn add_Q1_DOT(&mut self, Q1_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q1_DOT, Q1_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Q2_DOT(&mut self, Q2_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q2_DOT, Q2_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Q3_DOT(&mut self, Q3_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_Q3_DOT, Q3_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_QC_DOT(&mut self, QC_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_QC_DOT, QC_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_1(&mut self, ANGLE_1: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_1, ANGLE_1, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_2(&mut self, ANGLE_2: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_2, ANGLE_2, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_3(&mut self, ANGLE_3: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_3, ANGLE_3, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_1_DOT(&mut self, ANGLE_1_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_1_DOT, ANGLE_1_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_2_DOT(&mut self, ANGLE_2_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_2_DOT, ANGLE_2_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_3_DOT(&mut self, ANGLE_3_DOT: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGLE_3_DOT, ANGLE_3_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGVEL_X(&mut self, ANGVEL_X: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGVEL_X, ANGVEL_X, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGVEL_Y(&mut self, ANGVEL_Y: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGVEL_Y, ANGVEL_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGVEL_Z(&mut self, ANGVEL_Z: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_ANGVEL_Z, ANGVEL_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ALPHA(&mut self, SPIN_ALPHA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_SPIN_ALPHA, SPIN_ALPHA, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_DELTA(&mut self, SPIN_DELTA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_SPIN_DELTA, SPIN_DELTA, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ANGLE(&mut self, SPIN_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_SPIN_ANGLE, SPIN_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ANGLE_VEL(&mut self, SPIN_ANGLE_VEL: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_SPIN_ANGLE_VEL, SPIN_ANGLE_VEL, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION(&mut self, NUTATION: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_NUTATION, NUTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_PER(&mut self, NUTATION_PER: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_NUTATION_PER, NUTATION_PER, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_PHASE(&mut self, NUTATION_PHASE: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_NUTATION_PHASE, NUTATION_PHASE, 0.0);
+  }
+  #[inline]
+  pub fn add_MOMENTUM_ALPHA(&mut self, MOMENTUM_ALPHA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_MOMENTUM_ALPHA, MOMENTUM_ALPHA, 0.0);
+  }
+  #[inline]
+  pub fn add_MOMENTUM_DELTA(&mut self, MOMENTUM_DELTA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_MOMENTUM_DELTA, MOMENTUM_DELTA, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_VEL(&mut self, NUTATION_VEL: f64) {
+    self.fbb_.push_slot::<f64>(attitudeDataLine::VT_NUTATION_VEL, NUTATION_VEL, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> attitudeDataLineBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    attitudeDataLineBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<attitudeDataLine<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for attitudeDataLine<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("attitudeDataLine");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("Q1", &self.Q1());
+      ds.field("Q2", &self.Q2());
+      ds.field("Q3", &self.Q3());
+      ds.field("QC", &self.QC());
+      ds.field("Q1_DOT", &self.Q1_DOT());
+      ds.field("Q2_DOT", &self.Q2_DOT());
+      ds.field("Q3_DOT", &self.Q3_DOT());
+      ds.field("QC_DOT", &self.QC_DOT());
+      ds.field("ANGLE_1", &self.ANGLE_1());
+      ds.field("ANGLE_2", &self.ANGLE_2());
+      ds.field("ANGLE_3", &self.ANGLE_3());
+      ds.field("ANGLE_1_DOT", &self.ANGLE_1_DOT());
+      ds.field("ANGLE_2_DOT", &self.ANGLE_2_DOT());
+      ds.field("ANGLE_3_DOT", &self.ANGLE_3_DOT());
+      ds.field("ANGVEL_X", &self.ANGVEL_X());
+      ds.field("ANGVEL_Y", &self.ANGVEL_Y());
+      ds.field("ANGVEL_Z", &self.ANGVEL_Z());
+      ds.field("SPIN_ALPHA", &self.SPIN_ALPHA());
+      ds.field("SPIN_DELTA", &self.SPIN_DELTA());
+      ds.field("SPIN_ANGLE", &self.SPIN_ANGLE());
+      ds.field("SPIN_ANGLE_VEL", &self.SPIN_ANGLE_VEL());
+      ds.field("NUTATION", &self.NUTATION());
+      ds.field("NUTATION_PER", &self.NUTATION_PER());
+      ds.field("NUTATION_PHASE", &self.NUTATION_PHASE());
+      ds.field("MOMENTUM_ALPHA", &self.MOMENTUM_ALPHA());
+      ds.field("MOMENTUM_DELTA", &self.MOMENTUM_DELTA());
+      ds.field("NUTATION_VEL", &self.NUTATION_VEL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct attitudeDataLineT {
+  pub EPOCH: Option<alloc::string::String>,
+  pub Q1: f64,
+  pub Q2: f64,
+  pub Q3: f64,
+  pub QC: f64,
+  pub Q1_DOT: f64,
+  pub Q2_DOT: f64,
+  pub Q3_DOT: f64,
+  pub QC_DOT: f64,
+  pub ANGLE_1: f64,
+  pub ANGLE_2: f64,
+  pub ANGLE_3: f64,
+  pub ANGLE_1_DOT: f64,
+  pub ANGLE_2_DOT: f64,
+  pub ANGLE_3_DOT: f64,
+  pub ANGVEL_X: f64,
+  pub ANGVEL_Y: f64,
+  pub ANGVEL_Z: f64,
+  pub SPIN_ALPHA: f64,
+  pub SPIN_DELTA: f64,
+  pub SPIN_ANGLE: f64,
+  pub SPIN_ANGLE_VEL: f64,
+  pub NUTATION: f64,
+  pub NUTATION_PER: f64,
+  pub NUTATION_PHASE: f64,
+  pub MOMENTUM_ALPHA: f64,
+  pub MOMENTUM_DELTA: f64,
+  pub NUTATION_VEL: f64,
+}
+impl Default for attitudeDataLineT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      Q1: 0.0,
+      Q2: 0.0,
+      Q3: 0.0,
+      QC: 0.0,
+      Q1_DOT: 0.0,
+      Q2_DOT: 0.0,
+      Q3_DOT: 0.0,
+      QC_DOT: 0.0,
+      ANGLE_1: 0.0,
+      ANGLE_2: 0.0,
+      ANGLE_3: 0.0,
+      ANGLE_1_DOT: 0.0,
+      ANGLE_2_DOT: 0.0,
+      ANGLE_3_DOT: 0.0,
+      ANGVEL_X: 0.0,
+      ANGVEL_Y: 0.0,
+      ANGVEL_Z: 0.0,
+      SPIN_ALPHA: 0.0,
+      SPIN_DELTA: 0.0,
+      SPIN_ANGLE: 0.0,
+      SPIN_ANGLE_VEL: 0.0,
+      NUTATION: 0.0,
+      NUTATION_PER: 0.0,
+      NUTATION_PHASE: 0.0,
+      MOMENTUM_ALPHA: 0.0,
+      MOMENTUM_DELTA: 0.0,
+      NUTATION_VEL: 0.0,
+    }
+  }
+}
+impl attitudeDataLineT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<attitudeDataLine<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Q1 = self.Q1;
+    let Q2 = self.Q2;
+    let Q3 = self.Q3;
+    let QC = self.QC;
+    let Q1_DOT = self.Q1_DOT;
+    let Q2_DOT = self.Q2_DOT;
+    let Q3_DOT = self.Q3_DOT;
+    let QC_DOT = self.QC_DOT;
+    let ANGLE_1 = self.ANGLE_1;
+    let ANGLE_2 = self.ANGLE_2;
+    let ANGLE_3 = self.ANGLE_3;
+    let ANGLE_1_DOT = self.ANGLE_1_DOT;
+    let ANGLE_2_DOT = self.ANGLE_2_DOT;
+    let ANGLE_3_DOT = self.ANGLE_3_DOT;
+    let ANGVEL_X = self.ANGVEL_X;
+    let ANGVEL_Y = self.ANGVEL_Y;
+    let ANGVEL_Z = self.ANGVEL_Z;
+    let SPIN_ALPHA = self.SPIN_ALPHA;
+    let SPIN_DELTA = self.SPIN_DELTA;
+    let SPIN_ANGLE = self.SPIN_ANGLE;
+    let SPIN_ANGLE_VEL = self.SPIN_ANGLE_VEL;
+    let NUTATION = self.NUTATION;
+    let NUTATION_PER = self.NUTATION_PER;
+    let NUTATION_PHASE = self.NUTATION_PHASE;
+    let MOMENTUM_ALPHA = self.MOMENTUM_ALPHA;
+    let MOMENTUM_DELTA = self.MOMENTUM_DELTA;
+    let NUTATION_VEL = self.NUTATION_VEL;
+    attitudeDataLine::create(_fbb, &attitudeDataLineArgs{
+      EPOCH,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      Q1_DOT,
+      Q2_DOT,
+      Q3_DOT,
+      QC_DOT,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      ANGLE_1_DOT,
+      ANGLE_2_DOT,
+      ANGLE_3_DOT,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PER,
+      NUTATION_PHASE,
+      MOMENTUM_ALPHA,
+      MOMENTUM_DELTA,
+      NUTATION_VEL,
+    })
+  }
+}
 pub enum AEMSegmentOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,6 +839,16 @@ impl<'a> AEMSegment<'a> {
   pub const VT_STEP_SIZE: ::flatbuffers::VOffsetT = 22;
   pub const VT_ATTITUDE_COMPONENTS: ::flatbuffers::VOffsetT = 24;
   pub const VT_ATTITUDE_DATA: ::flatbuffers::VOffsetT = 26;
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 28;
+  pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 30;
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 32;
+  pub const VT_USEABLE_START_TIME: ::flatbuffers::VOffsetT = 34;
+  pub const VT_USEABLE_STOP_TIME: ::flatbuffers::VOffsetT = 36;
+  pub const VT_EULER_ROT_SEQ: ::flatbuffers::VOffsetT = 38;
+  pub const VT_ANGVEL_FRAME: ::flatbuffers::VOffsetT = 40;
+  pub const VT_INTERPOLATION_METHOD: ::flatbuffers::VOffsetT = 42;
+  pub const VT_INTERPOLATION_DEGREE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_ATTITUDE_DATA_LINES: ::flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -43,6 +861,16 @@ impl<'a> AEMSegment<'a> {
   ) -> ::flatbuffers::WIPOffset<AEMSegment<'bldr>> {
     let mut builder = AEMSegmentBuilder::new(_fbb);
     builder.add_STEP_SIZE(args.STEP_SIZE);
+    if let Some(x) = args.ATTITUDE_DATA_LINES { builder.add_ATTITUDE_DATA_LINES(x); }
+    builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
+    if let Some(x) = args.INTERPOLATION_METHOD { builder.add_INTERPOLATION_METHOD(x); }
+    if let Some(x) = args.ANGVEL_FRAME { builder.add_ANGVEL_FRAME(x); }
+    if let Some(x) = args.EULER_ROT_SEQ { builder.add_EULER_ROT_SEQ(x); }
+    if let Some(x) = args.USEABLE_STOP_TIME { builder.add_USEABLE_STOP_TIME(x); }
+    if let Some(x) = args.USEABLE_START_TIME { builder.add_USEABLE_START_TIME(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+    if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     if let Some(x) = args.ATTITUDE_DATA { builder.add_ATTITUDE_DATA(x); }
     if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
@@ -90,6 +918,34 @@ impl<'a> AEMSegment<'a> {
     let ATTITUDE_DATA = self.ATTITUDE_DATA().map(|x| {
       x.into_iter().collect()
     });
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let CENTER_NAME = self.CENTER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USEABLE_START_TIME = self.USEABLE_START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EULER_ROT_SEQ = self.EULER_ROT_SEQ().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ANGVEL_FRAME = self.ANGVEL_FRAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION_METHOD = self.INTERPOLATION_METHOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE();
+    let ATTITUDE_DATA_LINES = self.ATTITUDE_DATA_LINES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     AEMSegmentT {
       OBJECT_NAME,
       OBJECT_ID,
@@ -103,6 +959,16 @@ impl<'a> AEMSegment<'a> {
       STEP_SIZE,
       ATTITUDE_COMPONENTS,
       ATTITUDE_DATA,
+      COMMENT,
+      CENTER_NAME,
+      CLASSIFICATION,
+      USEABLE_START_TIME,
+      USEABLE_STOP_TIME,
+      EULER_ROT_SEQ,
+      ANGVEL_FRAME,
+      INTERPOLATION_METHOD,
+      INTERPOLATION_DEGREE,
+      ATTITUDE_DATA_LINES,
     }
   }
 
@@ -198,6 +1064,100 @@ impl<'a> AEMSegment<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(AEMSegment::VT_ATTITUDE_DATA, None)}
   }
+  /// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  /// One entry per COMMENT line, in file order.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(AEMSegment::VT_COMMENT, None)}
+  }
+  /// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  /// (504.0-B-2 table 4-3, optional).
+  #[inline]
+  pub fn CENTER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_CENTER_NAME, None)}
+  }
+  /// Classification marking of the data in portion-marked format
+  /// (504.0-B-2 table 4-3, optional).
+  #[inline]
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_CLASSIFICATION, None)}
+  }
+  /// Start of the USEABLE time span covered by the data, ISO 8601.
+  #[inline]
+  pub fn USEABLE_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_USEABLE_START_TIME, None)}
+  }
+  /// End of the USEABLE time span covered by the data, ISO 8601.
+  #[inline]
+  pub fn USEABLE_STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_USEABLE_STOP_TIME, None)}
+  }
+  /// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  /// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  #[inline]
+  pub fn EULER_ROT_SEQ(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_EULER_ROT_SEQ, None)}
+  }
+  /// Reference frame in which the ANGVEL_* components are expressed; the value
+  /// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  /// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  /// is the ratified spelling and is the one carried here.
+  #[inline]
+  pub fn ANGVEL_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_ANGVEL_FRAME, None)}
+  }
+  /// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  #[inline]
+  pub fn INTERPOLATION_METHOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_INTERPOLATION_METHOD, None)}
+  }
+  /// Recommended interpolation degree.
+  #[inline]
+  pub fn INTERPOLATION_DEGREE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(AEMSegment::VT_INTERPOLATION_DEGREE, Some(0)).unwrap()}
+  }
+  /// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  /// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  /// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  /// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///    and ATTITUDE_DATA must be empty or ignored by parsers.
+  /// 3. Do NOT populate both formats simultaneously.
+  #[inline]
+  pub fn ATTITUDE_DATA_LINES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<attitudeDataLine<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<attitudeDataLine>>>>(AEMSegment::VT_ATTITUDE_DATA_LINES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for AEMSegment<'_> {
@@ -218,6 +1178,16 @@ impl ::flatbuffers::Verifiable for AEMSegment<'_> {
      .visit_field::<f64>("STEP_SIZE", Self::VT_STEP_SIZE, false)?
      .visit_field::<u8>("ATTITUDE_COMPONENTS", Self::VT_ATTITUDE_COMPONENTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ATTITUDE_DATA", Self::VT_ATTITUDE_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_STOP_TIME", Self::VT_USEABLE_STOP_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EULER_ROT_SEQ", Self::VT_EULER_ROT_SEQ, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ANGVEL_FRAME", Self::VT_ANGVEL_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION_METHOD", Self::VT_INTERPOLATION_METHOD, false)?
+     .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<attitudeDataLine>>>>("ATTITUDE_DATA_LINES", Self::VT_ATTITUDE_DATA_LINES, false)?
      .finish();
     Ok(())
   }
@@ -235,6 +1205,16 @@ pub struct AEMSegmentArgs<'a> {
     pub STEP_SIZE: f64,
     pub ATTITUDE_COMPONENTS: u8,
     pub ATTITUDE_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EULER_ROT_SEQ: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ANGVEL_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub ATTITUDE_DATA_LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<attitudeDataLine<'a>>>>>,
 }
 impl<'a> Default for AEMSegmentArgs<'a> {
   #[inline]
@@ -252,6 +1232,16 @@ impl<'a> Default for AEMSegmentArgs<'a> {
       STEP_SIZE: 0.0,
       ATTITUDE_COMPONENTS: 7,
       ATTITUDE_DATA: None,
+      COMMENT: None,
+      CENTER_NAME: None,
+      CLASSIFICATION: None,
+      USEABLE_START_TIME: None,
+      USEABLE_STOP_TIME: None,
+      EULER_ROT_SEQ: None,
+      ANGVEL_FRAME: None,
+      INTERPOLATION_METHOD: None,
+      INTERPOLATION_DEGREE: 0,
+      ATTITUDE_DATA_LINES: None,
     }
   }
 }
@@ -310,6 +1300,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> AEMSegmentBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_ATTITUDE_DATA, ATTITUDE_DATA);
   }
   #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_CENTER_NAME, CENTER_NAME);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  #[inline]
+  pub fn add_USEABLE_START_TIME(&mut self, USEABLE_START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_USEABLE_START_TIME, USEABLE_START_TIME);
+  }
+  #[inline]
+  pub fn add_USEABLE_STOP_TIME(&mut self, USEABLE_STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_USEABLE_STOP_TIME, USEABLE_STOP_TIME);
+  }
+  #[inline]
+  pub fn add_EULER_ROT_SEQ(&mut self, EULER_ROT_SEQ: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  #[inline]
+  pub fn add_ANGVEL_FRAME(&mut self, ANGVEL_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_ANGVEL_FRAME, ANGVEL_FRAME);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION_METHOD(&mut self, INTERPOLATION_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_INTERPOLATION_METHOD, INTERPOLATION_METHOD);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION_DEGREE(&mut self, INTERPOLATION_DEGREE: u32) {
+    self.fbb_.push_slot::<u32>(AEMSegment::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  #[inline]
+  pub fn add_ATTITUDE_DATA_LINES(&mut self, ATTITUDE_DATA_LINES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<attitudeDataLine<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEMSegment::VT_ATTITUDE_DATA_LINES, ATTITUDE_DATA_LINES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> AEMSegmentBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     AEMSegmentBuilder {
@@ -339,6 +1369,16 @@ impl ::core::fmt::Debug for AEMSegment<'_> {
       ds.field("STEP_SIZE", &self.STEP_SIZE());
       ds.field("ATTITUDE_COMPONENTS", &self.ATTITUDE_COMPONENTS());
       ds.field("ATTITUDE_DATA", &self.ATTITUDE_DATA());
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("CENTER_NAME", &self.CENTER_NAME());
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+      ds.field("USEABLE_START_TIME", &self.USEABLE_START_TIME());
+      ds.field("USEABLE_STOP_TIME", &self.USEABLE_STOP_TIME());
+      ds.field("EULER_ROT_SEQ", &self.EULER_ROT_SEQ());
+      ds.field("ANGVEL_FRAME", &self.ANGVEL_FRAME());
+      ds.field("INTERPOLATION_METHOD", &self.INTERPOLATION_METHOD());
+      ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
+      ds.field("ATTITUDE_DATA_LINES", &self.ATTITUDE_DATA_LINES());
       ds.finish()
   }
 }
@@ -357,6 +1397,16 @@ pub struct AEMSegmentT {
   pub STEP_SIZE: f64,
   pub ATTITUDE_COMPONENTS: u8,
   pub ATTITUDE_DATA: Option<alloc::vec::Vec<f64>>,
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub CENTER_NAME: Option<alloc::string::String>,
+  pub CLASSIFICATION: Option<alloc::string::String>,
+  pub USEABLE_START_TIME: Option<alloc::string::String>,
+  pub USEABLE_STOP_TIME: Option<alloc::string::String>,
+  pub EULER_ROT_SEQ: Option<alloc::string::String>,
+  pub ANGVEL_FRAME: Option<alloc::string::String>,
+  pub INTERPOLATION_METHOD: Option<alloc::string::String>,
+  pub INTERPOLATION_DEGREE: u32,
+  pub ATTITUDE_DATA_LINES: Option<alloc::vec::Vec<attitudeDataLineT>>,
 }
 impl Default for AEMSegmentT {
   fn default() -> Self {
@@ -373,6 +1423,16 @@ impl Default for AEMSegmentT {
       STEP_SIZE: 0.0,
       ATTITUDE_COMPONENTS: 7,
       ATTITUDE_DATA: None,
+      COMMENT: None,
+      CENTER_NAME: None,
+      CLASSIFICATION: None,
+      USEABLE_START_TIME: None,
+      USEABLE_STOP_TIME: None,
+      EULER_ROT_SEQ: None,
+      ANGVEL_FRAME: None,
+      INTERPOLATION_METHOD: None,
+      INTERPOLATION_DEGREE: 0,
+      ATTITUDE_DATA_LINES: None,
     }
   }
 }
@@ -413,6 +1473,34 @@ impl AEMSegmentT {
     let ATTITUDE_DATA = self.ATTITUDE_DATA.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USEABLE_START_TIME = self.USEABLE_START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EULER_ROT_SEQ = self.EULER_ROT_SEQ.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANGVEL_FRAME = self.ANGVEL_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION_METHOD = self.INTERPOLATION_METHOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE;
+    let ATTITUDE_DATA_LINES = self.ATTITUDE_DATA_LINES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     AEMSegment::create(_fbb, &AEMSegmentArgs{
       OBJECT_NAME,
       OBJECT_ID,
@@ -426,6 +1514,16 @@ impl AEMSegmentT {
       STEP_SIZE,
       ATTITUDE_COMPONENTS,
       ATTITUDE_DATA,
+      COMMENT,
+      CENTER_NAME,
+      CLASSIFICATION,
+      USEABLE_START_TIME,
+      USEABLE_STOP_TIME,
+      EULER_ROT_SEQ,
+      ANGVEL_FRAME,
+      INTERPOLATION_METHOD,
+      INTERPOLATION_DEGREE,
+      ATTITUDE_DATA_LINES,
     })
   }
 }
@@ -450,6 +1548,9 @@ impl<'a> AEM<'a> {
   pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 6;
   pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 8;
   pub const VT_SEGMENTS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -461,6 +1562,9 @@ impl<'a> AEM<'a> {
     args: &'args AEMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<AEM<'bldr>> {
     let mut builder = AEMBuilder::new(_fbb);
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
     if let Some(x) = args.SEGMENTS { builder.add_SEGMENTS(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
@@ -481,11 +1585,23 @@ impl<'a> AEM<'a> {
     let SEGMENTS = self.SEGMENTS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     AEMT {
       CCSDS_AEM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       SEGMENTS,
+      MESSAGE_ID,
+      COMMENT,
+      CLASSIFICATION,
     }
   }
 
@@ -517,6 +1633,30 @@ impl<'a> AEM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<AEMSegment>>>>(AEM::VT_SEGMENTS, None)}
   }
+  /// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  #[inline]
+  pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEM::VT_MESSAGE_ID, None)}
+  }
+  /// Plain-text comments carried in the message header, one entry per line.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(AEM::VT_COMMENT, None)}
+  }
+  /// Message classification/caveats in portion-marked format.
+  #[inline]
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(AEM::VT_CLASSIFICATION, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for AEM<'_> {
@@ -529,6 +1669,9 @@ impl ::flatbuffers::Verifiable for AEM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<AEMSegment>>>>("SEGMENTS", Self::VT_SEGMENTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
      .finish();
     Ok(())
   }
@@ -538,6 +1681,9 @@ pub struct AEMArgs<'a> {
     pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SEGMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<AEMSegment<'a>>>>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for AEMArgs<'a> {
   #[inline]
@@ -547,6 +1693,9 @@ impl<'a> Default for AEMArgs<'a> {
       CREATION_DATE: None,
       ORIGINATOR: None,
       SEGMENTS: None,
+      MESSAGE_ID: None,
+      COMMENT: None,
+      CLASSIFICATION: None,
     }
   }
 }
@@ -573,6 +1722,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> AEMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEM::VT_SEGMENTS, SEGMENTS);
   }
   #[inline]
+  pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEM::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(AEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> AEMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     AEMBuilder {
@@ -594,6 +1755,9 @@ impl ::core::fmt::Debug for AEM<'_> {
       ds.field("CREATION_DATE", &self.CREATION_DATE());
       ds.field("ORIGINATOR", &self.ORIGINATOR());
       ds.field("SEGMENTS", &self.SEGMENTS());
+      ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
       ds.finish()
   }
 }
@@ -604,6 +1768,9 @@ pub struct AEMT {
   pub CREATION_DATE: Option<alloc::string::String>,
   pub ORIGINATOR: Option<alloc::string::String>,
   pub SEGMENTS: Option<alloc::vec::Vec<AEMSegmentT>>,
+  pub MESSAGE_ID: Option<alloc::string::String>,
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub CLASSIFICATION: Option<alloc::string::String>,
 }
 impl Default for AEMT {
   fn default() -> Self {
@@ -612,6 +1779,9 @@ impl Default for AEMT {
       CREATION_DATE: None,
       ORIGINATOR: None,
       SEGMENTS: None,
+      MESSAGE_ID: None,
+      COMMENT: None,
+      CLASSIFICATION: None,
     }
   }
 }
@@ -632,11 +1802,23 @@ impl AEMT {
     let SEGMENTS = self.SEGMENTS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     AEM::create(_fbb, &AEMArgs{
       CCSDS_AEM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       SEGMENTS,
+      MESSAGE_ID,
+      COMMENT,
+      CLASSIFICATION,
     })
   }
 }

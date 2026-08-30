@@ -13,11 +13,448 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+struct attitudeDataLine;
+struct attitudeDataLineBuilder;
+
 struct AEMSegment;
 struct AEMSegmentBuilder;
 
 struct AEM;
 struct AEMBuilder;
+
+/// A single attitude data line with an EXPLICIT epoch (non-uniform steps).
+///
+/// CCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs
+/// are not on a uniform grid: the published example (504.0-B-2 figure G-4)
+/// steps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.
+/// 2339 s then 1 s. Such a segment CANNOT be expressed by the compact
+/// ATTITUDE_DATA array, whose epochs are reconstructed as
+/// START_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have
+/// the same irregular shape.
+///
+/// The populated columns are selected by the segment's ATTITUDE_TYPE exactly
+/// as in CCSDS 504.0-B-2 table 4-4:
+///   QUATERNION              Q1 Q2 Q3 QC
+///   QUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT
+///   QUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   EULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3
+///   EULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT
+///   EULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   SPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL
+///   SPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE
+///   SPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL
+///
+/// Quaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,
+/// vector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2
+/// (annex, change 7) and is deliberately NOT carried here.
+///
+/// Units per 504.0-B-2 4.2.4.6: quaternion components dimensionless;
+/// Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
+/// ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
+/// NUTATION_PER s.
+struct attitudeDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef attitudeDataLineBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_Q1 = 6,
+    VT_Q2 = 8,
+    VT_Q3 = 10,
+    VT_QC = 12,
+    VT_Q1_DOT = 14,
+    VT_Q2_DOT = 16,
+    VT_Q3_DOT = 18,
+    VT_QC_DOT = 20,
+    VT_ANGLE_1 = 22,
+    VT_ANGLE_2 = 24,
+    VT_ANGLE_3 = 26,
+    VT_ANGLE_1_DOT = 28,
+    VT_ANGLE_2_DOT = 30,
+    VT_ANGLE_3_DOT = 32,
+    VT_ANGVEL_X = 34,
+    VT_ANGVEL_Y = 36,
+    VT_ANGVEL_Z = 38,
+    VT_SPIN_ALPHA = 40,
+    VT_SPIN_DELTA = 42,
+    VT_SPIN_ANGLE = 44,
+    VT_SPIN_ANGLE_VEL = 46,
+    VT_NUTATION = 48,
+    VT_NUTATION_PER = 50,
+    VT_NUTATION_PHASE = 52,
+    VT_MOMENTUM_ALPHA = 54,
+    VT_MOMENTUM_DELTA = 56,
+    VT_NUTATION_VEL = 58
+  };
+  /// Epoch of this attitude state (required for non-uniform steps).
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Quaternion vector component 1 (dimensionless).
+  double Q1() const {
+    return GetField<double>(VT_Q1, 0.0);
+  }
+  /// Quaternion vector component 2 (dimensionless).
+  double Q2() const {
+    return GetField<double>(VT_Q2, 0.0);
+  }
+  /// Quaternion vector component 3 (dimensionless).
+  double Q3() const {
+    return GetField<double>(VT_Q3, 0.0);
+  }
+  /// Quaternion scalar component (dimensionless).
+  double QC() const {
+    return GetField<double>(VT_QC, 0.0);
+  }
+  /// Time derivative of Q1, 1/s.
+  double Q1_DOT() const {
+    return GetField<double>(VT_Q1_DOT, 0.0);
+  }
+  /// Time derivative of Q2, 1/s.
+  double Q2_DOT() const {
+    return GetField<double>(VT_Q2_DOT, 0.0);
+  }
+  /// Time derivative of Q3, 1/s.
+  double Q3_DOT() const {
+    return GetField<double>(VT_Q3_DOT, 0.0);
+  }
+  /// Time derivative of QC, 1/s.
+  double QC_DOT() const {
+    return GetField<double>(VT_QC_DOT, 0.0);
+  }
+  /// Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.
+  double ANGLE_1() const {
+    return GetField<double>(VT_ANGLE_1, 0.0);
+  }
+  /// Euler angle 2, deg.
+  double ANGLE_2() const {
+    return GetField<double>(VT_ANGLE_2, 0.0);
+  }
+  /// Euler angle 3, deg.
+  double ANGLE_3() const {
+    return GetField<double>(VT_ANGLE_3, 0.0);
+  }
+  /// Time derivative of ANGLE_1, deg/s.
+  double ANGLE_1_DOT() const {
+    return GetField<double>(VT_ANGLE_1_DOT, 0.0);
+  }
+  /// Time derivative of ANGLE_2, deg/s.
+  double ANGLE_2_DOT() const {
+    return GetField<double>(VT_ANGLE_2_DOT, 0.0);
+  }
+  /// Time derivative of ANGLE_3, deg/s.
+  double ANGLE_3_DOT() const {
+    return GetField<double>(VT_ANGLE_3_DOT, 0.0);
+  }
+  /// Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.
+  double ANGVEL_X() const {
+    return GetField<double>(VT_ANGVEL_X, 0.0);
+  }
+  /// Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.
+  double ANGVEL_Y() const {
+    return GetField<double>(VT_ANGVEL_Y, 0.0);
+  }
+  /// Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.
+  double ANGVEL_Z() const {
+    return GetField<double>(VT_ANGVEL_Z, 0.0);
+  }
+  /// Right ascension of the spin axis, deg.
+  double SPIN_ALPHA() const {
+    return GetField<double>(VT_SPIN_ALPHA, 0.0);
+  }
+  /// Declination of the spin axis, deg.
+  double SPIN_DELTA() const {
+    return GetField<double>(VT_SPIN_DELTA, 0.0);
+  }
+  /// Phase of the satellite about the spin axis, deg.
+  double SPIN_ANGLE() const {
+    return GetField<double>(VT_SPIN_ANGLE, 0.0);
+  }
+  /// Angular velocity about the spin axis, deg/s.
+  double SPIN_ANGLE_VEL() const {
+    return GetField<double>(VT_SPIN_ANGLE_VEL, 0.0);
+  }
+  /// Nutation angle, deg.
+  double NUTATION() const {
+    return GetField<double>(VT_NUTATION, 0.0);
+  }
+  /// Nutation period, s.
+  double NUTATION_PER() const {
+    return GetField<double>(VT_NUTATION_PER, 0.0);
+  }
+  /// Nutation phase, deg.
+  double NUTATION_PHASE() const {
+    return GetField<double>(VT_NUTATION_PHASE, 0.0);
+  }
+  /// Right ascension of the angular momentum vector, deg.
+  double MOMENTUM_ALPHA() const {
+    return GetField<double>(VT_MOMENTUM_ALPHA, 0.0);
+  }
+  /// Declination of the angular momentum vector, deg.
+  double MOMENTUM_DELTA() const {
+    return GetField<double>(VT_MOMENTUM_DELTA, 0.0);
+  }
+  /// Angular velocity of the nutation, deg/s.
+  double NUTATION_VEL() const {
+    return GetField<double>(VT_NUTATION_VEL, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_Q1, 8) &&
+           VerifyField<double>(verifier, VT_Q2, 8) &&
+           VerifyField<double>(verifier, VT_Q3, 8) &&
+           VerifyField<double>(verifier, VT_QC, 8) &&
+           VerifyField<double>(verifier, VT_Q1_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Q2_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Q3_DOT, 8) &&
+           VerifyField<double>(verifier, VT_QC_DOT, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_1, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_2, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_3, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_1_DOT, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_2_DOT, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_3_DOT, 8) &&
+           VerifyField<double>(verifier, VT_ANGVEL_X, 8) &&
+           VerifyField<double>(verifier, VT_ANGVEL_Y, 8) &&
+           VerifyField<double>(verifier, VT_ANGVEL_Z, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ALPHA, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_DELTA, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ANGLE_VEL, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_PER, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_PHASE, 8) &&
+           VerifyField<double>(verifier, VT_MOMENTUM_ALPHA, 8) &&
+           VerifyField<double>(verifier, VT_MOMENTUM_DELTA, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_VEL, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct attitudeDataLineBuilder {
+  typedef attitudeDataLine Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(attitudeDataLine::VT_EPOCH, EPOCH);
+  }
+  void add_Q1(double Q1) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q1, Q1, 0.0);
+  }
+  void add_Q2(double Q2) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q2, Q2, 0.0);
+  }
+  void add_Q3(double Q3) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q3, Q3, 0.0);
+  }
+  void add_QC(double QC) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_QC, QC, 0.0);
+  }
+  void add_Q1_DOT(double Q1_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q1_DOT, Q1_DOT, 0.0);
+  }
+  void add_Q2_DOT(double Q2_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q2_DOT, Q2_DOT, 0.0);
+  }
+  void add_Q3_DOT(double Q3_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_Q3_DOT, Q3_DOT, 0.0);
+  }
+  void add_QC_DOT(double QC_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_QC_DOT, QC_DOT, 0.0);
+  }
+  void add_ANGLE_1(double ANGLE_1) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_1, ANGLE_1, 0.0);
+  }
+  void add_ANGLE_2(double ANGLE_2) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_2, ANGLE_2, 0.0);
+  }
+  void add_ANGLE_3(double ANGLE_3) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_3, ANGLE_3, 0.0);
+  }
+  void add_ANGLE_1_DOT(double ANGLE_1_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_1_DOT, ANGLE_1_DOT, 0.0);
+  }
+  void add_ANGLE_2_DOT(double ANGLE_2_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_2_DOT, ANGLE_2_DOT, 0.0);
+  }
+  void add_ANGLE_3_DOT(double ANGLE_3_DOT) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGLE_3_DOT, ANGLE_3_DOT, 0.0);
+  }
+  void add_ANGVEL_X(double ANGVEL_X) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGVEL_X, ANGVEL_X, 0.0);
+  }
+  void add_ANGVEL_Y(double ANGVEL_Y) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGVEL_Y, ANGVEL_Y, 0.0);
+  }
+  void add_ANGVEL_Z(double ANGVEL_Z) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_ANGVEL_Z, ANGVEL_Z, 0.0);
+  }
+  void add_SPIN_ALPHA(double SPIN_ALPHA) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_SPIN_ALPHA, SPIN_ALPHA, 0.0);
+  }
+  void add_SPIN_DELTA(double SPIN_DELTA) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_SPIN_DELTA, SPIN_DELTA, 0.0);
+  }
+  void add_SPIN_ANGLE(double SPIN_ANGLE) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_SPIN_ANGLE, SPIN_ANGLE, 0.0);
+  }
+  void add_SPIN_ANGLE_VEL(double SPIN_ANGLE_VEL) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_SPIN_ANGLE_VEL, SPIN_ANGLE_VEL, 0.0);
+  }
+  void add_NUTATION(double NUTATION) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_NUTATION, NUTATION, 0.0);
+  }
+  void add_NUTATION_PER(double NUTATION_PER) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_NUTATION_PER, NUTATION_PER, 0.0);
+  }
+  void add_NUTATION_PHASE(double NUTATION_PHASE) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_NUTATION_PHASE, NUTATION_PHASE, 0.0);
+  }
+  void add_MOMENTUM_ALPHA(double MOMENTUM_ALPHA) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_MOMENTUM_ALPHA, MOMENTUM_ALPHA, 0.0);
+  }
+  void add_MOMENTUM_DELTA(double MOMENTUM_DELTA) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_MOMENTUM_DELTA, MOMENTUM_DELTA, 0.0);
+  }
+  void add_NUTATION_VEL(double NUTATION_VEL) {
+    fbb_.AddElement<double>(attitudeDataLine::VT_NUTATION_VEL, NUTATION_VEL, 0.0);
+  }
+  explicit attitudeDataLineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<attitudeDataLine> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<attitudeDataLine>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<attitudeDataLine> CreateattitudeDataLine(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double Q1 = 0.0,
+    double Q2 = 0.0,
+    double Q3 = 0.0,
+    double QC = 0.0,
+    double Q1_DOT = 0.0,
+    double Q2_DOT = 0.0,
+    double Q3_DOT = 0.0,
+    double QC_DOT = 0.0,
+    double ANGLE_1 = 0.0,
+    double ANGLE_2 = 0.0,
+    double ANGLE_3 = 0.0,
+    double ANGLE_1_DOT = 0.0,
+    double ANGLE_2_DOT = 0.0,
+    double ANGLE_3_DOT = 0.0,
+    double ANGVEL_X = 0.0,
+    double ANGVEL_Y = 0.0,
+    double ANGVEL_Z = 0.0,
+    double SPIN_ALPHA = 0.0,
+    double SPIN_DELTA = 0.0,
+    double SPIN_ANGLE = 0.0,
+    double SPIN_ANGLE_VEL = 0.0,
+    double NUTATION = 0.0,
+    double NUTATION_PER = 0.0,
+    double NUTATION_PHASE = 0.0,
+    double MOMENTUM_ALPHA = 0.0,
+    double MOMENTUM_DELTA = 0.0,
+    double NUTATION_VEL = 0.0) {
+  attitudeDataLineBuilder builder_(_fbb);
+  builder_.add_NUTATION_VEL(NUTATION_VEL);
+  builder_.add_MOMENTUM_DELTA(MOMENTUM_DELTA);
+  builder_.add_MOMENTUM_ALPHA(MOMENTUM_ALPHA);
+  builder_.add_NUTATION_PHASE(NUTATION_PHASE);
+  builder_.add_NUTATION_PER(NUTATION_PER);
+  builder_.add_NUTATION(NUTATION);
+  builder_.add_SPIN_ANGLE_VEL(SPIN_ANGLE_VEL);
+  builder_.add_SPIN_ANGLE(SPIN_ANGLE);
+  builder_.add_SPIN_DELTA(SPIN_DELTA);
+  builder_.add_SPIN_ALPHA(SPIN_ALPHA);
+  builder_.add_ANGVEL_Z(ANGVEL_Z);
+  builder_.add_ANGVEL_Y(ANGVEL_Y);
+  builder_.add_ANGVEL_X(ANGVEL_X);
+  builder_.add_ANGLE_3_DOT(ANGLE_3_DOT);
+  builder_.add_ANGLE_2_DOT(ANGLE_2_DOT);
+  builder_.add_ANGLE_1_DOT(ANGLE_1_DOT);
+  builder_.add_ANGLE_3(ANGLE_3);
+  builder_.add_ANGLE_2(ANGLE_2);
+  builder_.add_ANGLE_1(ANGLE_1);
+  builder_.add_QC_DOT(QC_DOT);
+  builder_.add_Q3_DOT(Q3_DOT);
+  builder_.add_Q2_DOT(Q2_DOT);
+  builder_.add_Q1_DOT(Q1_DOT);
+  builder_.add_QC(QC);
+  builder_.add_Q3(Q3);
+  builder_.add_Q2(Q2);
+  builder_.add_Q1(Q1);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<attitudeDataLine> CreateattitudeDataLineDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    double Q1 = 0.0,
+    double Q2 = 0.0,
+    double Q3 = 0.0,
+    double QC = 0.0,
+    double Q1_DOT = 0.0,
+    double Q2_DOT = 0.0,
+    double Q3_DOT = 0.0,
+    double QC_DOT = 0.0,
+    double ANGLE_1 = 0.0,
+    double ANGLE_2 = 0.0,
+    double ANGLE_3 = 0.0,
+    double ANGLE_1_DOT = 0.0,
+    double ANGLE_2_DOT = 0.0,
+    double ANGLE_3_DOT = 0.0,
+    double ANGVEL_X = 0.0,
+    double ANGVEL_Y = 0.0,
+    double ANGVEL_Z = 0.0,
+    double SPIN_ALPHA = 0.0,
+    double SPIN_DELTA = 0.0,
+    double SPIN_ANGLE = 0.0,
+    double SPIN_ANGLE_VEL = 0.0,
+    double NUTATION = 0.0,
+    double NUTATION_PER = 0.0,
+    double NUTATION_PHASE = 0.0,
+    double MOMENTUM_ALPHA = 0.0,
+    double MOMENTUM_DELTA = 0.0,
+    double NUTATION_VEL = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreateattitudeDataLine(
+      _fbb,
+      EPOCH__,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      Q1_DOT,
+      Q2_DOT,
+      Q3_DOT,
+      QC_DOT,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      ANGLE_1_DOT,
+      ANGLE_2_DOT,
+      ANGLE_3_DOT,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PER,
+      NUTATION_PHASE,
+      MOMENTUM_ALPHA,
+      MOMENTUM_DELTA,
+      NUTATION_VEL);
+}
 
 struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AEMSegmentBuilder Builder;
@@ -33,7 +470,17 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_STOP_TIME = 20,
     VT_STEP_SIZE = 22,
     VT_ATTITUDE_COMPONENTS = 24,
-    VT_ATTITUDE_DATA = 26
+    VT_ATTITUDE_DATA = 26,
+    VT_COMMENT = 28,
+    VT_CENTER_NAME = 30,
+    VT_CLASSIFICATION = 32,
+    VT_USEABLE_START_TIME = 34,
+    VT_USEABLE_STOP_TIME = 36,
+    VT_EULER_ROT_SEQ = 38,
+    VT_ANGVEL_FRAME = 40,
+    VT_INTERPOLATION_METHOD = 42,
+    VT_INTERPOLATION_DEGREE = 44,
+    VT_ATTITUDE_DATA_LINES = 46
   };
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
@@ -79,6 +526,60 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *ATTITUDE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ATTITUDE_DATA);
   }
+  /// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  /// One entry per COMMENT line, in file order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
+  }
+  /// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  /// (504.0-B-2 table 4-3, optional).
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// Classification marking of the data in portion-marked format
+  /// (504.0-B-2 table 4-3, optional).
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
+  /// Start of the USEABLE time span covered by the data, ISO 8601.
+  const ::flatbuffers::String *USEABLE_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USEABLE_START_TIME);
+  }
+  /// End of the USEABLE time span covered by the data, ISO 8601.
+  const ::flatbuffers::String *USEABLE_STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USEABLE_STOP_TIME);
+  }
+  /// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  /// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  const ::flatbuffers::String *EULER_ROT_SEQ() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EULER_ROT_SEQ);
+  }
+  /// Reference frame in which the ANGVEL_* components are expressed; the value
+  /// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  /// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  /// is the ratified spelling and is the one carried here.
+  const ::flatbuffers::String *ANGVEL_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANGVEL_FRAME);
+  }
+  /// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  const ::flatbuffers::String *INTERPOLATION_METHOD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERPOLATION_METHOD);
+  }
+  /// Recommended interpolation degree.
+  uint32_t INTERPOLATION_DEGREE() const {
+    return GetField<uint32_t>(VT_INTERPOLATION_DEGREE, 0);
+  }
+  /// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  /// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  /// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  /// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///    and ATTITUDE_DATA must be empty or ignored by parsers.
+  /// 3. Do NOT populate both formats simultaneously.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<attitudeDataLine>> *ATTITUDE_DATA_LINES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<attitudeDataLine>> *>(VT_ATTITUDE_DATA_LINES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -104,6 +605,27 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_ATTITUDE_COMPONENTS, 1) &&
            VerifyOffset(verifier, VT_ATTITUDE_DATA) &&
            verifier.VerifyVector(ATTITUDE_DATA()) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyVector(COMMENT()) &&
+           verifier.VerifyVectorOfStrings(COMMENT()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyOffset(verifier, VT_USEABLE_START_TIME) &&
+           verifier.VerifyString(USEABLE_START_TIME()) &&
+           VerifyOffset(verifier, VT_USEABLE_STOP_TIME) &&
+           verifier.VerifyString(USEABLE_STOP_TIME()) &&
+           VerifyOffset(verifier, VT_EULER_ROT_SEQ) &&
+           verifier.VerifyString(EULER_ROT_SEQ()) &&
+           VerifyOffset(verifier, VT_ANGVEL_FRAME) &&
+           verifier.VerifyString(ANGVEL_FRAME()) &&
+           VerifyOffset(verifier, VT_INTERPOLATION_METHOD) &&
+           verifier.VerifyString(INTERPOLATION_METHOD()) &&
+           VerifyField<uint32_t>(verifier, VT_INTERPOLATION_DEGREE, 4) &&
+           VerifyOffset(verifier, VT_ATTITUDE_DATA_LINES) &&
+           verifier.VerifyVector(ATTITUDE_DATA_LINES()) &&
+           verifier.VerifyVectorOfTables(ATTITUDE_DATA_LINES()) &&
            verifier.EndTable();
   }
 };
@@ -148,6 +670,36 @@ struct AEMSegmentBuilder {
   void add_ATTITUDE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> ATTITUDE_DATA) {
     fbb_.AddOffset(AEMSegment::VT_ATTITUDE_DATA, ATTITUDE_DATA);
   }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
+    fbb_.AddOffset(AEMSegment::VT_COMMENT, COMMENT);
+  }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(AEMSegment::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(AEMSegment::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  void add_USEABLE_START_TIME(::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME) {
+    fbb_.AddOffset(AEMSegment::VT_USEABLE_START_TIME, USEABLE_START_TIME);
+  }
+  void add_USEABLE_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> USEABLE_STOP_TIME) {
+    fbb_.AddOffset(AEMSegment::VT_USEABLE_STOP_TIME, USEABLE_STOP_TIME);
+  }
+  void add_EULER_ROT_SEQ(::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ) {
+    fbb_.AddOffset(AEMSegment::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  void add_ANGVEL_FRAME(::flatbuffers::Offset<::flatbuffers::String> ANGVEL_FRAME) {
+    fbb_.AddOffset(AEMSegment::VT_ANGVEL_FRAME, ANGVEL_FRAME);
+  }
+  void add_INTERPOLATION_METHOD(::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION_METHOD) {
+    fbb_.AddOffset(AEMSegment::VT_INTERPOLATION_METHOD, INTERPOLATION_METHOD);
+  }
+  void add_INTERPOLATION_DEGREE(uint32_t INTERPOLATION_DEGREE) {
+    fbb_.AddElement<uint32_t>(AEMSegment::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  void add_ATTITUDE_DATA_LINES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attitudeDataLine>>> ATTITUDE_DATA_LINES) {
+    fbb_.AddOffset(AEMSegment::VT_ATTITUDE_DATA_LINES, ATTITUDE_DATA_LINES);
+  }
   explicit AEMSegmentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -172,9 +724,29 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegment(
     ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
     double STEP_SIZE = 0.0,
     uint8_t ATTITUDE_COMPONENTS = 7,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ATTITUDE_DATA = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ATTITUDE_DATA = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USEABLE_STOP_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ANGVEL_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION_METHOD = 0,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attitudeDataLine>>> ATTITUDE_DATA_LINES = 0) {
   AEMSegmentBuilder builder_(_fbb);
   builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_ATTITUDE_DATA_LINES(ATTITUDE_DATA_LINES);
+  builder_.add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE);
+  builder_.add_INTERPOLATION_METHOD(INTERPOLATION_METHOD);
+  builder_.add_ANGVEL_FRAME(ANGVEL_FRAME);
+  builder_.add_EULER_ROT_SEQ(EULER_ROT_SEQ);
+  builder_.add_USEABLE_STOP_TIME(USEABLE_STOP_TIME);
+  builder_.add_USEABLE_START_TIME(USEABLE_START_TIME);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
+  builder_.add_CENTER_NAME(CENTER_NAME);
+  builder_.add_COMMENT(COMMENT);
   builder_.add_ATTITUDE_DATA(ATTITUDE_DATA);
   builder_.add_STOP_TIME(STOP_TIME);
   builder_.add_START_TIME(START_TIME);
@@ -202,7 +774,17 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
     const char *STOP_TIME = nullptr,
     double STEP_SIZE = 0.0,
     uint8_t ATTITUDE_COMPONENTS = 7,
-    const std::vector<double> *ATTITUDE_DATA = nullptr) {
+    const std::vector<double> *ATTITUDE_DATA = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
+    const char *CENTER_NAME = nullptr,
+    const char *CLASSIFICATION = nullptr,
+    const char *USEABLE_START_TIME = nullptr,
+    const char *USEABLE_STOP_TIME = nullptr,
+    const char *EULER_ROT_SEQ = nullptr,
+    const char *ANGVEL_FRAME = nullptr,
+    const char *INTERPOLATION_METHOD = nullptr,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    const std::vector<::flatbuffers::Offset<attitudeDataLine>> *ATTITUDE_DATA_LINES = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto REF_FRAME_A__ = REF_FRAME_A ? _fbb.CreateString(REF_FRAME_A) : 0;
@@ -213,6 +795,15 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
   auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
   auto ATTITUDE_DATA__ = ATTITUDE_DATA ? _fbb.CreateVector<double>(*ATTITUDE_DATA) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto USEABLE_START_TIME__ = USEABLE_START_TIME ? _fbb.CreateString(USEABLE_START_TIME) : 0;
+  auto USEABLE_STOP_TIME__ = USEABLE_STOP_TIME ? _fbb.CreateString(USEABLE_STOP_TIME) : 0;
+  auto EULER_ROT_SEQ__ = EULER_ROT_SEQ ? _fbb.CreateString(EULER_ROT_SEQ) : 0;
+  auto ANGVEL_FRAME__ = ANGVEL_FRAME ? _fbb.CreateString(ANGVEL_FRAME) : 0;
+  auto INTERPOLATION_METHOD__ = INTERPOLATION_METHOD ? _fbb.CreateString(INTERPOLATION_METHOD) : 0;
+  auto ATTITUDE_DATA_LINES__ = ATTITUDE_DATA_LINES ? _fbb.CreateVector<::flatbuffers::Offset<attitudeDataLine>>(*ATTITUDE_DATA_LINES) : 0;
   return CreateAEMSegment(
       _fbb,
       OBJECT_NAME__,
@@ -226,7 +817,17 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
       STOP_TIME__,
       STEP_SIZE,
       ATTITUDE_COMPONENTS,
-      ATTITUDE_DATA__);
+      ATTITUDE_DATA__,
+      COMMENT__,
+      CENTER_NAME__,
+      CLASSIFICATION__,
+      USEABLE_START_TIME__,
+      USEABLE_STOP_TIME__,
+      EULER_ROT_SEQ__,
+      ANGVEL_FRAME__,
+      INTERPOLATION_METHOD__,
+      INTERPOLATION_DEGREE,
+      ATTITUDE_DATA_LINES__);
 }
 
 /// Attitude Ephemeris Message
@@ -236,7 +837,10 @@ struct AEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CCSDS_AEM_VERS = 4,
     VT_CREATION_DATE = 6,
     VT_ORIGINATOR = 8,
-    VT_SEGMENTS = 10
+    VT_SEGMENTS = 10,
+    VT_MESSAGE_ID = 12,
+    VT_COMMENT = 14,
+    VT_CLASSIFICATION = 16
   };
   const ::flatbuffers::String *CCSDS_AEM_VERS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_AEM_VERS);
@@ -250,6 +854,18 @@ struct AEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<AEMSegment>> *SEGMENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AEMSegment>> *>(VT_SEGMENTS);
   }
+  /// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// Plain-text comments carried in the message header, one entry per line.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
+  }
+  /// Message classification/caveats in portion-marked format.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -262,6 +878,13 @@ struct AEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_SEGMENTS) &&
            verifier.VerifyVector(SEGMENTS()) &&
            verifier.VerifyVectorOfTables(SEGMENTS()) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyVector(COMMENT()) &&
+           verifier.VerifyVectorOfStrings(COMMENT()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
            verifier.EndTable();
   }
 };
@@ -282,6 +905,15 @@ struct AEMBuilder {
   void add_SEGMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<AEMSegment>>> SEGMENTS) {
     fbb_.AddOffset(AEM::VT_SEGMENTS, SEGMENTS);
   }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(AEM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
+    fbb_.AddOffset(AEM::VT_COMMENT, COMMENT);
+  }
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(AEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
   explicit AEMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -298,8 +930,14 @@ inline ::flatbuffers::Offset<AEM> CreateAEM(
     ::flatbuffers::Offset<::flatbuffers::String> CCSDS_AEM_VERS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<AEMSegment>>> SEGMENTS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<AEMSegment>>> SEGMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0) {
   AEMBuilder builder_(_fbb);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
   builder_.add_SEGMENTS(SEGMENTS);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
@@ -312,17 +950,26 @@ inline ::flatbuffers::Offset<AEM> CreateAEMDirect(
     const char *CCSDS_AEM_VERS = nullptr,
     const char *CREATION_DATE = nullptr,
     const char *ORIGINATOR = nullptr,
-    const std::vector<::flatbuffers::Offset<AEMSegment>> *SEGMENTS = nullptr) {
+    const std::vector<::flatbuffers::Offset<AEMSegment>> *SEGMENTS = nullptr,
+    const char *MESSAGE_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
+    const char *CLASSIFICATION = nullptr) {
   auto CCSDS_AEM_VERS__ = CCSDS_AEM_VERS ? _fbb.CreateString(CCSDS_AEM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto SEGMENTS__ = SEGMENTS ? _fbb.CreateVector<::flatbuffers::Offset<AEMSegment>>(*SEGMENTS) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   return CreateAEM(
       _fbb,
       CCSDS_AEM_VERS__,
       CREATION_DATE__,
       ORIGINATOR__,
-      SEGMENTS__);
+      SEGMENTS__,
+      MESSAGE_ID__,
+      COMMENT__,
+      CLASSIFICATION__);
 }
 
 inline const AEM *GetAEM(const void *buf) {

@@ -286,8 +286,25 @@ class ephemerisDataBlock(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
+    # NAIF integer code of the ephemeris target (SPK segment target).
+    # ephemerisDataBlock
+    def OBJECT_NAIF_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # NAIF integer code of the ephemeris centre, matching CENTER_NAME
+    # (SPK segment centre).
+    # ephemerisDataBlock
+    def CENTER_NAIF_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
 def ephemerisDataBlockStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(21)
 
 def Start(builder):
     ephemerisDataBlockStart(builder)
@@ -458,6 +475,18 @@ def ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
 def CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
     ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
 
+def ephemerisDataBlockAddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID):
+    builder.PrependInt32Slot(19, OBJECT_NAIF_ID, 0)
+
+def AddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID):
+    ephemerisDataBlockAddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID)
+
+def ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID):
+    builder.PrependInt32Slot(20, CENTER_NAIF_ID, 0)
+
+def AddCENTER_NAIF_ID(builder, CENTER_NAIF_ID):
+    ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID)
+
 def ephemerisDataBlockEnd(builder):
     return builder.EndObject()
 
@@ -498,6 +527,8 @@ class ephemerisDataBlockT(object):
         EPHEMERIS_DATA_LINES = None,
         COVARIANCE_MATRIX_LINES = None,
         POLYNOMIAL_POSITION_RECORDS = None,
+        OBJECT_NAIF_ID = 0,
+        CENTER_NAIF_ID = 0,
     ):
         self.COMMENT = COMMENT  # type: Optional[str]
         self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
@@ -518,6 +549,8 @@ class ephemerisDataBlockT(object):
         self.EPHEMERIS_DATA_LINES = EPHEMERIS_DATA_LINES  # type: Optional[List[ephemerisDataLine.ephemerisDataLineT]]
         self.COVARIANCE_MATRIX_LINES = COVARIANCE_MATRIX_LINES  # type: Optional[List[covarianceMatrixLine.covarianceMatrixLineT]]
         self.POLYNOMIAL_POSITION_RECORDS = POLYNOMIAL_POSITION_RECORDS  # type: Optional[List[PPEPositionRecord.PPEPositionRecordT]]
+        self.OBJECT_NAIF_ID = OBJECT_NAIF_ID  # type: int
+        self.CENTER_NAIF_ID = CENTER_NAIF_ID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -589,6 +622,8 @@ class ephemerisDataBlockT(object):
                 else:
                     pPEPositionRecord_ = PPEPositionRecord.PPEPositionRecordT.InitFromObj(ephemerisDataBlock.POLYNOMIAL_POSITION_RECORDS(i))
                     self.POLYNOMIAL_POSITION_RECORDS.append(pPEPositionRecord_)
+        self.OBJECT_NAIF_ID = ephemerisDataBlock.OBJECT_NAIF_ID()
+        self.CENTER_NAIF_ID = ephemerisDataBlock.CENTER_NAIF_ID()
 
     # ephemerisDataBlockT
     def Pack(self, builder):
@@ -681,5 +716,7 @@ class ephemerisDataBlockT(object):
             ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES)
         if self.POLYNOMIAL_POSITION_RECORDS is not None:
             ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
+        ephemerisDataBlockAddOBJECT_NAIF_ID(builder, self.OBJECT_NAIF_ID)
+        ephemerisDataBlockAddCENTER_NAIF_ID(builder, self.CENTER_NAIF_ID)
         ephemerisDataBlock = ephemerisDataBlockEnd(builder)
         return ephemerisDataBlock

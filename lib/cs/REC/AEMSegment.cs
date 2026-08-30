@@ -97,6 +97,84 @@ public struct AEMSegment : IFlatbufferObject
   public ArraySegment<byte>? GetATTITUDE_DATABytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public double[] GetATTITUDE_DATAArray() { return __p.__vector_as_array<double>(26); }
+  /// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  /// One entry per COMMENT line, in file order.
+  public string COMMENT(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int COMMENTLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  /// (504.0-B-2 table 4-3, optional).
+  public string CENTER_NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Classification marking of the data in portion-marked format
+  /// (504.0-B-2 table 4-3, optional).
+  public string CLASSIFICATION { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(32); }
+  /// Start of the USEABLE time span covered by the data, ISO 8601.
+  public string USEABLE_START_TIME { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetUSEABLE_START_TIMEBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetUSEABLE_START_TIMEBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetUSEABLE_START_TIMEArray() { return __p.__vector_as_array<byte>(34); }
+  /// End of the USEABLE time span covered by the data, ISO 8601.
+  public string USEABLE_STOP_TIME { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetUSEABLE_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetUSEABLE_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetUSEABLE_STOP_TIMEArray() { return __p.__vector_as_array<byte>(36); }
+  /// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  /// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  public string EULER_ROT_SEQ { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEULER_ROT_SEQBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetEULER_ROT_SEQBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetEULER_ROT_SEQArray() { return __p.__vector_as_array<byte>(38); }
+  /// Reference frame in which the ANGVEL_* components are expressed; the value
+  /// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  /// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  /// is the ratified spelling and is the one carried here.
+  public string ANGVEL_FRAME { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetANGVEL_FRAMEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetANGVEL_FRAMEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetANGVEL_FRAMEArray() { return __p.__vector_as_array<byte>(40); }
+  /// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  public string INTERPOLATION_METHOD { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetINTERPOLATION_METHODBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetINTERPOLATION_METHODBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetINTERPOLATION_METHODArray() { return __p.__vector_as_array<byte>(42); }
+  /// Recommended interpolation degree.
+  public uint INTERPOLATION_DEGREE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  /// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  /// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  /// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///    and ATTITUDE_DATA must be empty or ignored by parsers.
+  /// 3. Do NOT populate both formats simultaneously.
+  public attitudeDataLine? ATTITUDE_DATA_LINES(int j) { int o = __p.__offset(46); return o != 0 ? (attitudeDataLine?)(new attitudeDataLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ATTITUDE_DATA_LINESLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<AEMSegment> CreateAEMSegment(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -110,9 +188,29 @@ public struct AEMSegment : IFlatbufferObject
       StringOffset STOP_TIMEOffset = default(StringOffset),
       double STEP_SIZE = 0.0,
       byte ATTITUDE_COMPONENTS = 7,
-      VectorOffset ATTITUDE_DATAOffset = default(VectorOffset)) {
-    builder.StartTable(12);
+      VectorOffset ATTITUDE_DATAOffset = default(VectorOffset),
+      VectorOffset COMMENTOffset = default(VectorOffset),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
+      StringOffset USEABLE_START_TIMEOffset = default(StringOffset),
+      StringOffset USEABLE_STOP_TIMEOffset = default(StringOffset),
+      StringOffset EULER_ROT_SEQOffset = default(StringOffset),
+      StringOffset ANGVEL_FRAMEOffset = default(StringOffset),
+      StringOffset INTERPOLATION_METHODOffset = default(StringOffset),
+      uint INTERPOLATION_DEGREE = 0,
+      VectorOffset ATTITUDE_DATA_LINESOffset = default(VectorOffset)) {
+    builder.StartTable(22);
     AEMSegment.AddSTEP_SIZE(builder, STEP_SIZE);
+    AEMSegment.AddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINESOffset);
+    AEMSegment.AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE);
+    AEMSegment.AddINTERPOLATION_METHOD(builder, INTERPOLATION_METHODOffset);
+    AEMSegment.AddANGVEL_FRAME(builder, ANGVEL_FRAMEOffset);
+    AEMSegment.AddEULER_ROT_SEQ(builder, EULER_ROT_SEQOffset);
+    AEMSegment.AddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIMEOffset);
+    AEMSegment.AddUSEABLE_START_TIME(builder, USEABLE_START_TIMEOffset);
+    AEMSegment.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
+    AEMSegment.AddCENTER_NAME(builder, CENTER_NAMEOffset);
+    AEMSegment.AddCOMMENT(builder, COMMENTOffset);
     AEMSegment.AddATTITUDE_DATA(builder, ATTITUDE_DATAOffset);
     AEMSegment.AddSTOP_TIME(builder, STOP_TIMEOffset);
     AEMSegment.AddSTART_TIME(builder, START_TIMEOffset);
@@ -127,7 +225,7 @@ public struct AEMSegment : IFlatbufferObject
     return AEMSegment.EndAEMSegment(builder);
   }
 
-  public static void StartAEMSegment(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartAEMSegment(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddREF_FRAME_A(FlatBufferBuilder builder, StringOffset REF_FRAME_AOffset) { builder.AddOffset(2, REF_FRAME_AOffset.Value, 0); }
@@ -145,6 +243,26 @@ public struct AEMSegment : IFlatbufferObject
   public static VectorOffset CreateATTITUDE_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateATTITUDE_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartATTITUDE_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(12, COMMENTOffset.Value, 0); }
+  public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(13, CENTER_NAMEOffset.Value, 0); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(14, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddUSEABLE_START_TIME(FlatBufferBuilder builder, StringOffset USEABLE_START_TIMEOffset) { builder.AddOffset(15, USEABLE_START_TIMEOffset.Value, 0); }
+  public static void AddUSEABLE_STOP_TIME(FlatBufferBuilder builder, StringOffset USEABLE_STOP_TIMEOffset) { builder.AddOffset(16, USEABLE_STOP_TIMEOffset.Value, 0); }
+  public static void AddEULER_ROT_SEQ(FlatBufferBuilder builder, StringOffset EULER_ROT_SEQOffset) { builder.AddOffset(17, EULER_ROT_SEQOffset.Value, 0); }
+  public static void AddANGVEL_FRAME(FlatBufferBuilder builder, StringOffset ANGVEL_FRAMEOffset) { builder.AddOffset(18, ANGVEL_FRAMEOffset.Value, 0); }
+  public static void AddINTERPOLATION_METHOD(FlatBufferBuilder builder, StringOffset INTERPOLATION_METHODOffset) { builder.AddOffset(19, INTERPOLATION_METHODOffset.Value, 0); }
+  public static void AddINTERPOLATION_DEGREE(FlatBufferBuilder builder, uint INTERPOLATION_DEGREE) { builder.AddUint(20, INTERPOLATION_DEGREE, 0); }
+  public static void AddATTITUDE_DATA_LINES(FlatBufferBuilder builder, VectorOffset ATTITUDE_DATA_LINESOffset) { builder.AddOffset(21, ATTITUDE_DATA_LINESOffset.Value, 0); }
+  public static VectorOffset CreateATTITUDE_DATA_LINESVector(FlatBufferBuilder builder, Offset<attitudeDataLine>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATA_LINESVectorBlock(FlatBufferBuilder builder, Offset<attitudeDataLine>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATA_LINESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<attitudeDataLine>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATA_LINESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<attitudeDataLine>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartATTITUDE_DATA_LINESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<AEMSegment> EndAEMSegment(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<AEMSegment>(o);
@@ -168,6 +286,18 @@ public struct AEMSegment : IFlatbufferObject
     _o.ATTITUDE_COMPONENTS = this.ATTITUDE_COMPONENTS;
     _o.ATTITUDE_DATA = new List<double>();
     for (var _j = 0; _j < this.ATTITUDE_DATALength; ++_j) {_o.ATTITUDE_DATA.Add(this.ATTITUDE_DATA(_j));}
+    _o.COMMENT = new List<string>();
+    for (var _j = 0; _j < this.COMMENTLength; ++_j) {_o.COMMENT.Add(this.COMMENT(_j));}
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.CLASSIFICATION = this.CLASSIFICATION;
+    _o.USEABLE_START_TIME = this.USEABLE_START_TIME;
+    _o.USEABLE_STOP_TIME = this.USEABLE_STOP_TIME;
+    _o.EULER_ROT_SEQ = this.EULER_ROT_SEQ;
+    _o.ANGVEL_FRAME = this.ANGVEL_FRAME;
+    _o.INTERPOLATION_METHOD = this.INTERPOLATION_METHOD;
+    _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE;
+    _o.ATTITUDE_DATA_LINES = new List<attitudeDataLineT>();
+    for (var _j = 0; _j < this.ATTITUDE_DATA_LINESLength; ++_j) {_o.ATTITUDE_DATA_LINES.Add(this.ATTITUDE_DATA_LINES(_j).HasValue ? this.ATTITUDE_DATA_LINES(_j).Value.UnPack() : null);}
   }
   public static Offset<AEMSegment> Pack(FlatBufferBuilder builder, AEMSegmentT _o) {
     if (_o == null) return default(Offset<AEMSegment>);
@@ -185,6 +315,25 @@ public struct AEMSegment : IFlatbufferObject
       var __ATTITUDE_DATA = _o.ATTITUDE_DATA.ToArray();
       _ATTITUDE_DATA = CreateATTITUDE_DATAVector(builder, __ATTITUDE_DATA);
     }
+    var _COMMENT = default(VectorOffset);
+    if (_o.COMMENT != null) {
+      var __COMMENT = new StringOffset[_o.COMMENT.Count];
+      for (var _j = 0; _j < __COMMENT.Length; ++_j) { __COMMENT[_j] = builder.CreateString(_o.COMMENT[_j]); }
+      _COMMENT = CreateCOMMENTVector(builder, __COMMENT);
+    }
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
+    var _USEABLE_START_TIME = _o.USEABLE_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.USEABLE_START_TIME);
+    var _USEABLE_STOP_TIME = _o.USEABLE_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.USEABLE_STOP_TIME);
+    var _EULER_ROT_SEQ = _o.EULER_ROT_SEQ == null ? default(StringOffset) : builder.CreateString(_o.EULER_ROT_SEQ);
+    var _ANGVEL_FRAME = _o.ANGVEL_FRAME == null ? default(StringOffset) : builder.CreateString(_o.ANGVEL_FRAME);
+    var _INTERPOLATION_METHOD = _o.INTERPOLATION_METHOD == null ? default(StringOffset) : builder.CreateString(_o.INTERPOLATION_METHOD);
+    var _ATTITUDE_DATA_LINES = default(VectorOffset);
+    if (_o.ATTITUDE_DATA_LINES != null) {
+      var __ATTITUDE_DATA_LINES = new Offset<attitudeDataLine>[_o.ATTITUDE_DATA_LINES.Count];
+      for (var _j = 0; _j < __ATTITUDE_DATA_LINES.Length; ++_j) { __ATTITUDE_DATA_LINES[_j] = attitudeDataLine.Pack(builder, _o.ATTITUDE_DATA_LINES[_j]); }
+      _ATTITUDE_DATA_LINES = CreateATTITUDE_DATA_LINESVector(builder, __ATTITUDE_DATA_LINES);
+    }
     return CreateAEMSegment(
       builder,
       _OBJECT_NAME,
@@ -198,7 +347,17 @@ public struct AEMSegment : IFlatbufferObject
       _STOP_TIME,
       _o.STEP_SIZE,
       _o.ATTITUDE_COMPONENTS,
-      _ATTITUDE_DATA);
+      _ATTITUDE_DATA,
+      _COMMENT,
+      _CENTER_NAME,
+      _CLASSIFICATION,
+      _USEABLE_START_TIME,
+      _USEABLE_STOP_TIME,
+      _EULER_ROT_SEQ,
+      _ANGVEL_FRAME,
+      _INTERPOLATION_METHOD,
+      _o.INTERPOLATION_DEGREE,
+      _ATTITUDE_DATA_LINES);
   }
 }
 
@@ -216,6 +375,16 @@ public class AEMSegmentT
   public double STEP_SIZE { get; set; }
   public byte ATTITUDE_COMPONENTS { get; set; }
   public List<double> ATTITUDE_DATA { get; set; }
+  public List<string> COMMENT { get; set; }
+  public string CENTER_NAME { get; set; }
+  public string CLASSIFICATION { get; set; }
+  public string USEABLE_START_TIME { get; set; }
+  public string USEABLE_STOP_TIME { get; set; }
+  public string EULER_ROT_SEQ { get; set; }
+  public string ANGVEL_FRAME { get; set; }
+  public string INTERPOLATION_METHOD { get; set; }
+  public uint INTERPOLATION_DEGREE { get; set; }
+  public List<attitudeDataLineT> ATTITUDE_DATA_LINES { get; set; }
 
   public AEMSegmentT() {
     this.OBJECT_NAME = null;
@@ -230,6 +399,16 @@ public class AEMSegmentT
     this.STEP_SIZE = 0.0;
     this.ATTITUDE_COMPONENTS = 7;
     this.ATTITUDE_DATA = null;
+    this.COMMENT = null;
+    this.CENTER_NAME = null;
+    this.CLASSIFICATION = null;
+    this.USEABLE_START_TIME = null;
+    this.USEABLE_STOP_TIME = null;
+    this.EULER_ROT_SEQ = null;
+    this.ANGVEL_FRAME = null;
+    this.INTERPOLATION_METHOD = null;
+    this.INTERPOLATION_DEGREE = 0;
+    this.ATTITUDE_DATA_LINES = null;
   }
 }
 
@@ -251,6 +430,16 @@ static public class AEMSegmentVerify
       && verifier.VerifyField(tablePos, 22 /*STEP_SIZE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 24 /*ATTITUDE_COMPONENTS*/, 1 /*byte*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 26 /*ATTITUDE_DATA*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 28 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 30 /*CENTER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 32 /*CLASSIFICATION*/, false)
+      && verifier.VerifyString(tablePos, 34 /*USEABLE_START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 36 /*USEABLE_STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 38 /*EULER_ROT_SEQ*/, false)
+      && verifier.VerifyString(tablePos, 40 /*ANGVEL_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 42 /*INTERPOLATION_METHOD*/, false)
+      && verifier.VerifyField(tablePos, 44 /*INTERPOLATION_DEGREE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 46 /*ATTITUDE_DATA_LINES*/, attitudeDataLineVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

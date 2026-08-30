@@ -63,8 +63,43 @@ segmentsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Plain-text comments carried in the message header, one entry per line.
+ */
+COMMENT(index: number):string
+COMMENT(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+COMMENT(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+commentLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Message classification/caveats in portion-marked format.
+ */
+CLASSIFICATION():string|null
+CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startAEM(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(7);
 }
 
 static addCcsdsAemVers(builder:flatbuffers.Builder, CCSDS_AEM_VERSOffset:flatbuffers.Offset) {
@@ -95,6 +130,30 @@ static startSegmentsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, MESSAGE_IDOffset, 0);
+}
+
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, COMMENTOffset, 0);
+}
+
+static createCommentVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCommentVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, CLASSIFICATIONOffset, 0);
+}
+
 static endAEM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -108,12 +167,15 @@ static finishSizePrefixedAEMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$AEM', true);
 }
 
-static createAEM(builder:flatbuffers.Builder, CCSDS_AEM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, SEGMENTSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createAEM(builder:flatbuffers.Builder, CCSDS_AEM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, SEGMENTSOffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset):flatbuffers.Offset {
   AEM.startAEM(builder);
   AEM.addCcsdsAemVers(builder, CCSDS_AEM_VERSOffset);
   AEM.addCreationDate(builder, CREATION_DATEOffset);
   AEM.addOriginator(builder, ORIGINATOROffset);
   AEM.addSegments(builder, SEGMENTSOffset);
+  AEM.addMessageId(builder, MESSAGE_IDOffset);
+  AEM.addComment(builder, COMMENTOffset);
+  AEM.addClassification(builder, CLASSIFICATIONOffset);
   return AEM.endAEM(builder);
 }
 
@@ -122,7 +184,10 @@ unpack(): AEMT {
     this.CCSDS_AEM_VERS(),
     this.CREATION_DATE(),
     this.ORIGINATOR(),
-    this.bb!.createObjList<AEMSegment, AEMSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength())
+    this.bb!.createObjList<AEMSegment, AEMSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength()),
+    this.MESSAGE_ID(),
+    this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength()),
+    this.CLASSIFICATION()
   );
 }
 
@@ -132,6 +197,9 @@ unpackTo(_o: AEMT): void {
   _o.CREATION_DATE = this.CREATION_DATE();
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.SEGMENTS = this.bb!.createObjList<AEMSegment, AEMSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength());
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
+  _o.CLASSIFICATION = this.CLASSIFICATION();
 }
 }
 
@@ -140,7 +208,10 @@ constructor(
   public CCSDS_AEM_VERS: string|Uint8Array|null = null,
   public CREATION_DATE: string|Uint8Array|null = null,
   public ORIGINATOR: string|Uint8Array|null = null,
-  public SEGMENTS: (AEMSegmentT)[] = []
+  public SEGMENTS: (AEMSegmentT)[] = [],
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public COMMENT: (string)[] = [],
+  public CLASSIFICATION: string|Uint8Array|null = null
 ){}
 
 
@@ -149,12 +220,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CREATION_DATE = (this.CREATION_DATE !== null ? builder.createString(this.CREATION_DATE!) : 0);
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
   const SEGMENTS = AEM.createSegmentsVector(builder, builder.createObjectOffsetList(this.SEGMENTS));
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const COMMENT = AEM.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
+  const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
 
   return AEM.createAEM(builder,
     CCSDS_AEM_VERS,
     CREATION_DATE,
     ORIGINATOR,
-    SEGMENTS
+    SEGMENTS,
+    MESSAGE_ID,
+    COMMENT,
+    CLASSIFICATION
   );
 }
 }

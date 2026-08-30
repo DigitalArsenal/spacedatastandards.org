@@ -45,6 +45,31 @@ public struct ephemerisDataLine : IFlatbufferObject
   public double Y_DDOT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Optional: Acceleration vector Z-component km/s²
   public double Z_DDOT { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  /// field instead.
+  public double CLOCK_BIAS_MICROSECONDS { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  public double CLOCK_RATE_MICROSECONDS_PER_SECOND { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  public double CLOCK_BIAS_SIGMA_PICOSECONDS { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  /// 1e-4 picoseconds per second.
+  public double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  /// the result in mm. These are the raw SP3 exponent columns, kept as
+  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  /// sigma raises the header base to this power.
+  public sbyte X_SIGMA_EXPONENT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public sbyte Y_SIGMA_EXPONENT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public sbyte Z_SIGMA_EXPONENT { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  /// Per-coordinate velocity standard-deviation exponents, result in
+  /// 1e-4 mm/s. Same base**n rule.
+  public sbyte X_DOT_SIGMA_EXPONENT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public sbyte Y_DOT_SIGMA_EXPONENT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public sbyte Z_DOT_SIGMA_EXPONENT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
 
   public static Offset<ephemerisDataLine> CreateephemerisDataLine(FlatBufferBuilder builder,
       StringOffset EPOCHOffset = default(StringOffset),
@@ -56,8 +81,22 @@ public struct ephemerisDataLine : IFlatbufferObject
       double Z_DOT = 0.0,
       double X_DDOT = 0.0,
       double Y_DDOT = 0.0,
-      double Z_DDOT = 0.0) {
-    builder.StartTable(10);
+      double Z_DDOT = 0.0,
+      double CLOCK_BIAS_MICROSECONDS = 0.0,
+      double CLOCK_RATE_MICROSECONDS_PER_SECOND = 0.0,
+      double CLOCK_BIAS_SIGMA_PICOSECONDS = 0.0,
+      double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 0.0,
+      sbyte X_SIGMA_EXPONENT = 0,
+      sbyte Y_SIGMA_EXPONENT = 0,
+      sbyte Z_SIGMA_EXPONENT = 0,
+      sbyte X_DOT_SIGMA_EXPONENT = 0,
+      sbyte Y_DOT_SIGMA_EXPONENT = 0,
+      sbyte Z_DOT_SIGMA_EXPONENT = 0) {
+    builder.StartTable(20);
+    ephemerisDataLine.AddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+    ephemerisDataLine.AddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, CLOCK_BIAS_SIGMA_PICOSECONDS);
+    ephemerisDataLine.AddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND);
+    ephemerisDataLine.AddCLOCK_BIAS_MICROSECONDS(builder, CLOCK_BIAS_MICROSECONDS);
     ephemerisDataLine.AddZ_DDOT(builder, Z_DDOT);
     ephemerisDataLine.AddY_DDOT(builder, Y_DDOT);
     ephemerisDataLine.AddX_DDOT(builder, X_DDOT);
@@ -68,10 +107,16 @@ public struct ephemerisDataLine : IFlatbufferObject
     ephemerisDataLine.AddY(builder, Y);
     ephemerisDataLine.AddX(builder, X);
     ephemerisDataLine.AddEPOCH(builder, EPOCHOffset);
+    ephemerisDataLine.AddZ_DOT_SIGMA_EXPONENT(builder, Z_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.AddY_DOT_SIGMA_EXPONENT(builder, Y_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.AddX_DOT_SIGMA_EXPONENT(builder, X_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.AddZ_SIGMA_EXPONENT(builder, Z_SIGMA_EXPONENT);
+    ephemerisDataLine.AddY_SIGMA_EXPONENT(builder, Y_SIGMA_EXPONENT);
+    ephemerisDataLine.AddX_SIGMA_EXPONENT(builder, X_SIGMA_EXPONENT);
     return ephemerisDataLine.EndephemerisDataLine(builder);
   }
 
-  public static void StartephemerisDataLine(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartephemerisDataLine(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(0, EPOCHOffset.Value, 0); }
   public static void AddX(FlatBufferBuilder builder, double X) { builder.AddDouble(1, X, 0.0); }
   public static void AddY(FlatBufferBuilder builder, double Y) { builder.AddDouble(2, Y, 0.0); }
@@ -82,6 +127,16 @@ public struct ephemerisDataLine : IFlatbufferObject
   public static void AddX_DDOT(FlatBufferBuilder builder, double X_DDOT) { builder.AddDouble(7, X_DDOT, 0.0); }
   public static void AddY_DDOT(FlatBufferBuilder builder, double Y_DDOT) { builder.AddDouble(8, Y_DDOT, 0.0); }
   public static void AddZ_DDOT(FlatBufferBuilder builder, double Z_DDOT) { builder.AddDouble(9, Z_DDOT, 0.0); }
+  public static void AddCLOCK_BIAS_MICROSECONDS(FlatBufferBuilder builder, double CLOCK_BIAS_MICROSECONDS) { builder.AddDouble(10, CLOCK_BIAS_MICROSECONDS, 0.0); }
+  public static void AddCLOCK_RATE_MICROSECONDS_PER_SECOND(FlatBufferBuilder builder, double CLOCK_RATE_MICROSECONDS_PER_SECOND) { builder.AddDouble(11, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0); }
+  public static void AddCLOCK_BIAS_SIGMA_PICOSECONDS(FlatBufferBuilder builder, double CLOCK_BIAS_SIGMA_PICOSECONDS) { builder.AddDouble(12, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0); }
+  public static void AddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(FlatBufferBuilder builder, double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND) { builder.AddDouble(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0); }
+  public static void AddX_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte X_SIGMA_EXPONENT) { builder.AddSbyte(14, X_SIGMA_EXPONENT, 0); }
+  public static void AddY_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte Y_SIGMA_EXPONENT) { builder.AddSbyte(15, Y_SIGMA_EXPONENT, 0); }
+  public static void AddZ_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte Z_SIGMA_EXPONENT) { builder.AddSbyte(16, Z_SIGMA_EXPONENT, 0); }
+  public static void AddX_DOT_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte X_DOT_SIGMA_EXPONENT) { builder.AddSbyte(17, X_DOT_SIGMA_EXPONENT, 0); }
+  public static void AddY_DOT_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte Y_DOT_SIGMA_EXPONENT) { builder.AddSbyte(18, Y_DOT_SIGMA_EXPONENT, 0); }
+  public static void AddZ_DOT_SIGMA_EXPONENT(FlatBufferBuilder builder, sbyte Z_DOT_SIGMA_EXPONENT) { builder.AddSbyte(19, Z_DOT_SIGMA_EXPONENT, 0); }
   public static Offset<ephemerisDataLine> EndephemerisDataLine(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ephemerisDataLine>(o);
@@ -102,6 +157,16 @@ public struct ephemerisDataLine : IFlatbufferObject
     _o.X_DDOT = this.X_DDOT;
     _o.Y_DDOT = this.Y_DDOT;
     _o.Z_DDOT = this.Z_DDOT;
+    _o.CLOCK_BIAS_MICROSECONDS = this.CLOCK_BIAS_MICROSECONDS;
+    _o.CLOCK_RATE_MICROSECONDS_PER_SECOND = this.CLOCK_RATE_MICROSECONDS_PER_SECOND;
+    _o.CLOCK_BIAS_SIGMA_PICOSECONDS = this.CLOCK_BIAS_SIGMA_PICOSECONDS;
+    _o.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = this.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND;
+    _o.X_SIGMA_EXPONENT = this.X_SIGMA_EXPONENT;
+    _o.Y_SIGMA_EXPONENT = this.Y_SIGMA_EXPONENT;
+    _o.Z_SIGMA_EXPONENT = this.Z_SIGMA_EXPONENT;
+    _o.X_DOT_SIGMA_EXPONENT = this.X_DOT_SIGMA_EXPONENT;
+    _o.Y_DOT_SIGMA_EXPONENT = this.Y_DOT_SIGMA_EXPONENT;
+    _o.Z_DOT_SIGMA_EXPONENT = this.Z_DOT_SIGMA_EXPONENT;
   }
   public static Offset<ephemerisDataLine> Pack(FlatBufferBuilder builder, ephemerisDataLineT _o) {
     if (_o == null) return default(Offset<ephemerisDataLine>);
@@ -117,7 +182,17 @@ public struct ephemerisDataLine : IFlatbufferObject
       _o.Z_DOT,
       _o.X_DDOT,
       _o.Y_DDOT,
-      _o.Z_DDOT);
+      _o.Z_DDOT,
+      _o.CLOCK_BIAS_MICROSECONDS,
+      _o.CLOCK_RATE_MICROSECONDS_PER_SECOND,
+      _o.CLOCK_BIAS_SIGMA_PICOSECONDS,
+      _o.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+      _o.X_SIGMA_EXPONENT,
+      _o.Y_SIGMA_EXPONENT,
+      _o.Z_SIGMA_EXPONENT,
+      _o.X_DOT_SIGMA_EXPONENT,
+      _o.Y_DOT_SIGMA_EXPONENT,
+      _o.Z_DOT_SIGMA_EXPONENT);
   }
 }
 
@@ -133,6 +208,16 @@ public class ephemerisDataLineT
   public double X_DDOT { get; set; }
   public double Y_DDOT { get; set; }
   public double Z_DDOT { get; set; }
+  public double CLOCK_BIAS_MICROSECONDS { get; set; }
+  public double CLOCK_RATE_MICROSECONDS_PER_SECOND { get; set; }
+  public double CLOCK_BIAS_SIGMA_PICOSECONDS { get; set; }
+  public double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND { get; set; }
+  public sbyte X_SIGMA_EXPONENT { get; set; }
+  public sbyte Y_SIGMA_EXPONENT { get; set; }
+  public sbyte Z_SIGMA_EXPONENT { get; set; }
+  public sbyte X_DOT_SIGMA_EXPONENT { get; set; }
+  public sbyte Y_DOT_SIGMA_EXPONENT { get; set; }
+  public sbyte Z_DOT_SIGMA_EXPONENT { get; set; }
 
   public ephemerisDataLineT() {
     this.EPOCH = null;
@@ -145,6 +230,16 @@ public class ephemerisDataLineT
     this.X_DDOT = 0.0;
     this.Y_DDOT = 0.0;
     this.Z_DDOT = 0.0;
+    this.CLOCK_BIAS_MICROSECONDS = 0.0;
+    this.CLOCK_RATE_MICROSECONDS_PER_SECOND = 0.0;
+    this.CLOCK_BIAS_SIGMA_PICOSECONDS = 0.0;
+    this.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 0.0;
+    this.X_SIGMA_EXPONENT = 0;
+    this.Y_SIGMA_EXPONENT = 0;
+    this.Z_SIGMA_EXPONENT = 0;
+    this.X_DOT_SIGMA_EXPONENT = 0;
+    this.Y_DOT_SIGMA_EXPONENT = 0;
+    this.Z_DOT_SIGMA_EXPONENT = 0;
   }
 }
 
@@ -164,6 +259,16 @@ static public class ephemerisDataLineVerify
       && verifier.VerifyField(tablePos, 18 /*X_DDOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*Y_DDOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 22 /*Z_DDOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*CLOCK_BIAS_MICROSECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*CLOCK_RATE_MICROSECONDS_PER_SECOND*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*CLOCK_BIAS_SIGMA_PICOSECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*X_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 34 /*Y_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*Z_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 38 /*X_DOT_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 40 /*Y_DOT_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 42 /*Z_DOT_SIGMA_EXPONENT*/, 1 /*sbyte*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

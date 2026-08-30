@@ -75,8 +75,45 @@ class AEM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
+    # Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+    # AEM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Plain-text comments carried in the message header, one entry per line.
+    # AEM
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # AEM
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AEM
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # Message classification/caveats in portion-marked format.
+    # AEM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def AEMStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(7)
 
 def Start(builder):
     AEMStart(builder)
@@ -117,6 +154,36 @@ def AEMCreateSEGMENTSVector(builder, data):
 def CreateSEGMENTSVector(builder, data):
     AEMCreateSEGMENTSVector(builder, data)
 
+def AEMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    AEMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def AEMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    AEMAddCOMMENT(builder, COMMENT)
+
+def AEMStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return AEMStartCOMMENTVector(builder, numElems)
+
+def AEMCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    AEMCreateCOMMENTVector(builder, data)
+
+def AEMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    AEMAddCLASSIFICATION(builder, CLASSIFICATION)
+
 def AEMEnd(builder):
     return builder.EndObject()
 
@@ -138,11 +205,17 @@ class AEMT(object):
         CREATION_DATE = None,
         ORIGINATOR = None,
         SEGMENTS = None,
+        MESSAGE_ID = None,
+        COMMENT = None,
+        CLASSIFICATION = None,
     ):
         self.CCSDS_AEM_VERS = CCSDS_AEM_VERS  # type: Optional[str]
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
         self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
         self.SEGMENTS = SEGMENTS  # type: Optional[List[AEMSegment.AEMSegmentT]]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -176,6 +249,12 @@ class AEMT(object):
                 else:
                     aEMSegment_ = AEMSegment.AEMSegmentT.InitFromObj(AEM.SEGMENTS(i))
                     self.SEGMENTS.append(aEMSegment_)
+        self.MESSAGE_ID = AEM.MESSAGE_ID()
+        if not AEM.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(AEM.COMMENTLength()):
+                self.COMMENT.append(AEM.COMMENT(i))
+        self.CLASSIFICATION = AEM.CLASSIFICATION()
 
     # AEMT
     def Pack(self, builder):
@@ -193,6 +272,18 @@ class AEMT(object):
             for i in reversed(range(len(self.SEGMENTS))):
                 builder.PrependUOffsetTRelative(SEGMENTSlist[i])
             SEGMENTS = builder.EndVector()
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            AEMStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
         AEMStart(builder)
         if self.CCSDS_AEM_VERS is not None:
             AEMAddCCSDS_AEM_VERS(builder, CCSDS_AEM_VERS)
@@ -202,5 +293,11 @@ class AEMT(object):
             AEMAddORIGINATOR(builder, ORIGINATOR)
         if self.SEGMENTS is not None:
             AEMAddSEGMENTS(builder, SEGMENTS)
+        if self.MESSAGE_ID is not None:
+            AEMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.COMMENT is not None:
+            AEMAddCOMMENT(builder, COMMENT)
+        if self.CLASSIFICATION is not None:
+            AEMAddCLASSIFICATION(builder, CLASSIFICATION)
         AEM = AEMEnd(builder)
         return AEM

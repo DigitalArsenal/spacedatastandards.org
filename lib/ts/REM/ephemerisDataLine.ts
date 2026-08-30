@@ -111,8 +111,85 @@ Z_DDOT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Satellite clock bias (offset), microseconds. SP3 position-record clock
+ * column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+ * field instead.
+ */
+CLOCK_BIAS_MICROSECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Satellite clock rate of change, 1e-4 microseconds per second. SP3
+ * velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+ */
+CLOCK_RATE_MICROSECONDS_PER_SECOND():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+ */
+CLOCK_BIAS_SIGMA_PICOSECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+ * 1e-4 picoseconds per second.
+ */
+CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+ * sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+ * the result in mm. These are the raw SP3 exponent columns, kept as
+ * exponents so an SP3 round-trip is exact; a consumer that wants a linear
+ * sigma raises the header base to this power.
+ */
+X_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+Y_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+Z_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Per-coordinate velocity standard-deviation exponents, result in
+ * 1e-4 mm/s. Same base**n rule.
+ */
+X_DOT_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+Y_DOT_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+Z_DOT_SIGMA_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
 static startephemerisDataLine(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(20);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -155,12 +232,52 @@ static addZDdot(builder:flatbuffers.Builder, Z_DDOT:number) {
   builder.addFieldFloat64(9, Z_DDOT, 0.0);
 }
 
+static addClockBiasMicroseconds(builder:flatbuffers.Builder, CLOCK_BIAS_MICROSECONDS:number) {
+  builder.addFieldFloat64(10, CLOCK_BIAS_MICROSECONDS, 0.0);
+}
+
+static addClockRateMicrosecondsPerSecond(builder:flatbuffers.Builder, CLOCK_RATE_MICROSECONDS_PER_SECOND:number) {
+  builder.addFieldFloat64(11, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0);
+}
+
+static addClockBiasSigmaPicoseconds(builder:flatbuffers.Builder, CLOCK_BIAS_SIGMA_PICOSECONDS:number) {
+  builder.addFieldFloat64(12, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0);
+}
+
+static addClockRateSigmaPicosecondsPerSecond(builder:flatbuffers.Builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND:number) {
+  builder.addFieldFloat64(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0);
+}
+
+static addXSigmaExponent(builder:flatbuffers.Builder, X_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(14, X_SIGMA_EXPONENT, 0);
+}
+
+static addYSigmaExponent(builder:flatbuffers.Builder, Y_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(15, Y_SIGMA_EXPONENT, 0);
+}
+
+static addZSigmaExponent(builder:flatbuffers.Builder, Z_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(16, Z_SIGMA_EXPONENT, 0);
+}
+
+static addXDotSigmaExponent(builder:flatbuffers.Builder, X_DOT_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(17, X_DOT_SIGMA_EXPONENT, 0);
+}
+
+static addYDotSigmaExponent(builder:flatbuffers.Builder, Y_DOT_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(18, Y_DOT_SIGMA_EXPONENT, 0);
+}
+
+static addZDotSigmaExponent(builder:flatbuffers.Builder, Z_DOT_SIGMA_EXPONENT:number) {
+  builder.addFieldInt8(19, Z_DOT_SIGMA_EXPONENT, 0);
+}
+
 static endephemerisDataLine(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createephemerisDataLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, X_DOT:number, Y_DOT:number, Z_DOT:number, X_DDOT:number, Y_DDOT:number, Z_DDOT:number):flatbuffers.Offset {
+static createephemerisDataLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, X_DOT:number, Y_DOT:number, Z_DOT:number, X_DDOT:number, Y_DDOT:number, Z_DDOT:number, CLOCK_BIAS_MICROSECONDS:number, CLOCK_RATE_MICROSECONDS_PER_SECOND:number, CLOCK_BIAS_SIGMA_PICOSECONDS:number, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND:number, X_SIGMA_EXPONENT:number, Y_SIGMA_EXPONENT:number, Z_SIGMA_EXPONENT:number, X_DOT_SIGMA_EXPONENT:number, Y_DOT_SIGMA_EXPONENT:number, Z_DOT_SIGMA_EXPONENT:number):flatbuffers.Offset {
   ephemerisDataLine.startephemerisDataLine(builder);
   ephemerisDataLine.addEpoch(builder, EPOCHOffset);
   ephemerisDataLine.addX(builder, X);
@@ -172,6 +289,16 @@ static createephemerisDataLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuff
   ephemerisDataLine.addXDdot(builder, X_DDOT);
   ephemerisDataLine.addYDdot(builder, Y_DDOT);
   ephemerisDataLine.addZDdot(builder, Z_DDOT);
+  ephemerisDataLine.addClockBiasMicroseconds(builder, CLOCK_BIAS_MICROSECONDS);
+  ephemerisDataLine.addClockRateMicrosecondsPerSecond(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND);
+  ephemerisDataLine.addClockBiasSigmaPicoseconds(builder, CLOCK_BIAS_SIGMA_PICOSECONDS);
+  ephemerisDataLine.addClockRateSigmaPicosecondsPerSecond(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+  ephemerisDataLine.addXSigmaExponent(builder, X_SIGMA_EXPONENT);
+  ephemerisDataLine.addYSigmaExponent(builder, Y_SIGMA_EXPONENT);
+  ephemerisDataLine.addZSigmaExponent(builder, Z_SIGMA_EXPONENT);
+  ephemerisDataLine.addXDotSigmaExponent(builder, X_DOT_SIGMA_EXPONENT);
+  ephemerisDataLine.addYDotSigmaExponent(builder, Y_DOT_SIGMA_EXPONENT);
+  ephemerisDataLine.addZDotSigmaExponent(builder, Z_DOT_SIGMA_EXPONENT);
   return ephemerisDataLine.endephemerisDataLine(builder);
 }
 
@@ -186,7 +313,17 @@ unpack(): ephemerisDataLineT {
     this.Z_DOT(),
     this.X_DDOT(),
     this.Y_DDOT(),
-    this.Z_DDOT()
+    this.Z_DDOT(),
+    this.CLOCK_BIAS_MICROSECONDS(),
+    this.CLOCK_RATE_MICROSECONDS_PER_SECOND(),
+    this.CLOCK_BIAS_SIGMA_PICOSECONDS(),
+    this.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(),
+    this.X_SIGMA_EXPONENT(),
+    this.Y_SIGMA_EXPONENT(),
+    this.Z_SIGMA_EXPONENT(),
+    this.X_DOT_SIGMA_EXPONENT(),
+    this.Y_DOT_SIGMA_EXPONENT(),
+    this.Z_DOT_SIGMA_EXPONENT()
   );
 }
 
@@ -202,6 +339,16 @@ unpackTo(_o: ephemerisDataLineT): void {
   _o.X_DDOT = this.X_DDOT();
   _o.Y_DDOT = this.Y_DDOT();
   _o.Z_DDOT = this.Z_DDOT();
+  _o.CLOCK_BIAS_MICROSECONDS = this.CLOCK_BIAS_MICROSECONDS();
+  _o.CLOCK_RATE_MICROSECONDS_PER_SECOND = this.CLOCK_RATE_MICROSECONDS_PER_SECOND();
+  _o.CLOCK_BIAS_SIGMA_PICOSECONDS = this.CLOCK_BIAS_SIGMA_PICOSECONDS();
+  _o.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = this.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND();
+  _o.X_SIGMA_EXPONENT = this.X_SIGMA_EXPONENT();
+  _o.Y_SIGMA_EXPONENT = this.Y_SIGMA_EXPONENT();
+  _o.Z_SIGMA_EXPONENT = this.Z_SIGMA_EXPONENT();
+  _o.X_DOT_SIGMA_EXPONENT = this.X_DOT_SIGMA_EXPONENT();
+  _o.Y_DOT_SIGMA_EXPONENT = this.Y_DOT_SIGMA_EXPONENT();
+  _o.Z_DOT_SIGMA_EXPONENT = this.Z_DOT_SIGMA_EXPONENT();
 }
 }
 
@@ -216,7 +363,17 @@ constructor(
   public Z_DOT: number = 0.0,
   public X_DDOT: number = 0.0,
   public Y_DDOT: number = 0.0,
-  public Z_DDOT: number = 0.0
+  public Z_DDOT: number = 0.0,
+  public CLOCK_BIAS_MICROSECONDS: number = 0.0,
+  public CLOCK_RATE_MICROSECONDS_PER_SECOND: number = 0.0,
+  public CLOCK_BIAS_SIGMA_PICOSECONDS: number = 0.0,
+  public CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: number = 0.0,
+  public X_SIGMA_EXPONENT: number = 0,
+  public Y_SIGMA_EXPONENT: number = 0,
+  public Z_SIGMA_EXPONENT: number = 0,
+  public X_DOT_SIGMA_EXPONENT: number = 0,
+  public Y_DOT_SIGMA_EXPONENT: number = 0,
+  public Z_DOT_SIGMA_EXPONENT: number = 0
 ){}
 
 
@@ -233,7 +390,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.Z_DOT,
     this.X_DDOT,
     this.Y_DDOT,
-    this.Z_DDOT
+    this.Z_DDOT,
+    this.CLOCK_BIAS_MICROSECONDS,
+    this.CLOCK_RATE_MICROSECONDS_PER_SECOND,
+    this.CLOCK_BIAS_SIGMA_PICOSECONDS,
+    this.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+    this.X_SIGMA_EXPONENT,
+    this.Y_SIGMA_EXPONENT,
+    this.Z_SIGMA_EXPONENT,
+    this.X_DOT_SIGMA_EXPONENT,
+    this.Y_DOT_SIGMA_EXPONENT,
+    this.Z_DOT_SIGMA_EXPONENT
   );
 }
 }

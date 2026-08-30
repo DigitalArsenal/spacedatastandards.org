@@ -8,6 +8,262 @@ import Common
 
 import FlatBuffers
 
+///  A single attitude data line with an EXPLICIT epoch (non-uniform steps).
+///
+///  CCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs
+///  are not on a uniform grid: the published example (504.0-B-2 figure G-4)
+///  steps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.
+///  2339 s then 1 s. Such a segment CANNOT be expressed by the compact
+///  ATTITUDE_DATA array, whose epochs are reconstructed as
+///  START_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have
+///  the same irregular shape.
+///
+///  The populated columns are selected by the segment's ATTITUDE_TYPE exactly
+///  as in CCSDS 504.0-B-2 table 4-4:
+///    QUATERNION              Q1 Q2 Q3 QC
+///    QUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT
+///    QUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z
+///    EULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3
+///    EULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT
+///    EULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z
+///    SPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL
+///    SPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE
+///    SPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL
+///
+///  Quaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,
+///  vector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2
+///  (annex, change 7) and is deliberately NOT carried here.
+///
+///  Units per 504.0-B-2 4.2.4.6: quaternion components dimensionless;
+///  Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
+///  ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
+///  NUTATION_PER s.
+public struct attitudeDataLine: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$AEM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: attitudeDataLine.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let Q1: VOffset = 6
+    static let Q2: VOffset = 8
+    static let Q3: VOffset = 10
+    static let QC: VOffset = 12
+    static let Q1_DOT: VOffset = 14
+    static let Q2_DOT: VOffset = 16
+    static let Q3_DOT: VOffset = 18
+    static let QC_DOT: VOffset = 20
+    static let ANGLE_1: VOffset = 22
+    static let ANGLE_2: VOffset = 24
+    static let ANGLE_3: VOffset = 26
+    static let ANGLE_1_DOT: VOffset = 28
+    static let ANGLE_2_DOT: VOffset = 30
+    static let ANGLE_3_DOT: VOffset = 32
+    static let ANGVEL_X: VOffset = 34
+    static let ANGVEL_Y: VOffset = 36
+    static let ANGVEL_Z: VOffset = 38
+    static let SPIN_ALPHA: VOffset = 40
+    static let SPIN_DELTA: VOffset = 42
+    static let SPIN_ANGLE: VOffset = 44
+    static let SPIN_ANGLE_VEL: VOffset = 46
+    static let NUTATION: VOffset = 48
+    static let NUTATION_PER: VOffset = 50
+    static let NUTATION_PHASE: VOffset = 52
+    static let MOMENTUM_ALPHA: VOffset = 54
+    static let MOMENTUM_DELTA: VOffset = 56
+    static let NUTATION_VEL: VOffset = 58
+  }
+
+  ///  Epoch of this attitude state (required for non-uniform steps).
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Quaternion vector component 1 (dimensionless).
+  public var Q1: Double { let o = _accessor.offset(VT.Q1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector component 2 (dimensionless).
+  public var Q2: Double { let o = _accessor.offset(VT.Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector component 3 (dimensionless).
+  public var Q3: Double { let o = _accessor.offset(VT.Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion scalar component (dimensionless).
+  public var QC: Double { let o = _accessor.offset(VT.QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of Q1, 1/s.
+  public var Q1_DOT: Double { let o = _accessor.offset(VT.Q1_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of Q2, 1/s.
+  public var Q2_DOT: Double { let o = _accessor.offset(VT.Q2_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of Q3, 1/s.
+  public var Q3_DOT: Double { let o = _accessor.offset(VT.Q3_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of QC, 1/s.
+  public var QC_DOT: Double { let o = _accessor.offset(VT.QC_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.
+  public var ANGLE_1: Double { let o = _accessor.offset(VT.ANGLE_1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle 2, deg.
+  public var ANGLE_2: Double { let o = _accessor.offset(VT.ANGLE_2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle 3, deg.
+  public var ANGLE_3: Double { let o = _accessor.offset(VT.ANGLE_3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of ANGLE_1, deg/s.
+  public var ANGLE_1_DOT: Double { let o = _accessor.offset(VT.ANGLE_1_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of ANGLE_2, deg/s.
+  public var ANGLE_2_DOT: Double { let o = _accessor.offset(VT.ANGLE_2_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time derivative of ANGLE_3, deg/s.
+  public var ANGLE_3_DOT: Double { let o = _accessor.offset(VT.ANGLE_3_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.
+  public var ANGVEL_X: Double { let o = _accessor.offset(VT.ANGVEL_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.
+  public var ANGVEL_Y: Double { let o = _accessor.offset(VT.ANGVEL_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.
+  public var ANGVEL_Z: Double { let o = _accessor.offset(VT.ANGVEL_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the spin axis, deg.
+  public var SPIN_ALPHA: Double { let o = _accessor.offset(VT.SPIN_ALPHA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination of the spin axis, deg.
+  public var SPIN_DELTA: Double { let o = _accessor.offset(VT.SPIN_DELTA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Phase of the satellite about the spin axis, deg.
+  public var SPIN_ANGLE: Double { let o = _accessor.offset(VT.SPIN_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular velocity about the spin axis, deg/s.
+  public var SPIN_ANGLE_VEL: Double { let o = _accessor.offset(VT.SPIN_ANGLE_VEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nutation angle, deg.
+  public var NUTATION: Double { let o = _accessor.offset(VT.NUTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nutation period, s.
+  public var NUTATION_PER: Double { let o = _accessor.offset(VT.NUTATION_PER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nutation phase, deg.
+  public var NUTATION_PHASE: Double { let o = _accessor.offset(VT.NUTATION_PHASE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the angular momentum vector, deg.
+  public var MOMENTUM_ALPHA: Double { let o = _accessor.offset(VT.MOMENTUM_ALPHA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination of the angular momentum vector, deg.
+  public var MOMENTUM_DELTA: Double { let o = _accessor.offset(VT.MOMENTUM_DELTA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular velocity of the nutation, deg/s.
+  public var NUTATION_VEL: Double { let o = _accessor.offset(VT.NUTATION_VEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startattitudeDataLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VT.Q1) }
+  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VT.Q2) }
+  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VT.Q3) }
+  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VT.QC) }
+  public static func add(Q1_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1_DOT, def: 0.0, at: VT.Q1_DOT) }
+  public static func add(Q2_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2_DOT, def: 0.0, at: VT.Q2_DOT) }
+  public static func add(Q3_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3_DOT, def: 0.0, at: VT.Q3_DOT) }
+  public static func add(QC_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_DOT, def: 0.0, at: VT.QC_DOT) }
+  public static func add(ANGLE_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_1, def: 0.0, at: VT.ANGLE_1) }
+  public static func add(ANGLE_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_2, def: 0.0, at: VT.ANGLE_2) }
+  public static func add(ANGLE_3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_3, def: 0.0, at: VT.ANGLE_3) }
+  public static func add(ANGLE_1_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_1_DOT, def: 0.0, at: VT.ANGLE_1_DOT) }
+  public static func add(ANGLE_2_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_2_DOT, def: 0.0, at: VT.ANGLE_2_DOT) }
+  public static func add(ANGLE_3_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_3_DOT, def: 0.0, at: VT.ANGLE_3_DOT) }
+  public static func add(ANGVEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_X, def: 0.0, at: VT.ANGVEL_X) }
+  public static func add(ANGVEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_Y, def: 0.0, at: VT.ANGVEL_Y) }
+  public static func add(ANGVEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_Z, def: 0.0, at: VT.ANGVEL_Z) }
+  public static func add(SPIN_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ALPHA, def: 0.0, at: VT.SPIN_ALPHA) }
+  public static func add(SPIN_DELTA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_DELTA, def: 0.0, at: VT.SPIN_DELTA) }
+  public static func add(SPIN_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ANGLE, def: 0.0, at: VT.SPIN_ANGLE) }
+  public static func add(SPIN_ANGLE_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ANGLE_VEL, def: 0.0, at: VT.SPIN_ANGLE_VEL) }
+  public static func add(NUTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION, def: 0.0, at: VT.NUTATION) }
+  public static func add(NUTATION_PER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_PER, def: 0.0, at: VT.NUTATION_PER) }
+  public static func add(NUTATION_PHASE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_PHASE, def: 0.0, at: VT.NUTATION_PHASE) }
+  public static func add(MOMENTUM_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOMENTUM_ALPHA, def: 0.0, at: VT.MOMENTUM_ALPHA) }
+  public static func add(MOMENTUM_DELTA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOMENTUM_DELTA, def: 0.0, at: VT.MOMENTUM_DELTA) }
+  public static func add(NUTATION_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_VEL, def: 0.0, at: VT.NUTATION_VEL) }
+  public static func endattitudeDataLine(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createattitudeDataLine(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    Q1: Double = 0.0,
+    Q2: Double = 0.0,
+    Q3: Double = 0.0,
+    QC: Double = 0.0,
+    Q1_DOT: Double = 0.0,
+    Q2_DOT: Double = 0.0,
+    Q3_DOT: Double = 0.0,
+    QC_DOT: Double = 0.0,
+    ANGLE_1: Double = 0.0,
+    ANGLE_2: Double = 0.0,
+    ANGLE_3: Double = 0.0,
+    ANGLE_1_DOT: Double = 0.0,
+    ANGLE_2_DOT: Double = 0.0,
+    ANGLE_3_DOT: Double = 0.0,
+    ANGVEL_X: Double = 0.0,
+    ANGVEL_Y: Double = 0.0,
+    ANGVEL_Z: Double = 0.0,
+    SPIN_ALPHA: Double = 0.0,
+    SPIN_DELTA: Double = 0.0,
+    SPIN_ANGLE: Double = 0.0,
+    SPIN_ANGLE_VEL: Double = 0.0,
+    NUTATION: Double = 0.0,
+    NUTATION_PER: Double = 0.0,
+    NUTATION_PHASE: Double = 0.0,
+    MOMENTUM_ALPHA: Double = 0.0,
+    MOMENTUM_DELTA: Double = 0.0,
+    NUTATION_VEL: Double = 0.0
+  ) -> Offset {
+    let __start = attitudeDataLine.startattitudeDataLine(&fbb)
+    attitudeDataLine.add(EPOCH: EPOCH, &fbb)
+    attitudeDataLine.add(Q1: Q1, &fbb)
+    attitudeDataLine.add(Q2: Q2, &fbb)
+    attitudeDataLine.add(Q3: Q3, &fbb)
+    attitudeDataLine.add(QC: QC, &fbb)
+    attitudeDataLine.add(Q1_DOT: Q1_DOT, &fbb)
+    attitudeDataLine.add(Q2_DOT: Q2_DOT, &fbb)
+    attitudeDataLine.add(Q3_DOT: Q3_DOT, &fbb)
+    attitudeDataLine.add(QC_DOT: QC_DOT, &fbb)
+    attitudeDataLine.add(ANGLE_1: ANGLE_1, &fbb)
+    attitudeDataLine.add(ANGLE_2: ANGLE_2, &fbb)
+    attitudeDataLine.add(ANGLE_3: ANGLE_3, &fbb)
+    attitudeDataLine.add(ANGLE_1_DOT: ANGLE_1_DOT, &fbb)
+    attitudeDataLine.add(ANGLE_2_DOT: ANGLE_2_DOT, &fbb)
+    attitudeDataLine.add(ANGLE_3_DOT: ANGLE_3_DOT, &fbb)
+    attitudeDataLine.add(ANGVEL_X: ANGVEL_X, &fbb)
+    attitudeDataLine.add(ANGVEL_Y: ANGVEL_Y, &fbb)
+    attitudeDataLine.add(ANGVEL_Z: ANGVEL_Z, &fbb)
+    attitudeDataLine.add(SPIN_ALPHA: SPIN_ALPHA, &fbb)
+    attitudeDataLine.add(SPIN_DELTA: SPIN_DELTA, &fbb)
+    attitudeDataLine.add(SPIN_ANGLE: SPIN_ANGLE, &fbb)
+    attitudeDataLine.add(SPIN_ANGLE_VEL: SPIN_ANGLE_VEL, &fbb)
+    attitudeDataLine.add(NUTATION: NUTATION, &fbb)
+    attitudeDataLine.add(NUTATION_PER: NUTATION_PER, &fbb)
+    attitudeDataLine.add(NUTATION_PHASE: NUTATION_PHASE, &fbb)
+    attitudeDataLine.add(MOMENTUM_ALPHA: MOMENTUM_ALPHA, &fbb)
+    attitudeDataLine.add(MOMENTUM_DELTA: MOMENTUM_DELTA, &fbb)
+    attitudeDataLine.add(NUTATION_VEL: NUTATION_VEL, &fbb)
+    return attitudeDataLine.endattitudeDataLine(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Q1, fieldName: "Q1", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2, fieldName: "Q2", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3, fieldName: "Q3", required: false, type: Double.self)
+    try _v.visit(field: VT.QC, fieldName: "QC", required: false, type: Double.self)
+    try _v.visit(field: VT.Q1_DOT, fieldName: "Q1_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2_DOT, fieldName: "Q2_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3_DOT, fieldName: "Q3_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.QC_DOT, fieldName: "QC_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_1, fieldName: "ANGLE_1", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_2, fieldName: "ANGLE_2", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_3, fieldName: "ANGLE_3", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_1_DOT, fieldName: "ANGLE_1_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_2_DOT, fieldName: "ANGLE_2_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_3_DOT, fieldName: "ANGLE_3_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGVEL_X, fieldName: "ANGVEL_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGVEL_Y, fieldName: "ANGVEL_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGVEL_Z, fieldName: "ANGVEL_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_ALPHA, fieldName: "SPIN_ALPHA", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_DELTA, fieldName: "SPIN_DELTA", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_ANGLE, fieldName: "SPIN_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_ANGLE_VEL, fieldName: "SPIN_ANGLE_VEL", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION, fieldName: "NUTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_PER, fieldName: "NUTATION_PER", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_PHASE, fieldName: "NUTATION_PHASE", required: false, type: Double.self)
+    try _v.visit(field: VT.MOMENTUM_ALPHA, fieldName: "MOMENTUM_ALPHA", required: false, type: Double.self)
+    try _v.visit(field: VT.MOMENTUM_DELTA, fieldName: "MOMENTUM_DELTA", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_VEL, fieldName: "NUTATION_VEL", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
 public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -32,6 +288,16 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     static let STEP_SIZE: VOffset = 22
     static let ATTITUDE_COMPONENTS: VOffset = 24
     static let ATTITUDE_DATA: VOffset = 26
+    static let COMMENT: VOffset = 28
+    static let CENTER_NAME: VOffset = 30
+    static let CLASSIFICATION: VOffset = 32
+    static let USEABLE_START_TIME: VOffset = 34
+    static let USEABLE_STOP_TIME: VOffset = 36
+    static let EULER_ROT_SEQ: VOffset = 38
+    static let ANGVEL_FRAME: VOffset = 40
+    static let INTERPOLATION_METHOD: VOffset = 42
+    static let INTERPOLATION_DEGREE: VOffset = 44
+    static let ATTITUDE_DATA_LINES: VOffset = 46
   }
 
   public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
@@ -64,7 +330,48 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   ///  Length must be divisible by ATTITUDE_COMPONENTS.
   public var ATTITUDE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.ATTITUDE_DATA, byteSize: 8) }
   public func withUnsafePointerToAttitudeData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ATTITUDE_DATA, body: body) }
-  public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  ///  Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  ///  One entry per COMMENT line, in file order.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  ///  (504.0-B-2 table 4-3, optional).
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  Classification marking of the data in portion-marked format
+  ///  (504.0-B-2 table 4-3, optional).
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  Start of the USEABLE time span covered by the data, ISO 8601.
+  public var USEABLE_START_TIME: String? { let o = _accessor.offset(VT.USEABLE_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USEABLE_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USEABLE_START_TIME) }
+  ///  End of the USEABLE time span covered by the data, ISO 8601.
+  public var USEABLE_STOP_TIME: String? { let o = _accessor.offset(VT.USEABLE_STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USEABLE_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USEABLE_STOP_TIME) }
+  ///  Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  ///  when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  public var EULER_ROT_SEQ: String? { let o = _accessor.offset(VT.EULER_ROT_SEQ); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EULER_ROT_SEQSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EULER_ROT_SEQ) }
+  ///  Reference frame in which the ANGVEL_* components are expressed; the value
+  ///  is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  ///  NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  ///  is the ratified spelling and is the one carried here.
+  public var ANGVEL_FRAME: String? { let o = _accessor.offset(VT.ANGVEL_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANGVEL_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANGVEL_FRAME) }
+  ///  Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  public var INTERPOLATION_METHOD: String? { let o = _accessor.offset(VT.INTERPOLATION_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERPOLATION_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERPOLATION_METHOD) }
+  ///  Recommended interpolation degree.
+  public var INTERPOLATION_DEGREE: UInt32 { let o = _accessor.offset(VT.INTERPOLATION_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  ///  VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  ///  1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///     ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  ///  2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///     and ATTITUDE_DATA must be empty or ignored by parsers.
+  ///  3. Do NOT populate both formats simultaneously.
+  public var ATTITUDE_DATA_LINES: FlatbufferVector<attitudeDataLine> { return _accessor.vector(at: VT.ATTITUDE_DATA_LINES, byteSize: 4) }
+  public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
@@ -77,6 +384,16 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
   public static func add(ATTITUDE_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_COMPONENTS, def: 7, at: VT.ATTITUDE_COMPONENTS) }
   public static func addVectorOf(ATTITUDE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DATA, at: VT.ATTITUDE_DATA) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(USEABLE_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_START_TIME, at: VT.USEABLE_START_TIME) }
+  public static func add(USEABLE_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_STOP_TIME, at: VT.USEABLE_STOP_TIME) }
+  public static func add(EULER_ROT_SEQ: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EULER_ROT_SEQ, at: VT.EULER_ROT_SEQ) }
+  public static func add(ANGVEL_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGVEL_FRAME, at: VT.ANGVEL_FRAME) }
+  public static func add(INTERPOLATION_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION_METHOD, at: VT.INTERPOLATION_METHOD) }
+  public static func add(INTERPOLATION_DEGREE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION_DEGREE, def: 0, at: VT.INTERPOLATION_DEGREE) }
+  public static func addVectorOf(ATTITUDE_DATA_LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DATA_LINES, at: VT.ATTITUDE_DATA_LINES) }
   public static func endAEMSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAEMSegment(
     _ fbb: inout FlatBufferBuilder,
@@ -91,7 +408,17 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
     STEP_SIZE: Double = 0.0,
     ATTITUDE_COMPONENTS: UInt8 = 7,
-    ATTITUDE_DATAVectorOffset ATTITUDE_DATA: Offset = Offset()
+    ATTITUDE_DATAVectorOffset ATTITUDE_DATA: Offset = Offset(),
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    USEABLE_START_TIMEOffset USEABLE_START_TIME: Offset = Offset(),
+    USEABLE_STOP_TIMEOffset USEABLE_STOP_TIME: Offset = Offset(),
+    EULER_ROT_SEQOffset EULER_ROT_SEQ: Offset = Offset(),
+    ANGVEL_FRAMEOffset ANGVEL_FRAME: Offset = Offset(),
+    INTERPOLATION_METHODOffset INTERPOLATION_METHOD: Offset = Offset(),
+    INTERPOLATION_DEGREE: UInt32 = 0,
+    ATTITUDE_DATA_LINESVectorOffset ATTITUDE_DATA_LINES: Offset = Offset()
   ) -> Offset {
     let __start = AEMSegment.startAEMSegment(&fbb)
     AEMSegment.add(OBJECT_NAME: OBJECT_NAME, &fbb)
@@ -106,6 +433,16 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     AEMSegment.add(STEP_SIZE: STEP_SIZE, &fbb)
     AEMSegment.add(ATTITUDE_COMPONENTS: ATTITUDE_COMPONENTS, &fbb)
     AEMSegment.addVectorOf(ATTITUDE_DATA: ATTITUDE_DATA, &fbb)
+    AEMSegment.addVectorOf(COMMENT: COMMENT, &fbb)
+    AEMSegment.add(CENTER_NAME: CENTER_NAME, &fbb)
+    AEMSegment.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    AEMSegment.add(USEABLE_START_TIME: USEABLE_START_TIME, &fbb)
+    AEMSegment.add(USEABLE_STOP_TIME: USEABLE_STOP_TIME, &fbb)
+    AEMSegment.add(EULER_ROT_SEQ: EULER_ROT_SEQ, &fbb)
+    AEMSegment.add(ANGVEL_FRAME: ANGVEL_FRAME, &fbb)
+    AEMSegment.add(INTERPOLATION_METHOD: INTERPOLATION_METHOD, &fbb)
+    AEMSegment.add(INTERPOLATION_DEGREE: INTERPOLATION_DEGREE, &fbb)
+    AEMSegment.addVectorOf(ATTITUDE_DATA_LINES: ATTITUDE_DATA_LINES, &fbb)
     return AEMSegment.endAEMSegment(&fbb, start: __start)
   }
 
@@ -123,6 +460,16 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
     try _v.visit(field: VT.ATTITUDE_COMPONENTS, fieldName: "ATTITUDE_COMPONENTS", required: false, type: UInt8.self)
     try _v.visit(field: VT.ATTITUDE_DATA, fieldName: "ATTITUDE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USEABLE_START_TIME, fieldName: "USEABLE_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USEABLE_STOP_TIME, fieldName: "USEABLE_STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EULER_ROT_SEQ, fieldName: "EULER_ROT_SEQ", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANGVEL_FRAME, fieldName: "ANGVEL_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION_METHOD, fieldName: "INTERPOLATION_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION_DEGREE, fieldName: "INTERPOLATION_DEGREE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ATTITUDE_DATA_LINES, fieldName: "ATTITUDE_DATA_LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<attitudeDataLine>, attitudeDataLine>>.self)
     _v.finish()
   }
 }
@@ -144,6 +491,9 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let CREATION_DATE: VOffset = 6
     static let ORIGINATOR: VOffset = 8
     static let SEGMENTS: VOffset = 10
+    static let MESSAGE_ID: VOffset = 12
+    static let COMMENT: VOffset = 14
+    static let CLASSIFICATION: VOffset = 16
   }
 
   public var CCSDS_AEM_VERS: String? { let o = _accessor.offset(VT.CCSDS_AEM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
@@ -153,24 +503,41 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
   public var SEGMENTS: FlatbufferVector<AEMSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
-  public static func startAEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  Plain-text comments carried in the message header, one entry per line.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  Message classification/caveats in portion-marked format.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  public static func startAEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(CCSDS_AEM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_AEM_VERS, at: VT.CCSDS_AEM_VERS) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
   public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
   public static func endAEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAEM(
     _ fbb: inout FlatBufferBuilder,
     CCSDS_AEM_VERSOffset CCSDS_AEM_VERS: Offset = Offset(),
     CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
     ORIGINATOROffset ORIGINATOR: Offset = Offset(),
-    SEGMENTSVectorOffset SEGMENTS: Offset = Offset()
+    SEGMENTSVectorOffset SEGMENTS: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset()
   ) -> Offset {
     let __start = AEM.startAEM(&fbb)
     AEM.add(CCSDS_AEM_VERS: CCSDS_AEM_VERS, &fbb)
     AEM.add(CREATION_DATE: CREATION_DATE, &fbb)
     AEM.add(ORIGINATOR: ORIGINATOR, &fbb)
     AEM.addVectorOf(SEGMENTS: SEGMENTS, &fbb)
+    AEM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    AEM.addVectorOf(COMMENT: COMMENT, &fbb)
+    AEM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
     return AEM.endAEM(&fbb, start: __start)
   }
 
@@ -180,6 +547,9 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AEMSegment>, AEMSegment>>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

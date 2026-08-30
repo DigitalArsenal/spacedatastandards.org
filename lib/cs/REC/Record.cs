@@ -249,6 +249,7 @@ public struct Record : IFlatbufferObject
   public BPF valueAsBPF() { return value<BPF>().Value; }
   public EVL valueAsEVL() { return value<EVL>().Value; }
   public PCE valueAsPCE() { return value<PCE>().Value; }
+  public NCD valueAsNCD() { return value<NCD>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -973,6 +974,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PCE:
         _o.value.Value = this.value<PCE>().HasValue ? this.value<PCE>().Value.UnPack() : null;
+        break;
+      case RecordType.NCD:
+        _o.value.Value = this.value<NCD>().HasValue ? this.value<NCD>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

@@ -780,22 +780,449 @@ class TDM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Data-section observations for a SINGLE-segment TDM, in file order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getOBSERVATIONS($j)
+    {
+        $o = $this->__offset(134);
+        $obj = new TDMObservation();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOBSERVATIONSLength()
+    {
+        $o = $this->__offset(134);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// All metadata+data segments of a MULTI-segment TDM, in file order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSEGMENTS($j)
+    {
+        $o = $this->__offset(136);
+        $obj = new TDMSegment();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSEGMENTSLength()
+    {
+        $o = $this->__offset(136);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+    /// already exists above; 2..5 had no carrier.
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_2()
+    {
+        $o = $this->__offset(138);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_3()
+    {
+        $o = $this->__offset(140);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_4()
+    {
+        $o = $this->__offset(142);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_5()
+    {
+        $o = $this->__offset(144);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Transmit frequency rates by participant, Hz/s. A constant rate here is
+    /// the single-interval degenerate case of TRANSMIT_RAMPS.
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_RATE_1()
+    {
+        $o = $this->__offset(146);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_RATE_2()
+    {
+        $o = $this->__offset(148);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_RATE_3()
+    {
+        $o = $this->__offset(150);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_RATE_4()
+    {
+        $o = $this->__offset(152);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQ_RATE_5()
+    {
+        $o = $this->__offset(154);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Unique message identifier (503.0-B-2 table 3-2).
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(156);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+    public function getTRACK_ID()
+    {
+        $o = $this->__offset(158);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Comma-separated list of the data keywords present in the data section.
+    public function getDATA_TYPES()
+    {
+        $o = $this->__offset(160);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Signal path through the participants as an ordered comma-separated list,
+    /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+    public function getPATH()
+    {
+        $o = $this->__offset(162);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Name of the ephemeris used to generate the data, per participant.
+    public function getEPHEMERIS_NAME_1()
+    {
+        $o = $this->__offset(164);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getEPHEMERIS_NAME_2()
+    {
+        $o = $this->__offset(166);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getEPHEMERIS_NAME_3()
+    {
+        $o = $this->__offset(168);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getEPHEMERIS_NAME_4()
+    {
+        $o = $this->__offset(170);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getEPHEMERIS_NAME_5()
+    {
+        $o = $this->__offset(172);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+    /// RANGE is meaningless without it.
+    public function getRANGE_UNITS()
+    {
+        $o = $this->__offset(174);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference frame for angle and position data, as the verbatim CCSDS
+    /// keyword value (503.0-B-2 annex B).
+    public function getREFERENCE_FRAME()
+    {
+        $o = $this->__offset(176);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Recommended interpolation method for the observations.
+    public function getINTERPOLATION()
+    {
+        $o = $this->__offset(178);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Recommended interpolation degree.
+    /**
+     * @return uint
+     */
+    public function getINTERPOLATION_DEGREE()
+    {
+        $o = $this->__offset(180);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Frequency offset applied to the observations, Hz.
+    /**
+     * @return double
+     */
+    public function getFREQ_OFFSET()
+    {
+        $o = $this->__offset(182);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Transponder turnaround ratio numerator.
+    /**
+     * @return int
+     */
+    public function getTURNAROUND_NUMERATOR()
+    {
+        $o = $this->__offset(184);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Transponder turnaround ratio denominator.
+    /**
+     * @return int
+     */
+    public function getTURNAROUND_DENOMINATOR()
+    {
+        $o = $this->__offset(186);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Transmit delays by participant, s.
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_DELAY_1()
+    {
+        $o = $this->__offset(188);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_DELAY_2()
+    {
+        $o = $this->__offset(190);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_DELAY_3()
+    {
+        $o = $this->__offset(192);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_DELAY_4()
+    {
+        $o = $this->__offset(194);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_DELAY_5()
+    {
+        $o = $this->__offset(196);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+    /// RECEIVE_DELAY_3 already exist on the TDM root.)
+    /**
+     * @return double
+     */
+    public function getRECEIVE_DELAY_1()
+    {
+        $o = $this->__offset(198);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getRECEIVE_DELAY_4()
+    {
+        $o = $this->__offset(200);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getRECEIVE_DELAY_5()
+    {
+        $o = $this->__offset(202);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Doppler count bias, Hz.
+    /**
+     * @return double
+     */
+    public function getDOPPLER_COUNT_BIAS()
+    {
+        $o = $this->__offset(204);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Doppler count scale factor.
+    /**
+     * @return uint
+     */
+    public function getDOPPLER_COUNT_SCALE()
+    {
+        $o = $this->__offset(206);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+    /**
+     * @return bool
+     */
+    public function getDOPPLER_COUNT_ROLLOVER()
+    {
+        $o = $this->__offset(208);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Corrections that a consumer must apply, or that were applied when
+    /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+    /**
+     * @return double
+     */
+    public function getCORRECTION_RANGE()
+    {
+        $o = $this->__offset(210);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_DOPPLER()
+    {
+        $o = $this->__offset(212);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_MAG()
+    {
+        $o = $this->__offset(214);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_RCS()
+    {
+        $o = $this->__offset(216);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_RECEIVE()
+    {
+        $o = $this->__offset(218);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_TRANSMIT()
+    {
+        $o = $this->__offset(220);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_ABERRATION_YEARLY()
+    {
+        $o = $this->__offset(222);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCORRECTION_ABERRATION_DIURNAL()
+    {
+        $o = $this->__offset(224);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(65);
+        $builder->StartObject(111);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TDM
      */
-    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $OBSERVATION_STEP_SIZE, $OBSERVATION_START_TIME, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT, $SIGNAL_TO_NOISE, $SPECTRAL_MAX, $DOPPLER_NOISE_HZ, $TRANSMIT_RAMPS)
+    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $OBSERVATION_STEP_SIZE, $OBSERVATION_START_TIME, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT, $SIGNAL_TO_NOISE, $SPECTRAL_MAX, $DOPPLER_NOISE_HZ, $TRANSMIT_RAMPS, $OBSERVATIONS, $SEGMENTS, $TRANSMIT_FREQ_2, $TRANSMIT_FREQ_3, $TRANSMIT_FREQ_4, $TRANSMIT_FREQ_5, $TRANSMIT_FREQ_RATE_1, $TRANSMIT_FREQ_RATE_2, $TRANSMIT_FREQ_RATE_3, $TRANSMIT_FREQ_RATE_4, $TRANSMIT_FREQ_RATE_5, $MESSAGE_ID, $TRACK_ID, $DATA_TYPES, $PATH, $EPHEMERIS_NAME_1, $EPHEMERIS_NAME_2, $EPHEMERIS_NAME_3, $EPHEMERIS_NAME_4, $EPHEMERIS_NAME_5, $RANGE_UNITS, $REFERENCE_FRAME, $INTERPOLATION, $INTERPOLATION_DEGREE, $FREQ_OFFSET, $TURNAROUND_NUMERATOR, $TURNAROUND_DENOMINATOR, $TRANSMIT_DELAY_1, $TRANSMIT_DELAY_2, $TRANSMIT_DELAY_3, $TRANSMIT_DELAY_4, $TRANSMIT_DELAY_5, $RECEIVE_DELAY_1, $RECEIVE_DELAY_4, $RECEIVE_DELAY_5, $DOPPLER_COUNT_BIAS, $DOPPLER_COUNT_SCALE, $DOPPLER_COUNT_ROLLOVER, $CORRECTION_RANGE, $CORRECTION_DOPPLER, $CORRECTION_MAG, $CORRECTION_RCS, $CORRECTION_RECEIVE, $CORRECTION_TRANSMIT, $CORRECTION_ABERRATION_YEARLY, $CORRECTION_ABERRATION_DIURNAL)
     {
-        $builder->startObject(65);
+        $builder->startObject(111);
         self::addOBSERVER_ID($builder, $OBSERVER_ID);
         self::addOBSERVER_X($builder, $OBSERVER_X);
         self::addOBSERVER_Y($builder, $OBSERVER_Y);
@@ -861,6 +1288,52 @@ class TDM extends Table
         self::addSPECTRAL_MAX($builder, $SPECTRAL_MAX);
         self::addDOPPLER_NOISE_HZ($builder, $DOPPLER_NOISE_HZ);
         self::addTRANSMIT_RAMPS($builder, $TRANSMIT_RAMPS);
+        self::addOBSERVATIONS($builder, $OBSERVATIONS);
+        self::addSEGMENTS($builder, $SEGMENTS);
+        self::addTRANSMIT_FREQ_2($builder, $TRANSMIT_FREQ_2);
+        self::addTRANSMIT_FREQ_3($builder, $TRANSMIT_FREQ_3);
+        self::addTRANSMIT_FREQ_4($builder, $TRANSMIT_FREQ_4);
+        self::addTRANSMIT_FREQ_5($builder, $TRANSMIT_FREQ_5);
+        self::addTRANSMIT_FREQ_RATE_1($builder, $TRANSMIT_FREQ_RATE_1);
+        self::addTRANSMIT_FREQ_RATE_2($builder, $TRANSMIT_FREQ_RATE_2);
+        self::addTRANSMIT_FREQ_RATE_3($builder, $TRANSMIT_FREQ_RATE_3);
+        self::addTRANSMIT_FREQ_RATE_4($builder, $TRANSMIT_FREQ_RATE_4);
+        self::addTRANSMIT_FREQ_RATE_5($builder, $TRANSMIT_FREQ_RATE_5);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addTRACK_ID($builder, $TRACK_ID);
+        self::addDATA_TYPES($builder, $DATA_TYPES);
+        self::addPATH($builder, $PATH);
+        self::addEPHEMERIS_NAME_1($builder, $EPHEMERIS_NAME_1);
+        self::addEPHEMERIS_NAME_2($builder, $EPHEMERIS_NAME_2);
+        self::addEPHEMERIS_NAME_3($builder, $EPHEMERIS_NAME_3);
+        self::addEPHEMERIS_NAME_4($builder, $EPHEMERIS_NAME_4);
+        self::addEPHEMERIS_NAME_5($builder, $EPHEMERIS_NAME_5);
+        self::addRANGE_UNITS($builder, $RANGE_UNITS);
+        self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
+        self::addINTERPOLATION($builder, $INTERPOLATION);
+        self::addINTERPOLATION_DEGREE($builder, $INTERPOLATION_DEGREE);
+        self::addFREQ_OFFSET($builder, $FREQ_OFFSET);
+        self::addTURNAROUND_NUMERATOR($builder, $TURNAROUND_NUMERATOR);
+        self::addTURNAROUND_DENOMINATOR($builder, $TURNAROUND_DENOMINATOR);
+        self::addTRANSMIT_DELAY_1($builder, $TRANSMIT_DELAY_1);
+        self::addTRANSMIT_DELAY_2($builder, $TRANSMIT_DELAY_2);
+        self::addTRANSMIT_DELAY_3($builder, $TRANSMIT_DELAY_3);
+        self::addTRANSMIT_DELAY_4($builder, $TRANSMIT_DELAY_4);
+        self::addTRANSMIT_DELAY_5($builder, $TRANSMIT_DELAY_5);
+        self::addRECEIVE_DELAY_1($builder, $RECEIVE_DELAY_1);
+        self::addRECEIVE_DELAY_4($builder, $RECEIVE_DELAY_4);
+        self::addRECEIVE_DELAY_5($builder, $RECEIVE_DELAY_5);
+        self::addDOPPLER_COUNT_BIAS($builder, $DOPPLER_COUNT_BIAS);
+        self::addDOPPLER_COUNT_SCALE($builder, $DOPPLER_COUNT_SCALE);
+        self::addDOPPLER_COUNT_ROLLOVER($builder, $DOPPLER_COUNT_ROLLOVER);
+        self::addCORRECTION_RANGE($builder, $CORRECTION_RANGE);
+        self::addCORRECTION_DOPPLER($builder, $CORRECTION_DOPPLER);
+        self::addCORRECTION_MAG($builder, $CORRECTION_MAG);
+        self::addCORRECTION_RCS($builder, $CORRECTION_RCS);
+        self::addCORRECTION_RECEIVE($builder, $CORRECTION_RECEIVE);
+        self::addCORRECTION_TRANSMIT($builder, $CORRECTION_TRANSMIT);
+        self::addCORRECTION_ABERRATION_YEARLY($builder, $CORRECTION_ABERRATION_YEARLY);
+        self::addCORRECTION_ABERRATION_DIURNAL($builder, $CORRECTION_ABERRATION_DIURNAL);
         $o = $builder->endObject();
         return $o;
     }
@@ -1897,6 +2370,514 @@ class TDM extends Table
     public static function startTRANSMIT_RAMPSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOBSERVATIONS(FlatBufferBuilder $builder, $OBSERVATIONS)
+    {
+        $builder->addOffsetX(65, $OBSERVATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOBSERVATIONSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOBSERVATIONSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSEGMENTS(FlatBufferBuilder $builder, $SEGMENTS)
+    {
+        $builder->addOffsetX(66, $SEGMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSEGMENTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSEGMENTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_2(FlatBufferBuilder $builder, $TRANSMIT_FREQ_2)
+    {
+        $builder->addDoubleX(67, $TRANSMIT_FREQ_2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_3(FlatBufferBuilder $builder, $TRANSMIT_FREQ_3)
+    {
+        $builder->addDoubleX(68, $TRANSMIT_FREQ_3, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_4(FlatBufferBuilder $builder, $TRANSMIT_FREQ_4)
+    {
+        $builder->addDoubleX(69, $TRANSMIT_FREQ_4, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_5(FlatBufferBuilder $builder, $TRANSMIT_FREQ_5)
+    {
+        $builder->addDoubleX(70, $TRANSMIT_FREQ_5, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_RATE_1(FlatBufferBuilder $builder, $TRANSMIT_FREQ_RATE_1)
+    {
+        $builder->addDoubleX(71, $TRANSMIT_FREQ_RATE_1, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_RATE_2(FlatBufferBuilder $builder, $TRANSMIT_FREQ_RATE_2)
+    {
+        $builder->addDoubleX(72, $TRANSMIT_FREQ_RATE_2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_RATE_3(FlatBufferBuilder $builder, $TRANSMIT_FREQ_RATE_3)
+    {
+        $builder->addDoubleX(73, $TRANSMIT_FREQ_RATE_3, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_RATE_4(FlatBufferBuilder $builder, $TRANSMIT_FREQ_RATE_4)
+    {
+        $builder->addDoubleX(74, $TRANSMIT_FREQ_RATE_4, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQ_RATE_5(FlatBufferBuilder $builder, $TRANSMIT_FREQ_RATE_5)
+    {
+        $builder->addDoubleX(75, $TRANSMIT_FREQ_RATE_5, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(76, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
+    {
+        $builder->addOffsetX(77, $TRACK_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDATA_TYPES(FlatBufferBuilder $builder, $DATA_TYPES)
+    {
+        $builder->addOffsetX(78, $DATA_TYPES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPATH(FlatBufferBuilder $builder, $PATH)
+    {
+        $builder->addOffsetX(79, $PATH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME_1(FlatBufferBuilder $builder, $EPHEMERIS_NAME_1)
+    {
+        $builder->addOffsetX(80, $EPHEMERIS_NAME_1, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME_2(FlatBufferBuilder $builder, $EPHEMERIS_NAME_2)
+    {
+        $builder->addOffsetX(81, $EPHEMERIS_NAME_2, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME_3(FlatBufferBuilder $builder, $EPHEMERIS_NAME_3)
+    {
+        $builder->addOffsetX(82, $EPHEMERIS_NAME_3, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME_4(FlatBufferBuilder $builder, $EPHEMERIS_NAME_4)
+    {
+        $builder->addOffsetX(83, $EPHEMERIS_NAME_4, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME_5(FlatBufferBuilder $builder, $EPHEMERIS_NAME_5)
+    {
+        $builder->addOffsetX(84, $EPHEMERIS_NAME_5, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addRANGE_UNITS(FlatBufferBuilder $builder, $RANGE_UNITS)
+    {
+        $builder->addOffsetX(85, $RANGE_UNITS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(86, $REFERENCE_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addINTERPOLATION(FlatBufferBuilder $builder, $INTERPOLATION)
+    {
+        $builder->addOffsetX(87, $INTERPOLATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addINTERPOLATION_DEGREE(FlatBufferBuilder $builder, $INTERPOLATION_DEGREE)
+    {
+        $builder->addUintX(88, $INTERPOLATION_DEGREE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQ_OFFSET(FlatBufferBuilder $builder, $FREQ_OFFSET)
+    {
+        $builder->addDoubleX(89, $FREQ_OFFSET, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addTURNAROUND_NUMERATOR(FlatBufferBuilder $builder, $TURNAROUND_NUMERATOR)
+    {
+        $builder->addIntX(90, $TURNAROUND_NUMERATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addTURNAROUND_DENOMINATOR(FlatBufferBuilder $builder, $TURNAROUND_DENOMINATOR)
+    {
+        $builder->addIntX(91, $TURNAROUND_DENOMINATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_DELAY_1(FlatBufferBuilder $builder, $TRANSMIT_DELAY_1)
+    {
+        $builder->addDoubleX(92, $TRANSMIT_DELAY_1, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_DELAY_2(FlatBufferBuilder $builder, $TRANSMIT_DELAY_2)
+    {
+        $builder->addDoubleX(93, $TRANSMIT_DELAY_2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_DELAY_3(FlatBufferBuilder $builder, $TRANSMIT_DELAY_3)
+    {
+        $builder->addDoubleX(94, $TRANSMIT_DELAY_3, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_DELAY_4(FlatBufferBuilder $builder, $TRANSMIT_DELAY_4)
+    {
+        $builder->addDoubleX(95, $TRANSMIT_DELAY_4, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_DELAY_5(FlatBufferBuilder $builder, $TRANSMIT_DELAY_5)
+    {
+        $builder->addDoubleX(96, $TRANSMIT_DELAY_5, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRECEIVE_DELAY_1(FlatBufferBuilder $builder, $RECEIVE_DELAY_1)
+    {
+        $builder->addDoubleX(97, $RECEIVE_DELAY_1, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRECEIVE_DELAY_4(FlatBufferBuilder $builder, $RECEIVE_DELAY_4)
+    {
+        $builder->addDoubleX(98, $RECEIVE_DELAY_4, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRECEIVE_DELAY_5(FlatBufferBuilder $builder, $RECEIVE_DELAY_5)
+    {
+        $builder->addDoubleX(99, $RECEIVE_DELAY_5, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDOPPLER_COUNT_BIAS(FlatBufferBuilder $builder, $DOPPLER_COUNT_BIAS)
+    {
+        $builder->addDoubleX(100, $DOPPLER_COUNT_BIAS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addDOPPLER_COUNT_SCALE(FlatBufferBuilder $builder, $DOPPLER_COUNT_SCALE)
+    {
+        $builder->addUintX(101, $DOPPLER_COUNT_SCALE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addDOPPLER_COUNT_ROLLOVER(FlatBufferBuilder $builder, $DOPPLER_COUNT_ROLLOVER)
+    {
+        $builder->addBoolX(102, $DOPPLER_COUNT_ROLLOVER, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_RANGE(FlatBufferBuilder $builder, $CORRECTION_RANGE)
+    {
+        $builder->addDoubleX(103, $CORRECTION_RANGE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_DOPPLER(FlatBufferBuilder $builder, $CORRECTION_DOPPLER)
+    {
+        $builder->addDoubleX(104, $CORRECTION_DOPPLER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_MAG(FlatBufferBuilder $builder, $CORRECTION_MAG)
+    {
+        $builder->addDoubleX(105, $CORRECTION_MAG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_RCS(FlatBufferBuilder $builder, $CORRECTION_RCS)
+    {
+        $builder->addDoubleX(106, $CORRECTION_RCS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_RECEIVE(FlatBufferBuilder $builder, $CORRECTION_RECEIVE)
+    {
+        $builder->addDoubleX(107, $CORRECTION_RECEIVE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_TRANSMIT(FlatBufferBuilder $builder, $CORRECTION_TRANSMIT)
+    {
+        $builder->addDoubleX(108, $CORRECTION_TRANSMIT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_ABERRATION_YEARLY(FlatBufferBuilder $builder, $CORRECTION_ABERRATION_YEARLY)
+    {
+        $builder->addDoubleX(109, $CORRECTION_ABERRATION_YEARLY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_ABERRATION_DIURNAL(FlatBufferBuilder $builder, $CORRECTION_ABERRATION_DIURNAL)
+    {
+        $builder->addDoubleX(110, $CORRECTION_ABERRATION_DIURNAL, 0.0);
     }
 
     /**

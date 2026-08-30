@@ -163,6 +163,157 @@ class AEMSegment : Table() {
         }
     val attitudeDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 8)
     fun attitudeDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 8)
+    /**
+     * Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+     * One entry per COMMENT line, in file order.
+     */
+    fun comment(j: Int) : String? {
+        val o = __offset(28)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val commentLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+     * (504.0-B-2 table 4-3, optional).
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Classification marking of the data in portion-marked format
+     * (504.0-B-2 table 4-3, optional).
+     */
+    val classification : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Start of the USEABLE time span covered by the data, ISO 8601.
+     */
+    val useableStartTime : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val useableStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun useableStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * End of the USEABLE time span covered by the data, ISO 8601.
+     */
+    val useableStopTime : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val useableStopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun useableStopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+     * when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+     */
+    val eulerRotSeq : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val eulerRotSeqAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun eulerRotSeqInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Reference frame in which the ANGVEL_* components are expressed; the value
+     * is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+     * NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+     * is the ratified spelling and is the one carried here.
+     */
+    val angvelFrame : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val angvelFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun angvelFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+     */
+    val interpolationMethod : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val interpolationMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun interpolationMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Recommended interpolation degree.
+     */
+    val interpolationDegree : UInt
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+     *
+     * VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+     * 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+     *    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+     * 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+     *    and ATTITUDE_DATA must be empty or ignored by parsers.
+     * 3. Do NOT populate both formats simultaneously.
+     */
+    fun attitudeDataLines(j: Int) : attitudeDataLine? = attitudeDataLines(attitudeDataLine(), j)
+    fun attitudeDataLines(obj: attitudeDataLine, j: Int) : attitudeDataLine? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val attitudeDataLinesLength : Int
+        get() {
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAEMSegment(_bb: ByteBuffer): AEMSegment = getRootAsAEMSegment(_bb, AEMSegment())
@@ -170,9 +321,19 @@ class AEMSegment : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAEMSegment(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, refFrameAOffset: Int, refFrameBOffset: Int, attitudeDirOffset: Int, timeSystemOffset: Int, attitudeTypeOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, attitudeComponents: UByte, attitudeDataOffset: Int) : Int {
-            builder.startTable(12)
+        fun createAEMSegment(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, refFrameAOffset: Int, refFrameBOffset: Int, attitudeDirOffset: Int, timeSystemOffset: Int, attitudeTypeOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, attitudeComponents: UByte, attitudeDataOffset: Int, commentOffset: Int, centerNameOffset: Int, classificationOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, eulerRotSeqOffset: Int, angvelFrameOffset: Int, interpolationMethodOffset: Int, interpolationDegree: UInt, attitudeDataLinesOffset: Int) : Int {
+            builder.startTable(22)
             addSTEPSIZE(builder, stepSize)
+            addATTITUDEDATALINES(builder, attitudeDataLinesOffset)
+            addINTERPOLATIONDEGREE(builder, interpolationDegree)
+            addINTERPOLATIONMETHOD(builder, interpolationMethodOffset)
+            addANGVELFRAME(builder, angvelFrameOffset)
+            addEULERROTSEQ(builder, eulerRotSeqOffset)
+            addUSEABLESTOPTIME(builder, useableStopTimeOffset)
+            addUSEABLESTARTTIME(builder, useableStartTimeOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addCOMMENT(builder, commentOffset)
             addATTITUDEDATA(builder, attitudeDataOffset)
             addSTOPTIME(builder, stopTimeOffset)
             addSTARTTIME(builder, startTimeOffset)
@@ -186,7 +347,7 @@ class AEMSegment : Table() {
             addATTITUDECOMPONENTS(builder, attitudeComponents)
             return endAEMSegment(builder)
         }
-        fun startAEMSegment(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startAEMSegment(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addREFFRAMEA(builder: FlatBufferBuilder, refFrameA: Int) = builder.addOffset(2, refFrameA, 0)
@@ -207,6 +368,32 @@ class AEMSegment : Table() {
             return builder.endVector()
         }
         fun startAttitudeDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(12, comment, 0)
+        fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(13, centerName, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(14, classification, 0)
+        fun addUSEABLESTARTTIME(builder: FlatBufferBuilder, useableStartTime: Int) = builder.addOffset(15, useableStartTime, 0)
+        fun addUSEABLESTOPTIME(builder: FlatBufferBuilder, useableStopTime: Int) = builder.addOffset(16, useableStopTime, 0)
+        fun addEULERROTSEQ(builder: FlatBufferBuilder, eulerRotSeq: Int) = builder.addOffset(17, eulerRotSeq, 0)
+        fun addANGVELFRAME(builder: FlatBufferBuilder, angvelFrame: Int) = builder.addOffset(18, angvelFrame, 0)
+        fun addINTERPOLATIONMETHOD(builder: FlatBufferBuilder, interpolationMethod: Int) = builder.addOffset(19, interpolationMethod, 0)
+        fun addINTERPOLATIONDEGREE(builder: FlatBufferBuilder, interpolationDegree: UInt) = builder.addInt(20, interpolationDegree.toInt(), 0)
+        fun addATTITUDEDATALINES(builder: FlatBufferBuilder, attitudeDataLines: Int) = builder.addOffset(21, attitudeDataLines, 0)
+        fun createAttitudeDataLinesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAttitudeDataLinesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endAEMSegment(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

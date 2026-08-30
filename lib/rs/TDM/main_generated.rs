@@ -313,6 +313,2264 @@ impl TDMTransmitRampT {
     })
   }
 }
+pub enum TDMObservationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// ONE CCSDS TDM observation: a single data-section line.
+///
+/// A TDM data section is NOT a uniform grid. Every line in every published
+/// example (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form
+///
+///     KEYWORD = <epoch> <value>
+///
+/// and the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground
+/// based radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and
+/// CARRIER_POWER share epochs, while the final RCS line repeats the EARLIER
+/// epoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single
+/// OBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,
+/// which is why the parallel observation arrays on the TDM root cannot
+/// round-trip a conformant TDM.
+///
+/// KEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. "RANGE",
+/// "ANGLE_1", "CARRIER_POWER", "RCS", "DOPPLER_INTEGRATED", "PR_N0",
+/// "RECEIVE_FREQ_1", "TRANSMIT_PHASE_CT_1", "VLBI_DELAY", "DOR", "MAG",
+/// "CLOCK_BIAS", "STEC", "TROPO_DRY", "PRESSURE". Carrying the keyword rather
+/// than a fixed field per observable is what lets this form transport the whole
+/// 503.0-B-2 data vocabulary, including keywords a future issue adds, without
+/// a wire change and without inventing a name the standard does not define.
+///
+/// Units are those the standard assigns to that keyword; RANGE additionally
+/// depends on RANGE_UNITS, which is metadata, not data.
+pub struct TDMObservation<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TDMObservation<'a> {
+  type Inner = TDMObservation<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TDMObservation<'a> {
+  pub const VT_KEYWORD: ::flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 6;
+  pub const VT_VALUE: ::flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TDMObservation { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TDMObservationArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TDMObservation<'bldr>> {
+    let mut builder = TDMObservationBuilder::new(_fbb);
+    builder.add_VALUE(args.VALUE);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.KEYWORD { builder.add_KEYWORD(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TDMObservationT {
+    let KEYWORD = self.KEYWORD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let VALUE = self.VALUE();
+    TDMObservationT {
+      KEYWORD,
+      EPOCH,
+      VALUE,
+    }
+  }
+
+  /// CCSDS data keyword, verbatim and case-exact.
+  #[inline]
+  pub fn KEYWORD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMObservation::VT_KEYWORD, None)}
+  }
+  /// Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM.
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMObservation::VT_EPOCH, None)}
+  }
+  /// Observed value.
+  #[inline]
+  pub fn VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMObservation::VT_VALUE, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TDMObservation<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEYWORD", Self::VT_KEYWORD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TDMObservationArgs<'a> {
+    pub KEYWORD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VALUE: f64,
+}
+impl<'a> Default for TDMObservationArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TDMObservationArgs {
+      KEYWORD: None,
+      EPOCH: None,
+      VALUE: 0.0,
+    }
+  }
+}
+
+pub struct TDMObservationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMObservationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_KEYWORD(&mut self, KEYWORD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMObservation::VT_KEYWORD, KEYWORD);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMObservation::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_VALUE(&mut self, VALUE: f64) {
+    self.fbb_.push_slot::<f64>(TDMObservation::VT_VALUE, VALUE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TDMObservationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TDMObservationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TDMObservation<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TDMObservation<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TDMObservation");
+      ds.field("KEYWORD", &self.KEYWORD());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("VALUE", &self.VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TDMObservationT {
+  pub KEYWORD: Option<alloc::string::String>,
+  pub EPOCH: Option<alloc::string::String>,
+  pub VALUE: f64,
+}
+impl Default for TDMObservationT {
+  fn default() -> Self {
+    Self {
+      KEYWORD: None,
+      EPOCH: None,
+      VALUE: 0.0,
+    }
+  }
+}
+impl TDMObservationT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TDMObservation<'b>> {
+    let KEYWORD = self.KEYWORD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VALUE = self.VALUE;
+    TDMObservation::create(_fbb, &TDMObservationArgs{
+      KEYWORD,
+      EPOCH,
+      VALUE,
+    })
+  }
+}
+pub enum TDMSegmentOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One TDM metadata + data segment.
+///
+/// A TDM file may carry MANY segments, each with its own META_START/META_STOP
+/// block and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,
+/// figures E-16 and E-18). The TDM root models a SINGLE segment, so a
+/// multi-segment file cannot be represented without this vector.
+pub struct TDMSegment<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TDMSegment<'a> {
+  type Inner = TDMSegment<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TDMSegment<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_META_START: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 8;
+  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PARTICIPANT_1: ::flatbuffers::VOffsetT = 14;
+  pub const VT_PARTICIPANT_2: ::flatbuffers::VOffsetT = 16;
+  pub const VT_PARTICIPANT_3: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PARTICIPANT_4: ::flatbuffers::VOffsetT = 20;
+  pub const VT_PARTICIPANT_5: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MODE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_PATH_1: ::flatbuffers::VOffsetT = 26;
+  pub const VT_PATH_2: ::flatbuffers::VOffsetT = 28;
+  pub const VT_TRANSMIT_BAND: ::flatbuffers::VOffsetT = 30;
+  pub const VT_RECEIVE_BAND: ::flatbuffers::VOffsetT = 32;
+  pub const VT_INTEGRATION_INTERVAL: ::flatbuffers::VOffsetT = 34;
+  pub const VT_INTEGRATION_REF: ::flatbuffers::VOffsetT = 36;
+  pub const VT_TIMETAG_REF: ::flatbuffers::VOffsetT = 38;
+  pub const VT_ANGLE_TYPE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_RANGE_MODE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_RANGE_MODULUS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_CORRECTION_ANGLE_1: ::flatbuffers::VOffsetT = 46;
+  pub const VT_CORRECTION_ANGLE_2: ::flatbuffers::VOffsetT = 48;
+  pub const VT_CORRECTIONS_APPLIED: ::flatbuffers::VOffsetT = 50;
+  pub const VT_DATA_QUALITY: ::flatbuffers::VOffsetT = 52;
+  pub const VT_RECEIVE_DELAY_2: ::flatbuffers::VOffsetT = 54;
+  pub const VT_RECEIVE_DELAY_3: ::flatbuffers::VOffsetT = 56;
+  pub const VT_TRANSMIT_FREQ_1: ::flatbuffers::VOffsetT = 58;
+  pub const VT_TRANSMIT_FREQ_2: ::flatbuffers::VOffsetT = 60;
+  pub const VT_TRANSMIT_FREQ_3: ::flatbuffers::VOffsetT = 62;
+  pub const VT_TRANSMIT_FREQ_4: ::flatbuffers::VOffsetT = 64;
+  pub const VT_TRANSMIT_FREQ_5: ::flatbuffers::VOffsetT = 66;
+  pub const VT_TRANSMIT_FREQ_RATE_1: ::flatbuffers::VOffsetT = 68;
+  pub const VT_TRANSMIT_FREQ_RATE_2: ::flatbuffers::VOffsetT = 70;
+  pub const VT_TRANSMIT_FREQ_RATE_3: ::flatbuffers::VOffsetT = 72;
+  pub const VT_TRANSMIT_FREQ_RATE_4: ::flatbuffers::VOffsetT = 74;
+  pub const VT_TRANSMIT_FREQ_RATE_5: ::flatbuffers::VOffsetT = 76;
+  pub const VT_META_STOP: ::flatbuffers::VOffsetT = 78;
+  pub const VT_DATA_START: ::flatbuffers::VOffsetT = 80;
+  pub const VT_OBSERVATIONS: ::flatbuffers::VOffsetT = 82;
+  pub const VT_DATA_STOP: ::flatbuffers::VOffsetT = 84;
+  pub const VT_TRANSMIT_RAMPS: ::flatbuffers::VOffsetT = 86;
+  pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 88;
+  pub const VT_TRACK_ID: ::flatbuffers::VOffsetT = 90;
+  pub const VT_DATA_TYPES: ::flatbuffers::VOffsetT = 92;
+  pub const VT_PATH: ::flatbuffers::VOffsetT = 94;
+  pub const VT_EPHEMERIS_NAME_1: ::flatbuffers::VOffsetT = 96;
+  pub const VT_EPHEMERIS_NAME_2: ::flatbuffers::VOffsetT = 98;
+  pub const VT_EPHEMERIS_NAME_3: ::flatbuffers::VOffsetT = 100;
+  pub const VT_EPHEMERIS_NAME_4: ::flatbuffers::VOffsetT = 102;
+  pub const VT_EPHEMERIS_NAME_5: ::flatbuffers::VOffsetT = 104;
+  pub const VT_RANGE_UNITS: ::flatbuffers::VOffsetT = 106;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 108;
+  pub const VT_INTERPOLATION: ::flatbuffers::VOffsetT = 110;
+  pub const VT_INTERPOLATION_DEGREE: ::flatbuffers::VOffsetT = 112;
+  pub const VT_FREQ_OFFSET: ::flatbuffers::VOffsetT = 114;
+  pub const VT_TURNAROUND_NUMERATOR: ::flatbuffers::VOffsetT = 116;
+  pub const VT_TURNAROUND_DENOMINATOR: ::flatbuffers::VOffsetT = 118;
+  pub const VT_TRANSMIT_DELAY_1: ::flatbuffers::VOffsetT = 120;
+  pub const VT_TRANSMIT_DELAY_2: ::flatbuffers::VOffsetT = 122;
+  pub const VT_TRANSMIT_DELAY_3: ::flatbuffers::VOffsetT = 124;
+  pub const VT_TRANSMIT_DELAY_4: ::flatbuffers::VOffsetT = 126;
+  pub const VT_TRANSMIT_DELAY_5: ::flatbuffers::VOffsetT = 128;
+  pub const VT_RECEIVE_DELAY_1: ::flatbuffers::VOffsetT = 130;
+  pub const VT_RECEIVE_DELAY_4: ::flatbuffers::VOffsetT = 132;
+  pub const VT_RECEIVE_DELAY_5: ::flatbuffers::VOffsetT = 134;
+  pub const VT_DOPPLER_COUNT_BIAS: ::flatbuffers::VOffsetT = 136;
+  pub const VT_DOPPLER_COUNT_SCALE: ::flatbuffers::VOffsetT = 138;
+  pub const VT_DOPPLER_COUNT_ROLLOVER: ::flatbuffers::VOffsetT = 140;
+  pub const VT_CORRECTION_RANGE: ::flatbuffers::VOffsetT = 142;
+  pub const VT_CORRECTION_DOPPLER: ::flatbuffers::VOffsetT = 144;
+  pub const VT_CORRECTION_MAG: ::flatbuffers::VOffsetT = 146;
+  pub const VT_CORRECTION_RCS: ::flatbuffers::VOffsetT = 148;
+  pub const VT_CORRECTION_RECEIVE: ::flatbuffers::VOffsetT = 150;
+  pub const VT_CORRECTION_TRANSMIT: ::flatbuffers::VOffsetT = 152;
+  pub const VT_CORRECTION_ABERRATION_YEARLY: ::flatbuffers::VOffsetT = 154;
+  pub const VT_CORRECTION_ABERRATION_DIURNAL: ::flatbuffers::VOffsetT = 156;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TDMSegment { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TDMSegmentArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TDMSegment<'bldr>> {
+    let mut builder = TDMSegmentBuilder::new(_fbb);
+    builder.add_CORRECTION_ABERRATION_DIURNAL(args.CORRECTION_ABERRATION_DIURNAL);
+    builder.add_CORRECTION_ABERRATION_YEARLY(args.CORRECTION_ABERRATION_YEARLY);
+    builder.add_CORRECTION_TRANSMIT(args.CORRECTION_TRANSMIT);
+    builder.add_CORRECTION_RECEIVE(args.CORRECTION_RECEIVE);
+    builder.add_CORRECTION_RCS(args.CORRECTION_RCS);
+    builder.add_CORRECTION_MAG(args.CORRECTION_MAG);
+    builder.add_CORRECTION_DOPPLER(args.CORRECTION_DOPPLER);
+    builder.add_CORRECTION_RANGE(args.CORRECTION_RANGE);
+    builder.add_DOPPLER_COUNT_BIAS(args.DOPPLER_COUNT_BIAS);
+    builder.add_RECEIVE_DELAY_5(args.RECEIVE_DELAY_5);
+    builder.add_RECEIVE_DELAY_4(args.RECEIVE_DELAY_4);
+    builder.add_RECEIVE_DELAY_1(args.RECEIVE_DELAY_1);
+    builder.add_TRANSMIT_DELAY_5(args.TRANSMIT_DELAY_5);
+    builder.add_TRANSMIT_DELAY_4(args.TRANSMIT_DELAY_4);
+    builder.add_TRANSMIT_DELAY_3(args.TRANSMIT_DELAY_3);
+    builder.add_TRANSMIT_DELAY_2(args.TRANSMIT_DELAY_2);
+    builder.add_TRANSMIT_DELAY_1(args.TRANSMIT_DELAY_1);
+    builder.add_FREQ_OFFSET(args.FREQ_OFFSET);
+    builder.add_TRANSMIT_FREQ_RATE_5(args.TRANSMIT_FREQ_RATE_5);
+    builder.add_TRANSMIT_FREQ_RATE_4(args.TRANSMIT_FREQ_RATE_4);
+    builder.add_TRANSMIT_FREQ_RATE_3(args.TRANSMIT_FREQ_RATE_3);
+    builder.add_TRANSMIT_FREQ_RATE_2(args.TRANSMIT_FREQ_RATE_2);
+    builder.add_TRANSMIT_FREQ_RATE_1(args.TRANSMIT_FREQ_RATE_1);
+    builder.add_TRANSMIT_FREQ_5(args.TRANSMIT_FREQ_5);
+    builder.add_TRANSMIT_FREQ_4(args.TRANSMIT_FREQ_4);
+    builder.add_TRANSMIT_FREQ_3(args.TRANSMIT_FREQ_3);
+    builder.add_TRANSMIT_FREQ_2(args.TRANSMIT_FREQ_2);
+    builder.add_TRANSMIT_FREQ_1(args.TRANSMIT_FREQ_1);
+    builder.add_RECEIVE_DELAY_3(args.RECEIVE_DELAY_3);
+    builder.add_RECEIVE_DELAY_2(args.RECEIVE_DELAY_2);
+    builder.add_CORRECTION_ANGLE_2(args.CORRECTION_ANGLE_2);
+    builder.add_CORRECTION_ANGLE_1(args.CORRECTION_ANGLE_1);
+    builder.add_RANGE_MODULUS(args.RANGE_MODULUS);
+    builder.add_INTEGRATION_INTERVAL(args.INTEGRATION_INTERVAL);
+    builder.add_DOPPLER_COUNT_SCALE(args.DOPPLER_COUNT_SCALE);
+    builder.add_TURNAROUND_DENOMINATOR(args.TURNAROUND_DENOMINATOR);
+    builder.add_TURNAROUND_NUMERATOR(args.TURNAROUND_NUMERATOR);
+    builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
+    if let Some(x) = args.INTERPOLATION { builder.add_INTERPOLATION(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    if let Some(x) = args.RANGE_UNITS { builder.add_RANGE_UNITS(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_5 { builder.add_EPHEMERIS_NAME_5(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_4 { builder.add_EPHEMERIS_NAME_4(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_3 { builder.add_EPHEMERIS_NAME_3(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_2 { builder.add_EPHEMERIS_NAME_2(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_1 { builder.add_EPHEMERIS_NAME_1(x); }
+    if let Some(x) = args.PATH { builder.add_PATH(x); }
+    if let Some(x) = args.DATA_TYPES { builder.add_DATA_TYPES(x); }
+    if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
+    if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+    if let Some(x) = args.TRANSMIT_RAMPS { builder.add_TRANSMIT_RAMPS(x); }
+    if let Some(x) = args.DATA_STOP { builder.add_DATA_STOP(x); }
+    if let Some(x) = args.OBSERVATIONS { builder.add_OBSERVATIONS(x); }
+    if let Some(x) = args.DATA_START { builder.add_DATA_START(x); }
+    if let Some(x) = args.META_STOP { builder.add_META_STOP(x); }
+    if let Some(x) = args.DATA_QUALITY { builder.add_DATA_QUALITY(x); }
+    if let Some(x) = args.CORRECTIONS_APPLIED { builder.add_CORRECTIONS_APPLIED(x); }
+    if let Some(x) = args.RANGE_MODE { builder.add_RANGE_MODE(x); }
+    if let Some(x) = args.ANGLE_TYPE { builder.add_ANGLE_TYPE(x); }
+    if let Some(x) = args.TIMETAG_REF { builder.add_TIMETAG_REF(x); }
+    if let Some(x) = args.INTEGRATION_REF { builder.add_INTEGRATION_REF(x); }
+    if let Some(x) = args.RECEIVE_BAND { builder.add_RECEIVE_BAND(x); }
+    if let Some(x) = args.TRANSMIT_BAND { builder.add_TRANSMIT_BAND(x); }
+    if let Some(x) = args.MODE { builder.add_MODE(x); }
+    if let Some(x) = args.PARTICIPANT_5 { builder.add_PARTICIPANT_5(x); }
+    if let Some(x) = args.PARTICIPANT_4 { builder.add_PARTICIPANT_4(x); }
+    if let Some(x) = args.PARTICIPANT_3 { builder.add_PARTICIPANT_3(x); }
+    if let Some(x) = args.PARTICIPANT_2 { builder.add_PARTICIPANT_2(x); }
+    if let Some(x) = args.PARTICIPANT_1 { builder.add_PARTICIPANT_1(x); }
+    if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
+    if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
+    if let Some(x) = args.META_START { builder.add_META_START(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.add_PATH_2(args.PATH_2);
+    builder.add_PATH_1(args.PATH_1);
+    builder.add_DOPPLER_COUNT_ROLLOVER(args.DOPPLER_COUNT_ROLLOVER);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TDMSegmentT {
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let META_START = self.META_START().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let START_TIME = self.START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARTICIPANT_1 = self.PARTICIPANT_1().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARTICIPANT_2 = self.PARTICIPANT_2().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARTICIPANT_3 = self.PARTICIPANT_3().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARTICIPANT_4 = self.PARTICIPANT_4().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARTICIPANT_5 = self.PARTICIPANT_5().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODE = self.MODE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PATH_1 = self.PATH_1();
+    let PATH_2 = self.PATH_2();
+    let TRANSMIT_BAND = self.TRANSMIT_BAND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RECEIVE_BAND = self.RECEIVE_BAND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTEGRATION_INTERVAL = self.INTEGRATION_INTERVAL();
+    let INTEGRATION_REF = self.INTEGRATION_REF().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIMETAG_REF = self.TIMETAG_REF().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ANGLE_TYPE = self.ANGLE_TYPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RANGE_MODE = self.RANGE_MODE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RANGE_MODULUS = self.RANGE_MODULUS();
+    let CORRECTION_ANGLE_1 = self.CORRECTION_ANGLE_1();
+    let CORRECTION_ANGLE_2 = self.CORRECTION_ANGLE_2();
+    let CORRECTIONS_APPLIED = self.CORRECTIONS_APPLIED().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_QUALITY = self.DATA_QUALITY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RECEIVE_DELAY_2 = self.RECEIVE_DELAY_2();
+    let RECEIVE_DELAY_3 = self.RECEIVE_DELAY_3();
+    let TRANSMIT_FREQ_1 = self.TRANSMIT_FREQ_1();
+    let TRANSMIT_FREQ_2 = self.TRANSMIT_FREQ_2();
+    let TRANSMIT_FREQ_3 = self.TRANSMIT_FREQ_3();
+    let TRANSMIT_FREQ_4 = self.TRANSMIT_FREQ_4();
+    let TRANSMIT_FREQ_5 = self.TRANSMIT_FREQ_5();
+    let TRANSMIT_FREQ_RATE_1 = self.TRANSMIT_FREQ_RATE_1();
+    let TRANSMIT_FREQ_RATE_2 = self.TRANSMIT_FREQ_RATE_2();
+    let TRANSMIT_FREQ_RATE_3 = self.TRANSMIT_FREQ_RATE_3();
+    let TRANSMIT_FREQ_RATE_4 = self.TRANSMIT_FREQ_RATE_4();
+    let TRANSMIT_FREQ_RATE_5 = self.TRANSMIT_FREQ_RATE_5();
+    let META_STOP = self.META_STOP().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_START = self.DATA_START().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBSERVATIONS = self.OBSERVATIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let DATA_STOP = self.DATA_STOP().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRACK_ID = self.TRACK_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_TYPES = self.DATA_TYPES().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PATH = self.PATH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_1 = self.EPHEMERIS_NAME_1().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_2 = self.EPHEMERIS_NAME_2().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_3 = self.EPHEMERIS_NAME_3().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_4 = self.EPHEMERIS_NAME_4().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_5 = self.EPHEMERIS_NAME_5().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RANGE_UNITS = self.RANGE_UNITS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION = self.INTERPOLATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE();
+    let FREQ_OFFSET = self.FREQ_OFFSET();
+    let TURNAROUND_NUMERATOR = self.TURNAROUND_NUMERATOR();
+    let TURNAROUND_DENOMINATOR = self.TURNAROUND_DENOMINATOR();
+    let TRANSMIT_DELAY_1 = self.TRANSMIT_DELAY_1();
+    let TRANSMIT_DELAY_2 = self.TRANSMIT_DELAY_2();
+    let TRANSMIT_DELAY_3 = self.TRANSMIT_DELAY_3();
+    let TRANSMIT_DELAY_4 = self.TRANSMIT_DELAY_4();
+    let TRANSMIT_DELAY_5 = self.TRANSMIT_DELAY_5();
+    let RECEIVE_DELAY_1 = self.RECEIVE_DELAY_1();
+    let RECEIVE_DELAY_4 = self.RECEIVE_DELAY_4();
+    let RECEIVE_DELAY_5 = self.RECEIVE_DELAY_5();
+    let DOPPLER_COUNT_BIAS = self.DOPPLER_COUNT_BIAS();
+    let DOPPLER_COUNT_SCALE = self.DOPPLER_COUNT_SCALE();
+    let DOPPLER_COUNT_ROLLOVER = self.DOPPLER_COUNT_ROLLOVER();
+    let CORRECTION_RANGE = self.CORRECTION_RANGE();
+    let CORRECTION_DOPPLER = self.CORRECTION_DOPPLER();
+    let CORRECTION_MAG = self.CORRECTION_MAG();
+    let CORRECTION_RCS = self.CORRECTION_RCS();
+    let CORRECTION_RECEIVE = self.CORRECTION_RECEIVE();
+    let CORRECTION_TRANSMIT = self.CORRECTION_TRANSMIT();
+    let CORRECTION_ABERRATION_YEARLY = self.CORRECTION_ABERRATION_YEARLY();
+    let CORRECTION_ABERRATION_DIURNAL = self.CORRECTION_ABERRATION_DIURNAL();
+    TDMSegmentT {
+      COMMENT,
+      META_START,
+      TIME_SYSTEM,
+      START_TIME,
+      STOP_TIME,
+      PARTICIPANT_1,
+      PARTICIPANT_2,
+      PARTICIPANT_3,
+      PARTICIPANT_4,
+      PARTICIPANT_5,
+      MODE,
+      PATH_1,
+      PATH_2,
+      TRANSMIT_BAND,
+      RECEIVE_BAND,
+      INTEGRATION_INTERVAL,
+      INTEGRATION_REF,
+      TIMETAG_REF,
+      ANGLE_TYPE,
+      RANGE_MODE,
+      RANGE_MODULUS,
+      CORRECTION_ANGLE_1,
+      CORRECTION_ANGLE_2,
+      CORRECTIONS_APPLIED,
+      DATA_QUALITY,
+      RECEIVE_DELAY_2,
+      RECEIVE_DELAY_3,
+      TRANSMIT_FREQ_1,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      META_STOP,
+      DATA_START,
+      OBSERVATIONS,
+      DATA_STOP,
+      TRANSMIT_RAMPS,
+      MESSAGE_ID,
+      TRACK_ID,
+      DATA_TYPES,
+      PATH,
+      EPHEMERIS_NAME_1,
+      EPHEMERIS_NAME_2,
+      EPHEMERIS_NAME_3,
+      EPHEMERIS_NAME_4,
+      EPHEMERIS_NAME_5,
+      RANGE_UNITS,
+      REFERENCE_FRAME,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL,
+    }
+  }
+
+  /// Comments carried in this segment's metadata block, in file order.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(TDMSegment::VT_COMMENT, None)}
+  }
+  #[inline]
+  pub fn META_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_META_START, None)}
+  }
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_TIME_SYSTEM, None)}
+  }
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_START_TIME, None)}
+  }
+  #[inline]
+  pub fn STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_STOP_TIME, None)}
+  }
+  #[inline]
+  pub fn PARTICIPANT_1(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PARTICIPANT_1, None)}
+  }
+  #[inline]
+  pub fn PARTICIPANT_2(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PARTICIPANT_2, None)}
+  }
+  #[inline]
+  pub fn PARTICIPANT_3(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PARTICIPANT_3, None)}
+  }
+  #[inline]
+  pub fn PARTICIPANT_4(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PARTICIPANT_4, None)}
+  }
+  #[inline]
+  pub fn PARTICIPANT_5(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PARTICIPANT_5, None)}
+  }
+  #[inline]
+  pub fn MODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_MODE, None)}
+  }
+  #[inline]
+  pub fn PATH_1(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(TDMSegment::VT_PATH_1, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn PATH_2(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(TDMSegment::VT_PATH_2, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_BAND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_TRANSMIT_BAND, None)}
+  }
+  #[inline]
+  pub fn RECEIVE_BAND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_RECEIVE_BAND, None)}
+  }
+  #[inline]
+  pub fn INTEGRATION_INTERVAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_INTEGRATION_INTERVAL, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INTEGRATION_REF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_INTEGRATION_REF, None)}
+  }
+  #[inline]
+  pub fn TIMETAG_REF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_TIMETAG_REF, None)}
+  }
+  #[inline]
+  pub fn ANGLE_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_ANGLE_TYPE, None)}
+  }
+  #[inline]
+  pub fn RANGE_MODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_RANGE_MODE, None)}
+  }
+  #[inline]
+  pub fn RANGE_MODULUS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RANGE_MODULUS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ANGLE_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_ANGLE_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ANGLE_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_ANGLE_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTIONS_APPLIED(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_CORRECTIONS_APPLIED, None)}
+  }
+  #[inline]
+  pub fn DATA_QUALITY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_DATA_QUALITY, None)}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RECEIVE_DELAY_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RECEIVE_DELAY_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_5, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_5, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn META_STOP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_META_STOP, None)}
+  }
+  #[inline]
+  pub fn DATA_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_DATA_START, None)}
+  }
+  /// The segment's observations, in FILE ORDER. This is the authoritative
+  /// data-section representation.
+  #[inline]
+  pub fn OBSERVATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation>>>>(TDMSegment::VT_OBSERVATIONS, None)}
+  }
+  #[inline]
+  pub fn DATA_STOP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_DATA_STOP, None)}
+  }
+  /// Uplink frequency ramp table applying to this segment. SDS EXTENSION;
+  /// absent (not empty) for a ramp-free, exactly CCSDS-conformant segment.
+  #[inline]
+  pub fn TRANSMIT_RAMPS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>(TDMSegment::VT_TRANSMIT_RAMPS, None)}
+  }
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  #[inline]
+  pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_MESSAGE_ID, None)}
+  }
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  #[inline]
+  pub fn TRACK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_TRACK_ID, None)}
+  }
+  /// Comma-separated list of the data keywords present in the data section.
+  #[inline]
+  pub fn DATA_TYPES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_DATA_TYPES, None)}
+  }
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  #[inline]
+  pub fn PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_PATH, None)}
+  }
+  /// Name of the ephemeris used to generate the data, per participant.
+  #[inline]
+  pub fn EPHEMERIS_NAME_1(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_EPHEMERIS_NAME_1, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_2(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_EPHEMERIS_NAME_2, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_3(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_EPHEMERIS_NAME_3, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_4(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_EPHEMERIS_NAME_4, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_5(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_EPHEMERIS_NAME_5, None)}
+  }
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  #[inline]
+  pub fn RANGE_UNITS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_RANGE_UNITS, None)}
+  }
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_REFERENCE_FRAME, None)}
+  }
+  /// Recommended interpolation method for the observations.
+  #[inline]
+  pub fn INTERPOLATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMSegment::VT_INTERPOLATION, None)}
+  }
+  /// Recommended interpolation degree.
+  #[inline]
+  pub fn INTERPOLATION_DEGREE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(TDMSegment::VT_INTERPOLATION_DEGREE, Some(0)).unwrap()}
+  }
+  /// Frequency offset applied to the observations, Hz.
+  #[inline]
+  pub fn FREQ_OFFSET(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_FREQ_OFFSET, Some(0.0)).unwrap()}
+  }
+  /// Transponder turnaround ratio numerator.
+  #[inline]
+  pub fn TURNAROUND_NUMERATOR(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TDMSegment::VT_TURNAROUND_NUMERATOR, Some(0)).unwrap()}
+  }
+  /// Transponder turnaround ratio denominator.
+  #[inline]
+  pub fn TURNAROUND_DENOMINATOR(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TDMSegment::VT_TURNAROUND_DENOMINATOR, Some(0)).unwrap()}
+  }
+  /// Transmit delays by participant, s.
+  #[inline]
+  pub fn TRANSMIT_DELAY_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_DELAY_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_DELAY_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_DELAY_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_DELAY_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_TRANSMIT_DELAY_5, Some(0.0)).unwrap()}
+  }
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  #[inline]
+  pub fn RECEIVE_DELAY_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RECEIVE_DELAY_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RECEIVE_DELAY_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_RECEIVE_DELAY_5, Some(0.0)).unwrap()}
+  }
+  /// Doppler count bias, Hz.
+  #[inline]
+  pub fn DOPPLER_COUNT_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_DOPPLER_COUNT_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Doppler count scale factor.
+  #[inline]
+  pub fn DOPPLER_COUNT_SCALE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(TDMSegment::VT_DOPPLER_COUNT_SCALE, Some(0)).unwrap()}
+  }
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  #[inline]
+  pub fn DOPPLER_COUNT_ROLLOVER(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(TDMSegment::VT_DOPPLER_COUNT_ROLLOVER, Some(false)).unwrap()}
+  }
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  #[inline]
+  pub fn CORRECTION_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_RANGE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_DOPPLER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_DOPPLER, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_MAG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_MAG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_RCS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_RCS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_RECEIVE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_RECEIVE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_TRANSMIT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_TRANSMIT, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ABERRATION_YEARLY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_ABERRATION_YEARLY, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ABERRATION_DIURNAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMSegment::VT_CORRECTION_ABERRATION_DIURNAL, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TDMSegment<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("META_START", Self::VT_META_START, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_1", Self::VT_PARTICIPANT_1, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_2", Self::VT_PARTICIPANT_2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_3", Self::VT_PARTICIPANT_3, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_4", Self::VT_PARTICIPANT_4, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_5", Self::VT_PARTICIPANT_5, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODE", Self::VT_MODE, false)?
+     .visit_field::<u16>("PATH_1", Self::VT_PATH_1, false)?
+     .visit_field::<u16>("PATH_2", Self::VT_PATH_2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSMIT_BAND", Self::VT_TRANSMIT_BAND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RECEIVE_BAND", Self::VT_RECEIVE_BAND, false)?
+     .visit_field::<f64>("INTEGRATION_INTERVAL", Self::VT_INTEGRATION_INTERVAL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTEGRATION_REF", Self::VT_INTEGRATION_REF, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIMETAG_REF", Self::VT_TIMETAG_REF, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ANGLE_TYPE", Self::VT_ANGLE_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RANGE_MODE", Self::VT_RANGE_MODE, false)?
+     .visit_field::<f64>("RANGE_MODULUS", Self::VT_RANGE_MODULUS, false)?
+     .visit_field::<f64>("CORRECTION_ANGLE_1", Self::VT_CORRECTION_ANGLE_1, false)?
+     .visit_field::<f64>("CORRECTION_ANGLE_2", Self::VT_CORRECTION_ANGLE_2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CORRECTIONS_APPLIED", Self::VT_CORRECTIONS_APPLIED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_QUALITY", Self::VT_DATA_QUALITY, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_2", Self::VT_RECEIVE_DELAY_2, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_3", Self::VT_RECEIVE_DELAY_3, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_1", Self::VT_TRANSMIT_FREQ_1, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_2", Self::VT_TRANSMIT_FREQ_2, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_3", Self::VT_TRANSMIT_FREQ_3, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_4", Self::VT_TRANSMIT_FREQ_4, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_5", Self::VT_TRANSMIT_FREQ_5, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_1", Self::VT_TRANSMIT_FREQ_RATE_1, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_2", Self::VT_TRANSMIT_FREQ_RATE_2, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_3", Self::VT_TRANSMIT_FREQ_RATE_3, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_4", Self::VT_TRANSMIT_FREQ_RATE_4, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_5", Self::VT_TRANSMIT_FREQ_RATE_5, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("META_STOP", Self::VT_META_STOP, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_START", Self::VT_DATA_START, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMObservation>>>>("OBSERVATIONS", Self::VT_OBSERVATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_STOP", Self::VT_DATA_STOP, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>("TRANSMIT_RAMPS", Self::VT_TRANSMIT_RAMPS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_TYPES", Self::VT_DATA_TYPES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PATH", Self::VT_PATH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_1", Self::VT_EPHEMERIS_NAME_1, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_2", Self::VT_EPHEMERIS_NAME_2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_3", Self::VT_EPHEMERIS_NAME_3, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_4", Self::VT_EPHEMERIS_NAME_4, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_5", Self::VT_EPHEMERIS_NAME_5, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RANGE_UNITS", Self::VT_RANGE_UNITS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
+     .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
+     .visit_field::<f64>("FREQ_OFFSET", Self::VT_FREQ_OFFSET, false)?
+     .visit_field::<i32>("TURNAROUND_NUMERATOR", Self::VT_TURNAROUND_NUMERATOR, false)?
+     .visit_field::<i32>("TURNAROUND_DENOMINATOR", Self::VT_TURNAROUND_DENOMINATOR, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_1", Self::VT_TRANSMIT_DELAY_1, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_2", Self::VT_TRANSMIT_DELAY_2, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_3", Self::VT_TRANSMIT_DELAY_3, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_4", Self::VT_TRANSMIT_DELAY_4, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_5", Self::VT_TRANSMIT_DELAY_5, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_1", Self::VT_RECEIVE_DELAY_1, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_4", Self::VT_RECEIVE_DELAY_4, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_5", Self::VT_RECEIVE_DELAY_5, false)?
+     .visit_field::<f64>("DOPPLER_COUNT_BIAS", Self::VT_DOPPLER_COUNT_BIAS, false)?
+     .visit_field::<u32>("DOPPLER_COUNT_SCALE", Self::VT_DOPPLER_COUNT_SCALE, false)?
+     .visit_field::<bool>("DOPPLER_COUNT_ROLLOVER", Self::VT_DOPPLER_COUNT_ROLLOVER, false)?
+     .visit_field::<f64>("CORRECTION_RANGE", Self::VT_CORRECTION_RANGE, false)?
+     .visit_field::<f64>("CORRECTION_DOPPLER", Self::VT_CORRECTION_DOPPLER, false)?
+     .visit_field::<f64>("CORRECTION_MAG", Self::VT_CORRECTION_MAG, false)?
+     .visit_field::<f64>("CORRECTION_RCS", Self::VT_CORRECTION_RCS, false)?
+     .visit_field::<f64>("CORRECTION_RECEIVE", Self::VT_CORRECTION_RECEIVE, false)?
+     .visit_field::<f64>("CORRECTION_TRANSMIT", Self::VT_CORRECTION_TRANSMIT, false)?
+     .visit_field::<f64>("CORRECTION_ABERRATION_YEARLY", Self::VT_CORRECTION_ABERRATION_YEARLY, false)?
+     .visit_field::<f64>("CORRECTION_ABERRATION_DIURNAL", Self::VT_CORRECTION_ABERRATION_DIURNAL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TDMSegmentArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub META_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SYSTEM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_1: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_2: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_3: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_4: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_5: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH_1: u16,
+    pub PATH_2: u16,
+    pub TRANSMIT_BAND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECEIVE_BAND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTEGRATION_INTERVAL: f64,
+    pub INTEGRATION_REF: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIMETAG_REF: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ANGLE_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RANGE_MODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RANGE_MODULUS: f64,
+    pub CORRECTION_ANGLE_1: f64,
+    pub CORRECTION_ANGLE_2: f64,
+    pub CORRECTIONS_APPLIED: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_QUALITY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECEIVE_DELAY_2: f64,
+    pub RECEIVE_DELAY_3: f64,
+    pub TRANSMIT_FREQ_1: f64,
+    pub TRANSMIT_FREQ_2: f64,
+    pub TRANSMIT_FREQ_3: f64,
+    pub TRANSMIT_FREQ_4: f64,
+    pub TRANSMIT_FREQ_5: f64,
+    pub TRANSMIT_FREQ_RATE_1: f64,
+    pub TRANSMIT_FREQ_RATE_2: f64,
+    pub TRANSMIT_FREQ_RATE_3: f64,
+    pub TRANSMIT_FREQ_RATE_4: f64,
+    pub TRANSMIT_FREQ_RATE_5: f64,
+    pub META_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBSERVATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation<'a>>>>>,
+    pub DATA_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSMIT_RAMPS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRACK_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_TYPES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_1: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_2: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_3: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_4: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_5: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RANGE_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub FREQ_OFFSET: f64,
+    pub TURNAROUND_NUMERATOR: i32,
+    pub TURNAROUND_DENOMINATOR: i32,
+    pub TRANSMIT_DELAY_1: f64,
+    pub TRANSMIT_DELAY_2: f64,
+    pub TRANSMIT_DELAY_3: f64,
+    pub TRANSMIT_DELAY_4: f64,
+    pub TRANSMIT_DELAY_5: f64,
+    pub RECEIVE_DELAY_1: f64,
+    pub RECEIVE_DELAY_4: f64,
+    pub RECEIVE_DELAY_5: f64,
+    pub DOPPLER_COUNT_BIAS: f64,
+    pub DOPPLER_COUNT_SCALE: u32,
+    pub DOPPLER_COUNT_ROLLOVER: bool,
+    pub CORRECTION_RANGE: f64,
+    pub CORRECTION_DOPPLER: f64,
+    pub CORRECTION_MAG: f64,
+    pub CORRECTION_RCS: f64,
+    pub CORRECTION_RECEIVE: f64,
+    pub CORRECTION_TRANSMIT: f64,
+    pub CORRECTION_ABERRATION_YEARLY: f64,
+    pub CORRECTION_ABERRATION_DIURNAL: f64,
+}
+impl<'a> Default for TDMSegmentArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TDMSegmentArgs {
+      COMMENT: None,
+      META_START: None,
+      TIME_SYSTEM: None,
+      START_TIME: None,
+      STOP_TIME: None,
+      PARTICIPANT_1: None,
+      PARTICIPANT_2: None,
+      PARTICIPANT_3: None,
+      PARTICIPANT_4: None,
+      PARTICIPANT_5: None,
+      MODE: None,
+      PATH_1: 0,
+      PATH_2: 0,
+      TRANSMIT_BAND: None,
+      RECEIVE_BAND: None,
+      INTEGRATION_INTERVAL: 0.0,
+      INTEGRATION_REF: None,
+      TIMETAG_REF: None,
+      ANGLE_TYPE: None,
+      RANGE_MODE: None,
+      RANGE_MODULUS: 0.0,
+      CORRECTION_ANGLE_1: 0.0,
+      CORRECTION_ANGLE_2: 0.0,
+      CORRECTIONS_APPLIED: None,
+      DATA_QUALITY: None,
+      RECEIVE_DELAY_2: 0.0,
+      RECEIVE_DELAY_3: 0.0,
+      TRANSMIT_FREQ_1: 0.0,
+      TRANSMIT_FREQ_2: 0.0,
+      TRANSMIT_FREQ_3: 0.0,
+      TRANSMIT_FREQ_4: 0.0,
+      TRANSMIT_FREQ_5: 0.0,
+      TRANSMIT_FREQ_RATE_1: 0.0,
+      TRANSMIT_FREQ_RATE_2: 0.0,
+      TRANSMIT_FREQ_RATE_3: 0.0,
+      TRANSMIT_FREQ_RATE_4: 0.0,
+      TRANSMIT_FREQ_RATE_5: 0.0,
+      META_STOP: None,
+      DATA_START: None,
+      OBSERVATIONS: None,
+      DATA_STOP: None,
+      TRANSMIT_RAMPS: None,
+      MESSAGE_ID: None,
+      TRACK_ID: None,
+      DATA_TYPES: None,
+      PATH: None,
+      EPHEMERIS_NAME_1: None,
+      EPHEMERIS_NAME_2: None,
+      EPHEMERIS_NAME_3: None,
+      EPHEMERIS_NAME_4: None,
+      EPHEMERIS_NAME_5: None,
+      RANGE_UNITS: None,
+      REFERENCE_FRAME: None,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      FREQ_OFFSET: 0.0,
+      TURNAROUND_NUMERATOR: 0,
+      TURNAROUND_DENOMINATOR: 0,
+      TRANSMIT_DELAY_1: 0.0,
+      TRANSMIT_DELAY_2: 0.0,
+      TRANSMIT_DELAY_3: 0.0,
+      TRANSMIT_DELAY_4: 0.0,
+      TRANSMIT_DELAY_5: 0.0,
+      RECEIVE_DELAY_1: 0.0,
+      RECEIVE_DELAY_4: 0.0,
+      RECEIVE_DELAY_5: 0.0,
+      DOPPLER_COUNT_BIAS: 0.0,
+      DOPPLER_COUNT_SCALE: 0,
+      DOPPLER_COUNT_ROLLOVER: false,
+      CORRECTION_RANGE: 0.0,
+      CORRECTION_DOPPLER: 0.0,
+      CORRECTION_MAG: 0.0,
+      CORRECTION_RCS: 0.0,
+      CORRECTION_RECEIVE: 0.0,
+      CORRECTION_TRANSMIT: 0.0,
+      CORRECTION_ABERRATION_YEARLY: 0.0,
+      CORRECTION_ABERRATION_DIURNAL: 0.0,
+    }
+  }
+}
+
+pub struct TDMSegmentBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMSegmentBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_META_START(&mut self, META_START: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_META_START, META_START);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  #[inline]
+  pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_STOP_TIME(&mut self, STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_STOP_TIME, STOP_TIME);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_1(&mut self, PARTICIPANT_1: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PARTICIPANT_1, PARTICIPANT_1);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_2(&mut self, PARTICIPANT_2: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PARTICIPANT_2, PARTICIPANT_2);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_3(&mut self, PARTICIPANT_3: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PARTICIPANT_3, PARTICIPANT_3);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_4(&mut self, PARTICIPANT_4: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PARTICIPANT_4, PARTICIPANT_4);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_5(&mut self, PARTICIPANT_5: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PARTICIPANT_5, PARTICIPANT_5);
+  }
+  #[inline]
+  pub fn add_MODE(&mut self, MODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_MODE, MODE);
+  }
+  #[inline]
+  pub fn add_PATH_1(&mut self, PATH_1: u16) {
+    self.fbb_.push_slot::<u16>(TDMSegment::VT_PATH_1, PATH_1, 0);
+  }
+  #[inline]
+  pub fn add_PATH_2(&mut self, PATH_2: u16) {
+    self.fbb_.push_slot::<u16>(TDMSegment::VT_PATH_2, PATH_2, 0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_BAND(&mut self, TRANSMIT_BAND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_TRANSMIT_BAND, TRANSMIT_BAND);
+  }
+  #[inline]
+  pub fn add_RECEIVE_BAND(&mut self, RECEIVE_BAND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_RECEIVE_BAND, RECEIVE_BAND);
+  }
+  #[inline]
+  pub fn add_INTEGRATION_INTERVAL(&mut self, INTEGRATION_INTERVAL: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_INTEGRATION_INTERVAL, INTEGRATION_INTERVAL, 0.0);
+  }
+  #[inline]
+  pub fn add_INTEGRATION_REF(&mut self, INTEGRATION_REF: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_INTEGRATION_REF, INTEGRATION_REF);
+  }
+  #[inline]
+  pub fn add_TIMETAG_REF(&mut self, TIMETAG_REF: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_TIMETAG_REF, TIMETAG_REF);
+  }
+  #[inline]
+  pub fn add_ANGLE_TYPE(&mut self, ANGLE_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_ANGLE_TYPE, ANGLE_TYPE);
+  }
+  #[inline]
+  pub fn add_RANGE_MODE(&mut self, RANGE_MODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_RANGE_MODE, RANGE_MODE);
+  }
+  #[inline]
+  pub fn add_RANGE_MODULUS(&mut self, RANGE_MODULUS: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RANGE_MODULUS, RANGE_MODULUS, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ANGLE_1(&mut self, CORRECTION_ANGLE_1: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_ANGLE_1, CORRECTION_ANGLE_1, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ANGLE_2(&mut self, CORRECTION_ANGLE_2: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_ANGLE_2, CORRECTION_ANGLE_2, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTIONS_APPLIED(&mut self, CORRECTIONS_APPLIED: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_CORRECTIONS_APPLIED, CORRECTIONS_APPLIED);
+  }
+  #[inline]
+  pub fn add_DATA_QUALITY(&mut self, DATA_QUALITY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_DATA_QUALITY, DATA_QUALITY);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_2(&mut self, RECEIVE_DELAY_2: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RECEIVE_DELAY_2, RECEIVE_DELAY_2, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_3(&mut self, RECEIVE_DELAY_3: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RECEIVE_DELAY_3, RECEIVE_DELAY_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_1(&mut self, TRANSMIT_FREQ_1: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_1, TRANSMIT_FREQ_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_2(&mut self, TRANSMIT_FREQ_2: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_2, TRANSMIT_FREQ_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_3(&mut self, TRANSMIT_FREQ_3: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_3, TRANSMIT_FREQ_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_4(&mut self, TRANSMIT_FREQ_4: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_4, TRANSMIT_FREQ_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_5(&mut self, TRANSMIT_FREQ_5: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_5, TRANSMIT_FREQ_5, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_1(&mut self, TRANSMIT_FREQ_RATE_1: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_1, TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_2(&mut self, TRANSMIT_FREQ_RATE_2: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_2, TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_3(&mut self, TRANSMIT_FREQ_RATE_3: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_3, TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_4(&mut self, TRANSMIT_FREQ_RATE_4: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_4, TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_5(&mut self, TRANSMIT_FREQ_RATE_5: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_FREQ_RATE_5, TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  #[inline]
+  pub fn add_META_STOP(&mut self, META_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_META_STOP, META_STOP);
+  }
+  #[inline]
+  pub fn add_DATA_START(&mut self, DATA_START: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_DATA_START, DATA_START);
+  }
+  #[inline]
+  pub fn add_OBSERVATIONS(&mut self, OBSERVATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMObservation<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  #[inline]
+  pub fn add_DATA_STOP(&mut self, DATA_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_DATA_STOP, DATA_STOP);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_RAMPS(&mut self, TRANSMIT_RAMPS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
+  }
+  #[inline]
+  pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_TRACK_ID(&mut self, TRACK_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_TRACK_ID, TRACK_ID);
+  }
+  #[inline]
+  pub fn add_DATA_TYPES(&mut self, DATA_TYPES: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_DATA_TYPES, DATA_TYPES);
+  }
+  #[inline]
+  pub fn add_PATH(&mut self, PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_PATH, PATH);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_1(&mut self, EPHEMERIS_NAME_1: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_EPHEMERIS_NAME_1, EPHEMERIS_NAME_1);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_2(&mut self, EPHEMERIS_NAME_2: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_EPHEMERIS_NAME_2, EPHEMERIS_NAME_2);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_3(&mut self, EPHEMERIS_NAME_3: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_EPHEMERIS_NAME_3, EPHEMERIS_NAME_3);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_4(&mut self, EPHEMERIS_NAME_4: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_EPHEMERIS_NAME_4, EPHEMERIS_NAME_4);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_5(&mut self, EPHEMERIS_NAME_5: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_EPHEMERIS_NAME_5, EPHEMERIS_NAME_5);
+  }
+  #[inline]
+  pub fn add_RANGE_UNITS(&mut self, RANGE_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_RANGE_UNITS, RANGE_UNITS);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION(&mut self, INTERPOLATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMSegment::VT_INTERPOLATION, INTERPOLATION);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION_DEGREE(&mut self, INTERPOLATION_DEGREE: u32) {
+    self.fbb_.push_slot::<u32>(TDMSegment::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  #[inline]
+  pub fn add_FREQ_OFFSET(&mut self, FREQ_OFFSET: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_FREQ_OFFSET, FREQ_OFFSET, 0.0);
+  }
+  #[inline]
+  pub fn add_TURNAROUND_NUMERATOR(&mut self, TURNAROUND_NUMERATOR: i32) {
+    self.fbb_.push_slot::<i32>(TDMSegment::VT_TURNAROUND_NUMERATOR, TURNAROUND_NUMERATOR, 0);
+  }
+  #[inline]
+  pub fn add_TURNAROUND_DENOMINATOR(&mut self, TURNAROUND_DENOMINATOR: i32) {
+    self.fbb_.push_slot::<i32>(TDMSegment::VT_TURNAROUND_DENOMINATOR, TURNAROUND_DENOMINATOR, 0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_1(&mut self, TRANSMIT_DELAY_1: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_DELAY_1, TRANSMIT_DELAY_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_2(&mut self, TRANSMIT_DELAY_2: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_DELAY_2, TRANSMIT_DELAY_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_3(&mut self, TRANSMIT_DELAY_3: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_DELAY_3, TRANSMIT_DELAY_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_4(&mut self, TRANSMIT_DELAY_4: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_DELAY_4, TRANSMIT_DELAY_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_5(&mut self, TRANSMIT_DELAY_5: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_TRANSMIT_DELAY_5, TRANSMIT_DELAY_5, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_1(&mut self, RECEIVE_DELAY_1: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RECEIVE_DELAY_1, RECEIVE_DELAY_1, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_4(&mut self, RECEIVE_DELAY_4: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RECEIVE_DELAY_4, RECEIVE_DELAY_4, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_5(&mut self, RECEIVE_DELAY_5: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_RECEIVE_DELAY_5, RECEIVE_DELAY_5, 0.0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_BIAS(&mut self, DOPPLER_COUNT_BIAS: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_DOPPLER_COUNT_BIAS, DOPPLER_COUNT_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_SCALE(&mut self, DOPPLER_COUNT_SCALE: u32) {
+    self.fbb_.push_slot::<u32>(TDMSegment::VT_DOPPLER_COUNT_SCALE, DOPPLER_COUNT_SCALE, 0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_ROLLOVER(&mut self, DOPPLER_COUNT_ROLLOVER: bool) {
+    self.fbb_.push_slot::<bool>(TDMSegment::VT_DOPPLER_COUNT_ROLLOVER, DOPPLER_COUNT_ROLLOVER, false);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RANGE(&mut self, CORRECTION_RANGE: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_RANGE, CORRECTION_RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_DOPPLER(&mut self, CORRECTION_DOPPLER: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_DOPPLER, CORRECTION_DOPPLER, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_MAG(&mut self, CORRECTION_MAG: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_MAG, CORRECTION_MAG, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RCS(&mut self, CORRECTION_RCS: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_RCS, CORRECTION_RCS, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RECEIVE(&mut self, CORRECTION_RECEIVE: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_RECEIVE, CORRECTION_RECEIVE, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_TRANSMIT(&mut self, CORRECTION_TRANSMIT: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_TRANSMIT, CORRECTION_TRANSMIT, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ABERRATION_YEARLY(&mut self, CORRECTION_ABERRATION_YEARLY: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_ABERRATION_YEARLY, CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ABERRATION_DIURNAL(&mut self, CORRECTION_ABERRATION_DIURNAL: f64) {
+    self.fbb_.push_slot::<f64>(TDMSegment::VT_CORRECTION_ABERRATION_DIURNAL, CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TDMSegmentBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TDMSegmentBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TDMSegment<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TDMSegment<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TDMSegment");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("META_START", &self.META_START());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("START_TIME", &self.START_TIME());
+      ds.field("STOP_TIME", &self.STOP_TIME());
+      ds.field("PARTICIPANT_1", &self.PARTICIPANT_1());
+      ds.field("PARTICIPANT_2", &self.PARTICIPANT_2());
+      ds.field("PARTICIPANT_3", &self.PARTICIPANT_3());
+      ds.field("PARTICIPANT_4", &self.PARTICIPANT_4());
+      ds.field("PARTICIPANT_5", &self.PARTICIPANT_5());
+      ds.field("MODE", &self.MODE());
+      ds.field("PATH_1", &self.PATH_1());
+      ds.field("PATH_2", &self.PATH_2());
+      ds.field("TRANSMIT_BAND", &self.TRANSMIT_BAND());
+      ds.field("RECEIVE_BAND", &self.RECEIVE_BAND());
+      ds.field("INTEGRATION_INTERVAL", &self.INTEGRATION_INTERVAL());
+      ds.field("INTEGRATION_REF", &self.INTEGRATION_REF());
+      ds.field("TIMETAG_REF", &self.TIMETAG_REF());
+      ds.field("ANGLE_TYPE", &self.ANGLE_TYPE());
+      ds.field("RANGE_MODE", &self.RANGE_MODE());
+      ds.field("RANGE_MODULUS", &self.RANGE_MODULUS());
+      ds.field("CORRECTION_ANGLE_1", &self.CORRECTION_ANGLE_1());
+      ds.field("CORRECTION_ANGLE_2", &self.CORRECTION_ANGLE_2());
+      ds.field("CORRECTIONS_APPLIED", &self.CORRECTIONS_APPLIED());
+      ds.field("DATA_QUALITY", &self.DATA_QUALITY());
+      ds.field("RECEIVE_DELAY_2", &self.RECEIVE_DELAY_2());
+      ds.field("RECEIVE_DELAY_3", &self.RECEIVE_DELAY_3());
+      ds.field("TRANSMIT_FREQ_1", &self.TRANSMIT_FREQ_1());
+      ds.field("TRANSMIT_FREQ_2", &self.TRANSMIT_FREQ_2());
+      ds.field("TRANSMIT_FREQ_3", &self.TRANSMIT_FREQ_3());
+      ds.field("TRANSMIT_FREQ_4", &self.TRANSMIT_FREQ_4());
+      ds.field("TRANSMIT_FREQ_5", &self.TRANSMIT_FREQ_5());
+      ds.field("TRANSMIT_FREQ_RATE_1", &self.TRANSMIT_FREQ_RATE_1());
+      ds.field("TRANSMIT_FREQ_RATE_2", &self.TRANSMIT_FREQ_RATE_2());
+      ds.field("TRANSMIT_FREQ_RATE_3", &self.TRANSMIT_FREQ_RATE_3());
+      ds.field("TRANSMIT_FREQ_RATE_4", &self.TRANSMIT_FREQ_RATE_4());
+      ds.field("TRANSMIT_FREQ_RATE_5", &self.TRANSMIT_FREQ_RATE_5());
+      ds.field("META_STOP", &self.META_STOP());
+      ds.field("DATA_START", &self.DATA_START());
+      ds.field("OBSERVATIONS", &self.OBSERVATIONS());
+      ds.field("DATA_STOP", &self.DATA_STOP());
+      ds.field("TRANSMIT_RAMPS", &self.TRANSMIT_RAMPS());
+      ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+      ds.field("TRACK_ID", &self.TRACK_ID());
+      ds.field("DATA_TYPES", &self.DATA_TYPES());
+      ds.field("PATH", &self.PATH());
+      ds.field("EPHEMERIS_NAME_1", &self.EPHEMERIS_NAME_1());
+      ds.field("EPHEMERIS_NAME_2", &self.EPHEMERIS_NAME_2());
+      ds.field("EPHEMERIS_NAME_3", &self.EPHEMERIS_NAME_3());
+      ds.field("EPHEMERIS_NAME_4", &self.EPHEMERIS_NAME_4());
+      ds.field("EPHEMERIS_NAME_5", &self.EPHEMERIS_NAME_5());
+      ds.field("RANGE_UNITS", &self.RANGE_UNITS());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("INTERPOLATION", &self.INTERPOLATION());
+      ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
+      ds.field("FREQ_OFFSET", &self.FREQ_OFFSET());
+      ds.field("TURNAROUND_NUMERATOR", &self.TURNAROUND_NUMERATOR());
+      ds.field("TURNAROUND_DENOMINATOR", &self.TURNAROUND_DENOMINATOR());
+      ds.field("TRANSMIT_DELAY_1", &self.TRANSMIT_DELAY_1());
+      ds.field("TRANSMIT_DELAY_2", &self.TRANSMIT_DELAY_2());
+      ds.field("TRANSMIT_DELAY_3", &self.TRANSMIT_DELAY_3());
+      ds.field("TRANSMIT_DELAY_4", &self.TRANSMIT_DELAY_4());
+      ds.field("TRANSMIT_DELAY_5", &self.TRANSMIT_DELAY_5());
+      ds.field("RECEIVE_DELAY_1", &self.RECEIVE_DELAY_1());
+      ds.field("RECEIVE_DELAY_4", &self.RECEIVE_DELAY_4());
+      ds.field("RECEIVE_DELAY_5", &self.RECEIVE_DELAY_5());
+      ds.field("DOPPLER_COUNT_BIAS", &self.DOPPLER_COUNT_BIAS());
+      ds.field("DOPPLER_COUNT_SCALE", &self.DOPPLER_COUNT_SCALE());
+      ds.field("DOPPLER_COUNT_ROLLOVER", &self.DOPPLER_COUNT_ROLLOVER());
+      ds.field("CORRECTION_RANGE", &self.CORRECTION_RANGE());
+      ds.field("CORRECTION_DOPPLER", &self.CORRECTION_DOPPLER());
+      ds.field("CORRECTION_MAG", &self.CORRECTION_MAG());
+      ds.field("CORRECTION_RCS", &self.CORRECTION_RCS());
+      ds.field("CORRECTION_RECEIVE", &self.CORRECTION_RECEIVE());
+      ds.field("CORRECTION_TRANSMIT", &self.CORRECTION_TRANSMIT());
+      ds.field("CORRECTION_ABERRATION_YEARLY", &self.CORRECTION_ABERRATION_YEARLY());
+      ds.field("CORRECTION_ABERRATION_DIURNAL", &self.CORRECTION_ABERRATION_DIURNAL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TDMSegmentT {
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub META_START: Option<alloc::string::String>,
+  pub TIME_SYSTEM: Option<alloc::string::String>,
+  pub START_TIME: Option<alloc::string::String>,
+  pub STOP_TIME: Option<alloc::string::String>,
+  pub PARTICIPANT_1: Option<alloc::string::String>,
+  pub PARTICIPANT_2: Option<alloc::string::String>,
+  pub PARTICIPANT_3: Option<alloc::string::String>,
+  pub PARTICIPANT_4: Option<alloc::string::String>,
+  pub PARTICIPANT_5: Option<alloc::string::String>,
+  pub MODE: Option<alloc::string::String>,
+  pub PATH_1: u16,
+  pub PATH_2: u16,
+  pub TRANSMIT_BAND: Option<alloc::string::String>,
+  pub RECEIVE_BAND: Option<alloc::string::String>,
+  pub INTEGRATION_INTERVAL: f64,
+  pub INTEGRATION_REF: Option<alloc::string::String>,
+  pub TIMETAG_REF: Option<alloc::string::String>,
+  pub ANGLE_TYPE: Option<alloc::string::String>,
+  pub RANGE_MODE: Option<alloc::string::String>,
+  pub RANGE_MODULUS: f64,
+  pub CORRECTION_ANGLE_1: f64,
+  pub CORRECTION_ANGLE_2: f64,
+  pub CORRECTIONS_APPLIED: Option<alloc::string::String>,
+  pub DATA_QUALITY: Option<alloc::string::String>,
+  pub RECEIVE_DELAY_2: f64,
+  pub RECEIVE_DELAY_3: f64,
+  pub TRANSMIT_FREQ_1: f64,
+  pub TRANSMIT_FREQ_2: f64,
+  pub TRANSMIT_FREQ_3: f64,
+  pub TRANSMIT_FREQ_4: f64,
+  pub TRANSMIT_FREQ_5: f64,
+  pub TRANSMIT_FREQ_RATE_1: f64,
+  pub TRANSMIT_FREQ_RATE_2: f64,
+  pub TRANSMIT_FREQ_RATE_3: f64,
+  pub TRANSMIT_FREQ_RATE_4: f64,
+  pub TRANSMIT_FREQ_RATE_5: f64,
+  pub META_STOP: Option<alloc::string::String>,
+  pub DATA_START: Option<alloc::string::String>,
+  pub OBSERVATIONS: Option<alloc::vec::Vec<TDMObservationT>>,
+  pub DATA_STOP: Option<alloc::string::String>,
+  pub TRANSMIT_RAMPS: Option<alloc::vec::Vec<TDMTransmitRampT>>,
+  pub MESSAGE_ID: Option<alloc::string::String>,
+  pub TRACK_ID: Option<alloc::string::String>,
+  pub DATA_TYPES: Option<alloc::string::String>,
+  pub PATH: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_1: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_2: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_3: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_4: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_5: Option<alloc::string::String>,
+  pub RANGE_UNITS: Option<alloc::string::String>,
+  pub REFERENCE_FRAME: Option<alloc::string::String>,
+  pub INTERPOLATION: Option<alloc::string::String>,
+  pub INTERPOLATION_DEGREE: u32,
+  pub FREQ_OFFSET: f64,
+  pub TURNAROUND_NUMERATOR: i32,
+  pub TURNAROUND_DENOMINATOR: i32,
+  pub TRANSMIT_DELAY_1: f64,
+  pub TRANSMIT_DELAY_2: f64,
+  pub TRANSMIT_DELAY_3: f64,
+  pub TRANSMIT_DELAY_4: f64,
+  pub TRANSMIT_DELAY_5: f64,
+  pub RECEIVE_DELAY_1: f64,
+  pub RECEIVE_DELAY_4: f64,
+  pub RECEIVE_DELAY_5: f64,
+  pub DOPPLER_COUNT_BIAS: f64,
+  pub DOPPLER_COUNT_SCALE: u32,
+  pub DOPPLER_COUNT_ROLLOVER: bool,
+  pub CORRECTION_RANGE: f64,
+  pub CORRECTION_DOPPLER: f64,
+  pub CORRECTION_MAG: f64,
+  pub CORRECTION_RCS: f64,
+  pub CORRECTION_RECEIVE: f64,
+  pub CORRECTION_TRANSMIT: f64,
+  pub CORRECTION_ABERRATION_YEARLY: f64,
+  pub CORRECTION_ABERRATION_DIURNAL: f64,
+}
+impl Default for TDMSegmentT {
+  fn default() -> Self {
+    Self {
+      COMMENT: None,
+      META_START: None,
+      TIME_SYSTEM: None,
+      START_TIME: None,
+      STOP_TIME: None,
+      PARTICIPANT_1: None,
+      PARTICIPANT_2: None,
+      PARTICIPANT_3: None,
+      PARTICIPANT_4: None,
+      PARTICIPANT_5: None,
+      MODE: None,
+      PATH_1: 0,
+      PATH_2: 0,
+      TRANSMIT_BAND: None,
+      RECEIVE_BAND: None,
+      INTEGRATION_INTERVAL: 0.0,
+      INTEGRATION_REF: None,
+      TIMETAG_REF: None,
+      ANGLE_TYPE: None,
+      RANGE_MODE: None,
+      RANGE_MODULUS: 0.0,
+      CORRECTION_ANGLE_1: 0.0,
+      CORRECTION_ANGLE_2: 0.0,
+      CORRECTIONS_APPLIED: None,
+      DATA_QUALITY: None,
+      RECEIVE_DELAY_2: 0.0,
+      RECEIVE_DELAY_3: 0.0,
+      TRANSMIT_FREQ_1: 0.0,
+      TRANSMIT_FREQ_2: 0.0,
+      TRANSMIT_FREQ_3: 0.0,
+      TRANSMIT_FREQ_4: 0.0,
+      TRANSMIT_FREQ_5: 0.0,
+      TRANSMIT_FREQ_RATE_1: 0.0,
+      TRANSMIT_FREQ_RATE_2: 0.0,
+      TRANSMIT_FREQ_RATE_3: 0.0,
+      TRANSMIT_FREQ_RATE_4: 0.0,
+      TRANSMIT_FREQ_RATE_5: 0.0,
+      META_STOP: None,
+      DATA_START: None,
+      OBSERVATIONS: None,
+      DATA_STOP: None,
+      TRANSMIT_RAMPS: None,
+      MESSAGE_ID: None,
+      TRACK_ID: None,
+      DATA_TYPES: None,
+      PATH: None,
+      EPHEMERIS_NAME_1: None,
+      EPHEMERIS_NAME_2: None,
+      EPHEMERIS_NAME_3: None,
+      EPHEMERIS_NAME_4: None,
+      EPHEMERIS_NAME_5: None,
+      RANGE_UNITS: None,
+      REFERENCE_FRAME: None,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      FREQ_OFFSET: 0.0,
+      TURNAROUND_NUMERATOR: 0,
+      TURNAROUND_DENOMINATOR: 0,
+      TRANSMIT_DELAY_1: 0.0,
+      TRANSMIT_DELAY_2: 0.0,
+      TRANSMIT_DELAY_3: 0.0,
+      TRANSMIT_DELAY_4: 0.0,
+      TRANSMIT_DELAY_5: 0.0,
+      RECEIVE_DELAY_1: 0.0,
+      RECEIVE_DELAY_4: 0.0,
+      RECEIVE_DELAY_5: 0.0,
+      DOPPLER_COUNT_BIAS: 0.0,
+      DOPPLER_COUNT_SCALE: 0,
+      DOPPLER_COUNT_ROLLOVER: false,
+      CORRECTION_RANGE: 0.0,
+      CORRECTION_DOPPLER: 0.0,
+      CORRECTION_MAG: 0.0,
+      CORRECTION_RCS: 0.0,
+      CORRECTION_RECEIVE: 0.0,
+      CORRECTION_TRANSMIT: 0.0,
+      CORRECTION_ABERRATION_YEARLY: 0.0,
+      CORRECTION_ABERRATION_DIURNAL: 0.0,
+    }
+  }
+}
+impl TDMSegmentT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TDMSegment<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let META_START = self.META_START.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_1 = self.PARTICIPANT_1.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_2 = self.PARTICIPANT_2.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_3 = self.PARTICIPANT_3.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_4 = self.PARTICIPANT_4.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_5 = self.PARTICIPANT_5.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODE = self.MODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PATH_1 = self.PATH_1;
+    let PATH_2 = self.PATH_2;
+    let TRANSMIT_BAND = self.TRANSMIT_BAND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RECEIVE_BAND = self.RECEIVE_BAND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTEGRATION_INTERVAL = self.INTEGRATION_INTERVAL;
+    let INTEGRATION_REF = self.INTEGRATION_REF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIMETAG_REF = self.TIMETAG_REF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANGLE_TYPE = self.ANGLE_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RANGE_MODE = self.RANGE_MODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RANGE_MODULUS = self.RANGE_MODULUS;
+    let CORRECTION_ANGLE_1 = self.CORRECTION_ANGLE_1;
+    let CORRECTION_ANGLE_2 = self.CORRECTION_ANGLE_2;
+    let CORRECTIONS_APPLIED = self.CORRECTIONS_APPLIED.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_QUALITY = self.DATA_QUALITY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RECEIVE_DELAY_2 = self.RECEIVE_DELAY_2;
+    let RECEIVE_DELAY_3 = self.RECEIVE_DELAY_3;
+    let TRANSMIT_FREQ_1 = self.TRANSMIT_FREQ_1;
+    let TRANSMIT_FREQ_2 = self.TRANSMIT_FREQ_2;
+    let TRANSMIT_FREQ_3 = self.TRANSMIT_FREQ_3;
+    let TRANSMIT_FREQ_4 = self.TRANSMIT_FREQ_4;
+    let TRANSMIT_FREQ_5 = self.TRANSMIT_FREQ_5;
+    let TRANSMIT_FREQ_RATE_1 = self.TRANSMIT_FREQ_RATE_1;
+    let TRANSMIT_FREQ_RATE_2 = self.TRANSMIT_FREQ_RATE_2;
+    let TRANSMIT_FREQ_RATE_3 = self.TRANSMIT_FREQ_RATE_3;
+    let TRANSMIT_FREQ_RATE_4 = self.TRANSMIT_FREQ_RATE_4;
+    let TRANSMIT_FREQ_RATE_5 = self.TRANSMIT_FREQ_RATE_5;
+    let META_STOP = self.META_STOP.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_START = self.DATA_START.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBSERVATIONS = self.OBSERVATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let DATA_STOP = self.DATA_STOP.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACK_ID = self.TRACK_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_TYPES = self.DATA_TYPES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PATH = self.PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_1 = self.EPHEMERIS_NAME_1.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_2 = self.EPHEMERIS_NAME_2.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_3 = self.EPHEMERIS_NAME_3.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_4 = self.EPHEMERIS_NAME_4.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_5 = self.EPHEMERIS_NAME_5.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RANGE_UNITS = self.RANGE_UNITS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE;
+    let FREQ_OFFSET = self.FREQ_OFFSET;
+    let TURNAROUND_NUMERATOR = self.TURNAROUND_NUMERATOR;
+    let TURNAROUND_DENOMINATOR = self.TURNAROUND_DENOMINATOR;
+    let TRANSMIT_DELAY_1 = self.TRANSMIT_DELAY_1;
+    let TRANSMIT_DELAY_2 = self.TRANSMIT_DELAY_2;
+    let TRANSMIT_DELAY_3 = self.TRANSMIT_DELAY_3;
+    let TRANSMIT_DELAY_4 = self.TRANSMIT_DELAY_4;
+    let TRANSMIT_DELAY_5 = self.TRANSMIT_DELAY_5;
+    let RECEIVE_DELAY_1 = self.RECEIVE_DELAY_1;
+    let RECEIVE_DELAY_4 = self.RECEIVE_DELAY_4;
+    let RECEIVE_DELAY_5 = self.RECEIVE_DELAY_5;
+    let DOPPLER_COUNT_BIAS = self.DOPPLER_COUNT_BIAS;
+    let DOPPLER_COUNT_SCALE = self.DOPPLER_COUNT_SCALE;
+    let DOPPLER_COUNT_ROLLOVER = self.DOPPLER_COUNT_ROLLOVER;
+    let CORRECTION_RANGE = self.CORRECTION_RANGE;
+    let CORRECTION_DOPPLER = self.CORRECTION_DOPPLER;
+    let CORRECTION_MAG = self.CORRECTION_MAG;
+    let CORRECTION_RCS = self.CORRECTION_RCS;
+    let CORRECTION_RECEIVE = self.CORRECTION_RECEIVE;
+    let CORRECTION_TRANSMIT = self.CORRECTION_TRANSMIT;
+    let CORRECTION_ABERRATION_YEARLY = self.CORRECTION_ABERRATION_YEARLY;
+    let CORRECTION_ABERRATION_DIURNAL = self.CORRECTION_ABERRATION_DIURNAL;
+    TDMSegment::create(_fbb, &TDMSegmentArgs{
+      COMMENT,
+      META_START,
+      TIME_SYSTEM,
+      START_TIME,
+      STOP_TIME,
+      PARTICIPANT_1,
+      PARTICIPANT_2,
+      PARTICIPANT_3,
+      PARTICIPANT_4,
+      PARTICIPANT_5,
+      MODE,
+      PATH_1,
+      PATH_2,
+      TRANSMIT_BAND,
+      RECEIVE_BAND,
+      INTEGRATION_INTERVAL,
+      INTEGRATION_REF,
+      TIMETAG_REF,
+      ANGLE_TYPE,
+      RANGE_MODE,
+      RANGE_MODULUS,
+      CORRECTION_ANGLE_1,
+      CORRECTION_ANGLE_2,
+      CORRECTIONS_APPLIED,
+      DATA_QUALITY,
+      RECEIVE_DELAY_2,
+      RECEIVE_DELAY_3,
+      TRANSMIT_FREQ_1,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      META_STOP,
+      DATA_START,
+      OBSERVATIONS,
+      DATA_STOP,
+      TRANSMIT_RAMPS,
+      MESSAGE_ID,
+      TRACK_ID,
+      DATA_TYPES,
+      PATH,
+      EPHEMERIS_NAME_1,
+      EPHEMERIS_NAME_2,
+      EPHEMERIS_NAME_3,
+      EPHEMERIS_NAME_4,
+      EPHEMERIS_NAME_5,
+      RANGE_UNITS,
+      REFERENCE_FRAME,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL,
+    })
+  }
+}
 pub enum TDMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -395,6 +2653,52 @@ impl<'a> TDM<'a> {
   pub const VT_SPECTRAL_MAX: ::flatbuffers::VOffsetT = 128;
   pub const VT_DOPPLER_NOISE_HZ: ::flatbuffers::VOffsetT = 130;
   pub const VT_TRANSMIT_RAMPS: ::flatbuffers::VOffsetT = 132;
+  pub const VT_OBSERVATIONS: ::flatbuffers::VOffsetT = 134;
+  pub const VT_SEGMENTS: ::flatbuffers::VOffsetT = 136;
+  pub const VT_TRANSMIT_FREQ_2: ::flatbuffers::VOffsetT = 138;
+  pub const VT_TRANSMIT_FREQ_3: ::flatbuffers::VOffsetT = 140;
+  pub const VT_TRANSMIT_FREQ_4: ::flatbuffers::VOffsetT = 142;
+  pub const VT_TRANSMIT_FREQ_5: ::flatbuffers::VOffsetT = 144;
+  pub const VT_TRANSMIT_FREQ_RATE_1: ::flatbuffers::VOffsetT = 146;
+  pub const VT_TRANSMIT_FREQ_RATE_2: ::flatbuffers::VOffsetT = 148;
+  pub const VT_TRANSMIT_FREQ_RATE_3: ::flatbuffers::VOffsetT = 150;
+  pub const VT_TRANSMIT_FREQ_RATE_4: ::flatbuffers::VOffsetT = 152;
+  pub const VT_TRANSMIT_FREQ_RATE_5: ::flatbuffers::VOffsetT = 154;
+  pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 156;
+  pub const VT_TRACK_ID: ::flatbuffers::VOffsetT = 158;
+  pub const VT_DATA_TYPES: ::flatbuffers::VOffsetT = 160;
+  pub const VT_PATH: ::flatbuffers::VOffsetT = 162;
+  pub const VT_EPHEMERIS_NAME_1: ::flatbuffers::VOffsetT = 164;
+  pub const VT_EPHEMERIS_NAME_2: ::flatbuffers::VOffsetT = 166;
+  pub const VT_EPHEMERIS_NAME_3: ::flatbuffers::VOffsetT = 168;
+  pub const VT_EPHEMERIS_NAME_4: ::flatbuffers::VOffsetT = 170;
+  pub const VT_EPHEMERIS_NAME_5: ::flatbuffers::VOffsetT = 172;
+  pub const VT_RANGE_UNITS: ::flatbuffers::VOffsetT = 174;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 176;
+  pub const VT_INTERPOLATION: ::flatbuffers::VOffsetT = 178;
+  pub const VT_INTERPOLATION_DEGREE: ::flatbuffers::VOffsetT = 180;
+  pub const VT_FREQ_OFFSET: ::flatbuffers::VOffsetT = 182;
+  pub const VT_TURNAROUND_NUMERATOR: ::flatbuffers::VOffsetT = 184;
+  pub const VT_TURNAROUND_DENOMINATOR: ::flatbuffers::VOffsetT = 186;
+  pub const VT_TRANSMIT_DELAY_1: ::flatbuffers::VOffsetT = 188;
+  pub const VT_TRANSMIT_DELAY_2: ::flatbuffers::VOffsetT = 190;
+  pub const VT_TRANSMIT_DELAY_3: ::flatbuffers::VOffsetT = 192;
+  pub const VT_TRANSMIT_DELAY_4: ::flatbuffers::VOffsetT = 194;
+  pub const VT_TRANSMIT_DELAY_5: ::flatbuffers::VOffsetT = 196;
+  pub const VT_RECEIVE_DELAY_1: ::flatbuffers::VOffsetT = 198;
+  pub const VT_RECEIVE_DELAY_4: ::flatbuffers::VOffsetT = 200;
+  pub const VT_RECEIVE_DELAY_5: ::flatbuffers::VOffsetT = 202;
+  pub const VT_DOPPLER_COUNT_BIAS: ::flatbuffers::VOffsetT = 204;
+  pub const VT_DOPPLER_COUNT_SCALE: ::flatbuffers::VOffsetT = 206;
+  pub const VT_DOPPLER_COUNT_ROLLOVER: ::flatbuffers::VOffsetT = 208;
+  pub const VT_CORRECTION_RANGE: ::flatbuffers::VOffsetT = 210;
+  pub const VT_CORRECTION_DOPPLER: ::flatbuffers::VOffsetT = 212;
+  pub const VT_CORRECTION_MAG: ::flatbuffers::VOffsetT = 214;
+  pub const VT_CORRECTION_RCS: ::flatbuffers::VOffsetT = 216;
+  pub const VT_CORRECTION_RECEIVE: ::flatbuffers::VOffsetT = 218;
+  pub const VT_CORRECTION_TRANSMIT: ::flatbuffers::VOffsetT = 220;
+  pub const VT_CORRECTION_ABERRATION_YEARLY: ::flatbuffers::VOffsetT = 222;
+  pub const VT_CORRECTION_ABERRATION_DIURNAL: ::flatbuffers::VOffsetT = 224;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -406,6 +2710,33 @@ impl<'a> TDM<'a> {
     args: &'args TDMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<TDM<'bldr>> {
     let mut builder = TDMBuilder::new(_fbb);
+    builder.add_CORRECTION_ABERRATION_DIURNAL(args.CORRECTION_ABERRATION_DIURNAL);
+    builder.add_CORRECTION_ABERRATION_YEARLY(args.CORRECTION_ABERRATION_YEARLY);
+    builder.add_CORRECTION_TRANSMIT(args.CORRECTION_TRANSMIT);
+    builder.add_CORRECTION_RECEIVE(args.CORRECTION_RECEIVE);
+    builder.add_CORRECTION_RCS(args.CORRECTION_RCS);
+    builder.add_CORRECTION_MAG(args.CORRECTION_MAG);
+    builder.add_CORRECTION_DOPPLER(args.CORRECTION_DOPPLER);
+    builder.add_CORRECTION_RANGE(args.CORRECTION_RANGE);
+    builder.add_DOPPLER_COUNT_BIAS(args.DOPPLER_COUNT_BIAS);
+    builder.add_RECEIVE_DELAY_5(args.RECEIVE_DELAY_5);
+    builder.add_RECEIVE_DELAY_4(args.RECEIVE_DELAY_4);
+    builder.add_RECEIVE_DELAY_1(args.RECEIVE_DELAY_1);
+    builder.add_TRANSMIT_DELAY_5(args.TRANSMIT_DELAY_5);
+    builder.add_TRANSMIT_DELAY_4(args.TRANSMIT_DELAY_4);
+    builder.add_TRANSMIT_DELAY_3(args.TRANSMIT_DELAY_3);
+    builder.add_TRANSMIT_DELAY_2(args.TRANSMIT_DELAY_2);
+    builder.add_TRANSMIT_DELAY_1(args.TRANSMIT_DELAY_1);
+    builder.add_FREQ_OFFSET(args.FREQ_OFFSET);
+    builder.add_TRANSMIT_FREQ_RATE_5(args.TRANSMIT_FREQ_RATE_5);
+    builder.add_TRANSMIT_FREQ_RATE_4(args.TRANSMIT_FREQ_RATE_4);
+    builder.add_TRANSMIT_FREQ_RATE_3(args.TRANSMIT_FREQ_RATE_3);
+    builder.add_TRANSMIT_FREQ_RATE_2(args.TRANSMIT_FREQ_RATE_2);
+    builder.add_TRANSMIT_FREQ_RATE_1(args.TRANSMIT_FREQ_RATE_1);
+    builder.add_TRANSMIT_FREQ_5(args.TRANSMIT_FREQ_5);
+    builder.add_TRANSMIT_FREQ_4(args.TRANSMIT_FREQ_4);
+    builder.add_TRANSMIT_FREQ_3(args.TRANSMIT_FREQ_3);
+    builder.add_TRANSMIT_FREQ_2(args.TRANSMIT_FREQ_2);
     builder.add_RANGE_MODULUS(args.RANGE_MODULUS);
     builder.add_RANGE_UNCERTAINTY(args.RANGE_UNCERTAINTY);
     builder.add_RANGE_RATE(args.RANGE_RATE);
@@ -419,6 +2750,24 @@ impl<'a> TDM<'a> {
     builder.add_OBSERVER_Z(args.OBSERVER_Z);
     builder.add_OBSERVER_Y(args.OBSERVER_Y);
     builder.add_OBSERVER_X(args.OBSERVER_X);
+    builder.add_DOPPLER_COUNT_SCALE(args.DOPPLER_COUNT_SCALE);
+    builder.add_TURNAROUND_DENOMINATOR(args.TURNAROUND_DENOMINATOR);
+    builder.add_TURNAROUND_NUMERATOR(args.TURNAROUND_NUMERATOR);
+    builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
+    if let Some(x) = args.INTERPOLATION { builder.add_INTERPOLATION(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    if let Some(x) = args.RANGE_UNITS { builder.add_RANGE_UNITS(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_5 { builder.add_EPHEMERIS_NAME_5(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_4 { builder.add_EPHEMERIS_NAME_4(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_3 { builder.add_EPHEMERIS_NAME_3(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_2 { builder.add_EPHEMERIS_NAME_2(x); }
+    if let Some(x) = args.EPHEMERIS_NAME_1 { builder.add_EPHEMERIS_NAME_1(x); }
+    if let Some(x) = args.PATH { builder.add_PATH(x); }
+    if let Some(x) = args.DATA_TYPES { builder.add_DATA_TYPES(x); }
+    if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
+    if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+    if let Some(x) = args.SEGMENTS { builder.add_SEGMENTS(x); }
+    if let Some(x) = args.OBSERVATIONS { builder.add_OBSERVATIONS(x); }
     if let Some(x) = args.TRANSMIT_RAMPS { builder.add_TRANSMIT_RAMPS(x); }
     if let Some(x) = args.DOPPLER_NOISE_HZ { builder.add_DOPPLER_NOISE_HZ(x); }
     if let Some(x) = args.SPECTRAL_MAX { builder.add_SPECTRAL_MAX(x); }
@@ -471,6 +2820,7 @@ impl<'a> TDM<'a> {
     if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
     builder.add_PATH_2(args.PATH_2);
     builder.add_PATH_1(args.PATH_1);
+    builder.add_DOPPLER_COUNT_ROLLOVER(args.DOPPLER_COUNT_ROLLOVER);
     builder.finish()
   }
 
@@ -630,6 +2980,80 @@ impl<'a> TDM<'a> {
     let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let OBSERVATIONS = self.OBSERVATIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SEGMENTS = self.SEGMENTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TRANSMIT_FREQ_2 = self.TRANSMIT_FREQ_2();
+    let TRANSMIT_FREQ_3 = self.TRANSMIT_FREQ_3();
+    let TRANSMIT_FREQ_4 = self.TRANSMIT_FREQ_4();
+    let TRANSMIT_FREQ_5 = self.TRANSMIT_FREQ_5();
+    let TRANSMIT_FREQ_RATE_1 = self.TRANSMIT_FREQ_RATE_1();
+    let TRANSMIT_FREQ_RATE_2 = self.TRANSMIT_FREQ_RATE_2();
+    let TRANSMIT_FREQ_RATE_3 = self.TRANSMIT_FREQ_RATE_3();
+    let TRANSMIT_FREQ_RATE_4 = self.TRANSMIT_FREQ_RATE_4();
+    let TRANSMIT_FREQ_RATE_5 = self.TRANSMIT_FREQ_RATE_5();
+    let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRACK_ID = self.TRACK_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_TYPES = self.DATA_TYPES().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PATH = self.PATH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_1 = self.EPHEMERIS_NAME_1().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_2 = self.EPHEMERIS_NAME_2().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_3 = self.EPHEMERIS_NAME_3().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_4 = self.EPHEMERIS_NAME_4().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME_5 = self.EPHEMERIS_NAME_5().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RANGE_UNITS = self.RANGE_UNITS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION = self.INTERPOLATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE();
+    let FREQ_OFFSET = self.FREQ_OFFSET();
+    let TURNAROUND_NUMERATOR = self.TURNAROUND_NUMERATOR();
+    let TURNAROUND_DENOMINATOR = self.TURNAROUND_DENOMINATOR();
+    let TRANSMIT_DELAY_1 = self.TRANSMIT_DELAY_1();
+    let TRANSMIT_DELAY_2 = self.TRANSMIT_DELAY_2();
+    let TRANSMIT_DELAY_3 = self.TRANSMIT_DELAY_3();
+    let TRANSMIT_DELAY_4 = self.TRANSMIT_DELAY_4();
+    let TRANSMIT_DELAY_5 = self.TRANSMIT_DELAY_5();
+    let RECEIVE_DELAY_1 = self.RECEIVE_DELAY_1();
+    let RECEIVE_DELAY_4 = self.RECEIVE_DELAY_4();
+    let RECEIVE_DELAY_5 = self.RECEIVE_DELAY_5();
+    let DOPPLER_COUNT_BIAS = self.DOPPLER_COUNT_BIAS();
+    let DOPPLER_COUNT_SCALE = self.DOPPLER_COUNT_SCALE();
+    let DOPPLER_COUNT_ROLLOVER = self.DOPPLER_COUNT_ROLLOVER();
+    let CORRECTION_RANGE = self.CORRECTION_RANGE();
+    let CORRECTION_DOPPLER = self.CORRECTION_DOPPLER();
+    let CORRECTION_MAG = self.CORRECTION_MAG();
+    let CORRECTION_RCS = self.CORRECTION_RCS();
+    let CORRECTION_RECEIVE = self.CORRECTION_RECEIVE();
+    let CORRECTION_TRANSMIT = self.CORRECTION_TRANSMIT();
+    let CORRECTION_ABERRATION_YEARLY = self.CORRECTION_ABERRATION_YEARLY();
+    let CORRECTION_ABERRATION_DIURNAL = self.CORRECTION_ABERRATION_DIURNAL();
     TDMT {
       OBSERVER_ID,
       OBSERVER_X,
@@ -696,6 +3120,52 @@ impl<'a> TDM<'a> {
       SPECTRAL_MAX,
       DOPPLER_NOISE_HZ,
       TRANSMIT_RAMPS,
+      OBSERVATIONS,
+      SEGMENTS,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      MESSAGE_ID,
+      TRACK_ID,
+      DATA_TYPES,
+      PATH,
+      EPHEMERIS_NAME_1,
+      EPHEMERIS_NAME_2,
+      EPHEMERIS_NAME_3,
+      EPHEMERIS_NAME_4,
+      EPHEMERIS_NAME_5,
+      RANGE_UNITS,
+      REFERENCE_FRAME,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL,
     }
   }
 
@@ -1233,6 +3703,357 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>(TDM::VT_TRANSMIT_RAMPS, None)}
   }
+  /// Data-section observations for a SINGLE-segment TDM, in file order.
+  #[inline]
+  pub fn OBSERVATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation>>>>(TDM::VT_OBSERVATIONS, None)}
+  }
+  /// All metadata+data segments of a MULTI-segment TDM, in file order.
+  #[inline]
+  pub fn SEGMENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMSegment<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMSegment>>>>(TDM::VT_SEGMENTS, None)}
+  }
+  /// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+  /// already exists above; 2..5 had no carrier.
+  #[inline]
+  pub fn TRANSMIT_FREQ_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_5, Some(0.0)).unwrap()}
+  }
+  /// Transmit frequency rates by participant, Hz/s. A constant rate here is
+  /// the single-interval degenerate case of TRANSMIT_RAMPS.
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_FREQ_RATE_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_5, Some(0.0)).unwrap()}
+  }
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  #[inline]
+  pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_MESSAGE_ID, None)}
+  }
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  #[inline]
+  pub fn TRACK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_TRACK_ID, None)}
+  }
+  /// Comma-separated list of the data keywords present in the data section.
+  #[inline]
+  pub fn DATA_TYPES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_DATA_TYPES, None)}
+  }
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  #[inline]
+  pub fn PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_PATH, None)}
+  }
+  /// Name of the ephemeris used to generate the data, per participant.
+  #[inline]
+  pub fn EPHEMERIS_NAME_1(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPHEMERIS_NAME_1, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_2(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPHEMERIS_NAME_2, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_3(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPHEMERIS_NAME_3, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_4(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPHEMERIS_NAME_4, None)}
+  }
+  #[inline]
+  pub fn EPHEMERIS_NAME_5(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPHEMERIS_NAME_5, None)}
+  }
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  #[inline]
+  pub fn RANGE_UNITS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_RANGE_UNITS, None)}
+  }
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_REFERENCE_FRAME, None)}
+  }
+  /// Recommended interpolation method for the observations.
+  #[inline]
+  pub fn INTERPOLATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDM::VT_INTERPOLATION, None)}
+  }
+  /// Recommended interpolation degree.
+  #[inline]
+  pub fn INTERPOLATION_DEGREE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(TDM::VT_INTERPOLATION_DEGREE, Some(0)).unwrap()}
+  }
+  /// Frequency offset applied to the observations, Hz.
+  #[inline]
+  pub fn FREQ_OFFSET(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_FREQ_OFFSET, Some(0.0)).unwrap()}
+  }
+  /// Transponder turnaround ratio numerator.
+  #[inline]
+  pub fn TURNAROUND_NUMERATOR(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TDM::VT_TURNAROUND_NUMERATOR, Some(0)).unwrap()}
+  }
+  /// Transponder turnaround ratio denominator.
+  #[inline]
+  pub fn TURNAROUND_DENOMINATOR(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TDM::VT_TURNAROUND_DENOMINATOR, Some(0)).unwrap()}
+  }
+  /// Transmit delays by participant, s.
+  #[inline]
+  pub fn TRANSMIT_DELAY_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_DELAY_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_DELAY_2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_DELAY_3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_DELAY_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TRANSMIT_DELAY_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_TRANSMIT_DELAY_5, Some(0.0)).unwrap()}
+  }
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  #[inline]
+  pub fn RECEIVE_DELAY_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_RECEIVE_DELAY_1, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_RECEIVE_DELAY_4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RECEIVE_DELAY_5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_RECEIVE_DELAY_5, Some(0.0)).unwrap()}
+  }
+  /// Doppler count bias, Hz.
+  #[inline]
+  pub fn DOPPLER_COUNT_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_DOPPLER_COUNT_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Doppler count scale factor.
+  #[inline]
+  pub fn DOPPLER_COUNT_SCALE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(TDM::VT_DOPPLER_COUNT_SCALE, Some(0)).unwrap()}
+  }
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  #[inline]
+  pub fn DOPPLER_COUNT_ROLLOVER(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(TDM::VT_DOPPLER_COUNT_ROLLOVER, Some(false)).unwrap()}
+  }
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  #[inline]
+  pub fn CORRECTION_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_RANGE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_DOPPLER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_DOPPLER, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_MAG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_MAG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_RCS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_RCS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_RECEIVE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_RECEIVE, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_TRANSMIT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_TRANSMIT, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ABERRATION_YEARLY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_ABERRATION_YEARLY, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CORRECTION_ABERRATION_DIURNAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_CORRECTION_ABERRATION_DIURNAL, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for TDM<'_> {
@@ -1306,6 +4127,52 @@ impl ::flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SPECTRAL_MAX", Self::VT_SPECTRAL_MAX, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DOPPLER_NOISE_HZ", Self::VT_DOPPLER_NOISE_HZ, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>("TRANSMIT_RAMPS", Self::VT_TRANSMIT_RAMPS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMObservation>>>>("OBSERVATIONS", Self::VT_OBSERVATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMSegment>>>>("SEGMENTS", Self::VT_SEGMENTS, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_2", Self::VT_TRANSMIT_FREQ_2, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_3", Self::VT_TRANSMIT_FREQ_3, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_4", Self::VT_TRANSMIT_FREQ_4, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_5", Self::VT_TRANSMIT_FREQ_5, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_1", Self::VT_TRANSMIT_FREQ_RATE_1, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_2", Self::VT_TRANSMIT_FREQ_RATE_2, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_3", Self::VT_TRANSMIT_FREQ_RATE_3, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_4", Self::VT_TRANSMIT_FREQ_RATE_4, false)?
+     .visit_field::<f64>("TRANSMIT_FREQ_RATE_5", Self::VT_TRANSMIT_FREQ_RATE_5, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_TYPES", Self::VT_DATA_TYPES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PATH", Self::VT_PATH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_1", Self::VT_EPHEMERIS_NAME_1, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_2", Self::VT_EPHEMERIS_NAME_2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_3", Self::VT_EPHEMERIS_NAME_3, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_4", Self::VT_EPHEMERIS_NAME_4, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME_5", Self::VT_EPHEMERIS_NAME_5, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RANGE_UNITS", Self::VT_RANGE_UNITS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
+     .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
+     .visit_field::<f64>("FREQ_OFFSET", Self::VT_FREQ_OFFSET, false)?
+     .visit_field::<i32>("TURNAROUND_NUMERATOR", Self::VT_TURNAROUND_NUMERATOR, false)?
+     .visit_field::<i32>("TURNAROUND_DENOMINATOR", Self::VT_TURNAROUND_DENOMINATOR, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_1", Self::VT_TRANSMIT_DELAY_1, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_2", Self::VT_TRANSMIT_DELAY_2, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_3", Self::VT_TRANSMIT_DELAY_3, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_4", Self::VT_TRANSMIT_DELAY_4, false)?
+     .visit_field::<f64>("TRANSMIT_DELAY_5", Self::VT_TRANSMIT_DELAY_5, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_1", Self::VT_RECEIVE_DELAY_1, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_4", Self::VT_RECEIVE_DELAY_4, false)?
+     .visit_field::<f64>("RECEIVE_DELAY_5", Self::VT_RECEIVE_DELAY_5, false)?
+     .visit_field::<f64>("DOPPLER_COUNT_BIAS", Self::VT_DOPPLER_COUNT_BIAS, false)?
+     .visit_field::<u32>("DOPPLER_COUNT_SCALE", Self::VT_DOPPLER_COUNT_SCALE, false)?
+     .visit_field::<bool>("DOPPLER_COUNT_ROLLOVER", Self::VT_DOPPLER_COUNT_ROLLOVER, false)?
+     .visit_field::<f64>("CORRECTION_RANGE", Self::VT_CORRECTION_RANGE, false)?
+     .visit_field::<f64>("CORRECTION_DOPPLER", Self::VT_CORRECTION_DOPPLER, false)?
+     .visit_field::<f64>("CORRECTION_MAG", Self::VT_CORRECTION_MAG, false)?
+     .visit_field::<f64>("CORRECTION_RCS", Self::VT_CORRECTION_RCS, false)?
+     .visit_field::<f64>("CORRECTION_RECEIVE", Self::VT_CORRECTION_RECEIVE, false)?
+     .visit_field::<f64>("CORRECTION_TRANSMIT", Self::VT_CORRECTION_TRANSMIT, false)?
+     .visit_field::<f64>("CORRECTION_ABERRATION_YEARLY", Self::VT_CORRECTION_ABERRATION_YEARLY, false)?
+     .visit_field::<f64>("CORRECTION_ABERRATION_DIURNAL", Self::VT_CORRECTION_ABERRATION_DIURNAL, false)?
      .finish();
     Ok(())
   }
@@ -1376,6 +4243,52 @@ pub struct TDMArgs<'a> {
     pub SPECTRAL_MAX: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub DOPPLER_NOISE_HZ: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub TRANSMIT_RAMPS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>>>,
+    pub OBSERVATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMObservation<'a>>>>>,
+    pub SEGMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMSegment<'a>>>>>,
+    pub TRANSMIT_FREQ_2: f64,
+    pub TRANSMIT_FREQ_3: f64,
+    pub TRANSMIT_FREQ_4: f64,
+    pub TRANSMIT_FREQ_5: f64,
+    pub TRANSMIT_FREQ_RATE_1: f64,
+    pub TRANSMIT_FREQ_RATE_2: f64,
+    pub TRANSMIT_FREQ_RATE_3: f64,
+    pub TRANSMIT_FREQ_RATE_4: f64,
+    pub TRANSMIT_FREQ_RATE_5: f64,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRACK_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_TYPES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_1: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_2: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_3: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_4: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME_5: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RANGE_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub FREQ_OFFSET: f64,
+    pub TURNAROUND_NUMERATOR: i32,
+    pub TURNAROUND_DENOMINATOR: i32,
+    pub TRANSMIT_DELAY_1: f64,
+    pub TRANSMIT_DELAY_2: f64,
+    pub TRANSMIT_DELAY_3: f64,
+    pub TRANSMIT_DELAY_4: f64,
+    pub TRANSMIT_DELAY_5: f64,
+    pub RECEIVE_DELAY_1: f64,
+    pub RECEIVE_DELAY_4: f64,
+    pub RECEIVE_DELAY_5: f64,
+    pub DOPPLER_COUNT_BIAS: f64,
+    pub DOPPLER_COUNT_SCALE: u32,
+    pub DOPPLER_COUNT_ROLLOVER: bool,
+    pub CORRECTION_RANGE: f64,
+    pub CORRECTION_DOPPLER: f64,
+    pub CORRECTION_MAG: f64,
+    pub CORRECTION_RCS: f64,
+    pub CORRECTION_RECEIVE: f64,
+    pub CORRECTION_TRANSMIT: f64,
+    pub CORRECTION_ABERRATION_YEARLY: f64,
+    pub CORRECTION_ABERRATION_DIURNAL: f64,
 }
 impl<'a> Default for TDMArgs<'a> {
   #[inline]
@@ -1446,6 +4359,52 @@ impl<'a> Default for TDMArgs<'a> {
       SPECTRAL_MAX: None,
       DOPPLER_NOISE_HZ: None,
       TRANSMIT_RAMPS: None,
+      OBSERVATIONS: None,
+      SEGMENTS: None,
+      TRANSMIT_FREQ_2: 0.0,
+      TRANSMIT_FREQ_3: 0.0,
+      TRANSMIT_FREQ_4: 0.0,
+      TRANSMIT_FREQ_5: 0.0,
+      TRANSMIT_FREQ_RATE_1: 0.0,
+      TRANSMIT_FREQ_RATE_2: 0.0,
+      TRANSMIT_FREQ_RATE_3: 0.0,
+      TRANSMIT_FREQ_RATE_4: 0.0,
+      TRANSMIT_FREQ_RATE_5: 0.0,
+      MESSAGE_ID: None,
+      TRACK_ID: None,
+      DATA_TYPES: None,
+      PATH: None,
+      EPHEMERIS_NAME_1: None,
+      EPHEMERIS_NAME_2: None,
+      EPHEMERIS_NAME_3: None,
+      EPHEMERIS_NAME_4: None,
+      EPHEMERIS_NAME_5: None,
+      RANGE_UNITS: None,
+      REFERENCE_FRAME: None,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      FREQ_OFFSET: 0.0,
+      TURNAROUND_NUMERATOR: 0,
+      TURNAROUND_DENOMINATOR: 0,
+      TRANSMIT_DELAY_1: 0.0,
+      TRANSMIT_DELAY_2: 0.0,
+      TRANSMIT_DELAY_3: 0.0,
+      TRANSMIT_DELAY_4: 0.0,
+      TRANSMIT_DELAY_5: 0.0,
+      RECEIVE_DELAY_1: 0.0,
+      RECEIVE_DELAY_4: 0.0,
+      RECEIVE_DELAY_5: 0.0,
+      DOPPLER_COUNT_BIAS: 0.0,
+      DOPPLER_COUNT_SCALE: 0,
+      DOPPLER_COUNT_ROLLOVER: false,
+      CORRECTION_RANGE: 0.0,
+      CORRECTION_DOPPLER: 0.0,
+      CORRECTION_MAG: 0.0,
+      CORRECTION_RCS: 0.0,
+      CORRECTION_RECEIVE: 0.0,
+      CORRECTION_TRANSMIT: 0.0,
+      CORRECTION_ABERRATION_YEARLY: 0.0,
+      CORRECTION_ABERRATION_DIURNAL: 0.0,
     }
   }
 }
@@ -1716,6 +4675,190 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
   }
   #[inline]
+  pub fn add_OBSERVATIONS(&mut self, OBSERVATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMObservation<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  #[inline]
+  pub fn add_SEGMENTS(&mut self, SEGMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMSegment<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_SEGMENTS, SEGMENTS);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_2(&mut self, TRANSMIT_FREQ_2: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_2, TRANSMIT_FREQ_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_3(&mut self, TRANSMIT_FREQ_3: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_3, TRANSMIT_FREQ_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_4(&mut self, TRANSMIT_FREQ_4: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_4, TRANSMIT_FREQ_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_5(&mut self, TRANSMIT_FREQ_5: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_5, TRANSMIT_FREQ_5, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_1(&mut self, TRANSMIT_FREQ_RATE_1: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_1, TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_2(&mut self, TRANSMIT_FREQ_RATE_2: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_2, TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_3(&mut self, TRANSMIT_FREQ_RATE_3: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_3, TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_4(&mut self, TRANSMIT_FREQ_RATE_4: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_4, TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FREQ_RATE_5(&mut self, TRANSMIT_FREQ_RATE_5: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_FREQ_RATE_5, TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  #[inline]
+  pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_TRACK_ID(&mut self, TRACK_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_TRACK_ID, TRACK_ID);
+  }
+  #[inline]
+  pub fn add_DATA_TYPES(&mut self, DATA_TYPES: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_DATA_TYPES, DATA_TYPES);
+  }
+  #[inline]
+  pub fn add_PATH(&mut self, PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_PATH, PATH);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_1(&mut self, EPHEMERIS_NAME_1: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_EPHEMERIS_NAME_1, EPHEMERIS_NAME_1);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_2(&mut self, EPHEMERIS_NAME_2: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_EPHEMERIS_NAME_2, EPHEMERIS_NAME_2);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_3(&mut self, EPHEMERIS_NAME_3: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_EPHEMERIS_NAME_3, EPHEMERIS_NAME_3);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_4(&mut self, EPHEMERIS_NAME_4: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_EPHEMERIS_NAME_4, EPHEMERIS_NAME_4);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME_5(&mut self, EPHEMERIS_NAME_5: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_EPHEMERIS_NAME_5, EPHEMERIS_NAME_5);
+  }
+  #[inline]
+  pub fn add_RANGE_UNITS(&mut self, RANGE_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_RANGE_UNITS, RANGE_UNITS);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION(&mut self, INTERPOLATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_INTERPOLATION, INTERPOLATION);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION_DEGREE(&mut self, INTERPOLATION_DEGREE: u32) {
+    self.fbb_.push_slot::<u32>(TDM::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  #[inline]
+  pub fn add_FREQ_OFFSET(&mut self, FREQ_OFFSET: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_FREQ_OFFSET, FREQ_OFFSET, 0.0);
+  }
+  #[inline]
+  pub fn add_TURNAROUND_NUMERATOR(&mut self, TURNAROUND_NUMERATOR: i32) {
+    self.fbb_.push_slot::<i32>(TDM::VT_TURNAROUND_NUMERATOR, TURNAROUND_NUMERATOR, 0);
+  }
+  #[inline]
+  pub fn add_TURNAROUND_DENOMINATOR(&mut self, TURNAROUND_DENOMINATOR: i32) {
+    self.fbb_.push_slot::<i32>(TDM::VT_TURNAROUND_DENOMINATOR, TURNAROUND_DENOMINATOR, 0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_1(&mut self, TRANSMIT_DELAY_1: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_DELAY_1, TRANSMIT_DELAY_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_2(&mut self, TRANSMIT_DELAY_2: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_DELAY_2, TRANSMIT_DELAY_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_3(&mut self, TRANSMIT_DELAY_3: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_DELAY_3, TRANSMIT_DELAY_3, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_4(&mut self, TRANSMIT_DELAY_4: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_DELAY_4, TRANSMIT_DELAY_4, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_DELAY_5(&mut self, TRANSMIT_DELAY_5: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_TRANSMIT_DELAY_5, TRANSMIT_DELAY_5, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_1(&mut self, RECEIVE_DELAY_1: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_RECEIVE_DELAY_1, RECEIVE_DELAY_1, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_4(&mut self, RECEIVE_DELAY_4: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_RECEIVE_DELAY_4, RECEIVE_DELAY_4, 0.0);
+  }
+  #[inline]
+  pub fn add_RECEIVE_DELAY_5(&mut self, RECEIVE_DELAY_5: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_RECEIVE_DELAY_5, RECEIVE_DELAY_5, 0.0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_BIAS(&mut self, DOPPLER_COUNT_BIAS: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_DOPPLER_COUNT_BIAS, DOPPLER_COUNT_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_SCALE(&mut self, DOPPLER_COUNT_SCALE: u32) {
+    self.fbb_.push_slot::<u32>(TDM::VT_DOPPLER_COUNT_SCALE, DOPPLER_COUNT_SCALE, 0);
+  }
+  #[inline]
+  pub fn add_DOPPLER_COUNT_ROLLOVER(&mut self, DOPPLER_COUNT_ROLLOVER: bool) {
+    self.fbb_.push_slot::<bool>(TDM::VT_DOPPLER_COUNT_ROLLOVER, DOPPLER_COUNT_ROLLOVER, false);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RANGE(&mut self, CORRECTION_RANGE: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_RANGE, CORRECTION_RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_DOPPLER(&mut self, CORRECTION_DOPPLER: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_DOPPLER, CORRECTION_DOPPLER, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_MAG(&mut self, CORRECTION_MAG: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_MAG, CORRECTION_MAG, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RCS(&mut self, CORRECTION_RCS: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_RCS, CORRECTION_RCS, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_RECEIVE(&mut self, CORRECTION_RECEIVE: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_RECEIVE, CORRECTION_RECEIVE, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_TRANSMIT(&mut self, CORRECTION_TRANSMIT: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_TRANSMIT, CORRECTION_TRANSMIT, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ABERRATION_YEARLY(&mut self, CORRECTION_ABERRATION_YEARLY: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_ABERRATION_YEARLY, CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  #[inline]
+  pub fn add_CORRECTION_ABERRATION_DIURNAL(&mut self, CORRECTION_ABERRATION_DIURNAL: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_CORRECTION_ABERRATION_DIURNAL, CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TDMBuilder {
@@ -1798,6 +4941,52 @@ impl ::core::fmt::Debug for TDM<'_> {
       ds.field("SPECTRAL_MAX", &self.SPECTRAL_MAX());
       ds.field("DOPPLER_NOISE_HZ", &self.DOPPLER_NOISE_HZ());
       ds.field("TRANSMIT_RAMPS", &self.TRANSMIT_RAMPS());
+      ds.field("OBSERVATIONS", &self.OBSERVATIONS());
+      ds.field("SEGMENTS", &self.SEGMENTS());
+      ds.field("TRANSMIT_FREQ_2", &self.TRANSMIT_FREQ_2());
+      ds.field("TRANSMIT_FREQ_3", &self.TRANSMIT_FREQ_3());
+      ds.field("TRANSMIT_FREQ_4", &self.TRANSMIT_FREQ_4());
+      ds.field("TRANSMIT_FREQ_5", &self.TRANSMIT_FREQ_5());
+      ds.field("TRANSMIT_FREQ_RATE_1", &self.TRANSMIT_FREQ_RATE_1());
+      ds.field("TRANSMIT_FREQ_RATE_2", &self.TRANSMIT_FREQ_RATE_2());
+      ds.field("TRANSMIT_FREQ_RATE_3", &self.TRANSMIT_FREQ_RATE_3());
+      ds.field("TRANSMIT_FREQ_RATE_4", &self.TRANSMIT_FREQ_RATE_4());
+      ds.field("TRANSMIT_FREQ_RATE_5", &self.TRANSMIT_FREQ_RATE_5());
+      ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+      ds.field("TRACK_ID", &self.TRACK_ID());
+      ds.field("DATA_TYPES", &self.DATA_TYPES());
+      ds.field("PATH", &self.PATH());
+      ds.field("EPHEMERIS_NAME_1", &self.EPHEMERIS_NAME_1());
+      ds.field("EPHEMERIS_NAME_2", &self.EPHEMERIS_NAME_2());
+      ds.field("EPHEMERIS_NAME_3", &self.EPHEMERIS_NAME_3());
+      ds.field("EPHEMERIS_NAME_4", &self.EPHEMERIS_NAME_4());
+      ds.field("EPHEMERIS_NAME_5", &self.EPHEMERIS_NAME_5());
+      ds.field("RANGE_UNITS", &self.RANGE_UNITS());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("INTERPOLATION", &self.INTERPOLATION());
+      ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
+      ds.field("FREQ_OFFSET", &self.FREQ_OFFSET());
+      ds.field("TURNAROUND_NUMERATOR", &self.TURNAROUND_NUMERATOR());
+      ds.field("TURNAROUND_DENOMINATOR", &self.TURNAROUND_DENOMINATOR());
+      ds.field("TRANSMIT_DELAY_1", &self.TRANSMIT_DELAY_1());
+      ds.field("TRANSMIT_DELAY_2", &self.TRANSMIT_DELAY_2());
+      ds.field("TRANSMIT_DELAY_3", &self.TRANSMIT_DELAY_3());
+      ds.field("TRANSMIT_DELAY_4", &self.TRANSMIT_DELAY_4());
+      ds.field("TRANSMIT_DELAY_5", &self.TRANSMIT_DELAY_5());
+      ds.field("RECEIVE_DELAY_1", &self.RECEIVE_DELAY_1());
+      ds.field("RECEIVE_DELAY_4", &self.RECEIVE_DELAY_4());
+      ds.field("RECEIVE_DELAY_5", &self.RECEIVE_DELAY_5());
+      ds.field("DOPPLER_COUNT_BIAS", &self.DOPPLER_COUNT_BIAS());
+      ds.field("DOPPLER_COUNT_SCALE", &self.DOPPLER_COUNT_SCALE());
+      ds.field("DOPPLER_COUNT_ROLLOVER", &self.DOPPLER_COUNT_ROLLOVER());
+      ds.field("CORRECTION_RANGE", &self.CORRECTION_RANGE());
+      ds.field("CORRECTION_DOPPLER", &self.CORRECTION_DOPPLER());
+      ds.field("CORRECTION_MAG", &self.CORRECTION_MAG());
+      ds.field("CORRECTION_RCS", &self.CORRECTION_RCS());
+      ds.field("CORRECTION_RECEIVE", &self.CORRECTION_RECEIVE());
+      ds.field("CORRECTION_TRANSMIT", &self.CORRECTION_TRANSMIT());
+      ds.field("CORRECTION_ABERRATION_YEARLY", &self.CORRECTION_ABERRATION_YEARLY());
+      ds.field("CORRECTION_ABERRATION_DIURNAL", &self.CORRECTION_ABERRATION_DIURNAL());
       ds.finish()
   }
 }
@@ -1869,6 +5058,52 @@ pub struct TDMT {
   pub SPECTRAL_MAX: Option<alloc::vec::Vec<f64>>,
   pub DOPPLER_NOISE_HZ: Option<alloc::vec::Vec<f64>>,
   pub TRANSMIT_RAMPS: Option<alloc::vec::Vec<TDMTransmitRampT>>,
+  pub OBSERVATIONS: Option<alloc::vec::Vec<TDMObservationT>>,
+  pub SEGMENTS: Option<alloc::vec::Vec<TDMSegmentT>>,
+  pub TRANSMIT_FREQ_2: f64,
+  pub TRANSMIT_FREQ_3: f64,
+  pub TRANSMIT_FREQ_4: f64,
+  pub TRANSMIT_FREQ_5: f64,
+  pub TRANSMIT_FREQ_RATE_1: f64,
+  pub TRANSMIT_FREQ_RATE_2: f64,
+  pub TRANSMIT_FREQ_RATE_3: f64,
+  pub TRANSMIT_FREQ_RATE_4: f64,
+  pub TRANSMIT_FREQ_RATE_5: f64,
+  pub MESSAGE_ID: Option<alloc::string::String>,
+  pub TRACK_ID: Option<alloc::string::String>,
+  pub DATA_TYPES: Option<alloc::string::String>,
+  pub PATH: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_1: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_2: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_3: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_4: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME_5: Option<alloc::string::String>,
+  pub RANGE_UNITS: Option<alloc::string::String>,
+  pub REFERENCE_FRAME: Option<alloc::string::String>,
+  pub INTERPOLATION: Option<alloc::string::String>,
+  pub INTERPOLATION_DEGREE: u32,
+  pub FREQ_OFFSET: f64,
+  pub TURNAROUND_NUMERATOR: i32,
+  pub TURNAROUND_DENOMINATOR: i32,
+  pub TRANSMIT_DELAY_1: f64,
+  pub TRANSMIT_DELAY_2: f64,
+  pub TRANSMIT_DELAY_3: f64,
+  pub TRANSMIT_DELAY_4: f64,
+  pub TRANSMIT_DELAY_5: f64,
+  pub RECEIVE_DELAY_1: f64,
+  pub RECEIVE_DELAY_4: f64,
+  pub RECEIVE_DELAY_5: f64,
+  pub DOPPLER_COUNT_BIAS: f64,
+  pub DOPPLER_COUNT_SCALE: u32,
+  pub DOPPLER_COUNT_ROLLOVER: bool,
+  pub CORRECTION_RANGE: f64,
+  pub CORRECTION_DOPPLER: f64,
+  pub CORRECTION_MAG: f64,
+  pub CORRECTION_RCS: f64,
+  pub CORRECTION_RECEIVE: f64,
+  pub CORRECTION_TRANSMIT: f64,
+  pub CORRECTION_ABERRATION_YEARLY: f64,
+  pub CORRECTION_ABERRATION_DIURNAL: f64,
 }
 impl Default for TDMT {
   fn default() -> Self {
@@ -1938,6 +5173,52 @@ impl Default for TDMT {
       SPECTRAL_MAX: None,
       DOPPLER_NOISE_HZ: None,
       TRANSMIT_RAMPS: None,
+      OBSERVATIONS: None,
+      SEGMENTS: None,
+      TRANSMIT_FREQ_2: 0.0,
+      TRANSMIT_FREQ_3: 0.0,
+      TRANSMIT_FREQ_4: 0.0,
+      TRANSMIT_FREQ_5: 0.0,
+      TRANSMIT_FREQ_RATE_1: 0.0,
+      TRANSMIT_FREQ_RATE_2: 0.0,
+      TRANSMIT_FREQ_RATE_3: 0.0,
+      TRANSMIT_FREQ_RATE_4: 0.0,
+      TRANSMIT_FREQ_RATE_5: 0.0,
+      MESSAGE_ID: None,
+      TRACK_ID: None,
+      DATA_TYPES: None,
+      PATH: None,
+      EPHEMERIS_NAME_1: None,
+      EPHEMERIS_NAME_2: None,
+      EPHEMERIS_NAME_3: None,
+      EPHEMERIS_NAME_4: None,
+      EPHEMERIS_NAME_5: None,
+      RANGE_UNITS: None,
+      REFERENCE_FRAME: None,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      FREQ_OFFSET: 0.0,
+      TURNAROUND_NUMERATOR: 0,
+      TURNAROUND_DENOMINATOR: 0,
+      TRANSMIT_DELAY_1: 0.0,
+      TRANSMIT_DELAY_2: 0.0,
+      TRANSMIT_DELAY_3: 0.0,
+      TRANSMIT_DELAY_4: 0.0,
+      TRANSMIT_DELAY_5: 0.0,
+      RECEIVE_DELAY_1: 0.0,
+      RECEIVE_DELAY_4: 0.0,
+      RECEIVE_DELAY_5: 0.0,
+      DOPPLER_COUNT_BIAS: 0.0,
+      DOPPLER_COUNT_SCALE: 0,
+      DOPPLER_COUNT_ROLLOVER: false,
+      CORRECTION_RANGE: 0.0,
+      CORRECTION_DOPPLER: 0.0,
+      CORRECTION_MAG: 0.0,
+      CORRECTION_RCS: 0.0,
+      CORRECTION_RECEIVE: 0.0,
+      CORRECTION_TRANSMIT: 0.0,
+      CORRECTION_ABERRATION_YEARLY: 0.0,
+      CORRECTION_ABERRATION_DIURNAL: 0.0,
     }
   }
 }
@@ -2101,6 +5382,80 @@ impl TDMT {
     let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let OBSERVATIONS = self.OBSERVATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SEGMENTS = self.SEGMENTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TRANSMIT_FREQ_2 = self.TRANSMIT_FREQ_2;
+    let TRANSMIT_FREQ_3 = self.TRANSMIT_FREQ_3;
+    let TRANSMIT_FREQ_4 = self.TRANSMIT_FREQ_4;
+    let TRANSMIT_FREQ_5 = self.TRANSMIT_FREQ_5;
+    let TRANSMIT_FREQ_RATE_1 = self.TRANSMIT_FREQ_RATE_1;
+    let TRANSMIT_FREQ_RATE_2 = self.TRANSMIT_FREQ_RATE_2;
+    let TRANSMIT_FREQ_RATE_3 = self.TRANSMIT_FREQ_RATE_3;
+    let TRANSMIT_FREQ_RATE_4 = self.TRANSMIT_FREQ_RATE_4;
+    let TRANSMIT_FREQ_RATE_5 = self.TRANSMIT_FREQ_RATE_5;
+    let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACK_ID = self.TRACK_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_TYPES = self.DATA_TYPES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PATH = self.PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_1 = self.EPHEMERIS_NAME_1.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_2 = self.EPHEMERIS_NAME_2.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_3 = self.EPHEMERIS_NAME_3.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_4 = self.EPHEMERIS_NAME_4.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME_5 = self.EPHEMERIS_NAME_5.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RANGE_UNITS = self.RANGE_UNITS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE;
+    let FREQ_OFFSET = self.FREQ_OFFSET;
+    let TURNAROUND_NUMERATOR = self.TURNAROUND_NUMERATOR;
+    let TURNAROUND_DENOMINATOR = self.TURNAROUND_DENOMINATOR;
+    let TRANSMIT_DELAY_1 = self.TRANSMIT_DELAY_1;
+    let TRANSMIT_DELAY_2 = self.TRANSMIT_DELAY_2;
+    let TRANSMIT_DELAY_3 = self.TRANSMIT_DELAY_3;
+    let TRANSMIT_DELAY_4 = self.TRANSMIT_DELAY_4;
+    let TRANSMIT_DELAY_5 = self.TRANSMIT_DELAY_5;
+    let RECEIVE_DELAY_1 = self.RECEIVE_DELAY_1;
+    let RECEIVE_DELAY_4 = self.RECEIVE_DELAY_4;
+    let RECEIVE_DELAY_5 = self.RECEIVE_DELAY_5;
+    let DOPPLER_COUNT_BIAS = self.DOPPLER_COUNT_BIAS;
+    let DOPPLER_COUNT_SCALE = self.DOPPLER_COUNT_SCALE;
+    let DOPPLER_COUNT_ROLLOVER = self.DOPPLER_COUNT_ROLLOVER;
+    let CORRECTION_RANGE = self.CORRECTION_RANGE;
+    let CORRECTION_DOPPLER = self.CORRECTION_DOPPLER;
+    let CORRECTION_MAG = self.CORRECTION_MAG;
+    let CORRECTION_RCS = self.CORRECTION_RCS;
+    let CORRECTION_RECEIVE = self.CORRECTION_RECEIVE;
+    let CORRECTION_TRANSMIT = self.CORRECTION_TRANSMIT;
+    let CORRECTION_ABERRATION_YEARLY = self.CORRECTION_ABERRATION_YEARLY;
+    let CORRECTION_ABERRATION_DIURNAL = self.CORRECTION_ABERRATION_DIURNAL;
     TDM::create(_fbb, &TDMArgs{
       OBSERVER_ID,
       OBSERVER_X,
@@ -2167,6 +5522,52 @@ impl TDMT {
       SPECTRAL_MAX,
       DOPPLER_NOISE_HZ,
       TRANSMIT_RAMPS,
+      OBSERVATIONS,
+      SEGMENTS,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      MESSAGE_ID,
+      TRACK_ID,
+      DATA_TYPES,
+      PATH,
+      EPHEMERIS_NAME_1,
+      EPHEMERIS_NAME_2,
+      EPHEMERIS_NAME_3,
+      EPHEMERIS_NAME_4,
+      EPHEMERIS_NAME_5,
+      RANGE_UNITS,
+      REFERENCE_FRAME,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL,
     })
   }
 }

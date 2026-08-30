@@ -1,5 +1,5 @@
-// Hash: a4a1e30f4d578312e1ed78ff72eaef64d6f81b7fe7106d7a2a5be7eaef6892fe
-// Version: 1.1.3
+// Hash: 7a7c258d63755676bc73a25f858ec8636a9797f3bcd7c09dfafa16d359135289
+// Version: 1.1.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -103,6 +103,43 @@ table ephemerisDataLine {
   Y_DDOT:double;
   /// Optional: Acceleration vector Z-component km/s²
   Z_DDOT:double;
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED. Per-state clock and accuracy columns. Append-only: never reorder.
+  //
+  // These are the SP3-d position/velocity record columns that have no CCSDS OEM
+  // equivalent. An OEM alone cannot be written back out as an SP3 file without
+  // them: the clock column is mandatory in every SP3 position record, and the
+  // per-coordinate standard-deviation exponents are how SP3 states accuracy.
+  // All are optional; an OEM that omits them is unchanged.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  /// field instead.
+  CLOCK_BIAS_MICROSECONDS:double;
+  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  CLOCK_RATE_MICROSECONDS_PER_SECOND:double;
+  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  CLOCK_BIAS_SIGMA_PICOSECONDS:double;
+  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  /// 1e-4 picoseconds per second.
+  CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND:double;
+
+  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  /// the result in mm. These are the raw SP3 exponent columns, kept as
+  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  /// sigma raises the header base to this power.
+  X_SIGMA_EXPONENT:int8;
+  Y_SIGMA_EXPONENT:int8;
+  Z_SIGMA_EXPONENT:int8;
+  /// Per-coordinate velocity standard-deviation exponents, result in
+  /// 1e-4 mm/s. Same base**n rule.
+  X_DOT_SIGMA_EXPONENT:int8;
+  Y_DOT_SIGMA_EXPONENT:int8;
+  Z_DOT_SIGMA_EXPONENT:int8;
 }
 
 /// Position/Velocity Covariance Matrix Line
@@ -254,6 +291,24 @@ table ephemerisDataBlock {
   /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
   /// See PPE schema for record structure and evaluation procedure.
   POLYNOMIAL_POSITION_RECORDS:[PPEPositionRecord];
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED. NAIF integer body codes. Append-only: never reorder.
+  //
+  // OBJECT and CENTER_NAME are text. An SPK segment descriptor is not: it
+  // stores INTEGER NAIF codes for the target and the centre, and there is no
+  // ratified text-to-code mapping to recover them from a name ($CAT carries no
+  // NAIF id). Without these an OEM cannot be written to an SPK at all, and a
+  // read SPK cannot state which bodies it referenced without guessing.
+  // Precedent: BODY_NAIF_ID (schema/MDS/main.fbs),
+  // CENTRAL_BODY_NAIF_ID (schema/SHC/main.fbs).
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// NAIF integer code of the ephemeris target (SPK segment target).
+  OBJECT_NAIF_ID:int;
+  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  /// (SPK segment centre).
+  CENTER_NAIF_ID:int;
 }
 
 /// Orbit Ephemeris Message

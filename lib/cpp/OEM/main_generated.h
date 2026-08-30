@@ -45,7 +45,17 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_Z_DOT = 16,
     VT_X_DDOT = 18,
     VT_Y_DDOT = 20,
-    VT_Z_DDOT = 22
+    VT_Z_DDOT = 22,
+    VT_CLOCK_BIAS_MICROSECONDS = 24,
+    VT_CLOCK_RATE_MICROSECONDS_PER_SECOND = 26,
+    VT_CLOCK_BIAS_SIGMA_PICOSECONDS = 28,
+    VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 30,
+    VT_X_SIGMA_EXPONENT = 32,
+    VT_Y_SIGMA_EXPONENT = 34,
+    VT_Z_SIGMA_EXPONENT = 36,
+    VT_X_DOT_SIGMA_EXPONENT = 38,
+    VT_Y_DOT_SIGMA_EXPONENT = 40,
+    VT_Z_DOT_SIGMA_EXPONENT = 42
   };
   /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   const ::flatbuffers::String *EPOCH() const {
@@ -87,6 +97,51 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double Z_DDOT() const {
     return GetField<double>(VT_Z_DDOT, 0.0);
   }
+  /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  /// field instead.
+  double CLOCK_BIAS_MICROSECONDS() const {
+    return GetField<double>(VT_CLOCK_BIAS_MICROSECONDS, 0.0);
+  }
+  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  double CLOCK_RATE_MICROSECONDS_PER_SECOND() const {
+    return GetField<double>(VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0);
+  }
+  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  double CLOCK_BIAS_SIGMA_PICOSECONDS() const {
+    return GetField<double>(VT_CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0);
+  }
+  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  /// 1e-4 picoseconds per second.
+  double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND() const {
+    return GetField<double>(VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0);
+  }
+  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  /// the result in mm. These are the raw SP3 exponent columns, kept as
+  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  /// sigma raises the header base to this power.
+  int8_t X_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_X_SIGMA_EXPONENT, 0);
+  }
+  int8_t Y_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_Y_SIGMA_EXPONENT, 0);
+  }
+  int8_t Z_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_Z_SIGMA_EXPONENT, 0);
+  }
+  /// Per-coordinate velocity standard-deviation exponents, result in
+  /// 1e-4 mm/s. Same base**n rule.
+  int8_t X_DOT_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_X_DOT_SIGMA_EXPONENT, 0);
+  }
+  int8_t Y_DOT_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_Y_DOT_SIGMA_EXPONENT, 0);
+  }
+  int8_t Z_DOT_SIGMA_EXPONENT() const {
+    return GetField<int8_t>(VT_Z_DOT_SIGMA_EXPONENT, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -101,6 +156,16 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            VerifyField<double>(verifier, VT_X_DDOT, 8) &&
            VerifyField<double>(verifier, VT_Y_DDOT, 8) &&
            VerifyField<double>(verifier, VT_Z_DDOT, 8) &&
+           VerifyField<double>(verifier, VT_CLOCK_BIAS_MICROSECONDS, 8) &&
+           VerifyField<double>(verifier, VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, 8) &&
+           VerifyField<double>(verifier, VT_CLOCK_BIAS_SIGMA_PICOSECONDS, 8) &&
+           VerifyField<double>(verifier, VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 8) &&
+           VerifyField<int8_t>(verifier, VT_X_SIGMA_EXPONENT, 1) &&
+           VerifyField<int8_t>(verifier, VT_Y_SIGMA_EXPONENT, 1) &&
+           VerifyField<int8_t>(verifier, VT_Z_SIGMA_EXPONENT, 1) &&
+           VerifyField<int8_t>(verifier, VT_X_DOT_SIGMA_EXPONENT, 1) &&
+           VerifyField<int8_t>(verifier, VT_Y_DOT_SIGMA_EXPONENT, 1) &&
+           VerifyField<int8_t>(verifier, VT_Z_DOT_SIGMA_EXPONENT, 1) &&
            verifier.EndTable();
   }
 };
@@ -139,6 +204,36 @@ struct ephemerisDataLineBuilder {
   void add_Z_DDOT(double Z_DDOT) {
     fbb_.AddElement<double>(ephemerisDataLine::VT_Z_DDOT, Z_DDOT, 0.0);
   }
+  void add_CLOCK_BIAS_MICROSECONDS(double CLOCK_BIAS_MICROSECONDS) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_CLOCK_BIAS_MICROSECONDS, CLOCK_BIAS_MICROSECONDS, 0.0);
+  }
+  void add_CLOCK_RATE_MICROSECONDS_PER_SECOND(double CLOCK_RATE_MICROSECONDS_PER_SECOND) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0);
+  }
+  void add_CLOCK_BIAS_SIGMA_PICOSECONDS(double CLOCK_BIAS_SIGMA_PICOSECONDS) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_CLOCK_BIAS_SIGMA_PICOSECONDS, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0);
+  }
+  void add_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0);
+  }
+  void add_X_SIGMA_EXPONENT(int8_t X_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_X_SIGMA_EXPONENT, X_SIGMA_EXPONENT, 0);
+  }
+  void add_Y_SIGMA_EXPONENT(int8_t Y_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_Y_SIGMA_EXPONENT, Y_SIGMA_EXPONENT, 0);
+  }
+  void add_Z_SIGMA_EXPONENT(int8_t Z_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_Z_SIGMA_EXPONENT, Z_SIGMA_EXPONENT, 0);
+  }
+  void add_X_DOT_SIGMA_EXPONENT(int8_t X_DOT_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_X_DOT_SIGMA_EXPONENT, X_DOT_SIGMA_EXPONENT, 0);
+  }
+  void add_Y_DOT_SIGMA_EXPONENT(int8_t Y_DOT_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_Y_DOT_SIGMA_EXPONENT, Y_DOT_SIGMA_EXPONENT, 0);
+  }
+  void add_Z_DOT_SIGMA_EXPONENT(int8_t Z_DOT_SIGMA_EXPONENT) {
+    fbb_.AddElement<int8_t>(ephemerisDataLine::VT_Z_DOT_SIGMA_EXPONENT, Z_DOT_SIGMA_EXPONENT, 0);
+  }
   explicit ephemerisDataLineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -161,8 +256,22 @@ inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLine(
     double Z_DOT = 0.0,
     double X_DDOT = 0.0,
     double Y_DDOT = 0.0,
-    double Z_DDOT = 0.0) {
+    double Z_DDOT = 0.0,
+    double CLOCK_BIAS_MICROSECONDS = 0.0,
+    double CLOCK_RATE_MICROSECONDS_PER_SECOND = 0.0,
+    double CLOCK_BIAS_SIGMA_PICOSECONDS = 0.0,
+    double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 0.0,
+    int8_t X_SIGMA_EXPONENT = 0,
+    int8_t Y_SIGMA_EXPONENT = 0,
+    int8_t Z_SIGMA_EXPONENT = 0,
+    int8_t X_DOT_SIGMA_EXPONENT = 0,
+    int8_t Y_DOT_SIGMA_EXPONENT = 0,
+    int8_t Z_DOT_SIGMA_EXPONENT = 0) {
   ephemerisDataLineBuilder builder_(_fbb);
+  builder_.add_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+  builder_.add_CLOCK_BIAS_SIGMA_PICOSECONDS(CLOCK_BIAS_SIGMA_PICOSECONDS);
+  builder_.add_CLOCK_RATE_MICROSECONDS_PER_SECOND(CLOCK_RATE_MICROSECONDS_PER_SECOND);
+  builder_.add_CLOCK_BIAS_MICROSECONDS(CLOCK_BIAS_MICROSECONDS);
   builder_.add_Z_DDOT(Z_DDOT);
   builder_.add_Y_DDOT(Y_DDOT);
   builder_.add_X_DDOT(X_DDOT);
@@ -173,6 +282,12 @@ inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLine(
   builder_.add_Y(Y);
   builder_.add_X(X);
   builder_.add_EPOCH(EPOCH);
+  builder_.add_Z_DOT_SIGMA_EXPONENT(Z_DOT_SIGMA_EXPONENT);
+  builder_.add_Y_DOT_SIGMA_EXPONENT(Y_DOT_SIGMA_EXPONENT);
+  builder_.add_X_DOT_SIGMA_EXPONENT(X_DOT_SIGMA_EXPONENT);
+  builder_.add_Z_SIGMA_EXPONENT(Z_SIGMA_EXPONENT);
+  builder_.add_Y_SIGMA_EXPONENT(Y_SIGMA_EXPONENT);
+  builder_.add_X_SIGMA_EXPONENT(X_SIGMA_EXPONENT);
   return builder_.Finish();
 }
 
@@ -187,7 +302,17 @@ inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLineDirect(
     double Z_DOT = 0.0,
     double X_DDOT = 0.0,
     double Y_DDOT = 0.0,
-    double Z_DDOT = 0.0) {
+    double Z_DDOT = 0.0,
+    double CLOCK_BIAS_MICROSECONDS = 0.0,
+    double CLOCK_RATE_MICROSECONDS_PER_SECOND = 0.0,
+    double CLOCK_BIAS_SIGMA_PICOSECONDS = 0.0,
+    double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 0.0,
+    int8_t X_SIGMA_EXPONENT = 0,
+    int8_t Y_SIGMA_EXPONENT = 0,
+    int8_t Z_SIGMA_EXPONENT = 0,
+    int8_t X_DOT_SIGMA_EXPONENT = 0,
+    int8_t Y_DOT_SIGMA_EXPONENT = 0,
+    int8_t Z_DOT_SIGMA_EXPONENT = 0) {
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
   return CreateephemerisDataLine(
       _fbb,
@@ -200,7 +325,17 @@ inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLineDirect(
       Z_DOT,
       X_DDOT,
       Y_DDOT,
-      Z_DDOT);
+      Z_DDOT,
+      CLOCK_BIAS_MICROSECONDS,
+      CLOCK_RATE_MICROSECONDS_PER_SECOND,
+      CLOCK_BIAS_SIGMA_PICOSECONDS,
+      CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+      X_SIGMA_EXPONENT,
+      Y_SIGMA_EXPONENT,
+      Z_SIGMA_EXPONENT,
+      X_DOT_SIGMA_EXPONENT,
+      Y_DOT_SIGMA_EXPONENT,
+      Z_DOT_SIGMA_EXPONENT);
 }
 
 /// Position/Velocity Covariance Matrix Line
@@ -552,7 +687,9 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_EPHEMERIS_DATA = 34,
     VT_EPHEMERIS_DATA_LINES = 36,
     VT_COVARIANCE_MATRIX_LINES = 38,
-    VT_POLYNOMIAL_POSITION_RECORDS = 40
+    VT_POLYNOMIAL_POSITION_RECORDS = 40,
+    VT_OBJECT_NAIF_ID = 42,
+    VT_CENTER_NAIF_ID = 44
   };
   /// Plain-Text Comment
   const ::flatbuffers::String *COMMENT() const {
@@ -649,6 +786,15 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *>(VT_POLYNOMIAL_POSITION_RECORDS);
   }
+  /// NAIF integer code of the ephemeris target (SPK segment target).
+  int32_t OBJECT_NAIF_ID() const {
+    return GetField<int32_t>(VT_OBJECT_NAIF_ID, 0);
+  }
+  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  /// (SPK segment centre).
+  int32_t CENTER_NAIF_ID() const {
+    return GetField<int32_t>(VT_CENTER_NAIF_ID, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -689,6 +835,8 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyOffset(verifier, VT_POLYNOMIAL_POSITION_RECORDS) &&
            verifier.VerifyVector(POLYNOMIAL_POSITION_RECORDS()) &&
            verifier.VerifyVectorOfTables(POLYNOMIAL_POSITION_RECORDS()) &&
+           VerifyField<int32_t>(verifier, VT_OBJECT_NAIF_ID, 4) &&
+           VerifyField<int32_t>(verifier, VT_CENTER_NAIF_ID, 4) &&
            verifier.EndTable();
   }
 };
@@ -754,6 +902,12 @@ struct ephemerisDataBlockBuilder {
   void add_POLYNOMIAL_POSITION_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS) {
     fbb_.AddOffset(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, POLYNOMIAL_POSITION_RECORDS);
   }
+  void add_OBJECT_NAIF_ID(int32_t OBJECT_NAIF_ID) {
+    fbb_.AddElement<int32_t>(ephemerisDataBlock::VT_OBJECT_NAIF_ID, OBJECT_NAIF_ID, 0);
+  }
+  void add_CENTER_NAIF_ID(int32_t CENTER_NAIF_ID) {
+    fbb_.AddElement<int32_t>(ephemerisDataBlock::VT_CENTER_NAIF_ID, CENTER_NAIF_ID, 0);
+  }
   explicit ephemerisDataBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -785,9 +939,13 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> EPHEMERIS_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>>> EPHEMERIS_DATA_LINES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>>> COVARIANCE_MATRIX_LINES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS = 0,
+    int32_t OBJECT_NAIF_ID = 0,
+    int32_t CENTER_NAIF_ID = 0) {
   ephemerisDataBlockBuilder builder_(_fbb);
   builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_CENTER_NAIF_ID(CENTER_NAIF_ID);
+  builder_.add_OBJECT_NAIF_ID(OBJECT_NAIF_ID);
   builder_.add_POLYNOMIAL_POSITION_RECORDS(POLYNOMIAL_POSITION_RECORDS);
   builder_.add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES);
   builder_.add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES);
@@ -829,7 +987,9 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const std::vector<double> *EPHEMERIS_DATA = nullptr,
     const std::vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES = nullptr,
     const std::vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES = nullptr,
-    const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS = nullptr) {
+    const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS = nullptr,
+    int32_t OBJECT_NAIF_ID = 0,
+    int32_t CENTER_NAIF_ID = 0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto REFERENCE_FRAME_EPOCH__ = REFERENCE_FRAME_EPOCH ? _fbb.CreateString(REFERENCE_FRAME_EPOCH) : 0;
@@ -862,7 +1022,9 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
       EPHEMERIS_DATA__,
       EPHEMERIS_DATA_LINES__,
       COVARIANCE_MATRIX_LINES__,
-      POLYNOMIAL_POSITION_RECORDS__);
+      POLYNOMIAL_POSITION_RECORDS__,
+      OBJECT_NAIF_ID,
+      CENTER_NAIF_ID);
 }
 
 /// Orbit Ephemeris Message

@@ -1094,6 +1094,42 @@
         "Z_DDOT" : {
                 "type" : "number",
                 "description" : "Optional: Acceleration vector Z-component km/s²"
+              },
+        "CLOCK_BIAS_MICROSECONDS" : {
+                "type" : "number",
+                "description" : "Satellite clock bias (offset), microseconds. SP3 position-record clock\ncolumn. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the\nfield instead."
+              },
+        "CLOCK_RATE_MICROSECONDS_PER_SECOND" : {
+                "type" : "number",
+                "description" : "Satellite clock rate of change, 1e-4 microseconds per second. SP3\nvelocity-record clock-rate column. Sentinel 999999.999999 is not stored."
+              },
+        "CLOCK_BIAS_SIGMA_PICOSECONDS" : {
+                "type" : "number",
+                "description" : "Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds."
+              },
+        "CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND" : {
+                "type" : "number",
+                "description" : "Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,\n1e-4 picoseconds per second."
+              },
+        "X_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:\nsigma = POS_VEL_BASE**n, with the position base from the SP3 header and\nthe result in mm. These are the raw SP3 exponent columns, kept as\nexponents so an SP3 round-trip is exact; a consumer that wants a linear\nsigma raises the header base to this power."
+              },
+        "Y_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "Z_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "X_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "Per-coordinate velocity standard-deviation exponents, result in\n1e-4 mm/s. Same base**n rule."
+              },
+        "Y_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "Z_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
               }
       },
       "additionalProperties" : false
@@ -1272,6 +1308,14 @@
         "POLYNOMIAL_POSITION_RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
                 "description" : "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure."
+              },
+        "OBJECT_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF integer code of the ephemeris target (SPK segment target)."
+              },
+        "CENTER_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
               }
       },
       "additionalProperties" : false

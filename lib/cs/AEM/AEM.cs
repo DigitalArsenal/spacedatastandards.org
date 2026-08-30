@@ -42,13 +42,38 @@ public struct AEM : IFlatbufferObject
   public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
   public AEMSegment? SEGMENTS(int j) { int o = __p.__offset(10); return o != 0 ? (AEMSegment?)(new AEMSegment()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int SEGMENTSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  public string MESSAGE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(12); }
+  /// Plain-text comments carried in the message header, one entry per line.
+  public string COMMENT(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int COMMENTLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Message classification/caveats in portion-marked format.
+  public string CLASSIFICATION { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(16); }
 
   public static Offset<AEM> CreateAEM(FlatBufferBuilder builder,
       StringOffset CCSDS_AEM_VERSOffset = default(StringOffset),
       StringOffset CREATION_DATEOffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
-      VectorOffset SEGMENTSOffset = default(VectorOffset)) {
-    builder.StartTable(4);
+      VectorOffset SEGMENTSOffset = default(VectorOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      VectorOffset COMMENTOffset = default(VectorOffset),
+      StringOffset CLASSIFICATIONOffset = default(StringOffset)) {
+    builder.StartTable(7);
+    AEM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
+    AEM.AddCOMMENT(builder, COMMENTOffset);
+    AEM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
     AEM.AddSEGMENTS(builder, SEGMENTSOffset);
     AEM.AddORIGINATOR(builder, ORIGINATOROffset);
     AEM.AddCREATION_DATE(builder, CREATION_DATEOffset);
@@ -56,7 +81,7 @@ public struct AEM : IFlatbufferObject
     return AEM.EndAEM(builder);
   }
 
-  public static void StartAEM(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartAEM(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddCCSDS_AEM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_AEM_VERSOffset) { builder.AddOffset(0, CCSDS_AEM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -66,6 +91,14 @@ public struct AEM : IFlatbufferObject
   public static VectorOffset CreateSEGMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<AEMSegment>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSEGMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<AEMSegment>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSEGMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(4, MESSAGE_IDOffset.Value, 0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(5, COMMENTOffset.Value, 0); }
+  public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(6, CLASSIFICATIONOffset.Value, 0); }
   public static Offset<AEM> EndAEM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<AEM>(o);
@@ -83,6 +116,10 @@ public struct AEM : IFlatbufferObject
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.SEGMENTS = new List<AEMSegmentT>();
     for (var _j = 0; _j < this.SEGMENTSLength; ++_j) {_o.SEGMENTS.Add(this.SEGMENTS(_j).HasValue ? this.SEGMENTS(_j).Value.UnPack() : null);}
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.COMMENT = new List<string>();
+    for (var _j = 0; _j < this.COMMENTLength; ++_j) {_o.COMMENT.Add(this.COMMENT(_j));}
+    _o.CLASSIFICATION = this.CLASSIFICATION;
   }
   public static Offset<AEM> Pack(FlatBufferBuilder builder, AEMT _o) {
     if (_o == null) return default(Offset<AEM>);
@@ -95,12 +132,23 @@ public struct AEM : IFlatbufferObject
       for (var _j = 0; _j < __SEGMENTS.Length; ++_j) { __SEGMENTS[_j] = AEMSegment.Pack(builder, _o.SEGMENTS[_j]); }
       _SEGMENTS = CreateSEGMENTSVector(builder, __SEGMENTS);
     }
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _COMMENT = default(VectorOffset);
+    if (_o.COMMENT != null) {
+      var __COMMENT = new StringOffset[_o.COMMENT.Count];
+      for (var _j = 0; _j < __COMMENT.Length; ++_j) { __COMMENT[_j] = builder.CreateString(_o.COMMENT[_j]); }
+      _COMMENT = CreateCOMMENTVector(builder, __COMMENT);
+    }
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
     return CreateAEM(
       builder,
       _CCSDS_AEM_VERS,
       _CREATION_DATE,
       _ORIGINATOR,
-      _SEGMENTS);
+      _SEGMENTS,
+      _MESSAGE_ID,
+      _COMMENT,
+      _CLASSIFICATION);
   }
 }
 
@@ -110,12 +158,18 @@ public class AEMT
   public string CREATION_DATE { get; set; }
   public string ORIGINATOR { get; set; }
   public List<AEMSegmentT> SEGMENTS { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public List<string> COMMENT { get; set; }
+  public string CLASSIFICATION { get; set; }
 
   public AEMT() {
     this.CCSDS_AEM_VERS = null;
     this.CREATION_DATE = null;
     this.ORIGINATOR = null;
     this.SEGMENTS = null;
+    this.MESSAGE_ID = null;
+    this.COMMENT = null;
+    this.CLASSIFICATION = null;
   }
   public static AEMT DeserializeFromBinary(byte[] fbBuffer) {
     return AEM.GetRootAsAEM(new ByteBuffer(fbBuffer)).UnPack();
@@ -137,6 +191,9 @@ static public class AEMVerify
       && verifier.VerifyString(tablePos, 6 /*CREATION_DATE*/, false)
       && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 10 /*SEGMENTS*/, AEMSegmentVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 12 /*MESSAGE_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 14 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 16 /*CLASSIFICATION*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

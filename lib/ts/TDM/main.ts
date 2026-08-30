@@ -22,4 +22,6 @@ export * from './rfmVectorSpecification.js';
 export * from './SpacecraftFrame.js';
 export * from './SpacecraftFrameWrapper.js';
 export * from './TDM.js';
+export * from './TDMObservation.js';
+export * from './TDMSegment.js';
 export * from './TDMTransmitRamp.js';

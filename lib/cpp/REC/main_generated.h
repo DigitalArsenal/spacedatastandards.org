@@ -242,6 +242,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -494,11 +495,12 @@ enum RecordType : uint8_t {
   RecordType_BPF = 227,
   RecordType_EVL = 228,
   RecordType_PCE = 229,
+  RecordType_NCD = 230,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_PCE
+  RecordType_MAX = RecordType_NCD
 };
 
-inline const RecordType (&EnumValuesRecordType())[230] {
+inline const RecordType (&EnumValuesRecordType())[231] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -729,13 +731,14 @@ inline const RecordType (&EnumValuesRecordType())[230] {
     RecordType_TXS,
     RecordType_BPF,
     RecordType_EVL,
-    RecordType_PCE
+    RecordType_PCE,
+    RecordType_NCD
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[231] = {
+  static const char * const names[232] = {
     "NONE",
     "ACL",
     "ACM",
@@ -966,13 +969,14 @@ inline const char * const *EnumNamesRecordType() {
     "BPF",
     "EVL",
     "PCE",
+    "NCD",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_PCE)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_NCD)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1897,6 +1901,10 @@ template<> struct RecordTypeTraits<PCE> {
   static const RecordType enum_value = RecordType_PCE;
 };
 
+template<> struct RecordTypeTraits<NCD> {
+  static const RecordType enum_value = RecordType_NCD;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2604,6 +2612,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const PCE *value_as_PCE() const {
     return value_type() == RecordType_PCE ? static_cast<const PCE *>(value()) : nullptr;
+  }
+  const NCD *value_as_NCD() const {
+    return value_type() == RecordType_NCD ? static_cast<const NCD *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3535,6 +3546,10 @@ template<> inline const EVL *Record::value_as<EVL>() const {
 
 template<> inline const PCE *Record::value_as<PCE>() const {
   return value_as_PCE();
+}
+
+template<> inline const NCD *Record::value_as<NCD>() const {
+  return value_as_NCD();
 }
 
 struct RecordBuilder {
@@ -4576,6 +4591,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_PCE: {
       auto ptr = reinterpret_cast<const PCE *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_NCD: {
+      auto ptr = reinterpret_cast<const NCD *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

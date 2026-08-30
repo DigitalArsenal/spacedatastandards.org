@@ -117,6 +117,83 @@ class ephemerisDataLine : Table() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Satellite clock bias (offset), microseconds. SP3 position-record clock
+     * column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+     * field instead.
+     */
+    val clockBiasMicroseconds : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Satellite clock rate of change, 1e-4 microseconds per second. SP3
+     * velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+     */
+    val clockRateMicrosecondsPerSecond : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+     */
+    val clockBiasSigmaPicoseconds : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+     * 1e-4 picoseconds per second.
+     */
+    val clockRateSigmaPicosecondsPerSecond : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+     * sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+     * the result in mm. These are the raw SP3 exponent columns, kept as
+     * exponents so an SP3 round-trip is exact; a consumer that wants a linear
+     * sigma raises the header base to this power.
+     */
+    val xSigmaExponent : Byte
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    val ySigmaExponent : Byte
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    val zSigmaExponent : Byte
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Per-coordinate velocity standard-deviation exponents, result in
+     * 1e-4 mm/s. Same base**n rule.
+     */
+    val xDotSigmaExponent : Byte
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    val yDotSigmaExponent : Byte
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    val zDotSigmaExponent : Byte
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsephemerisDataLine(_bb: ByteBuffer): ephemerisDataLine = getRootAsephemerisDataLine(_bb, ephemerisDataLine())
@@ -124,8 +201,12 @@ class ephemerisDataLine : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataLine(builder: FlatBufferBuilder, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, xDdot: Double, yDdot: Double, zDdot: Double) : Int {
-            builder.startTable(10)
+        fun createephemerisDataLine(builder: FlatBufferBuilder, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, xDdot: Double, yDdot: Double, zDdot: Double, clockBiasMicroseconds: Double, clockRateMicrosecondsPerSecond: Double, clockBiasSigmaPicoseconds: Double, clockRateSigmaPicosecondsPerSecond: Double, xSigmaExponent: Byte, ySigmaExponent: Byte, zSigmaExponent: Byte, xDotSigmaExponent: Byte, yDotSigmaExponent: Byte, zDotSigmaExponent: Byte) : Int {
+            builder.startTable(20)
+            addCLOCKRATESIGMAPICOSECONDSPERSECOND(builder, clockRateSigmaPicosecondsPerSecond)
+            addCLOCKBIASSIGMAPICOSECONDS(builder, clockBiasSigmaPicoseconds)
+            addCLOCKRATEMICROSECONDSPERSECOND(builder, clockRateMicrosecondsPerSecond)
+            addCLOCKBIASMICROSECONDS(builder, clockBiasMicroseconds)
             addZDDOT(builder, zDdot)
             addYDDOT(builder, yDdot)
             addXDDOT(builder, xDdot)
@@ -136,9 +217,15 @@ class ephemerisDataLine : Table() {
             addY(builder, y)
             addX(builder, x)
             addEPOCH(builder, epochOffset)
+            addZDOTSIGMAEXPONENT(builder, zDotSigmaExponent)
+            addYDOTSIGMAEXPONENT(builder, yDotSigmaExponent)
+            addXDOTSIGMAEXPONENT(builder, xDotSigmaExponent)
+            addZSIGMAEXPONENT(builder, zSigmaExponent)
+            addYSIGMAEXPONENT(builder, ySigmaExponent)
+            addXSIGMAEXPONENT(builder, xSigmaExponent)
             return endephemerisDataLine(builder)
         }
-        fun startephemerisDataLine(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startephemerisDataLine(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
         fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(1, x, 0.0)
         fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(2, y, 0.0)
@@ -149,6 +236,16 @@ class ephemerisDataLine : Table() {
         fun addXDDOT(builder: FlatBufferBuilder, xDdot: Double) = builder.addDouble(7, xDdot, 0.0)
         fun addYDDOT(builder: FlatBufferBuilder, yDdot: Double) = builder.addDouble(8, yDdot, 0.0)
         fun addZDDOT(builder: FlatBufferBuilder, zDdot: Double) = builder.addDouble(9, zDdot, 0.0)
+        fun addCLOCKBIASMICROSECONDS(builder: FlatBufferBuilder, clockBiasMicroseconds: Double) = builder.addDouble(10, clockBiasMicroseconds, 0.0)
+        fun addCLOCKRATEMICROSECONDSPERSECOND(builder: FlatBufferBuilder, clockRateMicrosecondsPerSecond: Double) = builder.addDouble(11, clockRateMicrosecondsPerSecond, 0.0)
+        fun addCLOCKBIASSIGMAPICOSECONDS(builder: FlatBufferBuilder, clockBiasSigmaPicoseconds: Double) = builder.addDouble(12, clockBiasSigmaPicoseconds, 0.0)
+        fun addCLOCKRATESIGMAPICOSECONDSPERSECOND(builder: FlatBufferBuilder, clockRateSigmaPicosecondsPerSecond: Double) = builder.addDouble(13, clockRateSigmaPicosecondsPerSecond, 0.0)
+        fun addXSIGMAEXPONENT(builder: FlatBufferBuilder, xSigmaExponent: Byte) = builder.addByte(14, xSigmaExponent, 0)
+        fun addYSIGMAEXPONENT(builder: FlatBufferBuilder, ySigmaExponent: Byte) = builder.addByte(15, ySigmaExponent, 0)
+        fun addZSIGMAEXPONENT(builder: FlatBufferBuilder, zSigmaExponent: Byte) = builder.addByte(16, zSigmaExponent, 0)
+        fun addXDOTSIGMAEXPONENT(builder: FlatBufferBuilder, xDotSigmaExponent: Byte) = builder.addByte(17, xDotSigmaExponent, 0)
+        fun addYDOTSIGMAEXPONENT(builder: FlatBufferBuilder, yDotSigmaExponent: Byte) = builder.addByte(18, yDotSigmaExponent, 0)
+        fun addZDOTSIGMAEXPONENT(builder: FlatBufferBuilder, zDotSigmaExponent: Byte) = builder.addByte(19, zDotSigmaExponent, 0)
         fun endephemerisDataLine(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

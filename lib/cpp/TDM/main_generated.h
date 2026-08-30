@@ -18,6 +18,12 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct TDMTransmitRamp;
 struct TDMTransmitRampBuilder;
 
+struct TDMObservation;
+struct TDMObservationBuilder;
+
+struct TDMSegment;
+struct TDMSegmentBuilder;
+
 struct TDM;
 struct TDMBuilder;
 
@@ -179,6 +185,1183 @@ inline ::flatbuffers::Offset<TDMTransmitRamp> CreateTDMTransmitRampDirect(
       TRANSMIT_BAND__);
 }
 
+/// ONE CCSDS TDM observation: a single data-section line.
+///
+/// A TDM data section is NOT a uniform grid. Every line in every published
+/// example (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form
+///
+///     KEYWORD = <epoch> <value>
+///
+/// and the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground
+/// based radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and
+/// CARRIER_POWER share epochs, while the final RCS line repeats the EARLIER
+/// epoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single
+/// OBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,
+/// which is why the parallel observation arrays on the TDM root cannot
+/// round-trip a conformant TDM.
+///
+/// KEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. "RANGE",
+/// "ANGLE_1", "CARRIER_POWER", "RCS", "DOPPLER_INTEGRATED", "PR_N0",
+/// "RECEIVE_FREQ_1", "TRANSMIT_PHASE_CT_1", "VLBI_DELAY", "DOR", "MAG",
+/// "CLOCK_BIAS", "STEC", "TROPO_DRY", "PRESSURE". Carrying the keyword rather
+/// than a fixed field per observable is what lets this form transport the whole
+/// 503.0-B-2 data vocabulary, including keywords a future issue adds, without
+/// a wire change and without inventing a name the standard does not define.
+///
+/// Units are those the standard assigns to that keyword; RANGE additionally
+/// depends on RANGE_UNITS, which is metadata, not data.
+struct TDMObservation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TDMObservationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KEYWORD = 4,
+    VT_EPOCH = 6,
+    VT_VALUE = 8
+  };
+  /// CCSDS data keyword, verbatim and case-exact.
+  const ::flatbuffers::String *KEYWORD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEYWORD);
+  }
+  /// Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Observed value.
+  double VALUE() const {
+    return GetField<double>(VT_VALUE, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_KEYWORD) &&
+           verifier.VerifyString(KEYWORD()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_VALUE, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct TDMObservationBuilder {
+  typedef TDMObservation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KEYWORD(::flatbuffers::Offset<::flatbuffers::String> KEYWORD) {
+    fbb_.AddOffset(TDMObservation::VT_KEYWORD, KEYWORD);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(TDMObservation::VT_EPOCH, EPOCH);
+  }
+  void add_VALUE(double VALUE) {
+    fbb_.AddElement<double>(TDMObservation::VT_VALUE, VALUE, 0.0);
+  }
+  explicit TDMObservationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TDMObservation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TDMObservation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TDMObservation> CreateTDMObservation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> KEYWORD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double VALUE = 0.0) {
+  TDMObservationBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_KEYWORD(KEYWORD);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TDMObservation> CreateTDMObservationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *KEYWORD = nullptr,
+    const char *EPOCH = nullptr,
+    double VALUE = 0.0) {
+  auto KEYWORD__ = KEYWORD ? _fbb.CreateString(KEYWORD) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreateTDMObservation(
+      _fbb,
+      KEYWORD__,
+      EPOCH__,
+      VALUE);
+}
+
+/// One TDM metadata + data segment.
+///
+/// A TDM file may carry MANY segments, each with its own META_START/META_STOP
+/// block and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,
+/// figures E-16 and E-18). The TDM root models a SINGLE segment, so a
+/// multi-segment file cannot be represented without this vector.
+struct TDMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TDMSegmentBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_META_START = 6,
+    VT_TIME_SYSTEM = 8,
+    VT_START_TIME = 10,
+    VT_STOP_TIME = 12,
+    VT_PARTICIPANT_1 = 14,
+    VT_PARTICIPANT_2 = 16,
+    VT_PARTICIPANT_3 = 18,
+    VT_PARTICIPANT_4 = 20,
+    VT_PARTICIPANT_5 = 22,
+    VT_MODE = 24,
+    VT_PATH_1 = 26,
+    VT_PATH_2 = 28,
+    VT_TRANSMIT_BAND = 30,
+    VT_RECEIVE_BAND = 32,
+    VT_INTEGRATION_INTERVAL = 34,
+    VT_INTEGRATION_REF = 36,
+    VT_TIMETAG_REF = 38,
+    VT_ANGLE_TYPE = 40,
+    VT_RANGE_MODE = 42,
+    VT_RANGE_MODULUS = 44,
+    VT_CORRECTION_ANGLE_1 = 46,
+    VT_CORRECTION_ANGLE_2 = 48,
+    VT_CORRECTIONS_APPLIED = 50,
+    VT_DATA_QUALITY = 52,
+    VT_RECEIVE_DELAY_2 = 54,
+    VT_RECEIVE_DELAY_3 = 56,
+    VT_TRANSMIT_FREQ_1 = 58,
+    VT_TRANSMIT_FREQ_2 = 60,
+    VT_TRANSMIT_FREQ_3 = 62,
+    VT_TRANSMIT_FREQ_4 = 64,
+    VT_TRANSMIT_FREQ_5 = 66,
+    VT_TRANSMIT_FREQ_RATE_1 = 68,
+    VT_TRANSMIT_FREQ_RATE_2 = 70,
+    VT_TRANSMIT_FREQ_RATE_3 = 72,
+    VT_TRANSMIT_FREQ_RATE_4 = 74,
+    VT_TRANSMIT_FREQ_RATE_5 = 76,
+    VT_META_STOP = 78,
+    VT_DATA_START = 80,
+    VT_OBSERVATIONS = 82,
+    VT_DATA_STOP = 84,
+    VT_TRANSMIT_RAMPS = 86,
+    VT_MESSAGE_ID = 88,
+    VT_TRACK_ID = 90,
+    VT_DATA_TYPES = 92,
+    VT_PATH = 94,
+    VT_EPHEMERIS_NAME_1 = 96,
+    VT_EPHEMERIS_NAME_2 = 98,
+    VT_EPHEMERIS_NAME_3 = 100,
+    VT_EPHEMERIS_NAME_4 = 102,
+    VT_EPHEMERIS_NAME_5 = 104,
+    VT_RANGE_UNITS = 106,
+    VT_REFERENCE_FRAME = 108,
+    VT_INTERPOLATION = 110,
+    VT_INTERPOLATION_DEGREE = 112,
+    VT_FREQ_OFFSET = 114,
+    VT_TURNAROUND_NUMERATOR = 116,
+    VT_TURNAROUND_DENOMINATOR = 118,
+    VT_TRANSMIT_DELAY_1 = 120,
+    VT_TRANSMIT_DELAY_2 = 122,
+    VT_TRANSMIT_DELAY_3 = 124,
+    VT_TRANSMIT_DELAY_4 = 126,
+    VT_TRANSMIT_DELAY_5 = 128,
+    VT_RECEIVE_DELAY_1 = 130,
+    VT_RECEIVE_DELAY_4 = 132,
+    VT_RECEIVE_DELAY_5 = 134,
+    VT_DOPPLER_COUNT_BIAS = 136,
+    VT_DOPPLER_COUNT_SCALE = 138,
+    VT_DOPPLER_COUNT_ROLLOVER = 140,
+    VT_CORRECTION_RANGE = 142,
+    VT_CORRECTION_DOPPLER = 144,
+    VT_CORRECTION_MAG = 146,
+    VT_CORRECTION_RCS = 148,
+    VT_CORRECTION_RECEIVE = 150,
+    VT_CORRECTION_TRANSMIT = 152,
+    VT_CORRECTION_ABERRATION_YEARLY = 154,
+    VT_CORRECTION_ABERRATION_DIURNAL = 156
+  };
+  /// Comments carried in this segment's metadata block, in file order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
+  }
+  const ::flatbuffers::String *META_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_META_START);
+  }
+  const ::flatbuffers::String *TIME_SYSTEM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_SYSTEM);
+  }
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  const ::flatbuffers::String *STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
+  }
+  const ::flatbuffers::String *PARTICIPANT_1() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_1);
+  }
+  const ::flatbuffers::String *PARTICIPANT_2() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_2);
+  }
+  const ::flatbuffers::String *PARTICIPANT_3() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_3);
+  }
+  const ::flatbuffers::String *PARTICIPANT_4() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_4);
+  }
+  const ::flatbuffers::String *PARTICIPANT_5() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_5);
+  }
+  const ::flatbuffers::String *MODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODE);
+  }
+  uint16_t PATH_1() const {
+    return GetField<uint16_t>(VT_PATH_1, 0);
+  }
+  uint16_t PATH_2() const {
+    return GetField<uint16_t>(VT_PATH_2, 0);
+  }
+  const ::flatbuffers::String *TRANSMIT_BAND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSMIT_BAND);
+  }
+  const ::flatbuffers::String *RECEIVE_BAND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECEIVE_BAND);
+  }
+  double INTEGRATION_INTERVAL() const {
+    return GetField<double>(VT_INTEGRATION_INTERVAL, 0.0);
+  }
+  const ::flatbuffers::String *INTEGRATION_REF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTEGRATION_REF);
+  }
+  const ::flatbuffers::String *TIMETAG_REF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIMETAG_REF);
+  }
+  const ::flatbuffers::String *ANGLE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANGLE_TYPE);
+  }
+  const ::flatbuffers::String *RANGE_MODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RANGE_MODE);
+  }
+  double RANGE_MODULUS() const {
+    return GetField<double>(VT_RANGE_MODULUS, 0.0);
+  }
+  double CORRECTION_ANGLE_1() const {
+    return GetField<double>(VT_CORRECTION_ANGLE_1, 0.0);
+  }
+  double CORRECTION_ANGLE_2() const {
+    return GetField<double>(VT_CORRECTION_ANGLE_2, 0.0);
+  }
+  const ::flatbuffers::String *CORRECTIONS_APPLIED() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CORRECTIONS_APPLIED);
+  }
+  const ::flatbuffers::String *DATA_QUALITY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_QUALITY);
+  }
+  double RECEIVE_DELAY_2() const {
+    return GetField<double>(VT_RECEIVE_DELAY_2, 0.0);
+  }
+  double RECEIVE_DELAY_3() const {
+    return GetField<double>(VT_RECEIVE_DELAY_3, 0.0);
+  }
+  double TRANSMIT_FREQ_1() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_1, 0.0);
+  }
+  double TRANSMIT_FREQ_2() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_2, 0.0);
+  }
+  double TRANSMIT_FREQ_3() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_3, 0.0);
+  }
+  double TRANSMIT_FREQ_4() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_4, 0.0);
+  }
+  double TRANSMIT_FREQ_5() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_5, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_1() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_2() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_3() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_4() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_5() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  const ::flatbuffers::String *META_STOP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_META_STOP);
+  }
+  const ::flatbuffers::String *DATA_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_START);
+  }
+  /// The segment's observations, in FILE ORDER. This is the authoritative
+  /// data-section representation.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>> *OBSERVATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>> *>(VT_OBSERVATIONS);
+  }
+  const ::flatbuffers::String *DATA_STOP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_STOP);
+  }
+  /// Uplink frequency ramp table applying to this segment. SDS EXTENSION;
+  /// absent (not empty) for a ramp-free, exactly CCSDS-conformant segment.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>> *>(VT_TRANSMIT_RAMPS);
+  }
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  const ::flatbuffers::String *TRACK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
+  }
+  /// Comma-separated list of the data keywords present in the data section.
+  const ::flatbuffers::String *DATA_TYPES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_TYPES);
+  }
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  const ::flatbuffers::String *PATH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PATH);
+  }
+  /// Name of the ephemeris used to generate the data, per participant.
+  const ::flatbuffers::String *EPHEMERIS_NAME_1() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_1);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_2() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_2);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_3() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_3);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_4() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_4);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_5() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_5);
+  }
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  const ::flatbuffers::String *RANGE_UNITS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RANGE_UNITS);
+  }
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  const ::flatbuffers::String *REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME);
+  }
+  /// Recommended interpolation method for the observations.
+  const ::flatbuffers::String *INTERPOLATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERPOLATION);
+  }
+  /// Recommended interpolation degree.
+  uint32_t INTERPOLATION_DEGREE() const {
+    return GetField<uint32_t>(VT_INTERPOLATION_DEGREE, 0);
+  }
+  /// Frequency offset applied to the observations, Hz.
+  double FREQ_OFFSET() const {
+    return GetField<double>(VT_FREQ_OFFSET, 0.0);
+  }
+  /// Transponder turnaround ratio numerator.
+  int32_t TURNAROUND_NUMERATOR() const {
+    return GetField<int32_t>(VT_TURNAROUND_NUMERATOR, 0);
+  }
+  /// Transponder turnaround ratio denominator.
+  int32_t TURNAROUND_DENOMINATOR() const {
+    return GetField<int32_t>(VT_TURNAROUND_DENOMINATOR, 0);
+  }
+  /// Transmit delays by participant, s.
+  double TRANSMIT_DELAY_1() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_1, 0.0);
+  }
+  double TRANSMIT_DELAY_2() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_2, 0.0);
+  }
+  double TRANSMIT_DELAY_3() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_3, 0.0);
+  }
+  double TRANSMIT_DELAY_4() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_4, 0.0);
+  }
+  double TRANSMIT_DELAY_5() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_5, 0.0);
+  }
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  double RECEIVE_DELAY_1() const {
+    return GetField<double>(VT_RECEIVE_DELAY_1, 0.0);
+  }
+  double RECEIVE_DELAY_4() const {
+    return GetField<double>(VT_RECEIVE_DELAY_4, 0.0);
+  }
+  double RECEIVE_DELAY_5() const {
+    return GetField<double>(VT_RECEIVE_DELAY_5, 0.0);
+  }
+  /// Doppler count bias, Hz.
+  double DOPPLER_COUNT_BIAS() const {
+    return GetField<double>(VT_DOPPLER_COUNT_BIAS, 0.0);
+  }
+  /// Doppler count scale factor.
+  uint32_t DOPPLER_COUNT_SCALE() const {
+    return GetField<uint32_t>(VT_DOPPLER_COUNT_SCALE, 0);
+  }
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  bool DOPPLER_COUNT_ROLLOVER() const {
+    return GetField<uint8_t>(VT_DOPPLER_COUNT_ROLLOVER, 0) != 0;
+  }
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  double CORRECTION_RANGE() const {
+    return GetField<double>(VT_CORRECTION_RANGE, 0.0);
+  }
+  double CORRECTION_DOPPLER() const {
+    return GetField<double>(VT_CORRECTION_DOPPLER, 0.0);
+  }
+  double CORRECTION_MAG() const {
+    return GetField<double>(VT_CORRECTION_MAG, 0.0);
+  }
+  double CORRECTION_RCS() const {
+    return GetField<double>(VT_CORRECTION_RCS, 0.0);
+  }
+  double CORRECTION_RECEIVE() const {
+    return GetField<double>(VT_CORRECTION_RECEIVE, 0.0);
+  }
+  double CORRECTION_TRANSMIT() const {
+    return GetField<double>(VT_CORRECTION_TRANSMIT, 0.0);
+  }
+  double CORRECTION_ABERRATION_YEARLY() const {
+    return GetField<double>(VT_CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  double CORRECTION_ABERRATION_DIURNAL() const {
+    return GetField<double>(VT_CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyVector(COMMENT()) &&
+           verifier.VerifyVectorOfStrings(COMMENT()) &&
+           VerifyOffset(verifier, VT_META_START) &&
+           verifier.VerifyString(META_START()) &&
+           VerifyOffset(verifier, VT_TIME_SYSTEM) &&
+           verifier.VerifyString(TIME_SYSTEM()) &&
+           VerifyOffset(verifier, VT_START_TIME) &&
+           verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_STOP_TIME) &&
+           verifier.VerifyString(STOP_TIME()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_1) &&
+           verifier.VerifyString(PARTICIPANT_1()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_2) &&
+           verifier.VerifyString(PARTICIPANT_2()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_3) &&
+           verifier.VerifyString(PARTICIPANT_3()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_4) &&
+           verifier.VerifyString(PARTICIPANT_4()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_5) &&
+           verifier.VerifyString(PARTICIPANT_5()) &&
+           VerifyOffset(verifier, VT_MODE) &&
+           verifier.VerifyString(MODE()) &&
+           VerifyField<uint16_t>(verifier, VT_PATH_1, 2) &&
+           VerifyField<uint16_t>(verifier, VT_PATH_2, 2) &&
+           VerifyOffset(verifier, VT_TRANSMIT_BAND) &&
+           verifier.VerifyString(TRANSMIT_BAND()) &&
+           VerifyOffset(verifier, VT_RECEIVE_BAND) &&
+           verifier.VerifyString(RECEIVE_BAND()) &&
+           VerifyField<double>(verifier, VT_INTEGRATION_INTERVAL, 8) &&
+           VerifyOffset(verifier, VT_INTEGRATION_REF) &&
+           verifier.VerifyString(INTEGRATION_REF()) &&
+           VerifyOffset(verifier, VT_TIMETAG_REF) &&
+           verifier.VerifyString(TIMETAG_REF()) &&
+           VerifyOffset(verifier, VT_ANGLE_TYPE) &&
+           verifier.VerifyString(ANGLE_TYPE()) &&
+           VerifyOffset(verifier, VT_RANGE_MODE) &&
+           verifier.VerifyString(RANGE_MODE()) &&
+           VerifyField<double>(verifier, VT_RANGE_MODULUS, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ANGLE_1, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ANGLE_2, 8) &&
+           VerifyOffset(verifier, VT_CORRECTIONS_APPLIED) &&
+           verifier.VerifyString(CORRECTIONS_APPLIED()) &&
+           VerifyOffset(verifier, VT_DATA_QUALITY) &&
+           verifier.VerifyString(DATA_QUALITY()) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_2, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_1, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_5, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_1, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_5, 8) &&
+           VerifyOffset(verifier, VT_META_STOP) &&
+           verifier.VerifyString(META_STOP()) &&
+           VerifyOffset(verifier, VT_DATA_START) &&
+           verifier.VerifyString(DATA_START()) &&
+           VerifyOffset(verifier, VT_OBSERVATIONS) &&
+           verifier.VerifyVector(OBSERVATIONS()) &&
+           verifier.VerifyVectorOfTables(OBSERVATIONS()) &&
+           VerifyOffset(verifier, VT_DATA_STOP) &&
+           verifier.VerifyString(DATA_STOP()) &&
+           VerifyOffset(verifier, VT_TRANSMIT_RAMPS) &&
+           verifier.VerifyVector(TRANSMIT_RAMPS()) &&
+           verifier.VerifyVectorOfTables(TRANSMIT_RAMPS()) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_TRACK_ID) &&
+           verifier.VerifyString(TRACK_ID()) &&
+           VerifyOffset(verifier, VT_DATA_TYPES) &&
+           verifier.VerifyString(DATA_TYPES()) &&
+           VerifyOffset(verifier, VT_PATH) &&
+           verifier.VerifyString(PATH()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_1) &&
+           verifier.VerifyString(EPHEMERIS_NAME_1()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_2) &&
+           verifier.VerifyString(EPHEMERIS_NAME_2()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_3) &&
+           verifier.VerifyString(EPHEMERIS_NAME_3()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_4) &&
+           verifier.VerifyString(EPHEMERIS_NAME_4()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_5) &&
+           verifier.VerifyString(EPHEMERIS_NAME_5()) &&
+           VerifyOffset(verifier, VT_RANGE_UNITS) &&
+           verifier.VerifyString(RANGE_UNITS()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyString(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_INTERPOLATION) &&
+           verifier.VerifyString(INTERPOLATION()) &&
+           VerifyField<uint32_t>(verifier, VT_INTERPOLATION_DEGREE, 4) &&
+           VerifyField<double>(verifier, VT_FREQ_OFFSET, 8) &&
+           VerifyField<int32_t>(verifier, VT_TURNAROUND_NUMERATOR, 4) &&
+           VerifyField<int32_t>(verifier, VT_TURNAROUND_DENOMINATOR, 4) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_1, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_5, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_1, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_4, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_5, 8) &&
+           VerifyField<double>(verifier, VT_DOPPLER_COUNT_BIAS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_DOPPLER_COUNT_SCALE, 4) &&
+           VerifyField<uint8_t>(verifier, VT_DOPPLER_COUNT_ROLLOVER, 1) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RANGE, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_DOPPLER, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_MAG, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RCS, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RECEIVE, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_TRANSMIT, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ABERRATION_YEARLY, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ABERRATION_DIURNAL, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct TDMSegmentBuilder {
+  typedef TDMSegment Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
+    fbb_.AddOffset(TDMSegment::VT_COMMENT, COMMENT);
+  }
+  void add_META_START(::flatbuffers::Offset<::flatbuffers::String> META_START) {
+    fbb_.AddOffset(TDMSegment::VT_META_START, META_START);
+  }
+  void add_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM) {
+    fbb_.AddOffset(TDMSegment::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
+    fbb_.AddOffset(TDMSegment::VT_START_TIME, START_TIME);
+  }
+  void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
+    fbb_.AddOffset(TDMSegment::VT_STOP_TIME, STOP_TIME);
+  }
+  void add_PARTICIPANT_1(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_1) {
+    fbb_.AddOffset(TDMSegment::VT_PARTICIPANT_1, PARTICIPANT_1);
+  }
+  void add_PARTICIPANT_2(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_2) {
+    fbb_.AddOffset(TDMSegment::VT_PARTICIPANT_2, PARTICIPANT_2);
+  }
+  void add_PARTICIPANT_3(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3) {
+    fbb_.AddOffset(TDMSegment::VT_PARTICIPANT_3, PARTICIPANT_3);
+  }
+  void add_PARTICIPANT_4(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4) {
+    fbb_.AddOffset(TDMSegment::VT_PARTICIPANT_4, PARTICIPANT_4);
+  }
+  void add_PARTICIPANT_5(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5) {
+    fbb_.AddOffset(TDMSegment::VT_PARTICIPANT_5, PARTICIPANT_5);
+  }
+  void add_MODE(::flatbuffers::Offset<::flatbuffers::String> MODE) {
+    fbb_.AddOffset(TDMSegment::VT_MODE, MODE);
+  }
+  void add_PATH_1(uint16_t PATH_1) {
+    fbb_.AddElement<uint16_t>(TDMSegment::VT_PATH_1, PATH_1, 0);
+  }
+  void add_PATH_2(uint16_t PATH_2) {
+    fbb_.AddElement<uint16_t>(TDMSegment::VT_PATH_2, PATH_2, 0);
+  }
+  void add_TRANSMIT_BAND(::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_BAND) {
+    fbb_.AddOffset(TDMSegment::VT_TRANSMIT_BAND, TRANSMIT_BAND);
+  }
+  void add_RECEIVE_BAND(::flatbuffers::Offset<::flatbuffers::String> RECEIVE_BAND) {
+    fbb_.AddOffset(TDMSegment::VT_RECEIVE_BAND, RECEIVE_BAND);
+  }
+  void add_INTEGRATION_INTERVAL(double INTEGRATION_INTERVAL) {
+    fbb_.AddElement<double>(TDMSegment::VT_INTEGRATION_INTERVAL, INTEGRATION_INTERVAL, 0.0);
+  }
+  void add_INTEGRATION_REF(::flatbuffers::Offset<::flatbuffers::String> INTEGRATION_REF) {
+    fbb_.AddOffset(TDMSegment::VT_INTEGRATION_REF, INTEGRATION_REF);
+  }
+  void add_TIMETAG_REF(::flatbuffers::Offset<::flatbuffers::String> TIMETAG_REF) {
+    fbb_.AddOffset(TDMSegment::VT_TIMETAG_REF, TIMETAG_REF);
+  }
+  void add_ANGLE_TYPE(::flatbuffers::Offset<::flatbuffers::String> ANGLE_TYPE) {
+    fbb_.AddOffset(TDMSegment::VT_ANGLE_TYPE, ANGLE_TYPE);
+  }
+  void add_RANGE_MODE(::flatbuffers::Offset<::flatbuffers::String> RANGE_MODE) {
+    fbb_.AddOffset(TDMSegment::VT_RANGE_MODE, RANGE_MODE);
+  }
+  void add_RANGE_MODULUS(double RANGE_MODULUS) {
+    fbb_.AddElement<double>(TDMSegment::VT_RANGE_MODULUS, RANGE_MODULUS, 0.0);
+  }
+  void add_CORRECTION_ANGLE_1(double CORRECTION_ANGLE_1) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_ANGLE_1, CORRECTION_ANGLE_1, 0.0);
+  }
+  void add_CORRECTION_ANGLE_2(double CORRECTION_ANGLE_2) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_ANGLE_2, CORRECTION_ANGLE_2, 0.0);
+  }
+  void add_CORRECTIONS_APPLIED(::flatbuffers::Offset<::flatbuffers::String> CORRECTIONS_APPLIED) {
+    fbb_.AddOffset(TDMSegment::VT_CORRECTIONS_APPLIED, CORRECTIONS_APPLIED);
+  }
+  void add_DATA_QUALITY(::flatbuffers::Offset<::flatbuffers::String> DATA_QUALITY) {
+    fbb_.AddOffset(TDMSegment::VT_DATA_QUALITY, DATA_QUALITY);
+  }
+  void add_RECEIVE_DELAY_2(double RECEIVE_DELAY_2) {
+    fbb_.AddElement<double>(TDMSegment::VT_RECEIVE_DELAY_2, RECEIVE_DELAY_2, 0.0);
+  }
+  void add_RECEIVE_DELAY_3(double RECEIVE_DELAY_3) {
+    fbb_.AddElement<double>(TDMSegment::VT_RECEIVE_DELAY_3, RECEIVE_DELAY_3, 0.0);
+  }
+  void add_TRANSMIT_FREQ_1(double TRANSMIT_FREQ_1) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_1, TRANSMIT_FREQ_1, 0.0);
+  }
+  void add_TRANSMIT_FREQ_2(double TRANSMIT_FREQ_2) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_2, TRANSMIT_FREQ_2, 0.0);
+  }
+  void add_TRANSMIT_FREQ_3(double TRANSMIT_FREQ_3) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_3, TRANSMIT_FREQ_3, 0.0);
+  }
+  void add_TRANSMIT_FREQ_4(double TRANSMIT_FREQ_4) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_4, TRANSMIT_FREQ_4, 0.0);
+  }
+  void add_TRANSMIT_FREQ_5(double TRANSMIT_FREQ_5) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_5, TRANSMIT_FREQ_5, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_1(double TRANSMIT_FREQ_RATE_1) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_RATE_1, TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_2(double TRANSMIT_FREQ_RATE_2) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_RATE_2, TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_3(double TRANSMIT_FREQ_RATE_3) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_RATE_3, TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_4(double TRANSMIT_FREQ_RATE_4) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_RATE_4, TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_5(double TRANSMIT_FREQ_RATE_5) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_FREQ_RATE_5, TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  void add_META_STOP(::flatbuffers::Offset<::flatbuffers::String> META_STOP) {
+    fbb_.AddOffset(TDMSegment::VT_META_STOP, META_STOP);
+  }
+  void add_DATA_START(::flatbuffers::Offset<::flatbuffers::String> DATA_START) {
+    fbb_.AddOffset(TDMSegment::VT_DATA_START, DATA_START);
+  }
+  void add_OBSERVATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>>> OBSERVATIONS) {
+    fbb_.AddOffset(TDMSegment::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  void add_DATA_STOP(::flatbuffers::Offset<::flatbuffers::String> DATA_STOP) {
+    fbb_.AddOffset(TDMSegment::VT_DATA_STOP, DATA_STOP);
+  }
+  void add_TRANSMIT_RAMPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS) {
+    fbb_.AddOffset(TDMSegment::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
+  }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(TDMSegment::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_TRACK_ID(::flatbuffers::Offset<::flatbuffers::String> TRACK_ID) {
+    fbb_.AddOffset(TDMSegment::VT_TRACK_ID, TRACK_ID);
+  }
+  void add_DATA_TYPES(::flatbuffers::Offset<::flatbuffers::String> DATA_TYPES) {
+    fbb_.AddOffset(TDMSegment::VT_DATA_TYPES, DATA_TYPES);
+  }
+  void add_PATH(::flatbuffers::Offset<::flatbuffers::String> PATH) {
+    fbb_.AddOffset(TDMSegment::VT_PATH, PATH);
+  }
+  void add_EPHEMERIS_NAME_1(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_1) {
+    fbb_.AddOffset(TDMSegment::VT_EPHEMERIS_NAME_1, EPHEMERIS_NAME_1);
+  }
+  void add_EPHEMERIS_NAME_2(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_2) {
+    fbb_.AddOffset(TDMSegment::VT_EPHEMERIS_NAME_2, EPHEMERIS_NAME_2);
+  }
+  void add_EPHEMERIS_NAME_3(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_3) {
+    fbb_.AddOffset(TDMSegment::VT_EPHEMERIS_NAME_3, EPHEMERIS_NAME_3);
+  }
+  void add_EPHEMERIS_NAME_4(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_4) {
+    fbb_.AddOffset(TDMSegment::VT_EPHEMERIS_NAME_4, EPHEMERIS_NAME_4);
+  }
+  void add_EPHEMERIS_NAME_5(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_5) {
+    fbb_.AddOffset(TDMSegment::VT_EPHEMERIS_NAME_5, EPHEMERIS_NAME_5);
+  }
+  void add_RANGE_UNITS(::flatbuffers::Offset<::flatbuffers::String> RANGE_UNITS) {
+    fbb_.AddOffset(TDMSegment::VT_RANGE_UNITS, RANGE_UNITS);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME) {
+    fbb_.AddOffset(TDMSegment::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_INTERPOLATION(::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION) {
+    fbb_.AddOffset(TDMSegment::VT_INTERPOLATION, INTERPOLATION);
+  }
+  void add_INTERPOLATION_DEGREE(uint32_t INTERPOLATION_DEGREE) {
+    fbb_.AddElement<uint32_t>(TDMSegment::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  void add_FREQ_OFFSET(double FREQ_OFFSET) {
+    fbb_.AddElement<double>(TDMSegment::VT_FREQ_OFFSET, FREQ_OFFSET, 0.0);
+  }
+  void add_TURNAROUND_NUMERATOR(int32_t TURNAROUND_NUMERATOR) {
+    fbb_.AddElement<int32_t>(TDMSegment::VT_TURNAROUND_NUMERATOR, TURNAROUND_NUMERATOR, 0);
+  }
+  void add_TURNAROUND_DENOMINATOR(int32_t TURNAROUND_DENOMINATOR) {
+    fbb_.AddElement<int32_t>(TDMSegment::VT_TURNAROUND_DENOMINATOR, TURNAROUND_DENOMINATOR, 0);
+  }
+  void add_TRANSMIT_DELAY_1(double TRANSMIT_DELAY_1) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_DELAY_1, TRANSMIT_DELAY_1, 0.0);
+  }
+  void add_TRANSMIT_DELAY_2(double TRANSMIT_DELAY_2) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_DELAY_2, TRANSMIT_DELAY_2, 0.0);
+  }
+  void add_TRANSMIT_DELAY_3(double TRANSMIT_DELAY_3) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_DELAY_3, TRANSMIT_DELAY_3, 0.0);
+  }
+  void add_TRANSMIT_DELAY_4(double TRANSMIT_DELAY_4) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_DELAY_4, TRANSMIT_DELAY_4, 0.0);
+  }
+  void add_TRANSMIT_DELAY_5(double TRANSMIT_DELAY_5) {
+    fbb_.AddElement<double>(TDMSegment::VT_TRANSMIT_DELAY_5, TRANSMIT_DELAY_5, 0.0);
+  }
+  void add_RECEIVE_DELAY_1(double RECEIVE_DELAY_1) {
+    fbb_.AddElement<double>(TDMSegment::VT_RECEIVE_DELAY_1, RECEIVE_DELAY_1, 0.0);
+  }
+  void add_RECEIVE_DELAY_4(double RECEIVE_DELAY_4) {
+    fbb_.AddElement<double>(TDMSegment::VT_RECEIVE_DELAY_4, RECEIVE_DELAY_4, 0.0);
+  }
+  void add_RECEIVE_DELAY_5(double RECEIVE_DELAY_5) {
+    fbb_.AddElement<double>(TDMSegment::VT_RECEIVE_DELAY_5, RECEIVE_DELAY_5, 0.0);
+  }
+  void add_DOPPLER_COUNT_BIAS(double DOPPLER_COUNT_BIAS) {
+    fbb_.AddElement<double>(TDMSegment::VT_DOPPLER_COUNT_BIAS, DOPPLER_COUNT_BIAS, 0.0);
+  }
+  void add_DOPPLER_COUNT_SCALE(uint32_t DOPPLER_COUNT_SCALE) {
+    fbb_.AddElement<uint32_t>(TDMSegment::VT_DOPPLER_COUNT_SCALE, DOPPLER_COUNT_SCALE, 0);
+  }
+  void add_DOPPLER_COUNT_ROLLOVER(bool DOPPLER_COUNT_ROLLOVER) {
+    fbb_.AddElement<uint8_t>(TDMSegment::VT_DOPPLER_COUNT_ROLLOVER, static_cast<uint8_t>(DOPPLER_COUNT_ROLLOVER), 0);
+  }
+  void add_CORRECTION_RANGE(double CORRECTION_RANGE) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_RANGE, CORRECTION_RANGE, 0.0);
+  }
+  void add_CORRECTION_DOPPLER(double CORRECTION_DOPPLER) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_DOPPLER, CORRECTION_DOPPLER, 0.0);
+  }
+  void add_CORRECTION_MAG(double CORRECTION_MAG) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_MAG, CORRECTION_MAG, 0.0);
+  }
+  void add_CORRECTION_RCS(double CORRECTION_RCS) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_RCS, CORRECTION_RCS, 0.0);
+  }
+  void add_CORRECTION_RECEIVE(double CORRECTION_RECEIVE) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_RECEIVE, CORRECTION_RECEIVE, 0.0);
+  }
+  void add_CORRECTION_TRANSMIT(double CORRECTION_TRANSMIT) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_TRANSMIT, CORRECTION_TRANSMIT, 0.0);
+  }
+  void add_CORRECTION_ABERRATION_YEARLY(double CORRECTION_ABERRATION_YEARLY) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_ABERRATION_YEARLY, CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  void add_CORRECTION_ABERRATION_DIURNAL(double CORRECTION_ABERRATION_DIURNAL) {
+    fbb_.AddElement<double>(TDMSegment::VT_CORRECTION_ABERRATION_DIURNAL, CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
+  explicit TDMSegmentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TDMSegment> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TDMSegment>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TDMSegment> CreateTDMSegment(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> META_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_1 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODE = 0,
+    uint16_t PATH_1 = 0,
+    uint16_t PATH_2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_BAND = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RECEIVE_BAND = 0,
+    double INTEGRATION_INTERVAL = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> INTEGRATION_REF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIMETAG_REF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ANGLE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RANGE_MODE = 0,
+    double RANGE_MODULUS = 0.0,
+    double CORRECTION_ANGLE_1 = 0.0,
+    double CORRECTION_ANGLE_2 = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CORRECTIONS_APPLIED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_QUALITY = 0,
+    double RECEIVE_DELAY_2 = 0.0,
+    double RECEIVE_DELAY_3 = 0.0,
+    double TRANSMIT_FREQ_1 = 0.0,
+    double TRANSMIT_FREQ_2 = 0.0,
+    double TRANSMIT_FREQ_3 = 0.0,
+    double TRANSMIT_FREQ_4 = 0.0,
+    double TRANSMIT_FREQ_5 = 0.0,
+    double TRANSMIT_FREQ_RATE_1 = 0.0,
+    double TRANSMIT_FREQ_RATE_2 = 0.0,
+    double TRANSMIT_FREQ_RATE_3 = 0.0,
+    double TRANSMIT_FREQ_RATE_4 = 0.0,
+    double TRANSMIT_FREQ_RATE_5 = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> META_STOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>>> OBSERVATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_STOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_TYPES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PATH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_1 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_3 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_4 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_5 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RANGE_UNITS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION = 0,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double FREQ_OFFSET = 0.0,
+    int32_t TURNAROUND_NUMERATOR = 0,
+    int32_t TURNAROUND_DENOMINATOR = 0,
+    double TRANSMIT_DELAY_1 = 0.0,
+    double TRANSMIT_DELAY_2 = 0.0,
+    double TRANSMIT_DELAY_3 = 0.0,
+    double TRANSMIT_DELAY_4 = 0.0,
+    double TRANSMIT_DELAY_5 = 0.0,
+    double RECEIVE_DELAY_1 = 0.0,
+    double RECEIVE_DELAY_4 = 0.0,
+    double RECEIVE_DELAY_5 = 0.0,
+    double DOPPLER_COUNT_BIAS = 0.0,
+    uint32_t DOPPLER_COUNT_SCALE = 0,
+    bool DOPPLER_COUNT_ROLLOVER = false,
+    double CORRECTION_RANGE = 0.0,
+    double CORRECTION_DOPPLER = 0.0,
+    double CORRECTION_MAG = 0.0,
+    double CORRECTION_RCS = 0.0,
+    double CORRECTION_RECEIVE = 0.0,
+    double CORRECTION_TRANSMIT = 0.0,
+    double CORRECTION_ABERRATION_YEARLY = 0.0,
+    double CORRECTION_ABERRATION_DIURNAL = 0.0) {
+  TDMSegmentBuilder builder_(_fbb);
+  builder_.add_CORRECTION_ABERRATION_DIURNAL(CORRECTION_ABERRATION_DIURNAL);
+  builder_.add_CORRECTION_ABERRATION_YEARLY(CORRECTION_ABERRATION_YEARLY);
+  builder_.add_CORRECTION_TRANSMIT(CORRECTION_TRANSMIT);
+  builder_.add_CORRECTION_RECEIVE(CORRECTION_RECEIVE);
+  builder_.add_CORRECTION_RCS(CORRECTION_RCS);
+  builder_.add_CORRECTION_MAG(CORRECTION_MAG);
+  builder_.add_CORRECTION_DOPPLER(CORRECTION_DOPPLER);
+  builder_.add_CORRECTION_RANGE(CORRECTION_RANGE);
+  builder_.add_DOPPLER_COUNT_BIAS(DOPPLER_COUNT_BIAS);
+  builder_.add_RECEIVE_DELAY_5(RECEIVE_DELAY_5);
+  builder_.add_RECEIVE_DELAY_4(RECEIVE_DELAY_4);
+  builder_.add_RECEIVE_DELAY_1(RECEIVE_DELAY_1);
+  builder_.add_TRANSMIT_DELAY_5(TRANSMIT_DELAY_5);
+  builder_.add_TRANSMIT_DELAY_4(TRANSMIT_DELAY_4);
+  builder_.add_TRANSMIT_DELAY_3(TRANSMIT_DELAY_3);
+  builder_.add_TRANSMIT_DELAY_2(TRANSMIT_DELAY_2);
+  builder_.add_TRANSMIT_DELAY_1(TRANSMIT_DELAY_1);
+  builder_.add_FREQ_OFFSET(FREQ_OFFSET);
+  builder_.add_TRANSMIT_FREQ_RATE_5(TRANSMIT_FREQ_RATE_5);
+  builder_.add_TRANSMIT_FREQ_RATE_4(TRANSMIT_FREQ_RATE_4);
+  builder_.add_TRANSMIT_FREQ_RATE_3(TRANSMIT_FREQ_RATE_3);
+  builder_.add_TRANSMIT_FREQ_RATE_2(TRANSMIT_FREQ_RATE_2);
+  builder_.add_TRANSMIT_FREQ_RATE_1(TRANSMIT_FREQ_RATE_1);
+  builder_.add_TRANSMIT_FREQ_5(TRANSMIT_FREQ_5);
+  builder_.add_TRANSMIT_FREQ_4(TRANSMIT_FREQ_4);
+  builder_.add_TRANSMIT_FREQ_3(TRANSMIT_FREQ_3);
+  builder_.add_TRANSMIT_FREQ_2(TRANSMIT_FREQ_2);
+  builder_.add_TRANSMIT_FREQ_1(TRANSMIT_FREQ_1);
+  builder_.add_RECEIVE_DELAY_3(RECEIVE_DELAY_3);
+  builder_.add_RECEIVE_DELAY_2(RECEIVE_DELAY_2);
+  builder_.add_CORRECTION_ANGLE_2(CORRECTION_ANGLE_2);
+  builder_.add_CORRECTION_ANGLE_1(CORRECTION_ANGLE_1);
+  builder_.add_RANGE_MODULUS(RANGE_MODULUS);
+  builder_.add_INTEGRATION_INTERVAL(INTEGRATION_INTERVAL);
+  builder_.add_DOPPLER_COUNT_SCALE(DOPPLER_COUNT_SCALE);
+  builder_.add_TURNAROUND_DENOMINATOR(TURNAROUND_DENOMINATOR);
+  builder_.add_TURNAROUND_NUMERATOR(TURNAROUND_NUMERATOR);
+  builder_.add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE);
+  builder_.add_INTERPOLATION(INTERPOLATION);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_RANGE_UNITS(RANGE_UNITS);
+  builder_.add_EPHEMERIS_NAME_5(EPHEMERIS_NAME_5);
+  builder_.add_EPHEMERIS_NAME_4(EPHEMERIS_NAME_4);
+  builder_.add_EPHEMERIS_NAME_3(EPHEMERIS_NAME_3);
+  builder_.add_EPHEMERIS_NAME_2(EPHEMERIS_NAME_2);
+  builder_.add_EPHEMERIS_NAME_1(EPHEMERIS_NAME_1);
+  builder_.add_PATH(PATH);
+  builder_.add_DATA_TYPES(DATA_TYPES);
+  builder_.add_TRACK_ID(TRACK_ID);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
+  builder_.add_TRANSMIT_RAMPS(TRANSMIT_RAMPS);
+  builder_.add_DATA_STOP(DATA_STOP);
+  builder_.add_OBSERVATIONS(OBSERVATIONS);
+  builder_.add_DATA_START(DATA_START);
+  builder_.add_META_STOP(META_STOP);
+  builder_.add_DATA_QUALITY(DATA_QUALITY);
+  builder_.add_CORRECTIONS_APPLIED(CORRECTIONS_APPLIED);
+  builder_.add_RANGE_MODE(RANGE_MODE);
+  builder_.add_ANGLE_TYPE(ANGLE_TYPE);
+  builder_.add_TIMETAG_REF(TIMETAG_REF);
+  builder_.add_INTEGRATION_REF(INTEGRATION_REF);
+  builder_.add_RECEIVE_BAND(RECEIVE_BAND);
+  builder_.add_TRANSMIT_BAND(TRANSMIT_BAND);
+  builder_.add_MODE(MODE);
+  builder_.add_PARTICIPANT_5(PARTICIPANT_5);
+  builder_.add_PARTICIPANT_4(PARTICIPANT_4);
+  builder_.add_PARTICIPANT_3(PARTICIPANT_3);
+  builder_.add_PARTICIPANT_2(PARTICIPANT_2);
+  builder_.add_PARTICIPANT_1(PARTICIPANT_1);
+  builder_.add_STOP_TIME(STOP_TIME);
+  builder_.add_START_TIME(START_TIME);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  builder_.add_META_START(META_START);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_PATH_2(PATH_2);
+  builder_.add_PATH_1(PATH_1);
+  builder_.add_DOPPLER_COUNT_ROLLOVER(DOPPLER_COUNT_ROLLOVER);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TDMSegment> CreateTDMSegmentDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
+    const char *META_START = nullptr,
+    const char *TIME_SYSTEM = nullptr,
+    const char *START_TIME = nullptr,
+    const char *STOP_TIME = nullptr,
+    const char *PARTICIPANT_1 = nullptr,
+    const char *PARTICIPANT_2 = nullptr,
+    const char *PARTICIPANT_3 = nullptr,
+    const char *PARTICIPANT_4 = nullptr,
+    const char *PARTICIPANT_5 = nullptr,
+    const char *MODE = nullptr,
+    uint16_t PATH_1 = 0,
+    uint16_t PATH_2 = 0,
+    const char *TRANSMIT_BAND = nullptr,
+    const char *RECEIVE_BAND = nullptr,
+    double INTEGRATION_INTERVAL = 0.0,
+    const char *INTEGRATION_REF = nullptr,
+    const char *TIMETAG_REF = nullptr,
+    const char *ANGLE_TYPE = nullptr,
+    const char *RANGE_MODE = nullptr,
+    double RANGE_MODULUS = 0.0,
+    double CORRECTION_ANGLE_1 = 0.0,
+    double CORRECTION_ANGLE_2 = 0.0,
+    const char *CORRECTIONS_APPLIED = nullptr,
+    const char *DATA_QUALITY = nullptr,
+    double RECEIVE_DELAY_2 = 0.0,
+    double RECEIVE_DELAY_3 = 0.0,
+    double TRANSMIT_FREQ_1 = 0.0,
+    double TRANSMIT_FREQ_2 = 0.0,
+    double TRANSMIT_FREQ_3 = 0.0,
+    double TRANSMIT_FREQ_4 = 0.0,
+    double TRANSMIT_FREQ_5 = 0.0,
+    double TRANSMIT_FREQ_RATE_1 = 0.0,
+    double TRANSMIT_FREQ_RATE_2 = 0.0,
+    double TRANSMIT_FREQ_RATE_3 = 0.0,
+    double TRANSMIT_FREQ_RATE_4 = 0.0,
+    double TRANSMIT_FREQ_RATE_5 = 0.0,
+    const char *META_STOP = nullptr,
+    const char *DATA_START = nullptr,
+    const std::vector<::flatbuffers::Offset<TDMObservation>> *OBSERVATIONS = nullptr,
+    const char *DATA_STOP = nullptr,
+    const std::vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS = nullptr,
+    const char *MESSAGE_ID = nullptr,
+    const char *TRACK_ID = nullptr,
+    const char *DATA_TYPES = nullptr,
+    const char *PATH = nullptr,
+    const char *EPHEMERIS_NAME_1 = nullptr,
+    const char *EPHEMERIS_NAME_2 = nullptr,
+    const char *EPHEMERIS_NAME_3 = nullptr,
+    const char *EPHEMERIS_NAME_4 = nullptr,
+    const char *EPHEMERIS_NAME_5 = nullptr,
+    const char *RANGE_UNITS = nullptr,
+    const char *REFERENCE_FRAME = nullptr,
+    const char *INTERPOLATION = nullptr,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double FREQ_OFFSET = 0.0,
+    int32_t TURNAROUND_NUMERATOR = 0,
+    int32_t TURNAROUND_DENOMINATOR = 0,
+    double TRANSMIT_DELAY_1 = 0.0,
+    double TRANSMIT_DELAY_2 = 0.0,
+    double TRANSMIT_DELAY_3 = 0.0,
+    double TRANSMIT_DELAY_4 = 0.0,
+    double TRANSMIT_DELAY_5 = 0.0,
+    double RECEIVE_DELAY_1 = 0.0,
+    double RECEIVE_DELAY_4 = 0.0,
+    double RECEIVE_DELAY_5 = 0.0,
+    double DOPPLER_COUNT_BIAS = 0.0,
+    uint32_t DOPPLER_COUNT_SCALE = 0,
+    bool DOPPLER_COUNT_ROLLOVER = false,
+    double CORRECTION_RANGE = 0.0,
+    double CORRECTION_DOPPLER = 0.0,
+    double CORRECTION_MAG = 0.0,
+    double CORRECTION_RCS = 0.0,
+    double CORRECTION_RECEIVE = 0.0,
+    double CORRECTION_TRANSMIT = 0.0,
+    double CORRECTION_ABERRATION_YEARLY = 0.0,
+    double CORRECTION_ABERRATION_DIURNAL = 0.0) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
+  auto META_START__ = META_START ? _fbb.CreateString(META_START) : 0;
+  auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
+  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
+  auto PARTICIPANT_1__ = PARTICIPANT_1 ? _fbb.CreateString(PARTICIPANT_1) : 0;
+  auto PARTICIPANT_2__ = PARTICIPANT_2 ? _fbb.CreateString(PARTICIPANT_2) : 0;
+  auto PARTICIPANT_3__ = PARTICIPANT_3 ? _fbb.CreateString(PARTICIPANT_3) : 0;
+  auto PARTICIPANT_4__ = PARTICIPANT_4 ? _fbb.CreateString(PARTICIPANT_4) : 0;
+  auto PARTICIPANT_5__ = PARTICIPANT_5 ? _fbb.CreateString(PARTICIPANT_5) : 0;
+  auto MODE__ = MODE ? _fbb.CreateString(MODE) : 0;
+  auto TRANSMIT_BAND__ = TRANSMIT_BAND ? _fbb.CreateString(TRANSMIT_BAND) : 0;
+  auto RECEIVE_BAND__ = RECEIVE_BAND ? _fbb.CreateString(RECEIVE_BAND) : 0;
+  auto INTEGRATION_REF__ = INTEGRATION_REF ? _fbb.CreateString(INTEGRATION_REF) : 0;
+  auto TIMETAG_REF__ = TIMETAG_REF ? _fbb.CreateString(TIMETAG_REF) : 0;
+  auto ANGLE_TYPE__ = ANGLE_TYPE ? _fbb.CreateString(ANGLE_TYPE) : 0;
+  auto RANGE_MODE__ = RANGE_MODE ? _fbb.CreateString(RANGE_MODE) : 0;
+  auto CORRECTIONS_APPLIED__ = CORRECTIONS_APPLIED ? _fbb.CreateString(CORRECTIONS_APPLIED) : 0;
+  auto DATA_QUALITY__ = DATA_QUALITY ? _fbb.CreateString(DATA_QUALITY) : 0;
+  auto META_STOP__ = META_STOP ? _fbb.CreateString(META_STOP) : 0;
+  auto DATA_START__ = DATA_START ? _fbb.CreateString(DATA_START) : 0;
+  auto OBSERVATIONS__ = OBSERVATIONS ? _fbb.CreateVector<::flatbuffers::Offset<TDMObservation>>(*OBSERVATIONS) : 0;
+  auto DATA_STOP__ = DATA_STOP ? _fbb.CreateString(DATA_STOP) : 0;
+  auto TRANSMIT_RAMPS__ = TRANSMIT_RAMPS ? _fbb.CreateVector<::flatbuffers::Offset<TDMTransmitRamp>>(*TRANSMIT_RAMPS) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
+  auto DATA_TYPES__ = DATA_TYPES ? _fbb.CreateString(DATA_TYPES) : 0;
+  auto PATH__ = PATH ? _fbb.CreateString(PATH) : 0;
+  auto EPHEMERIS_NAME_1__ = EPHEMERIS_NAME_1 ? _fbb.CreateString(EPHEMERIS_NAME_1) : 0;
+  auto EPHEMERIS_NAME_2__ = EPHEMERIS_NAME_2 ? _fbb.CreateString(EPHEMERIS_NAME_2) : 0;
+  auto EPHEMERIS_NAME_3__ = EPHEMERIS_NAME_3 ? _fbb.CreateString(EPHEMERIS_NAME_3) : 0;
+  auto EPHEMERIS_NAME_4__ = EPHEMERIS_NAME_4 ? _fbb.CreateString(EPHEMERIS_NAME_4) : 0;
+  auto EPHEMERIS_NAME_5__ = EPHEMERIS_NAME_5 ? _fbb.CreateString(EPHEMERIS_NAME_5) : 0;
+  auto RANGE_UNITS__ = RANGE_UNITS ? _fbb.CreateString(RANGE_UNITS) : 0;
+  auto REFERENCE_FRAME__ = REFERENCE_FRAME ? _fbb.CreateString(REFERENCE_FRAME) : 0;
+  auto INTERPOLATION__ = INTERPOLATION ? _fbb.CreateString(INTERPOLATION) : 0;
+  return CreateTDMSegment(
+      _fbb,
+      COMMENT__,
+      META_START__,
+      TIME_SYSTEM__,
+      START_TIME__,
+      STOP_TIME__,
+      PARTICIPANT_1__,
+      PARTICIPANT_2__,
+      PARTICIPANT_3__,
+      PARTICIPANT_4__,
+      PARTICIPANT_5__,
+      MODE__,
+      PATH_1,
+      PATH_2,
+      TRANSMIT_BAND__,
+      RECEIVE_BAND__,
+      INTEGRATION_INTERVAL,
+      INTEGRATION_REF__,
+      TIMETAG_REF__,
+      ANGLE_TYPE__,
+      RANGE_MODE__,
+      RANGE_MODULUS,
+      CORRECTION_ANGLE_1,
+      CORRECTION_ANGLE_2,
+      CORRECTIONS_APPLIED__,
+      DATA_QUALITY__,
+      RECEIVE_DELAY_2,
+      RECEIVE_DELAY_3,
+      TRANSMIT_FREQ_1,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      META_STOP__,
+      DATA_START__,
+      OBSERVATIONS__,
+      DATA_STOP__,
+      TRANSMIT_RAMPS__,
+      MESSAGE_ID__,
+      TRACK_ID__,
+      DATA_TYPES__,
+      PATH__,
+      EPHEMERIS_NAME_1__,
+      EPHEMERIS_NAME_2__,
+      EPHEMERIS_NAME_3__,
+      EPHEMERIS_NAME_4__,
+      EPHEMERIS_NAME_5__,
+      RANGE_UNITS__,
+      REFERENCE_FRAME__,
+      INTERPOLATION__,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL);
+}
+
 /// Tracking Data Message
 struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TDMBuilder Builder;
@@ -247,7 +1430,53 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SIGNAL_TO_NOISE = 126,
     VT_SPECTRAL_MAX = 128,
     VT_DOPPLER_NOISE_HZ = 130,
-    VT_TRANSMIT_RAMPS = 132
+    VT_TRANSMIT_RAMPS = 132,
+    VT_OBSERVATIONS = 134,
+    VT_SEGMENTS = 136,
+    VT_TRANSMIT_FREQ_2 = 138,
+    VT_TRANSMIT_FREQ_3 = 140,
+    VT_TRANSMIT_FREQ_4 = 142,
+    VT_TRANSMIT_FREQ_5 = 144,
+    VT_TRANSMIT_FREQ_RATE_1 = 146,
+    VT_TRANSMIT_FREQ_RATE_2 = 148,
+    VT_TRANSMIT_FREQ_RATE_3 = 150,
+    VT_TRANSMIT_FREQ_RATE_4 = 152,
+    VT_TRANSMIT_FREQ_RATE_5 = 154,
+    VT_MESSAGE_ID = 156,
+    VT_TRACK_ID = 158,
+    VT_DATA_TYPES = 160,
+    VT_PATH = 162,
+    VT_EPHEMERIS_NAME_1 = 164,
+    VT_EPHEMERIS_NAME_2 = 166,
+    VT_EPHEMERIS_NAME_3 = 168,
+    VT_EPHEMERIS_NAME_4 = 170,
+    VT_EPHEMERIS_NAME_5 = 172,
+    VT_RANGE_UNITS = 174,
+    VT_REFERENCE_FRAME = 176,
+    VT_INTERPOLATION = 178,
+    VT_INTERPOLATION_DEGREE = 180,
+    VT_FREQ_OFFSET = 182,
+    VT_TURNAROUND_NUMERATOR = 184,
+    VT_TURNAROUND_DENOMINATOR = 186,
+    VT_TRANSMIT_DELAY_1 = 188,
+    VT_TRANSMIT_DELAY_2 = 190,
+    VT_TRANSMIT_DELAY_3 = 192,
+    VT_TRANSMIT_DELAY_4 = 194,
+    VT_TRANSMIT_DELAY_5 = 196,
+    VT_RECEIVE_DELAY_1 = 198,
+    VT_RECEIVE_DELAY_4 = 200,
+    VT_RECEIVE_DELAY_5 = 202,
+    VT_DOPPLER_COUNT_BIAS = 204,
+    VT_DOPPLER_COUNT_SCALE = 206,
+    VT_DOPPLER_COUNT_ROLLOVER = 208,
+    VT_CORRECTION_RANGE = 210,
+    VT_CORRECTION_DOPPLER = 212,
+    VT_CORRECTION_MAG = 214,
+    VT_CORRECTION_RCS = 216,
+    VT_CORRECTION_RECEIVE = 218,
+    VT_CORRECTION_TRANSMIT = 220,
+    VT_CORRECTION_ABERRATION_YEARLY = 222,
+    VT_CORRECTION_ABERRATION_DIURNAL = 224
   };
   /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
   const ::flatbuffers::String *OBSERVER_ID() const {
@@ -523,6 +1752,173 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>> *>(VT_TRANSMIT_RAMPS);
   }
+  /// Data-section observations for a SINGLE-segment TDM, in file order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>> *OBSERVATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>> *>(VT_OBSERVATIONS);
+  }
+  /// All metadata+data segments of a MULTI-segment TDM, in file order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TDMSegment>> *SEGMENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDMSegment>> *>(VT_SEGMENTS);
+  }
+  /// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+  /// already exists above; 2..5 had no carrier.
+  double TRANSMIT_FREQ_2() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_2, 0.0);
+  }
+  double TRANSMIT_FREQ_3() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_3, 0.0);
+  }
+  double TRANSMIT_FREQ_4() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_4, 0.0);
+  }
+  double TRANSMIT_FREQ_5() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_5, 0.0);
+  }
+  /// Transmit frequency rates by participant, Hz/s. A constant rate here is
+  /// the single-interval degenerate case of TRANSMIT_RAMPS.
+  double TRANSMIT_FREQ_RATE_1() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_2() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_3() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_4() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  double TRANSMIT_FREQ_RATE_5() const {
+    return GetField<double>(VT_TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  const ::flatbuffers::String *TRACK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
+  }
+  /// Comma-separated list of the data keywords present in the data section.
+  const ::flatbuffers::String *DATA_TYPES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_TYPES);
+  }
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  const ::flatbuffers::String *PATH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PATH);
+  }
+  /// Name of the ephemeris used to generate the data, per participant.
+  const ::flatbuffers::String *EPHEMERIS_NAME_1() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_1);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_2() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_2);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_3() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_3);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_4() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_4);
+  }
+  const ::flatbuffers::String *EPHEMERIS_NAME_5() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME_5);
+  }
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  const ::flatbuffers::String *RANGE_UNITS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RANGE_UNITS);
+  }
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  const ::flatbuffers::String *REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME);
+  }
+  /// Recommended interpolation method for the observations.
+  const ::flatbuffers::String *INTERPOLATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERPOLATION);
+  }
+  /// Recommended interpolation degree.
+  uint32_t INTERPOLATION_DEGREE() const {
+    return GetField<uint32_t>(VT_INTERPOLATION_DEGREE, 0);
+  }
+  /// Frequency offset applied to the observations, Hz.
+  double FREQ_OFFSET() const {
+    return GetField<double>(VT_FREQ_OFFSET, 0.0);
+  }
+  /// Transponder turnaround ratio numerator.
+  int32_t TURNAROUND_NUMERATOR() const {
+    return GetField<int32_t>(VT_TURNAROUND_NUMERATOR, 0);
+  }
+  /// Transponder turnaround ratio denominator.
+  int32_t TURNAROUND_DENOMINATOR() const {
+    return GetField<int32_t>(VT_TURNAROUND_DENOMINATOR, 0);
+  }
+  /// Transmit delays by participant, s.
+  double TRANSMIT_DELAY_1() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_1, 0.0);
+  }
+  double TRANSMIT_DELAY_2() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_2, 0.0);
+  }
+  double TRANSMIT_DELAY_3() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_3, 0.0);
+  }
+  double TRANSMIT_DELAY_4() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_4, 0.0);
+  }
+  double TRANSMIT_DELAY_5() const {
+    return GetField<double>(VT_TRANSMIT_DELAY_5, 0.0);
+  }
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  double RECEIVE_DELAY_1() const {
+    return GetField<double>(VT_RECEIVE_DELAY_1, 0.0);
+  }
+  double RECEIVE_DELAY_4() const {
+    return GetField<double>(VT_RECEIVE_DELAY_4, 0.0);
+  }
+  double RECEIVE_DELAY_5() const {
+    return GetField<double>(VT_RECEIVE_DELAY_5, 0.0);
+  }
+  /// Doppler count bias, Hz.
+  double DOPPLER_COUNT_BIAS() const {
+    return GetField<double>(VT_DOPPLER_COUNT_BIAS, 0.0);
+  }
+  /// Doppler count scale factor.
+  uint32_t DOPPLER_COUNT_SCALE() const {
+    return GetField<uint32_t>(VT_DOPPLER_COUNT_SCALE, 0);
+  }
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  bool DOPPLER_COUNT_ROLLOVER() const {
+    return GetField<uint8_t>(VT_DOPPLER_COUNT_ROLLOVER, 0) != 0;
+  }
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  double CORRECTION_RANGE() const {
+    return GetField<double>(VT_CORRECTION_RANGE, 0.0);
+  }
+  double CORRECTION_DOPPLER() const {
+    return GetField<double>(VT_CORRECTION_DOPPLER, 0.0);
+  }
+  double CORRECTION_MAG() const {
+    return GetField<double>(VT_CORRECTION_MAG, 0.0);
+  }
+  double CORRECTION_RCS() const {
+    return GetField<double>(VT_CORRECTION_RCS, 0.0);
+  }
+  double CORRECTION_RECEIVE() const {
+    return GetField<double>(VT_CORRECTION_RECEIVE, 0.0);
+  }
+  double CORRECTION_TRANSMIT() const {
+    return GetField<double>(VT_CORRECTION_TRANSMIT, 0.0);
+  }
+  double CORRECTION_ABERRATION_YEARLY() const {
+    return GetField<double>(VT_CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  double CORRECTION_ABERRATION_DIURNAL() const {
+    return GetField<double>(VT_CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -638,6 +2034,68 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_TRANSMIT_RAMPS) &&
            verifier.VerifyVector(TRANSMIT_RAMPS()) &&
            verifier.VerifyVectorOfTables(TRANSMIT_RAMPS()) &&
+           VerifyOffset(verifier, VT_OBSERVATIONS) &&
+           verifier.VerifyVector(OBSERVATIONS()) &&
+           verifier.VerifyVectorOfTables(OBSERVATIONS()) &&
+           VerifyOffset(verifier, VT_SEGMENTS) &&
+           verifier.VerifyVector(SEGMENTS()) &&
+           verifier.VerifyVectorOfTables(SEGMENTS()) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_5, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_1, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_RATE_5, 8) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_TRACK_ID) &&
+           verifier.VerifyString(TRACK_ID()) &&
+           VerifyOffset(verifier, VT_DATA_TYPES) &&
+           verifier.VerifyString(DATA_TYPES()) &&
+           VerifyOffset(verifier, VT_PATH) &&
+           verifier.VerifyString(PATH()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_1) &&
+           verifier.VerifyString(EPHEMERIS_NAME_1()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_2) &&
+           verifier.VerifyString(EPHEMERIS_NAME_2()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_3) &&
+           verifier.VerifyString(EPHEMERIS_NAME_3()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_4) &&
+           verifier.VerifyString(EPHEMERIS_NAME_4()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME_5) &&
+           verifier.VerifyString(EPHEMERIS_NAME_5()) &&
+           VerifyOffset(verifier, VT_RANGE_UNITS) &&
+           verifier.VerifyString(RANGE_UNITS()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyString(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_INTERPOLATION) &&
+           verifier.VerifyString(INTERPOLATION()) &&
+           VerifyField<uint32_t>(verifier, VT_INTERPOLATION_DEGREE, 4) &&
+           VerifyField<double>(verifier, VT_FREQ_OFFSET, 8) &&
+           VerifyField<int32_t>(verifier, VT_TURNAROUND_NUMERATOR, 4) &&
+           VerifyField<int32_t>(verifier, VT_TURNAROUND_DENOMINATOR, 4) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_1, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_2, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_3, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_4, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_DELAY_5, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_1, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_4, 8) &&
+           VerifyField<double>(verifier, VT_RECEIVE_DELAY_5, 8) &&
+           VerifyField<double>(verifier, VT_DOPPLER_COUNT_BIAS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_DOPPLER_COUNT_SCALE, 4) &&
+           VerifyField<uint8_t>(verifier, VT_DOPPLER_COUNT_ROLLOVER, 1) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RANGE, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_DOPPLER, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_MAG, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RCS, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_RECEIVE, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_TRANSMIT, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ABERRATION_YEARLY, 8) &&
+           VerifyField<double>(verifier, VT_CORRECTION_ABERRATION_DIURNAL, 8) &&
            verifier.EndTable();
   }
 };
@@ -841,6 +2299,144 @@ struct TDMBuilder {
   void add_TRANSMIT_RAMPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS) {
     fbb_.AddOffset(TDM::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
   }
+  void add_OBSERVATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>>> OBSERVATIONS) {
+    fbb_.AddOffset(TDM::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  void add_SEGMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMSegment>>> SEGMENTS) {
+    fbb_.AddOffset(TDM::VT_SEGMENTS, SEGMENTS);
+  }
+  void add_TRANSMIT_FREQ_2(double TRANSMIT_FREQ_2) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_2, TRANSMIT_FREQ_2, 0.0);
+  }
+  void add_TRANSMIT_FREQ_3(double TRANSMIT_FREQ_3) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_3, TRANSMIT_FREQ_3, 0.0);
+  }
+  void add_TRANSMIT_FREQ_4(double TRANSMIT_FREQ_4) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_4, TRANSMIT_FREQ_4, 0.0);
+  }
+  void add_TRANSMIT_FREQ_5(double TRANSMIT_FREQ_5) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_5, TRANSMIT_FREQ_5, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_1(double TRANSMIT_FREQ_RATE_1) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_RATE_1, TRANSMIT_FREQ_RATE_1, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_2(double TRANSMIT_FREQ_RATE_2) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_RATE_2, TRANSMIT_FREQ_RATE_2, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_3(double TRANSMIT_FREQ_RATE_3) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_RATE_3, TRANSMIT_FREQ_RATE_3, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_4(double TRANSMIT_FREQ_RATE_4) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_RATE_4, TRANSMIT_FREQ_RATE_4, 0.0);
+  }
+  void add_TRANSMIT_FREQ_RATE_5(double TRANSMIT_FREQ_RATE_5) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_RATE_5, TRANSMIT_FREQ_RATE_5, 0.0);
+  }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(TDM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_TRACK_ID(::flatbuffers::Offset<::flatbuffers::String> TRACK_ID) {
+    fbb_.AddOffset(TDM::VT_TRACK_ID, TRACK_ID);
+  }
+  void add_DATA_TYPES(::flatbuffers::Offset<::flatbuffers::String> DATA_TYPES) {
+    fbb_.AddOffset(TDM::VT_DATA_TYPES, DATA_TYPES);
+  }
+  void add_PATH(::flatbuffers::Offset<::flatbuffers::String> PATH) {
+    fbb_.AddOffset(TDM::VT_PATH, PATH);
+  }
+  void add_EPHEMERIS_NAME_1(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_1) {
+    fbb_.AddOffset(TDM::VT_EPHEMERIS_NAME_1, EPHEMERIS_NAME_1);
+  }
+  void add_EPHEMERIS_NAME_2(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_2) {
+    fbb_.AddOffset(TDM::VT_EPHEMERIS_NAME_2, EPHEMERIS_NAME_2);
+  }
+  void add_EPHEMERIS_NAME_3(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_3) {
+    fbb_.AddOffset(TDM::VT_EPHEMERIS_NAME_3, EPHEMERIS_NAME_3);
+  }
+  void add_EPHEMERIS_NAME_4(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_4) {
+    fbb_.AddOffset(TDM::VT_EPHEMERIS_NAME_4, EPHEMERIS_NAME_4);
+  }
+  void add_EPHEMERIS_NAME_5(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_5) {
+    fbb_.AddOffset(TDM::VT_EPHEMERIS_NAME_5, EPHEMERIS_NAME_5);
+  }
+  void add_RANGE_UNITS(::flatbuffers::Offset<::flatbuffers::String> RANGE_UNITS) {
+    fbb_.AddOffset(TDM::VT_RANGE_UNITS, RANGE_UNITS);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME) {
+    fbb_.AddOffset(TDM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_INTERPOLATION(::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION) {
+    fbb_.AddOffset(TDM::VT_INTERPOLATION, INTERPOLATION);
+  }
+  void add_INTERPOLATION_DEGREE(uint32_t INTERPOLATION_DEGREE) {
+    fbb_.AddElement<uint32_t>(TDM::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  void add_FREQ_OFFSET(double FREQ_OFFSET) {
+    fbb_.AddElement<double>(TDM::VT_FREQ_OFFSET, FREQ_OFFSET, 0.0);
+  }
+  void add_TURNAROUND_NUMERATOR(int32_t TURNAROUND_NUMERATOR) {
+    fbb_.AddElement<int32_t>(TDM::VT_TURNAROUND_NUMERATOR, TURNAROUND_NUMERATOR, 0);
+  }
+  void add_TURNAROUND_DENOMINATOR(int32_t TURNAROUND_DENOMINATOR) {
+    fbb_.AddElement<int32_t>(TDM::VT_TURNAROUND_DENOMINATOR, TURNAROUND_DENOMINATOR, 0);
+  }
+  void add_TRANSMIT_DELAY_1(double TRANSMIT_DELAY_1) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_DELAY_1, TRANSMIT_DELAY_1, 0.0);
+  }
+  void add_TRANSMIT_DELAY_2(double TRANSMIT_DELAY_2) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_DELAY_2, TRANSMIT_DELAY_2, 0.0);
+  }
+  void add_TRANSMIT_DELAY_3(double TRANSMIT_DELAY_3) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_DELAY_3, TRANSMIT_DELAY_3, 0.0);
+  }
+  void add_TRANSMIT_DELAY_4(double TRANSMIT_DELAY_4) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_DELAY_4, TRANSMIT_DELAY_4, 0.0);
+  }
+  void add_TRANSMIT_DELAY_5(double TRANSMIT_DELAY_5) {
+    fbb_.AddElement<double>(TDM::VT_TRANSMIT_DELAY_5, TRANSMIT_DELAY_5, 0.0);
+  }
+  void add_RECEIVE_DELAY_1(double RECEIVE_DELAY_1) {
+    fbb_.AddElement<double>(TDM::VT_RECEIVE_DELAY_1, RECEIVE_DELAY_1, 0.0);
+  }
+  void add_RECEIVE_DELAY_4(double RECEIVE_DELAY_4) {
+    fbb_.AddElement<double>(TDM::VT_RECEIVE_DELAY_4, RECEIVE_DELAY_4, 0.0);
+  }
+  void add_RECEIVE_DELAY_5(double RECEIVE_DELAY_5) {
+    fbb_.AddElement<double>(TDM::VT_RECEIVE_DELAY_5, RECEIVE_DELAY_5, 0.0);
+  }
+  void add_DOPPLER_COUNT_BIAS(double DOPPLER_COUNT_BIAS) {
+    fbb_.AddElement<double>(TDM::VT_DOPPLER_COUNT_BIAS, DOPPLER_COUNT_BIAS, 0.0);
+  }
+  void add_DOPPLER_COUNT_SCALE(uint32_t DOPPLER_COUNT_SCALE) {
+    fbb_.AddElement<uint32_t>(TDM::VT_DOPPLER_COUNT_SCALE, DOPPLER_COUNT_SCALE, 0);
+  }
+  void add_DOPPLER_COUNT_ROLLOVER(bool DOPPLER_COUNT_ROLLOVER) {
+    fbb_.AddElement<uint8_t>(TDM::VT_DOPPLER_COUNT_ROLLOVER, static_cast<uint8_t>(DOPPLER_COUNT_ROLLOVER), 0);
+  }
+  void add_CORRECTION_RANGE(double CORRECTION_RANGE) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_RANGE, CORRECTION_RANGE, 0.0);
+  }
+  void add_CORRECTION_DOPPLER(double CORRECTION_DOPPLER) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_DOPPLER, CORRECTION_DOPPLER, 0.0);
+  }
+  void add_CORRECTION_MAG(double CORRECTION_MAG) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_MAG, CORRECTION_MAG, 0.0);
+  }
+  void add_CORRECTION_RCS(double CORRECTION_RCS) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_RCS, CORRECTION_RCS, 0.0);
+  }
+  void add_CORRECTION_RECEIVE(double CORRECTION_RECEIVE) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_RECEIVE, CORRECTION_RECEIVE, 0.0);
+  }
+  void add_CORRECTION_TRANSMIT(double CORRECTION_TRANSMIT) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_TRANSMIT, CORRECTION_TRANSMIT, 0.0);
+  }
+  void add_CORRECTION_ABERRATION_YEARLY(double CORRECTION_ABERRATION_YEARLY) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_ABERRATION_YEARLY, CORRECTION_ABERRATION_YEARLY, 0.0);
+  }
+  void add_CORRECTION_ABERRATION_DIURNAL(double CORRECTION_ABERRATION_DIURNAL) {
+    fbb_.AddElement<double>(TDM::VT_CORRECTION_ABERRATION_DIURNAL, CORRECTION_ABERRATION_DIURNAL, 0.0);
+  }
   explicit TDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -918,8 +2514,81 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> SIGNAL_TO_NOISE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_MAX = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> DOPPLER_NOISE_HZ = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMObservation>>> OBSERVATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMSegment>>> SEGMENTS = 0,
+    double TRANSMIT_FREQ_2 = 0.0,
+    double TRANSMIT_FREQ_3 = 0.0,
+    double TRANSMIT_FREQ_4 = 0.0,
+    double TRANSMIT_FREQ_5 = 0.0,
+    double TRANSMIT_FREQ_RATE_1 = 0.0,
+    double TRANSMIT_FREQ_RATE_2 = 0.0,
+    double TRANSMIT_FREQ_RATE_3 = 0.0,
+    double TRANSMIT_FREQ_RATE_4 = 0.0,
+    double TRANSMIT_FREQ_RATE_5 = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_TYPES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PATH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_1 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_3 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_4 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME_5 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RANGE_UNITS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION = 0,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double FREQ_OFFSET = 0.0,
+    int32_t TURNAROUND_NUMERATOR = 0,
+    int32_t TURNAROUND_DENOMINATOR = 0,
+    double TRANSMIT_DELAY_1 = 0.0,
+    double TRANSMIT_DELAY_2 = 0.0,
+    double TRANSMIT_DELAY_3 = 0.0,
+    double TRANSMIT_DELAY_4 = 0.0,
+    double TRANSMIT_DELAY_5 = 0.0,
+    double RECEIVE_DELAY_1 = 0.0,
+    double RECEIVE_DELAY_4 = 0.0,
+    double RECEIVE_DELAY_5 = 0.0,
+    double DOPPLER_COUNT_BIAS = 0.0,
+    uint32_t DOPPLER_COUNT_SCALE = 0,
+    bool DOPPLER_COUNT_ROLLOVER = false,
+    double CORRECTION_RANGE = 0.0,
+    double CORRECTION_DOPPLER = 0.0,
+    double CORRECTION_MAG = 0.0,
+    double CORRECTION_RCS = 0.0,
+    double CORRECTION_RECEIVE = 0.0,
+    double CORRECTION_TRANSMIT = 0.0,
+    double CORRECTION_ABERRATION_YEARLY = 0.0,
+    double CORRECTION_ABERRATION_DIURNAL = 0.0) {
   TDMBuilder builder_(_fbb);
+  builder_.add_CORRECTION_ABERRATION_DIURNAL(CORRECTION_ABERRATION_DIURNAL);
+  builder_.add_CORRECTION_ABERRATION_YEARLY(CORRECTION_ABERRATION_YEARLY);
+  builder_.add_CORRECTION_TRANSMIT(CORRECTION_TRANSMIT);
+  builder_.add_CORRECTION_RECEIVE(CORRECTION_RECEIVE);
+  builder_.add_CORRECTION_RCS(CORRECTION_RCS);
+  builder_.add_CORRECTION_MAG(CORRECTION_MAG);
+  builder_.add_CORRECTION_DOPPLER(CORRECTION_DOPPLER);
+  builder_.add_CORRECTION_RANGE(CORRECTION_RANGE);
+  builder_.add_DOPPLER_COUNT_BIAS(DOPPLER_COUNT_BIAS);
+  builder_.add_RECEIVE_DELAY_5(RECEIVE_DELAY_5);
+  builder_.add_RECEIVE_DELAY_4(RECEIVE_DELAY_4);
+  builder_.add_RECEIVE_DELAY_1(RECEIVE_DELAY_1);
+  builder_.add_TRANSMIT_DELAY_5(TRANSMIT_DELAY_5);
+  builder_.add_TRANSMIT_DELAY_4(TRANSMIT_DELAY_4);
+  builder_.add_TRANSMIT_DELAY_3(TRANSMIT_DELAY_3);
+  builder_.add_TRANSMIT_DELAY_2(TRANSMIT_DELAY_2);
+  builder_.add_TRANSMIT_DELAY_1(TRANSMIT_DELAY_1);
+  builder_.add_FREQ_OFFSET(FREQ_OFFSET);
+  builder_.add_TRANSMIT_FREQ_RATE_5(TRANSMIT_FREQ_RATE_5);
+  builder_.add_TRANSMIT_FREQ_RATE_4(TRANSMIT_FREQ_RATE_4);
+  builder_.add_TRANSMIT_FREQ_RATE_3(TRANSMIT_FREQ_RATE_3);
+  builder_.add_TRANSMIT_FREQ_RATE_2(TRANSMIT_FREQ_RATE_2);
+  builder_.add_TRANSMIT_FREQ_RATE_1(TRANSMIT_FREQ_RATE_1);
+  builder_.add_TRANSMIT_FREQ_5(TRANSMIT_FREQ_5);
+  builder_.add_TRANSMIT_FREQ_4(TRANSMIT_FREQ_4);
+  builder_.add_TRANSMIT_FREQ_3(TRANSMIT_FREQ_3);
+  builder_.add_TRANSMIT_FREQ_2(TRANSMIT_FREQ_2);
   builder_.add_RANGE_MODULUS(RANGE_MODULUS);
   builder_.add_RANGE_UNCERTAINTY(RANGE_UNCERTAINTY);
   builder_.add_RANGE_RATE(RANGE_RATE);
@@ -933,6 +2602,24 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_OBSERVER_Z(OBSERVER_Z);
   builder_.add_OBSERVER_Y(OBSERVER_Y);
   builder_.add_OBSERVER_X(OBSERVER_X);
+  builder_.add_DOPPLER_COUNT_SCALE(DOPPLER_COUNT_SCALE);
+  builder_.add_TURNAROUND_DENOMINATOR(TURNAROUND_DENOMINATOR);
+  builder_.add_TURNAROUND_NUMERATOR(TURNAROUND_NUMERATOR);
+  builder_.add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE);
+  builder_.add_INTERPOLATION(INTERPOLATION);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_RANGE_UNITS(RANGE_UNITS);
+  builder_.add_EPHEMERIS_NAME_5(EPHEMERIS_NAME_5);
+  builder_.add_EPHEMERIS_NAME_4(EPHEMERIS_NAME_4);
+  builder_.add_EPHEMERIS_NAME_3(EPHEMERIS_NAME_3);
+  builder_.add_EPHEMERIS_NAME_2(EPHEMERIS_NAME_2);
+  builder_.add_EPHEMERIS_NAME_1(EPHEMERIS_NAME_1);
+  builder_.add_PATH(PATH);
+  builder_.add_DATA_TYPES(DATA_TYPES);
+  builder_.add_TRACK_ID(TRACK_ID);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
+  builder_.add_SEGMENTS(SEGMENTS);
+  builder_.add_OBSERVATIONS(OBSERVATIONS);
   builder_.add_TRANSMIT_RAMPS(TRANSMIT_RAMPS);
   builder_.add_DOPPLER_NOISE_HZ(DOPPLER_NOISE_HZ);
   builder_.add_SPECTRAL_MAX(SPECTRAL_MAX);
@@ -985,6 +2672,7 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_OBSERVER_ID(OBSERVER_ID);
   builder_.add_PATH_2(PATH_2);
   builder_.add_PATH_1(PATH_1);
+  builder_.add_DOPPLER_COUNT_ROLLOVER(DOPPLER_COUNT_ROLLOVER);
   return builder_.Finish();
 }
 
@@ -1054,7 +2742,53 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     const std::vector<double> *SIGNAL_TO_NOISE = nullptr,
     const std::vector<double> *SPECTRAL_MAX = nullptr,
     const std::vector<double> *DOPPLER_NOISE_HZ = nullptr,
-    const std::vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS = nullptr) {
+    const std::vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS = nullptr,
+    const std::vector<::flatbuffers::Offset<TDMObservation>> *OBSERVATIONS = nullptr,
+    const std::vector<::flatbuffers::Offset<TDMSegment>> *SEGMENTS = nullptr,
+    double TRANSMIT_FREQ_2 = 0.0,
+    double TRANSMIT_FREQ_3 = 0.0,
+    double TRANSMIT_FREQ_4 = 0.0,
+    double TRANSMIT_FREQ_5 = 0.0,
+    double TRANSMIT_FREQ_RATE_1 = 0.0,
+    double TRANSMIT_FREQ_RATE_2 = 0.0,
+    double TRANSMIT_FREQ_RATE_3 = 0.0,
+    double TRANSMIT_FREQ_RATE_4 = 0.0,
+    double TRANSMIT_FREQ_RATE_5 = 0.0,
+    const char *MESSAGE_ID = nullptr,
+    const char *TRACK_ID = nullptr,
+    const char *DATA_TYPES = nullptr,
+    const char *PATH = nullptr,
+    const char *EPHEMERIS_NAME_1 = nullptr,
+    const char *EPHEMERIS_NAME_2 = nullptr,
+    const char *EPHEMERIS_NAME_3 = nullptr,
+    const char *EPHEMERIS_NAME_4 = nullptr,
+    const char *EPHEMERIS_NAME_5 = nullptr,
+    const char *RANGE_UNITS = nullptr,
+    const char *REFERENCE_FRAME = nullptr,
+    const char *INTERPOLATION = nullptr,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double FREQ_OFFSET = 0.0,
+    int32_t TURNAROUND_NUMERATOR = 0,
+    int32_t TURNAROUND_DENOMINATOR = 0,
+    double TRANSMIT_DELAY_1 = 0.0,
+    double TRANSMIT_DELAY_2 = 0.0,
+    double TRANSMIT_DELAY_3 = 0.0,
+    double TRANSMIT_DELAY_4 = 0.0,
+    double TRANSMIT_DELAY_5 = 0.0,
+    double RECEIVE_DELAY_1 = 0.0,
+    double RECEIVE_DELAY_4 = 0.0,
+    double RECEIVE_DELAY_5 = 0.0,
+    double DOPPLER_COUNT_BIAS = 0.0,
+    uint32_t DOPPLER_COUNT_SCALE = 0,
+    bool DOPPLER_COUNT_ROLLOVER = false,
+    double CORRECTION_RANGE = 0.0,
+    double CORRECTION_DOPPLER = 0.0,
+    double CORRECTION_MAG = 0.0,
+    double CORRECTION_RCS = 0.0,
+    double CORRECTION_RECEIVE = 0.0,
+    double CORRECTION_TRANSMIT = 0.0,
+    double CORRECTION_ABERRATION_YEARLY = 0.0,
+    double CORRECTION_ABERRATION_DIURNAL = 0.0) {
   auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
   auto OBSERVATION_START_TIME__ = OBSERVATION_START_TIME ? _fbb.CreateString(OBSERVATION_START_TIME) : 0;
@@ -1098,6 +2832,20 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
   auto SPECTRAL_MAX__ = SPECTRAL_MAX ? _fbb.CreateVector<double>(*SPECTRAL_MAX) : 0;
   auto DOPPLER_NOISE_HZ__ = DOPPLER_NOISE_HZ ? _fbb.CreateVector<double>(*DOPPLER_NOISE_HZ) : 0;
   auto TRANSMIT_RAMPS__ = TRANSMIT_RAMPS ? _fbb.CreateVector<::flatbuffers::Offset<TDMTransmitRamp>>(*TRANSMIT_RAMPS) : 0;
+  auto OBSERVATIONS__ = OBSERVATIONS ? _fbb.CreateVector<::flatbuffers::Offset<TDMObservation>>(*OBSERVATIONS) : 0;
+  auto SEGMENTS__ = SEGMENTS ? _fbb.CreateVector<::flatbuffers::Offset<TDMSegment>>(*SEGMENTS) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
+  auto DATA_TYPES__ = DATA_TYPES ? _fbb.CreateString(DATA_TYPES) : 0;
+  auto PATH__ = PATH ? _fbb.CreateString(PATH) : 0;
+  auto EPHEMERIS_NAME_1__ = EPHEMERIS_NAME_1 ? _fbb.CreateString(EPHEMERIS_NAME_1) : 0;
+  auto EPHEMERIS_NAME_2__ = EPHEMERIS_NAME_2 ? _fbb.CreateString(EPHEMERIS_NAME_2) : 0;
+  auto EPHEMERIS_NAME_3__ = EPHEMERIS_NAME_3 ? _fbb.CreateString(EPHEMERIS_NAME_3) : 0;
+  auto EPHEMERIS_NAME_4__ = EPHEMERIS_NAME_4 ? _fbb.CreateString(EPHEMERIS_NAME_4) : 0;
+  auto EPHEMERIS_NAME_5__ = EPHEMERIS_NAME_5 ? _fbb.CreateString(EPHEMERIS_NAME_5) : 0;
+  auto RANGE_UNITS__ = RANGE_UNITS ? _fbb.CreateString(RANGE_UNITS) : 0;
+  auto REFERENCE_FRAME__ = REFERENCE_FRAME ? _fbb.CreateString(REFERENCE_FRAME) : 0;
+  auto INTERPOLATION__ = INTERPOLATION ? _fbb.CreateString(INTERPOLATION) : 0;
   return CreateTDM(
       _fbb,
       OBSERVER_ID__,
@@ -1164,7 +2912,53 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
       SIGNAL_TO_NOISE__,
       SPECTRAL_MAX__,
       DOPPLER_NOISE_HZ__,
-      TRANSMIT_RAMPS__);
+      TRANSMIT_RAMPS__,
+      OBSERVATIONS__,
+      SEGMENTS__,
+      TRANSMIT_FREQ_2,
+      TRANSMIT_FREQ_3,
+      TRANSMIT_FREQ_4,
+      TRANSMIT_FREQ_5,
+      TRANSMIT_FREQ_RATE_1,
+      TRANSMIT_FREQ_RATE_2,
+      TRANSMIT_FREQ_RATE_3,
+      TRANSMIT_FREQ_RATE_4,
+      TRANSMIT_FREQ_RATE_5,
+      MESSAGE_ID__,
+      TRACK_ID__,
+      DATA_TYPES__,
+      PATH__,
+      EPHEMERIS_NAME_1__,
+      EPHEMERIS_NAME_2__,
+      EPHEMERIS_NAME_3__,
+      EPHEMERIS_NAME_4__,
+      EPHEMERIS_NAME_5__,
+      RANGE_UNITS__,
+      REFERENCE_FRAME__,
+      INTERPOLATION__,
+      INTERPOLATION_DEGREE,
+      FREQ_OFFSET,
+      TURNAROUND_NUMERATOR,
+      TURNAROUND_DENOMINATOR,
+      TRANSMIT_DELAY_1,
+      TRANSMIT_DELAY_2,
+      TRANSMIT_DELAY_3,
+      TRANSMIT_DELAY_4,
+      TRANSMIT_DELAY_5,
+      RECEIVE_DELAY_1,
+      RECEIVE_DELAY_4,
+      RECEIVE_DELAY_5,
+      DOPPLER_COUNT_BIAS,
+      DOPPLER_COUNT_SCALE,
+      DOPPLER_COUNT_ROLLOVER,
+      CORRECTION_RANGE,
+      CORRECTION_DOPPLER,
+      CORRECTION_MAG,
+      CORRECTION_RCS,
+      CORRECTION_RECEIVE,
+      CORRECTION_TRANSMIT,
+      CORRECTION_ABERRATION_YEARLY,
+      CORRECTION_ABERRATION_DIURNAL);
 }
 
 inline const TDM *GetTDM(const void *buf) {

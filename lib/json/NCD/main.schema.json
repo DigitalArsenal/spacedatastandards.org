@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ncdContainerFormat" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "PROVIDER_DEFINED"]
+    },
+    "NCDSegmentDescriptor" : {
+      "type" : "object",
+      "description" : "One independently addressed segment inside a native container.\n\nA segmented binary ephemeris is not a single span: each segment has its own\nbody pair, frame, numeric type and time bounds, and a reader must choose\namong them. $OEM carries the STATES; this carries the segment DESCRIPTOR\nthat says which states came from where and what must be written back.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Segment name as recorded in the container."
+              },
+        "TARGET_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer body code of the segment target."
+              },
+        "CENTER_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer body code of the segment centre."
+              },
+        "FRAME_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer reference frame code of the segment."
+              },
+        "FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Reference frame name as recorded in the container."
+              },
+        "SEGMENT_TYPE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Numeric segment data type, verbatim. The evaluation rule is a property of\nthis number (for example, Chebyshev position with fixed interval, or\ndiscrete states with Lagrange interpolation); it is carried as the\ncontainer's own integer so a rewrite is exact."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Segment coverage start, ISO 8601."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Segment coverage stop, ISO 8601."
+              },
+        "START_SECONDS_PAST_J2000_TDB" : {
+                "type" : "number",
+                "description" : "Segment coverage start, seconds past J2000 in the barycentric dynamical\ntime scale, as stored in the container."
+              },
+        "STOP_SECONDS_PAST_J2000_TDB" : {
+                "type" : "number",
+                "description" : "Segment coverage stop, same scale."
+              },
+        "INITIAL_ADDRESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "First addressed element of the segment inside the file."
+              },
+        "FINAL_ADDRESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Last addressed element of the segment inside the file."
+              },
+        "POLYNOMIAL_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Polynomial degree or record size the segment type parameterises, when the\ntype carries one."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDSP3Header" : {
+      "type" : "object",
+      "description" : "Header block of a fixed-column satellite position container (SP3).",
+      "properties" : {
+        "FILE_TYPE" : {
+                "type" : "string",
+                "description" : "Record content indicator, e.g. \"P\" for positions only, \"V\" with\nvelocities."
+              },
+        "SATELLITE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Satellite system indicator recorded in the header."
+              },
+        "ORBIT_TYPE" : {
+                "type" : "string",
+                "description" : "Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert."
+              },
+        "DATA_USED" : {
+                "type" : "string",
+                "description" : "Data used to produce the file, as recorded."
+              },
+        "COORDINATE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Terrestrial reference frame name as recorded."
+              },
+        "AGENCY" : {
+                "type" : "string",
+                "description" : "Producing agency as recorded IN THE FILE. This is observed content, not a\nclassification."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system as recorded in the header."
+              },
+        "GPS_WEEK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Week number of the first epoch in the file's own week counter."
+              },
+        "SECONDS_OF_WEEK" : {
+                "type" : "number",
+                "description" : "Seconds of week of the first epoch."
+              },
+        "MODIFIED_JULIAN_DAY_START" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Modified Julian Day of the first epoch."
+              },
+        "FRACTIONAL_DAY" : {
+                "type" : "number",
+                "description" : "Fractional day of the first epoch."
+              },
+        "EPOCH_INTERVAL_SECONDS" : {
+                "type" : "number",
+                "description" : "Uniform interval between epochs, seconds."
+              },
+        "NUMBER_OF_EPOCHS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of epochs declared in the header."
+              },
+        "SATELLITE_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Satellite identifiers in header order."
+              },
+        "SATELLITE_ACCURACY_EXPONENTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -128, "maximum" : 127},
+                "description" : "Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy\nis POSITION_VELOCITY_BASE raised to this power."
+              },
+        "POSITION_VELOCITY_BASE" : {
+                "type" : "number",
+                "description" : "Base for the position and velocity standard-deviation exponents carried\nper state in $OEM."
+              },
+        "CLOCK_RATE_BASE" : {
+                "type" : "number",
+                "description" : "Base for the clock bias and clock rate standard-deviation exponents."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Header comment lines in file order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDScenarioEpochContainer" : {
+      "type" : "object",
+      "description" : "Parameters of a scenario-epoch text container.",
+      "properties" : {
+        "SCENARIO_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch that every record offset is measured from, ISO 8601."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time scale the scenario epoch is expressed in."
+              },
+        "DISTANCE_UNIT" : {
+                "type" : "string",
+                "description" : "Distance unit of the records, e.g. \"Meters\", \"Kilometers\"."
+              },
+        "COORDINATE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Named coordinate system of the records."
+              },
+        "COORDINATE_AXES" : {
+                "type" : "string",
+                "description" : "Named coordinate axes, when stated separately from the system."
+              },
+        "CENTRAL_BODY" : {
+                "type" : "string",
+                "description" : "Central body of the records."
+              },
+        "INTERPOLATION_METHOD" : {
+                "type" : "string",
+                "description" : "Named interpolation method, e.g. \"Lagrange\", \"Hermite\"."
+              },
+        "INTERPOLATION_SAMPLES_M1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interpolation order expressed as (samples - 1), which is how these\ncontainers state it. Carried verbatim rather than converted, so a rewrite\nreproduces the source exactly."
+              },
+        "NUMBER_OF_EPHEMERIS_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of ephemeris points declared in the container."
+              },
+        "SEGMENT_BOUNDARY_TIMES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Segment boundary offsets in seconds from SCENARIO_EPOCH, when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDCode500Header" : {
+      "type" : "object",
+      "description" : "Header words of a fixed-record binary ephemeris container.",
+      "properties" : {
+        "SATELLITE_NAME" : {
+                "type" : "string",
+                "description" : "Object name as recorded in the header."
+              },
+        "TAPE_ID" : {
+                "type" : "string",
+                "description" : "Container-internal tape or file identifier."
+              },
+        "TIME_SYSTEM_INDICATOR" : {
+                "type" : "string",
+                "description" : "Time system indicator as recorded."
+              },
+        "COORDINATE_SYSTEM_INDICATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Coordinate system indicator as recorded."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Coverage start, ISO 8601."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Coverage stop, ISO 8601."
+              },
+        "EPOCH_STEP_SECONDS" : {
+                "type" : "number",
+                "description" : "Uniform step between data records, seconds."
+              },
+        "HEADER_WORDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The header record's packed words in file order, undecoded. A reader that\nunderstands a word decodes it; a rewriter reproduces the record exactly\nwithout having to."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCD" : {
+      "type" : "object",
+      "description" : "Native Container Descriptor.\n\nThe file-level facts of an ephemeris, attitude or tracking container that\nare NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the\nstates, attitudes and observations; none of them can carry the internal\nfile name, the comment area, the segment address ranges, the header accuracy\nblock or the interpolation order the source declared, because those describe\nthe CONTAINER. Without them a read-then-write cycle silently invents header\nvalues, and a segmented binary file cannot be reproduced at all.\n\nONE record covers every container class rather than one record per format:\nthe file-level facts are the same kind of fact in each, and the\nformat-specific blocks are optional sub-tables selected by FORMAT. Only the\nblock matching FORMAT is populated.",
+      "properties" : {
+        "FORMAT" : {
+                "$ref" : "#/definitions/ncdContainerFormat",
+                "description" : "Container format class."
+              },
+        "PROVIDER_DEFINED_FORMAT_NAME" : {
+                "type" : "string",
+                "description" : "Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise."
+              },
+        "FORMAT_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the container format as declared by the file itself."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Producing system or organization as recorded IN THE FILE."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation date recorded in the file, ISO 8601."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator recorded in the file."
+              },
+        "INTERNAL_FILE_NAME" : {
+                "type" : "string",
+                "description" : "Container-internal file name, which is stored inside the file and is\nindependent of the name on disk."
+              },
+        "COMMENT_AREA" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Free-text comment area carried inside the container, one entry per line,\nin file order."
+              },
+        "NATIVE_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Reference frame name as the container itself spells it, before any\nmapping onto $RFM."
+              },
+        "NATIVE_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer reference frame code as the container stores it."
+              },
+        "NATIVE_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system as the container itself spells it, before any mapping onto\nthe ratified time-scale vocabulary."
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NCDSegmentDescriptor"},
+                "description" : "Descriptors of the container's segments, in file order. Empty for a\nsingle-span container."
+              },
+        "SP3_HEADER" : {
+                "$ref" : "#/definitions/NCDSP3Header",
+                "description" : "Header block when FORMAT is SP3_C or SP3_D."
+              },
+        "SCENARIO_CONTAINER" : {
+                "$ref" : "#/definitions/NCDScenarioEpochContainer",
+                "description" : "Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or\nSCENARIO_EPOCH_ATTITUDE_TEXT."
+              },
+        "CODE_500_HEADER" : {
+                "$ref" : "#/definitions/NCDCode500Header",
+                "description" : "Header words when FORMAT is CODE_500."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Total coverage start across all segments, ISO 8601."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Total coverage stop across all segments, ISO 8601."
+              },
+        "SOURCE_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the described container in bytes."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the described container's exact bytes, lowercase hex. This is\nwhat makes the descriptor checkable: a consumer can prove the descriptor\nbelongs to the file it holds."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NCD"
+}

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { attitudeDataLine, attitudeDataLineT } from './attitudeDataLine.js';
 
 
 export class AEMSegment implements flatbuffers.IUnpackableObject<AEMSegmentT> {
@@ -126,8 +127,128 @@ attitudeDataArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+ * One entry per COMMENT line, in file order.
+ */
+COMMENT(index: number):string
+COMMENT(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+COMMENT(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+commentLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+ * (504.0-B-2 table 4-3, optional).
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Classification marking of the data in portion-marked format
+ * (504.0-B-2 table 4-3, optional).
+ */
+CLASSIFICATION():string|null
+CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Start of the USEABLE time span covered by the data, ISO 8601.
+ */
+USEABLE_START_TIME():string|null
+USEABLE_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+USEABLE_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * End of the USEABLE time span covered by the data, ISO 8601.
+ */
+USEABLE_STOP_TIME():string|null
+USEABLE_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+USEABLE_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+ * when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+ */
+EULER_ROT_SEQ():string|null
+EULER_ROT_SEQ(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EULER_ROT_SEQ(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference frame in which the ANGVEL_* components are expressed; the value
+ * is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+ * NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+ * is the ratified spelling and is the one carried here.
+ */
+ANGVEL_FRAME():string|null
+ANGVEL_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ANGVEL_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+ */
+INTERPOLATION_METHOD():string|null
+INTERPOLATION_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+INTERPOLATION_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Recommended interpolation degree.
+ */
+INTERPOLATION_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+ *
+ * VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+ * 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+ *    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+ * 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+ *    and ATTITUDE_DATA must be empty or ignored by parsers.
+ * 3. Do NOT populate both formats simultaneously.
+ */
+ATTITUDE_DATA_LINES(index: number, obj?:attitudeDataLine):attitudeDataLine|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new attitudeDataLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+attitudeDataLinesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startAEMSegment(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(22);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -195,12 +316,76 @@ static startAttitudeDataVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, COMMENTOffset, 0);
+}
+
+static createCommentVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCommentVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, CENTER_NAMEOffset, 0);
+}
+
+static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, CLASSIFICATIONOffset, 0);
+}
+
+static addUseableStartTime(builder:flatbuffers.Builder, USEABLE_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, USEABLE_START_TIMEOffset, 0);
+}
+
+static addUseableStopTime(builder:flatbuffers.Builder, USEABLE_STOP_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, USEABLE_STOP_TIMEOffset, 0);
+}
+
+static addEulerRotSeq(builder:flatbuffers.Builder, EULER_ROT_SEQOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, EULER_ROT_SEQOffset, 0);
+}
+
+static addAngvelFrame(builder:flatbuffers.Builder, ANGVEL_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, ANGVEL_FRAMEOffset, 0);
+}
+
+static addInterpolationMethod(builder:flatbuffers.Builder, INTERPOLATION_METHODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, INTERPOLATION_METHODOffset, 0);
+}
+
+static addInterpolationDegree(builder:flatbuffers.Builder, INTERPOLATION_DEGREE:number) {
+  builder.addFieldInt32(20, INTERPOLATION_DEGREE, 0);
+}
+
+static addAttitudeDataLines(builder:flatbuffers.Builder, ATTITUDE_DATA_LINESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, ATTITUDE_DATA_LINESOffset, 0);
+}
+
+static createAttitudeDataLinesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAttitudeDataLinesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endAEMSegment(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, REF_FRAME_AOffset:flatbuffers.Offset, REF_FRAME_BOffset:flatbuffers.Offset, ATTITUDE_DIROffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, ATTITUDE_TYPEOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, STEP_SIZE:number, ATTITUDE_COMPONENTS:number, ATTITUDE_DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, REF_FRAME_AOffset:flatbuffers.Offset, REF_FRAME_BOffset:flatbuffers.Offset, ATTITUDE_DIROffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, ATTITUDE_TYPEOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, STEP_SIZE:number, ATTITUDE_COMPONENTS:number, ATTITUDE_DATAOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, EULER_ROT_SEQOffset:flatbuffers.Offset, ANGVEL_FRAMEOffset:flatbuffers.Offset, INTERPOLATION_METHODOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, ATTITUDE_DATA_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
   AEMSegment.startAEMSegment(builder);
   AEMSegment.addObjectName(builder, OBJECT_NAMEOffset);
   AEMSegment.addObjectId(builder, OBJECT_IDOffset);
@@ -214,6 +399,16 @@ static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffe
   AEMSegment.addStepSize(builder, STEP_SIZE);
   AEMSegment.addAttitudeComponents(builder, ATTITUDE_COMPONENTS);
   AEMSegment.addAttitudeData(builder, ATTITUDE_DATAOffset);
+  AEMSegment.addComment(builder, COMMENTOffset);
+  AEMSegment.addCenterName(builder, CENTER_NAMEOffset);
+  AEMSegment.addClassification(builder, CLASSIFICATIONOffset);
+  AEMSegment.addUseableStartTime(builder, USEABLE_START_TIMEOffset);
+  AEMSegment.addUseableStopTime(builder, USEABLE_STOP_TIMEOffset);
+  AEMSegment.addEulerRotSeq(builder, EULER_ROT_SEQOffset);
+  AEMSegment.addAngvelFrame(builder, ANGVEL_FRAMEOffset);
+  AEMSegment.addInterpolationMethod(builder, INTERPOLATION_METHODOffset);
+  AEMSegment.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
+  AEMSegment.addAttitudeDataLines(builder, ATTITUDE_DATA_LINESOffset);
   return AEMSegment.endAEMSegment(builder);
 }
 
@@ -230,7 +425,17 @@ unpack(): AEMSegmentT {
     this.STOP_TIME(),
     this.STEP_SIZE(),
     this.ATTITUDE_COMPONENTS(),
-    this.bb!.createScalarList<number>(this.ATTITUDE_DATA.bind(this), this.attitudeDataLength())
+    this.bb!.createScalarList<number>(this.ATTITUDE_DATA.bind(this), this.attitudeDataLength()),
+    this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength()),
+    this.CENTER_NAME(),
+    this.CLASSIFICATION(),
+    this.USEABLE_START_TIME(),
+    this.USEABLE_STOP_TIME(),
+    this.EULER_ROT_SEQ(),
+    this.ANGVEL_FRAME(),
+    this.INTERPOLATION_METHOD(),
+    this.INTERPOLATION_DEGREE(),
+    this.bb!.createObjList<attitudeDataLine, attitudeDataLineT>(this.ATTITUDE_DATA_LINES.bind(this), this.attitudeDataLinesLength())
   );
 }
 
@@ -248,6 +453,16 @@ unpackTo(_o: AEMSegmentT): void {
   _o.STEP_SIZE = this.STEP_SIZE();
   _o.ATTITUDE_COMPONENTS = this.ATTITUDE_COMPONENTS();
   _o.ATTITUDE_DATA = this.bb!.createScalarList<number>(this.ATTITUDE_DATA.bind(this), this.attitudeDataLength());
+  _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.CLASSIFICATION = this.CLASSIFICATION();
+  _o.USEABLE_START_TIME = this.USEABLE_START_TIME();
+  _o.USEABLE_STOP_TIME = this.USEABLE_STOP_TIME();
+  _o.EULER_ROT_SEQ = this.EULER_ROT_SEQ();
+  _o.ANGVEL_FRAME = this.ANGVEL_FRAME();
+  _o.INTERPOLATION_METHOD = this.INTERPOLATION_METHOD();
+  _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE();
+  _o.ATTITUDE_DATA_LINES = this.bb!.createObjList<attitudeDataLine, attitudeDataLineT>(this.ATTITUDE_DATA_LINES.bind(this), this.attitudeDataLinesLength());
 }
 }
 
@@ -264,7 +479,17 @@ constructor(
   public STOP_TIME: string|Uint8Array|null = null,
   public STEP_SIZE: number = 0.0,
   public ATTITUDE_COMPONENTS: number = 7,
-  public ATTITUDE_DATA: (number)[] = []
+  public ATTITUDE_DATA: (number)[] = [],
+  public COMMENT: (string)[] = [],
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public CLASSIFICATION: string|Uint8Array|null = null,
+  public USEABLE_START_TIME: string|Uint8Array|null = null,
+  public USEABLE_STOP_TIME: string|Uint8Array|null = null,
+  public EULER_ROT_SEQ: string|Uint8Array|null = null,
+  public ANGVEL_FRAME: string|Uint8Array|null = null,
+  public INTERPOLATION_METHOD: string|Uint8Array|null = null,
+  public INTERPOLATION_DEGREE: number = 0,
+  public ATTITUDE_DATA_LINES: (attitudeDataLineT)[] = []
 ){}
 
 
@@ -279,6 +504,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
   const STOP_TIME = (this.STOP_TIME !== null ? builder.createString(this.STOP_TIME!) : 0);
   const ATTITUDE_DATA = AEMSegment.createAttitudeDataVector(builder, this.ATTITUDE_DATA);
+  const COMMENT = AEMSegment.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
+  const USEABLE_START_TIME = (this.USEABLE_START_TIME !== null ? builder.createString(this.USEABLE_START_TIME!) : 0);
+  const USEABLE_STOP_TIME = (this.USEABLE_STOP_TIME !== null ? builder.createString(this.USEABLE_STOP_TIME!) : 0);
+  const EULER_ROT_SEQ = (this.EULER_ROT_SEQ !== null ? builder.createString(this.EULER_ROT_SEQ!) : 0);
+  const ANGVEL_FRAME = (this.ANGVEL_FRAME !== null ? builder.createString(this.ANGVEL_FRAME!) : 0);
+  const INTERPOLATION_METHOD = (this.INTERPOLATION_METHOD !== null ? builder.createString(this.INTERPOLATION_METHOD!) : 0);
+  const ATTITUDE_DATA_LINES = AEMSegment.createAttitudeDataLinesVector(builder, builder.createObjectOffsetList(this.ATTITUDE_DATA_LINES));
 
   return AEMSegment.createAEMSegment(builder,
     OBJECT_NAME,
@@ -292,7 +526,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     STOP_TIME,
     this.STEP_SIZE,
     this.ATTITUDE_COMPONENTS,
-    ATTITUDE_DATA
+    ATTITUDE_DATA,
+    COMMENT,
+    CENTER_NAME,
+    CLASSIFICATION,
+    USEABLE_START_TIME,
+    USEABLE_STOP_TIME,
+    EULER_ROT_SEQ,
+    ANGVEL_FRAME,
+    INTERPOLATION_METHOD,
+    this.INTERPOLATION_DEGREE,
+    ATTITUDE_DATA_LINES
   );
 }
 }

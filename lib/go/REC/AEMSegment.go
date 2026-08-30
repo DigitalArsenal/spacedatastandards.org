@@ -243,8 +243,216 @@ func (rcv *AEMSegment) MutateAttitudeData(j int, n float64) bool {
 	return rcv.MutateATTITUDE_DATA(j, n)
 }
 
+/// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+/// One entry per COMMENT line, in file order.
+func (rcv *AEMSegment) COMMENT(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
+func (rcv *AEMSegment) COMMENTLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *AEMSegment) CommentLength() int {
+	return rcv.COMMENTLength()
+}
+
+/// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+/// One entry per COMMENT line, in file order.
+/// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+/// (504.0-B-2 table 4-3, optional).
+func (rcv *AEMSegment) CENTER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) CenterName() []byte {
+	return rcv.CENTER_NAME()
+}
+
+/// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+/// (504.0-B-2 table 4-3, optional).
+/// Classification marking of the data in portion-marked format
+/// (504.0-B-2 table 4-3, optional).
+func (rcv *AEMSegment) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// Classification marking of the data in portion-marked format
+/// (504.0-B-2 table 4-3, optional).
+/// Start of the USEABLE time span covered by the data, ISO 8601.
+func (rcv *AEMSegment) USEABLE_START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) UseableStartTime() []byte {
+	return rcv.USEABLE_START_TIME()
+}
+
+/// Start of the USEABLE time span covered by the data, ISO 8601.
+/// End of the USEABLE time span covered by the data, ISO 8601.
+func (rcv *AEMSegment) USEABLE_STOP_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) UseableStopTime() []byte {
+	return rcv.USEABLE_STOP_TIME()
+}
+
+/// End of the USEABLE time span covered by the data, ISO 8601.
+/// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+/// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+func (rcv *AEMSegment) EULER_ROT_SEQ() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) EulerRotSeq() []byte {
+	return rcv.EULER_ROT_SEQ()
+}
+
+/// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+/// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+/// Reference frame in which the ANGVEL_* components are expressed; the value
+/// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+/// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+/// is the ratified spelling and is the one carried here.
+func (rcv *AEMSegment) ANGVEL_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) AngvelFrame() []byte {
+	return rcv.ANGVEL_FRAME()
+}
+
+/// Reference frame in which the ANGVEL_* components are expressed; the value
+/// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+/// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+/// is the ratified spelling and is the one carried here.
+/// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+func (rcv *AEMSegment) INTERPOLATION_METHOD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEMSegment) InterpolationMethod() []byte {
+	return rcv.INTERPOLATION_METHOD()
+}
+
+/// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+/// Recommended interpolation degree.
+func (rcv *AEMSegment) INTERPOLATION_DEGREE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *AEMSegment) InterpolationDegree() uint32 {
+	return rcv.INTERPOLATION_DEGREE()
+}
+
+/// Recommended interpolation degree.
+func (rcv *AEMSegment) MutateINTERPOLATION_DEGREE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(44, n)
+}
+
+func (rcv *AEMSegment) MutateInterpolationDegree(n uint32) bool {
+	return rcv.MutateINTERPOLATION_DEGREE(n)
+}
+
+/// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+///
+/// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+/// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+/// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+///    and ATTITUDE_DATA must be empty or ignored by parsers.
+/// 3. Do NOT populate both formats simultaneously.
+func (rcv *AEMSegment) ATTITUDE_DATA_LINES(obj *attitudeDataLine, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(attitudeDataLine)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *AEMSegment) AttitudeDataLines(obj *attitudeDataLine, j int) bool {
+	return rcv.ATTITUDE_DATA_LINES(obj, j)
+}
+
+func (rcv *AEMSegment) ATTITUDE_DATA_LINESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *AEMSegment) AttitudeDataLinesLength() int {
+	return rcv.ATTITUDE_DATA_LINESLength()
+}
+
+/// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+///
+/// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+/// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+/// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+///    and ATTITUDE_DATA must be empty or ignored by parsers.
+/// 3. Do NOT populate both formats simultaneously.
 func AEMSegmentStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(22)
 }
 func AEMSegmentAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -323,6 +531,78 @@ func AEMSegmentStartATTITUDE_DATAVector(builder *flatbuffers.Builder, numElems i
 }
 func AEMSegmentStartAttitudeDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return AEMSegmentStartATTITUDE_DATAVector(builder, numElems)
+}
+func AEMSegmentAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func AEMSegmentAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	AEMSegmentAddCOMMENT(builder, COMMENT)
+}
+func AEMSegmentStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func AEMSegmentStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AEMSegmentStartCOMMENTVector(builder, numElems)
+}
+func AEMSegmentAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func AEMSegmentAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	AEMSegmentAddCENTER_NAME(builder, CENTER_NAME)
+}
+func AEMSegmentAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func AEMSegmentAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	AEMSegmentAddCLASSIFICATION(builder, CLASSIFICATION)
+}
+func AEMSegmentAddUSEABLE_START_TIME(builder *flatbuffers.Builder, USEABLE_START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(USEABLE_START_TIME), 0)
+}
+func AEMSegmentAddUseableStartTime(builder *flatbuffers.Builder, USEABLE_START_TIME flatbuffers.UOffsetT) {
+	AEMSegmentAddUSEABLE_START_TIME(builder, USEABLE_START_TIME)
+}
+func AEMSegmentAddUSEABLE_STOP_TIME(builder *flatbuffers.Builder, USEABLE_STOP_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(USEABLE_STOP_TIME), 0)
+}
+func AEMSegmentAddUseableStopTime(builder *flatbuffers.Builder, USEABLE_STOP_TIME flatbuffers.UOffsetT) {
+	AEMSegmentAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
+}
+func AEMSegmentAddEULER_ROT_SEQ(builder *flatbuffers.Builder, EULER_ROT_SEQ flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(EULER_ROT_SEQ), 0)
+}
+func AEMSegmentAddEulerRotSeq(builder *flatbuffers.Builder, EULER_ROT_SEQ flatbuffers.UOffsetT) {
+	AEMSegmentAddEULER_ROT_SEQ(builder, EULER_ROT_SEQ)
+}
+func AEMSegmentAddANGVEL_FRAME(builder *flatbuffers.Builder, ANGVEL_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ANGVEL_FRAME), 0)
+}
+func AEMSegmentAddAngvelFrame(builder *flatbuffers.Builder, ANGVEL_FRAME flatbuffers.UOffsetT) {
+	AEMSegmentAddANGVEL_FRAME(builder, ANGVEL_FRAME)
+}
+func AEMSegmentAddINTERPOLATION_METHOD(builder *flatbuffers.Builder, INTERPOLATION_METHOD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(INTERPOLATION_METHOD), 0)
+}
+func AEMSegmentAddInterpolationMethod(builder *flatbuffers.Builder, INTERPOLATION_METHOD flatbuffers.UOffsetT) {
+	AEMSegmentAddINTERPOLATION_METHOD(builder, INTERPOLATION_METHOD)
+}
+func AEMSegmentAddINTERPOLATION_DEGREE(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
+	builder.PrependUint32Slot(20, INTERPOLATION_DEGREE, 0)
+}
+func AEMSegmentAddInterpolationDegree(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
+	AEMSegmentAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
+}
+func AEMSegmentAddATTITUDE_DATA_LINES(builder *flatbuffers.Builder, ATTITUDE_DATA_LINES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ATTITUDE_DATA_LINES), 0)
+}
+func AEMSegmentAddAttitudeDataLines(builder *flatbuffers.Builder, ATTITUDE_DATA_LINES flatbuffers.UOffsetT) {
+	AEMSegmentAddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINES)
+}
+func AEMSegmentStartATTITUDE_DATA_LINESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func AEMSegmentStartAttitudeDataLinesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AEMSegmentStartATTITUDE_DATA_LINESVector(builder, numElems)
 }
 func AEMSegmentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

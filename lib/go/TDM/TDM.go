@@ -1558,8 +1558,912 @@ func (rcv *TDM) TransmitRampsLength() int {
 /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
 /// cannot reconstruct the observables. Absent for unramped tracking, which
 /// leaves the record exactly CCSDS-conformant.
+/// Data-section observations for a SINGLE-segment TDM, in file order.
+func (rcv *TDM) OBSERVATIONS(obj *TDMObservation, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(TDMObservation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *TDM) Observations(obj *TDMObservation, j int) bool {
+	return rcv.OBSERVATIONS(obj, j)
+}
+
+func (rcv *TDM) OBSERVATIONSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) ObservationsLength() int {
+	return rcv.OBSERVATIONSLength()
+}
+
+/// Data-section observations for a SINGLE-segment TDM, in file order.
+/// All metadata+data segments of a MULTI-segment TDM, in file order.
+func (rcv *TDM) SEGMENTS(obj *TDMSegment, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(TDMSegment)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *TDM) Segments(obj *TDMSegment, j int) bool {
+	return rcv.SEGMENTS(obj, j)
+}
+
+func (rcv *TDM) SEGMENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) SegmentsLength() int {
+	return rcv.SEGMENTSLength()
+}
+
+/// All metadata+data segments of a MULTI-segment TDM, in file order.
+/// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+/// already exists above; 2..5 had no carrier.
+func (rcv *TDM) TRANSMIT_FREQ_2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreq2() float64 {
+	return rcv.TRANSMIT_FREQ_2()
+}
+
+/// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+/// already exists above; 2..5 had no carrier.
+func (rcv *TDM) MutateTRANSMIT_FREQ_2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(138, n)
+}
+
+func (rcv *TDM) MutateTransmitFreq2(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_2(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_3() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreq3() float64 {
+	return rcv.TRANSMIT_FREQ_3()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_3(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(140, n)
+}
+
+func (rcv *TDM) MutateTransmitFreq3(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_3(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_4() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreq4() float64 {
+	return rcv.TRANSMIT_FREQ_4()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_4(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(142, n)
+}
+
+func (rcv *TDM) MutateTransmitFreq4(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_4(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_5() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreq5() float64 {
+	return rcv.TRANSMIT_FREQ_5()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_5(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(144, n)
+}
+
+func (rcv *TDM) MutateTransmitFreq5(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_5(n)
+}
+
+/// Transmit frequency rates by participant, Hz/s. A constant rate here is
+/// the single-interval degenerate case of TRANSMIT_RAMPS.
+func (rcv *TDM) TRANSMIT_FREQ_RATE_1() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreqRate1() float64 {
+	return rcv.TRANSMIT_FREQ_RATE_1()
+}
+
+/// Transmit frequency rates by participant, Hz/s. A constant rate here is
+/// the single-interval degenerate case of TRANSMIT_RAMPS.
+func (rcv *TDM) MutateTRANSMIT_FREQ_RATE_1(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(146, n)
+}
+
+func (rcv *TDM) MutateTransmitFreqRate1(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_RATE_1(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_RATE_2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreqRate2() float64 {
+	return rcv.TRANSMIT_FREQ_RATE_2()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_RATE_2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(148, n)
+}
+
+func (rcv *TDM) MutateTransmitFreqRate2(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_RATE_2(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_RATE_3() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreqRate3() float64 {
+	return rcv.TRANSMIT_FREQ_RATE_3()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_RATE_3(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(150, n)
+}
+
+func (rcv *TDM) MutateTransmitFreqRate3(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_RATE_3(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_RATE_4() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(152))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreqRate4() float64 {
+	return rcv.TRANSMIT_FREQ_RATE_4()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_RATE_4(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(152, n)
+}
+
+func (rcv *TDM) MutateTransmitFreqRate4(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_RATE_4(n)
+}
+
+func (rcv *TDM) TRANSMIT_FREQ_RATE_5() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(154))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitFreqRate5() float64 {
+	return rcv.TRANSMIT_FREQ_RATE_5()
+}
+
+func (rcv *TDM) MutateTRANSMIT_FREQ_RATE_5(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(154, n)
+}
+
+func (rcv *TDM) MutateTransmitFreqRate5(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQ_RATE_5(n)
+}
+
+/// Unique message identifier (503.0-B-2 table 3-2).
+func (rcv *TDM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(156))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// Unique message identifier (503.0-B-2 table 3-2).
+/// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+func (rcv *TDM) TRACK_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(158))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) TrackId() []byte {
+	return rcv.TRACK_ID()
+}
+
+/// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+/// Comma-separated list of the data keywords present in the data section.
+func (rcv *TDM) DATA_TYPES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(160))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) DataTypes() []byte {
+	return rcv.DATA_TYPES()
+}
+
+/// Comma-separated list of the data keywords present in the data section.
+/// Signal path through the participants as an ordered comma-separated list,
+/// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+func (rcv *TDM) PATH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(162))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) Path() []byte {
+	return rcv.PATH()
+}
+
+/// Signal path through the participants as an ordered comma-separated list,
+/// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+/// Name of the ephemeris used to generate the data, per participant.
+func (rcv *TDM) EPHEMERIS_NAME_1() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(164))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) EphemerisName1() []byte {
+	return rcv.EPHEMERIS_NAME_1()
+}
+
+/// Name of the ephemeris used to generate the data, per participant.
+func (rcv *TDM) EPHEMERIS_NAME_2() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) EphemerisName2() []byte {
+	return rcv.EPHEMERIS_NAME_2()
+}
+
+func (rcv *TDM) EPHEMERIS_NAME_3() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) EphemerisName3() []byte {
+	return rcv.EPHEMERIS_NAME_3()
+}
+
+func (rcv *TDM) EPHEMERIS_NAME_4() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(170))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) EphemerisName4() []byte {
+	return rcv.EPHEMERIS_NAME_4()
+}
+
+func (rcv *TDM) EPHEMERIS_NAME_5() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(172))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) EphemerisName5() []byte {
+	return rcv.EPHEMERIS_NAME_5()
+}
+
+/// Units of the RANGE observable: "km", "s" or "RU" (range units).
+/// RANGE is meaningless without it.
+func (rcv *TDM) RANGE_UNITS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(174))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) RangeUnits() []byte {
+	return rcv.RANGE_UNITS()
+}
+
+/// Units of the RANGE observable: "km", "s" or "RU" (range units).
+/// RANGE is meaningless without it.
+/// Reference frame for angle and position data, as the verbatim CCSDS
+/// keyword value (503.0-B-2 annex B).
+func (rcv *TDM) REFERENCE_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(176))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) ReferenceFrame() []byte {
+	return rcv.REFERENCE_FRAME()
+}
+
+/// Reference frame for angle and position data, as the verbatim CCSDS
+/// keyword value (503.0-B-2 annex B).
+/// Recommended interpolation method for the observations.
+func (rcv *TDM) INTERPOLATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(178))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TDM) Interpolation() []byte {
+	return rcv.INTERPOLATION()
+}
+
+/// Recommended interpolation method for the observations.
+/// Recommended interpolation degree.
+func (rcv *TDM) INTERPOLATION_DEGREE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(180))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *TDM) InterpolationDegree() uint32 {
+	return rcv.INTERPOLATION_DEGREE()
+}
+
+/// Recommended interpolation degree.
+func (rcv *TDM) MutateINTERPOLATION_DEGREE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(180, n)
+}
+
+func (rcv *TDM) MutateInterpolationDegree(n uint32) bool {
+	return rcv.MutateINTERPOLATION_DEGREE(n)
+}
+
+/// Frequency offset applied to the observations, Hz.
+func (rcv *TDM) FREQ_OFFSET() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(182))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) FreqOffset() float64 {
+	return rcv.FREQ_OFFSET()
+}
+
+/// Frequency offset applied to the observations, Hz.
+func (rcv *TDM) MutateFREQ_OFFSET(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(182, n)
+}
+
+func (rcv *TDM) MutateFreqOffset(n float64) bool {
+	return rcv.MutateFREQ_OFFSET(n)
+}
+
+/// Transponder turnaround ratio numerator.
+func (rcv *TDM) TURNAROUND_NUMERATOR() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(184))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *TDM) TurnaroundNumerator() int32 {
+	return rcv.TURNAROUND_NUMERATOR()
+}
+
+/// Transponder turnaround ratio numerator.
+func (rcv *TDM) MutateTURNAROUND_NUMERATOR(n int32) bool {
+	return rcv._tab.MutateInt32Slot(184, n)
+}
+
+func (rcv *TDM) MutateTurnaroundNumerator(n int32) bool {
+	return rcv.MutateTURNAROUND_NUMERATOR(n)
+}
+
+/// Transponder turnaround ratio denominator.
+func (rcv *TDM) TURNAROUND_DENOMINATOR() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(186))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *TDM) TurnaroundDenominator() int32 {
+	return rcv.TURNAROUND_DENOMINATOR()
+}
+
+/// Transponder turnaround ratio denominator.
+func (rcv *TDM) MutateTURNAROUND_DENOMINATOR(n int32) bool {
+	return rcv._tab.MutateInt32Slot(186, n)
+}
+
+func (rcv *TDM) MutateTurnaroundDenominator(n int32) bool {
+	return rcv.MutateTURNAROUND_DENOMINATOR(n)
+}
+
+/// Transmit delays by participant, s.
+func (rcv *TDM) TRANSMIT_DELAY_1() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(188))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitDelay1() float64 {
+	return rcv.TRANSMIT_DELAY_1()
+}
+
+/// Transmit delays by participant, s.
+func (rcv *TDM) MutateTRANSMIT_DELAY_1(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(188, n)
+}
+
+func (rcv *TDM) MutateTransmitDelay1(n float64) bool {
+	return rcv.MutateTRANSMIT_DELAY_1(n)
+}
+
+func (rcv *TDM) TRANSMIT_DELAY_2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(190))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitDelay2() float64 {
+	return rcv.TRANSMIT_DELAY_2()
+}
+
+func (rcv *TDM) MutateTRANSMIT_DELAY_2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(190, n)
+}
+
+func (rcv *TDM) MutateTransmitDelay2(n float64) bool {
+	return rcv.MutateTRANSMIT_DELAY_2(n)
+}
+
+func (rcv *TDM) TRANSMIT_DELAY_3() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(192))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitDelay3() float64 {
+	return rcv.TRANSMIT_DELAY_3()
+}
+
+func (rcv *TDM) MutateTRANSMIT_DELAY_3(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(192, n)
+}
+
+func (rcv *TDM) MutateTransmitDelay3(n float64) bool {
+	return rcv.MutateTRANSMIT_DELAY_3(n)
+}
+
+func (rcv *TDM) TRANSMIT_DELAY_4() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(194))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitDelay4() float64 {
+	return rcv.TRANSMIT_DELAY_4()
+}
+
+func (rcv *TDM) MutateTRANSMIT_DELAY_4(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(194, n)
+}
+
+func (rcv *TDM) MutateTransmitDelay4(n float64) bool {
+	return rcv.MutateTRANSMIT_DELAY_4(n)
+}
+
+func (rcv *TDM) TRANSMIT_DELAY_5() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(196))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) TransmitDelay5() float64 {
+	return rcv.TRANSMIT_DELAY_5()
+}
+
+func (rcv *TDM) MutateTRANSMIT_DELAY_5(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(196, n)
+}
+
+func (rcv *TDM) MutateTransmitDelay5(n float64) bool {
+	return rcv.MutateTRANSMIT_DELAY_5(n)
+}
+
+/// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+/// RECEIVE_DELAY_3 already exist on the TDM root.)
+func (rcv *TDM) RECEIVE_DELAY_1() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(198))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) ReceiveDelay1() float64 {
+	return rcv.RECEIVE_DELAY_1()
+}
+
+/// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+/// RECEIVE_DELAY_3 already exist on the TDM root.)
+func (rcv *TDM) MutateRECEIVE_DELAY_1(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(198, n)
+}
+
+func (rcv *TDM) MutateReceiveDelay1(n float64) bool {
+	return rcv.MutateRECEIVE_DELAY_1(n)
+}
+
+func (rcv *TDM) RECEIVE_DELAY_4() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(200))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) ReceiveDelay4() float64 {
+	return rcv.RECEIVE_DELAY_4()
+}
+
+func (rcv *TDM) MutateRECEIVE_DELAY_4(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(200, n)
+}
+
+func (rcv *TDM) MutateReceiveDelay4(n float64) bool {
+	return rcv.MutateRECEIVE_DELAY_4(n)
+}
+
+func (rcv *TDM) RECEIVE_DELAY_5() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(202))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) ReceiveDelay5() float64 {
+	return rcv.RECEIVE_DELAY_5()
+}
+
+func (rcv *TDM) MutateRECEIVE_DELAY_5(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(202, n)
+}
+
+func (rcv *TDM) MutateReceiveDelay5(n float64) bool {
+	return rcv.MutateRECEIVE_DELAY_5(n)
+}
+
+/// Doppler count bias, Hz.
+func (rcv *TDM) DOPPLER_COUNT_BIAS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(204))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) DopplerCountBias() float64 {
+	return rcv.DOPPLER_COUNT_BIAS()
+}
+
+/// Doppler count bias, Hz.
+func (rcv *TDM) MutateDOPPLER_COUNT_BIAS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(204, n)
+}
+
+func (rcv *TDM) MutateDopplerCountBias(n float64) bool {
+	return rcv.MutateDOPPLER_COUNT_BIAS(n)
+}
+
+/// Doppler count scale factor.
+func (rcv *TDM) DOPPLER_COUNT_SCALE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(206))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *TDM) DopplerCountScale() uint32 {
+	return rcv.DOPPLER_COUNT_SCALE()
+}
+
+/// Doppler count scale factor.
+func (rcv *TDM) MutateDOPPLER_COUNT_SCALE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(206, n)
+}
+
+func (rcv *TDM) MutateDopplerCountScale(n uint32) bool {
+	return rcv.MutateDOPPLER_COUNT_SCALE(n)
+}
+
+/// Whether the Doppler counter rolls over (CCSDS YES/NO).
+func (rcv *TDM) DOPPLER_COUNT_ROLLOVER() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(208))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *TDM) DopplerCountRollover() bool {
+	return rcv.DOPPLER_COUNT_ROLLOVER()
+}
+
+/// Whether the Doppler counter rolls over (CCSDS YES/NO).
+func (rcv *TDM) MutateDOPPLER_COUNT_ROLLOVER(n bool) bool {
+	return rcv._tab.MutateBoolSlot(208, n)
+}
+
+func (rcv *TDM) MutateDopplerCountRollover(n bool) bool {
+	return rcv.MutateDOPPLER_COUNT_ROLLOVER(n)
+}
+
+/// Corrections that a consumer must apply, or that were applied when
+/// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+func (rcv *TDM) CORRECTION_RANGE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(210))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionRange() float64 {
+	return rcv.CORRECTION_RANGE()
+}
+
+/// Corrections that a consumer must apply, or that were applied when
+/// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+func (rcv *TDM) MutateCORRECTION_RANGE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(210, n)
+}
+
+func (rcv *TDM) MutateCorrectionRange(n float64) bool {
+	return rcv.MutateCORRECTION_RANGE(n)
+}
+
+func (rcv *TDM) CORRECTION_DOPPLER() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(212))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionDoppler() float64 {
+	return rcv.CORRECTION_DOPPLER()
+}
+
+func (rcv *TDM) MutateCORRECTION_DOPPLER(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(212, n)
+}
+
+func (rcv *TDM) MutateCorrectionDoppler(n float64) bool {
+	return rcv.MutateCORRECTION_DOPPLER(n)
+}
+
+func (rcv *TDM) CORRECTION_MAG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(214))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionMag() float64 {
+	return rcv.CORRECTION_MAG()
+}
+
+func (rcv *TDM) MutateCORRECTION_MAG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(214, n)
+}
+
+func (rcv *TDM) MutateCorrectionMag(n float64) bool {
+	return rcv.MutateCORRECTION_MAG(n)
+}
+
+func (rcv *TDM) CORRECTION_RCS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(216))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionRcs() float64 {
+	return rcv.CORRECTION_RCS()
+}
+
+func (rcv *TDM) MutateCORRECTION_RCS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(216, n)
+}
+
+func (rcv *TDM) MutateCorrectionRcs(n float64) bool {
+	return rcv.MutateCORRECTION_RCS(n)
+}
+
+func (rcv *TDM) CORRECTION_RECEIVE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(218))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionReceive() float64 {
+	return rcv.CORRECTION_RECEIVE()
+}
+
+func (rcv *TDM) MutateCORRECTION_RECEIVE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(218, n)
+}
+
+func (rcv *TDM) MutateCorrectionReceive(n float64) bool {
+	return rcv.MutateCORRECTION_RECEIVE(n)
+}
+
+func (rcv *TDM) CORRECTION_TRANSMIT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(220))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionTransmit() float64 {
+	return rcv.CORRECTION_TRANSMIT()
+}
+
+func (rcv *TDM) MutateCORRECTION_TRANSMIT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(220, n)
+}
+
+func (rcv *TDM) MutateCorrectionTransmit(n float64) bool {
+	return rcv.MutateCORRECTION_TRANSMIT(n)
+}
+
+func (rcv *TDM) CORRECTION_ABERRATION_YEARLY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(222))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionAberrationYearly() float64 {
+	return rcv.CORRECTION_ABERRATION_YEARLY()
+}
+
+func (rcv *TDM) MutateCORRECTION_ABERRATION_YEARLY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(222, n)
+}
+
+func (rcv *TDM) MutateCorrectionAberrationYearly(n float64) bool {
+	return rcv.MutateCORRECTION_ABERRATION_YEARLY(n)
+}
+
+func (rcv *TDM) CORRECTION_ABERRATION_DIURNAL() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(224))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *TDM) CorrectionAberrationDiurnal() float64 {
+	return rcv.CORRECTION_ABERRATION_DIURNAL()
+}
+
+func (rcv *TDM) MutateCORRECTION_ABERRATION_DIURNAL(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(224, n)
+}
+
+func (rcv *TDM) MutateCorrectionAberrationDiurnal(n float64) bool {
+	return rcv.MutateCORRECTION_ABERRATION_DIURNAL(n)
+}
+
 func TDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(65)
+	builder.StartObject(111)
 }
 func TDMAddOBSERVER_ID(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBSERVER_ID), 0)
@@ -2046,6 +2950,294 @@ func TDMStartTRANSMIT_RAMPSVector(builder *flatbuffers.Builder, numElems int) fl
 }
 func TDMStartTransmitRampsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return TDMStartTRANSMIT_RAMPSVector(builder, numElems)
+}
+func TDMAddOBSERVATIONS(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(65, flatbuffers.UOffsetT(OBSERVATIONS), 0)
+}
+func TDMAddObservations(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
+	TDMAddOBSERVATIONS(builder, OBSERVATIONS)
+}
+func TDMStartOBSERVATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func TDMStartObservationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartOBSERVATIONSVector(builder, numElems)
+}
+func TDMAddSEGMENTS(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(66, flatbuffers.UOffsetT(SEGMENTS), 0)
+}
+func TDMAddSegments(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	TDMAddSEGMENTS(builder, SEGMENTS)
+}
+func TDMStartSEGMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func TDMStartSegmentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartSEGMENTSVector(builder, numElems)
+}
+func TDMAddTRANSMIT_FREQ_2(builder *flatbuffers.Builder, TRANSMIT_FREQ_2 float64) {
+	builder.PrependFloat64Slot(67, TRANSMIT_FREQ_2, 0.0)
+}
+func TDMAddTransmitFreq2(builder *flatbuffers.Builder, TRANSMIT_FREQ_2 float64) {
+	TDMAddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2)
+}
+func TDMAddTRANSMIT_FREQ_3(builder *flatbuffers.Builder, TRANSMIT_FREQ_3 float64) {
+	builder.PrependFloat64Slot(68, TRANSMIT_FREQ_3, 0.0)
+}
+func TDMAddTransmitFreq3(builder *flatbuffers.Builder, TRANSMIT_FREQ_3 float64) {
+	TDMAddTRANSMIT_FREQ_3(builder, TRANSMIT_FREQ_3)
+}
+func TDMAddTRANSMIT_FREQ_4(builder *flatbuffers.Builder, TRANSMIT_FREQ_4 float64) {
+	builder.PrependFloat64Slot(69, TRANSMIT_FREQ_4, 0.0)
+}
+func TDMAddTransmitFreq4(builder *flatbuffers.Builder, TRANSMIT_FREQ_4 float64) {
+	TDMAddTRANSMIT_FREQ_4(builder, TRANSMIT_FREQ_4)
+}
+func TDMAddTRANSMIT_FREQ_5(builder *flatbuffers.Builder, TRANSMIT_FREQ_5 float64) {
+	builder.PrependFloat64Slot(70, TRANSMIT_FREQ_5, 0.0)
+}
+func TDMAddTransmitFreq5(builder *flatbuffers.Builder, TRANSMIT_FREQ_5 float64) {
+	TDMAddTRANSMIT_FREQ_5(builder, TRANSMIT_FREQ_5)
+}
+func TDMAddTRANSMIT_FREQ_RATE_1(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_1 float64) {
+	builder.PrependFloat64Slot(71, TRANSMIT_FREQ_RATE_1, 0.0)
+}
+func TDMAddTransmitFreqRate1(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_1 float64) {
+	TDMAddTRANSMIT_FREQ_RATE_1(builder, TRANSMIT_FREQ_RATE_1)
+}
+func TDMAddTRANSMIT_FREQ_RATE_2(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_2 float64) {
+	builder.PrependFloat64Slot(72, TRANSMIT_FREQ_RATE_2, 0.0)
+}
+func TDMAddTransmitFreqRate2(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_2 float64) {
+	TDMAddTRANSMIT_FREQ_RATE_2(builder, TRANSMIT_FREQ_RATE_2)
+}
+func TDMAddTRANSMIT_FREQ_RATE_3(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_3 float64) {
+	builder.PrependFloat64Slot(73, TRANSMIT_FREQ_RATE_3, 0.0)
+}
+func TDMAddTransmitFreqRate3(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_3 float64) {
+	TDMAddTRANSMIT_FREQ_RATE_3(builder, TRANSMIT_FREQ_RATE_3)
+}
+func TDMAddTRANSMIT_FREQ_RATE_4(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_4 float64) {
+	builder.PrependFloat64Slot(74, TRANSMIT_FREQ_RATE_4, 0.0)
+}
+func TDMAddTransmitFreqRate4(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_4 float64) {
+	TDMAddTRANSMIT_FREQ_RATE_4(builder, TRANSMIT_FREQ_RATE_4)
+}
+func TDMAddTRANSMIT_FREQ_RATE_5(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_5 float64) {
+	builder.PrependFloat64Slot(75, TRANSMIT_FREQ_RATE_5, 0.0)
+}
+func TDMAddTransmitFreqRate5(builder *flatbuffers.Builder, TRANSMIT_FREQ_RATE_5 float64) {
+	TDMAddTRANSMIT_FREQ_RATE_5(builder, TRANSMIT_FREQ_RATE_5)
+}
+func TDMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(76, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func TDMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	TDMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func TDMAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(TRACK_ID), 0)
+}
+func TDMAddTrackId(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
+	TDMAddTRACK_ID(builder, TRACK_ID)
+}
+func TDMAddDATA_TYPES(builder *flatbuffers.Builder, DATA_TYPES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(78, flatbuffers.UOffsetT(DATA_TYPES), 0)
+}
+func TDMAddDataTypes(builder *flatbuffers.Builder, DATA_TYPES flatbuffers.UOffsetT) {
+	TDMAddDATA_TYPES(builder, DATA_TYPES)
+}
+func TDMAddPATH(builder *flatbuffers.Builder, PATH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(79, flatbuffers.UOffsetT(PATH), 0)
+}
+func TDMAddPath(builder *flatbuffers.Builder, PATH flatbuffers.UOffsetT) {
+	TDMAddPATH(builder, PATH)
+}
+func TDMAddEPHEMERIS_NAME_1(builder *flatbuffers.Builder, EPHEMERIS_NAME_1 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(80, flatbuffers.UOffsetT(EPHEMERIS_NAME_1), 0)
+}
+func TDMAddEphemerisName1(builder *flatbuffers.Builder, EPHEMERIS_NAME_1 flatbuffers.UOffsetT) {
+	TDMAddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1)
+}
+func TDMAddEPHEMERIS_NAME_2(builder *flatbuffers.Builder, EPHEMERIS_NAME_2 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(81, flatbuffers.UOffsetT(EPHEMERIS_NAME_2), 0)
+}
+func TDMAddEphemerisName2(builder *flatbuffers.Builder, EPHEMERIS_NAME_2 flatbuffers.UOffsetT) {
+	TDMAddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2)
+}
+func TDMAddEPHEMERIS_NAME_3(builder *flatbuffers.Builder, EPHEMERIS_NAME_3 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(82, flatbuffers.UOffsetT(EPHEMERIS_NAME_3), 0)
+}
+func TDMAddEphemerisName3(builder *flatbuffers.Builder, EPHEMERIS_NAME_3 flatbuffers.UOffsetT) {
+	TDMAddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3)
+}
+func TDMAddEPHEMERIS_NAME_4(builder *flatbuffers.Builder, EPHEMERIS_NAME_4 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(83, flatbuffers.UOffsetT(EPHEMERIS_NAME_4), 0)
+}
+func TDMAddEphemerisName4(builder *flatbuffers.Builder, EPHEMERIS_NAME_4 flatbuffers.UOffsetT) {
+	TDMAddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4)
+}
+func TDMAddEPHEMERIS_NAME_5(builder *flatbuffers.Builder, EPHEMERIS_NAME_5 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(84, flatbuffers.UOffsetT(EPHEMERIS_NAME_5), 0)
+}
+func TDMAddEphemerisName5(builder *flatbuffers.Builder, EPHEMERIS_NAME_5 flatbuffers.UOffsetT) {
+	TDMAddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5)
+}
+func TDMAddRANGE_UNITS(builder *flatbuffers.Builder, RANGE_UNITS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(85, flatbuffers.UOffsetT(RANGE_UNITS), 0)
+}
+func TDMAddRangeUnits(builder *flatbuffers.Builder, RANGE_UNITS flatbuffers.UOffsetT) {
+	TDMAddRANGE_UNITS(builder, RANGE_UNITS)
+}
+func TDMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(86, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func TDMAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	TDMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+}
+func TDMAddINTERPOLATION(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(87, flatbuffers.UOffsetT(INTERPOLATION), 0)
+}
+func TDMAddInterpolation(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
+	TDMAddINTERPOLATION(builder, INTERPOLATION)
+}
+func TDMAddINTERPOLATION_DEGREE(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
+	builder.PrependUint32Slot(88, INTERPOLATION_DEGREE, 0)
+}
+func TDMAddInterpolationDegree(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
+	TDMAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
+}
+func TDMAddFREQ_OFFSET(builder *flatbuffers.Builder, FREQ_OFFSET float64) {
+	builder.PrependFloat64Slot(89, FREQ_OFFSET, 0.0)
+}
+func TDMAddFreqOffset(builder *flatbuffers.Builder, FREQ_OFFSET float64) {
+	TDMAddFREQ_OFFSET(builder, FREQ_OFFSET)
+}
+func TDMAddTURNAROUND_NUMERATOR(builder *flatbuffers.Builder, TURNAROUND_NUMERATOR int32) {
+	builder.PrependInt32Slot(90, TURNAROUND_NUMERATOR, 0)
+}
+func TDMAddTurnaroundNumerator(builder *flatbuffers.Builder, TURNAROUND_NUMERATOR int32) {
+	TDMAddTURNAROUND_NUMERATOR(builder, TURNAROUND_NUMERATOR)
+}
+func TDMAddTURNAROUND_DENOMINATOR(builder *flatbuffers.Builder, TURNAROUND_DENOMINATOR int32) {
+	builder.PrependInt32Slot(91, TURNAROUND_DENOMINATOR, 0)
+}
+func TDMAddTurnaroundDenominator(builder *flatbuffers.Builder, TURNAROUND_DENOMINATOR int32) {
+	TDMAddTURNAROUND_DENOMINATOR(builder, TURNAROUND_DENOMINATOR)
+}
+func TDMAddTRANSMIT_DELAY_1(builder *flatbuffers.Builder, TRANSMIT_DELAY_1 float64) {
+	builder.PrependFloat64Slot(92, TRANSMIT_DELAY_1, 0.0)
+}
+func TDMAddTransmitDelay1(builder *flatbuffers.Builder, TRANSMIT_DELAY_1 float64) {
+	TDMAddTRANSMIT_DELAY_1(builder, TRANSMIT_DELAY_1)
+}
+func TDMAddTRANSMIT_DELAY_2(builder *flatbuffers.Builder, TRANSMIT_DELAY_2 float64) {
+	builder.PrependFloat64Slot(93, TRANSMIT_DELAY_2, 0.0)
+}
+func TDMAddTransmitDelay2(builder *flatbuffers.Builder, TRANSMIT_DELAY_2 float64) {
+	TDMAddTRANSMIT_DELAY_2(builder, TRANSMIT_DELAY_2)
+}
+func TDMAddTRANSMIT_DELAY_3(builder *flatbuffers.Builder, TRANSMIT_DELAY_3 float64) {
+	builder.PrependFloat64Slot(94, TRANSMIT_DELAY_3, 0.0)
+}
+func TDMAddTransmitDelay3(builder *flatbuffers.Builder, TRANSMIT_DELAY_3 float64) {
+	TDMAddTRANSMIT_DELAY_3(builder, TRANSMIT_DELAY_3)
+}
+func TDMAddTRANSMIT_DELAY_4(builder *flatbuffers.Builder, TRANSMIT_DELAY_4 float64) {
+	builder.PrependFloat64Slot(95, TRANSMIT_DELAY_4, 0.0)
+}
+func TDMAddTransmitDelay4(builder *flatbuffers.Builder, TRANSMIT_DELAY_4 float64) {
+	TDMAddTRANSMIT_DELAY_4(builder, TRANSMIT_DELAY_4)
+}
+func TDMAddTRANSMIT_DELAY_5(builder *flatbuffers.Builder, TRANSMIT_DELAY_5 float64) {
+	builder.PrependFloat64Slot(96, TRANSMIT_DELAY_5, 0.0)
+}
+func TDMAddTransmitDelay5(builder *flatbuffers.Builder, TRANSMIT_DELAY_5 float64) {
+	TDMAddTRANSMIT_DELAY_5(builder, TRANSMIT_DELAY_5)
+}
+func TDMAddRECEIVE_DELAY_1(builder *flatbuffers.Builder, RECEIVE_DELAY_1 float64) {
+	builder.PrependFloat64Slot(97, RECEIVE_DELAY_1, 0.0)
+}
+func TDMAddReceiveDelay1(builder *flatbuffers.Builder, RECEIVE_DELAY_1 float64) {
+	TDMAddRECEIVE_DELAY_1(builder, RECEIVE_DELAY_1)
+}
+func TDMAddRECEIVE_DELAY_4(builder *flatbuffers.Builder, RECEIVE_DELAY_4 float64) {
+	builder.PrependFloat64Slot(98, RECEIVE_DELAY_4, 0.0)
+}
+func TDMAddReceiveDelay4(builder *flatbuffers.Builder, RECEIVE_DELAY_4 float64) {
+	TDMAddRECEIVE_DELAY_4(builder, RECEIVE_DELAY_4)
+}
+func TDMAddRECEIVE_DELAY_5(builder *flatbuffers.Builder, RECEIVE_DELAY_5 float64) {
+	builder.PrependFloat64Slot(99, RECEIVE_DELAY_5, 0.0)
+}
+func TDMAddReceiveDelay5(builder *flatbuffers.Builder, RECEIVE_DELAY_5 float64) {
+	TDMAddRECEIVE_DELAY_5(builder, RECEIVE_DELAY_5)
+}
+func TDMAddDOPPLER_COUNT_BIAS(builder *flatbuffers.Builder, DOPPLER_COUNT_BIAS float64) {
+	builder.PrependFloat64Slot(100, DOPPLER_COUNT_BIAS, 0.0)
+}
+func TDMAddDopplerCountBias(builder *flatbuffers.Builder, DOPPLER_COUNT_BIAS float64) {
+	TDMAddDOPPLER_COUNT_BIAS(builder, DOPPLER_COUNT_BIAS)
+}
+func TDMAddDOPPLER_COUNT_SCALE(builder *flatbuffers.Builder, DOPPLER_COUNT_SCALE uint32) {
+	builder.PrependUint32Slot(101, DOPPLER_COUNT_SCALE, 0)
+}
+func TDMAddDopplerCountScale(builder *flatbuffers.Builder, DOPPLER_COUNT_SCALE uint32) {
+	TDMAddDOPPLER_COUNT_SCALE(builder, DOPPLER_COUNT_SCALE)
+}
+func TDMAddDOPPLER_COUNT_ROLLOVER(builder *flatbuffers.Builder, DOPPLER_COUNT_ROLLOVER bool) {
+	builder.PrependBoolSlot(102, DOPPLER_COUNT_ROLLOVER, false)
+}
+func TDMAddDopplerCountRollover(builder *flatbuffers.Builder, DOPPLER_COUNT_ROLLOVER bool) {
+	TDMAddDOPPLER_COUNT_ROLLOVER(builder, DOPPLER_COUNT_ROLLOVER)
+}
+func TDMAddCORRECTION_RANGE(builder *flatbuffers.Builder, CORRECTION_RANGE float64) {
+	builder.PrependFloat64Slot(103, CORRECTION_RANGE, 0.0)
+}
+func TDMAddCorrectionRange(builder *flatbuffers.Builder, CORRECTION_RANGE float64) {
+	TDMAddCORRECTION_RANGE(builder, CORRECTION_RANGE)
+}
+func TDMAddCORRECTION_DOPPLER(builder *flatbuffers.Builder, CORRECTION_DOPPLER float64) {
+	builder.PrependFloat64Slot(104, CORRECTION_DOPPLER, 0.0)
+}
+func TDMAddCorrectionDoppler(builder *flatbuffers.Builder, CORRECTION_DOPPLER float64) {
+	TDMAddCORRECTION_DOPPLER(builder, CORRECTION_DOPPLER)
+}
+func TDMAddCORRECTION_MAG(builder *flatbuffers.Builder, CORRECTION_MAG float64) {
+	builder.PrependFloat64Slot(105, CORRECTION_MAG, 0.0)
+}
+func TDMAddCorrectionMag(builder *flatbuffers.Builder, CORRECTION_MAG float64) {
+	TDMAddCORRECTION_MAG(builder, CORRECTION_MAG)
+}
+func TDMAddCORRECTION_RCS(builder *flatbuffers.Builder, CORRECTION_RCS float64) {
+	builder.PrependFloat64Slot(106, CORRECTION_RCS, 0.0)
+}
+func TDMAddCorrectionRcs(builder *flatbuffers.Builder, CORRECTION_RCS float64) {
+	TDMAddCORRECTION_RCS(builder, CORRECTION_RCS)
+}
+func TDMAddCORRECTION_RECEIVE(builder *flatbuffers.Builder, CORRECTION_RECEIVE float64) {
+	builder.PrependFloat64Slot(107, CORRECTION_RECEIVE, 0.0)
+}
+func TDMAddCorrectionReceive(builder *flatbuffers.Builder, CORRECTION_RECEIVE float64) {
+	TDMAddCORRECTION_RECEIVE(builder, CORRECTION_RECEIVE)
+}
+func TDMAddCORRECTION_TRANSMIT(builder *flatbuffers.Builder, CORRECTION_TRANSMIT float64) {
+	builder.PrependFloat64Slot(108, CORRECTION_TRANSMIT, 0.0)
+}
+func TDMAddCorrectionTransmit(builder *flatbuffers.Builder, CORRECTION_TRANSMIT float64) {
+	TDMAddCORRECTION_TRANSMIT(builder, CORRECTION_TRANSMIT)
+}
+func TDMAddCORRECTION_ABERRATION_YEARLY(builder *flatbuffers.Builder, CORRECTION_ABERRATION_YEARLY float64) {
+	builder.PrependFloat64Slot(109, CORRECTION_ABERRATION_YEARLY, 0.0)
+}
+func TDMAddCorrectionAberrationYearly(builder *flatbuffers.Builder, CORRECTION_ABERRATION_YEARLY float64) {
+	TDMAddCORRECTION_ABERRATION_YEARLY(builder, CORRECTION_ABERRATION_YEARLY)
+}
+func TDMAddCORRECTION_ABERRATION_DIURNAL(builder *flatbuffers.Builder, CORRECTION_ABERRATION_DIURNAL float64) {
+	builder.PrependFloat64Slot(110, CORRECTION_ABERRATION_DIURNAL, 0.0)
+}
+func TDMAddCorrectionAberrationDiurnal(builder *flatbuffers.Builder, CORRECTION_ABERRATION_DIURNAL float64) {
+	TDMAddCORRECTION_ABERRATION_DIURNAL(builder, CORRECTION_ABERRATION_DIURNAL)
 }
 func TDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

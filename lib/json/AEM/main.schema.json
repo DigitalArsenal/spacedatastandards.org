@@ -1,6 +1,125 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "attitudeDataLine" : {
+      "type" : "object",
+      "description" : "A single attitude data line with an EXPLICIT epoch (non-uniform steps).\n\nCCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs\nare not on a uniform grid: the published example (504.0-B-2 figure G-4)\nsteps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.\n2339 s then 1 s. Such a segment CANNOT be expressed by the compact\nATTITUDE_DATA array, whose epochs are reconstructed as\nSTART_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have\nthe same irregular shape.\n\nThe populated columns are selected by the segment's ATTITUDE_TYPE exactly\nas in CCSDS 504.0-B-2 table 4-4:\nQUATERNION              Q1 Q2 Q3 QC\nQUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT\nQUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z\nEULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3\nEULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT\nEULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z\nSPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL\nSPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE\nSPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL\n\nQuaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,\nvector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2\n(annex, change 7) and is deliberately NOT carried here.\n\nUnits per 504.0-B-2 4.2.4.6: quaternion components dimensionless;\nQ*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;\nANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;\nNUTATION_PER s.",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this attitude state (required for non-uniform steps)."
+              },
+        "Q1" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 1 (dimensionless)."
+              },
+        "Q2" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 2 (dimensionless)."
+              },
+        "Q3" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 3 (dimensionless)."
+              },
+        "QC" : {
+                "type" : "number",
+                "description" : "Quaternion scalar component (dimensionless)."
+              },
+        "Q1_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q1, 1/s."
+              },
+        "Q2_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q2, 1/s."
+              },
+        "Q3_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q3, 1/s."
+              },
+        "QC_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of QC, 1/s."
+              },
+        "ANGLE_1" : {
+                "type" : "number",
+                "description" : "Euler angle 1, deg. Sequence given by EULER_ROT_SEQ."
+              },
+        "ANGLE_2" : {
+                "type" : "number",
+                "description" : "Euler angle 2, deg."
+              },
+        "ANGLE_3" : {
+                "type" : "number",
+                "description" : "Euler angle 3, deg."
+              },
+        "ANGLE_1_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_1, deg/s."
+              },
+        "ANGLE_2_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_2, deg/s."
+              },
+        "ANGLE_3_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_3, deg/s."
+              },
+        "ANGVEL_X" : {
+                "type" : "number",
+                "description" : "Angular velocity X component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "ANGVEL_Y" : {
+                "type" : "number",
+                "description" : "Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "ANGVEL_Z" : {
+                "type" : "number",
+                "description" : "Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "SPIN_ALPHA" : {
+                "type" : "number",
+                "description" : "Right ascension of the spin axis, deg."
+              },
+        "SPIN_DELTA" : {
+                "type" : "number",
+                "description" : "Declination of the spin axis, deg."
+              },
+        "SPIN_ANGLE" : {
+                "type" : "number",
+                "description" : "Phase of the satellite about the spin axis, deg."
+              },
+        "SPIN_ANGLE_VEL" : {
+                "type" : "number",
+                "description" : "Angular velocity about the spin axis, deg/s."
+              },
+        "NUTATION" : {
+                "type" : "number",
+                "description" : "Nutation angle, deg."
+              },
+        "NUTATION_PER" : {
+                "type" : "number",
+                "description" : "Nutation period, s."
+              },
+        "NUTATION_PHASE" : {
+                "type" : "number",
+                "description" : "Nutation phase, deg."
+              },
+        "MOMENTUM_ALPHA" : {
+                "type" : "number",
+                "description" : "Right ascension of the angular momentum vector, deg."
+              },
+        "MOMENTUM_DELTA" : {
+                "type" : "number",
+                "description" : "Declination of the angular momentum vector, deg."
+              },
+        "NUTATION_VEL" : {
+                "type" : "number",
+                "description" : "Angular velocity of the nutation, deg/s."
+              }
+      },
+      "additionalProperties" : false
+    },
     "AEMSegment" : {
       "type" : "object",
       "properties" : {
@@ -42,6 +161,46 @@
         "ATTITUDE_DATA" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).\nOne entry per COMMENT line, in file order."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of the reference frame, e.g. \"EARTH\", \"MARS BARYCENTER\"\n(504.0-B-2 table 4-3, optional)."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Classification marking of the data in portion-marked format\n(504.0-B-2 table 4-3, optional)."
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "Start of the USEABLE time span covered by the data, ISO 8601."
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "End of the USEABLE time span covered by the data, ISO 8601."
+              },
+        "EULER_ROT_SEQ" : {
+                "type" : "string",
+                "description" : "Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation\nwhen ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. \"312\", \"321\"."
+              },
+        "ANGVEL_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame in which the ANGVEL_* components are expressed; the value\nis \"REF_FRAME_A\" or \"REF_FRAME_B\" (504.0-B-2 table 4-3).\nNOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME\nis the ratified spelling and is the one carried here."
+              },
+        "INTERPOLATION_METHOD" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method, e.g. \"HERMITE\", \"LINEAR\", \"LAGRANGE\"."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree."
+              },
+        "ATTITUDE_DATA_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/attitudeDataLine"},
+                "description" : "Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.\n\nVALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):\n1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and\nATTITUDE_DATA_LINES must be empty or ignored by parsers.\n2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative\nand ATTITUDE_DATA must be empty or ignored by parsers.\n3. Do NOT populate both formats simultaneously."
               }
       },
       "additionalProperties" : false
@@ -61,6 +220,18 @@
               },
         "SEGMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/AEMSegment"}
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments carried in the message header, one entry per line."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Message classification/caveats in portion-marked format."
               }
       },
       "additionalProperties" : false

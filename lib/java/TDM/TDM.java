@@ -435,6 +435,157 @@ public final class TDM extends com.google.flatbuffers.Table {
   public int TRANSMIT_RAMPSLength() { int o = __offset(132); return o != 0 ? __vector_len(o) : 0; }
   public TDMTransmitRamp.Vector transmitRampsVector() { return transmitRampsVector(new TDMTransmitRamp.Vector()); }
   public TDMTransmitRamp.Vector transmitRampsVector(TDMTransmitRamp.Vector obj) { int o = __offset(132); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Data-section observations for a SINGLE-segment TDM, in file order.
+   */
+  public TDMObservation OBSERVATIONS(int j) { return OBSERVATIONS(new TDMObservation(), j); }
+  public TDMObservation OBSERVATIONS(TDMObservation obj, int j) { int o = __offset(134); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int OBSERVATIONSLength() { int o = __offset(134); return o != 0 ? __vector_len(o) : 0; }
+  public TDMObservation.Vector observationsVector() { return observationsVector(new TDMObservation.Vector()); }
+  public TDMObservation.Vector observationsVector(TDMObservation.Vector obj) { int o = __offset(134); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * All metadata+data segments of a MULTI-segment TDM, in file order.
+   */
+  public TDMSegment SEGMENTS(int j) { return SEGMENTS(new TDMSegment(), j); }
+  public TDMSegment SEGMENTS(TDMSegment obj, int j) { int o = __offset(136); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SEGMENTSLength() { int o = __offset(136); return o != 0 ? __vector_len(o) : 0; }
+  public TDMSegment.Vector segmentsVector() { return segmentsVector(new TDMSegment.Vector()); }
+  public TDMSegment.Vector segmentsVector(TDMSegment.Vector obj) { int o = __offset(136); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+   * already exists above; 2..5 had no carrier.
+   */
+  public double TRANSMIT_FREQ_2() { int o = __offset(138); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_3() { int o = __offset(140); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_4() { int o = __offset(142); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_5() { int o = __offset(144); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Transmit frequency rates by participant, Hz/s. A constant rate here is
+   * the single-interval degenerate case of TRANSMIT_RAMPS.
+   */
+  public double TRANSMIT_FREQ_RATE_1() { int o = __offset(146); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_RATE_2() { int o = __offset(148); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_RATE_3() { int o = __offset(150); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_RATE_4() { int o = __offset(152); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_RATE_5() { int o = __offset(154); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Unique message identifier (503.0-B-2 table 3-2).
+   */
+  public String MESSAGE_ID() { int o = __offset(156); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(156, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 156, 1); }
+  /**
+   * Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+   */
+  public String TRACK_ID() { int o = __offset(158); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(158, 1); }
+  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 158, 1); }
+  /**
+   * Comma-separated list of the data keywords present in the data section.
+   */
+  public String DATA_TYPES() { int o = __offset(160); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATA_TYPESAsByteBuffer() { return __vector_as_bytebuffer(160, 1); }
+  public ByteBuffer DATA_TYPESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 160, 1); }
+  /**
+   * Signal path through the participants as an ordered comma-separated list,
+   * e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+   */
+  public String PATH() { int o = __offset(162); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PATHAsByteBuffer() { return __vector_as_bytebuffer(162, 1); }
+  public ByteBuffer PATHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 162, 1); }
+  /**
+   * Name of the ephemeris used to generate the data, per participant.
+   */
+  public String EPHEMERIS_NAME_1() { int o = __offset(164); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAME_1AsByteBuffer() { return __vector_as_bytebuffer(164, 1); }
+  public ByteBuffer EPHEMERIS_NAME_1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 164, 1); }
+  public String EPHEMERIS_NAME_2() { int o = __offset(166); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAME_2AsByteBuffer() { return __vector_as_bytebuffer(166, 1); }
+  public ByteBuffer EPHEMERIS_NAME_2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 166, 1); }
+  public String EPHEMERIS_NAME_3() { int o = __offset(168); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAME_3AsByteBuffer() { return __vector_as_bytebuffer(168, 1); }
+  public ByteBuffer EPHEMERIS_NAME_3InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 168, 1); }
+  public String EPHEMERIS_NAME_4() { int o = __offset(170); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAME_4AsByteBuffer() { return __vector_as_bytebuffer(170, 1); }
+  public ByteBuffer EPHEMERIS_NAME_4InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 170, 1); }
+  public String EPHEMERIS_NAME_5() { int o = __offset(172); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAME_5AsByteBuffer() { return __vector_as_bytebuffer(172, 1); }
+  public ByteBuffer EPHEMERIS_NAME_5InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 172, 1); }
+  /**
+   * Units of the RANGE observable: "km", "s" or "RU" (range units).
+   * RANGE is meaningless without it.
+   */
+  public String RANGE_UNITS() { int o = __offset(174); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RANGE_UNITSAsByteBuffer() { return __vector_as_bytebuffer(174, 1); }
+  public ByteBuffer RANGE_UNITSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 174, 1); }
+  /**
+   * Reference frame for angle and position data, as the verbatim CCSDS
+   * keyword value (503.0-B-2 annex B).
+   */
+  public String REFERENCE_FRAME() { int o = __offset(176); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(176, 1); }
+  public ByteBuffer REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 176, 1); }
+  /**
+   * Recommended interpolation method for the observations.
+   */
+  public String INTERPOLATION() { int o = __offset(178); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INTERPOLATIONAsByteBuffer() { return __vector_as_bytebuffer(178, 1); }
+  public ByteBuffer INTERPOLATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 178, 1); }
+  /**
+   * Recommended interpolation degree.
+   */
+  public long INTERPOLATION_DEGREE() { int o = __offset(180); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Frequency offset applied to the observations, Hz.
+   */
+  public double FREQ_OFFSET() { int o = __offset(182); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Transponder turnaround ratio numerator.
+   */
+  public int TURNAROUND_NUMERATOR() { int o = __offset(184); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Transponder turnaround ratio denominator.
+   */
+  public int TURNAROUND_DENOMINATOR() { int o = __offset(186); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Transmit delays by participant, s.
+   */
+  public double TRANSMIT_DELAY_1() { int o = __offset(188); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_DELAY_2() { int o = __offset(190); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_DELAY_3() { int o = __offset(192); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_DELAY_4() { int o = __offset(194); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_DELAY_5() { int o = __offset(196); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+   * RECEIVE_DELAY_3 already exist on the TDM root.)
+   */
+  public double RECEIVE_DELAY_1() { int o = __offset(198); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RECEIVE_DELAY_4() { int o = __offset(200); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RECEIVE_DELAY_5() { int o = __offset(202); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Doppler count bias, Hz.
+   */
+  public double DOPPLER_COUNT_BIAS() { int o = __offset(204); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Doppler count scale factor.
+   */
+  public long DOPPLER_COUNT_SCALE() { int o = __offset(206); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Whether the Doppler counter rolls over (CCSDS YES/NO).
+   */
+  public boolean DOPPLER_COUNT_ROLLOVER() { int o = __offset(208); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Corrections that a consumer must apply, or that were applied when
+   * CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+   */
+  public double CORRECTION_RANGE() { int o = __offset(210); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_DOPPLER() { int o = __offset(212); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_MAG() { int o = __offset(214); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_RCS() { int o = __offset(216); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_RECEIVE() { int o = __offset(218); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_TRANSMIT() { int o = __offset(220); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_ABERRATION_YEARLY() { int o = __offset(222); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CORRECTION_ABERRATION_DIURNAL() { int o = __offset(224); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createTDM(FlatBufferBuilder builder,
       int OBSERVER_IDOffset,
@@ -501,8 +652,81 @@ public final class TDM extends com.google.flatbuffers.Table {
       int SIGNAL_TO_NOISEOffset,
       int SPECTRAL_MAXOffset,
       int DOPPLER_NOISE_HZOffset,
-      int TRANSMIT_RAMPSOffset) {
-    builder.startTable(65);
+      int TRANSMIT_RAMPSOffset,
+      int OBSERVATIONSOffset,
+      int SEGMENTSOffset,
+      double TRANSMIT_FREQ_2,
+      double TRANSMIT_FREQ_3,
+      double TRANSMIT_FREQ_4,
+      double TRANSMIT_FREQ_5,
+      double TRANSMIT_FREQ_RATE_1,
+      double TRANSMIT_FREQ_RATE_2,
+      double TRANSMIT_FREQ_RATE_3,
+      double TRANSMIT_FREQ_RATE_4,
+      double TRANSMIT_FREQ_RATE_5,
+      int MESSAGE_IDOffset,
+      int TRACK_IDOffset,
+      int DATA_TYPESOffset,
+      int PATHOffset,
+      int EPHEMERIS_NAME_1Offset,
+      int EPHEMERIS_NAME_2Offset,
+      int EPHEMERIS_NAME_3Offset,
+      int EPHEMERIS_NAME_4Offset,
+      int EPHEMERIS_NAME_5Offset,
+      int RANGE_UNITSOffset,
+      int REFERENCE_FRAMEOffset,
+      int INTERPOLATIONOffset,
+      long INTERPOLATION_DEGREE,
+      double FREQ_OFFSET,
+      int TURNAROUND_NUMERATOR,
+      int TURNAROUND_DENOMINATOR,
+      double TRANSMIT_DELAY_1,
+      double TRANSMIT_DELAY_2,
+      double TRANSMIT_DELAY_3,
+      double TRANSMIT_DELAY_4,
+      double TRANSMIT_DELAY_5,
+      double RECEIVE_DELAY_1,
+      double RECEIVE_DELAY_4,
+      double RECEIVE_DELAY_5,
+      double DOPPLER_COUNT_BIAS,
+      long DOPPLER_COUNT_SCALE,
+      boolean DOPPLER_COUNT_ROLLOVER,
+      double CORRECTION_RANGE,
+      double CORRECTION_DOPPLER,
+      double CORRECTION_MAG,
+      double CORRECTION_RCS,
+      double CORRECTION_RECEIVE,
+      double CORRECTION_TRANSMIT,
+      double CORRECTION_ABERRATION_YEARLY,
+      double CORRECTION_ABERRATION_DIURNAL) {
+    builder.startTable(111);
+    TDM.addCorrectionAberrationDiurnal(builder, CORRECTION_ABERRATION_DIURNAL);
+    TDM.addCorrectionAberrationYearly(builder, CORRECTION_ABERRATION_YEARLY);
+    TDM.addCorrectionTransmit(builder, CORRECTION_TRANSMIT);
+    TDM.addCorrectionReceive(builder, CORRECTION_RECEIVE);
+    TDM.addCorrectionRcs(builder, CORRECTION_RCS);
+    TDM.addCorrectionMag(builder, CORRECTION_MAG);
+    TDM.addCorrectionDoppler(builder, CORRECTION_DOPPLER);
+    TDM.addCorrectionRange(builder, CORRECTION_RANGE);
+    TDM.addDopplerCountBias(builder, DOPPLER_COUNT_BIAS);
+    TDM.addReceiveDelay5(builder, RECEIVE_DELAY_5);
+    TDM.addReceiveDelay4(builder, RECEIVE_DELAY_4);
+    TDM.addReceiveDelay1(builder, RECEIVE_DELAY_1);
+    TDM.addTransmitDelay5(builder, TRANSMIT_DELAY_5);
+    TDM.addTransmitDelay4(builder, TRANSMIT_DELAY_4);
+    TDM.addTransmitDelay3(builder, TRANSMIT_DELAY_3);
+    TDM.addTransmitDelay2(builder, TRANSMIT_DELAY_2);
+    TDM.addTransmitDelay1(builder, TRANSMIT_DELAY_1);
+    TDM.addFreqOffset(builder, FREQ_OFFSET);
+    TDM.addTransmitFreqRate5(builder, TRANSMIT_FREQ_RATE_5);
+    TDM.addTransmitFreqRate4(builder, TRANSMIT_FREQ_RATE_4);
+    TDM.addTransmitFreqRate3(builder, TRANSMIT_FREQ_RATE_3);
+    TDM.addTransmitFreqRate2(builder, TRANSMIT_FREQ_RATE_2);
+    TDM.addTransmitFreqRate1(builder, TRANSMIT_FREQ_RATE_1);
+    TDM.addTransmitFreq5(builder, TRANSMIT_FREQ_5);
+    TDM.addTransmitFreq4(builder, TRANSMIT_FREQ_4);
+    TDM.addTransmitFreq3(builder, TRANSMIT_FREQ_3);
+    TDM.addTransmitFreq2(builder, TRANSMIT_FREQ_2);
     TDM.addRangeModulus(builder, RANGE_MODULUS);
     TDM.addRangeUncertainty(builder, RANGE_UNCERTAINTY);
     TDM.addRangeRate(builder, RANGE_RATE);
@@ -516,6 +740,24 @@ public final class TDM extends com.google.flatbuffers.Table {
     TDM.addObserverZ(builder, OBSERVER_Z);
     TDM.addObserverY(builder, OBSERVER_Y);
     TDM.addObserverX(builder, OBSERVER_X);
+    TDM.addDopplerCountScale(builder, DOPPLER_COUNT_SCALE);
+    TDM.addTurnaroundDenominator(builder, TURNAROUND_DENOMINATOR);
+    TDM.addTurnaroundNumerator(builder, TURNAROUND_NUMERATOR);
+    TDM.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
+    TDM.addInterpolation(builder, INTERPOLATIONOffset);
+    TDM.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
+    TDM.addRangeUnits(builder, RANGE_UNITSOffset);
+    TDM.addEphemerisName5(builder, EPHEMERIS_NAME_5Offset);
+    TDM.addEphemerisName4(builder, EPHEMERIS_NAME_4Offset);
+    TDM.addEphemerisName3(builder, EPHEMERIS_NAME_3Offset);
+    TDM.addEphemerisName2(builder, EPHEMERIS_NAME_2Offset);
+    TDM.addEphemerisName1(builder, EPHEMERIS_NAME_1Offset);
+    TDM.addPath(builder, PATHOffset);
+    TDM.addDataTypes(builder, DATA_TYPESOffset);
+    TDM.addTrackId(builder, TRACK_IDOffset);
+    TDM.addMessageId(builder, MESSAGE_IDOffset);
+    TDM.addSegments(builder, SEGMENTSOffset);
+    TDM.addObservations(builder, OBSERVATIONSOffset);
     TDM.addTransmitRamps(builder, TRANSMIT_RAMPSOffset);
     TDM.addDopplerNoiseHz(builder, DOPPLER_NOISE_HZOffset);
     TDM.addSpectralMax(builder, SPECTRAL_MAXOffset);
@@ -568,10 +810,11 @@ public final class TDM extends com.google.flatbuffers.Table {
     TDM.addObserverId(builder, OBSERVER_IDOffset);
     TDM.addPath2(builder, PATH_2);
     TDM.addPath1(builder, PATH_1);
+    TDM.addDopplerCountRollover(builder, DOPPLER_COUNT_ROLLOVER);
     return TDM.endTDM(builder);
   }
 
-  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(65); }
+  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(111); }
   public static void addObserverId(FlatBufferBuilder builder, int OBSERVER_IDOffset) { builder.addOffset(0, OBSERVER_IDOffset, 0); }
   public static void addObserverX(FlatBufferBuilder builder, double OBSERVER_X) { builder.addDouble(1, OBSERVER_X, 0.0); }
   public static void addObserverY(FlatBufferBuilder builder, double OBSERVER_Y) { builder.addDouble(2, OBSERVER_Y, 0.0); }
@@ -669,6 +912,56 @@ public final class TDM extends com.google.flatbuffers.Table {
   public static void addTransmitRamps(FlatBufferBuilder builder, int TRANSMIT_RAMPSOffset) { builder.addOffset(64, TRANSMIT_RAMPSOffset, 0); }
   public static int createTransmitRampsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTransmitRampsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addObservations(FlatBufferBuilder builder, int OBSERVATIONSOffset) { builder.addOffset(65, OBSERVATIONSOffset, 0); }
+  public static int createObservationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startObservationsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSegments(FlatBufferBuilder builder, int SEGMENTSOffset) { builder.addOffset(66, SEGMENTSOffset, 0); }
+  public static int createSegmentsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSegmentsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTransmitFreq2(FlatBufferBuilder builder, double TRANSMIT_FREQ_2) { builder.addDouble(67, TRANSMIT_FREQ_2, 0.0); }
+  public static void addTransmitFreq3(FlatBufferBuilder builder, double TRANSMIT_FREQ_3) { builder.addDouble(68, TRANSMIT_FREQ_3, 0.0); }
+  public static void addTransmitFreq4(FlatBufferBuilder builder, double TRANSMIT_FREQ_4) { builder.addDouble(69, TRANSMIT_FREQ_4, 0.0); }
+  public static void addTransmitFreq5(FlatBufferBuilder builder, double TRANSMIT_FREQ_5) { builder.addDouble(70, TRANSMIT_FREQ_5, 0.0); }
+  public static void addTransmitFreqRate1(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_1) { builder.addDouble(71, TRANSMIT_FREQ_RATE_1, 0.0); }
+  public static void addTransmitFreqRate2(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_2) { builder.addDouble(72, TRANSMIT_FREQ_RATE_2, 0.0); }
+  public static void addTransmitFreqRate3(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_3) { builder.addDouble(73, TRANSMIT_FREQ_RATE_3, 0.0); }
+  public static void addTransmitFreqRate4(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_4) { builder.addDouble(74, TRANSMIT_FREQ_RATE_4, 0.0); }
+  public static void addTransmitFreqRate5(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_5) { builder.addDouble(75, TRANSMIT_FREQ_RATE_5, 0.0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(76, MESSAGE_IDOffset, 0); }
+  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(77, TRACK_IDOffset, 0); }
+  public static void addDataTypes(FlatBufferBuilder builder, int DATA_TYPESOffset) { builder.addOffset(78, DATA_TYPESOffset, 0); }
+  public static void addPath(FlatBufferBuilder builder, int PATHOffset) { builder.addOffset(79, PATHOffset, 0); }
+  public static void addEphemerisName1(FlatBufferBuilder builder, int EPHEMERIS_NAME_1Offset) { builder.addOffset(80, EPHEMERIS_NAME_1Offset, 0); }
+  public static void addEphemerisName2(FlatBufferBuilder builder, int EPHEMERIS_NAME_2Offset) { builder.addOffset(81, EPHEMERIS_NAME_2Offset, 0); }
+  public static void addEphemerisName3(FlatBufferBuilder builder, int EPHEMERIS_NAME_3Offset) { builder.addOffset(82, EPHEMERIS_NAME_3Offset, 0); }
+  public static void addEphemerisName4(FlatBufferBuilder builder, int EPHEMERIS_NAME_4Offset) { builder.addOffset(83, EPHEMERIS_NAME_4Offset, 0); }
+  public static void addEphemerisName5(FlatBufferBuilder builder, int EPHEMERIS_NAME_5Offset) { builder.addOffset(84, EPHEMERIS_NAME_5Offset, 0); }
+  public static void addRangeUnits(FlatBufferBuilder builder, int RANGE_UNITSOffset) { builder.addOffset(85, RANGE_UNITSOffset, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(86, REFERENCE_FRAMEOffset, 0); }
+  public static void addInterpolation(FlatBufferBuilder builder, int INTERPOLATIONOffset) { builder.addOffset(87, INTERPOLATIONOffset, 0); }
+  public static void addInterpolationDegree(FlatBufferBuilder builder, long INTERPOLATION_DEGREE) { builder.addInt(88, (int) INTERPOLATION_DEGREE, (int) 0L); }
+  public static void addFreqOffset(FlatBufferBuilder builder, double FREQ_OFFSET) { builder.addDouble(89, FREQ_OFFSET, 0.0); }
+  public static void addTurnaroundNumerator(FlatBufferBuilder builder, int TURNAROUND_NUMERATOR) { builder.addInt(90, TURNAROUND_NUMERATOR, 0); }
+  public static void addTurnaroundDenominator(FlatBufferBuilder builder, int TURNAROUND_DENOMINATOR) { builder.addInt(91, TURNAROUND_DENOMINATOR, 0); }
+  public static void addTransmitDelay1(FlatBufferBuilder builder, double TRANSMIT_DELAY_1) { builder.addDouble(92, TRANSMIT_DELAY_1, 0.0); }
+  public static void addTransmitDelay2(FlatBufferBuilder builder, double TRANSMIT_DELAY_2) { builder.addDouble(93, TRANSMIT_DELAY_2, 0.0); }
+  public static void addTransmitDelay3(FlatBufferBuilder builder, double TRANSMIT_DELAY_3) { builder.addDouble(94, TRANSMIT_DELAY_3, 0.0); }
+  public static void addTransmitDelay4(FlatBufferBuilder builder, double TRANSMIT_DELAY_4) { builder.addDouble(95, TRANSMIT_DELAY_4, 0.0); }
+  public static void addTransmitDelay5(FlatBufferBuilder builder, double TRANSMIT_DELAY_5) { builder.addDouble(96, TRANSMIT_DELAY_5, 0.0); }
+  public static void addReceiveDelay1(FlatBufferBuilder builder, double RECEIVE_DELAY_1) { builder.addDouble(97, RECEIVE_DELAY_1, 0.0); }
+  public static void addReceiveDelay4(FlatBufferBuilder builder, double RECEIVE_DELAY_4) { builder.addDouble(98, RECEIVE_DELAY_4, 0.0); }
+  public static void addReceiveDelay5(FlatBufferBuilder builder, double RECEIVE_DELAY_5) { builder.addDouble(99, RECEIVE_DELAY_5, 0.0); }
+  public static void addDopplerCountBias(FlatBufferBuilder builder, double DOPPLER_COUNT_BIAS) { builder.addDouble(100, DOPPLER_COUNT_BIAS, 0.0); }
+  public static void addDopplerCountScale(FlatBufferBuilder builder, long DOPPLER_COUNT_SCALE) { builder.addInt(101, (int) DOPPLER_COUNT_SCALE, (int) 0L); }
+  public static void addDopplerCountRollover(FlatBufferBuilder builder, boolean DOPPLER_COUNT_ROLLOVER) { builder.addBoolean(102, DOPPLER_COUNT_ROLLOVER, false); }
+  public static void addCorrectionRange(FlatBufferBuilder builder, double CORRECTION_RANGE) { builder.addDouble(103, CORRECTION_RANGE, 0.0); }
+  public static void addCorrectionDoppler(FlatBufferBuilder builder, double CORRECTION_DOPPLER) { builder.addDouble(104, CORRECTION_DOPPLER, 0.0); }
+  public static void addCorrectionMag(FlatBufferBuilder builder, double CORRECTION_MAG) { builder.addDouble(105, CORRECTION_MAG, 0.0); }
+  public static void addCorrectionRcs(FlatBufferBuilder builder, double CORRECTION_RCS) { builder.addDouble(106, CORRECTION_RCS, 0.0); }
+  public static void addCorrectionReceive(FlatBufferBuilder builder, double CORRECTION_RECEIVE) { builder.addDouble(107, CORRECTION_RECEIVE, 0.0); }
+  public static void addCorrectionTransmit(FlatBufferBuilder builder, double CORRECTION_TRANSMIT) { builder.addDouble(108, CORRECTION_TRANSMIT, 0.0); }
+  public static void addCorrectionAberrationYearly(FlatBufferBuilder builder, double CORRECTION_ABERRATION_YEARLY) { builder.addDouble(109, CORRECTION_ABERRATION_YEARLY, 0.0); }
+  public static void addCorrectionAberrationDiurnal(FlatBufferBuilder builder, double CORRECTION_ABERRATION_DIURNAL) { builder.addDouble(110, CORRECTION_ABERRATION_DIURNAL, 0.0); }
   public static int endTDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

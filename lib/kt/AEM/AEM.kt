@@ -75,6 +75,49 @@ class AEM : Table() {
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Plain-text comments carried in the message header, one entry per line.
+     */
+    fun comment(j: Int) : String? {
+        val o = __offset(14)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val commentLength : Int
+        get() {
+            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Message classification/caveats in portion-marked format.
+     */
+    val classification : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAEM(_bb: ByteBuffer): AEM = getRootAsAEM(_bb, AEM())
@@ -83,15 +126,18 @@ class AEM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun AEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AEM")
-        fun createAEM(builder: FlatBufferBuilder, ccsdsAemVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, segmentsOffset: Int) : Int {
-            builder.startTable(4)
+        fun createAEM(builder: FlatBufferBuilder, ccsdsAemVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, segmentsOffset: Int, messageIdOffset: Int, commentOffset: Int, classificationOffset: Int) : Int {
+            builder.startTable(7)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCOMMENT(builder, commentOffset)
+            addMESSAGEID(builder, messageIdOffset)
             addSEGMENTS(builder, segmentsOffset)
             addORIGINATOR(builder, originatorOffset)
             addCREATIONDATE(builder, creationDateOffset)
             addCCSDSAEMVERS(builder, ccsdsAemVersOffset)
             return endAEM(builder)
         }
-        fun startAEM(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startAEM(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addCCSDSAEMVERS(builder: FlatBufferBuilder, ccsdsAemVers: Int) = builder.addOffset(0, ccsdsAemVers, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -104,6 +150,17 @@ class AEM : Table() {
             return builder.endVector()
         }
         fun startSegmentsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(4, messageId, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(5, comment, 0)
+        fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(6, classification, 0)
         fun endAEM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

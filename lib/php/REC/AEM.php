@@ -78,26 +78,63 @@ class AEM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Plain-text comments carried in the message header, one entry per line.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCOMMENT($j)
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOMMENTLength()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Message classification/caveats in portion-marked format.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAEM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return AEM
      */
-    public static function createAEM(FlatBufferBuilder $builder, $CCSDS_AEM_VERS, $CREATION_DATE, $ORIGINATOR, $SEGMENTS)
+    public static function createAEM(FlatBufferBuilder $builder, $CCSDS_AEM_VERS, $CREATION_DATE, $ORIGINATOR, $SEGMENTS, $MESSAGE_ID, $COMMENT, $CLASSIFICATION)
     {
-        $builder->startObject(4);
+        $builder->startObject(7);
         self::addCCSDS_AEM_VERS($builder, $CCSDS_AEM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addSEGMENTS($builder, $SEGMENTS);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -164,6 +201,60 @@ class AEM extends Table
     public static function startSEGMENTSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(4, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(5, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOMMENTVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOMMENTVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(6, $CLASSIFICATION, 0);
     }
 
     /**

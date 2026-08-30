@@ -245,8 +245,25 @@ polynomialPositionRecordsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * NAIF integer code of the ephemeris target (SPK segment target).
+ */
+OBJECT_NAIF_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * NAIF integer code of the ephemeris centre, matching CENTER_NAME
+ * (SPK segment centre).
+ */
+CENTER_NAIF_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startephemerisDataBlock(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(21);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -378,6 +395,14 @@ static startPolynomialPositionRecordsVector(builder:flatbuffers.Builder, numElem
   builder.startVector(4, numElems, 4);
 }
 
+static addObjectNaifId(builder:flatbuffers.Builder, OBJECT_NAIF_ID:number) {
+  builder.addFieldInt32(19, OBJECT_NAIF_ID, 0);
+}
+
+static addCenterNaifId(builder:flatbuffers.Builder, CENTER_NAIF_ID:number) {
+  builder.addFieldInt32(20, CENTER_NAIF_ID, 0);
+}
+
 static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -404,7 +429,9 @@ unpack(): ephemerisDataBlockT {
     this.bb!.createScalarList<number>(this.EPHEMERIS_DATA.bind(this), this.ephemerisDataLength()),
     this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength()),
     this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength()),
-    this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength())
+    this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength()),
+    this.OBJECT_NAIF_ID(),
+    this.CENTER_NAIF_ID()
   );
 }
 
@@ -429,6 +456,8 @@ unpackTo(_o: ephemerisDataBlockT): void {
   _o.EPHEMERIS_DATA_LINES = this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength());
   _o.COVARIANCE_MATRIX_LINES = this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength());
   _o.POLYNOMIAL_POSITION_RECORDS = this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength());
+  _o.OBJECT_NAIF_ID = this.OBJECT_NAIF_ID();
+  _o.CENTER_NAIF_ID = this.CENTER_NAIF_ID();
 }
 }
 
@@ -452,7 +481,9 @@ constructor(
   public EPHEMERIS_DATA: (number)[] = [],
   public EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[] = [],
   public COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[] = [],
-  public POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[] = []
+  public POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[] = [],
+  public OBJECT_NAIF_ID: number = 0,
+  public CENTER_NAIF_ID: number = 0
 ){}
 
 
@@ -493,6 +524,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINES);
   ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINES);
   ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDS);
+  ephemerisDataBlock.addObjectNaifId(builder, this.OBJECT_NAIF_ID);
+  ephemerisDataBlock.addCenterNaifId(builder, this.CENTER_NAIF_ID);
 
   return ephemerisDataBlock.endephemerisDataBlock(builder);
 }

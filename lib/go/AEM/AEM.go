@@ -121,8 +121,63 @@ func (rcv *AEM) SegmentsLength() int {
 	return rcv.SEGMENTSLength()
 }
 
+/// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+func (rcv *AEM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+/// Plain-text comments carried in the message header, one entry per line.
+func (rcv *AEM) COMMENT(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *AEM) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
+func (rcv *AEM) COMMENTLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *AEM) CommentLength() int {
+	return rcv.COMMENTLength()
+}
+
+/// Plain-text comments carried in the message header, one entry per line.
+/// Message classification/caveats in portion-marked format.
+func (rcv *AEM) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *AEM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// Message classification/caveats in portion-marked format.
 func AEMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(7)
 }
 func AEMAddCCSDS_AEM_VERS(builder *flatbuffers.Builder, CCSDS_AEM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_AEM_VERS), 0)
@@ -153,6 +208,30 @@ func AEMStartSEGMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuff
 }
 func AEMStartSegmentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return AEMStartSEGMENTSVector(builder, numElems)
+}
+func AEMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func AEMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	AEMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func AEMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func AEMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	AEMAddCOMMENT(builder, COMMENT)
+}
+func AEMStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func AEMStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AEMStartCOMMENTVector(builder, numElems)
+}
+func AEMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func AEMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	AEMAddCLASSIFICATION(builder, CLASSIFICATION)
 }
 func AEMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

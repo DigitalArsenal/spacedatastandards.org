@@ -14144,6 +14144,84 @@
         }
       }
     },
+    "ncdContainerFormat": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SPK_DAF",
+        "SP3_C",
+        "SP3_D",
+        "CODE_500",
+        "SCENARIO_EPOCH_EPHEMERIS_TEXT",
+        "SCENARIO_EPOCH_ATTITUDE_TEXT",
+        "CCSDS_OEM_KVN",
+        "CCSDS_OEM_XML",
+        "CCSDS_AEM_KVN",
+        "CCSDS_AEM_XML",
+        "CCSDS_TDM_KVN",
+        "CCSDS_TDM_XML",
+        "PROVIDER_DEFINED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SPK_DAF": {
+          "value": 1,
+          "description": "Double-precision Array File container carrying Spacecraft and Planet Kernel segments: a binary file of typed, independently addressed ephemeris segments, each with an integer target and centre, an integer reference frame, a numeric segment type, and a contiguous address range inside the file."
+        },
+        "SP3_C": {
+          "value": 2,
+          "description": "SP3 version c: fixed-column text container of per-epoch satellite positions and optional velocities with a clock column, a header block of accuracy codes, and one uniform epoch interval."
+        },
+        "SP3_D": {
+          "value": 3,
+          "description": "SP3 version d: as SP3_C, with an unbounded satellite count and extended header lines."
+        },
+        "CODE_500": {
+          "value": 4,
+          "description": "Code-500 fixed-record binary ephemeris: a header record of packed words followed by fixed-length data records on a uniform step."
+        },
+        "SCENARIO_EPOCH_EPHEMERIS_TEXT": {
+          "value": 5,
+          "description": "Scenario-epoch ephemeris text container: time-ordered position and velocity records whose epochs are offsets in seconds from a declared scenario epoch, qualified by a named coordinate system, a distance unit, a named interpolation method and an interpolation order."
+        },
+        "SCENARIO_EPOCH_ATTITUDE_TEXT": {
+          "value": 6,
+          "description": "Scenario-epoch attitude text container: the attitude counterpart of SCENARIO_EPOCH_EPHEMERIS_TEXT, carrying quaternion, Euler or angular velocity records against the same scenario epoch."
+        },
+        "CCSDS_OEM_KVN": {
+          "value": 7,
+          "description": "CCSDS Orbit Ephemeris Message, keyword-value notation."
+        },
+        "CCSDS_OEM_XML": {
+          "value": 8,
+          "description": "CCSDS Orbit Ephemeris Message, XML."
+        },
+        "CCSDS_AEM_KVN": {
+          "value": 9,
+          "description": "CCSDS Attitude Ephemeris Message, keyword-value notation."
+        },
+        "CCSDS_AEM_XML": {
+          "value": 10,
+          "description": "CCSDS Attitude Ephemeris Message, XML."
+        },
+        "CCSDS_TDM_KVN": {
+          "value": 11,
+          "description": "CCSDS Tracking Data Message, keyword-value notation."
+        },
+        "CCSDS_TDM_XML": {
+          "value": 12,
+          "description": "CCSDS Tracking Data Message, XML."
+        },
+        "PROVIDER_DEFINED": {
+          "value": 255,
+          "description": "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
+        }
+      }
+    },
     "numOperationCode": {
       "type": "string",
       "enum": [
@@ -21912,7 +21990,8 @@
         "TXS",
         "BPF",
         "EVL",
-        "PCE"
+        "PCE",
+        "NCD"
       ]
     },
     "LKS": {
@@ -27834,6 +27913,153 @@
       },
       "additionalProperties": false
     },
+    "attitudeDataLine": {
+      "type": "object",
+      "description": "A single attitude data line with an EXPLICIT epoch (non-uniform steps).\n\nCCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs\nare not on a uniform grid: the published example (504.0-B-2 figure G-4)\nsteps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.\n2339 s then 1 s. Such a segment CANNOT be expressed by the compact\nATTITUDE_DATA array, whose epochs are reconstructed as\nSTART_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have\nthe same irregular shape.\n\nThe populated columns are selected by the segment's ATTITUDE_TYPE exactly\nas in CCSDS 504.0-B-2 table 4-4:\nQUATERNION              Q1 Q2 Q3 QC\nQUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT\nQUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z\nEULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3\nEULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT\nEULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z\nSPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL\nSPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE\nSPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL\n\nQuaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,\nvector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2\n(annex, change 7) and is deliberately NOT carried here.\n\nUnits per 504.0-B-2 4.2.4.6: quaternion components dimensionless;\nQ*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;\nANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;\nNUTATION_PER s.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of this attitude state (required for non-uniform steps).",
+          "x-flatbuffer-type": "string"
+        },
+        "Q1": {
+          "type": "number",
+          "description": "Quaternion vector component 1 (dimensionless).",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "description": "Quaternion vector component 2 (dimensionless).",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "description": "Quaternion vector component 3 (dimensionless).",
+          "x-flatbuffer-type": "double"
+        },
+        "QC": {
+          "type": "number",
+          "description": "Quaternion scalar component (dimensionless).",
+          "x-flatbuffer-type": "double"
+        },
+        "Q1_DOT": {
+          "type": "number",
+          "description": "Time derivative of Q1, 1/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2_DOT": {
+          "type": "number",
+          "description": "Time derivative of Q2, 1/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3_DOT": {
+          "type": "number",
+          "description": "Time derivative of Q3, 1/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "QC_DOT": {
+          "type": "number",
+          "description": "Time derivative of QC, 1/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_1": {
+          "type": "number",
+          "description": "Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_2": {
+          "type": "number",
+          "description": "Euler angle 2, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_3": {
+          "type": "number",
+          "description": "Euler angle 3, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_1_DOT": {
+          "type": "number",
+          "description": "Time derivative of ANGLE_1, deg/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_2_DOT": {
+          "type": "number",
+          "description": "Time derivative of ANGLE_2, deg/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_3_DOT": {
+          "type": "number",
+          "description": "Time derivative of ANGLE_3, deg/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGVEL_X": {
+          "type": "number",
+          "description": "Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGVEL_Y": {
+          "type": "number",
+          "description": "Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGVEL_Z": {
+          "type": "number",
+          "description": "Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ALPHA": {
+          "type": "number",
+          "description": "Right ascension of the spin axis, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_DELTA": {
+          "type": "number",
+          "description": "Declination of the spin axis, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ANGLE": {
+          "type": "number",
+          "description": "Phase of the satellite about the spin axis, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ANGLE_VEL": {
+          "type": "number",
+          "description": "Angular velocity about the spin axis, deg/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION": {
+          "type": "number",
+          "description": "Nutation angle, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_PER": {
+          "type": "number",
+          "description": "Nutation period, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_PHASE": {
+          "type": "number",
+          "description": "Nutation phase, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "MOMENTUM_ALPHA": {
+          "type": "number",
+          "description": "Right ascension of the angular momentum vector, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "MOMENTUM_DELTA": {
+          "type": "number",
+          "description": "Declination of the angular momentum vector, deg.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_VEL": {
+          "type": "number",
+          "description": "Angular velocity of the nutation, deg/s.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "AEMSegment": {
       "type": "object",
       "properties": {
@@ -27893,6 +28119,64 @@
           },
           "description": "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS.",
           "x-flatbuffer-type": "[double]"
+        },
+        "COMMENT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).\nOne entry per COMMENT line, in file order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "Origin of the reference frame, e.g. \"EARTH\", \"MARS BARYCENTER\"\n(504.0-B-2 table 4-3, optional).",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification marking of the data in portion-marked format\n(504.0-B-2 table 4-3, optional).",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_START_TIME": {
+          "type": "string",
+          "description": "Start of the USEABLE time span covered by the data, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_STOP_TIME": {
+          "type": "string",
+          "description": "End of the USEABLE time span covered by the data, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "EULER_ROT_SEQ": {
+          "type": "string",
+          "description": "Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation\nwhen ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. \"312\", \"321\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ANGVEL_FRAME": {
+          "type": "string",
+          "description": "Reference frame in which the ANGVEL_* components are expressed; the value\nis \"REF_FRAME_A\" or \"REF_FRAME_B\" (504.0-B-2 table 4-3).\nNOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME\nis the ratified spelling and is the one carried here.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_METHOD": {
+          "type": "string",
+          "description": "Recommended interpolation method, e.g. \"HERMITE\", \"LINEAR\", \"LAGRANGE\".",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Recommended interpolation degree.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ATTITUDE_DATA_LINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attitudeDataLine"
+          },
+          "description": "Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.\n\nVALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):\n1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and\nATTITUDE_DATA_LINES must be empty or ignored by parsers.\n2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative\nand ATTITUDE_DATA must be empty or ignored by parsers.\n3. Do NOT populate both formats simultaneously.",
+          "x-flatbuffer-type": "[attitudeDataLine]"
         }
       },
       "additionalProperties": false
@@ -27919,6 +28203,24 @@
             "$ref": "#/definitions/AEMSegment"
           },
           "x-flatbuffer-type": "[AEMSegment]"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Plain-text comments carried in the message header, one entry per line.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Message classification/caveats in portion-marked format.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -58569,6 +58871,64 @@
           "type": "number",
           "description": "Optional: Acceleration vector Z-component km/s\u00b2",
           "x-flatbuffer-type": "double"
+        },
+        "CLOCK_BIAS_MICROSECONDS": {
+          "type": "number",
+          "description": "Satellite clock bias (offset), microseconds. SP3 position-record clock\ncolumn. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the\nfield instead.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_RATE_MICROSECONDS_PER_SECOND": {
+          "type": "number",
+          "description": "Satellite clock rate of change, 1e-4 microseconds per second. SP3\nvelocity-record clock-rate column. Sentinel 999999.999999 is not stored.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_BIAS_SIGMA_PICOSECONDS": {
+          "type": "number",
+          "description": "Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND": {
+          "type": "number",
+          "description": "Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,\n1e-4 picoseconds per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "X_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:\nsigma = POS_VEL_BASE**n, with the position base from the SP3 header and\nthe result in mm. These are the raw SP3 exponent columns, kept as\nexponents so an SP3 round-trip is exact; a consumer that wants a linear\nsigma raises the header base to this power.",
+          "x-flatbuffer-type": "int8"
+        },
+        "Y_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "x-flatbuffer-type": "int8"
+        },
+        "Z_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "x-flatbuffer-type": "int8"
+        },
+        "X_DOT_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Per-coordinate velocity standard-deviation exponents, result in\n1e-4 mm/s. Same base**n rule.",
+          "x-flatbuffer-type": "int8"
+        },
+        "Y_DOT_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "x-flatbuffer-type": "int8"
+        },
+        "Z_DOT_SIGMA_EXPONENT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "x-flatbuffer-type": "int8"
         }
       },
       "additionalProperties": false
@@ -58884,6 +59244,20 @@
           },
           "description": "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure.",
           "x-flatbuffer-type": "[PPEPositionRecord]"
+        },
+        "OBJECT_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "NAIF integer code of the ephemeris target (SPK segment target).",
+          "x-flatbuffer-type": "int"
+        },
+        "CENTER_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
+          "x-flatbuffer-type": "int"
         }
       },
       "additionalProperties": false
@@ -69650,6 +70024,498 @@
             "maximum": 255
           },
           "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NCDSegmentDescriptor": {
+      "type": "object",
+      "description": "One independently addressed segment inside a native container.\n\nA segmented binary ephemeris is not a single span: each segment has its own\nbody pair, frame, numeric type and time bounds, and a reader must choose\namong them. $OEM carries the STATES; this carries the segment DESCRIPTOR\nthat says which states came from where and what must be written back.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Segment name as recorded in the container.",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Integer body code of the segment target.",
+          "x-flatbuffer-type": "int"
+        },
+        "CENTER_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Integer body code of the segment centre.",
+          "x-flatbuffer-type": "int"
+        },
+        "FRAME_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Integer reference frame code of the segment.",
+          "x-flatbuffer-type": "int"
+        },
+        "FRAME_NAME": {
+          "type": "string",
+          "description": "Reference frame name as recorded in the container.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENT_TYPE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Numeric segment data type, verbatim. The evaluation rule is a property of\nthis number (for example, Chebyshev position with fixed interval, or\ndiscrete states with Lagrange interpolation); it is carried as the\ncontainer's own integer so a rewrite is exact.",
+          "x-flatbuffer-type": "int"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Segment coverage start, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "Segment coverage stop, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "START_SECONDS_PAST_J2000_TDB": {
+          "type": "number",
+          "description": "Segment coverage start, seconds past J2000 in the barycentric dynamical\ntime scale, as stored in the container.",
+          "x-flatbuffer-type": "double"
+        },
+        "STOP_SECONDS_PAST_J2000_TDB": {
+          "type": "number",
+          "description": "Segment coverage stop, same scale.",
+          "x-flatbuffer-type": "double"
+        },
+        "INITIAL_ADDRESS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "First addressed element of the segment inside the file.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "FINAL_ADDRESS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Last addressed element of the segment inside the file.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "POLYNOMIAL_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Polynomial degree or record size the segment type parameterises, when the\ntype carries one.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NCDSP3Header": {
+      "type": "object",
+      "description": "Header block of a fixed-column satellite position container (SP3).",
+      "properties": {
+        "FILE_TYPE": {
+          "type": "string",
+          "description": "Record content indicator, e.g. \"P\" for positions only, \"V\" with\nvelocities.",
+          "x-flatbuffer-type": "string"
+        },
+        "SATELLITE_SYSTEM": {
+          "type": "string",
+          "description": "Satellite system indicator recorded in the header.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORBIT_TYPE": {
+          "type": "string",
+          "description": "Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_USED": {
+          "type": "string",
+          "description": "Data used to produce the file, as recorded.",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATE_SYSTEM": {
+          "type": "string",
+          "description": "Terrestrial reference frame name as recorded.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGENCY": {
+          "type": "string",
+          "description": "Producing agency as recorded IN THE FILE. This is observed content, not a\nclassification.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system as recorded in the header.",
+          "x-flatbuffer-type": "string"
+        },
+        "GPS_WEEK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Week number of the first epoch in the file's own week counter.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SECONDS_OF_WEEK": {
+          "type": "number",
+          "description": "Seconds of week of the first epoch.",
+          "x-flatbuffer-type": "double"
+        },
+        "MODIFIED_JULIAN_DAY_START": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Modified Julian Day of the first epoch.",
+          "x-flatbuffer-type": "int"
+        },
+        "FRACTIONAL_DAY": {
+          "type": "number",
+          "description": "Fractional day of the first epoch.",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH_INTERVAL_SECONDS": {
+          "type": "number",
+          "description": "Uniform interval between epochs, seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUMBER_OF_EPOCHS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of epochs declared in the header.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SATELLITE_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Satellite identifiers in header order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SATELLITE_ACCURACY_EXPONENTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -128,
+            "maximum": 127
+          },
+          "description": "Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy\nis POSITION_VELOCITY_BASE raised to this power.",
+          "x-flatbuffer-type": "[int8]"
+        },
+        "POSITION_VELOCITY_BASE": {
+          "type": "number",
+          "description": "Base for the position and velocity standard-deviation exponents carried\nper state in $OEM.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_RATE_BASE": {
+          "type": "number",
+          "description": "Base for the clock bias and clock rate standard-deviation exponents.",
+          "x-flatbuffer-type": "double"
+        },
+        "COMMENT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Header comment lines in file order.",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NCDScenarioEpochContainer": {
+      "type": "object",
+      "description": "Parameters of a scenario-epoch text container.",
+      "properties": {
+        "SCENARIO_EPOCH": {
+          "type": "string",
+          "description": "Epoch that every record offset is measured from, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time scale the scenario epoch is expressed in.",
+          "x-flatbuffer-type": "string"
+        },
+        "DISTANCE_UNIT": {
+          "type": "string",
+          "description": "Distance unit of the records, e.g. \"Meters\", \"Kilometers\".",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATE_SYSTEM": {
+          "type": "string",
+          "description": "Named coordinate system of the records.",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATE_AXES": {
+          "type": "string",
+          "description": "Named coordinate axes, when stated separately from the system.",
+          "x-flatbuffer-type": "string"
+        },
+        "CENTRAL_BODY": {
+          "type": "string",
+          "description": "Central body of the records.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_METHOD": {
+          "type": "string",
+          "description": "Named interpolation method, e.g. \"Lagrange\", \"Hermite\".",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_SAMPLES_M1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interpolation order expressed as (samples - 1), which is how these\ncontainers state it. Carried verbatim rather than converted, so a rewrite\nreproduces the source exactly.",
+          "x-flatbuffer-type": "uint"
+        },
+        "NUMBER_OF_EPHEMERIS_POINTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of ephemeris points declared in the container.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SEGMENT_BOUNDARY_TIMES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Segment boundary offsets in seconds from SCENARIO_EPOCH, when present.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NCDCode500Header": {
+      "type": "object",
+      "description": "Header words of a fixed-record binary ephemeris container.",
+      "properties": {
+        "SATELLITE_NAME": {
+          "type": "string",
+          "description": "Object name as recorded in the header.",
+          "x-flatbuffer-type": "string"
+        },
+        "TAPE_ID": {
+          "type": "string",
+          "description": "Container-internal tape or file identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM_INDICATOR": {
+          "type": "string",
+          "description": "Time system indicator as recorded.",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATE_SYSTEM_INDICATOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Coordinate system indicator as recorded.",
+          "x-flatbuffer-type": "int"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Coverage start, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "Coverage stop, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_STEP_SECONDS": {
+          "type": "number",
+          "description": "Uniform step between data records, seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "HEADER_WORDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "The header record's packed words in file order, undecoded. A reader that\nunderstands a word decodes it; a rewriter reproduces the record exactly\nwithout having to.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NCD": {
+      "type": "object",
+      "description": "Native Container Descriptor.\n\nThe file-level facts of an ephemeris, attitude or tracking container that\nare NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the\nstates, attitudes and observations; none of them can carry the internal\nfile name, the comment area, the segment address ranges, the header accuracy\nblock or the interpolation order the source declared, because those describe\nthe CONTAINER. Without them a read-then-write cycle silently invents header\nvalues, and a segmented binary file cannot be reproduced at all.\n\nONE record covers every container class rather than one record per format:\nthe file-level facts are the same kind of fact in each, and the\nformat-specific blocks are optional sub-tables selected by FORMAT. Only the\nblock matching FORMAT is populated.",
+      "properties": {
+        "FORMAT": {
+          "$ref": "#/definitions/ncdContainerFormat",
+          "description": "Container format class.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SPK_DAF": {
+              "value": 1,
+              "description": "Double-precision Array File container carrying Spacecraft and Planet Kernel segments: a binary file of typed, independently addressed ephemeris segments, each with an integer target and centre, an integer reference frame, a numeric segment type, and a contiguous address range inside the file."
+            },
+            "SP3_C": {
+              "value": 2,
+              "description": "SP3 version c: fixed-column text container of per-epoch satellite positions and optional velocities with a clock column, a header block of accuracy codes, and one uniform epoch interval."
+            },
+            "SP3_D": {
+              "value": 3,
+              "description": "SP3 version d: as SP3_C, with an unbounded satellite count and extended header lines."
+            },
+            "CODE_500": {
+              "value": 4,
+              "description": "Code-500 fixed-record binary ephemeris: a header record of packed words followed by fixed-length data records on a uniform step."
+            },
+            "SCENARIO_EPOCH_EPHEMERIS_TEXT": {
+              "value": 5,
+              "description": "Scenario-epoch ephemeris text container: time-ordered position and velocity records whose epochs are offsets in seconds from a declared scenario epoch, qualified by a named coordinate system, a distance unit, a named interpolation method and an interpolation order."
+            },
+            "SCENARIO_EPOCH_ATTITUDE_TEXT": {
+              "value": 6,
+              "description": "Scenario-epoch attitude text container: the attitude counterpart of SCENARIO_EPOCH_EPHEMERIS_TEXT, carrying quaternion, Euler or angular velocity records against the same scenario epoch."
+            },
+            "CCSDS_OEM_KVN": {
+              "value": 7,
+              "description": "CCSDS Orbit Ephemeris Message, keyword-value notation."
+            },
+            "CCSDS_OEM_XML": {
+              "value": 8,
+              "description": "CCSDS Orbit Ephemeris Message, XML."
+            },
+            "CCSDS_AEM_KVN": {
+              "value": 9,
+              "description": "CCSDS Attitude Ephemeris Message, keyword-value notation."
+            },
+            "CCSDS_AEM_XML": {
+              "value": 10,
+              "description": "CCSDS Attitude Ephemeris Message, XML."
+            },
+            "CCSDS_TDM_KVN": {
+              "value": 11,
+              "description": "CCSDS Tracking Data Message, keyword-value notation."
+            },
+            "CCSDS_TDM_XML": {
+              "value": 12,
+              "description": "CCSDS Tracking Data Message, XML."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 255,
+              "description": "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROVIDER_DEFINED_FORMAT_NAME": {
+          "type": "string",
+          "description": "Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT_VERSION": {
+          "type": "string",
+          "description": "Version of the container format as declared by the file itself.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Producing system or organization as recorded IN THE FILE.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Creation date recorded in the file, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Originator recorded in the file.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERNAL_FILE_NAME": {
+          "type": "string",
+          "description": "Container-internal file name, which is stored inside the file and is\nindependent of the name on disk.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT_AREA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Free-text comment area carried inside the container, one entry per line,\nin file order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NATIVE_FRAME_NAME": {
+          "type": "string",
+          "description": "Reference frame name as the container itself spells it, before any\nmapping onto $RFM.",
+          "x-flatbuffer-type": "string"
+        },
+        "NATIVE_FRAME_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Integer reference frame code as the container stores it.",
+          "x-flatbuffer-type": "int"
+        },
+        "NATIVE_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system as the container itself spells it, before any mapping onto\nthe ratified time-scale vocabulary.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NCDSegmentDescriptor"
+          },
+          "description": "Descriptors of the container's segments, in file order. Empty for a\nsingle-span container.",
+          "x-flatbuffer-type": "[NCDSegmentDescriptor]"
+        },
+        "SP3_HEADER": {
+          "$ref": "#/definitions/NCDSP3Header",
+          "description": "Header block when FORMAT is SP3_C or SP3_D.",
+          "x-flatbuffer-type": "NCDSP3Header"
+        },
+        "SCENARIO_CONTAINER": {
+          "$ref": "#/definitions/NCDScenarioEpochContainer",
+          "description": "Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or\nSCENARIO_EPOCH_ATTITUDE_TEXT.",
+          "x-flatbuffer-type": "NCDScenarioEpochContainer"
+        },
+        "CODE_500_HEADER": {
+          "$ref": "#/definitions/NCDCode500Header",
+          "description": "Header words when FORMAT is CODE_500.",
+          "x-flatbuffer-type": "NCDCode500Header"
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "Total coverage start across all segments, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "description": "Total coverage stop across all segments, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Length of the described container in bytes.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the described container's exact bytes, lowercase hex. This is\nwhat makes the descriptor checkable: a consumer can prove the descriptor\nbelongs to the file it holds.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -88688,6 +89554,385 @@
       },
       "additionalProperties": false
     },
+    "TDMObservation": {
+      "type": "object",
+      "description": "ONE CCSDS TDM observation: a single data-section line.\n\nA TDM data section is NOT a uniform grid. Every line in every published\nexample (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form\n\nKEYWORD = <epoch> <value>\n\nand the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground\nbased radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and\nCARRIER_POWER share epochs, while the final RCS line repeats the EARLIER\nepoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single\nOBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,\nwhich is why the parallel observation arrays on the TDM root cannot\nround-trip a conformant TDM.\n\nKEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. \"RANGE\",\n\"ANGLE_1\", \"CARRIER_POWER\", \"RCS\", \"DOPPLER_INTEGRATED\", \"PR_N0\",\n\"RECEIVE_FREQ_1\", \"TRANSMIT_PHASE_CT_1\", \"VLBI_DELAY\", \"DOR\", \"MAG\",\n\"CLOCK_BIAS\", \"STEC\", \"TROPO_DRY\", \"PRESSURE\". Carrying the keyword rather\nthan a fixed field per observable is what lets this form transport the whole\n503.0-B-2 data vocabulary, including keywords a future issue adds, without\na wire change and without inventing a name the standard does not define.\n\nUnits are those the standard assigns to that keyword; RANGE additionally\ndepends on RANGE_UNITS, which is metadata, not data.",
+      "properties": {
+        "KEYWORD": {
+          "type": "string",
+          "description": "CCSDS data keyword, verbatim and case-exact.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Observed value.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TDMSegment": {
+      "type": "object",
+      "description": "One TDM metadata + data segment.\n\nA TDM file may carry MANY segments, each with its own META_START/META_STOP\nblock and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,\nfigures E-16 and E-18). The TDM root models a SINGLE segment, so a\nmulti-segment file cannot be represented without this vector.",
+      "properties": {
+        "COMMENT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Comments carried in this segment's metadata block, in file order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "META_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICIPANT_1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICIPANT_2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICIPANT_3": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICIPANT_4": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICIPANT_5": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PATH_1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "PATH_2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "TRANSMIT_BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVE_BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INTEGRATION_INTERVAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INTEGRATION_REF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIMETAG_REF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ANGLE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RANGE_MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RANGE_MODULUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ANGLE_1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ANGLE_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTIONS_APPLIED": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_QUALITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVE_DELAY_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "META_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TDMObservation"
+          },
+          "description": "The segment's observations, in FILE ORDER. This is the authoritative\ndata-section representation.",
+          "x-flatbuffer-type": "[TDMObservation]"
+        },
+        "DATA_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT_RAMPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TDMTransmitRamp"
+          },
+          "description": "Uplink frequency ramp table applying to this segment. SDS EXTENSION;\nabsent (not empty) for a ramp-free, exactly CCSDS-conformant segment.",
+          "x-flatbuffer-type": "[TDMTransmitRamp]"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "Unique message identifier (503.0-B-2 table 3-2).",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Free-text tracking-pass identifier (503.0-B-2 table 3-3).",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_TYPES": {
+          "type": "string",
+          "description": "Comma-separated list of the data keywords present in the data section.",
+          "x-flatbuffer-type": "string"
+        },
+        "PATH": {
+          "type": "string",
+          "description": "Signal path through the participants as an ordered comma-separated list,\ne.g. \"1,2,1\". Distinct from the numbered PATH_1 / PATH_2 above.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_1": {
+          "type": "string",
+          "description": "Name of the ephemeris used to generate the data, per participant.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_3": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_4": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_5": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RANGE_UNITS": {
+          "type": "string",
+          "description": "Units of the RANGE observable: \"km\", \"s\" or \"RU\" (range units).\nRANGE is meaningless without it.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "type": "string",
+          "description": "Reference frame for angle and position data, as the verbatim CCSDS\nkeyword value (503.0-B-2 annex B).",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION": {
+          "type": "string",
+          "description": "Recommended interpolation method for the observations.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Recommended interpolation degree.",
+          "x-flatbuffer-type": "uint"
+        },
+        "FREQ_OFFSET": {
+          "type": "number",
+          "description": "Frequency offset applied to the observations, Hz.",
+          "x-flatbuffer-type": "double"
+        },
+        "TURNAROUND_NUMERATOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Transponder turnaround ratio numerator.",
+          "x-flatbuffer-type": "int"
+        },
+        "TURNAROUND_DENOMINATOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Transponder turnaround ratio denominator.",
+          "x-flatbuffer-type": "int"
+        },
+        "TRANSMIT_DELAY_1": {
+          "type": "number",
+          "description": "Transmit delays by participant, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_1": {
+          "type": "number",
+          "description": "Receive delay for the first participant, s. (RECEIVE_DELAY_2 and\nRECEIVE_DELAY_3 already exist on the TDM root.)",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER_COUNT_BIAS": {
+          "type": "number",
+          "description": "Doppler count bias, Hz.",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER_COUNT_SCALE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Doppler count scale factor.",
+          "x-flatbuffer-type": "uint"
+        },
+        "DOPPLER_COUNT_ROLLOVER": {
+          "type": "boolean",
+          "description": "Whether the Doppler counter rolls over (CCSDS YES/NO).",
+          "x-flatbuffer-type": "bool"
+        },
+        "CORRECTION_RANGE": {
+          "type": "number",
+          "description": "Corrections that a consumer must apply, or that were applied when\nCORRECTIONS_APPLIED is \"YES\". Units follow the corrected observable.",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_DOPPLER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_RCS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_RECEIVE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_TRANSMIT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ABERRATION_YEARLY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ABERRATION_DIURNAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "TDM": {
       "type": "object",
       "description": "Tracking Data Message",
@@ -89068,6 +90313,226 @@
           },
           "description": "SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp\ntable covering this segment, ordered by START_TIME and non-overlapping.\nRequired in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone\ncannot reconstruct the observables. Absent for unramped tracking, which\nleaves the record exactly CCSDS-conformant.",
           "x-flatbuffer-type": "[TDMTransmitRamp]"
+        },
+        "OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TDMObservation"
+          },
+          "description": "Data-section observations for a SINGLE-segment TDM, in file order.",
+          "x-flatbuffer-type": "[TDMObservation]"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TDMSegment"
+          },
+          "description": "All metadata+data segments of a MULTI-segment TDM, in file order.",
+          "x-flatbuffer-type": "[TDMSegment]"
+        },
+        "TRANSMIT_FREQ_2": {
+          "type": "number",
+          "description": "Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1\nalready exists above; 2..5 had no carrier.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_1": {
+          "type": "number",
+          "description": "Transmit frequency rates by participant, Hz/s. A constant rate here is\nthe single-interval degenerate case of TRANSMIT_RAMPS.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQ_RATE_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "Unique message identifier (503.0-B-2 table 3-2).",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Free-text tracking-pass identifier (503.0-B-2 table 3-3).",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_TYPES": {
+          "type": "string",
+          "description": "Comma-separated list of the data keywords present in the data section.",
+          "x-flatbuffer-type": "string"
+        },
+        "PATH": {
+          "type": "string",
+          "description": "Signal path through the participants as an ordered comma-separated list,\ne.g. \"1,2,1\". Distinct from the numbered PATH_1 / PATH_2 above.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_1": {
+          "type": "string",
+          "description": "Name of the ephemeris used to generate the data, per participant.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_3": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_4": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_NAME_5": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RANGE_UNITS": {
+          "type": "string",
+          "description": "Units of the RANGE observable: \"km\", \"s\" or \"RU\" (range units).\nRANGE is meaningless without it.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "type": "string",
+          "description": "Reference frame for angle and position data, as the verbatim CCSDS\nkeyword value (503.0-B-2 annex B).",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION": {
+          "type": "string",
+          "description": "Recommended interpolation method for the observations.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Recommended interpolation degree.",
+          "x-flatbuffer-type": "uint"
+        },
+        "FREQ_OFFSET": {
+          "type": "number",
+          "description": "Frequency offset applied to the observations, Hz.",
+          "x-flatbuffer-type": "double"
+        },
+        "TURNAROUND_NUMERATOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Transponder turnaround ratio numerator.",
+          "x-flatbuffer-type": "int"
+        },
+        "TURNAROUND_DENOMINATOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Transponder turnaround ratio denominator.",
+          "x-flatbuffer-type": "int"
+        },
+        "TRANSMIT_DELAY_1": {
+          "type": "number",
+          "description": "Transmit delays by participant, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_DELAY_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_1": {
+          "type": "number",
+          "description": "Receive delay for the first participant, s. (RECEIVE_DELAY_2 and\nRECEIVE_DELAY_3 already exist on the TDM root.)",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVE_DELAY_5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER_COUNT_BIAS": {
+          "type": "number",
+          "description": "Doppler count bias, Hz.",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER_COUNT_SCALE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Doppler count scale factor.",
+          "x-flatbuffer-type": "uint"
+        },
+        "DOPPLER_COUNT_ROLLOVER": {
+          "type": "boolean",
+          "description": "Whether the Doppler counter rolls over (CCSDS YES/NO).",
+          "x-flatbuffer-type": "bool"
+        },
+        "CORRECTION_RANGE": {
+          "type": "number",
+          "description": "Corrections that a consumer must apply, or that were applied when\nCORRECTIONS_APPLIED is \"YES\". Units follow the corrected observable.",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_DOPPLER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_RCS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_RECEIVE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_TRANSMIT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ABERRATION_YEARLY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRECTION_ABERRATION_DIURNAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
@@ -97732,6 +99197,9 @@
             },
             {
               "$ref": "#/definitions/PCE"
+            },
+            {
+              "$ref": "#/definitions/NCD"
             }
           ],
           "description": "The record data (union of all supported standards)",

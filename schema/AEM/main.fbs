@@ -1,10 +1,118 @@
-// Hash: 7da76b81a11e6e9d9d5e28deb29684942f49692e97c856ec5248347a64aa192e
-// Version: 2.0.1
+// Hash: e5adf3485a7c1741a9211ca8c68397487da5bd5fb4f1c48d7443845fc430c1af
+// Version: 2.0.2
 // -----------------------------------END_HEADER
-// COMPACT FORMAT: This schema uses a row-major array layout for attitude data
-// instead of individual entry tables. Time is reconstructed from START_TIME
-// and STEP_SIZE rather than stored per-entry. This reduces storage overhead
-// and improves serialization performance for large attitude ephemeris datasets.
+// Attitude Ephemeris Message, CCSDS 504.0-B-2 (January 2024).
+//
+// TWO DATA FORMATS, selected by STEP_SIZE:
+//
+// COMPACT (STEP_SIZE > 0): row-major array layout for attitude data instead of
+// individual entry tables. Time is reconstructed as epoch[i] = START_TIME +
+// i * STEP_SIZE rather than stored per-entry. This reduces storage overhead and
+// improves serialization performance for large attitude ephemeris datasets, and
+// is only correct for a UNIFORM grid.
+//
+// VERBOSE (STEP_SIZE == 0 or omitted): ATTITUDE_DATA_LINES, each carrying its
+// own EPOCH. This is the form a CCSDS AEM actually takes -- every AEM data line
+// carries an explicit epoch and published AEMs are non-uniform. Use it whenever
+// the step is irregular. The same two-form rule governs $OEM.
+//
+// Do NOT populate both formats simultaneously.
+
+/// A single attitude data line with an EXPLICIT epoch (non-uniform steps).
+///
+/// CCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs
+/// are not on a uniform grid: the published example (504.0-B-2 figure G-4)
+/// steps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.
+/// 2339 s then 1 s. Such a segment CANNOT be expressed by the compact
+/// ATTITUDE_DATA array, whose epochs are reconstructed as
+/// START_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have
+/// the same irregular shape.
+///
+/// The populated columns are selected by the segment's ATTITUDE_TYPE exactly
+/// as in CCSDS 504.0-B-2 table 4-4:
+///   QUATERNION              Q1 Q2 Q3 QC
+///   QUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT
+///   QUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   EULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3
+///   EULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT
+///   EULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z
+///   SPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL
+///   SPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE
+///   SPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL
+///
+/// Quaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,
+/// vector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2
+/// (annex, change 7) and is deliberately NOT carried here.
+///
+/// Units per 504.0-B-2 4.2.4.6: quaternion components dimensionless;
+/// Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
+/// ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
+/// NUTATION_PER s.
+table attitudeDataLine {
+  /// Epoch of this attitude state (required for non-uniform steps).
+  EPOCH:string;
+
+  /// Quaternion vector component 1 (dimensionless).
+  Q1:double;
+  /// Quaternion vector component 2 (dimensionless).
+  Q2:double;
+  /// Quaternion vector component 3 (dimensionless).
+  Q3:double;
+  /// Quaternion scalar component (dimensionless).
+  QC:double;
+
+  /// Time derivative of Q1, 1/s.
+  Q1_DOT:double;
+  /// Time derivative of Q2, 1/s.
+  Q2_DOT:double;
+  /// Time derivative of Q3, 1/s.
+  Q3_DOT:double;
+  /// Time derivative of QC, 1/s.
+  QC_DOT:double;
+
+  /// Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.
+  ANGLE_1:double;
+  /// Euler angle 2, deg.
+  ANGLE_2:double;
+  /// Euler angle 3, deg.
+  ANGLE_3:double;
+  /// Time derivative of ANGLE_1, deg/s.
+  ANGLE_1_DOT:double;
+  /// Time derivative of ANGLE_2, deg/s.
+  ANGLE_2_DOT:double;
+  /// Time derivative of ANGLE_3, deg/s.
+  ANGLE_3_DOT:double;
+
+  /// Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.
+  ANGVEL_X:double;
+  /// Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.
+  ANGVEL_Y:double;
+  /// Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.
+  ANGVEL_Z:double;
+
+  /// Right ascension of the spin axis, deg.
+  SPIN_ALPHA:double;
+  /// Declination of the spin axis, deg.
+  SPIN_DELTA:double;
+  /// Phase of the satellite about the spin axis, deg.
+  SPIN_ANGLE:double;
+  /// Angular velocity about the spin axis, deg/s.
+  SPIN_ANGLE_VEL:double;
+
+  /// Nutation angle, deg.
+  NUTATION:double;
+  /// Nutation period, s.
+  NUTATION_PER:double;
+  /// Nutation phase, deg.
+  NUTATION_PHASE:double;
+
+  /// Right ascension of the angular momentum vector, deg.
+  MOMENTUM_ALPHA:double;
+  /// Declination of the angular momentum vector, deg.
+  MOMENTUM_DELTA:double;
+  /// Angular velocity of the nutation, deg/s.
+  NUTATION_VEL:double;
+}
 
 table AEMSegment {
   OBJECT_NAME:string;
@@ -30,6 +138,54 @@ table AEMSegment {
   /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
   /// Length must be divisible by ATTITUDE_COMPONENTS.
   ATTITUDE_DATA:[double];
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED (CCSDS 504.0-B-2 conformance). Append-only: never reorder.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  /// One entry per COMMENT line, in file order.
+  COMMENT:[string];
+
+  /// Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  /// (504.0-B-2 table 4-3, optional).
+  CENTER_NAME:string;
+
+  /// Classification marking of the data in portion-marked format
+  /// (504.0-B-2 table 4-3, optional).
+  CLASSIFICATION:string;
+
+  /// Start of the USEABLE time span covered by the data, ISO 8601.
+  USEABLE_START_TIME:string;
+
+  /// End of the USEABLE time span covered by the data, ISO 8601.
+  USEABLE_STOP_TIME:string;
+
+  /// Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  /// when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  EULER_ROT_SEQ:string;
+
+  /// Reference frame in which the ANGVEL_* components are expressed; the value
+  /// is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  /// NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  /// is the ratified spelling and is the one carried here.
+  ANGVEL_FRAME:string;
+
+  /// Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  INTERPOLATION_METHOD:string;
+
+  /// Recommended interpolation degree.
+  INTERPOLATION_DEGREE:uint;
+
+  /// Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  /// VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  /// 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  /// 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///    and ATTITUDE_DATA must be empty or ignored by parsers.
+  /// 3. Do NOT populate both formats simultaneously.
+  ATTITUDE_DATA_LINES:[attitudeDataLine];
 }
 
 /// Attitude Ephemeris Message
@@ -38,6 +194,19 @@ table AEM {
   CREATION_DATE:string;
   ORIGINATOR:string;
   SEGMENTS:[AEMSegment];
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED (CCSDS 504.0-B-2 header, table 4-2). Append-only: never reorder.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  MESSAGE_ID:string;
+
+  /// Plain-text comments carried in the message header, one entry per line.
+  COMMENT:[string];
+
+  /// Message classification/caveats in portion-marked format.
+  CLASSIFICATION:string;
 }
 
 root_type AEM;

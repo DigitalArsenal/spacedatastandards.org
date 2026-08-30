@@ -140,8 +140,133 @@ class AEMSegment(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
+    # Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+    # One entry per COMMENT line, in file order.
+    # AEMSegment
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # AEMSegment
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AEMSegment
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+    # (504.0-B-2 table 4-3, optional).
+    # AEMSegment
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification marking of the data in portion-marked format
+    # (504.0-B-2 table 4-3, optional).
+    # AEMSegment
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Start of the USEABLE time span covered by the data, ISO 8601.
+    # AEMSegment
+    def USEABLE_START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # End of the USEABLE time span covered by the data, ISO 8601.
+    # AEMSegment
+    def USEABLE_STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+    # when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+    # AEMSegment
+    def EULER_ROT_SEQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference frame in which the ANGVEL_* components are expressed; the value
+    # is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+    # NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+    # is the ratified spelling and is the one carried here.
+    # AEMSegment
+    def ANGVEL_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+    # AEMSegment
+    def INTERPOLATION_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Recommended interpolation degree.
+    # AEMSegment
+    def INTERPOLATION_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+    #
+    # VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+    # 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+    #    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+    # 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+    #    and ATTITUDE_DATA must be empty or ignored by parsers.
+    # 3. Do NOT populate both formats simultaneously.
+    # AEMSegment
+    def ATTITUDE_DATA_LINES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from attitudeDataLine import attitudeDataLine
+            obj = attitudeDataLine()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AEMSegment
+    def ATTITUDE_DATA_LINESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AEMSegment
+    def ATTITUDE_DATA_LINESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
 def AEMSegmentStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(22)
 
 def Start(builder):
     AEMSegmentStart(builder)
@@ -234,12 +359,97 @@ def AEMSegmentCreateATTITUDE_DATAVector(builder, data):
 def CreateATTITUDE_DATAVector(builder, data):
     AEMSegmentCreateATTITUDE_DATAVector(builder, data)
 
+def AEMSegmentAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    AEMSegmentAddCOMMENT(builder, COMMENT)
+
+def AEMSegmentStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return AEMSegmentStartCOMMENTVector(builder, numElems)
+
+def AEMSegmentCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    AEMSegmentCreateCOMMENTVector(builder, data)
+
+def AEMSegmentAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    AEMSegmentAddCENTER_NAME(builder, CENTER_NAME)
+
+def AEMSegmentAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    AEMSegmentAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def AEMSegmentAddUSEABLE_START_TIME(builder, USEABLE_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_START_TIME), 0)
+
+def AddUSEABLE_START_TIME(builder, USEABLE_START_TIME):
+    AEMSegmentAddUSEABLE_START_TIME(builder, USEABLE_START_TIME)
+
+def AEMSegmentAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_STOP_TIME), 0)
+
+def AddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME):
+    AEMSegmentAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
+
+def AEMSegmentAddEULER_ROT_SEQ(builder, EULER_ROT_SEQ):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(EULER_ROT_SEQ), 0)
+
+def AddEULER_ROT_SEQ(builder, EULER_ROT_SEQ):
+    AEMSegmentAddEULER_ROT_SEQ(builder, EULER_ROT_SEQ)
+
+def AEMSegmentAddANGVEL_FRAME(builder, ANGVEL_FRAME):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ANGVEL_FRAME), 0)
+
+def AddANGVEL_FRAME(builder, ANGVEL_FRAME):
+    AEMSegmentAddANGVEL_FRAME(builder, ANGVEL_FRAME)
+
+def AEMSegmentAddINTERPOLATION_METHOD(builder, INTERPOLATION_METHOD):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION_METHOD), 0)
+
+def AddINTERPOLATION_METHOD(builder, INTERPOLATION_METHOD):
+    AEMSegmentAddINTERPOLATION_METHOD(builder, INTERPOLATION_METHOD)
+
+def AEMSegmentAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
+    builder.PrependUint32Slot(20, INTERPOLATION_DEGREE, 0)
+
+def AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
+    AEMSegmentAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
+
+def AEMSegmentAddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINES):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_DATA_LINES), 0)
+
+def AddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINES):
+    AEMSegmentAddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINES)
+
+def AEMSegmentStartATTITUDE_DATA_LINESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartATTITUDE_DATA_LINESVector(builder, numElems):
+    return AEMSegmentStartATTITUDE_DATA_LINESVector(builder, numElems)
+
+def AEMSegmentCreateATTITUDE_DATA_LINESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateATTITUDE_DATA_LINESVector(builder, data):
+    AEMSegmentCreateATTITUDE_DATA_LINESVector(builder, data)
+
 def AEMSegmentEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return AEMSegmentEnd(builder)
 
+import attitudeDataLine
 try:
     from typing import List
 except:
@@ -262,6 +472,16 @@ class AEMSegmentT(object):
         STEP_SIZE = 0.0,
         ATTITUDE_COMPONENTS = 7,
         ATTITUDE_DATA = None,
+        COMMENT = None,
+        CENTER_NAME = None,
+        CLASSIFICATION = None,
+        USEABLE_START_TIME = None,
+        USEABLE_STOP_TIME = None,
+        EULER_ROT_SEQ = None,
+        ANGVEL_FRAME = None,
+        INTERPOLATION_METHOD = None,
+        INTERPOLATION_DEGREE = 0,
+        ATTITUDE_DATA_LINES = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -275,6 +495,16 @@ class AEMSegmentT(object):
         self.STEP_SIZE = STEP_SIZE  # type: float
         self.ATTITUDE_COMPONENTS = ATTITUDE_COMPONENTS  # type: int
         self.ATTITUDE_DATA = ATTITUDE_DATA  # type: Optional[List[float]]
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.USEABLE_START_TIME = USEABLE_START_TIME  # type: Optional[str]
+        self.USEABLE_STOP_TIME = USEABLE_STOP_TIME  # type: Optional[str]
+        self.EULER_ROT_SEQ = EULER_ROT_SEQ  # type: Optional[str]
+        self.ANGVEL_FRAME = ANGVEL_FRAME  # type: Optional[str]
+        self.INTERPOLATION_METHOD = INTERPOLATION_METHOD  # type: Optional[str]
+        self.INTERPOLATION_DEGREE = INTERPOLATION_DEGREE  # type: int
+        self.ATTITUDE_DATA_LINES = ATTITUDE_DATA_LINES  # type: Optional[List[attitudeDataLine.attitudeDataLineT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -315,6 +545,26 @@ class AEMSegmentT(object):
                     self.ATTITUDE_DATA.append(AEMSegment.ATTITUDE_DATA(i))
             else:
                 self.ATTITUDE_DATA = AEMSegment.ATTITUDE_DATAAsNumpy()
+        if not AEMSegment.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(AEMSegment.COMMENTLength()):
+                self.COMMENT.append(AEMSegment.COMMENT(i))
+        self.CENTER_NAME = AEMSegment.CENTER_NAME()
+        self.CLASSIFICATION = AEMSegment.CLASSIFICATION()
+        self.USEABLE_START_TIME = AEMSegment.USEABLE_START_TIME()
+        self.USEABLE_STOP_TIME = AEMSegment.USEABLE_STOP_TIME()
+        self.EULER_ROT_SEQ = AEMSegment.EULER_ROT_SEQ()
+        self.ANGVEL_FRAME = AEMSegment.ANGVEL_FRAME()
+        self.INTERPOLATION_METHOD = AEMSegment.INTERPOLATION_METHOD()
+        self.INTERPOLATION_DEGREE = AEMSegment.INTERPOLATION_DEGREE()
+        if not AEMSegment.ATTITUDE_DATA_LINESIsNone():
+            self.ATTITUDE_DATA_LINES = []
+            for i in range(AEMSegment.ATTITUDE_DATA_LINESLength()):
+                if AEMSegment.ATTITUDE_DATA_LINES(i) is None:
+                    self.ATTITUDE_DATA_LINES.append(None)
+                else:
+                    attitudeDataLine_ = attitudeDataLine.attitudeDataLineT.InitFromObj(AEMSegment.ATTITUDE_DATA_LINES(i))
+                    self.ATTITUDE_DATA_LINES.append(attitudeDataLine_)
 
     # AEMSegmentT
     def Pack(self, builder):
@@ -344,6 +594,36 @@ class AEMSegmentT(object):
                 for i in reversed(range(len(self.ATTITUDE_DATA))):
                     builder.PrependFloat64(self.ATTITUDE_DATA[i])
                 ATTITUDE_DATA = builder.EndVector()
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            AEMSegmentStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.USEABLE_START_TIME is not None:
+            USEABLE_START_TIME = builder.CreateString(self.USEABLE_START_TIME)
+        if self.USEABLE_STOP_TIME is not None:
+            USEABLE_STOP_TIME = builder.CreateString(self.USEABLE_STOP_TIME)
+        if self.EULER_ROT_SEQ is not None:
+            EULER_ROT_SEQ = builder.CreateString(self.EULER_ROT_SEQ)
+        if self.ANGVEL_FRAME is not None:
+            ANGVEL_FRAME = builder.CreateString(self.ANGVEL_FRAME)
+        if self.INTERPOLATION_METHOD is not None:
+            INTERPOLATION_METHOD = builder.CreateString(self.INTERPOLATION_METHOD)
+        if self.ATTITUDE_DATA_LINES is not None:
+            ATTITUDE_DATA_LINESlist = []
+            for i in range(len(self.ATTITUDE_DATA_LINES)):
+                ATTITUDE_DATA_LINESlist.append(self.ATTITUDE_DATA_LINES[i].Pack(builder))
+            AEMSegmentStartATTITUDE_DATA_LINESVector(builder, len(self.ATTITUDE_DATA_LINES))
+            for i in reversed(range(len(self.ATTITUDE_DATA_LINES))):
+                builder.PrependUOffsetTRelative(ATTITUDE_DATA_LINESlist[i])
+            ATTITUDE_DATA_LINES = builder.EndVector()
         AEMSegmentStart(builder)
         if self.OBJECT_NAME is not None:
             AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -367,5 +647,24 @@ class AEMSegmentT(object):
         AEMSegmentAddATTITUDE_COMPONENTS(builder, self.ATTITUDE_COMPONENTS)
         if self.ATTITUDE_DATA is not None:
             AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
+        if self.COMMENT is not None:
+            AEMSegmentAddCOMMENT(builder, COMMENT)
+        if self.CENTER_NAME is not None:
+            AEMSegmentAddCENTER_NAME(builder, CENTER_NAME)
+        if self.CLASSIFICATION is not None:
+            AEMSegmentAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.USEABLE_START_TIME is not None:
+            AEMSegmentAddUSEABLE_START_TIME(builder, USEABLE_START_TIME)
+        if self.USEABLE_STOP_TIME is not None:
+            AEMSegmentAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
+        if self.EULER_ROT_SEQ is not None:
+            AEMSegmentAddEULER_ROT_SEQ(builder, EULER_ROT_SEQ)
+        if self.ANGVEL_FRAME is not None:
+            AEMSegmentAddANGVEL_FRAME(builder, ANGVEL_FRAME)
+        if self.INTERPOLATION_METHOD is not None:
+            AEMSegmentAddINTERPOLATION_METHOD(builder, INTERPOLATION_METHOD)
+        AEMSegmentAddINTERPOLATION_DEGREE(builder, self.INTERPOLATION_DEGREE)
+        if self.ATTITUDE_DATA_LINES is not None:
+            AEMSegmentAddATTITUDE_DATA_LINES(builder, ATTITUDE_DATA_LINES)
         AEMSegment = AEMSegmentEnd(builder)
         return AEMSegment

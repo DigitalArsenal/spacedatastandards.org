@@ -1,0 +1,268 @@
+// Hash: 69f45a0409d81a1d57267d3667a42f1733091ffa7f779b3c6778080783a376c5
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Native container format class.
+///
+/// These are FORMAT designations, not products: each names a published or
+/// widely implemented container layout, and a capability description states
+/// what the layout can express. Reserve 0 so an unset byte never decodes as a
+/// real format. Append new members only; never reorder or reuse a value.
+enum ncdContainerFormat : ubyte {
+  UNSPECIFIED = 0,
+
+  /// Double-precision Array File container carrying Spacecraft and Planet
+  /// Kernel segments: a binary file of typed, independently addressed
+  /// ephemeris segments, each with an integer target and centre, an integer
+  /// reference frame, a numeric segment type, and a contiguous address range
+  /// inside the file.
+  SPK_DAF = 1,
+
+  /// SP3 version c: fixed-column text container of per-epoch satellite
+  /// positions and optional velocities with a clock column, a header block of
+  /// accuracy codes, and one uniform epoch interval.
+  SP3_C = 2,
+
+  /// SP3 version d: as SP3_C, with an unbounded satellite count and extended
+  /// header lines.
+  SP3_D = 3,
+
+  /// Code-500 fixed-record binary ephemeris: a header record of packed words
+  /// followed by fixed-length data records on a uniform step.
+  CODE_500 = 4,
+
+  /// Scenario-epoch ephemeris text container: time-ordered position and
+  /// velocity records whose epochs are offsets in seconds from a declared
+  /// scenario epoch, qualified by a named coordinate system, a distance unit,
+  /// a named interpolation method and an interpolation order.
+  SCENARIO_EPOCH_EPHEMERIS_TEXT = 5,
+
+  /// Scenario-epoch attitude text container: the attitude counterpart of
+  /// SCENARIO_EPOCH_EPHEMERIS_TEXT, carrying quaternion, Euler or angular
+  /// velocity records against the same scenario epoch.
+  SCENARIO_EPOCH_ATTITUDE_TEXT = 6,
+
+  /// CCSDS Orbit Ephemeris Message, keyword-value notation.
+  CCSDS_OEM_KVN = 7,
+  /// CCSDS Orbit Ephemeris Message, XML.
+  CCSDS_OEM_XML = 8,
+  /// CCSDS Attitude Ephemeris Message, keyword-value notation.
+  CCSDS_AEM_KVN = 9,
+  /// CCSDS Attitude Ephemeris Message, XML.
+  CCSDS_AEM_XML = 10,
+  /// CCSDS Tracking Data Message, keyword-value notation.
+  CCSDS_TDM_KVN = 11,
+  /// CCSDS Tracking Data Message, XML.
+  CCSDS_TDM_XML = 12,
+
+  /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
+  /// which; a producer never reuses a neighbouring member instead.
+  PROVIDER_DEFINED = 255,
+}
+
+/// One independently addressed segment inside a native container.
+///
+/// A segmented binary ephemeris is not a single span: each segment has its own
+/// body pair, frame, numeric type and time bounds, and a reader must choose
+/// among them. $OEM carries the STATES; this carries the segment DESCRIPTOR
+/// that says which states came from where and what must be written back.
+table NCDSegmentDescriptor {
+  /// Segment name as recorded in the container.
+  NAME: string;
+  /// Integer body code of the segment target.
+  TARGET_NAIF_ID: int;
+  /// Integer body code of the segment centre.
+  CENTER_NAIF_ID: int;
+  /// Integer reference frame code of the segment.
+  FRAME_NAIF_ID: int;
+  /// Reference frame name as recorded in the container.
+  FRAME_NAME: string;
+  /// Numeric segment data type, verbatim. The evaluation rule is a property of
+  /// this number (for example, Chebyshev position with fixed interval, or
+  /// discrete states with Lagrange interpolation); it is carried as the
+  /// container's own integer so a rewrite is exact.
+  SEGMENT_TYPE: int;
+  /// Segment coverage start, ISO 8601.
+  START_EPOCH: string;
+  /// Segment coverage stop, ISO 8601.
+  STOP_EPOCH: string;
+  /// Segment coverage start, seconds past J2000 in the barycentric dynamical
+  /// time scale, as stored in the container.
+  START_SECONDS_PAST_J2000_TDB: double;
+  /// Segment coverage stop, same scale.
+  STOP_SECONDS_PAST_J2000_TDB: double;
+  /// First addressed element of the segment inside the file.
+  INITIAL_ADDRESS: ulong;
+  /// Last addressed element of the segment inside the file.
+  FINAL_ADDRESS: ulong;
+  /// Polynomial degree or record size the segment type parameterises, when the
+  /// type carries one.
+  POLYNOMIAL_DEGREE: uint;
+}
+
+/// Header block of a fixed-column satellite position container (SP3).
+table NCDSP3Header {
+  /// Record content indicator, e.g. "P" for positions only, "V" with
+  /// velocities.
+  FILE_TYPE: string;
+  /// Satellite system indicator recorded in the header.
+  SATELLITE_SYSTEM: string;
+  /// Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert.
+  ORBIT_TYPE: string;
+  /// Data used to produce the file, as recorded.
+  DATA_USED: string;
+  /// Terrestrial reference frame name as recorded.
+  COORDINATE_SYSTEM: string;
+  /// Producing agency as recorded IN THE FILE. This is observed content, not a
+  /// classification.
+  AGENCY: string;
+  /// Time system as recorded in the header.
+  TIME_SYSTEM: string;
+  /// Week number of the first epoch in the file's own week counter.
+  GPS_WEEK: uint;
+  /// Seconds of week of the first epoch.
+  SECONDS_OF_WEEK: double;
+  /// Modified Julian Day of the first epoch.
+  MODIFIED_JULIAN_DAY_START: int;
+  /// Fractional day of the first epoch.
+  FRACTIONAL_DAY: double;
+  /// Uniform interval between epochs, seconds.
+  EPOCH_INTERVAL_SECONDS: double;
+  /// Number of epochs declared in the header.
+  NUMBER_OF_EPOCHS: uint;
+  /// Satellite identifiers in header order.
+  SATELLITE_IDS: [string];
+  /// Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy
+  /// is POSITION_VELOCITY_BASE raised to this power.
+  SATELLITE_ACCURACY_EXPONENTS: [int8];
+  /// Base for the position and velocity standard-deviation exponents carried
+  /// per state in $OEM.
+  POSITION_VELOCITY_BASE: double;
+  /// Base for the clock bias and clock rate standard-deviation exponents.
+  CLOCK_RATE_BASE: double;
+  /// Header comment lines in file order.
+  COMMENT: [string];
+}
+
+/// Parameters of a scenario-epoch text container.
+table NCDScenarioEpochContainer {
+  /// Epoch that every record offset is measured from, ISO 8601.
+  SCENARIO_EPOCH: string;
+  /// Time scale the scenario epoch is expressed in.
+  TIME_SYSTEM: string;
+  /// Distance unit of the records, e.g. "Meters", "Kilometers".
+  DISTANCE_UNIT: string;
+  /// Named coordinate system of the records.
+  COORDINATE_SYSTEM: string;
+  /// Named coordinate axes, when stated separately from the system.
+  COORDINATE_AXES: string;
+  /// Central body of the records.
+  CENTRAL_BODY: string;
+  /// Named interpolation method, e.g. "Lagrange", "Hermite".
+  INTERPOLATION_METHOD: string;
+  /// Interpolation order expressed as (samples - 1), which is how these
+  /// containers state it. Carried verbatim rather than converted, so a rewrite
+  /// reproduces the source exactly.
+  INTERPOLATION_SAMPLES_M1: uint;
+  /// Number of ephemeris points declared in the container.
+  NUMBER_OF_EPHEMERIS_POINTS: uint;
+  /// Segment boundary offsets in seconds from SCENARIO_EPOCH, when present.
+  SEGMENT_BOUNDARY_TIMES: [double];
+}
+
+/// Header words of a fixed-record binary ephemeris container.
+table NCDCode500Header {
+  /// Object name as recorded in the header.
+  SATELLITE_NAME: string;
+  /// Container-internal tape or file identifier.
+  TAPE_ID: string;
+  /// Time system indicator as recorded.
+  TIME_SYSTEM_INDICATOR: string;
+  /// Coordinate system indicator as recorded.
+  COORDINATE_SYSTEM_INDICATOR: int;
+  /// Coverage start, ISO 8601.
+  START_EPOCH: string;
+  /// Coverage stop, ISO 8601.
+  STOP_EPOCH: string;
+  /// Uniform step between data records, seconds.
+  EPOCH_STEP_SECONDS: double;
+  /// The header record's packed words in file order, undecoded. A reader that
+  /// understands a word decodes it; a rewriter reproduces the record exactly
+  /// without having to.
+  HEADER_WORDS: [double];
+}
+
+/// Native Container Descriptor.
+///
+/// The file-level facts of an ephemeris, attitude or tracking container that
+/// are NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the
+/// states, attitudes and observations; none of them can carry the internal
+/// file name, the comment area, the segment address ranges, the header accuracy
+/// block or the interpolation order the source declared, because those describe
+/// the CONTAINER. Without them a read-then-write cycle silently invents header
+/// values, and a segmented binary file cannot be reproduced at all.
+///
+/// ONE record covers every container class rather than one record per format:
+/// the file-level facts are the same kind of fact in each, and the
+/// format-specific blocks are optional sub-tables selected by FORMAT. Only the
+/// block matching FORMAT is populated.
+table NCD {
+  /// Container format class.
+  FORMAT: ncdContainerFormat = UNSPECIFIED;
+  /// Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise.
+  PROVIDER_DEFINED_FORMAT_NAME: string;
+  /// Version of the container format as declared by the file itself.
+  FORMAT_VERSION: string;
+
+  /// Producing system or organization as recorded IN THE FILE.
+  PRODUCER: string;
+  /// Creation date recorded in the file, ISO 8601.
+  CREATION_DATE: string;
+  /// Originator recorded in the file.
+  ORIGINATOR: string;
+
+  /// Container-internal file name, which is stored inside the file and is
+  /// independent of the name on disk.
+  INTERNAL_FILE_NAME: string;
+  /// Free-text comment area carried inside the container, one entry per line,
+  /// in file order.
+  COMMENT_AREA: [string];
+
+  /// Reference frame name as the container itself spells it, before any
+  /// mapping onto $RFM.
+  NATIVE_FRAME_NAME: string;
+  /// Integer reference frame code as the container stores it.
+  NATIVE_FRAME_ID: int;
+  /// Time system as the container itself spells it, before any mapping onto
+  /// the ratified time-scale vocabulary.
+  NATIVE_TIME_SYSTEM: string;
+
+  /// Descriptors of the container's segments, in file order. Empty for a
+  /// single-span container.
+  SEGMENTS: [NCDSegmentDescriptor];
+
+  /// Header block when FORMAT is SP3_C or SP3_D.
+  SP3_HEADER: NCDSP3Header;
+  /// Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or
+  /// SCENARIO_EPOCH_ATTITUDE_TEXT.
+  SCENARIO_CONTAINER: NCDScenarioEpochContainer;
+  /// Header words when FORMAT is CODE_500.
+  CODE_500_HEADER: NCDCode500Header;
+
+  /// Total coverage start across all segments, ISO 8601.
+  START_TIME: string;
+  /// Total coverage stop across all segments, ISO 8601.
+  STOP_TIME: string;
+
+  /// Length of the described container in bytes.
+  SOURCE_BYTE_LENGTH: ulong;
+  /// SHA-256 of the described container's exact bytes, lowercase hex. This is
+  /// what makes the descriptor checkable: a consumer can prove the descriptor
+  /// belongs to the file it holds.
+  SOURCE_SHA256: string;
+  /// Content identifier of the described container when it is addressed by
+  /// content rather than by path.
+  SOURCE_CID: string;
+}
+
+root_type NCD;
+file_identifier "$NCD";

@@ -293,6 +293,23 @@ class ephemerisDataBlock : Table() {
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * NAIF integer code of the ephemeris target (SPK segment target).
+     */
+    val objectNaifId : Int
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * NAIF integer code of the ephemeris centre, matching CENTER_NAME
+     * (SPK segment centre).
+     */
+    val centerNaifId : Int
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer): ephemerisDataBlock = getRootAsephemerisDataBlock(_bb, ephemerisDataBlock())
@@ -300,9 +317,11 @@ class ephemerisDataBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataBlock(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, covReferenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, stopTimeOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, stepSize: Double, stateVectorSize: UByte, ephemerisDataOffset: Int, ephemerisDataLinesOffset: Int, covarianceMatrixLinesOffset: Int, polynomialPositionRecordsOffset: Int) : Int {
-            builder.startTable(19)
+        fun createephemerisDataBlock(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, covReferenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, stopTimeOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, stepSize: Double, stateVectorSize: UByte, ephemerisDataOffset: Int, ephemerisDataLinesOffset: Int, covarianceMatrixLinesOffset: Int, polynomialPositionRecordsOffset: Int, objectNaifId: Int, centerNaifId: Int) : Int {
+            builder.startTable(21)
             addSTEPSIZE(builder, stepSize)
+            addCENTERNAIFID(builder, centerNaifId)
+            addOBJECTNAIFID(builder, objectNaifId)
             addPOLYNOMIALPOSITIONRECORDS(builder, polynomialPositionRecordsOffset)
             addCOVARIANCEMATRIXLINES(builder, covarianceMatrixLinesOffset)
             addEPHEMERISDATALINES(builder, ephemerisDataLinesOffset)
@@ -323,7 +342,7 @@ class ephemerisDataBlock : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endephemerisDataBlock(builder)
         }
-        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
         fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
@@ -375,6 +394,8 @@ class ephemerisDataBlock : Table() {
             return builder.endVector()
         }
         fun startPolynomialPositionRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addOBJECTNAIFID(builder: FlatBufferBuilder, objectNaifId: Int) = builder.addInt(19, objectNaifId, 0)
+        fun addCENTERNAIFID(builder: FlatBufferBuilder, centerNaifId: Int) = builder.addInt(20, centerNaifId, 0)
         fun endephemerisDataBlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

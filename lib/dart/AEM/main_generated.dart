@@ -6,6 +6,424 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
+///  A single attitude data line with an EXPLICIT epoch (non-uniform steps).
+///
+///  CCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs
+///  are not on a uniform grid: the published example (504.0-B-2 figure G-4)
+///  steps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.
+///  2339 s then 1 s. Such a segment CANNOT be expressed by the compact
+///  ATTITUDE_DATA array, whose epochs are reconstructed as
+///  START_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have
+///  the same irregular shape.
+///
+///  The populated columns are selected by the segment's ATTITUDE_TYPE exactly
+///  as in CCSDS 504.0-B-2 table 4-4:
+///    QUATERNION              Q1 Q2 Q3 QC
+///    QUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT
+///    QUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z
+///    EULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3
+///    EULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT
+///    EULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z
+///    SPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL
+///    SPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE
+///    SPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL
+///
+///  Quaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,
+///  vector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2
+///  (annex, change 7) and is deliberately NOT carried here.
+///
+///  Units per 504.0-B-2 4.2.4.6: quaternion components dimensionless;
+///  Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
+///  ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
+///  NUTATION_PER s.
+class attitudeDataLine {
+  attitudeDataLine._(this._bc, this._bcOffset);
+  factory attitudeDataLine(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<attitudeDataLine> reader = _attitudeDataLineReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch of this attitude state (required for non-uniform steps).
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Quaternion vector component 1 (dimensionless).
+  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Quaternion vector component 2 (dimensionless).
+  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Quaternion vector component 3 (dimensionless).
+  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Quaternion scalar component (dimensionless).
+  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Time derivative of Q1, 1/s.
+  double get Q1_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get q1Dot => Q1_DOT;
+  ///  Time derivative of Q2, 1/s.
+  double get Q2_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get q2Dot => Q2_DOT;
+  ///  Time derivative of Q3, 1/s.
+  double get Q3_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get q3Dot => Q3_DOT;
+  ///  Time derivative of QC, 1/s.
+  double get QC_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get qcDot => QC_DOT;
+  ///  Euler angle 1, deg. Sequence given by EULER_ROT_SEQ.
+  double get ANGLE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get angle1 => ANGLE_1;
+  ///  Euler angle 2, deg.
+  double get ANGLE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get angle2 => ANGLE_2;
+  ///  Euler angle 3, deg.
+  double get ANGLE_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get angle3 => ANGLE_3;
+  ///  Time derivative of ANGLE_1, deg/s.
+  double get ANGLE_1_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get angle1Dot => ANGLE_1_DOT;
+  ///  Time derivative of ANGLE_2, deg/s.
+  double get ANGLE_2_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get angle2Dot => ANGLE_2_DOT;
+  ///  Time derivative of ANGLE_3, deg/s.
+  double get ANGLE_3_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get angle3Dot => ANGLE_3_DOT;
+  ///  Angular velocity X component, deg/s, expressed in ANGVEL_FRAME.
+  double get ANGVEL_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get angvelX => ANGVEL_X;
+  ///  Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME.
+  double get ANGVEL_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get angvelY => ANGVEL_Y;
+  ///  Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME.
+  double get ANGVEL_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get angvelZ => ANGVEL_Z;
+  ///  Right ascension of the spin axis, deg.
+  double get SPIN_ALPHA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get spinAlpha => SPIN_ALPHA;
+  ///  Declination of the spin axis, deg.
+  double get SPIN_DELTA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get spinDelta => SPIN_DELTA;
+  ///  Phase of the satellite about the spin axis, deg.
+  double get SPIN_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get spinAngle => SPIN_ANGLE;
+  ///  Angular velocity about the spin axis, deg/s.
+  double get SPIN_ANGLE_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get spinAngleVel => SPIN_ANGLE_VEL;
+  ///  Nutation angle, deg.
+  double get NUTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Nutation period, s.
+  double get NUTATION_PER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get nutationPer => NUTATION_PER;
+  ///  Nutation phase, deg.
+  double get NUTATION_PHASE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get nutationPhase => NUTATION_PHASE;
+  ///  Right ascension of the angular momentum vector, deg.
+  double get MOMENTUM_ALPHA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  double get momentumAlpha => MOMENTUM_ALPHA;
+  ///  Declination of the angular momentum vector, deg.
+  double get MOMENTUM_DELTA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get momentumDelta => MOMENTUM_DELTA;
+  ///  Angular velocity of the nutation, deg/s.
+  double get NUTATION_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get nutationVel => NUTATION_VEL;
+
+  @override
+  String toString() {
+    return 'attitudeDataLine{EPOCH: ${EPOCH}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC: ${QC}, q1Dot: ${q1Dot}, q2Dot: ${q2Dot}, q3Dot: ${q3Dot}, qcDot: ${qcDot}, angle1: ${angle1}, angle2: ${angle2}, angle3: ${angle3}, angle1Dot: ${angle1Dot}, angle2Dot: ${angle2Dot}, angle3Dot: ${angle3Dot}, angvelX: ${angvelX}, angvelY: ${angvelY}, angvelZ: ${angvelZ}, spinAlpha: ${spinAlpha}, spinDelta: ${spinDelta}, spinAngle: ${spinAngle}, spinAngleVel: ${spinAngleVel}, NUTATION: ${NUTATION}, nutationPer: ${nutationPer}, nutationPhase: ${nutationPhase}, momentumAlpha: ${momentumAlpha}, momentumDelta: ${momentumDelta}, nutationVel: ${nutationVel}}';
+  }
+}
+
+class _attitudeDataLineReader extends fb.TableReader<attitudeDataLine> {
+  const _attitudeDataLineReader();
+
+  @override
+  attitudeDataLine createObject(fb.BufferContext bc, int offset) =>
+    attitudeDataLine._(bc, offset);
+}
+
+class attitudeDataLineBuilder {
+  attitudeDataLineBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(28);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addQ1(double? Q1) {
+    fbBuilder.addFloat64(1, Q1);
+    return fbBuilder.offset;
+  }
+  int addQ2(double? Q2) {
+    fbBuilder.addFloat64(2, Q2);
+    return fbBuilder.offset;
+  }
+  int addQ3(double? Q3) {
+    fbBuilder.addFloat64(3, Q3);
+    return fbBuilder.offset;
+  }
+  int addQc(double? QC) {
+    fbBuilder.addFloat64(4, QC);
+    return fbBuilder.offset;
+  }
+  int addQ1Dot(double? Q1_DOT) {
+    fbBuilder.addFloat64(5, Q1_DOT);
+    return fbBuilder.offset;
+  }
+  int addQ2Dot(double? Q2_DOT) {
+    fbBuilder.addFloat64(6, Q2_DOT);
+    return fbBuilder.offset;
+  }
+  int addQ3Dot(double? Q3_DOT) {
+    fbBuilder.addFloat64(7, Q3_DOT);
+    return fbBuilder.offset;
+  }
+  int addQcDot(double? QC_DOT) {
+    fbBuilder.addFloat64(8, QC_DOT);
+    return fbBuilder.offset;
+  }
+  int addAngle1(double? ANGLE_1) {
+    fbBuilder.addFloat64(9, ANGLE_1);
+    return fbBuilder.offset;
+  }
+  int addAngle2(double? ANGLE_2) {
+    fbBuilder.addFloat64(10, ANGLE_2);
+    return fbBuilder.offset;
+  }
+  int addAngle3(double? ANGLE_3) {
+    fbBuilder.addFloat64(11, ANGLE_3);
+    return fbBuilder.offset;
+  }
+  int addAngle1Dot(double? ANGLE_1_DOT) {
+    fbBuilder.addFloat64(12, ANGLE_1_DOT);
+    return fbBuilder.offset;
+  }
+  int addAngle2Dot(double? ANGLE_2_DOT) {
+    fbBuilder.addFloat64(13, ANGLE_2_DOT);
+    return fbBuilder.offset;
+  }
+  int addAngle3Dot(double? ANGLE_3_DOT) {
+    fbBuilder.addFloat64(14, ANGLE_3_DOT);
+    return fbBuilder.offset;
+  }
+  int addAngvelX(double? ANGVEL_X) {
+    fbBuilder.addFloat64(15, ANGVEL_X);
+    return fbBuilder.offset;
+  }
+  int addAngvelY(double? ANGVEL_Y) {
+    fbBuilder.addFloat64(16, ANGVEL_Y);
+    return fbBuilder.offset;
+  }
+  int addAngvelZ(double? ANGVEL_Z) {
+    fbBuilder.addFloat64(17, ANGVEL_Z);
+    return fbBuilder.offset;
+  }
+  int addSpinAlpha(double? SPIN_ALPHA) {
+    fbBuilder.addFloat64(18, SPIN_ALPHA);
+    return fbBuilder.offset;
+  }
+  int addSpinDelta(double? SPIN_DELTA) {
+    fbBuilder.addFloat64(19, SPIN_DELTA);
+    return fbBuilder.offset;
+  }
+  int addSpinAngle(double? SPIN_ANGLE) {
+    fbBuilder.addFloat64(20, SPIN_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addSpinAngleVel(double? SPIN_ANGLE_VEL) {
+    fbBuilder.addFloat64(21, SPIN_ANGLE_VEL);
+    return fbBuilder.offset;
+  }
+  int addNutation(double? NUTATION) {
+    fbBuilder.addFloat64(22, NUTATION);
+    return fbBuilder.offset;
+  }
+  int addNutationPer(double? NUTATION_PER) {
+    fbBuilder.addFloat64(23, NUTATION_PER);
+    return fbBuilder.offset;
+  }
+  int addNutationPhase(double? NUTATION_PHASE) {
+    fbBuilder.addFloat64(24, NUTATION_PHASE);
+    return fbBuilder.offset;
+  }
+  int addMomentumAlpha(double? MOMENTUM_ALPHA) {
+    fbBuilder.addFloat64(25, MOMENTUM_ALPHA);
+    return fbBuilder.offset;
+  }
+  int addMomentumDelta(double? MOMENTUM_DELTA) {
+    fbBuilder.addFloat64(26, MOMENTUM_DELTA);
+    return fbBuilder.offset;
+  }
+  int addNutationVel(double? NUTATION_VEL) {
+    fbBuilder.addFloat64(27, NUTATION_VEL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class attitudeDataLineObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _Q1;
+  final double? _Q2;
+  final double? _Q3;
+  final double? _QC;
+  final double? _Q1_DOT;
+  final double? _Q2_DOT;
+  final double? _Q3_DOT;
+  final double? _QC_DOT;
+  final double? _ANGLE_1;
+  final double? _ANGLE_2;
+  final double? _ANGLE_3;
+  final double? _ANGLE_1_DOT;
+  final double? _ANGLE_2_DOT;
+  final double? _ANGLE_3_DOT;
+  final double? _ANGVEL_X;
+  final double? _ANGVEL_Y;
+  final double? _ANGVEL_Z;
+  final double? _SPIN_ALPHA;
+  final double? _SPIN_DELTA;
+  final double? _SPIN_ANGLE;
+  final double? _SPIN_ANGLE_VEL;
+  final double? _NUTATION;
+  final double? _NUTATION_PER;
+  final double? _NUTATION_PHASE;
+  final double? _MOMENTUM_ALPHA;
+  final double? _MOMENTUM_DELTA;
+  final double? _NUTATION_VEL;
+
+  attitudeDataLineObjectBuilder({
+    String? EPOCH,
+    double? Q1,
+    double? Q2,
+    double? Q3,
+    double? QC,
+    double? Q1_DOT,
+    double? q1Dot,
+    double? Q2_DOT,
+    double? q2Dot,
+    double? Q3_DOT,
+    double? q3Dot,
+    double? QC_DOT,
+    double? qcDot,
+    double? ANGLE_1,
+    double? angle1,
+    double? ANGLE_2,
+    double? angle2,
+    double? ANGLE_3,
+    double? angle3,
+    double? ANGLE_1_DOT,
+    double? angle1Dot,
+    double? ANGLE_2_DOT,
+    double? angle2Dot,
+    double? ANGLE_3_DOT,
+    double? angle3Dot,
+    double? ANGVEL_X,
+    double? angvelX,
+    double? ANGVEL_Y,
+    double? angvelY,
+    double? ANGVEL_Z,
+    double? angvelZ,
+    double? SPIN_ALPHA,
+    double? spinAlpha,
+    double? SPIN_DELTA,
+    double? spinDelta,
+    double? SPIN_ANGLE,
+    double? spinAngle,
+    double? SPIN_ANGLE_VEL,
+    double? spinAngleVel,
+    double? NUTATION,
+    double? NUTATION_PER,
+    double? nutationPer,
+    double? NUTATION_PHASE,
+    double? nutationPhase,
+    double? MOMENTUM_ALPHA,
+    double? momentumAlpha,
+    double? MOMENTUM_DELTA,
+    double? momentumDelta,
+    double? NUTATION_VEL,
+    double? nutationVel,
+  })
+      : _EPOCH = EPOCH,
+        _Q1 = Q1,
+        _Q2 = Q2,
+        _Q3 = Q3,
+        _QC = QC,
+        _Q1_DOT = q1Dot ?? Q1_DOT,
+        _Q2_DOT = q2Dot ?? Q2_DOT,
+        _Q3_DOT = q3Dot ?? Q3_DOT,
+        _QC_DOT = qcDot ?? QC_DOT,
+        _ANGLE_1 = angle1 ?? ANGLE_1,
+        _ANGLE_2 = angle2 ?? ANGLE_2,
+        _ANGLE_3 = angle3 ?? ANGLE_3,
+        _ANGLE_1_DOT = angle1Dot ?? ANGLE_1_DOT,
+        _ANGLE_2_DOT = angle2Dot ?? ANGLE_2_DOT,
+        _ANGLE_3_DOT = angle3Dot ?? ANGLE_3_DOT,
+        _ANGVEL_X = angvelX ?? ANGVEL_X,
+        _ANGVEL_Y = angvelY ?? ANGVEL_Y,
+        _ANGVEL_Z = angvelZ ?? ANGVEL_Z,
+        _SPIN_ALPHA = spinAlpha ?? SPIN_ALPHA,
+        _SPIN_DELTA = spinDelta ?? SPIN_DELTA,
+        _SPIN_ANGLE = spinAngle ?? SPIN_ANGLE,
+        _SPIN_ANGLE_VEL = spinAngleVel ?? SPIN_ANGLE_VEL,
+        _NUTATION = NUTATION,
+        _NUTATION_PER = nutationPer ?? NUTATION_PER,
+        _NUTATION_PHASE = nutationPhase ?? NUTATION_PHASE,
+        _MOMENTUM_ALPHA = momentumAlpha ?? MOMENTUM_ALPHA,
+        _MOMENTUM_DELTA = momentumDelta ?? MOMENTUM_DELTA,
+        _NUTATION_VEL = nutationVel ?? NUTATION_VEL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(28);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _Q1);
+    fbBuilder.addFloat64(2, _Q2);
+    fbBuilder.addFloat64(3, _Q3);
+    fbBuilder.addFloat64(4, _QC);
+    fbBuilder.addFloat64(5, _Q1_DOT);
+    fbBuilder.addFloat64(6, _Q2_DOT);
+    fbBuilder.addFloat64(7, _Q3_DOT);
+    fbBuilder.addFloat64(8, _QC_DOT);
+    fbBuilder.addFloat64(9, _ANGLE_1);
+    fbBuilder.addFloat64(10, _ANGLE_2);
+    fbBuilder.addFloat64(11, _ANGLE_3);
+    fbBuilder.addFloat64(12, _ANGLE_1_DOT);
+    fbBuilder.addFloat64(13, _ANGLE_2_DOT);
+    fbBuilder.addFloat64(14, _ANGLE_3_DOT);
+    fbBuilder.addFloat64(15, _ANGVEL_X);
+    fbBuilder.addFloat64(16, _ANGVEL_Y);
+    fbBuilder.addFloat64(17, _ANGVEL_Z);
+    fbBuilder.addFloat64(18, _SPIN_ALPHA);
+    fbBuilder.addFloat64(19, _SPIN_DELTA);
+    fbBuilder.addFloat64(20, _SPIN_ANGLE);
+    fbBuilder.addFloat64(21, _SPIN_ANGLE_VEL);
+    fbBuilder.addFloat64(22, _NUTATION);
+    fbBuilder.addFloat64(23, _NUTATION_PER);
+    fbBuilder.addFloat64(24, _NUTATION_PHASE);
+    fbBuilder.addFloat64(25, _MOMENTUM_ALPHA);
+    fbBuilder.addFloat64(26, _MOMENTUM_DELTA);
+    fbBuilder.addFloat64(27, _NUTATION_VEL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class AEMSegment {
   AEMSegment._(this._bc, this._bcOffset);
   factory AEMSegment(List<int> bytes) {
@@ -50,10 +468,52 @@ class AEMSegment {
   ///  Length must be divisible by ATTITUDE_COMPONENTS.
   List<double>? get ATTITUDE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
   List<double>? get attitudeData => ATTITUDE_DATA;
+  ///  Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+  ///  One entry per COMMENT line, in file order.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+  ///  (504.0-B-2 table 4-3, optional).
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get centerName => CENTER_NAME;
+  ///  Classification marking of the data in portion-marked format
+  ///  (504.0-B-2 table 4-3, optional).
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Start of the USEABLE time span covered by the data, ISO 8601.
+  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get useableStartTime => USEABLE_START_TIME;
+  ///  End of the USEABLE time span covered by the data, ISO 8601.
+  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get useableStopTime => USEABLE_STOP_TIME;
+  ///  Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+  ///  when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+  String? get EULER_ROT_SEQ => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get eulerRotSeq => EULER_ROT_SEQ;
+  ///  Reference frame in which the ANGVEL_* components are expressed; the value
+  ///  is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+  ///  NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+  ///  is the ratified spelling and is the one carried here.
+  String? get ANGVEL_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get angvelFrame => ANGVEL_FRAME;
+  ///  Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+  String? get INTERPOLATION_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get interpolationMethod => INTERPOLATION_METHOD;
+  ///  Recommended interpolation degree.
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  int get interpolationDegree => INTERPOLATION_DEGREE;
+  ///  Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+  ///
+  ///  VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+  ///  1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+  ///     ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+  ///  2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+  ///     and ATTITUDE_DATA must be empty or ignored by parsers.
+  ///  3. Do NOT populate both formats simultaneously.
+  List<attitudeDataLine>? get ATTITUDE_DATA_LINES => const fb.ListReader<attitudeDataLine>(attitudeDataLine.reader).vTableGetNullable(_bc, _bcOffset, 46);
+  List<attitudeDataLine>? get attitudeDataLines => ATTITUDE_DATA_LINES;
 
   @override
   String toString() {
-    return 'AEMSegment{objectName: ${objectName}, objectId: ${objectId}, refFrameA: ${refFrameA}, refFrameB: ${refFrameB}, attitudeDir: ${attitudeDir}, timeSystem: ${timeSystem}, attitudeType: ${attitudeType}, startTime: ${startTime}, stopTime: ${stopTime}, stepSize: ${stepSize}, attitudeComponents: ${attitudeComponents}, attitudeData: ${attitudeData}}';
+    return 'AEMSegment{objectName: ${objectName}, objectId: ${objectId}, refFrameA: ${refFrameA}, refFrameB: ${refFrameB}, attitudeDir: ${attitudeDir}, timeSystem: ${timeSystem}, attitudeType: ${attitudeType}, startTime: ${startTime}, stopTime: ${stopTime}, stepSize: ${stepSize}, attitudeComponents: ${attitudeComponents}, attitudeData: ${attitudeData}, COMMENT: ${COMMENT}, centerName: ${centerName}, CLASSIFICATION: ${CLASSIFICATION}, useableStartTime: ${useableStartTime}, useableStopTime: ${useableStopTime}, eulerRotSeq: ${eulerRotSeq}, angvelFrame: ${angvelFrame}, interpolationMethod: ${interpolationMethod}, interpolationDegree: ${interpolationDegree}, attitudeDataLines: ${attitudeDataLines}}';
   }
 }
 
@@ -71,7 +531,7 @@ class AEMSegmentBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(22);
   }
 
   int addObjectNameOffset(int? offset) {
@@ -122,6 +582,46 @@ class AEMSegmentBuilder {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addUseableStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addUseableStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addEulerRotSeqOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addAngvelFrameOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationMethodOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
+    fbBuilder.addUint32(20, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addAttitudeDataLinesOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -141,6 +641,16 @@ class AEMSegmentObjectBuilder extends fb.ObjectBuilder {
   final double? _STEP_SIZE;
   final int? _ATTITUDE_COMPONENTS;
   final List<double>? _ATTITUDE_DATA;
+  final List<String>? _COMMENT;
+  final String? _CENTER_NAME;
+  final String? _CLASSIFICATION;
+  final String? _USEABLE_START_TIME;
+  final String? _USEABLE_STOP_TIME;
+  final String? _EULER_ROT_SEQ;
+  final String? _ANGVEL_FRAME;
+  final String? _INTERPOLATION_METHOD;
+  final int? _INTERPOLATION_DEGREE;
+  final List<attitudeDataLineObjectBuilder>? _ATTITUDE_DATA_LINES;
 
   AEMSegmentObjectBuilder({
     String? OBJECT_NAME,
@@ -167,6 +677,24 @@ class AEMSegmentObjectBuilder extends fb.ObjectBuilder {
     int? attitudeComponents,
     List<double>? ATTITUDE_DATA,
     List<double>? attitudeData,
+    List<String>? COMMENT,
+    String? CENTER_NAME,
+    String? centerName,
+    String? CLASSIFICATION,
+    String? USEABLE_START_TIME,
+    String? useableStartTime,
+    String? USEABLE_STOP_TIME,
+    String? useableStopTime,
+    String? EULER_ROT_SEQ,
+    String? eulerRotSeq,
+    String? ANGVEL_FRAME,
+    String? angvelFrame,
+    String? INTERPOLATION_METHOD,
+    String? interpolationMethod,
+    int? INTERPOLATION_DEGREE,
+    int? interpolationDegree,
+    List<attitudeDataLineObjectBuilder>? ATTITUDE_DATA_LINES,
+    List<attitudeDataLineObjectBuilder>? attitudeDataLines,
   })
       : _OBJECT_NAME = objectName ?? OBJECT_NAME,
         _OBJECT_ID = objectId ?? OBJECT_ID,
@@ -179,7 +707,17 @@ class AEMSegmentObjectBuilder extends fb.ObjectBuilder {
         _STOP_TIME = stopTime ?? STOP_TIME,
         _STEP_SIZE = stepSize ?? STEP_SIZE,
         _ATTITUDE_COMPONENTS = attitudeComponents ?? ATTITUDE_COMPONENTS,
-        _ATTITUDE_DATA = attitudeData ?? ATTITUDE_DATA;
+        _ATTITUDE_DATA = attitudeData ?? ATTITUDE_DATA,
+        _COMMENT = COMMENT,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _CLASSIFICATION = CLASSIFICATION,
+        _USEABLE_START_TIME = useableStartTime ?? USEABLE_START_TIME,
+        _USEABLE_STOP_TIME = useableStopTime ?? USEABLE_STOP_TIME,
+        _EULER_ROT_SEQ = eulerRotSeq ?? EULER_ROT_SEQ,
+        _ANGVEL_FRAME = angvelFrame ?? ANGVEL_FRAME,
+        _INTERPOLATION_METHOD = interpolationMethod ?? INTERPOLATION_METHOD,
+        _INTERPOLATION_DEGREE = interpolationDegree ?? INTERPOLATION_DEGREE,
+        _ATTITUDE_DATA_LINES = attitudeDataLines ?? ATTITUDE_DATA_LINES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -204,7 +742,25 @@ class AEMSegmentObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_STOP_TIME!);
     final int? ATTITUDE_DATAOffset = _ATTITUDE_DATA == null ? null
         : fbBuilder.writeListFloat64(_ATTITUDE_DATA!);
-    fbBuilder.startTable(12);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? USEABLE_START_TIMEOffset = _USEABLE_START_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_START_TIME!);
+    final int? USEABLE_STOP_TIMEOffset = _USEABLE_STOP_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_STOP_TIME!);
+    final int? EULER_ROT_SEQOffset = _EULER_ROT_SEQ == null ? null
+        : fbBuilder.writeString(_EULER_ROT_SEQ!);
+    final int? ANGVEL_FRAMEOffset = _ANGVEL_FRAME == null ? null
+        : fbBuilder.writeString(_ANGVEL_FRAME!);
+    final int? INTERPOLATION_METHODOffset = _INTERPOLATION_METHOD == null ? null
+        : fbBuilder.writeString(_INTERPOLATION_METHOD!);
+    final int? ATTITUDE_DATA_LINESOffset = _ATTITUDE_DATA_LINES == null ? null
+        : fbBuilder.writeList(_ATTITUDE_DATA_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, OBJECT_NAMEOffset);
     fbBuilder.addOffset(1, OBJECT_IDOffset);
     fbBuilder.addOffset(2, REF_FRAME_AOffset);
@@ -217,6 +773,16 @@ class AEMSegmentObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(9, _STEP_SIZE);
     fbBuilder.addUint8(10, _ATTITUDE_COMPONENTS);
     fbBuilder.addOffset(11, ATTITUDE_DATAOffset);
+    fbBuilder.addOffset(12, COMMENTOffset);
+    fbBuilder.addOffset(13, CENTER_NAMEOffset);
+    fbBuilder.addOffset(14, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(15, USEABLE_START_TIMEOffset);
+    fbBuilder.addOffset(16, USEABLE_STOP_TIMEOffset);
+    fbBuilder.addOffset(17, EULER_ROT_SEQOffset);
+    fbBuilder.addOffset(18, ANGVEL_FRAMEOffset);
+    fbBuilder.addOffset(19, INTERPOLATION_METHODOffset);
+    fbBuilder.addUint32(20, _INTERPOLATION_DEGREE);
+    fbBuilder.addOffset(21, ATTITUDE_DATA_LINESOffset);
     return fbBuilder.endTable();
   }
 
@@ -247,10 +813,17 @@ class AEM {
   String? get creationDate => CREATION_DATE;
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   List<AEMSegment>? get SEGMENTS => const fb.ListReader<AEMSegment>(AEMSegment.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get messageId => MESSAGE_ID;
+  ///  Plain-text comments carried in the message header, one entry per line.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Message classification/caveats in portion-marked format.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
 
   @override
   String toString() {
-    return 'AEM{ccsdsAemVers: ${ccsdsAemVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, SEGMENTS: ${SEGMENTS}}';
+    return 'AEM{ccsdsAemVers: ${ccsdsAemVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, SEGMENTS: ${SEGMENTS}, messageId: ${messageId}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}}';
   }
 }
 
@@ -268,7 +841,7 @@ class AEMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(7);
   }
 
   int addCcsdsAemVersOffset(int? offset) {
@@ -287,6 +860,18 @@ class AEMBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -298,6 +883,9 @@ class AEMObjectBuilder extends fb.ObjectBuilder {
   final String? _CREATION_DATE;
   final String? _ORIGINATOR;
   final List<AEMSegmentObjectBuilder>? _SEGMENTS;
+  final String? _MESSAGE_ID;
+  final List<String>? _COMMENT;
+  final String? _CLASSIFICATION;
 
   AEMObjectBuilder({
     String? CCSDS_AEM_VERS,
@@ -306,11 +894,18 @@ class AEMObjectBuilder extends fb.ObjectBuilder {
     String? creationDate,
     String? ORIGINATOR,
     List<AEMSegmentObjectBuilder>? SEGMENTS,
+    String? MESSAGE_ID,
+    String? messageId,
+    List<String>? COMMENT,
+    String? CLASSIFICATION,
   })
       : _CCSDS_AEM_VERS = ccsdsAemVers ?? CCSDS_AEM_VERS,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
         _ORIGINATOR = ORIGINATOR,
-        _SEGMENTS = SEGMENTS;
+        _SEGMENTS = SEGMENTS,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _COMMENT = COMMENT,
+        _CLASSIFICATION = CLASSIFICATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -323,11 +918,20 @@ class AEMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORIGINATOR!);
     final int? SEGMENTSOffset = _SEGMENTS == null ? null
         : fbBuilder.writeList(_SEGMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    fbBuilder.startTable(7);
     fbBuilder.addOffset(0, CCSDS_AEM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
     fbBuilder.addOffset(3, SEGMENTSOffset);
+    fbBuilder.addOffset(4, MESSAGE_IDOffset);
+    fbBuilder.addOffset(5, COMMENTOffset);
+    fbBuilder.addOffset(6, CLASSIFICATIONOffset);
     return fbBuilder.endTable();
   }
 

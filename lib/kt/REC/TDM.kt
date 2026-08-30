@@ -874,6 +874,397 @@ class TDM : Table() {
         get() {
             val o = __offset(132); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Data-section observations for a SINGLE-segment TDM, in file order.
+     */
+    fun observations(j: Int) : TDMObservation? = observations(TDMObservation(), j)
+    fun observations(obj: TDMObservation, j: Int) : TDMObservation? {
+        val o = __offset(134)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val observationsLength : Int
+        get() {
+            val o = __offset(134); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * All metadata+data segments of a MULTI-segment TDM, in file order.
+     */
+    fun segments(j: Int) : TDMSegment? = segments(TDMSegment(), j)
+    fun segments(obj: TDMSegment, j: Int) : TDMSegment? {
+        val o = __offset(136)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val segmentsLength : Int
+        get() {
+            val o = __offset(136); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+     * already exists above; 2..5 had no carrier.
+     */
+    val transmitFreq2 : Double
+        get() {
+            val o = __offset(138)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreq3 : Double
+        get() {
+            val o = __offset(140)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreq4 : Double
+        get() {
+            val o = __offset(142)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreq5 : Double
+        get() {
+            val o = __offset(144)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Transmit frequency rates by participant, Hz/s. A constant rate here is
+     * the single-interval degenerate case of TRANSMIT_RAMPS.
+     */
+    val transmitFreqRate1 : Double
+        get() {
+            val o = __offset(146)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreqRate2 : Double
+        get() {
+            val o = __offset(148)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreqRate3 : Double
+        get() {
+            val o = __offset(150)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreqRate4 : Double
+        get() {
+            val o = __offset(152)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitFreqRate5 : Double
+        get() {
+            val o = __offset(154)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Unique message identifier (503.0-B-2 table 3-2).
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(156)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(156, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 156, 1)
+    /**
+     * Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+     */
+    val trackId : String?
+        get() {
+            val o = __offset(158)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val trackIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(158, 1)
+    fun trackIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 158, 1)
+    /**
+     * Comma-separated list of the data keywords present in the data section.
+     */
+    val dataTypes : String?
+        get() {
+            val o = __offset(160)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dataTypesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(160, 1)
+    fun dataTypesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 160, 1)
+    /**
+     * Signal path through the participants as an ordered comma-separated list,
+     * e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+     */
+    val path : String?
+        get() {
+            val o = __offset(162)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val pathAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(162, 1)
+    fun pathInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 162, 1)
+    /**
+     * Name of the ephemeris used to generate the data, per participant.
+     */
+    val ephemerisName1 : String?
+        get() {
+            val o = __offset(164)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisName1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(164, 1)
+    fun ephemerisName1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 164, 1)
+    val ephemerisName2 : String?
+        get() {
+            val o = __offset(166)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisName2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(166, 1)
+    fun ephemerisName2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 166, 1)
+    val ephemerisName3 : String?
+        get() {
+            val o = __offset(168)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisName3AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(168, 1)
+    fun ephemerisName3InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 168, 1)
+    val ephemerisName4 : String?
+        get() {
+            val o = __offset(170)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisName4AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(170, 1)
+    fun ephemerisName4InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 170, 1)
+    val ephemerisName5 : String?
+        get() {
+            val o = __offset(172)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisName5AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(172, 1)
+    fun ephemerisName5InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 172, 1)
+    /**
+     * Units of the RANGE observable: "km", "s" or "RU" (range units).
+     * RANGE is meaningless without it.
+     */
+    val rangeUnits : String?
+        get() {
+            val o = __offset(174)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val rangeUnitsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(174, 1)
+    fun rangeUnitsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 174, 1)
+    /**
+     * Reference frame for angle and position data, as the verbatim CCSDS
+     * keyword value (503.0-B-2 annex B).
+     */
+    val referenceFrame : String?
+        get() {
+            val o = __offset(176)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val referenceFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(176, 1)
+    fun referenceFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 176, 1)
+    /**
+     * Recommended interpolation method for the observations.
+     */
+    val interpolation : String?
+        get() {
+            val o = __offset(178)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val interpolationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(178, 1)
+    fun interpolationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 178, 1)
+    /**
+     * Recommended interpolation degree.
+     */
+    val interpolationDegree : UInt
+        get() {
+            val o = __offset(180)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Frequency offset applied to the observations, Hz.
+     */
+    val freqOffset : Double
+        get() {
+            val o = __offset(182)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Transponder turnaround ratio numerator.
+     */
+    val turnaroundNumerator : Int
+        get() {
+            val o = __offset(184)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Transponder turnaround ratio denominator.
+     */
+    val turnaroundDenominator : Int
+        get() {
+            val o = __offset(186)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Transmit delays by participant, s.
+     */
+    val transmitDelay1 : Double
+        get() {
+            val o = __offset(188)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitDelay2 : Double
+        get() {
+            val o = __offset(190)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitDelay3 : Double
+        get() {
+            val o = __offset(192)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitDelay4 : Double
+        get() {
+            val o = __offset(194)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val transmitDelay5 : Double
+        get() {
+            val o = __offset(196)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+     * RECEIVE_DELAY_3 already exist on the TDM root.)
+     */
+    val receiveDelay1 : Double
+        get() {
+            val o = __offset(198)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val receiveDelay4 : Double
+        get() {
+            val o = __offset(200)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val receiveDelay5 : Double
+        get() {
+            val o = __offset(202)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Doppler count bias, Hz.
+     */
+    val dopplerCountBias : Double
+        get() {
+            val o = __offset(204)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Doppler count scale factor.
+     */
+    val dopplerCountScale : UInt
+        get() {
+            val o = __offset(206)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Whether the Doppler counter rolls over (CCSDS YES/NO).
+     */
+    val dopplerCountRollover : Boolean
+        get() {
+            val o = __offset(208)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Corrections that a consumer must apply, or that were applied when
+     * CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+     */
+    val correctionRange : Double
+        get() {
+            val o = __offset(210)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionDoppler : Double
+        get() {
+            val o = __offset(212)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionMag : Double
+        get() {
+            val o = __offset(214)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionRcs : Double
+        get() {
+            val o = __offset(216)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionReceive : Double
+        get() {
+            val o = __offset(218)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionTransmit : Double
+        get() {
+            val o = __offset(220)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionAberrationYearly : Double
+        get() {
+            val o = __offset(222)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val correctionAberrationDiurnal : Double
+        get() {
+            val o = __offset(224)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTDM(_bb: ByteBuffer): TDM = getRootAsTDM(_bb, TDM())
@@ -882,8 +1273,35 @@ class TDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TDM")
-        fun createTDM(builder: FlatBufferBuilder, observerIdOffset: Int, observerX: Double, observerY: Double, observerZ: Double, observerVx: Double, observerVy: Double, observerVz: Double, observerPositionReferenceFrameOffset: Int, obsReferenceFrameOffset: Int, epochOffset: Int, observationStepSize: Double, observationStartTimeOffset: Int, ccsdsTdmVersOffset: Int, commentOffset: Int, creationDateOffset: Int, originatorOffset: Int, metaStartOffset: Int, timeSystemOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, participant1Offset: Int, participant2Offset: Int, participant3Offset: Int, participant4Offset: Int, participant5Offset: Int, modeOffset: Int, path1: UShort, path2: UShort, transmitBandOffset: Int, receiveBandOffset: Int, integrationInterval: Float, integrationRefOffset: Int, receiveDelay2: Double, receiveDelay3: Double, dataQualityOffset: Int, metaStopOffset: Int, dataStartOffset: Int, transmitFreq1: Double, receiveFreqOffset: Int, dataStopOffset: Int, timetagRefOffset: Int, angleTypeOffset: Int, angle1Offset: Int, angle2Offset: Int, angleUncertainty1: Float, angleUncertainty2: Float, rangeRate: Double, rangeUncertainty: Double, rangeModeOffset: Int, rangeModulus: Double, correctionAngle1: Float, correctionAngle2: Float, correctionsAppliedOffset: Int, tropoDryOffset: Int, tropoWetOffset: Int, stecOffset: Int, pressureOffset: Int, rhumidityOffset: Int, temperatureOffset: Int, clockBiasOffset: Int, clockDriftOffset: Int, signalToNoiseOffset: Int, spectralMaxOffset: Int, dopplerNoiseHzOffset: Int, transmitRampsOffset: Int) : Int {
-            builder.startTable(65)
+        fun createTDM(builder: FlatBufferBuilder, observerIdOffset: Int, observerX: Double, observerY: Double, observerZ: Double, observerVx: Double, observerVy: Double, observerVz: Double, observerPositionReferenceFrameOffset: Int, obsReferenceFrameOffset: Int, epochOffset: Int, observationStepSize: Double, observationStartTimeOffset: Int, ccsdsTdmVersOffset: Int, commentOffset: Int, creationDateOffset: Int, originatorOffset: Int, metaStartOffset: Int, timeSystemOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, participant1Offset: Int, participant2Offset: Int, participant3Offset: Int, participant4Offset: Int, participant5Offset: Int, modeOffset: Int, path1: UShort, path2: UShort, transmitBandOffset: Int, receiveBandOffset: Int, integrationInterval: Float, integrationRefOffset: Int, receiveDelay2: Double, receiveDelay3: Double, dataQualityOffset: Int, metaStopOffset: Int, dataStartOffset: Int, transmitFreq1: Double, receiveFreqOffset: Int, dataStopOffset: Int, timetagRefOffset: Int, angleTypeOffset: Int, angle1Offset: Int, angle2Offset: Int, angleUncertainty1: Float, angleUncertainty2: Float, rangeRate: Double, rangeUncertainty: Double, rangeModeOffset: Int, rangeModulus: Double, correctionAngle1: Float, correctionAngle2: Float, correctionsAppliedOffset: Int, tropoDryOffset: Int, tropoWetOffset: Int, stecOffset: Int, pressureOffset: Int, rhumidityOffset: Int, temperatureOffset: Int, clockBiasOffset: Int, clockDriftOffset: Int, signalToNoiseOffset: Int, spectralMaxOffset: Int, dopplerNoiseHzOffset: Int, transmitRampsOffset: Int, observationsOffset: Int, segmentsOffset: Int, transmitFreq2: Double, transmitFreq3: Double, transmitFreq4: Double, transmitFreq5: Double, transmitFreqRate1: Double, transmitFreqRate2: Double, transmitFreqRate3: Double, transmitFreqRate4: Double, transmitFreqRate5: Double, messageIdOffset: Int, trackIdOffset: Int, dataTypesOffset: Int, pathOffset: Int, ephemerisName1Offset: Int, ephemerisName2Offset: Int, ephemerisName3Offset: Int, ephemerisName4Offset: Int, ephemerisName5Offset: Int, rangeUnitsOffset: Int, referenceFrameOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, freqOffset: Double, turnaroundNumerator: Int, turnaroundDenominator: Int, transmitDelay1: Double, transmitDelay2: Double, transmitDelay3: Double, transmitDelay4: Double, transmitDelay5: Double, receiveDelay1: Double, receiveDelay4: Double, receiveDelay5: Double, dopplerCountBias: Double, dopplerCountScale: UInt, dopplerCountRollover: Boolean, correctionRange: Double, correctionDoppler: Double, correctionMag: Double, correctionRcs: Double, correctionReceive: Double, correctionTransmit: Double, correctionAberrationYearly: Double, correctionAberrationDiurnal: Double) : Int {
+            builder.startTable(111)
+            addCORRECTIONABERRATIONDIURNAL(builder, correctionAberrationDiurnal)
+            addCORRECTIONABERRATIONYEARLY(builder, correctionAberrationYearly)
+            addCORRECTIONTRANSMIT(builder, correctionTransmit)
+            addCORRECTIONRECEIVE(builder, correctionReceive)
+            addCORRECTIONRCS(builder, correctionRcs)
+            addCORRECTIONMAG(builder, correctionMag)
+            addCORRECTIONDOPPLER(builder, correctionDoppler)
+            addCORRECTIONRANGE(builder, correctionRange)
+            addDOPPLERCOUNTBIAS(builder, dopplerCountBias)
+            addRECEIVEDELAY5(builder, receiveDelay5)
+            addRECEIVEDELAY4(builder, receiveDelay4)
+            addRECEIVEDELAY1(builder, receiveDelay1)
+            addTRANSMITDELAY5(builder, transmitDelay5)
+            addTRANSMITDELAY4(builder, transmitDelay4)
+            addTRANSMITDELAY3(builder, transmitDelay3)
+            addTRANSMITDELAY2(builder, transmitDelay2)
+            addTRANSMITDELAY1(builder, transmitDelay1)
+            addFREQOFFSET(builder, freqOffset)
+            addTRANSMITFREQRATE5(builder, transmitFreqRate5)
+            addTRANSMITFREQRATE4(builder, transmitFreqRate4)
+            addTRANSMITFREQRATE3(builder, transmitFreqRate3)
+            addTRANSMITFREQRATE2(builder, transmitFreqRate2)
+            addTRANSMITFREQRATE1(builder, transmitFreqRate1)
+            addTRANSMITFREQ5(builder, transmitFreq5)
+            addTRANSMITFREQ4(builder, transmitFreq4)
+            addTRANSMITFREQ3(builder, transmitFreq3)
+            addTRANSMITFREQ2(builder, transmitFreq2)
             addRANGEMODULUS(builder, rangeModulus)
             addRANGEUNCERTAINTY(builder, rangeUncertainty)
             addRANGERATE(builder, rangeRate)
@@ -897,6 +1315,24 @@ class TDM : Table() {
             addOBSERVERZ(builder, observerZ)
             addOBSERVERY(builder, observerY)
             addOBSERVERX(builder, observerX)
+            addDOPPLERCOUNTSCALE(builder, dopplerCountScale)
+            addTURNAROUNDDENOMINATOR(builder, turnaroundDenominator)
+            addTURNAROUNDNUMERATOR(builder, turnaroundNumerator)
+            addINTERPOLATIONDEGREE(builder, interpolationDegree)
+            addINTERPOLATION(builder, interpolationOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addRANGEUNITS(builder, rangeUnitsOffset)
+            addEPHEMERISNAME5(builder, ephemerisName5Offset)
+            addEPHEMERISNAME4(builder, ephemerisName4Offset)
+            addEPHEMERISNAME3(builder, ephemerisName3Offset)
+            addEPHEMERISNAME2(builder, ephemerisName2Offset)
+            addEPHEMERISNAME1(builder, ephemerisName1Offset)
+            addPATH(builder, pathOffset)
+            addDATATYPES(builder, dataTypesOffset)
+            addTRACKID(builder, trackIdOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addSEGMENTS(builder, segmentsOffset)
+            addOBSERVATIONS(builder, observationsOffset)
             addTRANSMITRAMPS(builder, transmitRampsOffset)
             addDOPPLERNOISEHZ(builder, dopplerNoiseHzOffset)
             addSPECTRALMAX(builder, spectralMaxOffset)
@@ -949,9 +1385,10 @@ class TDM : Table() {
             addOBSERVERID(builder, observerIdOffset)
             addPATH2(builder, path2)
             addPATH1(builder, path1)
+            addDOPPLERCOUNTROLLOVER(builder, dopplerCountRollover)
             return endTDM(builder)
         }
-        fun startTDM(builder: FlatBufferBuilder) = builder.startTable(65)
+        fun startTDM(builder: FlatBufferBuilder) = builder.startTable(111)
         fun addOBSERVERID(builder: FlatBufferBuilder, observerId: Int) = builder.addOffset(0, observerId, 0)
         fun addOBSERVERX(builder: FlatBufferBuilder, observerX: Double) = builder.addDouble(1, observerX, 0.0)
         fun addOBSERVERY(builder: FlatBufferBuilder, observerY: Double) = builder.addDouble(2, observerY, 0.0)
@@ -1145,6 +1582,68 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startTransmitRampsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addOBSERVATIONS(builder: FlatBufferBuilder, observations: Int) = builder.addOffset(65, observations, 0)
+        fun createObservationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startObservationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSEGMENTS(builder: FlatBufferBuilder, segments: Int) = builder.addOffset(66, segments, 0)
+        fun createSegmentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSegmentsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTRANSMITFREQ2(builder: FlatBufferBuilder, transmitFreq2: Double) = builder.addDouble(67, transmitFreq2, 0.0)
+        fun addTRANSMITFREQ3(builder: FlatBufferBuilder, transmitFreq3: Double) = builder.addDouble(68, transmitFreq3, 0.0)
+        fun addTRANSMITFREQ4(builder: FlatBufferBuilder, transmitFreq4: Double) = builder.addDouble(69, transmitFreq4, 0.0)
+        fun addTRANSMITFREQ5(builder: FlatBufferBuilder, transmitFreq5: Double) = builder.addDouble(70, transmitFreq5, 0.0)
+        fun addTRANSMITFREQRATE1(builder: FlatBufferBuilder, transmitFreqRate1: Double) = builder.addDouble(71, transmitFreqRate1, 0.0)
+        fun addTRANSMITFREQRATE2(builder: FlatBufferBuilder, transmitFreqRate2: Double) = builder.addDouble(72, transmitFreqRate2, 0.0)
+        fun addTRANSMITFREQRATE3(builder: FlatBufferBuilder, transmitFreqRate3: Double) = builder.addDouble(73, transmitFreqRate3, 0.0)
+        fun addTRANSMITFREQRATE4(builder: FlatBufferBuilder, transmitFreqRate4: Double) = builder.addDouble(74, transmitFreqRate4, 0.0)
+        fun addTRANSMITFREQRATE5(builder: FlatBufferBuilder, transmitFreqRate5: Double) = builder.addDouble(75, transmitFreqRate5, 0.0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(76, messageId, 0)
+        fun addTRACKID(builder: FlatBufferBuilder, trackId: Int) = builder.addOffset(77, trackId, 0)
+        fun addDATATYPES(builder: FlatBufferBuilder, dataTypes: Int) = builder.addOffset(78, dataTypes, 0)
+        fun addPATH(builder: FlatBufferBuilder, path: Int) = builder.addOffset(79, path, 0)
+        fun addEPHEMERISNAME1(builder: FlatBufferBuilder, ephemerisName1: Int) = builder.addOffset(80, ephemerisName1, 0)
+        fun addEPHEMERISNAME2(builder: FlatBufferBuilder, ephemerisName2: Int) = builder.addOffset(81, ephemerisName2, 0)
+        fun addEPHEMERISNAME3(builder: FlatBufferBuilder, ephemerisName3: Int) = builder.addOffset(82, ephemerisName3, 0)
+        fun addEPHEMERISNAME4(builder: FlatBufferBuilder, ephemerisName4: Int) = builder.addOffset(83, ephemerisName4, 0)
+        fun addEPHEMERISNAME5(builder: FlatBufferBuilder, ephemerisName5: Int) = builder.addOffset(84, ephemerisName5, 0)
+        fun addRANGEUNITS(builder: FlatBufferBuilder, rangeUnits: Int) = builder.addOffset(85, rangeUnits, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(86, referenceFrame, 0)
+        fun addINTERPOLATION(builder: FlatBufferBuilder, interpolation: Int) = builder.addOffset(87, interpolation, 0)
+        fun addINTERPOLATIONDEGREE(builder: FlatBufferBuilder, interpolationDegree: UInt) = builder.addInt(88, interpolationDegree.toInt(), 0)
+        fun addFREQOFFSET(builder: FlatBufferBuilder, freqOffset: Double) = builder.addDouble(89, freqOffset, 0.0)
+        fun addTURNAROUNDNUMERATOR(builder: FlatBufferBuilder, turnaroundNumerator: Int) = builder.addInt(90, turnaroundNumerator, 0)
+        fun addTURNAROUNDDENOMINATOR(builder: FlatBufferBuilder, turnaroundDenominator: Int) = builder.addInt(91, turnaroundDenominator, 0)
+        fun addTRANSMITDELAY1(builder: FlatBufferBuilder, transmitDelay1: Double) = builder.addDouble(92, transmitDelay1, 0.0)
+        fun addTRANSMITDELAY2(builder: FlatBufferBuilder, transmitDelay2: Double) = builder.addDouble(93, transmitDelay2, 0.0)
+        fun addTRANSMITDELAY3(builder: FlatBufferBuilder, transmitDelay3: Double) = builder.addDouble(94, transmitDelay3, 0.0)
+        fun addTRANSMITDELAY4(builder: FlatBufferBuilder, transmitDelay4: Double) = builder.addDouble(95, transmitDelay4, 0.0)
+        fun addTRANSMITDELAY5(builder: FlatBufferBuilder, transmitDelay5: Double) = builder.addDouble(96, transmitDelay5, 0.0)
+        fun addRECEIVEDELAY1(builder: FlatBufferBuilder, receiveDelay1: Double) = builder.addDouble(97, receiveDelay1, 0.0)
+        fun addRECEIVEDELAY4(builder: FlatBufferBuilder, receiveDelay4: Double) = builder.addDouble(98, receiveDelay4, 0.0)
+        fun addRECEIVEDELAY5(builder: FlatBufferBuilder, receiveDelay5: Double) = builder.addDouble(99, receiveDelay5, 0.0)
+        fun addDOPPLERCOUNTBIAS(builder: FlatBufferBuilder, dopplerCountBias: Double) = builder.addDouble(100, dopplerCountBias, 0.0)
+        fun addDOPPLERCOUNTSCALE(builder: FlatBufferBuilder, dopplerCountScale: UInt) = builder.addInt(101, dopplerCountScale.toInt(), 0)
+        fun addDOPPLERCOUNTROLLOVER(builder: FlatBufferBuilder, dopplerCountRollover: Boolean) = builder.addBoolean(102, dopplerCountRollover, false)
+        fun addCORRECTIONRANGE(builder: FlatBufferBuilder, correctionRange: Double) = builder.addDouble(103, correctionRange, 0.0)
+        fun addCORRECTIONDOPPLER(builder: FlatBufferBuilder, correctionDoppler: Double) = builder.addDouble(104, correctionDoppler, 0.0)
+        fun addCORRECTIONMAG(builder: FlatBufferBuilder, correctionMag: Double) = builder.addDouble(105, correctionMag, 0.0)
+        fun addCORRECTIONRCS(builder: FlatBufferBuilder, correctionRcs: Double) = builder.addDouble(106, correctionRcs, 0.0)
+        fun addCORRECTIONRECEIVE(builder: FlatBufferBuilder, correctionReceive: Double) = builder.addDouble(107, correctionReceive, 0.0)
+        fun addCORRECTIONTRANSMIT(builder: FlatBufferBuilder, correctionTransmit: Double) = builder.addDouble(108, correctionTransmit, 0.0)
+        fun addCORRECTIONABERRATIONYEARLY(builder: FlatBufferBuilder, correctionAberrationYearly: Double) = builder.addDouble(109, correctionAberrationYearly, 0.0)
+        fun addCORRECTIONABERRATIONDIURNAL(builder: FlatBufferBuilder, correctionAberrationDiurnal: Double) = builder.addDouble(110, correctionAberrationDiurnal, 0.0)
         fun endTDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

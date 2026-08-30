@@ -882,8 +882,395 @@ class TDM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         return o == 0
 
+    # Data-section observations for a SINGLE-segment TDM, in file order.
+    # TDM
+    def OBSERVATIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from TDMObservation import TDMObservation
+            obj = TDMObservation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TDM
+    def OBSERVATIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def OBSERVATIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        return o == 0
+
+    # All metadata+data segments of a MULTI-segment TDM, in file order.
+    # TDM
+    def SEGMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from TDMSegment import TDMSegment
+            obj = TDMSegment()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TDM
+    def SEGMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def SEGMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        return o == 0
+
+    # Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+    # already exists above; 2..5 had no carrier.
+    # TDM
+    def TRANSMIT_FREQ_2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Transmit frequency rates by participant, Hz/s. A constant rate here is
+    # the single-interval degenerate case of TRANSMIT_RAMPS.
+    # TDM
+    def TRANSMIT_FREQ_RATE_1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_RATE_2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_RATE_3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_RATE_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_FREQ_RATE_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Unique message identifier (503.0-B-2 table 3-2).
+    # TDM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+    # TDM
+    def TRACK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Comma-separated list of the data keywords present in the data section.
+    # TDM
+    def DATA_TYPES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Signal path through the participants as an ordered comma-separated list,
+    # e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+    # TDM
+    def PATH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Name of the ephemeris used to generate the data, per participant.
+    # TDM
+    def EPHEMERIS_NAME_1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TDM
+    def EPHEMERIS_NAME_2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TDM
+    def EPHEMERIS_NAME_3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TDM
+    def EPHEMERIS_NAME_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TDM
+    def EPHEMERIS_NAME_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Units of the RANGE observable: "km", "s" or "RU" (range units).
+    # RANGE is meaningless without it.
+    # TDM
+    def RANGE_UNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference frame for angle and position data, as the verbatim CCSDS
+    # keyword value (503.0-B-2 annex B).
+    # TDM
+    def REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Recommended interpolation method for the observations.
+    # TDM
+    def INTERPOLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Recommended interpolation degree.
+    # TDM
+    def INTERPOLATION_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(180))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Frequency offset applied to the observations, Hz.
+    # TDM
+    def FREQ_OFFSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Transponder turnaround ratio numerator.
+    # TDM
+    def TURNAROUND_NUMERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(184))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Transponder turnaround ratio denominator.
+    # TDM
+    def TURNAROUND_DENOMINATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(186))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Transmit delays by participant, s.
+    # TDM
+    def TRANSMIT_DELAY_1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(188))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_DELAY_2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(190))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_DELAY_3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(192))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_DELAY_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(194))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def TRANSMIT_DELAY_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(196))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+    # RECEIVE_DELAY_3 already exist on the TDM root.)
+    # TDM
+    def RECEIVE_DELAY_1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(198))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def RECEIVE_DELAY_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(200))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def RECEIVE_DELAY_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(202))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Doppler count bias, Hz.
+    # TDM
+    def DOPPLER_COUNT_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(204))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Doppler count scale factor.
+    # TDM
+    def DOPPLER_COUNT_SCALE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(206))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Whether the Doppler counter rolls over (CCSDS YES/NO).
+    # TDM
+    def DOPPLER_COUNT_ROLLOVER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(208))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Corrections that a consumer must apply, or that were applied when
+    # CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+    # TDM
+    def CORRECTION_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(210))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_DOPPLER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(212))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_MAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(214))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(216))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_RECEIVE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(218))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_TRANSMIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(220))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_ABERRATION_YEARLY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(222))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TDM
+    def CORRECTION_ABERRATION_DIURNAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(224))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def TDMStart(builder):
-    builder.StartObject(65)
+    builder.StartObject(111)
 
 def Start(builder):
     TDMStart(builder)
@@ -1526,6 +1913,306 @@ def TDMCreateTRANSMIT_RAMPSVector(builder, data):
 def CreateTRANSMIT_RAMPSVector(builder, data):
     TDMCreateTRANSMIT_RAMPSVector(builder, data)
 
+def TDMAddOBSERVATIONS(builder, OBSERVATIONS):
+    builder.PrependUOffsetTRelativeSlot(65, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATIONS), 0)
+
+def AddOBSERVATIONS(builder, OBSERVATIONS):
+    TDMAddOBSERVATIONS(builder, OBSERVATIONS)
+
+def TDMStartOBSERVATIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOBSERVATIONSVector(builder, numElems):
+    return TDMStartOBSERVATIONSVector(builder, numElems)
+
+def TDMCreateOBSERVATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBSERVATIONSVector(builder, data):
+    TDMCreateOBSERVATIONSVector(builder, data)
+
+def TDMAddSEGMENTS(builder, SEGMENTS):
+    builder.PrependUOffsetTRelativeSlot(66, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)
+
+def AddSEGMENTS(builder, SEGMENTS):
+    TDMAddSEGMENTS(builder, SEGMENTS)
+
+def TDMStartSEGMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSEGMENTSVector(builder, numElems):
+    return TDMStartSEGMENTSVector(builder, numElems)
+
+def TDMCreateSEGMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSEGMENTSVector(builder, data):
+    TDMCreateSEGMENTSVector(builder, data)
+
+def TDMAddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2):
+    builder.PrependFloat64Slot(67, TRANSMIT_FREQ_2, 0.0)
+
+def AddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2):
+    TDMAddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2)
+
+def TDMAddTRANSMIT_FREQ_3(builder, TRANSMIT_FREQ_3):
+    builder.PrependFloat64Slot(68, TRANSMIT_FREQ_3, 0.0)
+
+def AddTRANSMIT_FREQ_3(builder, TRANSMIT_FREQ_3):
+    TDMAddTRANSMIT_FREQ_3(builder, TRANSMIT_FREQ_3)
+
+def TDMAddTRANSMIT_FREQ_4(builder, TRANSMIT_FREQ_4):
+    builder.PrependFloat64Slot(69, TRANSMIT_FREQ_4, 0.0)
+
+def AddTRANSMIT_FREQ_4(builder, TRANSMIT_FREQ_4):
+    TDMAddTRANSMIT_FREQ_4(builder, TRANSMIT_FREQ_4)
+
+def TDMAddTRANSMIT_FREQ_5(builder, TRANSMIT_FREQ_5):
+    builder.PrependFloat64Slot(70, TRANSMIT_FREQ_5, 0.0)
+
+def AddTRANSMIT_FREQ_5(builder, TRANSMIT_FREQ_5):
+    TDMAddTRANSMIT_FREQ_5(builder, TRANSMIT_FREQ_5)
+
+def TDMAddTRANSMIT_FREQ_RATE_1(builder, TRANSMIT_FREQ_RATE_1):
+    builder.PrependFloat64Slot(71, TRANSMIT_FREQ_RATE_1, 0.0)
+
+def AddTRANSMIT_FREQ_RATE_1(builder, TRANSMIT_FREQ_RATE_1):
+    TDMAddTRANSMIT_FREQ_RATE_1(builder, TRANSMIT_FREQ_RATE_1)
+
+def TDMAddTRANSMIT_FREQ_RATE_2(builder, TRANSMIT_FREQ_RATE_2):
+    builder.PrependFloat64Slot(72, TRANSMIT_FREQ_RATE_2, 0.0)
+
+def AddTRANSMIT_FREQ_RATE_2(builder, TRANSMIT_FREQ_RATE_2):
+    TDMAddTRANSMIT_FREQ_RATE_2(builder, TRANSMIT_FREQ_RATE_2)
+
+def TDMAddTRANSMIT_FREQ_RATE_3(builder, TRANSMIT_FREQ_RATE_3):
+    builder.PrependFloat64Slot(73, TRANSMIT_FREQ_RATE_3, 0.0)
+
+def AddTRANSMIT_FREQ_RATE_3(builder, TRANSMIT_FREQ_RATE_3):
+    TDMAddTRANSMIT_FREQ_RATE_3(builder, TRANSMIT_FREQ_RATE_3)
+
+def TDMAddTRANSMIT_FREQ_RATE_4(builder, TRANSMIT_FREQ_RATE_4):
+    builder.PrependFloat64Slot(74, TRANSMIT_FREQ_RATE_4, 0.0)
+
+def AddTRANSMIT_FREQ_RATE_4(builder, TRANSMIT_FREQ_RATE_4):
+    TDMAddTRANSMIT_FREQ_RATE_4(builder, TRANSMIT_FREQ_RATE_4)
+
+def TDMAddTRANSMIT_FREQ_RATE_5(builder, TRANSMIT_FREQ_RATE_5):
+    builder.PrependFloat64Slot(75, TRANSMIT_FREQ_RATE_5, 0.0)
+
+def AddTRANSMIT_FREQ_RATE_5(builder, TRANSMIT_FREQ_RATE_5):
+    TDMAddTRANSMIT_FREQ_RATE_5(builder, TRANSMIT_FREQ_RATE_5)
+
+def TDMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    TDMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def TDMAddTRACK_ID(builder, TRACK_ID):
+    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+
+def AddTRACK_ID(builder, TRACK_ID):
+    TDMAddTRACK_ID(builder, TRACK_ID)
+
+def TDMAddDATA_TYPES(builder, DATA_TYPES):
+    builder.PrependUOffsetTRelativeSlot(78, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_TYPES), 0)
+
+def AddDATA_TYPES(builder, DATA_TYPES):
+    TDMAddDATA_TYPES(builder, DATA_TYPES)
+
+def TDMAddPATH(builder, PATH):
+    builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(PATH), 0)
+
+def AddPATH(builder, PATH):
+    TDMAddPATH(builder, PATH)
+
+def TDMAddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1):
+    builder.PrependUOffsetTRelativeSlot(80, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME_1), 0)
+
+def AddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1):
+    TDMAddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1)
+
+def TDMAddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2):
+    builder.PrependUOffsetTRelativeSlot(81, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME_2), 0)
+
+def AddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2):
+    TDMAddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2)
+
+def TDMAddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3):
+    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME_3), 0)
+
+def AddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3):
+    TDMAddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3)
+
+def TDMAddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4):
+    builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME_4), 0)
+
+def AddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4):
+    TDMAddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4)
+
+def TDMAddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5):
+    builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME_5), 0)
+
+def AddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5):
+    TDMAddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5)
+
+def TDMAddRANGE_UNITS(builder, RANGE_UNITS):
+    builder.PrependUOffsetTRelativeSlot(85, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_UNITS), 0)
+
+def AddRANGE_UNITS(builder, RANGE_UNITS):
+    TDMAddRANGE_UNITS(builder, RANGE_UNITS)
+
+def TDMAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(86, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
+
+def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    TDMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def TDMAddINTERPOLATION(builder, INTERPOLATION):
+    builder.PrependUOffsetTRelativeSlot(87, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
+
+def AddINTERPOLATION(builder, INTERPOLATION):
+    TDMAddINTERPOLATION(builder, INTERPOLATION)
+
+def TDMAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
+    builder.PrependUint32Slot(88, INTERPOLATION_DEGREE, 0)
+
+def AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
+    TDMAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
+
+def TDMAddFREQ_OFFSET(builder, FREQ_OFFSET):
+    builder.PrependFloat64Slot(89, FREQ_OFFSET, 0.0)
+
+def AddFREQ_OFFSET(builder, FREQ_OFFSET):
+    TDMAddFREQ_OFFSET(builder, FREQ_OFFSET)
+
+def TDMAddTURNAROUND_NUMERATOR(builder, TURNAROUND_NUMERATOR):
+    builder.PrependInt32Slot(90, TURNAROUND_NUMERATOR, 0)
+
+def AddTURNAROUND_NUMERATOR(builder, TURNAROUND_NUMERATOR):
+    TDMAddTURNAROUND_NUMERATOR(builder, TURNAROUND_NUMERATOR)
+
+def TDMAddTURNAROUND_DENOMINATOR(builder, TURNAROUND_DENOMINATOR):
+    builder.PrependInt32Slot(91, TURNAROUND_DENOMINATOR, 0)
+
+def AddTURNAROUND_DENOMINATOR(builder, TURNAROUND_DENOMINATOR):
+    TDMAddTURNAROUND_DENOMINATOR(builder, TURNAROUND_DENOMINATOR)
+
+def TDMAddTRANSMIT_DELAY_1(builder, TRANSMIT_DELAY_1):
+    builder.PrependFloat64Slot(92, TRANSMIT_DELAY_1, 0.0)
+
+def AddTRANSMIT_DELAY_1(builder, TRANSMIT_DELAY_1):
+    TDMAddTRANSMIT_DELAY_1(builder, TRANSMIT_DELAY_1)
+
+def TDMAddTRANSMIT_DELAY_2(builder, TRANSMIT_DELAY_2):
+    builder.PrependFloat64Slot(93, TRANSMIT_DELAY_2, 0.0)
+
+def AddTRANSMIT_DELAY_2(builder, TRANSMIT_DELAY_2):
+    TDMAddTRANSMIT_DELAY_2(builder, TRANSMIT_DELAY_2)
+
+def TDMAddTRANSMIT_DELAY_3(builder, TRANSMIT_DELAY_3):
+    builder.PrependFloat64Slot(94, TRANSMIT_DELAY_3, 0.0)
+
+def AddTRANSMIT_DELAY_3(builder, TRANSMIT_DELAY_3):
+    TDMAddTRANSMIT_DELAY_3(builder, TRANSMIT_DELAY_3)
+
+def TDMAddTRANSMIT_DELAY_4(builder, TRANSMIT_DELAY_4):
+    builder.PrependFloat64Slot(95, TRANSMIT_DELAY_4, 0.0)
+
+def AddTRANSMIT_DELAY_4(builder, TRANSMIT_DELAY_4):
+    TDMAddTRANSMIT_DELAY_4(builder, TRANSMIT_DELAY_4)
+
+def TDMAddTRANSMIT_DELAY_5(builder, TRANSMIT_DELAY_5):
+    builder.PrependFloat64Slot(96, TRANSMIT_DELAY_5, 0.0)
+
+def AddTRANSMIT_DELAY_5(builder, TRANSMIT_DELAY_5):
+    TDMAddTRANSMIT_DELAY_5(builder, TRANSMIT_DELAY_5)
+
+def TDMAddRECEIVE_DELAY_1(builder, RECEIVE_DELAY_1):
+    builder.PrependFloat64Slot(97, RECEIVE_DELAY_1, 0.0)
+
+def AddRECEIVE_DELAY_1(builder, RECEIVE_DELAY_1):
+    TDMAddRECEIVE_DELAY_1(builder, RECEIVE_DELAY_1)
+
+def TDMAddRECEIVE_DELAY_4(builder, RECEIVE_DELAY_4):
+    builder.PrependFloat64Slot(98, RECEIVE_DELAY_4, 0.0)
+
+def AddRECEIVE_DELAY_4(builder, RECEIVE_DELAY_4):
+    TDMAddRECEIVE_DELAY_4(builder, RECEIVE_DELAY_4)
+
+def TDMAddRECEIVE_DELAY_5(builder, RECEIVE_DELAY_5):
+    builder.PrependFloat64Slot(99, RECEIVE_DELAY_5, 0.0)
+
+def AddRECEIVE_DELAY_5(builder, RECEIVE_DELAY_5):
+    TDMAddRECEIVE_DELAY_5(builder, RECEIVE_DELAY_5)
+
+def TDMAddDOPPLER_COUNT_BIAS(builder, DOPPLER_COUNT_BIAS):
+    builder.PrependFloat64Slot(100, DOPPLER_COUNT_BIAS, 0.0)
+
+def AddDOPPLER_COUNT_BIAS(builder, DOPPLER_COUNT_BIAS):
+    TDMAddDOPPLER_COUNT_BIAS(builder, DOPPLER_COUNT_BIAS)
+
+def TDMAddDOPPLER_COUNT_SCALE(builder, DOPPLER_COUNT_SCALE):
+    builder.PrependUint32Slot(101, DOPPLER_COUNT_SCALE, 0)
+
+def AddDOPPLER_COUNT_SCALE(builder, DOPPLER_COUNT_SCALE):
+    TDMAddDOPPLER_COUNT_SCALE(builder, DOPPLER_COUNT_SCALE)
+
+def TDMAddDOPPLER_COUNT_ROLLOVER(builder, DOPPLER_COUNT_ROLLOVER):
+    builder.PrependBoolSlot(102, DOPPLER_COUNT_ROLLOVER, 0)
+
+def AddDOPPLER_COUNT_ROLLOVER(builder, DOPPLER_COUNT_ROLLOVER):
+    TDMAddDOPPLER_COUNT_ROLLOVER(builder, DOPPLER_COUNT_ROLLOVER)
+
+def TDMAddCORRECTION_RANGE(builder, CORRECTION_RANGE):
+    builder.PrependFloat64Slot(103, CORRECTION_RANGE, 0.0)
+
+def AddCORRECTION_RANGE(builder, CORRECTION_RANGE):
+    TDMAddCORRECTION_RANGE(builder, CORRECTION_RANGE)
+
+def TDMAddCORRECTION_DOPPLER(builder, CORRECTION_DOPPLER):
+    builder.PrependFloat64Slot(104, CORRECTION_DOPPLER, 0.0)
+
+def AddCORRECTION_DOPPLER(builder, CORRECTION_DOPPLER):
+    TDMAddCORRECTION_DOPPLER(builder, CORRECTION_DOPPLER)
+
+def TDMAddCORRECTION_MAG(builder, CORRECTION_MAG):
+    builder.PrependFloat64Slot(105, CORRECTION_MAG, 0.0)
+
+def AddCORRECTION_MAG(builder, CORRECTION_MAG):
+    TDMAddCORRECTION_MAG(builder, CORRECTION_MAG)
+
+def TDMAddCORRECTION_RCS(builder, CORRECTION_RCS):
+    builder.PrependFloat64Slot(106, CORRECTION_RCS, 0.0)
+
+def AddCORRECTION_RCS(builder, CORRECTION_RCS):
+    TDMAddCORRECTION_RCS(builder, CORRECTION_RCS)
+
+def TDMAddCORRECTION_RECEIVE(builder, CORRECTION_RECEIVE):
+    builder.PrependFloat64Slot(107, CORRECTION_RECEIVE, 0.0)
+
+def AddCORRECTION_RECEIVE(builder, CORRECTION_RECEIVE):
+    TDMAddCORRECTION_RECEIVE(builder, CORRECTION_RECEIVE)
+
+def TDMAddCORRECTION_TRANSMIT(builder, CORRECTION_TRANSMIT):
+    builder.PrependFloat64Slot(108, CORRECTION_TRANSMIT, 0.0)
+
+def AddCORRECTION_TRANSMIT(builder, CORRECTION_TRANSMIT):
+    TDMAddCORRECTION_TRANSMIT(builder, CORRECTION_TRANSMIT)
+
+def TDMAddCORRECTION_ABERRATION_YEARLY(builder, CORRECTION_ABERRATION_YEARLY):
+    builder.PrependFloat64Slot(109, CORRECTION_ABERRATION_YEARLY, 0.0)
+
+def AddCORRECTION_ABERRATION_YEARLY(builder, CORRECTION_ABERRATION_YEARLY):
+    TDMAddCORRECTION_ABERRATION_YEARLY(builder, CORRECTION_ABERRATION_YEARLY)
+
+def TDMAddCORRECTION_ABERRATION_DIURNAL(builder, CORRECTION_ABERRATION_DIURNAL):
+    builder.PrependFloat64Slot(110, CORRECTION_ABERRATION_DIURNAL, 0.0)
+
+def AddCORRECTION_ABERRATION_DIURNAL(builder, CORRECTION_ABERRATION_DIURNAL):
+    TDMAddCORRECTION_ABERRATION_DIURNAL(builder, CORRECTION_ABERRATION_DIURNAL)
+
 def TDMEnd(builder):
     return builder.EndObject()
 
@@ -1533,6 +2220,8 @@ def End(builder):
     return TDMEnd(builder)
 
 import RFM
+import TDMObservation
+import TDMSegment
 import TDMTransmitRamp
 try:
     from typing import List, Optional
@@ -1609,6 +2298,52 @@ class TDMT(object):
         SPECTRAL_MAX = None,
         DOPPLER_NOISE_HZ = None,
         TRANSMIT_RAMPS = None,
+        OBSERVATIONS = None,
+        SEGMENTS = None,
+        TRANSMIT_FREQ_2 = 0.0,
+        TRANSMIT_FREQ_3 = 0.0,
+        TRANSMIT_FREQ_4 = 0.0,
+        TRANSMIT_FREQ_5 = 0.0,
+        TRANSMIT_FREQ_RATE_1 = 0.0,
+        TRANSMIT_FREQ_RATE_2 = 0.0,
+        TRANSMIT_FREQ_RATE_3 = 0.0,
+        TRANSMIT_FREQ_RATE_4 = 0.0,
+        TRANSMIT_FREQ_RATE_5 = 0.0,
+        MESSAGE_ID = None,
+        TRACK_ID = None,
+        DATA_TYPES = None,
+        PATH = None,
+        EPHEMERIS_NAME_1 = None,
+        EPHEMERIS_NAME_2 = None,
+        EPHEMERIS_NAME_3 = None,
+        EPHEMERIS_NAME_4 = None,
+        EPHEMERIS_NAME_5 = None,
+        RANGE_UNITS = None,
+        REFERENCE_FRAME = None,
+        INTERPOLATION = None,
+        INTERPOLATION_DEGREE = 0,
+        FREQ_OFFSET = 0.0,
+        TURNAROUND_NUMERATOR = 0,
+        TURNAROUND_DENOMINATOR = 0,
+        TRANSMIT_DELAY_1 = 0.0,
+        TRANSMIT_DELAY_2 = 0.0,
+        TRANSMIT_DELAY_3 = 0.0,
+        TRANSMIT_DELAY_4 = 0.0,
+        TRANSMIT_DELAY_5 = 0.0,
+        RECEIVE_DELAY_1 = 0.0,
+        RECEIVE_DELAY_4 = 0.0,
+        RECEIVE_DELAY_5 = 0.0,
+        DOPPLER_COUNT_BIAS = 0.0,
+        DOPPLER_COUNT_SCALE = 0,
+        DOPPLER_COUNT_ROLLOVER = False,
+        CORRECTION_RANGE = 0.0,
+        CORRECTION_DOPPLER = 0.0,
+        CORRECTION_MAG = 0.0,
+        CORRECTION_RCS = 0.0,
+        CORRECTION_RECEIVE = 0.0,
+        CORRECTION_TRANSMIT = 0.0,
+        CORRECTION_ABERRATION_YEARLY = 0.0,
+        CORRECTION_ABERRATION_DIURNAL = 0.0,
     ):
         self.OBSERVER_ID = OBSERVER_ID  # type: Optional[str]
         self.OBSERVER_X = OBSERVER_X  # type: float
@@ -1675,6 +2410,52 @@ class TDMT(object):
         self.SPECTRAL_MAX = SPECTRAL_MAX  # type: Optional[List[float]]
         self.DOPPLER_NOISE_HZ = DOPPLER_NOISE_HZ  # type: Optional[List[float]]
         self.TRANSMIT_RAMPS = TRANSMIT_RAMPS  # type: Optional[List[TDMTransmitRamp.TDMTransmitRampT]]
+        self.OBSERVATIONS = OBSERVATIONS  # type: Optional[List[TDMObservation.TDMObservationT]]
+        self.SEGMENTS = SEGMENTS  # type: Optional[List[TDMSegment.TDMSegmentT]]
+        self.TRANSMIT_FREQ_2 = TRANSMIT_FREQ_2  # type: float
+        self.TRANSMIT_FREQ_3 = TRANSMIT_FREQ_3  # type: float
+        self.TRANSMIT_FREQ_4 = TRANSMIT_FREQ_4  # type: float
+        self.TRANSMIT_FREQ_5 = TRANSMIT_FREQ_5  # type: float
+        self.TRANSMIT_FREQ_RATE_1 = TRANSMIT_FREQ_RATE_1  # type: float
+        self.TRANSMIT_FREQ_RATE_2 = TRANSMIT_FREQ_RATE_2  # type: float
+        self.TRANSMIT_FREQ_RATE_3 = TRANSMIT_FREQ_RATE_3  # type: float
+        self.TRANSMIT_FREQ_RATE_4 = TRANSMIT_FREQ_RATE_4  # type: float
+        self.TRANSMIT_FREQ_RATE_5 = TRANSMIT_FREQ_RATE_5  # type: float
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.DATA_TYPES = DATA_TYPES  # type: Optional[str]
+        self.PATH = PATH  # type: Optional[str]
+        self.EPHEMERIS_NAME_1 = EPHEMERIS_NAME_1  # type: Optional[str]
+        self.EPHEMERIS_NAME_2 = EPHEMERIS_NAME_2  # type: Optional[str]
+        self.EPHEMERIS_NAME_3 = EPHEMERIS_NAME_3  # type: Optional[str]
+        self.EPHEMERIS_NAME_4 = EPHEMERIS_NAME_4  # type: Optional[str]
+        self.EPHEMERIS_NAME_5 = EPHEMERIS_NAME_5  # type: Optional[str]
+        self.RANGE_UNITS = RANGE_UNITS  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[str]
+        self.INTERPOLATION = INTERPOLATION  # type: Optional[str]
+        self.INTERPOLATION_DEGREE = INTERPOLATION_DEGREE  # type: int
+        self.FREQ_OFFSET = FREQ_OFFSET  # type: float
+        self.TURNAROUND_NUMERATOR = TURNAROUND_NUMERATOR  # type: int
+        self.TURNAROUND_DENOMINATOR = TURNAROUND_DENOMINATOR  # type: int
+        self.TRANSMIT_DELAY_1 = TRANSMIT_DELAY_1  # type: float
+        self.TRANSMIT_DELAY_2 = TRANSMIT_DELAY_2  # type: float
+        self.TRANSMIT_DELAY_3 = TRANSMIT_DELAY_3  # type: float
+        self.TRANSMIT_DELAY_4 = TRANSMIT_DELAY_4  # type: float
+        self.TRANSMIT_DELAY_5 = TRANSMIT_DELAY_5  # type: float
+        self.RECEIVE_DELAY_1 = RECEIVE_DELAY_1  # type: float
+        self.RECEIVE_DELAY_4 = RECEIVE_DELAY_4  # type: float
+        self.RECEIVE_DELAY_5 = RECEIVE_DELAY_5  # type: float
+        self.DOPPLER_COUNT_BIAS = DOPPLER_COUNT_BIAS  # type: float
+        self.DOPPLER_COUNT_SCALE = DOPPLER_COUNT_SCALE  # type: int
+        self.DOPPLER_COUNT_ROLLOVER = DOPPLER_COUNT_ROLLOVER  # type: bool
+        self.CORRECTION_RANGE = CORRECTION_RANGE  # type: float
+        self.CORRECTION_DOPPLER = CORRECTION_DOPPLER  # type: float
+        self.CORRECTION_MAG = CORRECTION_MAG  # type: float
+        self.CORRECTION_RCS = CORRECTION_RCS  # type: float
+        self.CORRECTION_RECEIVE = CORRECTION_RECEIVE  # type: float
+        self.CORRECTION_TRANSMIT = CORRECTION_TRANSMIT  # type: float
+        self.CORRECTION_ABERRATION_YEARLY = CORRECTION_ABERRATION_YEARLY  # type: float
+        self.CORRECTION_ABERRATION_DIURNAL = CORRECTION_ABERRATION_DIURNAL  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1858,6 +2639,66 @@ class TDMT(object):
                 else:
                     tDMTransmitRamp_ = TDMTransmitRamp.TDMTransmitRampT.InitFromObj(TDM.TRANSMIT_RAMPS(i))
                     self.TRANSMIT_RAMPS.append(tDMTransmitRamp_)
+        if not TDM.OBSERVATIONSIsNone():
+            self.OBSERVATIONS = []
+            for i in range(TDM.OBSERVATIONSLength()):
+                if TDM.OBSERVATIONS(i) is None:
+                    self.OBSERVATIONS.append(None)
+                else:
+                    tDMObservation_ = TDMObservation.TDMObservationT.InitFromObj(TDM.OBSERVATIONS(i))
+                    self.OBSERVATIONS.append(tDMObservation_)
+        if not TDM.SEGMENTSIsNone():
+            self.SEGMENTS = []
+            for i in range(TDM.SEGMENTSLength()):
+                if TDM.SEGMENTS(i) is None:
+                    self.SEGMENTS.append(None)
+                else:
+                    tDMSegment_ = TDMSegment.TDMSegmentT.InitFromObj(TDM.SEGMENTS(i))
+                    self.SEGMENTS.append(tDMSegment_)
+        self.TRANSMIT_FREQ_2 = TDM.TRANSMIT_FREQ_2()
+        self.TRANSMIT_FREQ_3 = TDM.TRANSMIT_FREQ_3()
+        self.TRANSMIT_FREQ_4 = TDM.TRANSMIT_FREQ_4()
+        self.TRANSMIT_FREQ_5 = TDM.TRANSMIT_FREQ_5()
+        self.TRANSMIT_FREQ_RATE_1 = TDM.TRANSMIT_FREQ_RATE_1()
+        self.TRANSMIT_FREQ_RATE_2 = TDM.TRANSMIT_FREQ_RATE_2()
+        self.TRANSMIT_FREQ_RATE_3 = TDM.TRANSMIT_FREQ_RATE_3()
+        self.TRANSMIT_FREQ_RATE_4 = TDM.TRANSMIT_FREQ_RATE_4()
+        self.TRANSMIT_FREQ_RATE_5 = TDM.TRANSMIT_FREQ_RATE_5()
+        self.MESSAGE_ID = TDM.MESSAGE_ID()
+        self.TRACK_ID = TDM.TRACK_ID()
+        self.DATA_TYPES = TDM.DATA_TYPES()
+        self.PATH = TDM.PATH()
+        self.EPHEMERIS_NAME_1 = TDM.EPHEMERIS_NAME_1()
+        self.EPHEMERIS_NAME_2 = TDM.EPHEMERIS_NAME_2()
+        self.EPHEMERIS_NAME_3 = TDM.EPHEMERIS_NAME_3()
+        self.EPHEMERIS_NAME_4 = TDM.EPHEMERIS_NAME_4()
+        self.EPHEMERIS_NAME_5 = TDM.EPHEMERIS_NAME_5()
+        self.RANGE_UNITS = TDM.RANGE_UNITS()
+        self.REFERENCE_FRAME = TDM.REFERENCE_FRAME()
+        self.INTERPOLATION = TDM.INTERPOLATION()
+        self.INTERPOLATION_DEGREE = TDM.INTERPOLATION_DEGREE()
+        self.FREQ_OFFSET = TDM.FREQ_OFFSET()
+        self.TURNAROUND_NUMERATOR = TDM.TURNAROUND_NUMERATOR()
+        self.TURNAROUND_DENOMINATOR = TDM.TURNAROUND_DENOMINATOR()
+        self.TRANSMIT_DELAY_1 = TDM.TRANSMIT_DELAY_1()
+        self.TRANSMIT_DELAY_2 = TDM.TRANSMIT_DELAY_2()
+        self.TRANSMIT_DELAY_3 = TDM.TRANSMIT_DELAY_3()
+        self.TRANSMIT_DELAY_4 = TDM.TRANSMIT_DELAY_4()
+        self.TRANSMIT_DELAY_5 = TDM.TRANSMIT_DELAY_5()
+        self.RECEIVE_DELAY_1 = TDM.RECEIVE_DELAY_1()
+        self.RECEIVE_DELAY_4 = TDM.RECEIVE_DELAY_4()
+        self.RECEIVE_DELAY_5 = TDM.RECEIVE_DELAY_5()
+        self.DOPPLER_COUNT_BIAS = TDM.DOPPLER_COUNT_BIAS()
+        self.DOPPLER_COUNT_SCALE = TDM.DOPPLER_COUNT_SCALE()
+        self.DOPPLER_COUNT_ROLLOVER = TDM.DOPPLER_COUNT_ROLLOVER()
+        self.CORRECTION_RANGE = TDM.CORRECTION_RANGE()
+        self.CORRECTION_DOPPLER = TDM.CORRECTION_DOPPLER()
+        self.CORRECTION_MAG = TDM.CORRECTION_MAG()
+        self.CORRECTION_RCS = TDM.CORRECTION_RCS()
+        self.CORRECTION_RECEIVE = TDM.CORRECTION_RECEIVE()
+        self.CORRECTION_TRANSMIT = TDM.CORRECTION_TRANSMIT()
+        self.CORRECTION_ABERRATION_YEARLY = TDM.CORRECTION_ABERRATION_YEARLY()
+        self.CORRECTION_ABERRATION_DIURNAL = TDM.CORRECTION_ABERRATION_DIURNAL()
 
     # TDMT
     def Pack(self, builder):
@@ -2047,6 +2888,46 @@ class TDMT(object):
             for i in reversed(range(len(self.TRANSMIT_RAMPS))):
                 builder.PrependUOffsetTRelative(TRANSMIT_RAMPSlist[i])
             TRANSMIT_RAMPS = builder.EndVector()
+        if self.OBSERVATIONS is not None:
+            OBSERVATIONSlist = []
+            for i in range(len(self.OBSERVATIONS)):
+                OBSERVATIONSlist.append(self.OBSERVATIONS[i].Pack(builder))
+            TDMStartOBSERVATIONSVector(builder, len(self.OBSERVATIONS))
+            for i in reversed(range(len(self.OBSERVATIONS))):
+                builder.PrependUOffsetTRelative(OBSERVATIONSlist[i])
+            OBSERVATIONS = builder.EndVector()
+        if self.SEGMENTS is not None:
+            SEGMENTSlist = []
+            for i in range(len(self.SEGMENTS)):
+                SEGMENTSlist.append(self.SEGMENTS[i].Pack(builder))
+            TDMStartSEGMENTSVector(builder, len(self.SEGMENTS))
+            for i in reversed(range(len(self.SEGMENTS))):
+                builder.PrependUOffsetTRelative(SEGMENTSlist[i])
+            SEGMENTS = builder.EndVector()
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.TRACK_ID is not None:
+            TRACK_ID = builder.CreateString(self.TRACK_ID)
+        if self.DATA_TYPES is not None:
+            DATA_TYPES = builder.CreateString(self.DATA_TYPES)
+        if self.PATH is not None:
+            PATH = builder.CreateString(self.PATH)
+        if self.EPHEMERIS_NAME_1 is not None:
+            EPHEMERIS_NAME_1 = builder.CreateString(self.EPHEMERIS_NAME_1)
+        if self.EPHEMERIS_NAME_2 is not None:
+            EPHEMERIS_NAME_2 = builder.CreateString(self.EPHEMERIS_NAME_2)
+        if self.EPHEMERIS_NAME_3 is not None:
+            EPHEMERIS_NAME_3 = builder.CreateString(self.EPHEMERIS_NAME_3)
+        if self.EPHEMERIS_NAME_4 is not None:
+            EPHEMERIS_NAME_4 = builder.CreateString(self.EPHEMERIS_NAME_4)
+        if self.EPHEMERIS_NAME_5 is not None:
+            EPHEMERIS_NAME_5 = builder.CreateString(self.EPHEMERIS_NAME_5)
+        if self.RANGE_UNITS is not None:
+            RANGE_UNITS = builder.CreateString(self.RANGE_UNITS)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = builder.CreateString(self.REFERENCE_FRAME)
+        if self.INTERPOLATION is not None:
+            INTERPOLATION = builder.CreateString(self.INTERPOLATION)
         TDMStart(builder)
         if self.OBSERVER_ID is not None:
             TDMAddOBSERVER_ID(builder, OBSERVER_ID)
@@ -2158,5 +3039,65 @@ class TDMT(object):
             TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ)
         if self.TRANSMIT_RAMPS is not None:
             TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
+        if self.OBSERVATIONS is not None:
+            TDMAddOBSERVATIONS(builder, OBSERVATIONS)
+        if self.SEGMENTS is not None:
+            TDMAddSEGMENTS(builder, SEGMENTS)
+        TDMAddTRANSMIT_FREQ_2(builder, self.TRANSMIT_FREQ_2)
+        TDMAddTRANSMIT_FREQ_3(builder, self.TRANSMIT_FREQ_3)
+        TDMAddTRANSMIT_FREQ_4(builder, self.TRANSMIT_FREQ_4)
+        TDMAddTRANSMIT_FREQ_5(builder, self.TRANSMIT_FREQ_5)
+        TDMAddTRANSMIT_FREQ_RATE_1(builder, self.TRANSMIT_FREQ_RATE_1)
+        TDMAddTRANSMIT_FREQ_RATE_2(builder, self.TRANSMIT_FREQ_RATE_2)
+        TDMAddTRANSMIT_FREQ_RATE_3(builder, self.TRANSMIT_FREQ_RATE_3)
+        TDMAddTRANSMIT_FREQ_RATE_4(builder, self.TRANSMIT_FREQ_RATE_4)
+        TDMAddTRANSMIT_FREQ_RATE_5(builder, self.TRANSMIT_FREQ_RATE_5)
+        if self.MESSAGE_ID is not None:
+            TDMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.TRACK_ID is not None:
+            TDMAddTRACK_ID(builder, TRACK_ID)
+        if self.DATA_TYPES is not None:
+            TDMAddDATA_TYPES(builder, DATA_TYPES)
+        if self.PATH is not None:
+            TDMAddPATH(builder, PATH)
+        if self.EPHEMERIS_NAME_1 is not None:
+            TDMAddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1)
+        if self.EPHEMERIS_NAME_2 is not None:
+            TDMAddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2)
+        if self.EPHEMERIS_NAME_3 is not None:
+            TDMAddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3)
+        if self.EPHEMERIS_NAME_4 is not None:
+            TDMAddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4)
+        if self.EPHEMERIS_NAME_5 is not None:
+            TDMAddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5)
+        if self.RANGE_UNITS is not None:
+            TDMAddRANGE_UNITS(builder, RANGE_UNITS)
+        if self.REFERENCE_FRAME is not None:
+            TDMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        if self.INTERPOLATION is not None:
+            TDMAddINTERPOLATION(builder, INTERPOLATION)
+        TDMAddINTERPOLATION_DEGREE(builder, self.INTERPOLATION_DEGREE)
+        TDMAddFREQ_OFFSET(builder, self.FREQ_OFFSET)
+        TDMAddTURNAROUND_NUMERATOR(builder, self.TURNAROUND_NUMERATOR)
+        TDMAddTURNAROUND_DENOMINATOR(builder, self.TURNAROUND_DENOMINATOR)
+        TDMAddTRANSMIT_DELAY_1(builder, self.TRANSMIT_DELAY_1)
+        TDMAddTRANSMIT_DELAY_2(builder, self.TRANSMIT_DELAY_2)
+        TDMAddTRANSMIT_DELAY_3(builder, self.TRANSMIT_DELAY_3)
+        TDMAddTRANSMIT_DELAY_4(builder, self.TRANSMIT_DELAY_4)
+        TDMAddTRANSMIT_DELAY_5(builder, self.TRANSMIT_DELAY_5)
+        TDMAddRECEIVE_DELAY_1(builder, self.RECEIVE_DELAY_1)
+        TDMAddRECEIVE_DELAY_4(builder, self.RECEIVE_DELAY_4)
+        TDMAddRECEIVE_DELAY_5(builder, self.RECEIVE_DELAY_5)
+        TDMAddDOPPLER_COUNT_BIAS(builder, self.DOPPLER_COUNT_BIAS)
+        TDMAddDOPPLER_COUNT_SCALE(builder, self.DOPPLER_COUNT_SCALE)
+        TDMAddDOPPLER_COUNT_ROLLOVER(builder, self.DOPPLER_COUNT_ROLLOVER)
+        TDMAddCORRECTION_RANGE(builder, self.CORRECTION_RANGE)
+        TDMAddCORRECTION_DOPPLER(builder, self.CORRECTION_DOPPLER)
+        TDMAddCORRECTION_MAG(builder, self.CORRECTION_MAG)
+        TDMAddCORRECTION_RCS(builder, self.CORRECTION_RCS)
+        TDMAddCORRECTION_RECEIVE(builder, self.CORRECTION_RECEIVE)
+        TDMAddCORRECTION_TRANSMIT(builder, self.CORRECTION_TRANSMIT)
+        TDMAddCORRECTION_ABERRATION_YEARLY(builder, self.CORRECTION_ABERRATION_YEARLY)
+        TDMAddCORRECTION_ABERRATION_DIURNAL(builder, self.CORRECTION_ABERRATION_DIURNAL)
         TDM = TDMEnd(builder)
         return TDM

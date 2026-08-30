@@ -140,22 +140,127 @@ class ephemerisDataLine extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+    /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+    /// field instead.
+    /**
+     * @return double
+     */
+    public function getCLOCK_BIAS_MICROSECONDS()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+    /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+    /**
+     * @return double
+     */
+    public function getCLOCK_RATE_MICROSECONDS_PER_SECOND()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+    /**
+     * @return double
+     */
+    public function getCLOCK_BIAS_SIGMA_PICOSECONDS()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+    /// 1e-4 picoseconds per second.
+    /**
+     * @return double
+     */
+    public function getCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+    /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+    /// the result in mm. These are the raw SP3 exponent columns, kept as
+    /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+    /// sigma raises the header base to this power.
+    /**
+     * @return sbyte
+     */
+    public function getX_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return sbyte
+     */
+    public function getY_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return sbyte
+     */
+    public function getZ_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /// Per-coordinate velocity standard-deviation exponents, result in
+    /// 1e-4 mm/s. Same base**n rule.
+    /**
+     * @return sbyte
+     */
+    public function getX_DOT_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return sbyte
+     */
+    public function getY_DOT_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return sbyte
+     */
+    public function getZ_DOT_SIGMA_EXPONENT()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startephemerisDataLine(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ephemerisDataLine
      */
-    public static function createephemerisDataLine(FlatBufferBuilder $builder, $EPOCH, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $X_DDOT, $Y_DDOT, $Z_DDOT)
+    public static function createephemerisDataLine(FlatBufferBuilder $builder, $EPOCH, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $X_DDOT, $Y_DDOT, $Z_DDOT, $CLOCK_BIAS_MICROSECONDS, $CLOCK_RATE_MICROSECONDS_PER_SECOND, $CLOCK_BIAS_SIGMA_PICOSECONDS, $CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, $X_SIGMA_EXPONENT, $Y_SIGMA_EXPONENT, $Z_SIGMA_EXPONENT, $X_DOT_SIGMA_EXPONENT, $Y_DOT_SIGMA_EXPONENT, $Z_DOT_SIGMA_EXPONENT)
     {
-        $builder->startObject(10);
+        $builder->startObject(20);
         self::addEPOCH($builder, $EPOCH);
         self::addX($builder, $X);
         self::addY($builder, $Y);
@@ -166,6 +271,16 @@ class ephemerisDataLine extends Table
         self::addX_DDOT($builder, $X_DDOT);
         self::addY_DDOT($builder, $Y_DDOT);
         self::addZ_DDOT($builder, $Z_DDOT);
+        self::addCLOCK_BIAS_MICROSECONDS($builder, $CLOCK_BIAS_MICROSECONDS);
+        self::addCLOCK_RATE_MICROSECONDS_PER_SECOND($builder, $CLOCK_RATE_MICROSECONDS_PER_SECOND);
+        self::addCLOCK_BIAS_SIGMA_PICOSECONDS($builder, $CLOCK_BIAS_SIGMA_PICOSECONDS);
+        self::addCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND($builder, $CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+        self::addX_SIGMA_EXPONENT($builder, $X_SIGMA_EXPONENT);
+        self::addY_SIGMA_EXPONENT($builder, $Y_SIGMA_EXPONENT);
+        self::addZ_SIGMA_EXPONENT($builder, $Z_SIGMA_EXPONENT);
+        self::addX_DOT_SIGMA_EXPONENT($builder, $X_DOT_SIGMA_EXPONENT);
+        self::addY_DOT_SIGMA_EXPONENT($builder, $Y_DOT_SIGMA_EXPONENT);
+        self::addZ_DOT_SIGMA_EXPONENT($builder, $Z_DOT_SIGMA_EXPONENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -268,6 +383,106 @@ class ephemerisDataLine extends Table
     public static function addZ_DDOT(FlatBufferBuilder $builder, $Z_DDOT)
     {
         $builder->addDoubleX(9, $Z_DDOT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_BIAS_MICROSECONDS(FlatBufferBuilder $builder, $CLOCK_BIAS_MICROSECONDS)
+    {
+        $builder->addDoubleX(10, $CLOCK_BIAS_MICROSECONDS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_RATE_MICROSECONDS_PER_SECOND(FlatBufferBuilder $builder, $CLOCK_RATE_MICROSECONDS_PER_SECOND)
+    {
+        $builder->addDoubleX(11, $CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_BIAS_SIGMA_PICOSECONDS(FlatBufferBuilder $builder, $CLOCK_BIAS_SIGMA_PICOSECONDS)
+    {
+        $builder->addDoubleX(12, $CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(FlatBufferBuilder $builder, $CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND)
+    {
+        $builder->addDoubleX(13, $CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addX_SIGMA_EXPONENT(FlatBufferBuilder $builder, $X_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(14, $X_SIGMA_EXPONENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addY_SIGMA_EXPONENT(FlatBufferBuilder $builder, $Y_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(15, $Y_SIGMA_EXPONENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addZ_SIGMA_EXPONENT(FlatBufferBuilder $builder, $Z_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(16, $Z_SIGMA_EXPONENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addX_DOT_SIGMA_EXPONENT(FlatBufferBuilder $builder, $X_DOT_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(17, $X_DOT_SIGMA_EXPONENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addY_DOT_SIGMA_EXPONENT(FlatBufferBuilder $builder, $Y_DOT_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(18, $Y_DOT_SIGMA_EXPONENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addZ_DOT_SIGMA_EXPONENT(FlatBufferBuilder $builder, $Z_DOT_SIGMA_EXPONENT)
+    {
+        $builder->addSbyteX(19, $Z_DOT_SIGMA_EXPONENT, 0);
     }
 
     /**

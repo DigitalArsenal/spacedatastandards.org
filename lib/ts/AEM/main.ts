@@ -4,3 +4,4 @@
 
 export * from './AEM.js';
 export * from './AEMSegment.js';
+export * from './attitudeDataLine.js';

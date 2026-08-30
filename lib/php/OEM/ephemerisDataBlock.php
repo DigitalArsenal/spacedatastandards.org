@@ -260,22 +260,43 @@ class ephemerisDataBlock extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// NAIF integer code of the ephemeris target (SPK segment target).
+    /**
+     * @return int
+     */
+    public function getOBJECT_NAIF_ID()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+    /// (SPK segment centre).
+    /**
+     * @return int
+     */
+    public function getCENTER_NAIF_ID()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startephemerisDataBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ephemerisDataBlock
      */
-    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES, $POLYNOMIAL_POSITION_RECORDS)
+    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES, $POLYNOMIAL_POSITION_RECORDS, $OBJECT_NAIF_ID, $CENTER_NAIF_ID)
     {
-        $builder->startObject(19);
+        $builder->startObject(21);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addCENTER_NAME($builder, $CENTER_NAME);
@@ -295,6 +316,8 @@ class ephemerisDataBlock extends Table
         self::addEPHEMERIS_DATA_LINES($builder, $EPHEMERIS_DATA_LINES);
         self::addCOVARIANCE_MATRIX_LINES($builder, $COVARIANCE_MATRIX_LINES);
         self::addPOLYNOMIAL_POSITION_RECORDS($builder, $POLYNOMIAL_POSITION_RECORDS);
+        self::addOBJECT_NAIF_ID($builder, $OBJECT_NAIF_ID);
+        self::addCENTER_NAIF_ID($builder, $CENTER_NAIF_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -583,6 +606,26 @@ class ephemerisDataBlock extends Table
     public static function startPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addOBJECT_NAIF_ID(FlatBufferBuilder $builder, $OBJECT_NAIF_ID)
+    {
+        $builder->addIntX(19, $OBJECT_NAIF_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addCENTER_NAIF_ID(FlatBufferBuilder $builder, $CENTER_NAIF_ID)
+    {
+        $builder->addIntX(20, $CENTER_NAIF_ID, 0);
     }
 
     /**

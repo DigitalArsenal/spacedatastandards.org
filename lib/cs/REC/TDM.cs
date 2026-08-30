@@ -425,6 +425,155 @@ public struct TDM : IFlatbufferObject
   /// leaves the record exactly CCSDS-conformant.
   public TDMTransmitRamp? TRANSMIT_RAMPS(int j) { int o = __p.__offset(132); return o != 0 ? (TDMTransmitRamp?)(new TDMTransmitRamp()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int TRANSMIT_RAMPSLength { get { int o = __p.__offset(132); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Data-section observations for a SINGLE-segment TDM, in file order.
+  public TDMObservation? OBSERVATIONS(int j) { int o = __p.__offset(134); return o != 0 ? (TDMObservation?)(new TDMObservation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int OBSERVATIONSLength { get { int o = __p.__offset(134); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// All metadata+data segments of a MULTI-segment TDM, in file order.
+  public TDMSegment? SEGMENTS(int j) { int o = __p.__offset(136); return o != 0 ? (TDMSegment?)(new TDMSegment()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SEGMENTSLength { get { int o = __p.__offset(136); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+  /// already exists above; 2..5 had no carrier.
+  public double TRANSMIT_FREQ_2 { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_3 { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_4 { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_5 { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Transmit frequency rates by participant, Hz/s. A constant rate here is
+  /// the single-interval degenerate case of TRANSMIT_RAMPS.
+  public double TRANSMIT_FREQ_RATE_1 { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_RATE_2 { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_RATE_3 { get { int o = __p.__offset(150); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_RATE_4 { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_RATE_5 { get { int o = __p.__offset(154); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  public string MESSAGE_ID { get { int o = __p.__offset(156); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(156, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(156); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(156); }
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  public string TRACK_ID { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(158, 1); }
+#else
+  public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(158); }
+#endif
+  public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(158); }
+  /// Comma-separated list of the data keywords present in the data section.
+  public string DATA_TYPES { get { int o = __p.__offset(160); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATA_TYPESBytes() { return __p.__vector_as_span<byte>(160, 1); }
+#else
+  public ArraySegment<byte>? GetDATA_TYPESBytes() { return __p.__vector_as_arraysegment(160); }
+#endif
+  public byte[] GetDATA_TYPESArray() { return __p.__vector_as_array<byte>(160); }
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  public string PATH { get { int o = __p.__offset(162); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPATHBytes() { return __p.__vector_as_span<byte>(162, 1); }
+#else
+  public ArraySegment<byte>? GetPATHBytes() { return __p.__vector_as_arraysegment(162); }
+#endif
+  public byte[] GetPATHArray() { return __p.__vector_as_array<byte>(162); }
+  /// Name of the ephemeris used to generate the data, per participant.
+  public string EPHEMERIS_NAME_1 { get { int o = __p.__offset(164); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAME_1Bytes() { return __p.__vector_as_span<byte>(164, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAME_1Bytes() { return __p.__vector_as_arraysegment(164); }
+#endif
+  public byte[] GetEPHEMERIS_NAME_1Array() { return __p.__vector_as_array<byte>(164); }
+  public string EPHEMERIS_NAME_2 { get { int o = __p.__offset(166); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAME_2Bytes() { return __p.__vector_as_span<byte>(166, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAME_2Bytes() { return __p.__vector_as_arraysegment(166); }
+#endif
+  public byte[] GetEPHEMERIS_NAME_2Array() { return __p.__vector_as_array<byte>(166); }
+  public string EPHEMERIS_NAME_3 { get { int o = __p.__offset(168); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAME_3Bytes() { return __p.__vector_as_span<byte>(168, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAME_3Bytes() { return __p.__vector_as_arraysegment(168); }
+#endif
+  public byte[] GetEPHEMERIS_NAME_3Array() { return __p.__vector_as_array<byte>(168); }
+  public string EPHEMERIS_NAME_4 { get { int o = __p.__offset(170); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAME_4Bytes() { return __p.__vector_as_span<byte>(170, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAME_4Bytes() { return __p.__vector_as_arraysegment(170); }
+#endif
+  public byte[] GetEPHEMERIS_NAME_4Array() { return __p.__vector_as_array<byte>(170); }
+  public string EPHEMERIS_NAME_5 { get { int o = __p.__offset(172); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAME_5Bytes() { return __p.__vector_as_span<byte>(172, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAME_5Bytes() { return __p.__vector_as_arraysegment(172); }
+#endif
+  public byte[] GetEPHEMERIS_NAME_5Array() { return __p.__vector_as_array<byte>(172); }
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  public string RANGE_UNITS { get { int o = __p.__offset(174); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRANGE_UNITSBytes() { return __p.__vector_as_span<byte>(174, 1); }
+#else
+  public ArraySegment<byte>? GetRANGE_UNITSBytes() { return __p.__vector_as_arraysegment(174); }
+#endif
+  public byte[] GetRANGE_UNITSArray() { return __p.__vector_as_array<byte>(174); }
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  public string REFERENCE_FRAME { get { int o = __p.__offset(176); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(176, 1); }
+#else
+  public ArraySegment<byte>? GetREFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(176); }
+#endif
+  public byte[] GetREFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(176); }
+  /// Recommended interpolation method for the observations.
+  public string INTERPOLATION { get { int o = __p.__offset(178); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetINTERPOLATIONBytes() { return __p.__vector_as_span<byte>(178, 1); }
+#else
+  public ArraySegment<byte>? GetINTERPOLATIONBytes() { return __p.__vector_as_arraysegment(178); }
+#endif
+  public byte[] GetINTERPOLATIONArray() { return __p.__vector_as_array<byte>(178); }
+  /// Recommended interpolation degree.
+  public uint INTERPOLATION_DEGREE { get { int o = __p.__offset(180); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Frequency offset applied to the observations, Hz.
+  public double FREQ_OFFSET { get { int o = __p.__offset(182); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Transponder turnaround ratio numerator.
+  public int TURNAROUND_NUMERATOR { get { int o = __p.__offset(184); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Transponder turnaround ratio denominator.
+  public int TURNAROUND_DENOMINATOR { get { int o = __p.__offset(186); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Transmit delays by participant, s.
+  public double TRANSMIT_DELAY_1 { get { int o = __p.__offset(188); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_DELAY_2 { get { int o = __p.__offset(190); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_DELAY_3 { get { int o = __p.__offset(192); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_DELAY_4 { get { int o = __p.__offset(194); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_DELAY_5 { get { int o = __p.__offset(196); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  public double RECEIVE_DELAY_1 { get { int o = __p.__offset(198); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RECEIVE_DELAY_4 { get { int o = __p.__offset(200); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RECEIVE_DELAY_5 { get { int o = __p.__offset(202); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Doppler count bias, Hz.
+  public double DOPPLER_COUNT_BIAS { get { int o = __p.__offset(204); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Doppler count scale factor.
+  public uint DOPPLER_COUNT_SCALE { get { int o = __p.__offset(206); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  public bool DOPPLER_COUNT_ROLLOVER { get { int o = __p.__offset(208); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  public double CORRECTION_RANGE { get { int o = __p.__offset(210); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_DOPPLER { get { int o = __p.__offset(212); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_MAG { get { int o = __p.__offset(214); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_RCS { get { int o = __p.__offset(216); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_RECEIVE { get { int o = __p.__offset(218); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_TRANSMIT { get { int o = __p.__offset(220); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_ABERRATION_YEARLY { get { int o = __p.__offset(222); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CORRECTION_ABERRATION_DIURNAL { get { int o = __p.__offset(224); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<TDM> CreateTDM(FlatBufferBuilder builder,
       StringOffset OBSERVER_IDOffset = default(StringOffset),
@@ -491,8 +640,81 @@ public struct TDM : IFlatbufferObject
       VectorOffset SIGNAL_TO_NOISEOffset = default(VectorOffset),
       VectorOffset SPECTRAL_MAXOffset = default(VectorOffset),
       VectorOffset DOPPLER_NOISE_HZOffset = default(VectorOffset),
-      VectorOffset TRANSMIT_RAMPSOffset = default(VectorOffset)) {
-    builder.StartTable(65);
+      VectorOffset TRANSMIT_RAMPSOffset = default(VectorOffset),
+      VectorOffset OBSERVATIONSOffset = default(VectorOffset),
+      VectorOffset SEGMENTSOffset = default(VectorOffset),
+      double TRANSMIT_FREQ_2 = 0.0,
+      double TRANSMIT_FREQ_3 = 0.0,
+      double TRANSMIT_FREQ_4 = 0.0,
+      double TRANSMIT_FREQ_5 = 0.0,
+      double TRANSMIT_FREQ_RATE_1 = 0.0,
+      double TRANSMIT_FREQ_RATE_2 = 0.0,
+      double TRANSMIT_FREQ_RATE_3 = 0.0,
+      double TRANSMIT_FREQ_RATE_4 = 0.0,
+      double TRANSMIT_FREQ_RATE_5 = 0.0,
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      StringOffset TRACK_IDOffset = default(StringOffset),
+      StringOffset DATA_TYPESOffset = default(StringOffset),
+      StringOffset PATHOffset = default(StringOffset),
+      StringOffset EPHEMERIS_NAME_1Offset = default(StringOffset),
+      StringOffset EPHEMERIS_NAME_2Offset = default(StringOffset),
+      StringOffset EPHEMERIS_NAME_3Offset = default(StringOffset),
+      StringOffset EPHEMERIS_NAME_4Offset = default(StringOffset),
+      StringOffset EPHEMERIS_NAME_5Offset = default(StringOffset),
+      StringOffset RANGE_UNITSOffset = default(StringOffset),
+      StringOffset REFERENCE_FRAMEOffset = default(StringOffset),
+      StringOffset INTERPOLATIONOffset = default(StringOffset),
+      uint INTERPOLATION_DEGREE = 0,
+      double FREQ_OFFSET = 0.0,
+      int TURNAROUND_NUMERATOR = 0,
+      int TURNAROUND_DENOMINATOR = 0,
+      double TRANSMIT_DELAY_1 = 0.0,
+      double TRANSMIT_DELAY_2 = 0.0,
+      double TRANSMIT_DELAY_3 = 0.0,
+      double TRANSMIT_DELAY_4 = 0.0,
+      double TRANSMIT_DELAY_5 = 0.0,
+      double RECEIVE_DELAY_1 = 0.0,
+      double RECEIVE_DELAY_4 = 0.0,
+      double RECEIVE_DELAY_5 = 0.0,
+      double DOPPLER_COUNT_BIAS = 0.0,
+      uint DOPPLER_COUNT_SCALE = 0,
+      bool DOPPLER_COUNT_ROLLOVER = false,
+      double CORRECTION_RANGE = 0.0,
+      double CORRECTION_DOPPLER = 0.0,
+      double CORRECTION_MAG = 0.0,
+      double CORRECTION_RCS = 0.0,
+      double CORRECTION_RECEIVE = 0.0,
+      double CORRECTION_TRANSMIT = 0.0,
+      double CORRECTION_ABERRATION_YEARLY = 0.0,
+      double CORRECTION_ABERRATION_DIURNAL = 0.0) {
+    builder.StartTable(111);
+    TDM.AddCORRECTION_ABERRATION_DIURNAL(builder, CORRECTION_ABERRATION_DIURNAL);
+    TDM.AddCORRECTION_ABERRATION_YEARLY(builder, CORRECTION_ABERRATION_YEARLY);
+    TDM.AddCORRECTION_TRANSMIT(builder, CORRECTION_TRANSMIT);
+    TDM.AddCORRECTION_RECEIVE(builder, CORRECTION_RECEIVE);
+    TDM.AddCORRECTION_RCS(builder, CORRECTION_RCS);
+    TDM.AddCORRECTION_MAG(builder, CORRECTION_MAG);
+    TDM.AddCORRECTION_DOPPLER(builder, CORRECTION_DOPPLER);
+    TDM.AddCORRECTION_RANGE(builder, CORRECTION_RANGE);
+    TDM.AddDOPPLER_COUNT_BIAS(builder, DOPPLER_COUNT_BIAS);
+    TDM.AddRECEIVE_DELAY_5(builder, RECEIVE_DELAY_5);
+    TDM.AddRECEIVE_DELAY_4(builder, RECEIVE_DELAY_4);
+    TDM.AddRECEIVE_DELAY_1(builder, RECEIVE_DELAY_1);
+    TDM.AddTRANSMIT_DELAY_5(builder, TRANSMIT_DELAY_5);
+    TDM.AddTRANSMIT_DELAY_4(builder, TRANSMIT_DELAY_4);
+    TDM.AddTRANSMIT_DELAY_3(builder, TRANSMIT_DELAY_3);
+    TDM.AddTRANSMIT_DELAY_2(builder, TRANSMIT_DELAY_2);
+    TDM.AddTRANSMIT_DELAY_1(builder, TRANSMIT_DELAY_1);
+    TDM.AddFREQ_OFFSET(builder, FREQ_OFFSET);
+    TDM.AddTRANSMIT_FREQ_RATE_5(builder, TRANSMIT_FREQ_RATE_5);
+    TDM.AddTRANSMIT_FREQ_RATE_4(builder, TRANSMIT_FREQ_RATE_4);
+    TDM.AddTRANSMIT_FREQ_RATE_3(builder, TRANSMIT_FREQ_RATE_3);
+    TDM.AddTRANSMIT_FREQ_RATE_2(builder, TRANSMIT_FREQ_RATE_2);
+    TDM.AddTRANSMIT_FREQ_RATE_1(builder, TRANSMIT_FREQ_RATE_1);
+    TDM.AddTRANSMIT_FREQ_5(builder, TRANSMIT_FREQ_5);
+    TDM.AddTRANSMIT_FREQ_4(builder, TRANSMIT_FREQ_4);
+    TDM.AddTRANSMIT_FREQ_3(builder, TRANSMIT_FREQ_3);
+    TDM.AddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2);
     TDM.AddRANGE_MODULUS(builder, RANGE_MODULUS);
     TDM.AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY);
     TDM.AddRANGE_RATE(builder, RANGE_RATE);
@@ -506,6 +728,24 @@ public struct TDM : IFlatbufferObject
     TDM.AddOBSERVER_Z(builder, OBSERVER_Z);
     TDM.AddOBSERVER_Y(builder, OBSERVER_Y);
     TDM.AddOBSERVER_X(builder, OBSERVER_X);
+    TDM.AddDOPPLER_COUNT_SCALE(builder, DOPPLER_COUNT_SCALE);
+    TDM.AddTURNAROUND_DENOMINATOR(builder, TURNAROUND_DENOMINATOR);
+    TDM.AddTURNAROUND_NUMERATOR(builder, TURNAROUND_NUMERATOR);
+    TDM.AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE);
+    TDM.AddINTERPOLATION(builder, INTERPOLATIONOffset);
+    TDM.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
+    TDM.AddRANGE_UNITS(builder, RANGE_UNITSOffset);
+    TDM.AddEPHEMERIS_NAME_5(builder, EPHEMERIS_NAME_5Offset);
+    TDM.AddEPHEMERIS_NAME_4(builder, EPHEMERIS_NAME_4Offset);
+    TDM.AddEPHEMERIS_NAME_3(builder, EPHEMERIS_NAME_3Offset);
+    TDM.AddEPHEMERIS_NAME_2(builder, EPHEMERIS_NAME_2Offset);
+    TDM.AddEPHEMERIS_NAME_1(builder, EPHEMERIS_NAME_1Offset);
+    TDM.AddPATH(builder, PATHOffset);
+    TDM.AddDATA_TYPES(builder, DATA_TYPESOffset);
+    TDM.AddTRACK_ID(builder, TRACK_IDOffset);
+    TDM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    TDM.AddSEGMENTS(builder, SEGMENTSOffset);
+    TDM.AddOBSERVATIONS(builder, OBSERVATIONSOffset);
     TDM.AddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPSOffset);
     TDM.AddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZOffset);
     TDM.AddSPECTRAL_MAX(builder, SPECTRAL_MAXOffset);
@@ -558,10 +798,11 @@ public struct TDM : IFlatbufferObject
     TDM.AddOBSERVER_ID(builder, OBSERVER_IDOffset);
     TDM.AddPATH_2(builder, PATH_2);
     TDM.AddPATH_1(builder, PATH_1);
+    TDM.AddDOPPLER_COUNT_ROLLOVER(builder, DOPPLER_COUNT_ROLLOVER);
     return TDM.EndTDM(builder);
   }
 
-  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(65); }
+  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(111); }
   public static void AddOBSERVER_ID(FlatBufferBuilder builder, StringOffset OBSERVER_IDOffset) { builder.AddOffset(0, OBSERVER_IDOffset.Value, 0); }
   public static void AddOBSERVER_X(FlatBufferBuilder builder, double OBSERVER_X) { builder.AddDouble(1, OBSERVER_X, 0.0); }
   public static void AddOBSERVER_Y(FlatBufferBuilder builder, double OBSERVER_Y) { builder.AddDouble(2, OBSERVER_Y, 0.0); }
@@ -707,6 +948,62 @@ public struct TDM : IFlatbufferObject
   public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<TDMTransmitRamp>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<TDMTransmitRamp>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTRANSMIT_RAMPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddOBSERVATIONS(FlatBufferBuilder builder, VectorOffset OBSERVATIONSOffset) { builder.AddOffset(65, OBSERVATIONSOffset.Value, 0); }
+  public static VectorOffset CreateOBSERVATIONSVector(FlatBufferBuilder builder, Offset<TDMObservation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVATIONSVectorBlock(FlatBufferBuilder builder, Offset<TDMObservation>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVATIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<TDMObservation>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVATIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<TDMObservation>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOBSERVATIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSEGMENTS(FlatBufferBuilder builder, VectorOffset SEGMENTSOffset) { builder.AddOffset(66, SEGMENTSOffset.Value, 0); }
+  public static VectorOffset CreateSEGMENTSVector(FlatBufferBuilder builder, Offset<TDMSegment>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSEGMENTSVectorBlock(FlatBufferBuilder builder, Offset<TDMSegment>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEGMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<TDMSegment>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEGMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<TDMSegment>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEGMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTRANSMIT_FREQ_2(FlatBufferBuilder builder, double TRANSMIT_FREQ_2) { builder.AddDouble(67, TRANSMIT_FREQ_2, 0.0); }
+  public static void AddTRANSMIT_FREQ_3(FlatBufferBuilder builder, double TRANSMIT_FREQ_3) { builder.AddDouble(68, TRANSMIT_FREQ_3, 0.0); }
+  public static void AddTRANSMIT_FREQ_4(FlatBufferBuilder builder, double TRANSMIT_FREQ_4) { builder.AddDouble(69, TRANSMIT_FREQ_4, 0.0); }
+  public static void AddTRANSMIT_FREQ_5(FlatBufferBuilder builder, double TRANSMIT_FREQ_5) { builder.AddDouble(70, TRANSMIT_FREQ_5, 0.0); }
+  public static void AddTRANSMIT_FREQ_RATE_1(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_1) { builder.AddDouble(71, TRANSMIT_FREQ_RATE_1, 0.0); }
+  public static void AddTRANSMIT_FREQ_RATE_2(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_2) { builder.AddDouble(72, TRANSMIT_FREQ_RATE_2, 0.0); }
+  public static void AddTRANSMIT_FREQ_RATE_3(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_3) { builder.AddDouble(73, TRANSMIT_FREQ_RATE_3, 0.0); }
+  public static void AddTRANSMIT_FREQ_RATE_4(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_4) { builder.AddDouble(74, TRANSMIT_FREQ_RATE_4, 0.0); }
+  public static void AddTRANSMIT_FREQ_RATE_5(FlatBufferBuilder builder, double TRANSMIT_FREQ_RATE_5) { builder.AddDouble(75, TRANSMIT_FREQ_RATE_5, 0.0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(76, MESSAGE_IDOffset.Value, 0); }
+  public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(77, TRACK_IDOffset.Value, 0); }
+  public static void AddDATA_TYPES(FlatBufferBuilder builder, StringOffset DATA_TYPESOffset) { builder.AddOffset(78, DATA_TYPESOffset.Value, 0); }
+  public static void AddPATH(FlatBufferBuilder builder, StringOffset PATHOffset) { builder.AddOffset(79, PATHOffset.Value, 0); }
+  public static void AddEPHEMERIS_NAME_1(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAME_1Offset) { builder.AddOffset(80, EPHEMERIS_NAME_1Offset.Value, 0); }
+  public static void AddEPHEMERIS_NAME_2(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAME_2Offset) { builder.AddOffset(81, EPHEMERIS_NAME_2Offset.Value, 0); }
+  public static void AddEPHEMERIS_NAME_3(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAME_3Offset) { builder.AddOffset(82, EPHEMERIS_NAME_3Offset.Value, 0); }
+  public static void AddEPHEMERIS_NAME_4(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAME_4Offset) { builder.AddOffset(83, EPHEMERIS_NAME_4Offset.Value, 0); }
+  public static void AddEPHEMERIS_NAME_5(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAME_5Offset) { builder.AddOffset(84, EPHEMERIS_NAME_5Offset.Value, 0); }
+  public static void AddRANGE_UNITS(FlatBufferBuilder builder, StringOffset RANGE_UNITSOffset) { builder.AddOffset(85, RANGE_UNITSOffset.Value, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, StringOffset REFERENCE_FRAMEOffset) { builder.AddOffset(86, REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddINTERPOLATION(FlatBufferBuilder builder, StringOffset INTERPOLATIONOffset) { builder.AddOffset(87, INTERPOLATIONOffset.Value, 0); }
+  public static void AddINTERPOLATION_DEGREE(FlatBufferBuilder builder, uint INTERPOLATION_DEGREE) { builder.AddUint(88, INTERPOLATION_DEGREE, 0); }
+  public static void AddFREQ_OFFSET(FlatBufferBuilder builder, double FREQ_OFFSET) { builder.AddDouble(89, FREQ_OFFSET, 0.0); }
+  public static void AddTURNAROUND_NUMERATOR(FlatBufferBuilder builder, int TURNAROUND_NUMERATOR) { builder.AddInt(90, TURNAROUND_NUMERATOR, 0); }
+  public static void AddTURNAROUND_DENOMINATOR(FlatBufferBuilder builder, int TURNAROUND_DENOMINATOR) { builder.AddInt(91, TURNAROUND_DENOMINATOR, 0); }
+  public static void AddTRANSMIT_DELAY_1(FlatBufferBuilder builder, double TRANSMIT_DELAY_1) { builder.AddDouble(92, TRANSMIT_DELAY_1, 0.0); }
+  public static void AddTRANSMIT_DELAY_2(FlatBufferBuilder builder, double TRANSMIT_DELAY_2) { builder.AddDouble(93, TRANSMIT_DELAY_2, 0.0); }
+  public static void AddTRANSMIT_DELAY_3(FlatBufferBuilder builder, double TRANSMIT_DELAY_3) { builder.AddDouble(94, TRANSMIT_DELAY_3, 0.0); }
+  public static void AddTRANSMIT_DELAY_4(FlatBufferBuilder builder, double TRANSMIT_DELAY_4) { builder.AddDouble(95, TRANSMIT_DELAY_4, 0.0); }
+  public static void AddTRANSMIT_DELAY_5(FlatBufferBuilder builder, double TRANSMIT_DELAY_5) { builder.AddDouble(96, TRANSMIT_DELAY_5, 0.0); }
+  public static void AddRECEIVE_DELAY_1(FlatBufferBuilder builder, double RECEIVE_DELAY_1) { builder.AddDouble(97, RECEIVE_DELAY_1, 0.0); }
+  public static void AddRECEIVE_DELAY_4(FlatBufferBuilder builder, double RECEIVE_DELAY_4) { builder.AddDouble(98, RECEIVE_DELAY_4, 0.0); }
+  public static void AddRECEIVE_DELAY_5(FlatBufferBuilder builder, double RECEIVE_DELAY_5) { builder.AddDouble(99, RECEIVE_DELAY_5, 0.0); }
+  public static void AddDOPPLER_COUNT_BIAS(FlatBufferBuilder builder, double DOPPLER_COUNT_BIAS) { builder.AddDouble(100, DOPPLER_COUNT_BIAS, 0.0); }
+  public static void AddDOPPLER_COUNT_SCALE(FlatBufferBuilder builder, uint DOPPLER_COUNT_SCALE) { builder.AddUint(101, DOPPLER_COUNT_SCALE, 0); }
+  public static void AddDOPPLER_COUNT_ROLLOVER(FlatBufferBuilder builder, bool DOPPLER_COUNT_ROLLOVER) { builder.AddBool(102, DOPPLER_COUNT_ROLLOVER, false); }
+  public static void AddCORRECTION_RANGE(FlatBufferBuilder builder, double CORRECTION_RANGE) { builder.AddDouble(103, CORRECTION_RANGE, 0.0); }
+  public static void AddCORRECTION_DOPPLER(FlatBufferBuilder builder, double CORRECTION_DOPPLER) { builder.AddDouble(104, CORRECTION_DOPPLER, 0.0); }
+  public static void AddCORRECTION_MAG(FlatBufferBuilder builder, double CORRECTION_MAG) { builder.AddDouble(105, CORRECTION_MAG, 0.0); }
+  public static void AddCORRECTION_RCS(FlatBufferBuilder builder, double CORRECTION_RCS) { builder.AddDouble(106, CORRECTION_RCS, 0.0); }
+  public static void AddCORRECTION_RECEIVE(FlatBufferBuilder builder, double CORRECTION_RECEIVE) { builder.AddDouble(107, CORRECTION_RECEIVE, 0.0); }
+  public static void AddCORRECTION_TRANSMIT(FlatBufferBuilder builder, double CORRECTION_TRANSMIT) { builder.AddDouble(108, CORRECTION_TRANSMIT, 0.0); }
+  public static void AddCORRECTION_ABERRATION_YEARLY(FlatBufferBuilder builder, double CORRECTION_ABERRATION_YEARLY) { builder.AddDouble(109, CORRECTION_ABERRATION_YEARLY, 0.0); }
+  public static void AddCORRECTION_ABERRATION_DIURNAL(FlatBufferBuilder builder, double CORRECTION_ABERRATION_DIURNAL) { builder.AddDouble(110, CORRECTION_ABERRATION_DIURNAL, 0.0); }
   public static Offset<TDM> EndTDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TDM>(o);
@@ -800,6 +1097,54 @@ public struct TDM : IFlatbufferObject
     for (var _j = 0; _j < this.DOPPLER_NOISE_HZLength; ++_j) {_o.DOPPLER_NOISE_HZ.Add(this.DOPPLER_NOISE_HZ(_j));}
     _o.TRANSMIT_RAMPS = new List<TDMTransmitRampT>();
     for (var _j = 0; _j < this.TRANSMIT_RAMPSLength; ++_j) {_o.TRANSMIT_RAMPS.Add(this.TRANSMIT_RAMPS(_j).HasValue ? this.TRANSMIT_RAMPS(_j).Value.UnPack() : null);}
+    _o.OBSERVATIONS = new List<TDMObservationT>();
+    for (var _j = 0; _j < this.OBSERVATIONSLength; ++_j) {_o.OBSERVATIONS.Add(this.OBSERVATIONS(_j).HasValue ? this.OBSERVATIONS(_j).Value.UnPack() : null);}
+    _o.SEGMENTS = new List<TDMSegmentT>();
+    for (var _j = 0; _j < this.SEGMENTSLength; ++_j) {_o.SEGMENTS.Add(this.SEGMENTS(_j).HasValue ? this.SEGMENTS(_j).Value.UnPack() : null);}
+    _o.TRANSMIT_FREQ_2 = this.TRANSMIT_FREQ_2;
+    _o.TRANSMIT_FREQ_3 = this.TRANSMIT_FREQ_3;
+    _o.TRANSMIT_FREQ_4 = this.TRANSMIT_FREQ_4;
+    _o.TRANSMIT_FREQ_5 = this.TRANSMIT_FREQ_5;
+    _o.TRANSMIT_FREQ_RATE_1 = this.TRANSMIT_FREQ_RATE_1;
+    _o.TRANSMIT_FREQ_RATE_2 = this.TRANSMIT_FREQ_RATE_2;
+    _o.TRANSMIT_FREQ_RATE_3 = this.TRANSMIT_FREQ_RATE_3;
+    _o.TRANSMIT_FREQ_RATE_4 = this.TRANSMIT_FREQ_RATE_4;
+    _o.TRANSMIT_FREQ_RATE_5 = this.TRANSMIT_FREQ_RATE_5;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.TRACK_ID = this.TRACK_ID;
+    _o.DATA_TYPES = this.DATA_TYPES;
+    _o.PATH = this.PATH;
+    _o.EPHEMERIS_NAME_1 = this.EPHEMERIS_NAME_1;
+    _o.EPHEMERIS_NAME_2 = this.EPHEMERIS_NAME_2;
+    _o.EPHEMERIS_NAME_3 = this.EPHEMERIS_NAME_3;
+    _o.EPHEMERIS_NAME_4 = this.EPHEMERIS_NAME_4;
+    _o.EPHEMERIS_NAME_5 = this.EPHEMERIS_NAME_5;
+    _o.RANGE_UNITS = this.RANGE_UNITS;
+    _o.REFERENCE_FRAME = this.REFERENCE_FRAME;
+    _o.INTERPOLATION = this.INTERPOLATION;
+    _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE;
+    _o.FREQ_OFFSET = this.FREQ_OFFSET;
+    _o.TURNAROUND_NUMERATOR = this.TURNAROUND_NUMERATOR;
+    _o.TURNAROUND_DENOMINATOR = this.TURNAROUND_DENOMINATOR;
+    _o.TRANSMIT_DELAY_1 = this.TRANSMIT_DELAY_1;
+    _o.TRANSMIT_DELAY_2 = this.TRANSMIT_DELAY_2;
+    _o.TRANSMIT_DELAY_3 = this.TRANSMIT_DELAY_3;
+    _o.TRANSMIT_DELAY_4 = this.TRANSMIT_DELAY_4;
+    _o.TRANSMIT_DELAY_5 = this.TRANSMIT_DELAY_5;
+    _o.RECEIVE_DELAY_1 = this.RECEIVE_DELAY_1;
+    _o.RECEIVE_DELAY_4 = this.RECEIVE_DELAY_4;
+    _o.RECEIVE_DELAY_5 = this.RECEIVE_DELAY_5;
+    _o.DOPPLER_COUNT_BIAS = this.DOPPLER_COUNT_BIAS;
+    _o.DOPPLER_COUNT_SCALE = this.DOPPLER_COUNT_SCALE;
+    _o.DOPPLER_COUNT_ROLLOVER = this.DOPPLER_COUNT_ROLLOVER;
+    _o.CORRECTION_RANGE = this.CORRECTION_RANGE;
+    _o.CORRECTION_DOPPLER = this.CORRECTION_DOPPLER;
+    _o.CORRECTION_MAG = this.CORRECTION_MAG;
+    _o.CORRECTION_RCS = this.CORRECTION_RCS;
+    _o.CORRECTION_RECEIVE = this.CORRECTION_RECEIVE;
+    _o.CORRECTION_TRANSMIT = this.CORRECTION_TRANSMIT;
+    _o.CORRECTION_ABERRATION_YEARLY = this.CORRECTION_ABERRATION_YEARLY;
+    _o.CORRECTION_ABERRATION_DIURNAL = this.CORRECTION_ABERRATION_DIURNAL;
   }
   public static Offset<TDM> Pack(FlatBufferBuilder builder, TDMT _o) {
     if (_o == null) return default(Offset<TDM>);
@@ -914,6 +1259,30 @@ public struct TDM : IFlatbufferObject
       for (var _j = 0; _j < __TRANSMIT_RAMPS.Length; ++_j) { __TRANSMIT_RAMPS[_j] = TDMTransmitRamp.Pack(builder, _o.TRANSMIT_RAMPS[_j]); }
       _TRANSMIT_RAMPS = CreateTRANSMIT_RAMPSVector(builder, __TRANSMIT_RAMPS);
     }
+    var _OBSERVATIONS = default(VectorOffset);
+    if (_o.OBSERVATIONS != null) {
+      var __OBSERVATIONS = new Offset<TDMObservation>[_o.OBSERVATIONS.Count];
+      for (var _j = 0; _j < __OBSERVATIONS.Length; ++_j) { __OBSERVATIONS[_j] = TDMObservation.Pack(builder, _o.OBSERVATIONS[_j]); }
+      _OBSERVATIONS = CreateOBSERVATIONSVector(builder, __OBSERVATIONS);
+    }
+    var _SEGMENTS = default(VectorOffset);
+    if (_o.SEGMENTS != null) {
+      var __SEGMENTS = new Offset<TDMSegment>[_o.SEGMENTS.Count];
+      for (var _j = 0; _j < __SEGMENTS.Length; ++_j) { __SEGMENTS[_j] = TDMSegment.Pack(builder, _o.SEGMENTS[_j]); }
+      _SEGMENTS = CreateSEGMENTSVector(builder, __SEGMENTS);
+    }
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _TRACK_ID = _o.TRACK_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACK_ID);
+    var _DATA_TYPES = _o.DATA_TYPES == null ? default(StringOffset) : builder.CreateString(_o.DATA_TYPES);
+    var _PATH = _o.PATH == null ? default(StringOffset) : builder.CreateString(_o.PATH);
+    var _EPHEMERIS_NAME_1 = _o.EPHEMERIS_NAME_1 == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME_1);
+    var _EPHEMERIS_NAME_2 = _o.EPHEMERIS_NAME_2 == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME_2);
+    var _EPHEMERIS_NAME_3 = _o.EPHEMERIS_NAME_3 == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME_3);
+    var _EPHEMERIS_NAME_4 = _o.EPHEMERIS_NAME_4 == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME_4);
+    var _EPHEMERIS_NAME_5 = _o.EPHEMERIS_NAME_5 == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME_5);
+    var _RANGE_UNITS = _o.RANGE_UNITS == null ? default(StringOffset) : builder.CreateString(_o.RANGE_UNITS);
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_FRAME);
+    var _INTERPOLATION = _o.INTERPOLATION == null ? default(StringOffset) : builder.CreateString(_o.INTERPOLATION);
     return CreateTDM(
       builder,
       _OBSERVER_ID,
@@ -980,7 +1349,53 @@ public struct TDM : IFlatbufferObject
       _SIGNAL_TO_NOISE,
       _SPECTRAL_MAX,
       _DOPPLER_NOISE_HZ,
-      _TRANSMIT_RAMPS);
+      _TRANSMIT_RAMPS,
+      _OBSERVATIONS,
+      _SEGMENTS,
+      _o.TRANSMIT_FREQ_2,
+      _o.TRANSMIT_FREQ_3,
+      _o.TRANSMIT_FREQ_4,
+      _o.TRANSMIT_FREQ_5,
+      _o.TRANSMIT_FREQ_RATE_1,
+      _o.TRANSMIT_FREQ_RATE_2,
+      _o.TRANSMIT_FREQ_RATE_3,
+      _o.TRANSMIT_FREQ_RATE_4,
+      _o.TRANSMIT_FREQ_RATE_5,
+      _MESSAGE_ID,
+      _TRACK_ID,
+      _DATA_TYPES,
+      _PATH,
+      _EPHEMERIS_NAME_1,
+      _EPHEMERIS_NAME_2,
+      _EPHEMERIS_NAME_3,
+      _EPHEMERIS_NAME_4,
+      _EPHEMERIS_NAME_5,
+      _RANGE_UNITS,
+      _REFERENCE_FRAME,
+      _INTERPOLATION,
+      _o.INTERPOLATION_DEGREE,
+      _o.FREQ_OFFSET,
+      _o.TURNAROUND_NUMERATOR,
+      _o.TURNAROUND_DENOMINATOR,
+      _o.TRANSMIT_DELAY_1,
+      _o.TRANSMIT_DELAY_2,
+      _o.TRANSMIT_DELAY_3,
+      _o.TRANSMIT_DELAY_4,
+      _o.TRANSMIT_DELAY_5,
+      _o.RECEIVE_DELAY_1,
+      _o.RECEIVE_DELAY_4,
+      _o.RECEIVE_DELAY_5,
+      _o.DOPPLER_COUNT_BIAS,
+      _o.DOPPLER_COUNT_SCALE,
+      _o.DOPPLER_COUNT_ROLLOVER,
+      _o.CORRECTION_RANGE,
+      _o.CORRECTION_DOPPLER,
+      _o.CORRECTION_MAG,
+      _o.CORRECTION_RCS,
+      _o.CORRECTION_RECEIVE,
+      _o.CORRECTION_TRANSMIT,
+      _o.CORRECTION_ABERRATION_YEARLY,
+      _o.CORRECTION_ABERRATION_DIURNAL);
   }
 }
 
@@ -1051,6 +1466,52 @@ public class TDMT
   public List<double> SPECTRAL_MAX { get; set; }
   public List<double> DOPPLER_NOISE_HZ { get; set; }
   public List<TDMTransmitRampT> TRANSMIT_RAMPS { get; set; }
+  public List<TDMObservationT> OBSERVATIONS { get; set; }
+  public List<TDMSegmentT> SEGMENTS { get; set; }
+  public double TRANSMIT_FREQ_2 { get; set; }
+  public double TRANSMIT_FREQ_3 { get; set; }
+  public double TRANSMIT_FREQ_4 { get; set; }
+  public double TRANSMIT_FREQ_5 { get; set; }
+  public double TRANSMIT_FREQ_RATE_1 { get; set; }
+  public double TRANSMIT_FREQ_RATE_2 { get; set; }
+  public double TRANSMIT_FREQ_RATE_3 { get; set; }
+  public double TRANSMIT_FREQ_RATE_4 { get; set; }
+  public double TRANSMIT_FREQ_RATE_5 { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public string TRACK_ID { get; set; }
+  public string DATA_TYPES { get; set; }
+  public string PATH { get; set; }
+  public string EPHEMERIS_NAME_1 { get; set; }
+  public string EPHEMERIS_NAME_2 { get; set; }
+  public string EPHEMERIS_NAME_3 { get; set; }
+  public string EPHEMERIS_NAME_4 { get; set; }
+  public string EPHEMERIS_NAME_5 { get; set; }
+  public string RANGE_UNITS { get; set; }
+  public string REFERENCE_FRAME { get; set; }
+  public string INTERPOLATION { get; set; }
+  public uint INTERPOLATION_DEGREE { get; set; }
+  public double FREQ_OFFSET { get; set; }
+  public int TURNAROUND_NUMERATOR { get; set; }
+  public int TURNAROUND_DENOMINATOR { get; set; }
+  public double TRANSMIT_DELAY_1 { get; set; }
+  public double TRANSMIT_DELAY_2 { get; set; }
+  public double TRANSMIT_DELAY_3 { get; set; }
+  public double TRANSMIT_DELAY_4 { get; set; }
+  public double TRANSMIT_DELAY_5 { get; set; }
+  public double RECEIVE_DELAY_1 { get; set; }
+  public double RECEIVE_DELAY_4 { get; set; }
+  public double RECEIVE_DELAY_5 { get; set; }
+  public double DOPPLER_COUNT_BIAS { get; set; }
+  public uint DOPPLER_COUNT_SCALE { get; set; }
+  public bool DOPPLER_COUNT_ROLLOVER { get; set; }
+  public double CORRECTION_RANGE { get; set; }
+  public double CORRECTION_DOPPLER { get; set; }
+  public double CORRECTION_MAG { get; set; }
+  public double CORRECTION_RCS { get; set; }
+  public double CORRECTION_RECEIVE { get; set; }
+  public double CORRECTION_TRANSMIT { get; set; }
+  public double CORRECTION_ABERRATION_YEARLY { get; set; }
+  public double CORRECTION_ABERRATION_DIURNAL { get; set; }
 
   public TDMT() {
     this.OBSERVER_ID = null;
@@ -1118,6 +1579,52 @@ public class TDMT
     this.SPECTRAL_MAX = null;
     this.DOPPLER_NOISE_HZ = null;
     this.TRANSMIT_RAMPS = null;
+    this.OBSERVATIONS = null;
+    this.SEGMENTS = null;
+    this.TRANSMIT_FREQ_2 = 0.0;
+    this.TRANSMIT_FREQ_3 = 0.0;
+    this.TRANSMIT_FREQ_4 = 0.0;
+    this.TRANSMIT_FREQ_5 = 0.0;
+    this.TRANSMIT_FREQ_RATE_1 = 0.0;
+    this.TRANSMIT_FREQ_RATE_2 = 0.0;
+    this.TRANSMIT_FREQ_RATE_3 = 0.0;
+    this.TRANSMIT_FREQ_RATE_4 = 0.0;
+    this.TRANSMIT_FREQ_RATE_5 = 0.0;
+    this.MESSAGE_ID = null;
+    this.TRACK_ID = null;
+    this.DATA_TYPES = null;
+    this.PATH = null;
+    this.EPHEMERIS_NAME_1 = null;
+    this.EPHEMERIS_NAME_2 = null;
+    this.EPHEMERIS_NAME_3 = null;
+    this.EPHEMERIS_NAME_4 = null;
+    this.EPHEMERIS_NAME_5 = null;
+    this.RANGE_UNITS = null;
+    this.REFERENCE_FRAME = null;
+    this.INTERPOLATION = null;
+    this.INTERPOLATION_DEGREE = 0;
+    this.FREQ_OFFSET = 0.0;
+    this.TURNAROUND_NUMERATOR = 0;
+    this.TURNAROUND_DENOMINATOR = 0;
+    this.TRANSMIT_DELAY_1 = 0.0;
+    this.TRANSMIT_DELAY_2 = 0.0;
+    this.TRANSMIT_DELAY_3 = 0.0;
+    this.TRANSMIT_DELAY_4 = 0.0;
+    this.TRANSMIT_DELAY_5 = 0.0;
+    this.RECEIVE_DELAY_1 = 0.0;
+    this.RECEIVE_DELAY_4 = 0.0;
+    this.RECEIVE_DELAY_5 = 0.0;
+    this.DOPPLER_COUNT_BIAS = 0.0;
+    this.DOPPLER_COUNT_SCALE = 0;
+    this.DOPPLER_COUNT_ROLLOVER = false;
+    this.CORRECTION_RANGE = 0.0;
+    this.CORRECTION_DOPPLER = 0.0;
+    this.CORRECTION_MAG = 0.0;
+    this.CORRECTION_RCS = 0.0;
+    this.CORRECTION_RECEIVE = 0.0;
+    this.CORRECTION_TRANSMIT = 0.0;
+    this.CORRECTION_ABERRATION_YEARLY = 0.0;
+    this.CORRECTION_ABERRATION_DIURNAL = 0.0;
   }
   public static TDMT DeserializeFromBinary(byte[] fbBuffer) {
     return TDM.GetRootAsTDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -1200,6 +1707,52 @@ static public class TDMVerify
       && verifier.VerifyVectorOfData(tablePos, 128 /*SPECTRAL_MAX*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 130 /*DOPPLER_NOISE_HZ*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 132 /*TRANSMIT_RAMPS*/, TDMTransmitRampVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 134 /*OBSERVATIONS*/, TDMObservationVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 136 /*SEGMENTS*/, TDMSegmentVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 138 /*TRANSMIT_FREQ_2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 140 /*TRANSMIT_FREQ_3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 142 /*TRANSMIT_FREQ_4*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 144 /*TRANSMIT_FREQ_5*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 146 /*TRANSMIT_FREQ_RATE_1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 148 /*TRANSMIT_FREQ_RATE_2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 150 /*TRANSMIT_FREQ_RATE_3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 152 /*TRANSMIT_FREQ_RATE_4*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 154 /*TRANSMIT_FREQ_RATE_5*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 156 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 158 /*TRACK_ID*/, false)
+      && verifier.VerifyString(tablePos, 160 /*DATA_TYPES*/, false)
+      && verifier.VerifyString(tablePos, 162 /*PATH*/, false)
+      && verifier.VerifyString(tablePos, 164 /*EPHEMERIS_NAME_1*/, false)
+      && verifier.VerifyString(tablePos, 166 /*EPHEMERIS_NAME_2*/, false)
+      && verifier.VerifyString(tablePos, 168 /*EPHEMERIS_NAME_3*/, false)
+      && verifier.VerifyString(tablePos, 170 /*EPHEMERIS_NAME_4*/, false)
+      && verifier.VerifyString(tablePos, 172 /*EPHEMERIS_NAME_5*/, false)
+      && verifier.VerifyString(tablePos, 174 /*RANGE_UNITS*/, false)
+      && verifier.VerifyString(tablePos, 176 /*REFERENCE_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 178 /*INTERPOLATION*/, false)
+      && verifier.VerifyField(tablePos, 180 /*INTERPOLATION_DEGREE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 182 /*FREQ_OFFSET*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 184 /*TURNAROUND_NUMERATOR*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 186 /*TURNAROUND_DENOMINATOR*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 188 /*TRANSMIT_DELAY_1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 190 /*TRANSMIT_DELAY_2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 192 /*TRANSMIT_DELAY_3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 194 /*TRANSMIT_DELAY_4*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 196 /*TRANSMIT_DELAY_5*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 198 /*RECEIVE_DELAY_1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 200 /*RECEIVE_DELAY_4*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 202 /*RECEIVE_DELAY_5*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 204 /*DOPPLER_COUNT_BIAS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 206 /*DOPPLER_COUNT_SCALE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 208 /*DOPPLER_COUNT_ROLLOVER*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 210 /*CORRECTION_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 212 /*CORRECTION_DOPPLER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 214 /*CORRECTION_MAG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 216 /*CORRECTION_RCS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 218 /*CORRECTION_RECEIVE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 220 /*CORRECTION_TRANSMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 222 /*CORRECTION_ABERRATION_YEARLY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 224 /*CORRECTION_ABERRATION_DIURNAL*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

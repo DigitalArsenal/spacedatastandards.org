@@ -1,9 +1,11 @@
-// Hash: f9243ef533502d930a48ae2961fc321ae1882a4d5e178ce68268bae0caebcd80
-// Version: 2.0.3
+// Hash: a38b365287a4b3be346777f9c4c8a9b5cd9525f7fb5fcc227faa3f30be05bd2e
+// Version: 2.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
-// Based on CCSDS 503.0-B-1 standard, November 2007
+// Based on CCSDS 503.0-B-2 Cor.1 (June 2020), which SUPERSEDES 503.0-B-1
+// (November 2007). Field comments citing 503.0-B-1 page numbers are the
+// original provenance of fields added under B-1 and are retained as history.
 //
 // Time Reconstruction:
 // Individual observation times can be reconstructed using the step-size formula:
@@ -44,6 +46,154 @@ table TDMTransmitRamp {
   /// Uplink band the ramp applies to, using the same vocabulary as
   /// TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").
   TRANSMIT_BAND: string;
+}
+
+/// ONE CCSDS TDM observation: a single data-section line.
+///
+/// A TDM data section is NOT a uniform grid. Every line in every published
+/// example (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form
+///
+///     KEYWORD = <epoch> <value>
+///
+/// and the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground
+/// based radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and
+/// CARRIER_POWER share epochs, while the final RCS line repeats the EARLIER
+/// epoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single
+/// OBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,
+/// which is why the parallel observation arrays on the TDM root cannot
+/// round-trip a conformant TDM.
+///
+/// KEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. "RANGE",
+/// "ANGLE_1", "CARRIER_POWER", "RCS", "DOPPLER_INTEGRATED", "PR_N0",
+/// "RECEIVE_FREQ_1", "TRANSMIT_PHASE_CT_1", "VLBI_DELAY", "DOR", "MAG",
+/// "CLOCK_BIAS", "STEC", "TROPO_DRY", "PRESSURE". Carrying the keyword rather
+/// than a fixed field per observable is what lets this form transport the whole
+/// 503.0-B-2 data vocabulary, including keywords a future issue adds, without
+/// a wire change and without inventing a name the standard does not define.
+///
+/// Units are those the standard assigns to that keyword; RANGE additionally
+/// depends on RANGE_UNITS, which is metadata, not data.
+table TDMObservation {
+  /// CCSDS data keyword, verbatim and case-exact.
+  KEYWORD: string;
+  /// Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM.
+  EPOCH: string;
+  /// Observed value.
+  VALUE: double;
+}
+
+/// One TDM metadata + data segment.
+///
+/// A TDM file may carry MANY segments, each with its own META_START/META_STOP
+/// block and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,
+/// figures E-16 and E-18). The TDM root models a SINGLE segment, so a
+/// multi-segment file cannot be represented without this vector.
+table TDMSegment {
+  /// Comments carried in this segment's metadata block, in file order.
+  COMMENT: [string];
+  META_START: string;
+  TIME_SYSTEM: string;
+  START_TIME: string;
+  STOP_TIME: string;
+  PARTICIPANT_1: string;
+  PARTICIPANT_2: string;
+  PARTICIPANT_3: string;
+  PARTICIPANT_4: string;
+  PARTICIPANT_5: string;
+  MODE: string;
+  PATH_1: ushort;
+  PATH_2: ushort;
+  TRANSMIT_BAND: string;
+  RECEIVE_BAND: string;
+  INTEGRATION_INTERVAL: double;
+  INTEGRATION_REF: string;
+  TIMETAG_REF: string;
+  ANGLE_TYPE: string;
+  RANGE_MODE: string;
+  RANGE_MODULUS: double;
+  CORRECTION_ANGLE_1: double;
+  CORRECTION_ANGLE_2: double;
+  CORRECTIONS_APPLIED: string;
+  DATA_QUALITY: string;
+  RECEIVE_DELAY_2: double;
+  RECEIVE_DELAY_3: double;
+  TRANSMIT_FREQ_1: double;
+  TRANSMIT_FREQ_2: double;
+  TRANSMIT_FREQ_3: double;
+  TRANSMIT_FREQ_4: double;
+  TRANSMIT_FREQ_5: double;
+  TRANSMIT_FREQ_RATE_1: double;
+  TRANSMIT_FREQ_RATE_2: double;
+  TRANSMIT_FREQ_RATE_3: double;
+  TRANSMIT_FREQ_RATE_4: double;
+  TRANSMIT_FREQ_RATE_5: double;
+  META_STOP: string;
+  DATA_START: string;
+  /// The segment's observations, in FILE ORDER. This is the authoritative
+  /// data-section representation.
+  OBSERVATIONS: [TDMObservation];
+  DATA_STOP: string;
+  /// Uplink frequency ramp table applying to this segment. SDS EXTENSION;
+  /// absent (not empty) for a ramp-free, exactly CCSDS-conformant segment.
+  TRANSMIT_RAMPS: [TDMTransmitRamp];
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  MESSAGE_ID: string;
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  TRACK_ID: string;
+  /// Comma-separated list of the data keywords present in the data section.
+  DATA_TYPES: string;
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  PATH: string;
+  /// Name of the ephemeris used to generate the data, per participant.
+  EPHEMERIS_NAME_1: string;
+  EPHEMERIS_NAME_2: string;
+  EPHEMERIS_NAME_3: string;
+  EPHEMERIS_NAME_4: string;
+  EPHEMERIS_NAME_5: string;
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  RANGE_UNITS: string;
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  REFERENCE_FRAME: string;
+  /// Recommended interpolation method for the observations.
+  INTERPOLATION: string;
+  /// Recommended interpolation degree.
+  INTERPOLATION_DEGREE: uint;
+  /// Frequency offset applied to the observations, Hz.
+  FREQ_OFFSET: double;
+  /// Transponder turnaround ratio numerator.
+  TURNAROUND_NUMERATOR: int;
+  /// Transponder turnaround ratio denominator.
+  TURNAROUND_DENOMINATOR: int;
+  /// Transmit delays by participant, s.
+  TRANSMIT_DELAY_1: double;
+  TRANSMIT_DELAY_2: double;
+  TRANSMIT_DELAY_3: double;
+  TRANSMIT_DELAY_4: double;
+  TRANSMIT_DELAY_5: double;
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  RECEIVE_DELAY_1: double;
+  RECEIVE_DELAY_4: double;
+  RECEIVE_DELAY_5: double;
+  /// Doppler count bias, Hz.
+  DOPPLER_COUNT_BIAS: double;
+  /// Doppler count scale factor.
+  DOPPLER_COUNT_SCALE: uint;
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  DOPPLER_COUNT_ROLLOVER: bool;
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  CORRECTION_RANGE: double;
+  CORRECTION_DOPPLER: double;
+  CORRECTION_MAG: double;
+  CORRECTION_RCS: double;
+  CORRECTION_RECEIVE: double;
+  CORRECTION_TRANSMIT: double;
+  CORRECTION_ABERRATION_YEARLY: double;
+  CORRECTION_ABERRATION_DIURNAL: double;
 }
 
 /// Tracking Data Message
@@ -257,6 +407,105 @@ table TDM {
   /// cannot reconstruct the observables. Absent for unramped tracking, which
   /// leaves the record exactly CCSDS-conformant.
   TRANSMIT_RAMPS: [TDMTransmitRamp];
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED (CCSDS 503.0-B-2 Cor.1 conformance). Append-only: never reorder.
+  //
+  // WHICH FORM WINS:
+  //  1. If SEGMENTS is non-empty, SEGMENTS is authoritative for BOTH metadata
+  //     and data, and every other field on this root is ignored by parsers.
+  //     This is the only form that can carry a multi-segment TDM.
+  //  2. Otherwise, if OBSERVATIONS is non-empty, OBSERVATIONS is authoritative
+  //     for the data section and the parallel observation arrays above
+  //     (ANGLE_1, ANGLE_2, RECEIVE_FREQ, STEC, TROPO_*, PRESSURE, RHUMIDITY,
+  //     TEMPERATURE, CLOCK_BIAS, CLOCK_DRIFT, SIGNAL_TO_NOISE, SPECTRAL_MAX,
+  //     DOPPLER_NOISE_HZ) are ignored.
+  //  3. Otherwise the legacy uniform-grid arrays apply, with epochs
+  //     reconstructed as OBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE.
+  //     That grid is an SDS compaction, NOT a CCSDS construct, and is only
+  //     correct when every observable was sampled on one uniform schedule.
+  //
+  // Do NOT populate more than one form.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// Data-section observations for a SINGLE-segment TDM, in file order.
+  OBSERVATIONS: [TDMObservation];
+
+  /// All metadata+data segments of a MULTI-segment TDM, in file order.
+  SEGMENTS: [TDMSegment];
+
+  /// Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+  /// already exists above; 2..5 had no carrier.
+  TRANSMIT_FREQ_2: double;
+  TRANSMIT_FREQ_3: double;
+  TRANSMIT_FREQ_4: double;
+  TRANSMIT_FREQ_5: double;
+  /// Transmit frequency rates by participant, Hz/s. A constant rate here is
+  /// the single-interval degenerate case of TRANSMIT_RAMPS.
+  TRANSMIT_FREQ_RATE_1: double;
+  TRANSMIT_FREQ_RATE_2: double;
+  TRANSMIT_FREQ_RATE_3: double;
+  TRANSMIT_FREQ_RATE_4: double;
+  TRANSMIT_FREQ_RATE_5: double;
+
+  /// Unique message identifier (503.0-B-2 table 3-2).
+  MESSAGE_ID: string;
+  /// Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  TRACK_ID: string;
+  /// Comma-separated list of the data keywords present in the data section.
+  DATA_TYPES: string;
+  /// Signal path through the participants as an ordered comma-separated list,
+  /// e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  PATH: string;
+  /// Name of the ephemeris used to generate the data, per participant.
+  EPHEMERIS_NAME_1: string;
+  EPHEMERIS_NAME_2: string;
+  EPHEMERIS_NAME_3: string;
+  EPHEMERIS_NAME_4: string;
+  EPHEMERIS_NAME_5: string;
+  /// Units of the RANGE observable: "km", "s" or "RU" (range units).
+  /// RANGE is meaningless without it.
+  RANGE_UNITS: string;
+  /// Reference frame for angle and position data, as the verbatim CCSDS
+  /// keyword value (503.0-B-2 annex B).
+  REFERENCE_FRAME: string;
+  /// Recommended interpolation method for the observations.
+  INTERPOLATION: string;
+  /// Recommended interpolation degree.
+  INTERPOLATION_DEGREE: uint;
+  /// Frequency offset applied to the observations, Hz.
+  FREQ_OFFSET: double;
+  /// Transponder turnaround ratio numerator.
+  TURNAROUND_NUMERATOR: int;
+  /// Transponder turnaround ratio denominator.
+  TURNAROUND_DENOMINATOR: int;
+  /// Transmit delays by participant, s.
+  TRANSMIT_DELAY_1: double;
+  TRANSMIT_DELAY_2: double;
+  TRANSMIT_DELAY_3: double;
+  TRANSMIT_DELAY_4: double;
+  TRANSMIT_DELAY_5: double;
+  /// Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  /// RECEIVE_DELAY_3 already exist on the TDM root.)
+  RECEIVE_DELAY_1: double;
+  RECEIVE_DELAY_4: double;
+  RECEIVE_DELAY_5: double;
+  /// Doppler count bias, Hz.
+  DOPPLER_COUNT_BIAS: double;
+  /// Doppler count scale factor.
+  DOPPLER_COUNT_SCALE: uint;
+  /// Whether the Doppler counter rolls over (CCSDS YES/NO).
+  DOPPLER_COUNT_ROLLOVER: bool;
+  /// Corrections that a consumer must apply, or that were applied when
+  /// CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  CORRECTION_RANGE: double;
+  CORRECTION_DOPPLER: double;
+  CORRECTION_MAG: double;
+  CORRECTION_RCS: double;
+  CORRECTION_RECEIVE: double;
+  CORRECTION_TRANSMIT: double;
+  CORRECTION_ABERRATION_YEARLY: double;
+  CORRECTION_ABERRATION_DIURNAL: double;
 }
 
 root_type TDM;

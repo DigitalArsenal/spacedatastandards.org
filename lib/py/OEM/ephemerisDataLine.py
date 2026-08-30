@@ -111,8 +111,93 @@ class ephemerisDataLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Satellite clock bias (offset), microseconds. SP3 position-record clock
+    # column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+    # field instead.
+    # ephemerisDataLine
+    def CLOCK_BIAS_MICROSECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Satellite clock rate of change, 1e-4 microseconds per second. SP3
+    # velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+    # ephemerisDataLine
+    def CLOCK_RATE_MICROSECONDS_PER_SECOND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+    # ephemerisDataLine
+    def CLOCK_BIAS_SIGMA_PICOSECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+    # 1e-4 picoseconds per second.
+    # ephemerisDataLine
+    def CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+    # sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+    # the result in mm. These are the raw SP3 exponent columns, kept as
+    # exponents so an SP3 round-trip is exact; a consumer that wants a linear
+    # sigma raises the header base to this power.
+    # ephemerisDataLine
+    def X_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # ephemerisDataLine
+    def Y_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # ephemerisDataLine
+    def Z_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Per-coordinate velocity standard-deviation exponents, result in
+    # 1e-4 mm/s. Same base**n rule.
+    # ephemerisDataLine
+    def X_DOT_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # ephemerisDataLine
+    def Y_DOT_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # ephemerisDataLine
+    def Z_DOT_SIGMA_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def ephemerisDataLineStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(20)
 
 def Start(builder):
     ephemerisDataLineStart(builder)
@@ -177,6 +262,66 @@ def ephemerisDataLineAddZ_DDOT(builder, Z_DDOT):
 def AddZ_DDOT(builder, Z_DDOT):
     ephemerisDataLineAddZ_DDOT(builder, Z_DDOT)
 
+def ephemerisDataLineAddCLOCK_BIAS_MICROSECONDS(builder, CLOCK_BIAS_MICROSECONDS):
+    builder.PrependFloat64Slot(10, CLOCK_BIAS_MICROSECONDS, 0.0)
+
+def AddCLOCK_BIAS_MICROSECONDS(builder, CLOCK_BIAS_MICROSECONDS):
+    ephemerisDataLineAddCLOCK_BIAS_MICROSECONDS(builder, CLOCK_BIAS_MICROSECONDS)
+
+def ephemerisDataLineAddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND):
+    builder.PrependFloat64Slot(11, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0)
+
+def AddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND):
+    ephemerisDataLineAddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND)
+
+def ephemerisDataLineAddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, CLOCK_BIAS_SIGMA_PICOSECONDS):
+    builder.PrependFloat64Slot(12, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0)
+
+def AddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, CLOCK_BIAS_SIGMA_PICOSECONDS):
+    ephemerisDataLineAddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, CLOCK_BIAS_SIGMA_PICOSECONDS)
+
+def ephemerisDataLineAddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND):
+    builder.PrependFloat64Slot(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0)
+
+def AddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND):
+    ephemerisDataLineAddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND)
+
+def ephemerisDataLineAddX_SIGMA_EXPONENT(builder, X_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(14, X_SIGMA_EXPONENT, 0)
+
+def AddX_SIGMA_EXPONENT(builder, X_SIGMA_EXPONENT):
+    ephemerisDataLineAddX_SIGMA_EXPONENT(builder, X_SIGMA_EXPONENT)
+
+def ephemerisDataLineAddY_SIGMA_EXPONENT(builder, Y_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(15, Y_SIGMA_EXPONENT, 0)
+
+def AddY_SIGMA_EXPONENT(builder, Y_SIGMA_EXPONENT):
+    ephemerisDataLineAddY_SIGMA_EXPONENT(builder, Y_SIGMA_EXPONENT)
+
+def ephemerisDataLineAddZ_SIGMA_EXPONENT(builder, Z_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(16, Z_SIGMA_EXPONENT, 0)
+
+def AddZ_SIGMA_EXPONENT(builder, Z_SIGMA_EXPONENT):
+    ephemerisDataLineAddZ_SIGMA_EXPONENT(builder, Z_SIGMA_EXPONENT)
+
+def ephemerisDataLineAddX_DOT_SIGMA_EXPONENT(builder, X_DOT_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(17, X_DOT_SIGMA_EXPONENT, 0)
+
+def AddX_DOT_SIGMA_EXPONENT(builder, X_DOT_SIGMA_EXPONENT):
+    ephemerisDataLineAddX_DOT_SIGMA_EXPONENT(builder, X_DOT_SIGMA_EXPONENT)
+
+def ephemerisDataLineAddY_DOT_SIGMA_EXPONENT(builder, Y_DOT_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(18, Y_DOT_SIGMA_EXPONENT, 0)
+
+def AddY_DOT_SIGMA_EXPONENT(builder, Y_DOT_SIGMA_EXPONENT):
+    ephemerisDataLineAddY_DOT_SIGMA_EXPONENT(builder, Y_DOT_SIGMA_EXPONENT)
+
+def ephemerisDataLineAddZ_DOT_SIGMA_EXPONENT(builder, Z_DOT_SIGMA_EXPONENT):
+    builder.PrependInt8Slot(19, Z_DOT_SIGMA_EXPONENT, 0)
+
+def AddZ_DOT_SIGMA_EXPONENT(builder, Z_DOT_SIGMA_EXPONENT):
+    ephemerisDataLineAddZ_DOT_SIGMA_EXPONENT(builder, Z_DOT_SIGMA_EXPONENT)
+
 def ephemerisDataLineEnd(builder):
     return builder.EndObject()
 
@@ -199,6 +344,16 @@ class ephemerisDataLineT(object):
         X_DDOT = 0.0,
         Y_DDOT = 0.0,
         Z_DDOT = 0.0,
+        CLOCK_BIAS_MICROSECONDS = 0.0,
+        CLOCK_RATE_MICROSECONDS_PER_SECOND = 0.0,
+        CLOCK_BIAS_SIGMA_PICOSECONDS = 0.0,
+        CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = 0.0,
+        X_SIGMA_EXPONENT = 0,
+        Y_SIGMA_EXPONENT = 0,
+        Z_SIGMA_EXPONENT = 0,
+        X_DOT_SIGMA_EXPONENT = 0,
+        Y_DOT_SIGMA_EXPONENT = 0,
+        Z_DOT_SIGMA_EXPONENT = 0,
     ):
         self.EPOCH = EPOCH  # type: Optional[str]
         self.X = X  # type: float
@@ -210,6 +365,16 @@ class ephemerisDataLineT(object):
         self.X_DDOT = X_DDOT  # type: float
         self.Y_DDOT = Y_DDOT  # type: float
         self.Z_DDOT = Z_DDOT  # type: float
+        self.CLOCK_BIAS_MICROSECONDS = CLOCK_BIAS_MICROSECONDS  # type: float
+        self.CLOCK_RATE_MICROSECONDS_PER_SECOND = CLOCK_RATE_MICROSECONDS_PER_SECOND  # type: float
+        self.CLOCK_BIAS_SIGMA_PICOSECONDS = CLOCK_BIAS_SIGMA_PICOSECONDS  # type: float
+        self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND  # type: float
+        self.X_SIGMA_EXPONENT = X_SIGMA_EXPONENT  # type: int
+        self.Y_SIGMA_EXPONENT = Y_SIGMA_EXPONENT  # type: int
+        self.Z_SIGMA_EXPONENT = Z_SIGMA_EXPONENT  # type: int
+        self.X_DOT_SIGMA_EXPONENT = X_DOT_SIGMA_EXPONENT  # type: int
+        self.Y_DOT_SIGMA_EXPONENT = Y_DOT_SIGMA_EXPONENT  # type: int
+        self.Z_DOT_SIGMA_EXPONENT = Z_DOT_SIGMA_EXPONENT  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -242,6 +407,16 @@ class ephemerisDataLineT(object):
         self.X_DDOT = ephemerisDataLine.X_DDOT()
         self.Y_DDOT = ephemerisDataLine.Y_DDOT()
         self.Z_DDOT = ephemerisDataLine.Z_DDOT()
+        self.CLOCK_BIAS_MICROSECONDS = ephemerisDataLine.CLOCK_BIAS_MICROSECONDS()
+        self.CLOCK_RATE_MICROSECONDS_PER_SECOND = ephemerisDataLine.CLOCK_RATE_MICROSECONDS_PER_SECOND()
+        self.CLOCK_BIAS_SIGMA_PICOSECONDS = ephemerisDataLine.CLOCK_BIAS_SIGMA_PICOSECONDS()
+        self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = ephemerisDataLine.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND()
+        self.X_SIGMA_EXPONENT = ephemerisDataLine.X_SIGMA_EXPONENT()
+        self.Y_SIGMA_EXPONENT = ephemerisDataLine.Y_SIGMA_EXPONENT()
+        self.Z_SIGMA_EXPONENT = ephemerisDataLine.Z_SIGMA_EXPONENT()
+        self.X_DOT_SIGMA_EXPONENT = ephemerisDataLine.X_DOT_SIGMA_EXPONENT()
+        self.Y_DOT_SIGMA_EXPONENT = ephemerisDataLine.Y_DOT_SIGMA_EXPONENT()
+        self.Z_DOT_SIGMA_EXPONENT = ephemerisDataLine.Z_DOT_SIGMA_EXPONENT()
 
     # ephemerisDataLineT
     def Pack(self, builder):
@@ -259,5 +434,15 @@ class ephemerisDataLineT(object):
         ephemerisDataLineAddX_DDOT(builder, self.X_DDOT)
         ephemerisDataLineAddY_DDOT(builder, self.Y_DDOT)
         ephemerisDataLineAddZ_DDOT(builder, self.Z_DDOT)
+        ephemerisDataLineAddCLOCK_BIAS_MICROSECONDS(builder, self.CLOCK_BIAS_MICROSECONDS)
+        ephemerisDataLineAddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, self.CLOCK_RATE_MICROSECONDS_PER_SECOND)
+        ephemerisDataLineAddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, self.CLOCK_BIAS_SIGMA_PICOSECONDS)
+        ephemerisDataLineAddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND)
+        ephemerisDataLineAddX_SIGMA_EXPONENT(builder, self.X_SIGMA_EXPONENT)
+        ephemerisDataLineAddY_SIGMA_EXPONENT(builder, self.Y_SIGMA_EXPONENT)
+        ephemerisDataLineAddZ_SIGMA_EXPONENT(builder, self.Z_SIGMA_EXPONENT)
+        ephemerisDataLineAddX_DOT_SIGMA_EXPONENT(builder, self.X_DOT_SIGMA_EXPONENT)
+        ephemerisDataLineAddY_DOT_SIGMA_EXPONENT(builder, self.Y_DOT_SIGMA_EXPONENT)
+        ephemerisDataLineAddZ_DOT_SIGMA_EXPONENT(builder, self.Z_DOT_SIGMA_EXPONENT)
         ephemerisDataLine = ephemerisDataLineEnd(builder)
         return ephemerisDataLine

@@ -158,6 +158,15 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
   public int POLYNOMIAL_POSITION_RECORDSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
   public PPEPositionRecord.Vector polynomialPositionRecordsVector() { return polynomialPositionRecordsVector(new PPEPositionRecord.Vector()); }
   public PPEPositionRecord.Vector polynomialPositionRecordsVector(PPEPositionRecord.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * NAIF integer code of the ephemeris target (SPK segment target).
+   */
+  public int OBJECT_NAIF_ID() { int o = __offset(42); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * NAIF integer code of the ephemeris centre, matching CENTER_NAME
+   * (SPK segment centre).
+   */
+  public int CENTER_NAIF_ID() { int o = __offset(44); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createephemerisDataBlock(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -178,9 +187,13 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
       int EPHEMERIS_DATAOffset,
       int EPHEMERIS_DATA_LINESOffset,
       int COVARIANCE_MATRIX_LINESOffset,
-      int POLYNOMIAL_POSITION_RECORDSOffset) {
-    builder.startTable(19);
+      int POLYNOMIAL_POSITION_RECORDSOffset,
+      int OBJECT_NAIF_ID,
+      int CENTER_NAIF_ID) {
+    builder.startTable(21);
     ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
+    ephemerisDataBlock.addCenterNaifId(builder, CENTER_NAIF_ID);
+    ephemerisDataBlock.addObjectNaifId(builder, OBJECT_NAIF_ID);
     ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDSOffset);
     ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINESOffset);
@@ -202,7 +215,7 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
     return ephemerisDataBlock.endephemerisDataBlock(builder);
   }
 
-  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(2, CENTER_NAMEOffset, 0); }
@@ -230,6 +243,8 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
   public static void addPolynomialPositionRecords(FlatBufferBuilder builder, int POLYNOMIAL_POSITION_RECORDSOffset) { builder.addOffset(18, POLYNOMIAL_POSITION_RECORDSOffset, 0); }
   public static int createPolynomialPositionRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPolynomialPositionRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addObjectNaifId(FlatBufferBuilder builder, int OBJECT_NAIF_ID) { builder.addInt(19, OBJECT_NAIF_ID, 0); }
+  public static void addCenterNaifId(FlatBufferBuilder builder, int CENTER_NAIF_ID) { builder.addInt(20, CENTER_NAIF_ID, 0); }
   public static int endephemerisDataBlock(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

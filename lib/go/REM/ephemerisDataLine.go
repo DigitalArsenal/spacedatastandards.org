@@ -232,8 +232,238 @@ func (rcv *ephemerisDataLine) MutateZDdot(n float64) bool {
 	return rcv.MutateZ_DDOT(n)
 }
 
+/// Satellite clock bias (offset), microseconds. SP3 position-record clock
+/// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+/// field instead.
+func (rcv *ephemerisDataLine) CLOCK_BIAS_MICROSECONDS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ephemerisDataLine) ClockBiasMicroseconds() float64 {
+	return rcv.CLOCK_BIAS_MICROSECONDS()
+}
+
+/// Satellite clock bias (offset), microseconds. SP3 position-record clock
+/// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+/// field instead.
+func (rcv *ephemerisDataLine) MutateCLOCK_BIAS_MICROSECONDS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ephemerisDataLine) MutateClockBiasMicroseconds(n float64) bool {
+	return rcv.MutateCLOCK_BIAS_MICROSECONDS(n)
+}
+
+/// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+/// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+func (rcv *ephemerisDataLine) CLOCK_RATE_MICROSECONDS_PER_SECOND() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ephemerisDataLine) ClockRateMicrosecondsPerSecond() float64 {
+	return rcv.CLOCK_RATE_MICROSECONDS_PER_SECOND()
+}
+
+/// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+/// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+func (rcv *ephemerisDataLine) MutateCLOCK_RATE_MICROSECONDS_PER_SECOND(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ephemerisDataLine) MutateClockRateMicrosecondsPerSecond(n float64) bool {
+	return rcv.MutateCLOCK_RATE_MICROSECONDS_PER_SECOND(n)
+}
+
+/// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+func (rcv *ephemerisDataLine) CLOCK_BIAS_SIGMA_PICOSECONDS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ephemerisDataLine) ClockBiasSigmaPicoseconds() float64 {
+	return rcv.CLOCK_BIAS_SIGMA_PICOSECONDS()
+}
+
+/// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+func (rcv *ephemerisDataLine) MutateCLOCK_BIAS_SIGMA_PICOSECONDS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *ephemerisDataLine) MutateClockBiasSigmaPicoseconds(n float64) bool {
+	return rcv.MutateCLOCK_BIAS_SIGMA_PICOSECONDS(n)
+}
+
+/// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+/// 1e-4 picoseconds per second.
+func (rcv *ephemerisDataLine) CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ephemerisDataLine) ClockRateSigmaPicosecondsPerSecond() float64 {
+	return rcv.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND()
+}
+
+/// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+/// 1e-4 picoseconds per second.
+func (rcv *ephemerisDataLine) MutateCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ephemerisDataLine) MutateClockRateSigmaPicosecondsPerSecond(n float64) bool {
+	return rcv.MutateCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(n)
+}
+
+/// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+/// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+/// the result in mm. These are the raw SP3 exponent columns, kept as
+/// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+/// sigma raises the header base to this power.
+func (rcv *ephemerisDataLine) X_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) XSigmaExponent() int8 {
+	return rcv.X_SIGMA_EXPONENT()
+}
+
+/// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+/// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+/// the result in mm. These are the raw SP3 exponent columns, kept as
+/// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+/// sigma raises the header base to this power.
+func (rcv *ephemerisDataLine) MutateX_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(32, n)
+}
+
+func (rcv *ephemerisDataLine) MutateXSigmaExponent(n int8) bool {
+	return rcv.MutateX_SIGMA_EXPONENT(n)
+}
+
+func (rcv *ephemerisDataLine) Y_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) YSigmaExponent() int8 {
+	return rcv.Y_SIGMA_EXPONENT()
+}
+
+func (rcv *ephemerisDataLine) MutateY_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(34, n)
+}
+
+func (rcv *ephemerisDataLine) MutateYSigmaExponent(n int8) bool {
+	return rcv.MutateY_SIGMA_EXPONENT(n)
+}
+
+func (rcv *ephemerisDataLine) Z_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) ZSigmaExponent() int8 {
+	return rcv.Z_SIGMA_EXPONENT()
+}
+
+func (rcv *ephemerisDataLine) MutateZ_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(36, n)
+}
+
+func (rcv *ephemerisDataLine) MutateZSigmaExponent(n int8) bool {
+	return rcv.MutateZ_SIGMA_EXPONENT(n)
+}
+
+/// Per-coordinate velocity standard-deviation exponents, result in
+/// 1e-4 mm/s. Same base**n rule.
+func (rcv *ephemerisDataLine) X_DOT_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) XDotSigmaExponent() int8 {
+	return rcv.X_DOT_SIGMA_EXPONENT()
+}
+
+/// Per-coordinate velocity standard-deviation exponents, result in
+/// 1e-4 mm/s. Same base**n rule.
+func (rcv *ephemerisDataLine) MutateX_DOT_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(38, n)
+}
+
+func (rcv *ephemerisDataLine) MutateXDotSigmaExponent(n int8) bool {
+	return rcv.MutateX_DOT_SIGMA_EXPONENT(n)
+}
+
+func (rcv *ephemerisDataLine) Y_DOT_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) YDotSigmaExponent() int8 {
+	return rcv.Y_DOT_SIGMA_EXPONENT()
+}
+
+func (rcv *ephemerisDataLine) MutateY_DOT_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(40, n)
+}
+
+func (rcv *ephemerisDataLine) MutateYDotSigmaExponent(n int8) bool {
+	return rcv.MutateY_DOT_SIGMA_EXPONENT(n)
+}
+
+func (rcv *ephemerisDataLine) Z_DOT_SIGMA_EXPONENT() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataLine) ZDotSigmaExponent() int8 {
+	return rcv.Z_DOT_SIGMA_EXPONENT()
+}
+
+func (rcv *ephemerisDataLine) MutateZ_DOT_SIGMA_EXPONENT(n int8) bool {
+	return rcv._tab.MutateInt8Slot(42, n)
+}
+
+func (rcv *ephemerisDataLine) MutateZDotSigmaExponent(n int8) bool {
+	return rcv.MutateZ_DOT_SIGMA_EXPONENT(n)
+}
+
 func ephemerisDataLineStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(20)
 }
 func ephemerisDataLineAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
@@ -285,6 +515,66 @@ func ephemerisDataLineAddZ_DDOT(builder *flatbuffers.Builder, Z_DDOT float64) {
 }
 func ephemerisDataLineAddZDdot(builder *flatbuffers.Builder, Z_DDOT float64) {
 	ephemerisDataLineAddZ_DDOT(builder, Z_DDOT)
+}
+func ephemerisDataLineAddCLOCK_BIAS_MICROSECONDS(builder *flatbuffers.Builder, CLOCK_BIAS_MICROSECONDS float64) {
+	builder.PrependFloat64Slot(10, CLOCK_BIAS_MICROSECONDS, 0.0)
+}
+func ephemerisDataLineAddClockBiasMicroseconds(builder *flatbuffers.Builder, CLOCK_BIAS_MICROSECONDS float64) {
+	ephemerisDataLineAddCLOCK_BIAS_MICROSECONDS(builder, CLOCK_BIAS_MICROSECONDS)
+}
+func ephemerisDataLineAddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder *flatbuffers.Builder, CLOCK_RATE_MICROSECONDS_PER_SECOND float64) {
+	builder.PrependFloat64Slot(11, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0)
+}
+func ephemerisDataLineAddClockRateMicrosecondsPerSecond(builder *flatbuffers.Builder, CLOCK_RATE_MICROSECONDS_PER_SECOND float64) {
+	ephemerisDataLineAddCLOCK_RATE_MICROSECONDS_PER_SECOND(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND)
+}
+func ephemerisDataLineAddCLOCK_BIAS_SIGMA_PICOSECONDS(builder *flatbuffers.Builder, CLOCK_BIAS_SIGMA_PICOSECONDS float64) {
+	builder.PrependFloat64Slot(12, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0)
+}
+func ephemerisDataLineAddClockBiasSigmaPicoseconds(builder *flatbuffers.Builder, CLOCK_BIAS_SIGMA_PICOSECONDS float64) {
+	ephemerisDataLineAddCLOCK_BIAS_SIGMA_PICOSECONDS(builder, CLOCK_BIAS_SIGMA_PICOSECONDS)
+}
+func ephemerisDataLineAddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder *flatbuffers.Builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND float64) {
+	builder.PrependFloat64Slot(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0)
+}
+func ephemerisDataLineAddClockRateSigmaPicosecondsPerSecond(builder *flatbuffers.Builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND float64) {
+	ephemerisDataLineAddCLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND)
+}
+func ephemerisDataLineAddX_SIGMA_EXPONENT(builder *flatbuffers.Builder, X_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(14, X_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddXSigmaExponent(builder *flatbuffers.Builder, X_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddX_SIGMA_EXPONENT(builder, X_SIGMA_EXPONENT)
+}
+func ephemerisDataLineAddY_SIGMA_EXPONENT(builder *flatbuffers.Builder, Y_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(15, Y_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddYSigmaExponent(builder *flatbuffers.Builder, Y_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddY_SIGMA_EXPONENT(builder, Y_SIGMA_EXPONENT)
+}
+func ephemerisDataLineAddZ_SIGMA_EXPONENT(builder *flatbuffers.Builder, Z_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(16, Z_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddZSigmaExponent(builder *flatbuffers.Builder, Z_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddZ_SIGMA_EXPONENT(builder, Z_SIGMA_EXPONENT)
+}
+func ephemerisDataLineAddX_DOT_SIGMA_EXPONENT(builder *flatbuffers.Builder, X_DOT_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(17, X_DOT_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddXDotSigmaExponent(builder *flatbuffers.Builder, X_DOT_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddX_DOT_SIGMA_EXPONENT(builder, X_DOT_SIGMA_EXPONENT)
+}
+func ephemerisDataLineAddY_DOT_SIGMA_EXPONENT(builder *flatbuffers.Builder, Y_DOT_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(18, Y_DOT_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddYDotSigmaExponent(builder *flatbuffers.Builder, Y_DOT_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddY_DOT_SIGMA_EXPONENT(builder, Y_DOT_SIGMA_EXPONENT)
+}
+func ephemerisDataLineAddZ_DOT_SIGMA_EXPONENT(builder *flatbuffers.Builder, Z_DOT_SIGMA_EXPONENT int8) {
+	builder.PrependInt8Slot(19, Z_DOT_SIGMA_EXPONENT, 0)
+}
+func ephemerisDataLineAddZDotSigmaExponent(builder *flatbuffers.Builder, Z_DOT_SIGMA_EXPONENT int8) {
+	ephemerisDataLineAddZ_DOT_SIGMA_EXPONENT(builder, Z_DOT_SIGMA_EXPONENT)
 }
 func ephemerisDataLineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

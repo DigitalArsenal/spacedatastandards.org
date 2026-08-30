@@ -5,6 +5,8 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { RFM, RFMT } from './RFM.js';
+import { TDMObservation, TDMObservationT } from './TDMObservation.js';
+import { TDMSegment, TDMSegmentT } from './TDMSegment.js';
 import { TDMTransmitRamp, TDMTransmitRampT } from './TDMTransmitRamp.js';
 
 
@@ -773,8 +775,345 @@ transmitRampsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Data-section observations for a SINGLE-segment TDM, in file order.
+ */
+OBSERVATIONS(index: number, obj?:TDMObservation):TDMObservation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 134);
+  return offset ? (obj || new TDMObservation()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+observationsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 134);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * All metadata+data segments of a MULTI-segment TDM, in file order.
+ */
+SEGMENTS(index: number, obj?:TDMSegment):TDMSegment|null {
+  const offset = this.bb!.__offset(this.bb_pos, 136);
+  return offset ? (obj || new TDMSegment()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+segmentsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 136);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+ * already exists above; 2..5 had no carrier.
+ */
+TRANSMIT_FREQ_2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 138);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 140);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_4():number {
+  const offset = this.bb!.__offset(this.bb_pos, 142);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_5():number {
+  const offset = this.bb!.__offset(this.bb_pos, 144);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Transmit frequency rates by participant, Hz/s. A constant rate here is
+ * the single-interval degenerate case of TRANSMIT_RAMPS.
+ */
+TRANSMIT_FREQ_RATE_1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 146);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_RATE_2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 148);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_RATE_3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 150);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_RATE_4():number {
+  const offset = this.bb!.__offset(this.bb_pos, 152);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_FREQ_RATE_5():number {
+  const offset = this.bb!.__offset(this.bb_pos, 154);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Unique message identifier (503.0-B-2 table 3-2).
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 156);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+ */
+TRACK_ID():string|null
+TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 158);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Comma-separated list of the data keywords present in the data section.
+ */
+DATA_TYPES():string|null
+DATA_TYPES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATA_TYPES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 160);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Signal path through the participants as an ordered comma-separated list,
+ * e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+ */
+PATH():string|null
+PATH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PATH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 162);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Name of the ephemeris used to generate the data, per participant.
+ */
+EPHEMERIS_NAME_1():string|null
+EPHEMERIS_NAME_1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME_1(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 164);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+EPHEMERIS_NAME_2():string|null
+EPHEMERIS_NAME_2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME_2(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 166);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+EPHEMERIS_NAME_3():string|null
+EPHEMERIS_NAME_3(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME_3(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 168);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+EPHEMERIS_NAME_4():string|null
+EPHEMERIS_NAME_4(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME_4(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 170);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+EPHEMERIS_NAME_5():string|null
+EPHEMERIS_NAME_5(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME_5(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 172);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Units of the RANGE observable: "km", "s" or "RU" (range units).
+ * RANGE is meaningless without it.
+ */
+RANGE_UNITS():string|null
+RANGE_UNITS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RANGE_UNITS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 174);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference frame for angle and position data, as the verbatim CCSDS
+ * keyword value (503.0-B-2 annex B).
+ */
+REFERENCE_FRAME():string|null
+REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 176);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Recommended interpolation method for the observations.
+ */
+INTERPOLATION():string|null
+INTERPOLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+INTERPOLATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 178);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Recommended interpolation degree.
+ */
+INTERPOLATION_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 180);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Frequency offset applied to the observations, Hz.
+ */
+FREQ_OFFSET():number {
+  const offset = this.bb!.__offset(this.bb_pos, 182);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Transponder turnaround ratio numerator.
+ */
+TURNAROUND_NUMERATOR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 184);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Transponder turnaround ratio denominator.
+ */
+TURNAROUND_DENOMINATOR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 186);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Transmit delays by participant, s.
+ */
+TRANSMIT_DELAY_1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 188);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_DELAY_2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 190);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_DELAY_3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 192);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_DELAY_4():number {
+  const offset = this.bb!.__offset(this.bb_pos, 194);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+TRANSMIT_DELAY_5():number {
+  const offset = this.bb!.__offset(this.bb_pos, 196);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+ * RECEIVE_DELAY_3 already exist on the TDM root.)
+ */
+RECEIVE_DELAY_1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 198);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+RECEIVE_DELAY_4():number {
+  const offset = this.bb!.__offset(this.bb_pos, 200);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+RECEIVE_DELAY_5():number {
+  const offset = this.bb!.__offset(this.bb_pos, 202);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Doppler count bias, Hz.
+ */
+DOPPLER_COUNT_BIAS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 204);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Doppler count scale factor.
+ */
+DOPPLER_COUNT_SCALE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 206);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Whether the Doppler counter rolls over (CCSDS YES/NO).
+ */
+DOPPLER_COUNT_ROLLOVER():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 208);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Corrections that a consumer must apply, or that were applied when
+ * CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+ */
+CORRECTION_RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 210);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_DOPPLER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 212);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_MAG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 214);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_RCS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 216);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_RECEIVE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 218);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_TRANSMIT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 220);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_ABERRATION_YEARLY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 222);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CORRECTION_ABERRATION_DIURNAL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 224);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startTDM(builder:flatbuffers.Builder) {
-  builder.startObject(65);
+  builder.startObject(111);
 }
 
 static addObserverId(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset) {
@@ -1299,6 +1638,214 @@ static startTransmitRampsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addObservations(builder:flatbuffers.Builder, OBSERVATIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(65, OBSERVATIONSOffset, 0);
+}
+
+static createObservationsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startObservationsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSegments(builder:flatbuffers.Builder, SEGMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(66, SEGMENTSOffset, 0);
+}
+
+static createSegmentsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSegmentsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addTransmitFreq2(builder:flatbuffers.Builder, TRANSMIT_FREQ_2:number) {
+  builder.addFieldFloat64(67, TRANSMIT_FREQ_2, 0.0);
+}
+
+static addTransmitFreq3(builder:flatbuffers.Builder, TRANSMIT_FREQ_3:number) {
+  builder.addFieldFloat64(68, TRANSMIT_FREQ_3, 0.0);
+}
+
+static addTransmitFreq4(builder:flatbuffers.Builder, TRANSMIT_FREQ_4:number) {
+  builder.addFieldFloat64(69, TRANSMIT_FREQ_4, 0.0);
+}
+
+static addTransmitFreq5(builder:flatbuffers.Builder, TRANSMIT_FREQ_5:number) {
+  builder.addFieldFloat64(70, TRANSMIT_FREQ_5, 0.0);
+}
+
+static addTransmitFreqRate1(builder:flatbuffers.Builder, TRANSMIT_FREQ_RATE_1:number) {
+  builder.addFieldFloat64(71, TRANSMIT_FREQ_RATE_1, 0.0);
+}
+
+static addTransmitFreqRate2(builder:flatbuffers.Builder, TRANSMIT_FREQ_RATE_2:number) {
+  builder.addFieldFloat64(72, TRANSMIT_FREQ_RATE_2, 0.0);
+}
+
+static addTransmitFreqRate3(builder:flatbuffers.Builder, TRANSMIT_FREQ_RATE_3:number) {
+  builder.addFieldFloat64(73, TRANSMIT_FREQ_RATE_3, 0.0);
+}
+
+static addTransmitFreqRate4(builder:flatbuffers.Builder, TRANSMIT_FREQ_RATE_4:number) {
+  builder.addFieldFloat64(74, TRANSMIT_FREQ_RATE_4, 0.0);
+}
+
+static addTransmitFreqRate5(builder:flatbuffers.Builder, TRANSMIT_FREQ_RATE_5:number) {
+  builder.addFieldFloat64(75, TRANSMIT_FREQ_RATE_5, 0.0);
+}
+
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(76, MESSAGE_IDOffset, 0);
+}
+
+static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(77, TRACK_IDOffset, 0);
+}
+
+static addDataTypes(builder:flatbuffers.Builder, DATA_TYPESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(78, DATA_TYPESOffset, 0);
+}
+
+static addPath(builder:flatbuffers.Builder, PATHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(79, PATHOffset, 0);
+}
+
+static addEphemerisName1(builder:flatbuffers.Builder, EPHEMERIS_NAME_1Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(80, EPHEMERIS_NAME_1Offset, 0);
+}
+
+static addEphemerisName2(builder:flatbuffers.Builder, EPHEMERIS_NAME_2Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(81, EPHEMERIS_NAME_2Offset, 0);
+}
+
+static addEphemerisName3(builder:flatbuffers.Builder, EPHEMERIS_NAME_3Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(82, EPHEMERIS_NAME_3Offset, 0);
+}
+
+static addEphemerisName4(builder:flatbuffers.Builder, EPHEMERIS_NAME_4Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(83, EPHEMERIS_NAME_4Offset, 0);
+}
+
+static addEphemerisName5(builder:flatbuffers.Builder, EPHEMERIS_NAME_5Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(84, EPHEMERIS_NAME_5Offset, 0);
+}
+
+static addRangeUnits(builder:flatbuffers.Builder, RANGE_UNITSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(85, RANGE_UNITSOffset, 0);
+}
+
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(86, REFERENCE_FRAMEOffset, 0);
+}
+
+static addInterpolation(builder:flatbuffers.Builder, INTERPOLATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(87, INTERPOLATIONOffset, 0);
+}
+
+static addInterpolationDegree(builder:flatbuffers.Builder, INTERPOLATION_DEGREE:number) {
+  builder.addFieldInt32(88, INTERPOLATION_DEGREE, 0);
+}
+
+static addFreqOffset(builder:flatbuffers.Builder, FREQ_OFFSET:number) {
+  builder.addFieldFloat64(89, FREQ_OFFSET, 0.0);
+}
+
+static addTurnaroundNumerator(builder:flatbuffers.Builder, TURNAROUND_NUMERATOR:number) {
+  builder.addFieldInt32(90, TURNAROUND_NUMERATOR, 0);
+}
+
+static addTurnaroundDenominator(builder:flatbuffers.Builder, TURNAROUND_DENOMINATOR:number) {
+  builder.addFieldInt32(91, TURNAROUND_DENOMINATOR, 0);
+}
+
+static addTransmitDelay1(builder:flatbuffers.Builder, TRANSMIT_DELAY_1:number) {
+  builder.addFieldFloat64(92, TRANSMIT_DELAY_1, 0.0);
+}
+
+static addTransmitDelay2(builder:flatbuffers.Builder, TRANSMIT_DELAY_2:number) {
+  builder.addFieldFloat64(93, TRANSMIT_DELAY_2, 0.0);
+}
+
+static addTransmitDelay3(builder:flatbuffers.Builder, TRANSMIT_DELAY_3:number) {
+  builder.addFieldFloat64(94, TRANSMIT_DELAY_3, 0.0);
+}
+
+static addTransmitDelay4(builder:flatbuffers.Builder, TRANSMIT_DELAY_4:number) {
+  builder.addFieldFloat64(95, TRANSMIT_DELAY_4, 0.0);
+}
+
+static addTransmitDelay5(builder:flatbuffers.Builder, TRANSMIT_DELAY_5:number) {
+  builder.addFieldFloat64(96, TRANSMIT_DELAY_5, 0.0);
+}
+
+static addReceiveDelay1(builder:flatbuffers.Builder, RECEIVE_DELAY_1:number) {
+  builder.addFieldFloat64(97, RECEIVE_DELAY_1, 0.0);
+}
+
+static addReceiveDelay4(builder:flatbuffers.Builder, RECEIVE_DELAY_4:number) {
+  builder.addFieldFloat64(98, RECEIVE_DELAY_4, 0.0);
+}
+
+static addReceiveDelay5(builder:flatbuffers.Builder, RECEIVE_DELAY_5:number) {
+  builder.addFieldFloat64(99, RECEIVE_DELAY_5, 0.0);
+}
+
+static addDopplerCountBias(builder:flatbuffers.Builder, DOPPLER_COUNT_BIAS:number) {
+  builder.addFieldFloat64(100, DOPPLER_COUNT_BIAS, 0.0);
+}
+
+static addDopplerCountScale(builder:flatbuffers.Builder, DOPPLER_COUNT_SCALE:number) {
+  builder.addFieldInt32(101, DOPPLER_COUNT_SCALE, 0);
+}
+
+static addDopplerCountRollover(builder:flatbuffers.Builder, DOPPLER_COUNT_ROLLOVER:boolean) {
+  builder.addFieldInt8(102, +DOPPLER_COUNT_ROLLOVER, +false);
+}
+
+static addCorrectionRange(builder:flatbuffers.Builder, CORRECTION_RANGE:number) {
+  builder.addFieldFloat64(103, CORRECTION_RANGE, 0.0);
+}
+
+static addCorrectionDoppler(builder:flatbuffers.Builder, CORRECTION_DOPPLER:number) {
+  builder.addFieldFloat64(104, CORRECTION_DOPPLER, 0.0);
+}
+
+static addCorrectionMag(builder:flatbuffers.Builder, CORRECTION_MAG:number) {
+  builder.addFieldFloat64(105, CORRECTION_MAG, 0.0);
+}
+
+static addCorrectionRcs(builder:flatbuffers.Builder, CORRECTION_RCS:number) {
+  builder.addFieldFloat64(106, CORRECTION_RCS, 0.0);
+}
+
+static addCorrectionReceive(builder:flatbuffers.Builder, CORRECTION_RECEIVE:number) {
+  builder.addFieldFloat64(107, CORRECTION_RECEIVE, 0.0);
+}
+
+static addCorrectionTransmit(builder:flatbuffers.Builder, CORRECTION_TRANSMIT:number) {
+  builder.addFieldFloat64(108, CORRECTION_TRANSMIT, 0.0);
+}
+
+static addCorrectionAberrationYearly(builder:flatbuffers.Builder, CORRECTION_ABERRATION_YEARLY:number) {
+  builder.addFieldFloat64(109, CORRECTION_ABERRATION_YEARLY, 0.0);
+}
+
+static addCorrectionAberrationDiurnal(builder:flatbuffers.Builder, CORRECTION_ABERRATION_DIURNAL:number) {
+  builder.addFieldFloat64(110, CORRECTION_ABERRATION_DIURNAL, 0.0);
+}
+
 static endTDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1379,7 +1926,53 @@ unpack(): TDMT {
     this.bb!.createScalarList<number>(this.SIGNAL_TO_NOISE.bind(this), this.signalToNoiseLength()),
     this.bb!.createScalarList<number>(this.SPECTRAL_MAX.bind(this), this.spectralMaxLength()),
     this.bb!.createScalarList<number>(this.DOPPLER_NOISE_HZ.bind(this), this.dopplerNoiseHzLength()),
-    this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength())
+    this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength()),
+    this.bb!.createObjList<TDMObservation, TDMObservationT>(this.OBSERVATIONS.bind(this), this.observationsLength()),
+    this.bb!.createObjList<TDMSegment, TDMSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength()),
+    this.TRANSMIT_FREQ_2(),
+    this.TRANSMIT_FREQ_3(),
+    this.TRANSMIT_FREQ_4(),
+    this.TRANSMIT_FREQ_5(),
+    this.TRANSMIT_FREQ_RATE_1(),
+    this.TRANSMIT_FREQ_RATE_2(),
+    this.TRANSMIT_FREQ_RATE_3(),
+    this.TRANSMIT_FREQ_RATE_4(),
+    this.TRANSMIT_FREQ_RATE_5(),
+    this.MESSAGE_ID(),
+    this.TRACK_ID(),
+    this.DATA_TYPES(),
+    this.PATH(),
+    this.EPHEMERIS_NAME_1(),
+    this.EPHEMERIS_NAME_2(),
+    this.EPHEMERIS_NAME_3(),
+    this.EPHEMERIS_NAME_4(),
+    this.EPHEMERIS_NAME_5(),
+    this.RANGE_UNITS(),
+    this.REFERENCE_FRAME(),
+    this.INTERPOLATION(),
+    this.INTERPOLATION_DEGREE(),
+    this.FREQ_OFFSET(),
+    this.TURNAROUND_NUMERATOR(),
+    this.TURNAROUND_DENOMINATOR(),
+    this.TRANSMIT_DELAY_1(),
+    this.TRANSMIT_DELAY_2(),
+    this.TRANSMIT_DELAY_3(),
+    this.TRANSMIT_DELAY_4(),
+    this.TRANSMIT_DELAY_5(),
+    this.RECEIVE_DELAY_1(),
+    this.RECEIVE_DELAY_4(),
+    this.RECEIVE_DELAY_5(),
+    this.DOPPLER_COUNT_BIAS(),
+    this.DOPPLER_COUNT_SCALE(),
+    this.DOPPLER_COUNT_ROLLOVER(),
+    this.CORRECTION_RANGE(),
+    this.CORRECTION_DOPPLER(),
+    this.CORRECTION_MAG(),
+    this.CORRECTION_RCS(),
+    this.CORRECTION_RECEIVE(),
+    this.CORRECTION_TRANSMIT(),
+    this.CORRECTION_ABERRATION_YEARLY(),
+    this.CORRECTION_ABERRATION_DIURNAL()
   );
 }
 
@@ -1450,6 +2043,52 @@ unpackTo(_o: TDMT): void {
   _o.SPECTRAL_MAX = this.bb!.createScalarList<number>(this.SPECTRAL_MAX.bind(this), this.spectralMaxLength());
   _o.DOPPLER_NOISE_HZ = this.bb!.createScalarList<number>(this.DOPPLER_NOISE_HZ.bind(this), this.dopplerNoiseHzLength());
   _o.TRANSMIT_RAMPS = this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength());
+  _o.OBSERVATIONS = this.bb!.createObjList<TDMObservation, TDMObservationT>(this.OBSERVATIONS.bind(this), this.observationsLength());
+  _o.SEGMENTS = this.bb!.createObjList<TDMSegment, TDMSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength());
+  _o.TRANSMIT_FREQ_2 = this.TRANSMIT_FREQ_2();
+  _o.TRANSMIT_FREQ_3 = this.TRANSMIT_FREQ_3();
+  _o.TRANSMIT_FREQ_4 = this.TRANSMIT_FREQ_4();
+  _o.TRANSMIT_FREQ_5 = this.TRANSMIT_FREQ_5();
+  _o.TRANSMIT_FREQ_RATE_1 = this.TRANSMIT_FREQ_RATE_1();
+  _o.TRANSMIT_FREQ_RATE_2 = this.TRANSMIT_FREQ_RATE_2();
+  _o.TRANSMIT_FREQ_RATE_3 = this.TRANSMIT_FREQ_RATE_3();
+  _o.TRANSMIT_FREQ_RATE_4 = this.TRANSMIT_FREQ_RATE_4();
+  _o.TRANSMIT_FREQ_RATE_5 = this.TRANSMIT_FREQ_RATE_5();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.TRACK_ID = this.TRACK_ID();
+  _o.DATA_TYPES = this.DATA_TYPES();
+  _o.PATH = this.PATH();
+  _o.EPHEMERIS_NAME_1 = this.EPHEMERIS_NAME_1();
+  _o.EPHEMERIS_NAME_2 = this.EPHEMERIS_NAME_2();
+  _o.EPHEMERIS_NAME_3 = this.EPHEMERIS_NAME_3();
+  _o.EPHEMERIS_NAME_4 = this.EPHEMERIS_NAME_4();
+  _o.EPHEMERIS_NAME_5 = this.EPHEMERIS_NAME_5();
+  _o.RANGE_UNITS = this.RANGE_UNITS();
+  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
+  _o.INTERPOLATION = this.INTERPOLATION();
+  _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE();
+  _o.FREQ_OFFSET = this.FREQ_OFFSET();
+  _o.TURNAROUND_NUMERATOR = this.TURNAROUND_NUMERATOR();
+  _o.TURNAROUND_DENOMINATOR = this.TURNAROUND_DENOMINATOR();
+  _o.TRANSMIT_DELAY_1 = this.TRANSMIT_DELAY_1();
+  _o.TRANSMIT_DELAY_2 = this.TRANSMIT_DELAY_2();
+  _o.TRANSMIT_DELAY_3 = this.TRANSMIT_DELAY_3();
+  _o.TRANSMIT_DELAY_4 = this.TRANSMIT_DELAY_4();
+  _o.TRANSMIT_DELAY_5 = this.TRANSMIT_DELAY_5();
+  _o.RECEIVE_DELAY_1 = this.RECEIVE_DELAY_1();
+  _o.RECEIVE_DELAY_4 = this.RECEIVE_DELAY_4();
+  _o.RECEIVE_DELAY_5 = this.RECEIVE_DELAY_5();
+  _o.DOPPLER_COUNT_BIAS = this.DOPPLER_COUNT_BIAS();
+  _o.DOPPLER_COUNT_SCALE = this.DOPPLER_COUNT_SCALE();
+  _o.DOPPLER_COUNT_ROLLOVER = this.DOPPLER_COUNT_ROLLOVER();
+  _o.CORRECTION_RANGE = this.CORRECTION_RANGE();
+  _o.CORRECTION_DOPPLER = this.CORRECTION_DOPPLER();
+  _o.CORRECTION_MAG = this.CORRECTION_MAG();
+  _o.CORRECTION_RCS = this.CORRECTION_RCS();
+  _o.CORRECTION_RECEIVE = this.CORRECTION_RECEIVE();
+  _o.CORRECTION_TRANSMIT = this.CORRECTION_TRANSMIT();
+  _o.CORRECTION_ABERRATION_YEARLY = this.CORRECTION_ABERRATION_YEARLY();
+  _o.CORRECTION_ABERRATION_DIURNAL = this.CORRECTION_ABERRATION_DIURNAL();
 }
 }
 
@@ -1519,7 +2158,53 @@ constructor(
   public SIGNAL_TO_NOISE: (number)[] = [],
   public SPECTRAL_MAX: (number)[] = [],
   public DOPPLER_NOISE_HZ: (number)[] = [],
-  public TRANSMIT_RAMPS: (TDMTransmitRampT)[] = []
+  public TRANSMIT_RAMPS: (TDMTransmitRampT)[] = [],
+  public OBSERVATIONS: (TDMObservationT)[] = [],
+  public SEGMENTS: (TDMSegmentT)[] = [],
+  public TRANSMIT_FREQ_2: number = 0.0,
+  public TRANSMIT_FREQ_3: number = 0.0,
+  public TRANSMIT_FREQ_4: number = 0.0,
+  public TRANSMIT_FREQ_5: number = 0.0,
+  public TRANSMIT_FREQ_RATE_1: number = 0.0,
+  public TRANSMIT_FREQ_RATE_2: number = 0.0,
+  public TRANSMIT_FREQ_RATE_3: number = 0.0,
+  public TRANSMIT_FREQ_RATE_4: number = 0.0,
+  public TRANSMIT_FREQ_RATE_5: number = 0.0,
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public TRACK_ID: string|Uint8Array|null = null,
+  public DATA_TYPES: string|Uint8Array|null = null,
+  public PATH: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME_1: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME_2: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME_3: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME_4: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME_5: string|Uint8Array|null = null,
+  public RANGE_UNITS: string|Uint8Array|null = null,
+  public REFERENCE_FRAME: string|Uint8Array|null = null,
+  public INTERPOLATION: string|Uint8Array|null = null,
+  public INTERPOLATION_DEGREE: number = 0,
+  public FREQ_OFFSET: number = 0.0,
+  public TURNAROUND_NUMERATOR: number = 0,
+  public TURNAROUND_DENOMINATOR: number = 0,
+  public TRANSMIT_DELAY_1: number = 0.0,
+  public TRANSMIT_DELAY_2: number = 0.0,
+  public TRANSMIT_DELAY_3: number = 0.0,
+  public TRANSMIT_DELAY_4: number = 0.0,
+  public TRANSMIT_DELAY_5: number = 0.0,
+  public RECEIVE_DELAY_1: number = 0.0,
+  public RECEIVE_DELAY_4: number = 0.0,
+  public RECEIVE_DELAY_5: number = 0.0,
+  public DOPPLER_COUNT_BIAS: number = 0.0,
+  public DOPPLER_COUNT_SCALE: number = 0,
+  public DOPPLER_COUNT_ROLLOVER: boolean = false,
+  public CORRECTION_RANGE: number = 0.0,
+  public CORRECTION_DOPPLER: number = 0.0,
+  public CORRECTION_MAG: number = 0.0,
+  public CORRECTION_RCS: number = 0.0,
+  public CORRECTION_RECEIVE: number = 0.0,
+  public CORRECTION_TRANSMIT: number = 0.0,
+  public CORRECTION_ABERRATION_YEARLY: number = 0.0,
+  public CORRECTION_ABERRATION_DIURNAL: number = 0.0
 ){}
 
 
@@ -1569,6 +2254,20 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SPECTRAL_MAX = TDM.createSpectralMaxVector(builder, this.SPECTRAL_MAX);
   const DOPPLER_NOISE_HZ = TDM.createDopplerNoiseHzVector(builder, this.DOPPLER_NOISE_HZ);
   const TRANSMIT_RAMPS = TDM.createTransmitRampsVector(builder, builder.createObjectOffsetList(this.TRANSMIT_RAMPS));
+  const OBSERVATIONS = TDM.createObservationsVector(builder, builder.createObjectOffsetList(this.OBSERVATIONS));
+  const SEGMENTS = TDM.createSegmentsVector(builder, builder.createObjectOffsetList(this.SEGMENTS));
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const TRACK_ID = (this.TRACK_ID !== null ? builder.createString(this.TRACK_ID!) : 0);
+  const DATA_TYPES = (this.DATA_TYPES !== null ? builder.createString(this.DATA_TYPES!) : 0);
+  const PATH = (this.PATH !== null ? builder.createString(this.PATH!) : 0);
+  const EPHEMERIS_NAME_1 = (this.EPHEMERIS_NAME_1 !== null ? builder.createString(this.EPHEMERIS_NAME_1!) : 0);
+  const EPHEMERIS_NAME_2 = (this.EPHEMERIS_NAME_2 !== null ? builder.createString(this.EPHEMERIS_NAME_2!) : 0);
+  const EPHEMERIS_NAME_3 = (this.EPHEMERIS_NAME_3 !== null ? builder.createString(this.EPHEMERIS_NAME_3!) : 0);
+  const EPHEMERIS_NAME_4 = (this.EPHEMERIS_NAME_4 !== null ? builder.createString(this.EPHEMERIS_NAME_4!) : 0);
+  const EPHEMERIS_NAME_5 = (this.EPHEMERIS_NAME_5 !== null ? builder.createString(this.EPHEMERIS_NAME_5!) : 0);
+  const RANGE_UNITS = (this.RANGE_UNITS !== null ? builder.createString(this.RANGE_UNITS!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? builder.createString(this.REFERENCE_FRAME!) : 0);
+  const INTERPOLATION = (this.INTERPOLATION !== null ? builder.createString(this.INTERPOLATION!) : 0);
 
   TDM.startTDM(builder);
   TDM.addObserverId(builder, OBSERVER_ID);
@@ -1636,6 +2335,52 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   TDM.addSpectralMax(builder, SPECTRAL_MAX);
   TDM.addDopplerNoiseHz(builder, DOPPLER_NOISE_HZ);
   TDM.addTransmitRamps(builder, TRANSMIT_RAMPS);
+  TDM.addObservations(builder, OBSERVATIONS);
+  TDM.addSegments(builder, SEGMENTS);
+  TDM.addTransmitFreq2(builder, this.TRANSMIT_FREQ_2);
+  TDM.addTransmitFreq3(builder, this.TRANSMIT_FREQ_3);
+  TDM.addTransmitFreq4(builder, this.TRANSMIT_FREQ_4);
+  TDM.addTransmitFreq5(builder, this.TRANSMIT_FREQ_5);
+  TDM.addTransmitFreqRate1(builder, this.TRANSMIT_FREQ_RATE_1);
+  TDM.addTransmitFreqRate2(builder, this.TRANSMIT_FREQ_RATE_2);
+  TDM.addTransmitFreqRate3(builder, this.TRANSMIT_FREQ_RATE_3);
+  TDM.addTransmitFreqRate4(builder, this.TRANSMIT_FREQ_RATE_4);
+  TDM.addTransmitFreqRate5(builder, this.TRANSMIT_FREQ_RATE_5);
+  TDM.addMessageId(builder, MESSAGE_ID);
+  TDM.addTrackId(builder, TRACK_ID);
+  TDM.addDataTypes(builder, DATA_TYPES);
+  TDM.addPath(builder, PATH);
+  TDM.addEphemerisName1(builder, EPHEMERIS_NAME_1);
+  TDM.addEphemerisName2(builder, EPHEMERIS_NAME_2);
+  TDM.addEphemerisName3(builder, EPHEMERIS_NAME_3);
+  TDM.addEphemerisName4(builder, EPHEMERIS_NAME_4);
+  TDM.addEphemerisName5(builder, EPHEMERIS_NAME_5);
+  TDM.addRangeUnits(builder, RANGE_UNITS);
+  TDM.addReferenceFrame(builder, REFERENCE_FRAME);
+  TDM.addInterpolation(builder, INTERPOLATION);
+  TDM.addInterpolationDegree(builder, this.INTERPOLATION_DEGREE);
+  TDM.addFreqOffset(builder, this.FREQ_OFFSET);
+  TDM.addTurnaroundNumerator(builder, this.TURNAROUND_NUMERATOR);
+  TDM.addTurnaroundDenominator(builder, this.TURNAROUND_DENOMINATOR);
+  TDM.addTransmitDelay1(builder, this.TRANSMIT_DELAY_1);
+  TDM.addTransmitDelay2(builder, this.TRANSMIT_DELAY_2);
+  TDM.addTransmitDelay3(builder, this.TRANSMIT_DELAY_3);
+  TDM.addTransmitDelay4(builder, this.TRANSMIT_DELAY_4);
+  TDM.addTransmitDelay5(builder, this.TRANSMIT_DELAY_5);
+  TDM.addReceiveDelay1(builder, this.RECEIVE_DELAY_1);
+  TDM.addReceiveDelay4(builder, this.RECEIVE_DELAY_4);
+  TDM.addReceiveDelay5(builder, this.RECEIVE_DELAY_5);
+  TDM.addDopplerCountBias(builder, this.DOPPLER_COUNT_BIAS);
+  TDM.addDopplerCountScale(builder, this.DOPPLER_COUNT_SCALE);
+  TDM.addDopplerCountRollover(builder, this.DOPPLER_COUNT_ROLLOVER);
+  TDM.addCorrectionRange(builder, this.CORRECTION_RANGE);
+  TDM.addCorrectionDoppler(builder, this.CORRECTION_DOPPLER);
+  TDM.addCorrectionMag(builder, this.CORRECTION_MAG);
+  TDM.addCorrectionRcs(builder, this.CORRECTION_RCS);
+  TDM.addCorrectionReceive(builder, this.CORRECTION_RECEIVE);
+  TDM.addCorrectionTransmit(builder, this.CORRECTION_TRANSMIT);
+  TDM.addCorrectionAberrationYearly(builder, this.CORRECTION_ABERRATION_YEARLY);
+  TDM.addCorrectionAberrationDiurnal(builder, this.CORRECTION_ABERRATION_DIURNAL);
 
   return TDM.endTDM(builder);
 }

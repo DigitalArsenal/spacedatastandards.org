@@ -73,6 +73,81 @@ public final class AEMSegment extends com.google.flatbuffers.Table {
   public DoubleVector attitudeDataVector(DoubleVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer ATTITUDE_DATAAsByteBuffer() { return __vector_as_bytebuffer(26, 8); }
   public ByteBuffer ATTITUDE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 8); }
+  /**
+   * Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).
+   * One entry per COMMENT line, in file order.
+   */
+  public String COMMENT(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int COMMENTLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector commentVector() { return commentVector(new StringVector()); }
+  public StringVector commentVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Origin of the reference frame, e.g. "EARTH", "MARS BARYCENTER"
+   * (504.0-B-2 table 4-3, optional).
+   */
+  public String CENTER_NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Classification marking of the data in portion-marked format
+   * (504.0-B-2 table 4-3, optional).
+   */
+  public String CLASSIFICATION() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Start of the USEABLE time span covered by the data, ISO 8601.
+   */
+  public String USEABLE_START_TIME() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USEABLE_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer USEABLE_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * End of the USEABLE time span covered by the data, ISO 8601.
+   */
+  public String USEABLE_STOP_TIME() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USEABLE_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer USEABLE_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation
+   * when ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. "312", "321".
+   */
+  public String EULER_ROT_SEQ() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EULER_ROT_SEQAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer EULER_ROT_SEQInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Reference frame in which the ANGVEL_* components are expressed; the value
+   * is "REF_FRAME_A" or "REF_FRAME_B" (504.0-B-2 table 4-3).
+   * NOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME
+   * is the ratified spelling and is the one carried here.
+   */
+  public String ANGVEL_FRAME() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ANGVEL_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer ANGVEL_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Recommended interpolation method, e.g. "HERMITE", "LINEAR", "LAGRANGE".
+   */
+  public String INTERPOLATION_METHOD() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INTERPOLATION_METHODAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer INTERPOLATION_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Recommended interpolation degree.
+   */
+  public long INTERPOLATION_DEGREE() { int o = __offset(44); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.
+   *
+   * VALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):
+   * 1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and
+   *    ATTITUDE_DATA_LINES must be empty or ignored by parsers.
+   * 2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative
+   *    and ATTITUDE_DATA must be empty or ignored by parsers.
+   * 3. Do NOT populate both formats simultaneously.
+   */
+  public attitudeDataLine ATTITUDE_DATA_LINES(int j) { return ATTITUDE_DATA_LINES(new attitudeDataLine(), j); }
+  public attitudeDataLine ATTITUDE_DATA_LINES(attitudeDataLine obj, int j) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ATTITUDE_DATA_LINESLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public attitudeDataLine.Vector attitudeDataLinesVector() { return attitudeDataLinesVector(new attitudeDataLine.Vector()); }
+  public attitudeDataLine.Vector attitudeDataLinesVector(attitudeDataLine.Vector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createAEMSegment(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -86,9 +161,29 @@ public final class AEMSegment extends com.google.flatbuffers.Table {
       int STOP_TIMEOffset,
       double STEP_SIZE,
       int ATTITUDE_COMPONENTS,
-      int ATTITUDE_DATAOffset) {
-    builder.startTable(12);
+      int ATTITUDE_DATAOffset,
+      int COMMENTOffset,
+      int CENTER_NAMEOffset,
+      int CLASSIFICATIONOffset,
+      int USEABLE_START_TIMEOffset,
+      int USEABLE_STOP_TIMEOffset,
+      int EULER_ROT_SEQOffset,
+      int ANGVEL_FRAMEOffset,
+      int INTERPOLATION_METHODOffset,
+      long INTERPOLATION_DEGREE,
+      int ATTITUDE_DATA_LINESOffset) {
+    builder.startTable(22);
     AEMSegment.addStepSize(builder, STEP_SIZE);
+    AEMSegment.addAttitudeDataLines(builder, ATTITUDE_DATA_LINESOffset);
+    AEMSegment.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
+    AEMSegment.addInterpolationMethod(builder, INTERPOLATION_METHODOffset);
+    AEMSegment.addAngvelFrame(builder, ANGVEL_FRAMEOffset);
+    AEMSegment.addEulerRotSeq(builder, EULER_ROT_SEQOffset);
+    AEMSegment.addUseableStopTime(builder, USEABLE_STOP_TIMEOffset);
+    AEMSegment.addUseableStartTime(builder, USEABLE_START_TIMEOffset);
+    AEMSegment.addClassification(builder, CLASSIFICATIONOffset);
+    AEMSegment.addCenterName(builder, CENTER_NAMEOffset);
+    AEMSegment.addComment(builder, COMMENTOffset);
     AEMSegment.addAttitudeData(builder, ATTITUDE_DATAOffset);
     AEMSegment.addStopTime(builder, STOP_TIMEOffset);
     AEMSegment.addStartTime(builder, START_TIMEOffset);
@@ -103,7 +198,7 @@ public final class AEMSegment extends com.google.flatbuffers.Table {
     return AEMSegment.endAEMSegment(builder);
   }
 
-  public static void startAEMSegment(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startAEMSegment(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addRefFrameA(FlatBufferBuilder builder, int REF_FRAME_AOffset) { builder.addOffset(2, REF_FRAME_AOffset, 0); }
@@ -118,6 +213,20 @@ public final class AEMSegment extends com.google.flatbuffers.Table {
   public static void addAttitudeData(FlatBufferBuilder builder, int ATTITUDE_DATAOffset) { builder.addOffset(11, ATTITUDE_DATAOffset, 0); }
   public static int createAttitudeDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startAttitudeDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(12, COMMENTOffset, 0); }
+  public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(13, CENTER_NAMEOffset, 0); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(14, CLASSIFICATIONOffset, 0); }
+  public static void addUseableStartTime(FlatBufferBuilder builder, int USEABLE_START_TIMEOffset) { builder.addOffset(15, USEABLE_START_TIMEOffset, 0); }
+  public static void addUseableStopTime(FlatBufferBuilder builder, int USEABLE_STOP_TIMEOffset) { builder.addOffset(16, USEABLE_STOP_TIMEOffset, 0); }
+  public static void addEulerRotSeq(FlatBufferBuilder builder, int EULER_ROT_SEQOffset) { builder.addOffset(17, EULER_ROT_SEQOffset, 0); }
+  public static void addAngvelFrame(FlatBufferBuilder builder, int ANGVEL_FRAMEOffset) { builder.addOffset(18, ANGVEL_FRAMEOffset, 0); }
+  public static void addInterpolationMethod(FlatBufferBuilder builder, int INTERPOLATION_METHODOffset) { builder.addOffset(19, INTERPOLATION_METHODOffset, 0); }
+  public static void addInterpolationDegree(FlatBufferBuilder builder, long INTERPOLATION_DEGREE) { builder.addInt(20, (int) INTERPOLATION_DEGREE, (int) 0L); }
+  public static void addAttitudeDataLines(FlatBufferBuilder builder, int ATTITUDE_DATA_LINESOffset) { builder.addOffset(21, ATTITUDE_DATA_LINESOffset, 0); }
+  public static int createAttitudeDataLinesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAttitudeDataLinesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endAEMSegment(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -247,6 +247,7 @@ class RecordType(object):
     BPF = 227
     EVL = 228
     PCE = 229
+    NCD = 230
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -939,4 +940,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PCE:
         import PCE
         return PCE.PCET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.NCD:
+        import NCD
+        return NCD.NCDT.InitFromBuf(table.Bytes, table.Pos)
     return None

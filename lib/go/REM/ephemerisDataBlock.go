@@ -476,8 +476,54 @@ func (rcv *ephemerisDataBlock) PolynomialPositionRecordsLength() int {
 /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
 /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
 /// See PPE schema for record structure and evaluation procedure.
+/// NAIF integer code of the ephemeris target (SPK segment target).
+func (rcv *ephemerisDataBlock) OBJECT_NAIF_ID() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataBlock) ObjectNaifId() int32 {
+	return rcv.OBJECT_NAIF_ID()
+}
+
+/// NAIF integer code of the ephemeris target (SPK segment target).
+func (rcv *ephemerisDataBlock) MutateOBJECT_NAIF_ID(n int32) bool {
+	return rcv._tab.MutateInt32Slot(42, n)
+}
+
+func (rcv *ephemerisDataBlock) MutateObjectNaifId(n int32) bool {
+	return rcv.MutateOBJECT_NAIF_ID(n)
+}
+
+/// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+/// (SPK segment centre).
+func (rcv *ephemerisDataBlock) CENTER_NAIF_ID() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ephemerisDataBlock) CenterNaifId() int32 {
+	return rcv.CENTER_NAIF_ID()
+}
+
+/// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+/// (SPK segment centre).
+func (rcv *ephemerisDataBlock) MutateCENTER_NAIF_ID(n int32) bool {
+	return rcv._tab.MutateInt32Slot(44, n)
+}
+
+func (rcv *ephemerisDataBlock) MutateCenterNaifId(n int32) bool {
+	return rcv.MutateCENTER_NAIF_ID(n)
+}
+
 func ephemerisDataBlockStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(21)
 }
 func ephemerisDataBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -616,6 +662,18 @@ func ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder *flatbuffe
 }
 func ephemerisDataBlockStartPolynomialPositionRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems)
+}
+func ephemerisDataBlockAddOBJECT_NAIF_ID(builder *flatbuffers.Builder, OBJECT_NAIF_ID int32) {
+	builder.PrependInt32Slot(19, OBJECT_NAIF_ID, 0)
+}
+func ephemerisDataBlockAddObjectNaifId(builder *flatbuffers.Builder, OBJECT_NAIF_ID int32) {
+	ephemerisDataBlockAddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID)
+}
+func ephemerisDataBlockAddCENTER_NAIF_ID(builder *flatbuffers.Builder, CENTER_NAIF_ID int32) {
+	builder.PrependInt32Slot(20, CENTER_NAIF_ID, 0)
+}
+func ephemerisDataBlockAddCenterNaifId(builder *flatbuffers.Builder, CENTER_NAIF_ID int32) {
+	ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID)
 }
 func ephemerisDataBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

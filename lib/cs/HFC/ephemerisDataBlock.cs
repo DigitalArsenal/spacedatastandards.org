@@ -132,6 +132,11 @@ public struct ephemerisDataBlock : IFlatbufferObject
   /// See PPE schema for record structure and evaluation procedure.
   public PPEPositionRecord? POLYNOMIAL_POSITION_RECORDS(int j) { int o = __p.__offset(40); return o != 0 ? (PPEPositionRecord?)(new PPEPositionRecord()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int POLYNOMIAL_POSITION_RECORDSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// NAIF integer code of the ephemeris target (SPK segment target).
+  public int OBJECT_NAIF_ID { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  /// (SPK segment centre).
+  public int CENTER_NAIF_ID { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<ephemerisDataBlock> CreateephemerisDataBlock(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -152,9 +157,13 @@ public struct ephemerisDataBlock : IFlatbufferObject
       VectorOffset EPHEMERIS_DATAOffset = default(VectorOffset),
       VectorOffset EPHEMERIS_DATA_LINESOffset = default(VectorOffset),
       VectorOffset COVARIANCE_MATRIX_LINESOffset = default(VectorOffset),
-      VectorOffset POLYNOMIAL_POSITION_RECORDSOffset = default(VectorOffset)) {
-    builder.StartTable(19);
+      VectorOffset POLYNOMIAL_POSITION_RECORDSOffset = default(VectorOffset),
+      int OBJECT_NAIF_ID = 0,
+      int CENTER_NAIF_ID = 0) {
+    builder.StartTable(21);
     ephemerisDataBlock.AddSTEP_SIZE(builder, STEP_SIZE);
+    ephemerisDataBlock.AddCENTER_NAIF_ID(builder, CENTER_NAIF_ID);
+    ephemerisDataBlock.AddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID);
     ephemerisDataBlock.AddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDSOffset);
     ephemerisDataBlock.AddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.AddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINESOffset);
@@ -176,7 +185,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
     return ephemerisDataBlock.EndephemerisDataBlock(builder);
   }
 
-  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(2, CENTER_NAMEOffset.Value, 0); }
@@ -216,6 +225,8 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PPEPositionRecord>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PPEPositionRecord>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddOBJECT_NAIF_ID(FlatBufferBuilder builder, int OBJECT_NAIF_ID) { builder.AddInt(19, OBJECT_NAIF_ID, 0); }
+  public static void AddCENTER_NAIF_ID(FlatBufferBuilder builder, int CENTER_NAIF_ID) { builder.AddInt(20, CENTER_NAIF_ID, 0); }
   public static Offset<ephemerisDataBlock> EndephemerisDataBlock(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ephemerisDataBlock>(o);
@@ -249,6 +260,8 @@ public struct ephemerisDataBlock : IFlatbufferObject
     for (var _j = 0; _j < this.COVARIANCE_MATRIX_LINESLength; ++_j) {_o.COVARIANCE_MATRIX_LINES.Add(this.COVARIANCE_MATRIX_LINES(_j).HasValue ? this.COVARIANCE_MATRIX_LINES(_j).Value.UnPack() : null);}
     _o.POLYNOMIAL_POSITION_RECORDS = new List<PPEPositionRecordT>();
     for (var _j = 0; _j < this.POLYNOMIAL_POSITION_RECORDSLength; ++_j) {_o.POLYNOMIAL_POSITION_RECORDS.Add(this.POLYNOMIAL_POSITION_RECORDS(_j).HasValue ? this.POLYNOMIAL_POSITION_RECORDS(_j).Value.UnPack() : null);}
+    _o.OBJECT_NAIF_ID = this.OBJECT_NAIF_ID;
+    _o.CENTER_NAIF_ID = this.CENTER_NAIF_ID;
   }
   public static Offset<ephemerisDataBlock> Pack(FlatBufferBuilder builder, ephemerisDataBlockT _o) {
     if (_o == null) return default(Offset<ephemerisDataBlock>);
@@ -306,7 +319,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
       _EPHEMERIS_DATA,
       _EPHEMERIS_DATA_LINES,
       _COVARIANCE_MATRIX_LINES,
-      _POLYNOMIAL_POSITION_RECORDS);
+      _POLYNOMIAL_POSITION_RECORDS,
+      _o.OBJECT_NAIF_ID,
+      _o.CENTER_NAIF_ID);
   }
 }
 
@@ -331,6 +346,8 @@ public class ephemerisDataBlockT
   public List<ephemerisDataLineT> EPHEMERIS_DATA_LINES { get; set; }
   public List<covarianceMatrixLineT> COVARIANCE_MATRIX_LINES { get; set; }
   public List<PPEPositionRecordT> POLYNOMIAL_POSITION_RECORDS { get; set; }
+  public int OBJECT_NAIF_ID { get; set; }
+  public int CENTER_NAIF_ID { get; set; }
 
   public ephemerisDataBlockT() {
     this.COMMENT = null;
@@ -352,6 +369,8 @@ public class ephemerisDataBlockT
     this.EPHEMERIS_DATA_LINES = null;
     this.COVARIANCE_MATRIX_LINES = null;
     this.POLYNOMIAL_POSITION_RECORDS = null;
+    this.OBJECT_NAIF_ID = 0;
+    this.CENTER_NAIF_ID = 0;
   }
 }
 
@@ -380,6 +399,8 @@ static public class ephemerisDataBlockVerify
       && verifier.VerifyVectorOfTables(tablePos, 36 /*EPHEMERIS_DATA_LINES*/, ephemerisDataLineVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 38 /*COVARIANCE_MATRIX_LINES*/, covarianceMatrixLineVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 40 /*POLYNOMIAL_POSITION_RECORDS*/, PPEPositionRecordVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*OBJECT_NAIF_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 44 /*CENTER_NAIF_ID*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

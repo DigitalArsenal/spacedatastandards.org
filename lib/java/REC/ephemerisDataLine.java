@@ -71,6 +71,43 @@ public final class ephemerisDataLine extends com.google.flatbuffers.Table {
    * Optional: Acceleration vector Z-component km/s²
    */
   public double Z_DDOT() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Satellite clock bias (offset), microseconds. SP3 position-record clock
+   * column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+   * field instead.
+   */
+  public double CLOCK_BIAS_MICROSECONDS() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Satellite clock rate of change, 1e-4 microseconds per second. SP3
+   * velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+   */
+  public double CLOCK_RATE_MICROSECONDS_PER_SECOND() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+   */
+  public double CLOCK_BIAS_SIGMA_PICOSECONDS() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+   * 1e-4 picoseconds per second.
+   */
+  public double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+   * sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+   * the result in mm. These are the raw SP3 exponent columns, kept as
+   * exponents so an SP3 round-trip is exact; a consumer that wants a linear
+   * sigma raises the header base to this power.
+   */
+  public byte X_SIGMA_EXPONENT() { int o = __offset(32); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte Y_SIGMA_EXPONENT() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte Z_SIGMA_EXPONENT() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Per-coordinate velocity standard-deviation exponents, result in
+   * 1e-4 mm/s. Same base**n rule.
+   */
+  public byte X_DOT_SIGMA_EXPONENT() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte Y_DOT_SIGMA_EXPONENT() { int o = __offset(40); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte Z_DOT_SIGMA_EXPONENT() { int o = __offset(42); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createephemerisDataLine(FlatBufferBuilder builder,
       int EPOCHOffset,
@@ -82,8 +119,22 @@ public final class ephemerisDataLine extends com.google.flatbuffers.Table {
       double Z_DOT,
       double X_DDOT,
       double Y_DDOT,
-      double Z_DDOT) {
-    builder.startTable(10);
+      double Z_DDOT,
+      double CLOCK_BIAS_MICROSECONDS,
+      double CLOCK_RATE_MICROSECONDS_PER_SECOND,
+      double CLOCK_BIAS_SIGMA_PICOSECONDS,
+      double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+      byte X_SIGMA_EXPONENT,
+      byte Y_SIGMA_EXPONENT,
+      byte Z_SIGMA_EXPONENT,
+      byte X_DOT_SIGMA_EXPONENT,
+      byte Y_DOT_SIGMA_EXPONENT,
+      byte Z_DOT_SIGMA_EXPONENT) {
+    builder.startTable(20);
+    ephemerisDataLine.addClockRateSigmaPicosecondsPerSecond(builder, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+    ephemerisDataLine.addClockBiasSigmaPicoseconds(builder, CLOCK_BIAS_SIGMA_PICOSECONDS);
+    ephemerisDataLine.addClockRateMicrosecondsPerSecond(builder, CLOCK_RATE_MICROSECONDS_PER_SECOND);
+    ephemerisDataLine.addClockBiasMicroseconds(builder, CLOCK_BIAS_MICROSECONDS);
     ephemerisDataLine.addZDdot(builder, Z_DDOT);
     ephemerisDataLine.addYDdot(builder, Y_DDOT);
     ephemerisDataLine.addXDdot(builder, X_DDOT);
@@ -94,10 +145,16 @@ public final class ephemerisDataLine extends com.google.flatbuffers.Table {
     ephemerisDataLine.addY(builder, Y);
     ephemerisDataLine.addX(builder, X);
     ephemerisDataLine.addEpoch(builder, EPOCHOffset);
+    ephemerisDataLine.addZDotSigmaExponent(builder, Z_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.addYDotSigmaExponent(builder, Y_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.addXDotSigmaExponent(builder, X_DOT_SIGMA_EXPONENT);
+    ephemerisDataLine.addZSigmaExponent(builder, Z_SIGMA_EXPONENT);
+    ephemerisDataLine.addYSigmaExponent(builder, Y_SIGMA_EXPONENT);
+    ephemerisDataLine.addXSigmaExponent(builder, X_SIGMA_EXPONENT);
     return ephemerisDataLine.endephemerisDataLine(builder);
   }
 
-  public static void startephemerisDataLine(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startephemerisDataLine(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(0, EPOCHOffset, 0); }
   public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(1, X, 0.0); }
   public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(2, Y, 0.0); }
@@ -108,6 +165,16 @@ public final class ephemerisDataLine extends com.google.flatbuffers.Table {
   public static void addXDdot(FlatBufferBuilder builder, double X_DDOT) { builder.addDouble(7, X_DDOT, 0.0); }
   public static void addYDdot(FlatBufferBuilder builder, double Y_DDOT) { builder.addDouble(8, Y_DDOT, 0.0); }
   public static void addZDdot(FlatBufferBuilder builder, double Z_DDOT) { builder.addDouble(9, Z_DDOT, 0.0); }
+  public static void addClockBiasMicroseconds(FlatBufferBuilder builder, double CLOCK_BIAS_MICROSECONDS) { builder.addDouble(10, CLOCK_BIAS_MICROSECONDS, 0.0); }
+  public static void addClockRateMicrosecondsPerSecond(FlatBufferBuilder builder, double CLOCK_RATE_MICROSECONDS_PER_SECOND) { builder.addDouble(11, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0); }
+  public static void addClockBiasSigmaPicoseconds(FlatBufferBuilder builder, double CLOCK_BIAS_SIGMA_PICOSECONDS) { builder.addDouble(12, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0); }
+  public static void addClockRateSigmaPicosecondsPerSecond(FlatBufferBuilder builder, double CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND) { builder.addDouble(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0); }
+  public static void addXSigmaExponent(FlatBufferBuilder builder, byte X_SIGMA_EXPONENT) { builder.addByte(14, X_SIGMA_EXPONENT, 0); }
+  public static void addYSigmaExponent(FlatBufferBuilder builder, byte Y_SIGMA_EXPONENT) { builder.addByte(15, Y_SIGMA_EXPONENT, 0); }
+  public static void addZSigmaExponent(FlatBufferBuilder builder, byte Z_SIGMA_EXPONENT) { builder.addByte(16, Z_SIGMA_EXPONENT, 0); }
+  public static void addXDotSigmaExponent(FlatBufferBuilder builder, byte X_DOT_SIGMA_EXPONENT) { builder.addByte(17, X_DOT_SIGMA_EXPONENT, 0); }
+  public static void addYDotSigmaExponent(FlatBufferBuilder builder, byte Y_DOT_SIGMA_EXPONENT) { builder.addByte(18, Y_DOT_SIGMA_EXPONENT, 0); }
+  public static void addZDotSigmaExponent(FlatBufferBuilder builder, byte Z_DOT_SIGMA_EXPONENT) { builder.addByte(19, Z_DOT_SIGMA_EXPONENT, 0); }
   public static int endephemerisDataLine(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

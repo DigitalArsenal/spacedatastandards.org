@@ -1273,6 +1273,10 @@
       "type" : "string",
       "enum": ["NORMAL", "MINOR_DAMAGE", "MODERATE_DAMAGE", "SEVERE_DAMAGE", "CRITICAL", "SINKING", "ABANDONED"]
     },
+    "ncdContainerFormat" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "PROVIDER_DEFINED"]
+    },
     "numOperationCode" : {
       "type" : "string",
       "enum": ["UNKNOWN", "NEWTON_RAPHSON", "LINEAR_INTERPOLATION", "BILINEAR_INTERPOLATION", "GAUSS_MARKOV_SEQUENCE"]
@@ -2071,7 +2075,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD"]
     },
     "LKS" : {
       "type" : "object",
@@ -4687,6 +4691,125 @@
       },
       "additionalProperties" : false
     },
+    "attitudeDataLine" : {
+      "type" : "object",
+      "description" : "A single attitude data line with an EXPLICIT epoch (non-uniform steps).\n\nCCSDS 504.0-B-2 4.2.4 puts an epoch on EVERY AEM data line, and real AEMs\nare not on a uniform grid: the published example (504.0-B-2 figure G-4)\nsteps 1996-11-28T21:29:07.2555 -> 22:08:03.5555 -> 22:08:04.5555, i.e.\n2339 s then 1 s. Such a segment CANNOT be expressed by the compact\nATTITUDE_DATA array, whose epochs are reconstructed as\nSTART_TIME + i * STEP_SIZE. Scenario-epoch attitude text containers have\nthe same irregular shape.\n\nThe populated columns are selected by the segment's ATTITUDE_TYPE exactly\nas in CCSDS 504.0-B-2 table 4-4:\nQUATERNION              Q1 Q2 Q3 QC\nQUATERNION/DERIVATIVE   Q1 Q2 Q3 QC Q1_DOT Q2_DOT Q3_DOT QC_DOT\nQUATERNION/ANGVEL       Q1 Q2 Q3 QC ANGVEL_X ANGVEL_Y ANGVEL_Z\nEULER_ANGLE             ANGLE_1 ANGLE_2 ANGLE_3\nEULER_ANGLE/DERIVATIVE  ANGLE_1..3 ANGLE_1_DOT ANGLE_2_DOT ANGLE_3_DOT\nEULER_ANGLE/ANGVEL      ANGLE_1..3 ANGVEL_X ANGVEL_Y ANGVEL_Z\nSPIN                    SPIN_ALPHA SPIN_DELTA SPIN_ANGLE SPIN_ANGLE_VEL\nSPIN/NUTATION           + NUTATION NUTATION_PER NUTATION_PHASE\nSPIN/NUTATION_MOM       + MOMENTUM_ALPHA MOMENTUM_DELTA NUTATION_VEL\n\nQuaternion component order is fixed by CCSDS 504.0-B-2 (Q1, Q2, Q3, QC,\nvector part first). The B-1 keyword QUATERNION_TYPE was REMOVED by B-2\n(annex, change 7) and is deliberately NOT carried here.\n\nUnits per 504.0-B-2 4.2.4.6: quaternion components dimensionless;\nQ*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;\nANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;\nNUTATION_PER s.",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this attitude state (required for non-uniform steps)."
+              },
+        "Q1" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 1 (dimensionless)."
+              },
+        "Q2" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 2 (dimensionless)."
+              },
+        "Q3" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 3 (dimensionless)."
+              },
+        "QC" : {
+                "type" : "number",
+                "description" : "Quaternion scalar component (dimensionless)."
+              },
+        "Q1_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q1, 1/s."
+              },
+        "Q2_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q2, 1/s."
+              },
+        "Q3_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of Q3, 1/s."
+              },
+        "QC_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of QC, 1/s."
+              },
+        "ANGLE_1" : {
+                "type" : "number",
+                "description" : "Euler angle 1, deg. Sequence given by EULER_ROT_SEQ."
+              },
+        "ANGLE_2" : {
+                "type" : "number",
+                "description" : "Euler angle 2, deg."
+              },
+        "ANGLE_3" : {
+                "type" : "number",
+                "description" : "Euler angle 3, deg."
+              },
+        "ANGLE_1_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_1, deg/s."
+              },
+        "ANGLE_2_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_2, deg/s."
+              },
+        "ANGLE_3_DOT" : {
+                "type" : "number",
+                "description" : "Time derivative of ANGLE_3, deg/s."
+              },
+        "ANGVEL_X" : {
+                "type" : "number",
+                "description" : "Angular velocity X component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "ANGVEL_Y" : {
+                "type" : "number",
+                "description" : "Angular velocity Y component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "ANGVEL_Z" : {
+                "type" : "number",
+                "description" : "Angular velocity Z component, deg/s, expressed in ANGVEL_FRAME."
+              },
+        "SPIN_ALPHA" : {
+                "type" : "number",
+                "description" : "Right ascension of the spin axis, deg."
+              },
+        "SPIN_DELTA" : {
+                "type" : "number",
+                "description" : "Declination of the spin axis, deg."
+              },
+        "SPIN_ANGLE" : {
+                "type" : "number",
+                "description" : "Phase of the satellite about the spin axis, deg."
+              },
+        "SPIN_ANGLE_VEL" : {
+                "type" : "number",
+                "description" : "Angular velocity about the spin axis, deg/s."
+              },
+        "NUTATION" : {
+                "type" : "number",
+                "description" : "Nutation angle, deg."
+              },
+        "NUTATION_PER" : {
+                "type" : "number",
+                "description" : "Nutation period, s."
+              },
+        "NUTATION_PHASE" : {
+                "type" : "number",
+                "description" : "Nutation phase, deg."
+              },
+        "MOMENTUM_ALPHA" : {
+                "type" : "number",
+                "description" : "Right ascension of the angular momentum vector, deg."
+              },
+        "MOMENTUM_DELTA" : {
+                "type" : "number",
+                "description" : "Declination of the angular momentum vector, deg."
+              },
+        "NUTATION_VEL" : {
+                "type" : "number",
+                "description" : "Angular velocity of the nutation, deg/s."
+              }
+      },
+      "additionalProperties" : false
+    },
     "AEMSegment" : {
       "type" : "object",
       "properties" : {
@@ -4728,6 +4851,46 @@
         "ATTITUDE_DATA" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments carried in the metadata block (504.0-B-2 table 4-3).\nOne entry per COMMENT line, in file order."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of the reference frame, e.g. \"EARTH\", \"MARS BARYCENTER\"\n(504.0-B-2 table 4-3, optional)."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Classification marking of the data in portion-marked format\n(504.0-B-2 table 4-3, optional)."
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "Start of the USEABLE time span covered by the data, ISO 8601."
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "End of the USEABLE time span covered by the data, ISO 8601."
+              },
+        "EULER_ROT_SEQ" : {
+                "type" : "string",
+                "description" : "Rotation sequence defining the REF_FRAME_A to REF_FRAME_B transformation\nwhen ATTITUDE_TYPE is an EULER_ANGLE variant, e.g. \"312\", \"321\"."
+              },
+        "ANGVEL_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame in which the ANGVEL_* components are expressed; the value\nis \"REF_FRAME_A\" or \"REF_FRAME_B\" (504.0-B-2 table 4-3).\nNOTE: the B-1 keyword RATE_FRAME does not exist in 504.0-B-2; ANGVEL_FRAME\nis the ratified spelling and is the one carried here."
+              },
+        "INTERPOLATION_METHOD" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method, e.g. \"HERMITE\", \"LINEAR\", \"LAGRANGE\"."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree."
+              },
+        "ATTITUDE_DATA_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/attitudeDataLine"},
+                "description" : "Attitude data lines with EXPLICIT per-state epochs, for non-uniform steps.\n\nVALIDATION RULES (identical in form to $OEM, schema/OEM/main.fbs):\n1. If STEP_SIZE > 0, ATTITUDE_DATA is authoritative and\nATTITUDE_DATA_LINES must be empty or ignored by parsers.\n2. If STEP_SIZE == 0 or is omitted, ATTITUDE_DATA_LINES is authoritative\nand ATTITUDE_DATA must be empty or ignored by parsers.\n3. Do NOT populate both formats simultaneously."
               }
       },
       "additionalProperties" : false
@@ -4747,6 +4910,18 @@
               },
         "SEGMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/AEMSegment"}
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments carried in the message header, one entry per line."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Message classification/caveats in portion-marked format."
               }
       },
       "additionalProperties" : false
@@ -18640,6 +18815,42 @@
         "Z_DDOT" : {
                 "type" : "number",
                 "description" : "Optional: Acceleration vector Z-component km/s²"
+              },
+        "CLOCK_BIAS_MICROSECONDS" : {
+                "type" : "number",
+                "description" : "Satellite clock bias (offset), microseconds. SP3 position-record clock\ncolumn. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the\nfield instead."
+              },
+        "CLOCK_RATE_MICROSECONDS_PER_SECOND" : {
+                "type" : "number",
+                "description" : "Satellite clock rate of change, 1e-4 microseconds per second. SP3\nvelocity-record clock-rate column. Sentinel 999999.999999 is not stored."
+              },
+        "CLOCK_BIAS_SIGMA_PICOSECONDS" : {
+                "type" : "number",
+                "description" : "Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds."
+              },
+        "CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND" : {
+                "type" : "number",
+                "description" : "Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,\n1e-4 picoseconds per second."
+              },
+        "X_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:\nsigma = POS_VEL_BASE**n, with the position base from the SP3 header and\nthe result in mm. These are the raw SP3 exponent columns, kept as\nexponents so an SP3 round-trip is exact; a consumer that wants a linear\nsigma raises the header base to this power."
+              },
+        "Y_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "Z_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "X_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "Per-coordinate velocity standard-deviation exponents, result in\n1e-4 mm/s. Same base**n rule."
+              },
+        "Y_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
+              },
+        "Z_DOT_SIGMA_EXPONENT" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127
               }
       },
       "additionalProperties" : false
@@ -18818,6 +19029,14 @@
         "POLYNOMIAL_POSITION_RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
                 "description" : "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure."
+              },
+        "OBJECT_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF integer code of the ephemeris target (SPK segment target)."
+              },
+        "CENTER_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
               }
       },
       "additionalProperties" : false
@@ -25513,6 +25732,317 @@
               },
         "RESERVED" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDSegmentDescriptor" : {
+      "type" : "object",
+      "description" : "One independently addressed segment inside a native container.\n\nA segmented binary ephemeris is not a single span: each segment has its own\nbody pair, frame, numeric type and time bounds, and a reader must choose\namong them. $OEM carries the STATES; this carries the segment DESCRIPTOR\nthat says which states came from where and what must be written back.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Segment name as recorded in the container."
+              },
+        "TARGET_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer body code of the segment target."
+              },
+        "CENTER_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer body code of the segment centre."
+              },
+        "FRAME_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer reference frame code of the segment."
+              },
+        "FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Reference frame name as recorded in the container."
+              },
+        "SEGMENT_TYPE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Numeric segment data type, verbatim. The evaluation rule is a property of\nthis number (for example, Chebyshev position with fixed interval, or\ndiscrete states with Lagrange interpolation); it is carried as the\ncontainer's own integer so a rewrite is exact."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Segment coverage start, ISO 8601."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Segment coverage stop, ISO 8601."
+              },
+        "START_SECONDS_PAST_J2000_TDB" : {
+                "type" : "number",
+                "description" : "Segment coverage start, seconds past J2000 in the barycentric dynamical\ntime scale, as stored in the container."
+              },
+        "STOP_SECONDS_PAST_J2000_TDB" : {
+                "type" : "number",
+                "description" : "Segment coverage stop, same scale."
+              },
+        "INITIAL_ADDRESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "First addressed element of the segment inside the file."
+              },
+        "FINAL_ADDRESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Last addressed element of the segment inside the file."
+              },
+        "POLYNOMIAL_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Polynomial degree or record size the segment type parameterises, when the\ntype carries one."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDSP3Header" : {
+      "type" : "object",
+      "description" : "Header block of a fixed-column satellite position container (SP3).",
+      "properties" : {
+        "FILE_TYPE" : {
+                "type" : "string",
+                "description" : "Record content indicator, e.g. \"P\" for positions only, \"V\" with\nvelocities."
+              },
+        "SATELLITE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Satellite system indicator recorded in the header."
+              },
+        "ORBIT_TYPE" : {
+                "type" : "string",
+                "description" : "Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert."
+              },
+        "DATA_USED" : {
+                "type" : "string",
+                "description" : "Data used to produce the file, as recorded."
+              },
+        "COORDINATE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Terrestrial reference frame name as recorded."
+              },
+        "AGENCY" : {
+                "type" : "string",
+                "description" : "Producing agency as recorded IN THE FILE. This is observed content, not a\nclassification."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system as recorded in the header."
+              },
+        "GPS_WEEK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Week number of the first epoch in the file's own week counter."
+              },
+        "SECONDS_OF_WEEK" : {
+                "type" : "number",
+                "description" : "Seconds of week of the first epoch."
+              },
+        "MODIFIED_JULIAN_DAY_START" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Modified Julian Day of the first epoch."
+              },
+        "FRACTIONAL_DAY" : {
+                "type" : "number",
+                "description" : "Fractional day of the first epoch."
+              },
+        "EPOCH_INTERVAL_SECONDS" : {
+                "type" : "number",
+                "description" : "Uniform interval between epochs, seconds."
+              },
+        "NUMBER_OF_EPOCHS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of epochs declared in the header."
+              },
+        "SATELLITE_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Satellite identifiers in header order."
+              },
+        "SATELLITE_ACCURACY_EXPONENTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -128, "maximum" : 127},
+                "description" : "Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy\nis POSITION_VELOCITY_BASE raised to this power."
+              },
+        "POSITION_VELOCITY_BASE" : {
+                "type" : "number",
+                "description" : "Base for the position and velocity standard-deviation exponents carried\nper state in $OEM."
+              },
+        "CLOCK_RATE_BASE" : {
+                "type" : "number",
+                "description" : "Base for the clock bias and clock rate standard-deviation exponents."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Header comment lines in file order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDScenarioEpochContainer" : {
+      "type" : "object",
+      "description" : "Parameters of a scenario-epoch text container.",
+      "properties" : {
+        "SCENARIO_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch that every record offset is measured from, ISO 8601."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time scale the scenario epoch is expressed in."
+              },
+        "DISTANCE_UNIT" : {
+                "type" : "string",
+                "description" : "Distance unit of the records, e.g. \"Meters\", \"Kilometers\"."
+              },
+        "COORDINATE_SYSTEM" : {
+                "type" : "string",
+                "description" : "Named coordinate system of the records."
+              },
+        "COORDINATE_AXES" : {
+                "type" : "string",
+                "description" : "Named coordinate axes, when stated separately from the system."
+              },
+        "CENTRAL_BODY" : {
+                "type" : "string",
+                "description" : "Central body of the records."
+              },
+        "INTERPOLATION_METHOD" : {
+                "type" : "string",
+                "description" : "Named interpolation method, e.g. \"Lagrange\", \"Hermite\"."
+              },
+        "INTERPOLATION_SAMPLES_M1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interpolation order expressed as (samples - 1), which is how these\ncontainers state it. Carried verbatim rather than converted, so a rewrite\nreproduces the source exactly."
+              },
+        "NUMBER_OF_EPHEMERIS_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of ephemeris points declared in the container."
+              },
+        "SEGMENT_BOUNDARY_TIMES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Segment boundary offsets in seconds from SCENARIO_EPOCH, when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCDCode500Header" : {
+      "type" : "object",
+      "description" : "Header words of a fixed-record binary ephemeris container.",
+      "properties" : {
+        "SATELLITE_NAME" : {
+                "type" : "string",
+                "description" : "Object name as recorded in the header."
+              },
+        "TAPE_ID" : {
+                "type" : "string",
+                "description" : "Container-internal tape or file identifier."
+              },
+        "TIME_SYSTEM_INDICATOR" : {
+                "type" : "string",
+                "description" : "Time system indicator as recorded."
+              },
+        "COORDINATE_SYSTEM_INDICATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Coordinate system indicator as recorded."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Coverage start, ISO 8601."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Coverage stop, ISO 8601."
+              },
+        "EPOCH_STEP_SECONDS" : {
+                "type" : "number",
+                "description" : "Uniform step between data records, seconds."
+              },
+        "HEADER_WORDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The header record's packed words in file order, undecoded. A reader that\nunderstands a word decodes it; a rewriter reproduces the record exactly\nwithout having to."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NCD" : {
+      "type" : "object",
+      "description" : "Native Container Descriptor.\n\nThe file-level facts of an ephemeris, attitude or tracking container that\nare NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the\nstates, attitudes and observations; none of them can carry the internal\nfile name, the comment area, the segment address ranges, the header accuracy\nblock or the interpolation order the source declared, because those describe\nthe CONTAINER. Without them a read-then-write cycle silently invents header\nvalues, and a segmented binary file cannot be reproduced at all.\n\nONE record covers every container class rather than one record per format:\nthe file-level facts are the same kind of fact in each, and the\nformat-specific blocks are optional sub-tables selected by FORMAT. Only the\nblock matching FORMAT is populated.",
+      "properties" : {
+        "FORMAT" : {
+                "$ref" : "#/definitions/ncdContainerFormat",
+                "description" : "Container format class."
+              },
+        "PROVIDER_DEFINED_FORMAT_NAME" : {
+                "type" : "string",
+                "description" : "Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise."
+              },
+        "FORMAT_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the container format as declared by the file itself."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Producing system or organization as recorded IN THE FILE."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation date recorded in the file, ISO 8601."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator recorded in the file."
+              },
+        "INTERNAL_FILE_NAME" : {
+                "type" : "string",
+                "description" : "Container-internal file name, which is stored inside the file and is\nindependent of the name on disk."
+              },
+        "COMMENT_AREA" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Free-text comment area carried inside the container, one entry per line,\nin file order."
+              },
+        "NATIVE_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Reference frame name as the container itself spells it, before any\nmapping onto $RFM."
+              },
+        "NATIVE_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Integer reference frame code as the container stores it."
+              },
+        "NATIVE_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system as the container itself spells it, before any mapping onto\nthe ratified time-scale vocabulary."
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NCDSegmentDescriptor"},
+                "description" : "Descriptors of the container's segments, in file order. Empty for a\nsingle-span container."
+              },
+        "SP3_HEADER" : {
+                "$ref" : "#/definitions/NCDSP3Header",
+                "description" : "Header block when FORMAT is SP3_C or SP3_D."
+              },
+        "SCENARIO_CONTAINER" : {
+                "$ref" : "#/definitions/NCDScenarioEpochContainer",
+                "description" : "Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or\nSCENARIO_EPOCH_ATTITUDE_TEXT."
+              },
+        "CODE_500_HEADER" : {
+                "$ref" : "#/definitions/NCDCode500Header",
+                "description" : "Header words when FORMAT is CODE_500."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Total coverage start across all segments, ISO 8601."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Total coverage stop across all segments, ISO 8601."
+              },
+        "SOURCE_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Length of the described container in bytes."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the described container's exact bytes, lowercase hex. This is\nwhat makes the descriptor checkable: a consumer can prove the descriptor\nbelongs to the file it holds."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the described container when it is addressed by\ncontent rather than by path."
               }
       },
       "additionalProperties" : false
@@ -36109,6 +36639,284 @@
       },
       "additionalProperties" : false
     },
+    "TDMObservation" : {
+      "type" : "object",
+      "description" : "ONE CCSDS TDM observation: a single data-section line.\n\nA TDM data section is NOT a uniform grid. Every line in every published\nexample (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form\n\nKEYWORD = <epoch> <value>\n\nand the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground\nbased radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and\nCARRIER_POWER share epochs, while the final RCS line repeats the EARLIER\nepoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single\nOBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,\nwhich is why the parallel observation arrays on the TDM root cannot\nround-trip a conformant TDM.\n\nKEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. \"RANGE\",\n\"ANGLE_1\", \"CARRIER_POWER\", \"RCS\", \"DOPPLER_INTEGRATED\", \"PR_N0\",\n\"RECEIVE_FREQ_1\", \"TRANSMIT_PHASE_CT_1\", \"VLBI_DELAY\", \"DOR\", \"MAG\",\n\"CLOCK_BIAS\", \"STEC\", \"TROPO_DRY\", \"PRESSURE\". Carrying the keyword rather\nthan a fixed field per observable is what lets this form transport the whole\n503.0-B-2 data vocabulary, including keywords a future issue adds, without\na wire change and without inventing a name the standard does not define.\n\nUnits are those the standard assigns to that keyword; RANGE additionally\ndepends on RANGE_UNITS, which is metadata, not data.",
+      "properties" : {
+        "KEYWORD" : {
+                "type" : "string",
+                "description" : "CCSDS data keyword, verbatim and case-exact."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Observed value."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TDMSegment" : {
+      "type" : "object",
+      "description" : "One TDM metadata + data segment.\n\nA TDM file may carry MANY segments, each with its own META_START/META_STOP\nblock and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,\nfigures E-16 and E-18). The TDM root models a SINGLE segment, so a\nmulti-segment file cannot be represented without this vector.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments carried in this segment's metadata block, in file order."
+              },
+        "META_START" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "STOP_TIME" : {
+                "type" : "string"
+              },
+        "PARTICIPANT_1" : {
+                "type" : "string"
+              },
+        "PARTICIPANT_2" : {
+                "type" : "string"
+              },
+        "PARTICIPANT_3" : {
+                "type" : "string"
+              },
+        "PARTICIPANT_4" : {
+                "type" : "string"
+              },
+        "PARTICIPANT_5" : {
+                "type" : "string"
+              },
+        "MODE" : {
+                "type" : "string"
+              },
+        "PATH_1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "PATH_2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "TRANSMIT_BAND" : {
+                "type" : "string"
+              },
+        "RECEIVE_BAND" : {
+                "type" : "string"
+              },
+        "INTEGRATION_INTERVAL" : {
+                "type" : "number"
+              },
+        "INTEGRATION_REF" : {
+                "type" : "string"
+              },
+        "TIMETAG_REF" : {
+                "type" : "string"
+              },
+        "ANGLE_TYPE" : {
+                "type" : "string"
+              },
+        "RANGE_MODE" : {
+                "type" : "string"
+              },
+        "RANGE_MODULUS" : {
+                "type" : "number"
+              },
+        "CORRECTION_ANGLE_1" : {
+                "type" : "number"
+              },
+        "CORRECTION_ANGLE_2" : {
+                "type" : "number"
+              },
+        "CORRECTIONS_APPLIED" : {
+                "type" : "string"
+              },
+        "DATA_QUALITY" : {
+                "type" : "string"
+              },
+        "RECEIVE_DELAY_2" : {
+                "type" : "number"
+              },
+        "RECEIVE_DELAY_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_1" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_2" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_5" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_1" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_2" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_5" : {
+                "type" : "number"
+              },
+        "META_STOP" : {
+                "type" : "string"
+              },
+        "DATA_START" : {
+                "type" : "string"
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TDMObservation"},
+                "description" : "The segment's observations, in FILE ORDER. This is the authoritative\ndata-section representation."
+              },
+        "DATA_STOP" : {
+                "type" : "string"
+              },
+        "TRANSMIT_RAMPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TDMTransmitRamp"},
+                "description" : "Uplink frequency ramp table applying to this segment. SDS EXTENSION;\nabsent (not empty) for a ramp-free, exactly CCSDS-conformant segment."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Unique message identifier (503.0-B-2 table 3-2)."
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Free-text tracking-pass identifier (503.0-B-2 table 3-3)."
+              },
+        "DATA_TYPES" : {
+                "type" : "string",
+                "description" : "Comma-separated list of the data keywords present in the data section."
+              },
+        "PATH" : {
+                "type" : "string",
+                "description" : "Signal path through the participants as an ordered comma-separated list,\ne.g. \"1,2,1\". Distinct from the numbered PATH_1 / PATH_2 above."
+              },
+        "EPHEMERIS_NAME_1" : {
+                "type" : "string",
+                "description" : "Name of the ephemeris used to generate the data, per participant."
+              },
+        "EPHEMERIS_NAME_2" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_3" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_4" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_5" : {
+                "type" : "string"
+              },
+        "RANGE_UNITS" : {
+                "type" : "string",
+                "description" : "Units of the RANGE observable: \"km\", \"s\" or \"RU\" (range units).\nRANGE is meaningless without it."
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for angle and position data, as the verbatim CCSDS\nkeyword value (503.0-B-2 annex B)."
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method for the observations."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree."
+              },
+        "FREQ_OFFSET" : {
+                "type" : "number",
+                "description" : "Frequency offset applied to the observations, Hz."
+              },
+        "TURNAROUND_NUMERATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Transponder turnaround ratio numerator."
+              },
+        "TURNAROUND_DENOMINATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Transponder turnaround ratio denominator."
+              },
+        "TRANSMIT_DELAY_1" : {
+                "type" : "number",
+                "description" : "Transmit delays by participant, s."
+              },
+        "TRANSMIT_DELAY_2" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_5" : {
+                "type" : "number"
+              },
+        "RECEIVE_DELAY_1" : {
+                "type" : "number",
+                "description" : "Receive delay for the first participant, s. (RECEIVE_DELAY_2 and\nRECEIVE_DELAY_3 already exist on the TDM root.)"
+              },
+        "RECEIVE_DELAY_4" : {
+                "type" : "number"
+              },
+        "RECEIVE_DELAY_5" : {
+                "type" : "number"
+              },
+        "DOPPLER_COUNT_BIAS" : {
+                "type" : "number",
+                "description" : "Doppler count bias, Hz."
+              },
+        "DOPPLER_COUNT_SCALE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Doppler count scale factor."
+              },
+        "DOPPLER_COUNT_ROLLOVER" : {
+                "type" : "boolean",
+                "description" : "Whether the Doppler counter rolls over (CCSDS YES/NO)."
+              },
+        "CORRECTION_RANGE" : {
+                "type" : "number",
+                "description" : "Corrections that a consumer must apply, or that were applied when\nCORRECTIONS_APPLIED is \"YES\". Units follow the corrected observable."
+              },
+        "CORRECTION_DOPPLER" : {
+                "type" : "number"
+              },
+        "CORRECTION_MAG" : {
+                "type" : "number"
+              },
+        "CORRECTION_RCS" : {
+                "type" : "number"
+              },
+        "CORRECTION_RECEIVE" : {
+                "type" : "number"
+              },
+        "CORRECTION_TRANSMIT" : {
+                "type" : "number"
+              },
+        "CORRECTION_ABERRATION_YEARLY" : {
+                "type" : "number"
+              },
+        "CORRECTION_ABERRATION_DIURNAL" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "TDM" : {
       "type" : "object",
       "description" : "Tracking Data Message",
@@ -36372,6 +37180,166 @@
         "TRANSMIT_RAMPS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/TDMTransmitRamp"},
                 "description" : "SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp\ntable covering this segment, ordered by START_TIME and non-overlapping.\nRequired in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone\ncannot reconstruct the observables. Absent for unramped tracking, which\nleaves the record exactly CCSDS-conformant."
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TDMObservation"},
+                "description" : "Data-section observations for a SINGLE-segment TDM, in file order."
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TDMSegment"},
+                "description" : "All metadata+data segments of a MULTI-segment TDM, in file order."
+              },
+        "TRANSMIT_FREQ_2" : {
+                "type" : "number",
+                "description" : "Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1\nalready exists above; 2..5 had no carrier."
+              },
+        "TRANSMIT_FREQ_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_5" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_1" : {
+                "type" : "number",
+                "description" : "Transmit frequency rates by participant, Hz/s. A constant rate here is\nthe single-interval degenerate case of TRANSMIT_RAMPS."
+              },
+        "TRANSMIT_FREQ_RATE_2" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_FREQ_RATE_5" : {
+                "type" : "number"
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Unique message identifier (503.0-B-2 table 3-2)."
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Free-text tracking-pass identifier (503.0-B-2 table 3-3)."
+              },
+        "DATA_TYPES" : {
+                "type" : "string",
+                "description" : "Comma-separated list of the data keywords present in the data section."
+              },
+        "PATH" : {
+                "type" : "string",
+                "description" : "Signal path through the participants as an ordered comma-separated list,\ne.g. \"1,2,1\". Distinct from the numbered PATH_1 / PATH_2 above."
+              },
+        "EPHEMERIS_NAME_1" : {
+                "type" : "string",
+                "description" : "Name of the ephemeris used to generate the data, per participant."
+              },
+        "EPHEMERIS_NAME_2" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_3" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_4" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME_5" : {
+                "type" : "string"
+              },
+        "RANGE_UNITS" : {
+                "type" : "string",
+                "description" : "Units of the RANGE observable: \"km\", \"s\" or \"RU\" (range units).\nRANGE is meaningless without it."
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for angle and position data, as the verbatim CCSDS\nkeyword value (503.0-B-2 annex B)."
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method for the observations."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree."
+              },
+        "FREQ_OFFSET" : {
+                "type" : "number",
+                "description" : "Frequency offset applied to the observations, Hz."
+              },
+        "TURNAROUND_NUMERATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Transponder turnaround ratio numerator."
+              },
+        "TURNAROUND_DENOMINATOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Transponder turnaround ratio denominator."
+              },
+        "TRANSMIT_DELAY_1" : {
+                "type" : "number",
+                "description" : "Transmit delays by participant, s."
+              },
+        "TRANSMIT_DELAY_2" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_3" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_4" : {
+                "type" : "number"
+              },
+        "TRANSMIT_DELAY_5" : {
+                "type" : "number"
+              },
+        "RECEIVE_DELAY_1" : {
+                "type" : "number",
+                "description" : "Receive delay for the first participant, s. (RECEIVE_DELAY_2 and\nRECEIVE_DELAY_3 already exist on the TDM root.)"
+              },
+        "RECEIVE_DELAY_4" : {
+                "type" : "number"
+              },
+        "RECEIVE_DELAY_5" : {
+                "type" : "number"
+              },
+        "DOPPLER_COUNT_BIAS" : {
+                "type" : "number",
+                "description" : "Doppler count bias, Hz."
+              },
+        "DOPPLER_COUNT_SCALE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Doppler count scale factor."
+              },
+        "DOPPLER_COUNT_ROLLOVER" : {
+                "type" : "boolean",
+                "description" : "Whether the Doppler counter rolls over (CCSDS YES/NO)."
+              },
+        "CORRECTION_RANGE" : {
+                "type" : "number",
+                "description" : "Corrections that a consumer must apply, or that were applied when\nCORRECTIONS_APPLIED is \"YES\". Units follow the corrected observable."
+              },
+        "CORRECTION_DOPPLER" : {
+                "type" : "number"
+              },
+        "CORRECTION_MAG" : {
+                "type" : "number"
+              },
+        "CORRECTION_RCS" : {
+                "type" : "number"
+              },
+        "CORRECTION_RECEIVE" : {
+                "type" : "number"
+              },
+        "CORRECTION_TRANSMIT" : {
+                "type" : "number"
+              },
+        "CORRECTION_ABERRATION_YEARLY" : {
+                "type" : "number"
+              },
+        "CORRECTION_ABERRATION_DIURNAL" : {
+                "type" : "number"
               }
       },
       "additionalProperties" : false
@@ -41221,7 +42189,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

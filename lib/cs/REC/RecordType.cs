@@ -248,6 +248,7 @@ public enum RecordType : byte
   BPF = 227,
   EVL = 228,
   PCE = 229,
+  NCD = 230,
 };
 
 public class RecordTypeUnion {
@@ -718,6 +719,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromEVL(EVLT _evl) { return new RecordTypeUnion{ Type = RecordType.EVL, Value = _evl }; }
   public PCET AsPCE() { return this.As<PCET>(); }
   public static RecordTypeUnion FromPCE(PCET _pce) { return new RecordTypeUnion{ Type = RecordType.PCE, Value = _pce }; }
+  public NCDT AsNCD() { return this.As<NCDT>(); }
+  public static RecordTypeUnion FromNCD(NCDT _ncd) { return new RecordTypeUnion{ Type = RecordType.NCD, Value = _ncd }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -951,6 +954,7 @@ public class RecordTypeUnion {
       case RecordType.BPF: return BPF.Pack(builder, _o.AsBPF()).Value;
       case RecordType.EVL: return EVL.Pack(builder, _o.AsEVL()).Value;
       case RecordType.PCE: return PCE.Pack(builder, _o.AsPCE()).Value;
+      case RecordType.NCD: return NCD.Pack(builder, _o.AsNCD()).Value;
     }
   }
 }
@@ -1650,6 +1654,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.PCE:
         result = PCEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.NCD:
+        result = NCDVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

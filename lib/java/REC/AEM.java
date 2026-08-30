@@ -42,13 +42,38 @@ public final class AEM extends com.google.flatbuffers.Table {
   public int SEGMENTSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
   public AEMSegment.Vector segmentsVector() { return segmentsVector(new AEMSegment.Vector()); }
   public AEMSegment.Vector segmentsVector(AEMSegment.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Unique message identifier (504.0-B-2 table 4-2, optional). Added by B-2.
+   */
+  public String MESSAGE_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Plain-text comments carried in the message header, one entry per line.
+   */
+  public String COMMENT(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int COMMENTLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector commentVector() { return commentVector(new StringVector()); }
+  public StringVector commentVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Message classification/caveats in portion-marked format.
+   */
+  public String CLASSIFICATION() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
 
   public static int createAEM(FlatBufferBuilder builder,
       int CCSDS_AEM_VERSOffset,
       int CREATION_DATEOffset,
       int ORIGINATOROffset,
-      int SEGMENTSOffset) {
-    builder.startTable(4);
+      int SEGMENTSOffset,
+      int MESSAGE_IDOffset,
+      int COMMENTOffset,
+      int CLASSIFICATIONOffset) {
+    builder.startTable(7);
+    AEM.addClassification(builder, CLASSIFICATIONOffset);
+    AEM.addComment(builder, COMMENTOffset);
+    AEM.addMessageId(builder, MESSAGE_IDOffset);
     AEM.addSegments(builder, SEGMENTSOffset);
     AEM.addOriginator(builder, ORIGINATOROffset);
     AEM.addCreationDate(builder, CREATION_DATEOffset);
@@ -56,13 +81,18 @@ public final class AEM extends com.google.flatbuffers.Table {
     return AEM.endAEM(builder);
   }
 
-  public static void startAEM(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startAEM(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addCcsdsAemVers(FlatBufferBuilder builder, int CCSDS_AEM_VERSOffset) { builder.addOffset(0, CCSDS_AEM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
   public static void addSegments(FlatBufferBuilder builder, int SEGMENTSOffset) { builder.addOffset(3, SEGMENTSOffset, 0); }
   public static int createSegmentsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSegmentsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(4, MESSAGE_IDOffset, 0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(5, COMMENTOffset, 0); }
+  public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(6, CLASSIFICATIONOffset, 0); }
   public static int endAEM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

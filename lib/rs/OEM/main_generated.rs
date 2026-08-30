@@ -39,6 +39,16 @@ impl<'a> ephemerisDataLine<'a> {
   pub const VT_X_DDOT: ::flatbuffers::VOffsetT = 18;
   pub const VT_Y_DDOT: ::flatbuffers::VOffsetT = 20;
   pub const VT_Z_DDOT: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CLOCK_BIAS_MICROSECONDS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_CLOCK_RATE_MICROSECONDS_PER_SECOND: ::flatbuffers::VOffsetT = 26;
+  pub const VT_CLOCK_BIAS_SIGMA_PICOSECONDS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: ::flatbuffers::VOffsetT = 30;
+  pub const VT_X_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 32;
+  pub const VT_Y_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 34;
+  pub const VT_Z_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 36;
+  pub const VT_X_DOT_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 38;
+  pub const VT_Y_DOT_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 40;
+  pub const VT_Z_DOT_SIGMA_EXPONENT: ::flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -50,6 +60,10 @@ impl<'a> ephemerisDataLine<'a> {
     args: &'args ephemerisDataLineArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ephemerisDataLine<'bldr>> {
     let mut builder = ephemerisDataLineBuilder::new(_fbb);
+    builder.add_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(args.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+    builder.add_CLOCK_BIAS_SIGMA_PICOSECONDS(args.CLOCK_BIAS_SIGMA_PICOSECONDS);
+    builder.add_CLOCK_RATE_MICROSECONDS_PER_SECOND(args.CLOCK_RATE_MICROSECONDS_PER_SECOND);
+    builder.add_CLOCK_BIAS_MICROSECONDS(args.CLOCK_BIAS_MICROSECONDS);
     builder.add_Z_DDOT(args.Z_DDOT);
     builder.add_Y_DDOT(args.Y_DDOT);
     builder.add_X_DDOT(args.X_DDOT);
@@ -60,6 +74,12 @@ impl<'a> ephemerisDataLine<'a> {
     builder.add_Y(args.Y);
     builder.add_X(args.X);
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.add_Z_DOT_SIGMA_EXPONENT(args.Z_DOT_SIGMA_EXPONENT);
+    builder.add_Y_DOT_SIGMA_EXPONENT(args.Y_DOT_SIGMA_EXPONENT);
+    builder.add_X_DOT_SIGMA_EXPONENT(args.X_DOT_SIGMA_EXPONENT);
+    builder.add_Z_SIGMA_EXPONENT(args.Z_SIGMA_EXPONENT);
+    builder.add_Y_SIGMA_EXPONENT(args.Y_SIGMA_EXPONENT);
+    builder.add_X_SIGMA_EXPONENT(args.X_SIGMA_EXPONENT);
     builder.finish()
   }
 
@@ -76,6 +96,16 @@ impl<'a> ephemerisDataLine<'a> {
     let X_DDOT = self.X_DDOT();
     let Y_DDOT = self.Y_DDOT();
     let Z_DDOT = self.Z_DDOT();
+    let CLOCK_BIAS_MICROSECONDS = self.CLOCK_BIAS_MICROSECONDS();
+    let CLOCK_RATE_MICROSECONDS_PER_SECOND = self.CLOCK_RATE_MICROSECONDS_PER_SECOND();
+    let CLOCK_BIAS_SIGMA_PICOSECONDS = self.CLOCK_BIAS_SIGMA_PICOSECONDS();
+    let CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND();
+    let X_SIGMA_EXPONENT = self.X_SIGMA_EXPONENT();
+    let Y_SIGMA_EXPONENT = self.Y_SIGMA_EXPONENT();
+    let Z_SIGMA_EXPONENT = self.Z_SIGMA_EXPONENT();
+    let X_DOT_SIGMA_EXPONENT = self.X_DOT_SIGMA_EXPONENT();
+    let Y_DOT_SIGMA_EXPONENT = self.Y_DOT_SIGMA_EXPONENT();
+    let Z_DOT_SIGMA_EXPONENT = self.Z_DOT_SIGMA_EXPONENT();
     ephemerisDataLineT {
       EPOCH,
       X,
@@ -87,6 +117,16 @@ impl<'a> ephemerisDataLine<'a> {
       X_DDOT,
       Y_DDOT,
       Z_DDOT,
+      CLOCK_BIAS_MICROSECONDS,
+      CLOCK_RATE_MICROSECONDS_PER_SECOND,
+      CLOCK_BIAS_SIGMA_PICOSECONDS,
+      CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+      X_SIGMA_EXPONENT,
+      Y_SIGMA_EXPONENT,
+      Z_SIGMA_EXPONENT,
+      X_DOT_SIGMA_EXPONENT,
+      Y_DOT_SIGMA_EXPONENT,
+      Z_DOT_SIGMA_EXPONENT,
     }
   }
 
@@ -170,6 +210,91 @@ impl<'a> ephemerisDataLine<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Z_DDOT, Some(0.0)).unwrap()}
   }
+  /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  /// field instead.
+  #[inline]
+  pub fn CLOCK_BIAS_MICROSECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_CLOCK_BIAS_MICROSECONDS, Some(0.0)).unwrap()}
+  }
+  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  #[inline]
+  pub fn CLOCK_RATE_MICROSECONDS_PER_SECOND(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, Some(0.0)).unwrap()}
+  }
+  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  #[inline]
+  pub fn CLOCK_BIAS_SIGMA_PICOSECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_CLOCK_BIAS_SIGMA_PICOSECONDS, Some(0.0)).unwrap()}
+  }
+  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  /// 1e-4 picoseconds per second.
+  #[inline]
+  pub fn CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, Some(0.0)).unwrap()}
+  }
+  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  /// the result in mm. These are the raw SP3 exponent columns, kept as
+  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  /// sigma raises the header base to this power.
+  #[inline]
+  pub fn X_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_X_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn Y_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_Y_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn Z_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_Z_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
+  /// Per-coordinate velocity standard-deviation exponents, result in
+  /// 1e-4 mm/s. Same base**n rule.
+  #[inline]
+  pub fn X_DOT_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_X_DOT_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn Y_DOT_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_Y_DOT_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn Z_DOT_SIGMA_EXPONENT(&self) -> i8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i8>(ephemerisDataLine::VT_Z_DOT_SIGMA_EXPONENT, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ephemerisDataLine<'_> {
@@ -188,6 +313,16 @@ impl ::flatbuffers::Verifiable for ephemerisDataLine<'_> {
      .visit_field::<f64>("X_DDOT", Self::VT_X_DDOT, false)?
      .visit_field::<f64>("Y_DDOT", Self::VT_Y_DDOT, false)?
      .visit_field::<f64>("Z_DDOT", Self::VT_Z_DDOT, false)?
+     .visit_field::<f64>("CLOCK_BIAS_MICROSECONDS", Self::VT_CLOCK_BIAS_MICROSECONDS, false)?
+     .visit_field::<f64>("CLOCK_RATE_MICROSECONDS_PER_SECOND", Self::VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, false)?
+     .visit_field::<f64>("CLOCK_BIAS_SIGMA_PICOSECONDS", Self::VT_CLOCK_BIAS_SIGMA_PICOSECONDS, false)?
+     .visit_field::<f64>("CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND", Self::VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, false)?
+     .visit_field::<i8>("X_SIGMA_EXPONENT", Self::VT_X_SIGMA_EXPONENT, false)?
+     .visit_field::<i8>("Y_SIGMA_EXPONENT", Self::VT_Y_SIGMA_EXPONENT, false)?
+     .visit_field::<i8>("Z_SIGMA_EXPONENT", Self::VT_Z_SIGMA_EXPONENT, false)?
+     .visit_field::<i8>("X_DOT_SIGMA_EXPONENT", Self::VT_X_DOT_SIGMA_EXPONENT, false)?
+     .visit_field::<i8>("Y_DOT_SIGMA_EXPONENT", Self::VT_Y_DOT_SIGMA_EXPONENT, false)?
+     .visit_field::<i8>("Z_DOT_SIGMA_EXPONENT", Self::VT_Z_DOT_SIGMA_EXPONENT, false)?
      .finish();
     Ok(())
   }
@@ -203,6 +338,16 @@ pub struct ephemerisDataLineArgs<'a> {
     pub X_DDOT: f64,
     pub Y_DDOT: f64,
     pub Z_DDOT: f64,
+    pub CLOCK_BIAS_MICROSECONDS: f64,
+    pub CLOCK_RATE_MICROSECONDS_PER_SECOND: f64,
+    pub CLOCK_BIAS_SIGMA_PICOSECONDS: f64,
+    pub CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: f64,
+    pub X_SIGMA_EXPONENT: i8,
+    pub Y_SIGMA_EXPONENT: i8,
+    pub Z_SIGMA_EXPONENT: i8,
+    pub X_DOT_SIGMA_EXPONENT: i8,
+    pub Y_DOT_SIGMA_EXPONENT: i8,
+    pub Z_DOT_SIGMA_EXPONENT: i8,
 }
 impl<'a> Default for ephemerisDataLineArgs<'a> {
   #[inline]
@@ -218,6 +363,16 @@ impl<'a> Default for ephemerisDataLineArgs<'a> {
       X_DDOT: 0.0,
       Y_DDOT: 0.0,
       Z_DDOT: 0.0,
+      CLOCK_BIAS_MICROSECONDS: 0.0,
+      CLOCK_RATE_MICROSECONDS_PER_SECOND: 0.0,
+      CLOCK_BIAS_SIGMA_PICOSECONDS: 0.0,
+      CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: 0.0,
+      X_SIGMA_EXPONENT: 0,
+      Y_SIGMA_EXPONENT: 0,
+      Z_SIGMA_EXPONENT: 0,
+      X_DOT_SIGMA_EXPONENT: 0,
+      Y_DOT_SIGMA_EXPONENT: 0,
+      Z_DOT_SIGMA_EXPONENT: 0,
     }
   }
 }
@@ -268,6 +423,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ephemerisDataLineBuilder<'a, 
     self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Z_DDOT, Z_DDOT, 0.0);
   }
   #[inline]
+  pub fn add_CLOCK_BIAS_MICROSECONDS(&mut self, CLOCK_BIAS_MICROSECONDS: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_CLOCK_BIAS_MICROSECONDS, CLOCK_BIAS_MICROSECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOCK_RATE_MICROSECONDS_PER_SECOND(&mut self, CLOCK_RATE_MICROSECONDS_PER_SECOND: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_CLOCK_RATE_MICROSECONDS_PER_SECOND, CLOCK_RATE_MICROSECONDS_PER_SECOND, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOCK_BIAS_SIGMA_PICOSECONDS(&mut self, CLOCK_BIAS_SIGMA_PICOSECONDS: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_CLOCK_BIAS_SIGMA_PICOSECONDS, CLOCK_BIAS_SIGMA_PICOSECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND(&mut self, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND, 0.0);
+  }
+  #[inline]
+  pub fn add_X_SIGMA_EXPONENT(&mut self, X_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_X_SIGMA_EXPONENT, X_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
+  pub fn add_Y_SIGMA_EXPONENT(&mut self, Y_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_Y_SIGMA_EXPONENT, Y_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
+  pub fn add_Z_SIGMA_EXPONENT(&mut self, Z_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_Z_SIGMA_EXPONENT, Z_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
+  pub fn add_X_DOT_SIGMA_EXPONENT(&mut self, X_DOT_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_X_DOT_SIGMA_EXPONENT, X_DOT_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
+  pub fn add_Y_DOT_SIGMA_EXPONENT(&mut self, Y_DOT_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_Y_DOT_SIGMA_EXPONENT, Y_DOT_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
+  pub fn add_Z_DOT_SIGMA_EXPONENT(&mut self, Z_DOT_SIGMA_EXPONENT: i8) {
+    self.fbb_.push_slot::<i8>(ephemerisDataLine::VT_Z_DOT_SIGMA_EXPONENT, Z_DOT_SIGMA_EXPONENT, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataLineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ephemerisDataLineBuilder {
@@ -295,6 +490,16 @@ impl ::core::fmt::Debug for ephemerisDataLine<'_> {
       ds.field("X_DDOT", &self.X_DDOT());
       ds.field("Y_DDOT", &self.Y_DDOT());
       ds.field("Z_DDOT", &self.Z_DDOT());
+      ds.field("CLOCK_BIAS_MICROSECONDS", &self.CLOCK_BIAS_MICROSECONDS());
+      ds.field("CLOCK_RATE_MICROSECONDS_PER_SECOND", &self.CLOCK_RATE_MICROSECONDS_PER_SECOND());
+      ds.field("CLOCK_BIAS_SIGMA_PICOSECONDS", &self.CLOCK_BIAS_SIGMA_PICOSECONDS());
+      ds.field("CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND", &self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND());
+      ds.field("X_SIGMA_EXPONENT", &self.X_SIGMA_EXPONENT());
+      ds.field("Y_SIGMA_EXPONENT", &self.Y_SIGMA_EXPONENT());
+      ds.field("Z_SIGMA_EXPONENT", &self.Z_SIGMA_EXPONENT());
+      ds.field("X_DOT_SIGMA_EXPONENT", &self.X_DOT_SIGMA_EXPONENT());
+      ds.field("Y_DOT_SIGMA_EXPONENT", &self.Y_DOT_SIGMA_EXPONENT());
+      ds.field("Z_DOT_SIGMA_EXPONENT", &self.Z_DOT_SIGMA_EXPONENT());
       ds.finish()
   }
 }
@@ -311,6 +516,16 @@ pub struct ephemerisDataLineT {
   pub X_DDOT: f64,
   pub Y_DDOT: f64,
   pub Z_DDOT: f64,
+  pub CLOCK_BIAS_MICROSECONDS: f64,
+  pub CLOCK_RATE_MICROSECONDS_PER_SECOND: f64,
+  pub CLOCK_BIAS_SIGMA_PICOSECONDS: f64,
+  pub CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: f64,
+  pub X_SIGMA_EXPONENT: i8,
+  pub Y_SIGMA_EXPONENT: i8,
+  pub Z_SIGMA_EXPONENT: i8,
+  pub X_DOT_SIGMA_EXPONENT: i8,
+  pub Y_DOT_SIGMA_EXPONENT: i8,
+  pub Z_DOT_SIGMA_EXPONENT: i8,
 }
 impl Default for ephemerisDataLineT {
   fn default() -> Self {
@@ -325,6 +540,16 @@ impl Default for ephemerisDataLineT {
       X_DDOT: 0.0,
       Y_DDOT: 0.0,
       Z_DDOT: 0.0,
+      CLOCK_BIAS_MICROSECONDS: 0.0,
+      CLOCK_RATE_MICROSECONDS_PER_SECOND: 0.0,
+      CLOCK_BIAS_SIGMA_PICOSECONDS: 0.0,
+      CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND: 0.0,
+      X_SIGMA_EXPONENT: 0,
+      Y_SIGMA_EXPONENT: 0,
+      Z_SIGMA_EXPONENT: 0,
+      X_DOT_SIGMA_EXPONENT: 0,
+      Y_DOT_SIGMA_EXPONENT: 0,
+      Z_DOT_SIGMA_EXPONENT: 0,
     }
   }
 }
@@ -345,6 +570,16 @@ impl ephemerisDataLineT {
     let X_DDOT = self.X_DDOT;
     let Y_DDOT = self.Y_DDOT;
     let Z_DDOT = self.Z_DDOT;
+    let CLOCK_BIAS_MICROSECONDS = self.CLOCK_BIAS_MICROSECONDS;
+    let CLOCK_RATE_MICROSECONDS_PER_SECOND = self.CLOCK_RATE_MICROSECONDS_PER_SECOND;
+    let CLOCK_BIAS_SIGMA_PICOSECONDS = self.CLOCK_BIAS_SIGMA_PICOSECONDS;
+    let CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = self.CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND;
+    let X_SIGMA_EXPONENT = self.X_SIGMA_EXPONENT;
+    let Y_SIGMA_EXPONENT = self.Y_SIGMA_EXPONENT;
+    let Z_SIGMA_EXPONENT = self.Z_SIGMA_EXPONENT;
+    let X_DOT_SIGMA_EXPONENT = self.X_DOT_SIGMA_EXPONENT;
+    let Y_DOT_SIGMA_EXPONENT = self.Y_DOT_SIGMA_EXPONENT;
+    let Z_DOT_SIGMA_EXPONENT = self.Z_DOT_SIGMA_EXPONENT;
     ephemerisDataLine::create(_fbb, &ephemerisDataLineArgs{
       EPOCH,
       X,
@@ -356,6 +591,16 @@ impl ephemerisDataLineT {
       X_DDOT,
       Y_DDOT,
       Z_DDOT,
+      CLOCK_BIAS_MICROSECONDS,
+      CLOCK_RATE_MICROSECONDS_PER_SECOND,
+      CLOCK_BIAS_SIGMA_PICOSECONDS,
+      CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+      X_SIGMA_EXPONENT,
+      Y_SIGMA_EXPONENT,
+      Z_SIGMA_EXPONENT,
+      X_DOT_SIGMA_EXPONENT,
+      Y_DOT_SIGMA_EXPONENT,
+      Z_DOT_SIGMA_EXPONENT,
     })
   }
 }
@@ -1030,6 +1275,8 @@ impl<'a> ephemerisDataBlock<'a> {
   pub const VT_EPHEMERIS_DATA_LINES: ::flatbuffers::VOffsetT = 36;
   pub const VT_COVARIANCE_MATRIX_LINES: ::flatbuffers::VOffsetT = 38;
   pub const VT_POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::VOffsetT = 40;
+  pub const VT_OBJECT_NAIF_ID: ::flatbuffers::VOffsetT = 42;
+  pub const VT_CENTER_NAIF_ID: ::flatbuffers::VOffsetT = 44;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1042,6 +1289,8 @@ impl<'a> ephemerisDataBlock<'a> {
   ) -> ::flatbuffers::WIPOffset<ephemerisDataBlock<'bldr>> {
     let mut builder = ephemerisDataBlockBuilder::new(_fbb);
     builder.add_STEP_SIZE(args.STEP_SIZE);
+    builder.add_CENTER_NAIF_ID(args.CENTER_NAIF_ID);
+    builder.add_OBJECT_NAIF_ID(args.OBJECT_NAIF_ID);
     if let Some(x) = args.POLYNOMIAL_POSITION_RECORDS { builder.add_POLYNOMIAL_POSITION_RECORDS(x); }
     if let Some(x) = args.COVARIANCE_MATRIX_LINES { builder.add_COVARIANCE_MATRIX_LINES(x); }
     if let Some(x) = args.EPHEMERIS_DATA_LINES { builder.add_EPHEMERIS_DATA_LINES(x); }
@@ -1113,6 +1362,8 @@ impl<'a> ephemerisDataBlock<'a> {
     let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let OBJECT_NAIF_ID = self.OBJECT_NAIF_ID();
+    let CENTER_NAIF_ID = self.CENTER_NAIF_ID();
     ephemerisDataBlockT {
       COMMENT,
       OBJECT,
@@ -1133,6 +1384,8 @@ impl<'a> ephemerisDataBlock<'a> {
       EPHEMERIS_DATA_LINES,
       COVARIANCE_MATRIX_LINES,
       POLYNOMIAL_POSITION_RECORDS,
+      OBJECT_NAIF_ID,
+      CENTER_NAIF_ID,
     }
   }
 
@@ -1307,6 +1560,23 @@ impl<'a> ephemerisDataBlock<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, None)}
   }
+  /// NAIF integer code of the ephemeris target (SPK segment target).
+  #[inline]
+  pub fn OBJECT_NAIF_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(ephemerisDataBlock::VT_OBJECT_NAIF_ID, Some(0)).unwrap()}
+  }
+  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  /// (SPK segment centre).
+  #[inline]
+  pub fn CENTER_NAIF_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(ephemerisDataBlock::VT_CENTER_NAIF_ID, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ephemerisDataBlock<'_> {
@@ -1334,6 +1604,8 @@ impl ::flatbuffers::Verifiable for ephemerisDataBlock<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ephemerisDataLine>>>>("EPHEMERIS_DATA_LINES", Self::VT_EPHEMERIS_DATA_LINES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine>>>>("COVARIANCE_MATRIX_LINES", Self::VT_COVARIANCE_MATRIX_LINES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POLYNOMIAL_POSITION_RECORDS", Self::VT_POLYNOMIAL_POSITION_RECORDS, false)?
+     .visit_field::<i32>("OBJECT_NAIF_ID", Self::VT_OBJECT_NAIF_ID, false)?
+     .visit_field::<i32>("CENTER_NAIF_ID", Self::VT_CENTER_NAIF_ID, false)?
      .finish();
     Ok(())
   }
@@ -1358,6 +1630,8 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub EPHEMERIS_DATA_LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataLine<'a>>>>>,
     pub COVARIANCE_MATRIX_LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine<'a>>>>>,
     pub POLYNOMIAL_POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
+    pub OBJECT_NAIF_ID: i32,
+    pub CENTER_NAIF_ID: i32,
 }
 impl<'a> Default for ephemerisDataBlockArgs<'a> {
   #[inline]
@@ -1382,6 +1656,8 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       EPHEMERIS_DATA_LINES: None,
       COVARIANCE_MATRIX_LINES: None,
       POLYNOMIAL_POSITION_RECORDS: None,
+      OBJECT_NAIF_ID: 0,
+      CENTER_NAIF_ID: 0,
     }
   }
 }
@@ -1468,6 +1744,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, POLYNOMIAL_POSITION_RECORDS);
   }
   #[inline]
+  pub fn add_OBJECT_NAIF_ID(&mut self, OBJECT_NAIF_ID: i32) {
+    self.fbb_.push_slot::<i32>(ephemerisDataBlock::VT_OBJECT_NAIF_ID, OBJECT_NAIF_ID, 0);
+  }
+  #[inline]
+  pub fn add_CENTER_NAIF_ID(&mut self, CENTER_NAIF_ID: i32) {
+    self.fbb_.push_slot::<i32>(ephemerisDataBlock::VT_CENTER_NAIF_ID, CENTER_NAIF_ID, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataBlockBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ephemerisDataBlockBuilder {
@@ -1504,6 +1788,8 @@ impl ::core::fmt::Debug for ephemerisDataBlock<'_> {
       ds.field("EPHEMERIS_DATA_LINES", &self.EPHEMERIS_DATA_LINES());
       ds.field("COVARIANCE_MATRIX_LINES", &self.COVARIANCE_MATRIX_LINES());
       ds.field("POLYNOMIAL_POSITION_RECORDS", &self.POLYNOMIAL_POSITION_RECORDS());
+      ds.field("OBJECT_NAIF_ID", &self.OBJECT_NAIF_ID());
+      ds.field("CENTER_NAIF_ID", &self.CENTER_NAIF_ID());
       ds.finish()
   }
 }
@@ -1529,6 +1815,8 @@ pub struct ephemerisDataBlockT {
   pub EPHEMERIS_DATA_LINES: Option<alloc::vec::Vec<ephemerisDataLineT>>,
   pub COVARIANCE_MATRIX_LINES: Option<alloc::vec::Vec<covarianceMatrixLineT>>,
   pub POLYNOMIAL_POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
+  pub OBJECT_NAIF_ID: i32,
+  pub CENTER_NAIF_ID: i32,
 }
 impl Default for ephemerisDataBlockT {
   fn default() -> Self {
@@ -1552,6 +1840,8 @@ impl Default for ephemerisDataBlockT {
       EPHEMERIS_DATA_LINES: None,
       COVARIANCE_MATRIX_LINES: None,
       POLYNOMIAL_POSITION_RECORDS: None,
+      OBJECT_NAIF_ID: 0,
+      CENTER_NAIF_ID: 0,
     }
   }
 }
@@ -1609,6 +1899,8 @@ impl ephemerisDataBlockT {
     let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let OBJECT_NAIF_ID = self.OBJECT_NAIF_ID;
+    let CENTER_NAIF_ID = self.CENTER_NAIF_ID;
     ephemerisDataBlock::create(_fbb, &ephemerisDataBlockArgs{
       COMMENT,
       OBJECT,
@@ -1629,6 +1921,8 @@ impl ephemerisDataBlockT {
       EPHEMERIS_DATA_LINES,
       COVARIANCE_MATRIX_LINES,
       POLYNOMIAL_POSITION_RECORDS,
+      OBJECT_NAIF_ID,
+      CENTER_NAIF_ID,
     })
   }
 }
