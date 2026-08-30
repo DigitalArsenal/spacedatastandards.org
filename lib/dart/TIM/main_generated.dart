@@ -24,7 +24,8 @@ enum timingStandard {
   QZSS(14),
   BDT(15),
   NAVIC(16),
-  SBAS(17);
+  SBAS(17),
+  A1(18);
 
   final int value;
   const timingStandard(this.value);
@@ -49,6 +50,7 @@ enum timingStandard {
       case 15: return timingStandard.BDT;
       case 16: return timingStandard.NAVIC;
       case 17: return timingStandard.SBAS;
+      case 18: return timingStandard.A1;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -57,7 +59,7 @@ enum timingStandard {
       value == null ? null : timingStandard.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 17;
+  static const int maxValue = 18;
   static const fb.Reader<timingStandard> reader = _timingStandardReader();
 }
 

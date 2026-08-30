@@ -5,8 +5,11 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { FRMMatrix3, FRMMatrix3T } from './FRMMatrix3.js';
+import { FRMStateVector, FRMStateVectorT } from './FRMStateVector.js';
 import { FRMVector3, FRMVector3T } from './FRMVector3.js';
+import { RFMCoordinateSystem, RFMCoordinateSystemT } from './RFMCoordinateSystem.js';
 import { frmOperationCode } from './frmOperationCode.js';
+import { frmStateRepresentation } from './frmStateRepresentation.js';
 
 
 export class FRMFrameTransformRequest implements flatbuffers.IUnpackableObject<FRMFrameTransformRequestT> {
@@ -59,8 +62,74 @@ TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Coordinate system the request's state is expressed in.
+ */
+SOURCE_COORDINATE_SYSTEM(obj?:RFMCoordinateSystem):RFMCoordinateSystem|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new RFMCoordinateSystem()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Coordinate system the result is required in.
+ */
+TARGET_COORDINATE_SYSTEM(obj?:RFMCoordinateSystem):RFMCoordinateSystem|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new RFMCoordinateSystem()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * The full input state, carrying velocity as well as position. POSITION
+ * above is position-only and remains the input for operations 1-4.
+ */
+SOURCE_STATE(obj?:FRMStateVector):FRMStateVector|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new FRMStateVector()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Element set the result must be expressed in.
+ */
+TARGET_REPRESENTATION():frmStateRepresentation {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : frmStateRepresentation.UNSPECIFIED;
+}
+
+/**
+ * Epoch the transform is evaluated at, ISO 8601. Required for every
+ * time-dependent axis chain.
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Time system of EPOCH, named by the $TIM timingStandard member name.
+ */
+EPOCH_TIME_SYSTEM():string|null
+EPOCH_TIME_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH_TIME_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the Earth-orientation data set the caller requires
+ * the provider to use. A provider that cannot honour it returns
+ * MISSING_EOP_DATA rather than substituting another table.
+ */
+EOP_DATA_SET_CID():string|null
+EOP_DATA_SET_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EOP_DATA_SET_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startFRMFrameTransformRequest(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(13);
 }
 
 static addOperation(builder:flatbuffers.Builder, OPERATION:frmOperationCode) {
@@ -87,6 +156,34 @@ static addTraceId(builder:flatbuffers.Builder, TRACE_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(5, TRACE_IDOffset, 0);
 }
 
+static addSourceCoordinateSystem(builder:flatbuffers.Builder, SOURCE_COORDINATE_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SOURCE_COORDINATE_SYSTEMOffset, 0);
+}
+
+static addTargetCoordinateSystem(builder:flatbuffers.Builder, TARGET_COORDINATE_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, TARGET_COORDINATE_SYSTEMOffset, 0);
+}
+
+static addSourceState(builder:flatbuffers.Builder, SOURCE_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, SOURCE_STATEOffset, 0);
+}
+
+static addTargetRepresentation(builder:flatbuffers.Builder, TARGET_REPRESENTATION:frmStateRepresentation) {
+  builder.addFieldInt8(9, TARGET_REPRESENTATION, frmStateRepresentation.UNSPECIFIED);
+}
+
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, EPOCHOffset, 0);
+}
+
+static addEpochTimeSystem(builder:flatbuffers.Builder, EPOCH_TIME_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, EPOCH_TIME_SYSTEMOffset, 0);
+}
+
+static addEopDataSetCid(builder:flatbuffers.Builder, EOP_DATA_SET_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, EOP_DATA_SET_CIDOffset, 0);
+}
+
 static endFRMFrameTransformRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -100,7 +197,14 @@ unpack(): FRMFrameTransformRequestT {
     (this.TRANSFORM_DCM() !== null ? this.TRANSFORM_DCM()!.unpack() : null),
     this.EQUATORIAL_RADIUS_M(),
     this.POLAR_RADIUS_M(),
-    this.TRACE_ID()
+    this.TRACE_ID(),
+    (this.SOURCE_COORDINATE_SYSTEM() !== null ? this.SOURCE_COORDINATE_SYSTEM()!.unpack() : null),
+    (this.TARGET_COORDINATE_SYSTEM() !== null ? this.TARGET_COORDINATE_SYSTEM()!.unpack() : null),
+    (this.SOURCE_STATE() !== null ? this.SOURCE_STATE()!.unpack() : null),
+    this.TARGET_REPRESENTATION(),
+    this.EPOCH(),
+    this.EPOCH_TIME_SYSTEM(),
+    this.EOP_DATA_SET_CID()
   );
 }
 
@@ -112,6 +216,13 @@ unpackTo(_o: FRMFrameTransformRequestT): void {
   _o.EQUATORIAL_RADIUS_M = this.EQUATORIAL_RADIUS_M();
   _o.POLAR_RADIUS_M = this.POLAR_RADIUS_M();
   _o.TRACE_ID = this.TRACE_ID();
+  _o.SOURCE_COORDINATE_SYSTEM = (this.SOURCE_COORDINATE_SYSTEM() !== null ? this.SOURCE_COORDINATE_SYSTEM()!.unpack() : null);
+  _o.TARGET_COORDINATE_SYSTEM = (this.TARGET_COORDINATE_SYSTEM() !== null ? this.TARGET_COORDINATE_SYSTEM()!.unpack() : null);
+  _o.SOURCE_STATE = (this.SOURCE_STATE() !== null ? this.SOURCE_STATE()!.unpack() : null);
+  _o.TARGET_REPRESENTATION = this.TARGET_REPRESENTATION();
+  _o.EPOCH = this.EPOCH();
+  _o.EPOCH_TIME_SYSTEM = this.EPOCH_TIME_SYSTEM();
+  _o.EOP_DATA_SET_CID = this.EOP_DATA_SET_CID();
 }
 }
 
@@ -122,7 +233,14 @@ constructor(
   public TRANSFORM_DCM: FRMMatrix3T|null = null,
   public EQUATORIAL_RADIUS_M: number = 0.0,
   public POLAR_RADIUS_M: number = 0.0,
-  public TRACE_ID: string|Uint8Array|null = null
+  public TRACE_ID: string|Uint8Array|null = null,
+  public SOURCE_COORDINATE_SYSTEM: RFMCoordinateSystemT|null = null,
+  public TARGET_COORDINATE_SYSTEM: RFMCoordinateSystemT|null = null,
+  public SOURCE_STATE: FRMStateVectorT|null = null,
+  public TARGET_REPRESENTATION: frmStateRepresentation = frmStateRepresentation.UNSPECIFIED,
+  public EPOCH: string|Uint8Array|null = null,
+  public EPOCH_TIME_SYSTEM: string|Uint8Array|null = null,
+  public EOP_DATA_SET_CID: string|Uint8Array|null = null
 ){}
 
 
@@ -130,6 +248,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POSITION = (this.POSITION !== null ? this.POSITION!.pack(builder) : 0);
   const TRANSFORM_DCM = (this.TRANSFORM_DCM !== null ? this.TRANSFORM_DCM!.pack(builder) : 0);
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
+  const SOURCE_COORDINATE_SYSTEM = (this.SOURCE_COORDINATE_SYSTEM !== null ? this.SOURCE_COORDINATE_SYSTEM!.pack(builder) : 0);
+  const TARGET_COORDINATE_SYSTEM = (this.TARGET_COORDINATE_SYSTEM !== null ? this.TARGET_COORDINATE_SYSTEM!.pack(builder) : 0);
+  const SOURCE_STATE = (this.SOURCE_STATE !== null ? this.SOURCE_STATE!.pack(builder) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const EPOCH_TIME_SYSTEM = (this.EPOCH_TIME_SYSTEM !== null ? builder.createString(this.EPOCH_TIME_SYSTEM!) : 0);
+  const EOP_DATA_SET_CID = (this.EOP_DATA_SET_CID !== null ? builder.createString(this.EOP_DATA_SET_CID!) : 0);
 
   FRMFrameTransformRequest.startFRMFrameTransformRequest(builder);
   FRMFrameTransformRequest.addOperation(builder, this.OPERATION);
@@ -138,6 +262,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   FRMFrameTransformRequest.addEquatorialRadiusM(builder, this.EQUATORIAL_RADIUS_M);
   FRMFrameTransformRequest.addPolarRadiusM(builder, this.POLAR_RADIUS_M);
   FRMFrameTransformRequest.addTraceId(builder, TRACE_ID);
+  FRMFrameTransformRequest.addSourceCoordinateSystem(builder, SOURCE_COORDINATE_SYSTEM);
+  FRMFrameTransformRequest.addTargetCoordinateSystem(builder, TARGET_COORDINATE_SYSTEM);
+  FRMFrameTransformRequest.addSourceState(builder, SOURCE_STATE);
+  FRMFrameTransformRequest.addTargetRepresentation(builder, this.TARGET_REPRESENTATION);
+  FRMFrameTransformRequest.addEpoch(builder, EPOCH);
+  FRMFrameTransformRequest.addEpochTimeSystem(builder, EPOCH_TIME_SYSTEM);
+  FRMFrameTransformRequest.addEopDataSetCid(builder, EOP_DATA_SET_CID);
 
   return FRMFrameTransformRequest.endFRMFrameTransformRequest(builder);
 }

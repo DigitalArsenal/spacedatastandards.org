@@ -68,26 +68,81 @@ class FRMFrameTransformResult extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+    /// TARGET_REPRESENTATION.
+    public function getTARGET_STATE()
+    {
+        $obj = new FRMStateVector();
+        $o = $this->__offset(12);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Rotation from the source axes to the target axes at EPOCH.
+    public function getROTATION_DCM()
+    {
+        $obj = new FRMMatrix3();
+        $o = $this->__offset(14);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Time derivative of ROTATION_DCM, per second. Required for a velocity
+    /// transform between relatively rotating axis sets.
+    public function getROTATION_DCM_RATE()
+    {
+        $obj = new FRMMatrix3();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Angular velocity of the target axes with respect to the source axes,
+    /// radians per second, expressed in the source axes.
+    public function getANGULAR_VELOCITY_RAD_S()
+    {
+        $obj = new FRMVector3();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Epoch of the Earth-orientation data set actually used, ISO 8601.
+    public function getEOP_DATA_SET_EPOCH()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content identifier of the Earth-orientation data set actually used.
+    public function getEOP_DATA_SET_CID()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startFRMFrameTransformResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return FRMFrameTransformResult
      */
-    public static function createFRMFrameTransformResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $POSITION, $TRACE_ID)
+    public static function createFRMFrameTransformResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $POSITION, $TRACE_ID, $TARGET_STATE, $ROTATION_DCM, $ROTATION_DCM_RATE, $ANGULAR_VELOCITY_RAD_S, $EOP_DATA_SET_EPOCH, $EOP_DATA_SET_CID)
     {
-        $builder->startObject(4);
+        $builder->startObject(10);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_MESSAGE($builder, $ERROR_MESSAGE);
         self::addPOSITION($builder, $POSITION);
         self::addTRACE_ID($builder, $TRACE_ID);
+        self::addTARGET_STATE($builder, $TARGET_STATE);
+        self::addROTATION_DCM($builder, $ROTATION_DCM);
+        self::addROTATION_DCM_RATE($builder, $ROTATION_DCM_RATE);
+        self::addANGULAR_VELOCITY_RAD_S($builder, $ANGULAR_VELOCITY_RAD_S);
+        self::addEOP_DATA_SET_EPOCH($builder, $EOP_DATA_SET_EPOCH);
+        self::addEOP_DATA_SET_CID($builder, $EOP_DATA_SET_CID);
         $o = $builder->endObject();
         return $o;
     }
@@ -130,6 +185,66 @@ class FRMFrameTransformResult extends Table
     public static function addTRACE_ID(FlatBufferBuilder $builder, $TRACE_ID)
     {
         $builder->addOffsetX(3, $TRACE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGET_STATE(FlatBufferBuilder $builder, $TARGET_STATE)
+    {
+        $builder->addOffsetX(4, $TARGET_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addROTATION_DCM(FlatBufferBuilder $builder, $ROTATION_DCM)
+    {
+        $builder->addOffsetX(5, $ROTATION_DCM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addROTATION_DCM_RATE(FlatBufferBuilder $builder, $ROTATION_DCM_RATE)
+    {
+        $builder->addOffsetX(6, $ROTATION_DCM_RATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addANGULAR_VELOCITY_RAD_S(FlatBufferBuilder $builder, $ANGULAR_VELOCITY_RAD_S)
+    {
+        $builder->addOffsetX(7, $ANGULAR_VELOCITY_RAD_S, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEOP_DATA_SET_EPOCH(FlatBufferBuilder $builder, $EOP_DATA_SET_EPOCH)
+    {
+        $builder->addOffsetX(8, $EOP_DATA_SET_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEOP_DATA_SET_CID(FlatBufferBuilder $builder, $EOP_DATA_SET_CID)
+    {
+        $builder->addOffsetX(9, $EOP_DATA_SET_CID, 0);
     }
 
     /**

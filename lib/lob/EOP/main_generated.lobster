@@ -94,13 +94,47 @@ class EOP : flatbuffers.handle
     /// 1-sigma uncertainty in the Length of Day correction, seconds.
     def LENGTH_OF_DAY_UNCERTAINTY_SECONDS() -> float:
         return flatbuffers.field_float32(buf_, pos_, 38, 0.0)
+    /// x component of Pole Wander in radians, double precision. Authoritative
+    /// over X_POLE_WANDER_RADIANS when present.
+    def X_POLE_WANDER_RADIANS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// y component of Pole Wander in radians, double precision. Authoritative
+    /// over Y_POLE_WANDER_RADIANS when present.
+    def Y_POLE_WANDER_RADIANS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// x component of the Celestial Pole Offset in radians, double precision.
+    /// Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+    def X_CELESTIAL_POLE_OFFSET_RADIANS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// y component of the Celestial Pole Offset in radians, double precision.
+    /// Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+    def Y_CELESTIAL_POLE_OFFSET_RADIANS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
+    /// UT1 minus UTC in seconds, double precision. Authoritative over
+    /// UT1_MINUS_UTC_SECONDS when present.
+    def UT1_MINUS_UTC_SECONDS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
+    /// Correction to Length of Day in seconds, double precision. Authoritative
+    /// over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+    def LENGTH_OF_DAY_CORRECTION_SECONDS_HP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+    /// WHICH issue of the series a consumer is holding; two rows for the same
+    /// MJD from different data-set epochs are different values, not duplicates.
+    def DATA_SET_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    /// Content identifier of the complete published data set this row was taken
+    /// from. Every frames consumer that must agree bit-for-bit records this so
+    /// the source is provable rather than assumed.
+    def DATA_SET_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
 
 def GetRootAsEOP(buf:string): return EOP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(26)
         return this
     def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
@@ -155,6 +189,30 @@ struct EOPBuilder:
         return this
     def add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(LENGTH_OF_DAY_UNCERTAINTY_SECONDS:float):
         b_.PrependFloat32Slot(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0)
+        return this
+    def add_X_POLE_WANDER_RADIANS_HP(X_POLE_WANDER_RADIANS_HP:float):
+        b_.PrependFloat64Slot(18, X_POLE_WANDER_RADIANS_HP, 0.0)
+        return this
+    def add_Y_POLE_WANDER_RADIANS_HP(Y_POLE_WANDER_RADIANS_HP:float):
+        b_.PrependFloat64Slot(19, Y_POLE_WANDER_RADIANS_HP, 0.0)
+        return this
+    def add_X_CELESTIAL_POLE_OFFSET_RADIANS_HP(X_CELESTIAL_POLE_OFFSET_RADIANS_HP:float):
+        b_.PrependFloat64Slot(20, X_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0)
+        return this
+    def add_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(Y_CELESTIAL_POLE_OFFSET_RADIANS_HP:float):
+        b_.PrependFloat64Slot(21, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0)
+        return this
+    def add_UT1_MINUS_UTC_SECONDS_HP(UT1_MINUS_UTC_SECONDS_HP:float):
+        b_.PrependFloat64Slot(22, UT1_MINUS_UTC_SECONDS_HP, 0.0)
+        return this
+    def add_LENGTH_OF_DAY_CORRECTION_SECONDS_HP(LENGTH_OF_DAY_CORRECTION_SECONDS_HP:float):
+        b_.PrependFloat64Slot(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0)
+        return this
+    def add_DATA_SET_EPOCH(DATA_SET_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, DATA_SET_EPOCH)
+        return this
+    def add_DATA_SET_CID(DATA_SET_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, DATA_SET_CID)
         return this
     def end():
         return b_.EndObject()

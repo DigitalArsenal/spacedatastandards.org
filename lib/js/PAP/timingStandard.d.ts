@@ -70,6 +70,12 @@ export declare enum timingStandard {
     /**
      * Satellite-Based Augmentation System Time
      */
-    SBAS = 17
+    SBAS = 17,
+    /**
+     * Atomic time scale of the reference atomic-time network, offset from
+     * International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+     * exactly. Appended last; never reorder or reuse existing values.
+     */
+    A1 = 18
 }
 //# sourceMappingURL=timingStandard.d.ts.map

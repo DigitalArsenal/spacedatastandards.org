@@ -39,6 +39,10 @@ class timingStandard
     const NAVIC = 16;
     /// Satellite-Based Augmentation System Time
     const SBAS = 17;
+    /// Atomic time scale of the reference atomic-time network, offset from
+    /// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+    /// exactly. Appended last; never reorder or reuse existing values.
+    const A1 = 18;
 
     private static $names = array(
         timingStandard::GMST=>"GMST",
@@ -59,6 +63,7 @@ class timingStandard
         timingStandard::BDT=>"BDT",
         timingStandard::NAVIC=>"NAVIC",
         timingStandard::SBAS=>"SBAS",
+        timingStandard::A1=>"A1",
     );
 
     public static function Name($e)

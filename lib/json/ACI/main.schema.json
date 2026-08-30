@@ -23,7 +23,7 @@
     },
     "timingStandard" : {
       "type" : "string",
-      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS"]
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", "A1"]
     },
     "timEpochRepresentation" : {
       "type" : "string",

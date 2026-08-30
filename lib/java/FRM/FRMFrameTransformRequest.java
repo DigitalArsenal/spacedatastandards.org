@@ -34,6 +34,47 @@ public final class FRMFrameTransformRequest extends com.google.flatbuffers.Table
   public String TRACE_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACE_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer TRACE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Coordinate system the request's state is expressed in.
+   */
+  public RFMCoordinateSystem SOURCE_COORDINATE_SYSTEM() { return SOURCE_COORDINATE_SYSTEM(new RFMCoordinateSystem()); }
+  public RFMCoordinateSystem SOURCE_COORDINATE_SYSTEM(RFMCoordinateSystem obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Coordinate system the result is required in.
+   */
+  public RFMCoordinateSystem TARGET_COORDINATE_SYSTEM() { return TARGET_COORDINATE_SYSTEM(new RFMCoordinateSystem()); }
+  public RFMCoordinateSystem TARGET_COORDINATE_SYSTEM(RFMCoordinateSystem obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The full input state, carrying velocity as well as position. POSITION
+   * above is position-only and remains the input for operations 1-4.
+   */
+  public FRMStateVector SOURCE_STATE() { return SOURCE_STATE(new FRMStateVector()); }
+  public FRMStateVector SOURCE_STATE(FRMStateVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Element set the result must be expressed in.
+   */
+  public int TARGET_REPRESENTATION() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Epoch the transform is evaluated at, ISO 8601. Required for every
+   * time-dependent axis chain.
+   */
+  public String EPOCH() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Time system of EPOCH, named by the $TIM timingStandard member name.
+   */
+  public String EPOCH_TIME_SYSTEM() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCH_TIME_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer EPOCH_TIME_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Content identifier of the Earth-orientation data set the caller requires
+   * the provider to use. A provider that cannot honour it returns
+   * MISSING_EOP_DATA rather than substituting another table.
+   */
+  public String EOP_DATA_SET_CID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EOP_DATA_SET_CIDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer EOP_DATA_SET_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
 
   public static int createFRMFrameTransformRequest(FlatBufferBuilder builder,
       byte OPERATION,
@@ -41,24 +82,45 @@ public final class FRMFrameTransformRequest extends com.google.flatbuffers.Table
       int TRANSFORM_DCMOffset,
       double EQUATORIAL_RADIUS_M,
       double POLAR_RADIUS_M,
-      int TRACE_IDOffset) {
-    builder.startTable(6);
+      int TRACE_IDOffset,
+      int SOURCE_COORDINATE_SYSTEMOffset,
+      int TARGET_COORDINATE_SYSTEMOffset,
+      int SOURCE_STATEOffset,
+      int TARGET_REPRESENTATION,
+      int EPOCHOffset,
+      int EPOCH_TIME_SYSTEMOffset,
+      int EOP_DATA_SET_CIDOffset) {
+    builder.startTable(13);
     FRMFrameTransformRequest.addPolarRadiusM(builder, POLAR_RADIUS_M);
     FRMFrameTransformRequest.addEquatorialRadiusM(builder, EQUATORIAL_RADIUS_M);
+    FRMFrameTransformRequest.addEopDataSetCid(builder, EOP_DATA_SET_CIDOffset);
+    FRMFrameTransformRequest.addEpochTimeSystem(builder, EPOCH_TIME_SYSTEMOffset);
+    FRMFrameTransformRequest.addEpoch(builder, EPOCHOffset);
+    FRMFrameTransformRequest.addSourceState(builder, SOURCE_STATEOffset);
+    FRMFrameTransformRequest.addTargetCoordinateSystem(builder, TARGET_COORDINATE_SYSTEMOffset);
+    FRMFrameTransformRequest.addSourceCoordinateSystem(builder, SOURCE_COORDINATE_SYSTEMOffset);
     FRMFrameTransformRequest.addTraceId(builder, TRACE_IDOffset);
     FRMFrameTransformRequest.addTransformDcm(builder, TRANSFORM_DCMOffset);
     FRMFrameTransformRequest.addPosition(builder, POSITIONOffset);
+    FRMFrameTransformRequest.addTargetRepresentation(builder, TARGET_REPRESENTATION);
     FRMFrameTransformRequest.addOperation(builder, OPERATION);
     return FRMFrameTransformRequest.endFRMFrameTransformRequest(builder);
   }
 
-  public static void startFRMFrameTransformRequest(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startFRMFrameTransformRequest(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addOperation(FlatBufferBuilder builder, byte OPERATION) { builder.addByte(0, OPERATION, 0); }
   public static void addPosition(FlatBufferBuilder builder, int POSITIONOffset) { builder.addOffset(1, POSITIONOffset, 0); }
   public static void addTransformDcm(FlatBufferBuilder builder, int TRANSFORM_DCMOffset) { builder.addOffset(2, TRANSFORM_DCMOffset, 0); }
   public static void addEquatorialRadiusM(FlatBufferBuilder builder, double EQUATORIAL_RADIUS_M) { builder.addDouble(3, EQUATORIAL_RADIUS_M, 0.0); }
   public static void addPolarRadiusM(FlatBufferBuilder builder, double POLAR_RADIUS_M) { builder.addDouble(4, POLAR_RADIUS_M, 0.0); }
   public static void addTraceId(FlatBufferBuilder builder, int TRACE_IDOffset) { builder.addOffset(5, TRACE_IDOffset, 0); }
+  public static void addSourceCoordinateSystem(FlatBufferBuilder builder, int SOURCE_COORDINATE_SYSTEMOffset) { builder.addOffset(6, SOURCE_COORDINATE_SYSTEMOffset, 0); }
+  public static void addTargetCoordinateSystem(FlatBufferBuilder builder, int TARGET_COORDINATE_SYSTEMOffset) { builder.addOffset(7, TARGET_COORDINATE_SYSTEMOffset, 0); }
+  public static void addSourceState(FlatBufferBuilder builder, int SOURCE_STATEOffset) { builder.addOffset(8, SOURCE_STATEOffset, 0); }
+  public static void addTargetRepresentation(FlatBufferBuilder builder, int TARGET_REPRESENTATION) { builder.addByte(9, (byte) TARGET_REPRESENTATION, (byte) 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(10, EPOCHOffset, 0); }
+  public static void addEpochTimeSystem(FlatBufferBuilder builder, int EPOCH_TIME_SYSTEMOffset) { builder.addOffset(11, EPOCH_TIME_SYSTEMOffset, 0); }
+  public static void addEopDataSetCid(FlatBufferBuilder builder, int EOP_DATA_SET_CIDOffset) { builder.addOffset(12, EOP_DATA_SET_CIDOffset, 0); }
   public static int endFRMFrameTransformRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -28,6 +28,42 @@ public struct FRMFrameTransformRequest : IFlatbufferObject
   public ArraySegment<byte>? GetTRACE_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetTRACE_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// Coordinate system the request's state is expressed in.
+  public RFMCoordinateSystem? SOURCE_COORDINATE_SYSTEM { get { int o = __p.__offset(16); return o != 0 ? (RFMCoordinateSystem?)(new RFMCoordinateSystem()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Coordinate system the result is required in.
+  public RFMCoordinateSystem? TARGET_COORDINATE_SYSTEM { get { int o = __p.__offset(18); return o != 0 ? (RFMCoordinateSystem?)(new RFMCoordinateSystem()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The full input state, carrying velocity as well as position. POSITION
+  /// above is position-only and remains the input for operations 1-4.
+  public FRMStateVector? SOURCE_STATE { get { int o = __p.__offset(20); return o != 0 ? (FRMStateVector?)(new FRMStateVector()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Element set the result must be expressed in.
+  public frmStateRepresentation TARGET_REPRESENTATION { get { int o = __p.__offset(22); return o != 0 ? (frmStateRepresentation)__p.bb.Get(o + __p.bb_pos) : frmStateRepresentation.UNSPECIFIED; } }
+  /// Epoch the transform is evaluated at, ISO 8601. Required for every
+  /// time-dependent axis chain.
+  public string EPOCH { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(24); }
+  /// Time system of EPOCH, named by the $TIM timingStandard member name.
+  public string EPOCH_TIME_SYSTEM { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCH_TIME_SYSTEMBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCH_TIME_SYSTEMBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetEPOCH_TIME_SYSTEMArray() { return __p.__vector_as_array<byte>(26); }
+  /// Content identifier of the Earth-orientation data set the caller requires
+  /// the provider to use. A provider that cannot honour it returns
+  /// MISSING_EOP_DATA rather than substituting another table.
+  public string EOP_DATA_SET_CID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEOP_DATA_SET_CIDBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetEOP_DATA_SET_CIDBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetEOP_DATA_SET_CIDArray() { return __p.__vector_as_array<byte>(28); }
 
   public static Offset<FRMFrameTransformRequest> CreateFRMFrameTransformRequest(FlatBufferBuilder builder,
       frmOperationCode OPERATION = frmOperationCode.UNKNOWN,
@@ -35,24 +71,45 @@ public struct FRMFrameTransformRequest : IFlatbufferObject
       Offset<FRMMatrix3> TRANSFORM_DCMOffset = default(Offset<FRMMatrix3>),
       double EQUATORIAL_RADIUS_M = 0.0,
       double POLAR_RADIUS_M = 0.0,
-      StringOffset TRACE_IDOffset = default(StringOffset)) {
-    builder.StartTable(6);
+      StringOffset TRACE_IDOffset = default(StringOffset),
+      Offset<RFMCoordinateSystem> SOURCE_COORDINATE_SYSTEMOffset = default(Offset<RFMCoordinateSystem>),
+      Offset<RFMCoordinateSystem> TARGET_COORDINATE_SYSTEMOffset = default(Offset<RFMCoordinateSystem>),
+      Offset<FRMStateVector> SOURCE_STATEOffset = default(Offset<FRMStateVector>),
+      frmStateRepresentation TARGET_REPRESENTATION = frmStateRepresentation.UNSPECIFIED,
+      StringOffset EPOCHOffset = default(StringOffset),
+      StringOffset EPOCH_TIME_SYSTEMOffset = default(StringOffset),
+      StringOffset EOP_DATA_SET_CIDOffset = default(StringOffset)) {
+    builder.StartTable(13);
     FRMFrameTransformRequest.AddPOLAR_RADIUS_M(builder, POLAR_RADIUS_M);
     FRMFrameTransformRequest.AddEQUATORIAL_RADIUS_M(builder, EQUATORIAL_RADIUS_M);
+    FRMFrameTransformRequest.AddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CIDOffset);
+    FRMFrameTransformRequest.AddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEMOffset);
+    FRMFrameTransformRequest.AddEPOCH(builder, EPOCHOffset);
+    FRMFrameTransformRequest.AddSOURCE_STATE(builder, SOURCE_STATEOffset);
+    FRMFrameTransformRequest.AddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEMOffset);
+    FRMFrameTransformRequest.AddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEMOffset);
     FRMFrameTransformRequest.AddTRACE_ID(builder, TRACE_IDOffset);
     FRMFrameTransformRequest.AddTRANSFORM_DCM(builder, TRANSFORM_DCMOffset);
     FRMFrameTransformRequest.AddPOSITION(builder, POSITIONOffset);
+    FRMFrameTransformRequest.AddTARGET_REPRESENTATION(builder, TARGET_REPRESENTATION);
     FRMFrameTransformRequest.AddOPERATION(builder, OPERATION);
     return FRMFrameTransformRequest.EndFRMFrameTransformRequest(builder);
   }
 
-  public static void StartFRMFrameTransformRequest(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartFRMFrameTransformRequest(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddOPERATION(FlatBufferBuilder builder, frmOperationCode OPERATION) { builder.AddSbyte(0, (sbyte)OPERATION, 0); }
   public static void AddPOSITION(FlatBufferBuilder builder, Offset<FRMVector3> POSITIONOffset) { builder.AddOffset(1, POSITIONOffset.Value, 0); }
   public static void AddTRANSFORM_DCM(FlatBufferBuilder builder, Offset<FRMMatrix3> TRANSFORM_DCMOffset) { builder.AddOffset(2, TRANSFORM_DCMOffset.Value, 0); }
   public static void AddEQUATORIAL_RADIUS_M(FlatBufferBuilder builder, double EQUATORIAL_RADIUS_M) { builder.AddDouble(3, EQUATORIAL_RADIUS_M, 0.0); }
   public static void AddPOLAR_RADIUS_M(FlatBufferBuilder builder, double POLAR_RADIUS_M) { builder.AddDouble(4, POLAR_RADIUS_M, 0.0); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, StringOffset TRACE_IDOffset) { builder.AddOffset(5, TRACE_IDOffset.Value, 0); }
+  public static void AddSOURCE_COORDINATE_SYSTEM(FlatBufferBuilder builder, Offset<RFMCoordinateSystem> SOURCE_COORDINATE_SYSTEMOffset) { builder.AddOffset(6, SOURCE_COORDINATE_SYSTEMOffset.Value, 0); }
+  public static void AddTARGET_COORDINATE_SYSTEM(FlatBufferBuilder builder, Offset<RFMCoordinateSystem> TARGET_COORDINATE_SYSTEMOffset) { builder.AddOffset(7, TARGET_COORDINATE_SYSTEMOffset.Value, 0); }
+  public static void AddSOURCE_STATE(FlatBufferBuilder builder, Offset<FRMStateVector> SOURCE_STATEOffset) { builder.AddOffset(8, SOURCE_STATEOffset.Value, 0); }
+  public static void AddTARGET_REPRESENTATION(FlatBufferBuilder builder, frmStateRepresentation TARGET_REPRESENTATION) { builder.AddByte(9, (byte)TARGET_REPRESENTATION, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(10, EPOCHOffset.Value, 0); }
+  public static void AddEPOCH_TIME_SYSTEM(FlatBufferBuilder builder, StringOffset EPOCH_TIME_SYSTEMOffset) { builder.AddOffset(11, EPOCH_TIME_SYSTEMOffset.Value, 0); }
+  public static void AddEOP_DATA_SET_CID(FlatBufferBuilder builder, StringOffset EOP_DATA_SET_CIDOffset) { builder.AddOffset(12, EOP_DATA_SET_CIDOffset.Value, 0); }
   public static Offset<FRMFrameTransformRequest> EndFRMFrameTransformRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<FRMFrameTransformRequest>(o);
@@ -69,12 +126,25 @@ public struct FRMFrameTransformRequest : IFlatbufferObject
     _o.EQUATORIAL_RADIUS_M = this.EQUATORIAL_RADIUS_M;
     _o.POLAR_RADIUS_M = this.POLAR_RADIUS_M;
     _o.TRACE_ID = this.TRACE_ID;
+    _o.SOURCE_COORDINATE_SYSTEM = this.SOURCE_COORDINATE_SYSTEM.HasValue ? this.SOURCE_COORDINATE_SYSTEM.Value.UnPack() : null;
+    _o.TARGET_COORDINATE_SYSTEM = this.TARGET_COORDINATE_SYSTEM.HasValue ? this.TARGET_COORDINATE_SYSTEM.Value.UnPack() : null;
+    _o.SOURCE_STATE = this.SOURCE_STATE.HasValue ? this.SOURCE_STATE.Value.UnPack() : null;
+    _o.TARGET_REPRESENTATION = this.TARGET_REPRESENTATION;
+    _o.EPOCH = this.EPOCH;
+    _o.EPOCH_TIME_SYSTEM = this.EPOCH_TIME_SYSTEM;
+    _o.EOP_DATA_SET_CID = this.EOP_DATA_SET_CID;
   }
   public static Offset<FRMFrameTransformRequest> Pack(FlatBufferBuilder builder, FRMFrameTransformRequestT _o) {
     if (_o == null) return default(Offset<FRMFrameTransformRequest>);
     var _POSITION = _o.POSITION == null ? default(Offset<FRMVector3>) : FRMVector3.Pack(builder, _o.POSITION);
     var _TRANSFORM_DCM = _o.TRANSFORM_DCM == null ? default(Offset<FRMMatrix3>) : FRMMatrix3.Pack(builder, _o.TRANSFORM_DCM);
     var _TRACE_ID = _o.TRACE_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACE_ID);
+    var _SOURCE_COORDINATE_SYSTEM = _o.SOURCE_COORDINATE_SYSTEM == null ? default(Offset<RFMCoordinateSystem>) : RFMCoordinateSystem.Pack(builder, _o.SOURCE_COORDINATE_SYSTEM);
+    var _TARGET_COORDINATE_SYSTEM = _o.TARGET_COORDINATE_SYSTEM == null ? default(Offset<RFMCoordinateSystem>) : RFMCoordinateSystem.Pack(builder, _o.TARGET_COORDINATE_SYSTEM);
+    var _SOURCE_STATE = _o.SOURCE_STATE == null ? default(Offset<FRMStateVector>) : FRMStateVector.Pack(builder, _o.SOURCE_STATE);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _EPOCH_TIME_SYSTEM = _o.EPOCH_TIME_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.EPOCH_TIME_SYSTEM);
+    var _EOP_DATA_SET_CID = _o.EOP_DATA_SET_CID == null ? default(StringOffset) : builder.CreateString(_o.EOP_DATA_SET_CID);
     return CreateFRMFrameTransformRequest(
       builder,
       _o.OPERATION,
@@ -82,7 +152,14 @@ public struct FRMFrameTransformRequest : IFlatbufferObject
       _TRANSFORM_DCM,
       _o.EQUATORIAL_RADIUS_M,
       _o.POLAR_RADIUS_M,
-      _TRACE_ID);
+      _TRACE_ID,
+      _SOURCE_COORDINATE_SYSTEM,
+      _TARGET_COORDINATE_SYSTEM,
+      _SOURCE_STATE,
+      _o.TARGET_REPRESENTATION,
+      _EPOCH,
+      _EPOCH_TIME_SYSTEM,
+      _EOP_DATA_SET_CID);
   }
 }
 
@@ -94,6 +171,13 @@ public class FRMFrameTransformRequestT
   public double EQUATORIAL_RADIUS_M { get; set; }
   public double POLAR_RADIUS_M { get; set; }
   public string TRACE_ID { get; set; }
+  public RFMCoordinateSystemT SOURCE_COORDINATE_SYSTEM { get; set; }
+  public RFMCoordinateSystemT TARGET_COORDINATE_SYSTEM { get; set; }
+  public FRMStateVectorT SOURCE_STATE { get; set; }
+  public frmStateRepresentation TARGET_REPRESENTATION { get; set; }
+  public string EPOCH { get; set; }
+  public string EPOCH_TIME_SYSTEM { get; set; }
+  public string EOP_DATA_SET_CID { get; set; }
 
   public FRMFrameTransformRequestT() {
     this.OPERATION = frmOperationCode.UNKNOWN;
@@ -102,6 +186,13 @@ public class FRMFrameTransformRequestT
     this.EQUATORIAL_RADIUS_M = 0.0;
     this.POLAR_RADIUS_M = 0.0;
     this.TRACE_ID = null;
+    this.SOURCE_COORDINATE_SYSTEM = null;
+    this.TARGET_COORDINATE_SYSTEM = null;
+    this.SOURCE_STATE = null;
+    this.TARGET_REPRESENTATION = frmStateRepresentation.UNSPECIFIED;
+    this.EPOCH = null;
+    this.EPOCH_TIME_SYSTEM = null;
+    this.EOP_DATA_SET_CID = null;
   }
 }
 
@@ -117,6 +208,13 @@ static public class FRMFrameTransformRequestVerify
       && verifier.VerifyField(tablePos, 10 /*EQUATORIAL_RADIUS_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*POLAR_RADIUS_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 14 /*TRACE_ID*/, false)
+      && verifier.VerifyTable(tablePos, 16 /*SOURCE_COORDINATE_SYSTEM*/, RFMCoordinateSystemVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 18 /*TARGET_COORDINATE_SYSTEM*/, RFMCoordinateSystemVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*SOURCE_STATE*/, FRMStateVectorVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 22 /*TARGET_REPRESENTATION*/, 1 /*frmStateRepresentation*/, 1, false)
+      && verifier.VerifyString(tablePos, 24 /*EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 26 /*EPOCH_TIME_SYSTEM*/, false)
+      && verifier.VerifyString(tablePos, 28 /*EOP_DATA_SET_CID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

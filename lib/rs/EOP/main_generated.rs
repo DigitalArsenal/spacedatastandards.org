@@ -329,6 +329,14 @@ impl<'a> EOP<'a> {
   pub const VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 34;
   pub const VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS: ::flatbuffers::VOffsetT = 36;
   pub const VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS: ::flatbuffers::VOffsetT = 38;
+  pub const VT_X_POLE_WANDER_RADIANS_HP: ::flatbuffers::VOffsetT = 40;
+  pub const VT_Y_POLE_WANDER_RADIANS_HP: ::flatbuffers::VOffsetT = 42;
+  pub const VT_X_CELESTIAL_POLE_OFFSET_RADIANS_HP: ::flatbuffers::VOffsetT = 44;
+  pub const VT_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: ::flatbuffers::VOffsetT = 46;
+  pub const VT_UT1_MINUS_UTC_SECONDS_HP: ::flatbuffers::VOffsetT = 48;
+  pub const VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP: ::flatbuffers::VOffsetT = 50;
+  pub const VT_DATA_SET_EPOCH: ::flatbuffers::VOffsetT = 52;
+  pub const VT_DATA_SET_CID: ::flatbuffers::VOffsetT = 54;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -340,6 +348,14 @@ impl<'a> EOP<'a> {
     args: &'args EOPArgs<'args>
   ) -> ::flatbuffers::WIPOffset<EOP<'bldr>> {
     let mut builder = EOPBuilder::new(_fbb);
+    builder.add_LENGTH_OF_DAY_CORRECTION_SECONDS_HP(args.LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
+    builder.add_UT1_MINUS_UTC_SECONDS_HP(args.UT1_MINUS_UTC_SECONDS_HP);
+    builder.add_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(args.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    builder.add_X_CELESTIAL_POLE_OFFSET_RADIANS_HP(args.X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    builder.add_Y_POLE_WANDER_RADIANS_HP(args.Y_POLE_WANDER_RADIANS_HP);
+    builder.add_X_POLE_WANDER_RADIANS_HP(args.X_POLE_WANDER_RADIANS_HP);
+    if let Some(x) = args.DATA_SET_CID { builder.add_DATA_SET_CID(x); }
+    if let Some(x) = args.DATA_SET_EPOCH { builder.add_DATA_SET_EPOCH(x); }
     builder.add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(args.LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
     builder.add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(args.UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
     builder.add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(args.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
@@ -382,6 +398,18 @@ impl<'a> EOP<'a> {
     let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS();
     let UT1_MINUS_UTC_UNCERTAINTY_SECONDS = self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS();
     let LENGTH_OF_DAY_UNCERTAINTY_SECONDS = self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS();
+    let X_POLE_WANDER_RADIANS_HP = self.X_POLE_WANDER_RADIANS_HP();
+    let Y_POLE_WANDER_RADIANS_HP = self.Y_POLE_WANDER_RADIANS_HP();
+    let X_CELESTIAL_POLE_OFFSET_RADIANS_HP = self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP();
+    let Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP();
+    let UT1_MINUS_UTC_SECONDS_HP = self.UT1_MINUS_UTC_SECONDS_HP();
+    let LENGTH_OF_DAY_CORRECTION_SECONDS_HP = self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP();
+    let DATA_SET_EPOCH = self.DATA_SET_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_SET_CID = self.DATA_SET_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     EOPT {
       DATE,
       MJD,
@@ -401,6 +429,14 @@ impl<'a> EOP<'a> {
       Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
       UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
       LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+      X_POLE_WANDER_RADIANS_HP,
+      Y_POLE_WANDER_RADIANS_HP,
+      X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      UT1_MINUS_UTC_SECONDS_HP,
+      LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+      DATA_SET_EPOCH,
+      DATA_SET_CID,
     }
   }
 
@@ -553,6 +589,80 @@ impl<'a> EOP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOP::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, Some(0.0)).unwrap()}
   }
+  /// x component of Pole Wander in radians, double precision. Authoritative
+  /// over X_POLE_WANDER_RADIANS when present.
+  #[inline]
+  pub fn X_POLE_WANDER_RADIANS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_X_POLE_WANDER_RADIANS_HP, Some(0.0)).unwrap()}
+  }
+  /// y component of Pole Wander in radians, double precision. Authoritative
+  /// over Y_POLE_WANDER_RADIANS when present.
+  #[inline]
+  pub fn Y_POLE_WANDER_RADIANS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_Y_POLE_WANDER_RADIANS_HP, Some(0.0)).unwrap()}
+  }
+  /// x component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  #[inline]
+  pub fn X_CELESTIAL_POLE_OFFSET_RADIANS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_X_CELESTIAL_POLE_OFFSET_RADIANS_HP, Some(0.0)).unwrap()}
+  }
+  /// y component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  #[inline]
+  pub fn Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, Some(0.0)).unwrap()}
+  }
+  /// UT1 minus UTC in seconds, double precision. Authoritative over
+  /// UT1_MINUS_UTC_SECONDS when present.
+  #[inline]
+  pub fn UT1_MINUS_UTC_SECONDS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_UT1_MINUS_UTC_SECONDS_HP, Some(0.0)).unwrap()}
+  }
+  /// Correction to Length of Day in seconds, double precision. Authoritative
+  /// over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+  #[inline]
+  pub fn LENGTH_OF_DAY_CORRECTION_SECONDS_HP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP, Some(0.0)).unwrap()}
+  }
+  /// Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+  /// WHICH issue of the series a consumer is holding; two rows for the same
+  /// MJD from different data-set epochs are different values, not duplicates.
+  #[inline]
+  pub fn DATA_SET_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOP::VT_DATA_SET_EPOCH, None)}
+  }
+  /// Content identifier of the complete published data set this row was taken
+  /// from. Every frames consumer that must agree bit-for-bit records this so
+  /// the source is provable rather than assumed.
+  #[inline]
+  pub fn DATA_SET_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOP::VT_DATA_SET_CID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EOP<'_> {
@@ -579,6 +689,14 @@ impl ::flatbuffers::Verifiable for EOP<'_> {
      .visit_field::<f32>("Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", Self::VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, false)?
      .visit_field::<f32>("UT1_MINUS_UTC_UNCERTAINTY_SECONDS", Self::VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, false)?
      .visit_field::<f32>("LENGTH_OF_DAY_UNCERTAINTY_SECONDS", Self::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, false)?
+     .visit_field::<f64>("X_POLE_WANDER_RADIANS_HP", Self::VT_X_POLE_WANDER_RADIANS_HP, false)?
+     .visit_field::<f64>("Y_POLE_WANDER_RADIANS_HP", Self::VT_Y_POLE_WANDER_RADIANS_HP, false)?
+     .visit_field::<f64>("X_CELESTIAL_POLE_OFFSET_RADIANS_HP", Self::VT_X_CELESTIAL_POLE_OFFSET_RADIANS_HP, false)?
+     .visit_field::<f64>("Y_CELESTIAL_POLE_OFFSET_RADIANS_HP", Self::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, false)?
+     .visit_field::<f64>("UT1_MINUS_UTC_SECONDS_HP", Self::VT_UT1_MINUS_UTC_SECONDS_HP, false)?
+     .visit_field::<f64>("LENGTH_OF_DAY_CORRECTION_SECONDS_HP", Self::VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_SET_EPOCH", Self::VT_DATA_SET_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_SET_CID", Self::VT_DATA_SET_CID, false)?
      .finish();
     Ok(())
   }
@@ -602,6 +720,14 @@ pub struct EOPArgs<'a> {
     pub Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
     pub UT1_MINUS_UTC_UNCERTAINTY_SECONDS: f32,
     pub LENGTH_OF_DAY_UNCERTAINTY_SECONDS: f32,
+    pub X_POLE_WANDER_RADIANS_HP: f64,
+    pub Y_POLE_WANDER_RADIANS_HP: f64,
+    pub X_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64,
+    pub Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64,
+    pub UT1_MINUS_UTC_SECONDS_HP: f64,
+    pub LENGTH_OF_DAY_CORRECTION_SECONDS_HP: f64,
+    pub DATA_SET_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_SET_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for EOPArgs<'a> {
   #[inline]
@@ -625,6 +751,14 @@ impl<'a> Default for EOPArgs<'a> {
       Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
       UT1_MINUS_UTC_UNCERTAINTY_SECONDS: 0.0,
       LENGTH_OF_DAY_UNCERTAINTY_SECONDS: 0.0,
+      X_POLE_WANDER_RADIANS_HP: 0.0,
+      Y_POLE_WANDER_RADIANS_HP: 0.0,
+      X_CELESTIAL_POLE_OFFSET_RADIANS_HP: 0.0,
+      Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: 0.0,
+      UT1_MINUS_UTC_SECONDS_HP: 0.0,
+      LENGTH_OF_DAY_CORRECTION_SECONDS_HP: 0.0,
+      DATA_SET_EPOCH: None,
+      DATA_SET_CID: None,
     }
   }
 }
@@ -707,6 +841,38 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EOPBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f32>(EOP::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0);
   }
   #[inline]
+  pub fn add_X_POLE_WANDER_RADIANS_HP(&mut self, X_POLE_WANDER_RADIANS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_X_POLE_WANDER_RADIANS_HP, X_POLE_WANDER_RADIANS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_POLE_WANDER_RADIANS_HP(&mut self, Y_POLE_WANDER_RADIANS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_Y_POLE_WANDER_RADIANS_HP, Y_POLE_WANDER_RADIANS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_X_CELESTIAL_POLE_OFFSET_RADIANS_HP(&mut self, X_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_X_CELESTIAL_POLE_OFFSET_RADIANS_HP, X_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(&mut self, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_UT1_MINUS_UTC_SECONDS_HP(&mut self, UT1_MINUS_UTC_SECONDS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_UT1_MINUS_UTC_SECONDS_HP, UT1_MINUS_UTC_SECONDS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_LENGTH_OF_DAY_CORRECTION_SECONDS_HP(&mut self, LENGTH_OF_DAY_CORRECTION_SECONDS_HP: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0);
+  }
+  #[inline]
+  pub fn add_DATA_SET_EPOCH(&mut self, DATA_SET_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOP::VT_DATA_SET_EPOCH, DATA_SET_EPOCH);
+  }
+  #[inline]
+  pub fn add_DATA_SET_CID(&mut self, DATA_SET_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOP::VT_DATA_SET_CID, DATA_SET_CID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EOPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOPBuilder {
@@ -742,6 +908,14 @@ impl ::core::fmt::Debug for EOP<'_> {
       ds.field("Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", &self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS());
       ds.field("UT1_MINUS_UTC_UNCERTAINTY_SECONDS", &self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS());
       ds.field("LENGTH_OF_DAY_UNCERTAINTY_SECONDS", &self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS());
+      ds.field("X_POLE_WANDER_RADIANS_HP", &self.X_POLE_WANDER_RADIANS_HP());
+      ds.field("Y_POLE_WANDER_RADIANS_HP", &self.Y_POLE_WANDER_RADIANS_HP());
+      ds.field("X_CELESTIAL_POLE_OFFSET_RADIANS_HP", &self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP());
+      ds.field("Y_CELESTIAL_POLE_OFFSET_RADIANS_HP", &self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP());
+      ds.field("UT1_MINUS_UTC_SECONDS_HP", &self.UT1_MINUS_UTC_SECONDS_HP());
+      ds.field("LENGTH_OF_DAY_CORRECTION_SECONDS_HP", &self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP());
+      ds.field("DATA_SET_EPOCH", &self.DATA_SET_EPOCH());
+      ds.field("DATA_SET_CID", &self.DATA_SET_CID());
       ds.finish()
   }
 }
@@ -766,6 +940,14 @@ pub struct EOPT {
   pub Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
   pub UT1_MINUS_UTC_UNCERTAINTY_SECONDS: f32,
   pub LENGTH_OF_DAY_UNCERTAINTY_SECONDS: f32,
+  pub X_POLE_WANDER_RADIANS_HP: f64,
+  pub Y_POLE_WANDER_RADIANS_HP: f64,
+  pub X_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64,
+  pub Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: f64,
+  pub UT1_MINUS_UTC_SECONDS_HP: f64,
+  pub LENGTH_OF_DAY_CORRECTION_SECONDS_HP: f64,
+  pub DATA_SET_EPOCH: Option<alloc::string::String>,
+  pub DATA_SET_CID: Option<alloc::string::String>,
 }
 impl Default for EOPT {
   fn default() -> Self {
@@ -788,6 +970,14 @@ impl Default for EOPT {
       Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
       UT1_MINUS_UTC_UNCERTAINTY_SECONDS: 0.0,
       LENGTH_OF_DAY_UNCERTAINTY_SECONDS: 0.0,
+      X_POLE_WANDER_RADIANS_HP: 0.0,
+      Y_POLE_WANDER_RADIANS_HP: 0.0,
+      X_CELESTIAL_POLE_OFFSET_RADIANS_HP: 0.0,
+      Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: 0.0,
+      UT1_MINUS_UTC_SECONDS_HP: 0.0,
+      LENGTH_OF_DAY_CORRECTION_SECONDS_HP: 0.0,
+      DATA_SET_EPOCH: None,
+      DATA_SET_CID: None,
     }
   }
 }
@@ -816,6 +1006,18 @@ impl EOPT {
     let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
     let UT1_MINUS_UTC_UNCERTAINTY_SECONDS = self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS;
     let LENGTH_OF_DAY_UNCERTAINTY_SECONDS = self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS;
+    let X_POLE_WANDER_RADIANS_HP = self.X_POLE_WANDER_RADIANS_HP;
+    let Y_POLE_WANDER_RADIANS_HP = self.Y_POLE_WANDER_RADIANS_HP;
+    let X_CELESTIAL_POLE_OFFSET_RADIANS_HP = self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+    let Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+    let UT1_MINUS_UTC_SECONDS_HP = self.UT1_MINUS_UTC_SECONDS_HP;
+    let LENGTH_OF_DAY_CORRECTION_SECONDS_HP = self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
+    let DATA_SET_EPOCH = self.DATA_SET_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_SET_CID = self.DATA_SET_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     EOP::create(_fbb, &EOPArgs{
       DATE,
       MJD,
@@ -835,6 +1037,14 @@ impl EOPT {
       Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
       UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
       LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+      X_POLE_WANDER_RADIANS_HP,
+      Y_POLE_WANDER_RADIANS_HP,
+      X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      UT1_MINUS_UTC_SECONDS_HP,
+      LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+      DATA_SET_EPOCH,
+      DATA_SET_CID,
     })
   }
 }

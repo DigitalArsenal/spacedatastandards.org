@@ -87,28 +87,94 @@ class FRMFrameTransformRequest extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Coordinate system the request's state is expressed in.
+    public function getSOURCE_COORDINATE_SYSTEM()
+    {
+        $obj = new RFMCoordinateSystem();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Coordinate system the result is required in.
+    public function getTARGET_COORDINATE_SYSTEM()
+    {
+        $obj = new RFMCoordinateSystem();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// The full input state, carrying velocity as well as position. POSITION
+    /// above is position-only and remains the input for operations 1-4.
+    public function getSOURCE_STATE()
+    {
+        $obj = new FRMStateVector();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Element set the result must be expressed in.
+    /**
+     * @return byte
+     */
+    public function getTARGET_REPRESENTATION()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \frmStateRepresentation::UNSPECIFIED;
+    }
+
+    /// Epoch the transform is evaluated at, ISO 8601. Required for every
+    /// time-dependent axis chain.
+    public function getEPOCH()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Time system of EPOCH, named by the $TIM timingStandard member name.
+    public function getEPOCH_TIME_SYSTEM()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content identifier of the Earth-orientation data set the caller requires
+    /// the provider to use. A provider that cannot honour it returns
+    /// MISSING_EOP_DATA rather than substituting another table.
+    public function getEOP_DATA_SET_CID()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startFRMFrameTransformRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return FRMFrameTransformRequest
      */
-    public static function createFRMFrameTransformRequest(FlatBufferBuilder $builder, $OPERATION, $POSITION, $TRANSFORM_DCM, $EQUATORIAL_RADIUS_M, $POLAR_RADIUS_M, $TRACE_ID)
+    public static function createFRMFrameTransformRequest(FlatBufferBuilder $builder, $OPERATION, $POSITION, $TRANSFORM_DCM, $EQUATORIAL_RADIUS_M, $POLAR_RADIUS_M, $TRACE_ID, $SOURCE_COORDINATE_SYSTEM, $TARGET_COORDINATE_SYSTEM, $SOURCE_STATE, $TARGET_REPRESENTATION, $EPOCH, $EPOCH_TIME_SYSTEM, $EOP_DATA_SET_CID)
     {
-        $builder->startObject(6);
+        $builder->startObject(13);
         self::addOPERATION($builder, $OPERATION);
         self::addPOSITION($builder, $POSITION);
         self::addTRANSFORM_DCM($builder, $TRANSFORM_DCM);
         self::addEQUATORIAL_RADIUS_M($builder, $EQUATORIAL_RADIUS_M);
         self::addPOLAR_RADIUS_M($builder, $POLAR_RADIUS_M);
         self::addTRACE_ID($builder, $TRACE_ID);
+        self::addSOURCE_COORDINATE_SYSTEM($builder, $SOURCE_COORDINATE_SYSTEM);
+        self::addTARGET_COORDINATE_SYSTEM($builder, $TARGET_COORDINATE_SYSTEM);
+        self::addSOURCE_STATE($builder, $SOURCE_STATE);
+        self::addTARGET_REPRESENTATION($builder, $TARGET_REPRESENTATION);
+        self::addEPOCH($builder, $EPOCH);
+        self::addEPOCH_TIME_SYSTEM($builder, $EPOCH_TIME_SYSTEM);
+        self::addEOP_DATA_SET_CID($builder, $EOP_DATA_SET_CID);
         $o = $builder->endObject();
         return $o;
     }
@@ -171,6 +237,76 @@ class FRMFrameTransformRequest extends Table
     public static function addTRACE_ID(FlatBufferBuilder $builder, $TRACE_ID)
     {
         $builder->addOffsetX(5, $TRACE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSOURCE_COORDINATE_SYSTEM(FlatBufferBuilder $builder, $SOURCE_COORDINATE_SYSTEM)
+    {
+        $builder->addOffsetX(6, $SOURCE_COORDINATE_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGET_COORDINATE_SYSTEM(FlatBufferBuilder $builder, $TARGET_COORDINATE_SYSTEM)
+    {
+        $builder->addOffsetX(7, $TARGET_COORDINATE_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSOURCE_STATE(FlatBufferBuilder $builder, $SOURCE_STATE)
+    {
+        $builder->addOffsetX(8, $SOURCE_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addTARGET_REPRESENTATION(FlatBufferBuilder $builder, $TARGET_REPRESENTATION)
+    {
+        $builder->addByteX(9, $TARGET_REPRESENTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(10, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH_TIME_SYSTEM(FlatBufferBuilder $builder, $EPOCH_TIME_SYSTEM)
+    {
+        $builder->addOffsetX(11, $EPOCH_TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEOP_DATA_SET_CID(FlatBufferBuilder $builder, $EOP_DATA_SET_CID)
+    {
+        $builder->addOffsetX(12, $EOP_DATA_SET_CID, 0);
     }
 
     /**

@@ -13,6 +13,18 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+struct RFMOrigin;
+struct RFMOriginBuilder;
+
+struct RFMObjectReferencedAxes;
+struct RFMObjectReferencedAxesBuilder;
+
+struct RFMLocalAlignedConstrainedAxes;
+struct RFMLocalAlignedConstrainedAxesBuilder;
+
+struct RFMCoordinateSystem;
+struct RFMCoordinateSystemBuilder;
+
 struct CelestialFrameWrapper;
 struct CelestialFrameWrapperBuilder;
 
@@ -24,6 +36,9 @@ struct OrbitFrameWrapperBuilder;
 
 struct CustomFrameWrapper;
 struct CustomFrameWrapperBuilder;
+
+struct RFMCoordinateSystemWrapper;
+struct RFMCoordinateSystemWrapperBuilder;
 
 struct RFM;
 struct RFMBuilder;
@@ -502,41 +517,329 @@ inline const char *EnumNameCustomFrame(CustomFrame e) {
   return EnumNamesCustomFrame()[index];
 }
 
+/// Axis-set capability classes for a fully specified coordinate system.
+/// These name the ORIENTATION rule only; the ORIGIN is carried separately in
+/// RFMOrigin, so any axis set below combines with any origin. Append new
+/// values only; never reorder or reuse existing values.
+enum rfmAxisType : uint8_t {
+  rfmAxisType_UNSPECIFIED = 0,
+  /// Mean equator and mean equinox of the J2000.0 epoch.
+  rfmAxisType_MEAN_EQUATOR_EQUINOX_J2000 = 1,
+  /// Mean ecliptic and mean equinox of the J2000.0 epoch.
+  rfmAxisType_MEAN_ECLIPTIC_EQUINOX_J2000 = 2,
+  /// International Celestial Reference Frame axes.
+  rfmAxisType_ICRF = 3,
+  /// True equator, mean equinox of date.
+  rfmAxisType_TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE = 4,
+  /// Mean equator of date (precession applied to the epoch of the state).
+  rfmAxisType_MEAN_OF_DATE_EQUATOR = 5,
+  /// Mean ecliptic of date.
+  rfmAxisType_MEAN_OF_DATE_ECLIPTIC = 6,
+  /// True equator of date (precession and nutation applied).
+  rfmAxisType_TRUE_OF_DATE_EQUATOR = 7,
+  /// True ecliptic of date.
+  rfmAxisType_TRUE_OF_DATE_ECLIPTIC = 8,
+  /// Mean equator of a fixed reference epoch.
+  rfmAxisType_MEAN_OF_EPOCH_EQUATOR = 9,
+  /// Mean ecliptic of a fixed reference epoch.
+  rfmAxisType_MEAN_OF_EPOCH_ECLIPTIC = 10,
+  /// True equator of a fixed reference epoch.
+  rfmAxisType_TRUE_OF_EPOCH_EQUATOR = 11,
+  /// True ecliptic of a fixed reference epoch.
+  rfmAxisType_TRUE_OF_EPOCH_ECLIPTIC = 12,
+  /// Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID,
+  /// per its published rotation elements.
+  rfmAxisType_BODY_FIXED = 13,
+  /// Non-rotating axes aligned with the reference body's equator and prime
+  /// meridian at the reference epoch.
+  rfmAxisType_BODY_INERTIAL = 14,
+  /// Axes built from the relative geometry of two named objects; see
+  /// RFMObjectReferencedAxes.
+  rfmAxisType_OBJECT_REFERENCED = 15,
+  /// Axes built by aligning one vector and constraining a second; see
+  /// RFMLocalAlignedConstrainedAxes.
+  rfmAxisType_LOCAL_ALIGNED_CONSTRAINED = 16,
+  /// Axes in the reference body's equatorial plane at the requested epoch.
+  rfmAxisType_BODY_EQUATOR = 17,
+  /// Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the
+  /// ecliptic north, commonly abbreviated GSE.
+  rfmAxisType_SOLAR_ECLIPTIC_MAGNETOSPHERIC = 18,
+  /// Solar-magnetospheric axes: X toward the Sun, Z in the plane containing
+  /// the body magnetic dipole, commonly abbreviated GSM.
+  rfmAxisType_SOLAR_MAGNETOSPHERIC = 19,
+  /// Local horizon axes at a surface site; the site is carried on RFMOrigin.
+  rfmAxisType_TOPOCENTRIC = 20,
+  /// Axes fixed by the body spin axis and the body-to-Sun direction.
+  rfmAxisType_BODY_SPIN_SUN = 21,
+  /// Axes defined by a loaded ephemeris/orientation kernel; identified by
+  /// KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem.
+  rfmAxisType_EPHEMERIS_KERNEL_DEFINED = 22,
+  /// LEGACY, retained and NAMED rather than left implicit: mean equator of
+  /// date computed with the IAU-76/FK5 precession theory instead of the
+  /// IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the
+  /// milliarcsecond level and the two are not interchangeable.
+  rfmAxisType_MEAN_OF_DATE_EQUATOR_FK5 = 23,
+  /// LEGACY, retained and NAMED: true equator of date computed with the
+  /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
+  rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5 = 24,
+  rfmAxisType_MIN = rfmAxisType_UNSPECIFIED,
+  rfmAxisType_MAX = rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5
+};
+
+inline const rfmAxisType (&EnumValuesrfmAxisType())[25] {
+  static const rfmAxisType values[] = {
+    rfmAxisType_UNSPECIFIED,
+    rfmAxisType_MEAN_EQUATOR_EQUINOX_J2000,
+    rfmAxisType_MEAN_ECLIPTIC_EQUINOX_J2000,
+    rfmAxisType_ICRF,
+    rfmAxisType_TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE,
+    rfmAxisType_MEAN_OF_DATE_EQUATOR,
+    rfmAxisType_MEAN_OF_DATE_ECLIPTIC,
+    rfmAxisType_TRUE_OF_DATE_EQUATOR,
+    rfmAxisType_TRUE_OF_DATE_ECLIPTIC,
+    rfmAxisType_MEAN_OF_EPOCH_EQUATOR,
+    rfmAxisType_MEAN_OF_EPOCH_ECLIPTIC,
+    rfmAxisType_TRUE_OF_EPOCH_EQUATOR,
+    rfmAxisType_TRUE_OF_EPOCH_ECLIPTIC,
+    rfmAxisType_BODY_FIXED,
+    rfmAxisType_BODY_INERTIAL,
+    rfmAxisType_OBJECT_REFERENCED,
+    rfmAxisType_LOCAL_ALIGNED_CONSTRAINED,
+    rfmAxisType_BODY_EQUATOR,
+    rfmAxisType_SOLAR_ECLIPTIC_MAGNETOSPHERIC,
+    rfmAxisType_SOLAR_MAGNETOSPHERIC,
+    rfmAxisType_TOPOCENTRIC,
+    rfmAxisType_BODY_SPIN_SUN,
+    rfmAxisType_EPHEMERIS_KERNEL_DEFINED,
+    rfmAxisType_MEAN_OF_DATE_EQUATOR_FK5,
+    rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfmAxisType() {
+  static const char * const names[26] = {
+    "UNSPECIFIED",
+    "MEAN_EQUATOR_EQUINOX_J2000",
+    "MEAN_ECLIPTIC_EQUINOX_J2000",
+    "ICRF",
+    "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+    "MEAN_OF_DATE_EQUATOR",
+    "MEAN_OF_DATE_ECLIPTIC",
+    "TRUE_OF_DATE_EQUATOR",
+    "TRUE_OF_DATE_ECLIPTIC",
+    "MEAN_OF_EPOCH_EQUATOR",
+    "MEAN_OF_EPOCH_ECLIPTIC",
+    "TRUE_OF_EPOCH_EQUATOR",
+    "TRUE_OF_EPOCH_ECLIPTIC",
+    "BODY_FIXED",
+    "BODY_INERTIAL",
+    "OBJECT_REFERENCED",
+    "LOCAL_ALIGNED_CONSTRAINED",
+    "BODY_EQUATOR",
+    "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+    "SOLAR_MAGNETOSPHERIC",
+    "TOPOCENTRIC",
+    "BODY_SPIN_SUN",
+    "EPHEMERIS_KERNEL_DEFINED",
+    "MEAN_OF_DATE_EQUATOR_FK5",
+    "TRUE_OF_DATE_EQUATOR_FK5",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfmAxisType(rfmAxisType e) {
+  if (::flatbuffers::IsOutRange(e, rfmAxisType_UNSPECIFIED, rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfmAxisType()[index];
+}
+
+/// What kind of point a coordinate system is centred on. Append new values
+/// only; never reorder or reuse existing values.
+enum rfmOriginKind : uint8_t {
+  rfmOriginKind_UNSPECIFIED = 0,
+  /// The centre of mass of a single celestial body.
+  rfmOriginKind_CELESTIAL_BODY = 1,
+  /// The barycentre of a named system of bodies.
+  rfmOriginKind_BARYCENTRE = 2,
+  /// A libration (Lagrange) point of a two-body system.
+  rfmOriginKind_LIBRATION_POINT = 3,
+  /// Another tracked space object, identified by OBJECT_ID.
+  rfmOriginKind_SPACE_OBJECT = 4,
+  /// A fixed site on a body surface, identified by SITE_ID and the geodetic
+  /// fields on RFMOrigin.
+  rfmOriginKind_GROUND_SITE = 5,
+  rfmOriginKind_MIN = rfmOriginKind_UNSPECIFIED,
+  rfmOriginKind_MAX = rfmOriginKind_GROUND_SITE
+};
+
+inline const rfmOriginKind (&EnumValuesrfmOriginKind())[6] {
+  static const rfmOriginKind values[] = {
+    rfmOriginKind_UNSPECIFIED,
+    rfmOriginKind_CELESTIAL_BODY,
+    rfmOriginKind_BARYCENTRE,
+    rfmOriginKind_LIBRATION_POINT,
+    rfmOriginKind_SPACE_OBJECT,
+    rfmOriginKind_GROUND_SITE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfmOriginKind() {
+  static const char * const names[7] = {
+    "UNSPECIFIED",
+    "CELESTIAL_BODY",
+    "BARYCENTRE",
+    "LIBRATION_POINT",
+    "SPACE_OBJECT",
+    "GROUND_SITE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfmOriginKind(rfmOriginKind e) {
+  if (::flatbuffers::IsOutRange(e, rfmOriginKind_UNSPECIFIED, rfmOriginKind_GROUND_SITE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfmOriginKind()[index];
+}
+
+/// Libration point of the primary/secondary pair named on RFMOrigin. Append
+/// new values only; never reorder or reuse existing values.
+enum rfmLibrationPoint : uint8_t {
+  rfmLibrationPoint_UNSPECIFIED = 0,
+  rfmLibrationPoint_L1 = 1,
+  rfmLibrationPoint_L2 = 2,
+  rfmLibrationPoint_L3 = 3,
+  rfmLibrationPoint_L4 = 4,
+  rfmLibrationPoint_L5 = 5,
+  rfmLibrationPoint_MIN = rfmLibrationPoint_UNSPECIFIED,
+  rfmLibrationPoint_MAX = rfmLibrationPoint_L5
+};
+
+inline const rfmLibrationPoint (&EnumValuesrfmLibrationPoint())[6] {
+  static const rfmLibrationPoint values[] = {
+    rfmLibrationPoint_UNSPECIFIED,
+    rfmLibrationPoint_L1,
+    rfmLibrationPoint_L2,
+    rfmLibrationPoint_L3,
+    rfmLibrationPoint_L4,
+    rfmLibrationPoint_L5
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfmLibrationPoint() {
+  static const char * const names[7] = {
+    "UNSPECIFIED",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfmLibrationPoint(rfmLibrationPoint e) {
+  if (::flatbuffers::IsOutRange(e, rfmLibrationPoint_UNSPECIFIED, rfmLibrationPoint_L5)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfmLibrationPoint()[index];
+}
+
+/// Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
+enum rfmVectorSpecification : uint8_t {
+  rfmVectorSpecification_UNSPECIFIED = 0,
+  /// Primary-to-secondary position direction.
+  rfmVectorSpecification_RADIAL = 1,
+  /// Negated RADIAL.
+  rfmVectorSpecification_ANTI_RADIAL = 2,
+  /// Relative velocity direction.
+  rfmVectorSpecification_VELOCITY = 3,
+  /// Negated VELOCITY.
+  rfmVectorSpecification_ANTI_VELOCITY = 4,
+  /// Orbit normal, RADIAL crossed into VELOCITY.
+  rfmVectorSpecification_ORBIT_NORMAL = 5,
+  /// Negated ORBIT_NORMAL.
+  rfmVectorSpecification_ANTI_ORBIT_NORMAL = 6,
+  rfmVectorSpecification_MIN = rfmVectorSpecification_UNSPECIFIED,
+  rfmVectorSpecification_MAX = rfmVectorSpecification_ANTI_ORBIT_NORMAL
+};
+
+inline const rfmVectorSpecification (&EnumValuesrfmVectorSpecification())[7] {
+  static const rfmVectorSpecification values[] = {
+    rfmVectorSpecification_UNSPECIFIED,
+    rfmVectorSpecification_RADIAL,
+    rfmVectorSpecification_ANTI_RADIAL,
+    rfmVectorSpecification_VELOCITY,
+    rfmVectorSpecification_ANTI_VELOCITY,
+    rfmVectorSpecification_ORBIT_NORMAL,
+    rfmVectorSpecification_ANTI_ORBIT_NORMAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfmVectorSpecification() {
+  static const char * const names[8] = {
+    "UNSPECIFIED",
+    "RADIAL",
+    "ANTI_RADIAL",
+    "VELOCITY",
+    "ANTI_VELOCITY",
+    "ORBIT_NORMAL",
+    "ANTI_ORBIT_NORMAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfmVectorSpecification(rfmVectorSpecification e) {
+  if (::flatbuffers::IsOutRange(e, rfmVectorSpecification_UNSPECIFIED, rfmVectorSpecification_ANTI_ORBIT_NORMAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfmVectorSpecification()[index];
+}
+
+/// Union ordinals are WIRE. Append new members LAST; never reorder.
 enum RFMUnion : uint8_t {
   RFMUnion_NONE = 0,
   RFMUnion_CelestialFrameWrapper = 1,
   RFMUnion_SpacecraftFrameWrapper = 2,
   RFMUnion_OrbitFrameWrapper = 3,
   RFMUnion_CustomFrameWrapper = 4,
+  RFMUnion_RFMCoordinateSystemWrapper = 5,
   RFMUnion_MIN = RFMUnion_NONE,
-  RFMUnion_MAX = RFMUnion_CustomFrameWrapper
+  RFMUnion_MAX = RFMUnion_RFMCoordinateSystemWrapper
 };
 
-inline const RFMUnion (&EnumValuesRFMUnion())[5] {
+inline const RFMUnion (&EnumValuesRFMUnion())[6] {
   static const RFMUnion values[] = {
     RFMUnion_NONE,
     RFMUnion_CelestialFrameWrapper,
     RFMUnion_SpacecraftFrameWrapper,
     RFMUnion_OrbitFrameWrapper,
-    RFMUnion_CustomFrameWrapper
+    RFMUnion_CustomFrameWrapper,
+    RFMUnion_RFMCoordinateSystemWrapper
   };
   return values;
 }
 
 inline const char * const *EnumNamesRFMUnion() {
-  static const char * const names[6] = {
+  static const char * const names[7] = {
     "NONE",
     "CelestialFrameWrapper",
     "SpacecraftFrameWrapper",
     "OrbitFrameWrapper",
     "CustomFrameWrapper",
+    "RFMCoordinateSystemWrapper",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRFMUnion(RFMUnion e) {
-  if (::flatbuffers::IsOutRange(e, RFMUnion_NONE, RFMUnion_CustomFrameWrapper)) return "";
+  if (::flatbuffers::IsOutRange(e, RFMUnion_NONE, RFMUnion_RFMCoordinateSystemWrapper)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRFMUnion()[index];
 }
@@ -561,10 +864,661 @@ template<> struct RFMUnionTraits<CustomFrameWrapper> {
   static const RFMUnion enum_value = RFMUnion_CustomFrameWrapper;
 };
 
+template<> struct RFMUnionTraits<RFMCoordinateSystemWrapper> {
+  static const RFMUnion enum_value = RFMUnion_RFMCoordinateSystemWrapper;
+};
+
 template <bool B = false>
 bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RFMUnion type);
 template <bool B = false>
 bool VerifyRFMUnionVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+
+/// The point a coordinate system is centred on. Body and barycentre
+/// identifiers are integer ephemeris body codes; text NAME is descriptive
+/// only and is never the machine key.
+struct RFMOrigin FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMOriginBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_CELESTIAL_BODY_ID = 6,
+    VT_BARYCENTRE_ID = 8,
+    VT_LIBRATION_POINT = 10,
+    VT_LIBRATION_PRIMARY_ID = 12,
+    VT_LIBRATION_SECONDARY_ID = 14,
+    VT_OBJECT_ID = 16,
+    VT_SITE_ID = 18,
+    VT_SITE_BODY_ID = 20,
+    VT_SITE_LATITUDE = 22,
+    VT_SITE_LONGITUDE = 24,
+    VT_SITE_ALTITUDE = 26,
+    VT_NAME = 28
+  };
+  rfmOriginKind KIND() const {
+    return static_cast<rfmOriginKind>(GetField<uint8_t>(VT_KIND, 0));
+  }
+  /// Ephemeris body code when KIND is CELESTIAL_BODY.
+  int32_t CELESTIAL_BODY_ID() const {
+    return GetField<int32_t>(VT_CELESTIAL_BODY_ID, 0);
+  }
+  /// Ephemeris body code of the barycentre when KIND is BARYCENTRE.
+  int32_t BARYCENTRE_ID() const {
+    return GetField<int32_t>(VT_BARYCENTRE_ID, 0);
+  }
+  /// Which libration point, when KIND is LIBRATION_POINT.
+  rfmLibrationPoint LIBRATION_POINT() const {
+    return static_cast<rfmLibrationPoint>(GetField<uint8_t>(VT_LIBRATION_POINT, 0));
+  }
+  /// Ephemeris body code of the libration system primary.
+  int32_t LIBRATION_PRIMARY_ID() const {
+    return GetField<int32_t>(VT_LIBRATION_PRIMARY_ID, 0);
+  }
+  /// Ephemeris body code of the libration system secondary.
+  int32_t LIBRATION_SECONDARY_ID() const {
+    return GetField<int32_t>(VT_LIBRATION_SECONDARY_ID, 0);
+  }
+  /// Identifier of the space object when KIND is SPACE_OBJECT.
+  const ::flatbuffers::String *OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
+  }
+  /// Identifier of the surface site when KIND is GROUND_SITE.
+  const ::flatbuffers::String *SITE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SITE_ID);
+  }
+  /// Ephemeris body code of the body the site sits on.
+  int32_t SITE_BODY_ID() const {
+    return GetField<int32_t>(VT_SITE_BODY_ID, 0);
+  }
+  /// Geodetic latitude of the site, degrees, positive north.
+  double SITE_LATITUDE() const {
+    return GetField<double>(VT_SITE_LATITUDE, 0.0);
+  }
+  /// Geodetic longitude of the site, degrees, positive east.
+  double SITE_LONGITUDE() const {
+    return GetField<double>(VT_SITE_LONGITUDE, 0.0);
+  }
+  /// Height of the site above the reference ellipsoid, metres.
+  double SITE_ALTITUDE() const {
+    return GetField<double>(VT_SITE_ALTITUDE, 0.0);
+  }
+  /// Human-readable label. Descriptive only.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_KIND, 1) &&
+           VerifyField<int32_t>(verifier, VT_CELESTIAL_BODY_ID, 4) &&
+           VerifyField<int32_t>(verifier, VT_BARYCENTRE_ID, 4) &&
+           VerifyField<uint8_t>(verifier, VT_LIBRATION_POINT, 1) &&
+           VerifyField<int32_t>(verifier, VT_LIBRATION_PRIMARY_ID, 4) &&
+           VerifyField<int32_t>(verifier, VT_LIBRATION_SECONDARY_ID, 4) &&
+           VerifyOffset(verifier, VT_OBJECT_ID) &&
+           verifier.VerifyString(OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_SITE_ID) &&
+           verifier.VerifyString(SITE_ID()) &&
+           VerifyField<int32_t>(verifier, VT_SITE_BODY_ID, 4) &&
+           VerifyField<double>(verifier, VT_SITE_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_SITE_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_SITE_ALTITUDE, 8) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFMOriginBuilder {
+  typedef RFMOrigin Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KIND(rfmOriginKind KIND) {
+    fbb_.AddElement<uint8_t>(RFMOrigin::VT_KIND, static_cast<uint8_t>(KIND), 0);
+  }
+  void add_CELESTIAL_BODY_ID(int32_t CELESTIAL_BODY_ID) {
+    fbb_.AddElement<int32_t>(RFMOrigin::VT_CELESTIAL_BODY_ID, CELESTIAL_BODY_ID, 0);
+  }
+  void add_BARYCENTRE_ID(int32_t BARYCENTRE_ID) {
+    fbb_.AddElement<int32_t>(RFMOrigin::VT_BARYCENTRE_ID, BARYCENTRE_ID, 0);
+  }
+  void add_LIBRATION_POINT(rfmLibrationPoint LIBRATION_POINT) {
+    fbb_.AddElement<uint8_t>(RFMOrigin::VT_LIBRATION_POINT, static_cast<uint8_t>(LIBRATION_POINT), 0);
+  }
+  void add_LIBRATION_PRIMARY_ID(int32_t LIBRATION_PRIMARY_ID) {
+    fbb_.AddElement<int32_t>(RFMOrigin::VT_LIBRATION_PRIMARY_ID, LIBRATION_PRIMARY_ID, 0);
+  }
+  void add_LIBRATION_SECONDARY_ID(int32_t LIBRATION_SECONDARY_ID) {
+    fbb_.AddElement<int32_t>(RFMOrigin::VT_LIBRATION_SECONDARY_ID, LIBRATION_SECONDARY_ID, 0);
+  }
+  void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
+    fbb_.AddOffset(RFMOrigin::VT_OBJECT_ID, OBJECT_ID);
+  }
+  void add_SITE_ID(::flatbuffers::Offset<::flatbuffers::String> SITE_ID) {
+    fbb_.AddOffset(RFMOrigin::VT_SITE_ID, SITE_ID);
+  }
+  void add_SITE_BODY_ID(int32_t SITE_BODY_ID) {
+    fbb_.AddElement<int32_t>(RFMOrigin::VT_SITE_BODY_ID, SITE_BODY_ID, 0);
+  }
+  void add_SITE_LATITUDE(double SITE_LATITUDE) {
+    fbb_.AddElement<double>(RFMOrigin::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
+  }
+  void add_SITE_LONGITUDE(double SITE_LONGITUDE) {
+    fbb_.AddElement<double>(RFMOrigin::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
+  }
+  void add_SITE_ALTITUDE(double SITE_ALTITUDE) {
+    fbb_.AddElement<double>(RFMOrigin::VT_SITE_ALTITUDE, SITE_ALTITUDE, 0.0);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(RFMOrigin::VT_NAME, NAME);
+  }
+  explicit RFMOriginBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFMOrigin> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFMOrigin>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFMOrigin> CreateRFMOrigin(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    rfmOriginKind KIND = rfmOriginKind_UNSPECIFIED,
+    int32_t CELESTIAL_BODY_ID = 0,
+    int32_t BARYCENTRE_ID = 0,
+    rfmLibrationPoint LIBRATION_POINT = rfmLibrationPoint_UNSPECIFIED,
+    int32_t LIBRATION_PRIMARY_ID = 0,
+    int32_t LIBRATION_SECONDARY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SITE_ID = 0,
+    int32_t SITE_BODY_ID = 0,
+    double SITE_LATITUDE = 0.0,
+    double SITE_LONGITUDE = 0.0,
+    double SITE_ALTITUDE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0) {
+  RFMOriginBuilder builder_(_fbb);
+  builder_.add_SITE_ALTITUDE(SITE_ALTITUDE);
+  builder_.add_SITE_LONGITUDE(SITE_LONGITUDE);
+  builder_.add_SITE_LATITUDE(SITE_LATITUDE);
+  builder_.add_NAME(NAME);
+  builder_.add_SITE_BODY_ID(SITE_BODY_ID);
+  builder_.add_SITE_ID(SITE_ID);
+  builder_.add_OBJECT_ID(OBJECT_ID);
+  builder_.add_LIBRATION_SECONDARY_ID(LIBRATION_SECONDARY_ID);
+  builder_.add_LIBRATION_PRIMARY_ID(LIBRATION_PRIMARY_ID);
+  builder_.add_BARYCENTRE_ID(BARYCENTRE_ID);
+  builder_.add_CELESTIAL_BODY_ID(CELESTIAL_BODY_ID);
+  builder_.add_LIBRATION_POINT(LIBRATION_POINT);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFMOrigin> CreateRFMOriginDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    rfmOriginKind KIND = rfmOriginKind_UNSPECIFIED,
+    int32_t CELESTIAL_BODY_ID = 0,
+    int32_t BARYCENTRE_ID = 0,
+    rfmLibrationPoint LIBRATION_POINT = rfmLibrationPoint_UNSPECIFIED,
+    int32_t LIBRATION_PRIMARY_ID = 0,
+    int32_t LIBRATION_SECONDARY_ID = 0,
+    const char *OBJECT_ID = nullptr,
+    const char *SITE_ID = nullptr,
+    int32_t SITE_BODY_ID = 0,
+    double SITE_LATITUDE = 0.0,
+    double SITE_LONGITUDE = 0.0,
+    double SITE_ALTITUDE = 0.0,
+    const char *NAME = nullptr) {
+  auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
+  auto SITE_ID__ = SITE_ID ? _fbb.CreateString(SITE_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  return CreateRFMOrigin(
+      _fbb,
+      KIND,
+      CELESTIAL_BODY_ID,
+      BARYCENTRE_ID,
+      LIBRATION_POINT,
+      LIBRATION_PRIMARY_ID,
+      LIBRATION_SECONDARY_ID,
+      OBJECT_ID__,
+      SITE_ID__,
+      SITE_BODY_ID,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
+      SITE_ALTITUDE,
+      NAME__);
+}
+
+/// Axes built from the relative geometry of two objects. Exactly two of the
+/// three axis assignments are independent; the third completes the triad.
+struct RFMObjectReferencedAxes FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMObjectReferencedAxesBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PRIMARY_OBJECT_ID = 4,
+    VT_SECONDARY_OBJECT_ID = 6,
+    VT_X_AXIS = 8,
+    VT_Y_AXIS = 10,
+    VT_Z_AXIS = 12
+  };
+  const ::flatbuffers::String *PRIMARY_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PRIMARY_OBJECT_ID);
+  }
+  const ::flatbuffers::String *SECONDARY_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SECONDARY_OBJECT_ID);
+  }
+  rfmVectorSpecification X_AXIS() const {
+    return static_cast<rfmVectorSpecification>(GetField<uint8_t>(VT_X_AXIS, 0));
+  }
+  rfmVectorSpecification Y_AXIS() const {
+    return static_cast<rfmVectorSpecification>(GetField<uint8_t>(VT_Y_AXIS, 0));
+  }
+  rfmVectorSpecification Z_AXIS() const {
+    return static_cast<rfmVectorSpecification>(GetField<uint8_t>(VT_Z_AXIS, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PRIMARY_OBJECT_ID) &&
+           verifier.VerifyString(PRIMARY_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_SECONDARY_OBJECT_ID) &&
+           verifier.VerifyString(SECONDARY_OBJECT_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_X_AXIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_Y_AXIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_Z_AXIS, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFMObjectReferencedAxesBuilder {
+  typedef RFMObjectReferencedAxes Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PRIMARY_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> PRIMARY_OBJECT_ID) {
+    fbb_.AddOffset(RFMObjectReferencedAxes::VT_PRIMARY_OBJECT_ID, PRIMARY_OBJECT_ID);
+  }
+  void add_SECONDARY_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> SECONDARY_OBJECT_ID) {
+    fbb_.AddOffset(RFMObjectReferencedAxes::VT_SECONDARY_OBJECT_ID, SECONDARY_OBJECT_ID);
+  }
+  void add_X_AXIS(rfmVectorSpecification X_AXIS) {
+    fbb_.AddElement<uint8_t>(RFMObjectReferencedAxes::VT_X_AXIS, static_cast<uint8_t>(X_AXIS), 0);
+  }
+  void add_Y_AXIS(rfmVectorSpecification Y_AXIS) {
+    fbb_.AddElement<uint8_t>(RFMObjectReferencedAxes::VT_Y_AXIS, static_cast<uint8_t>(Y_AXIS), 0);
+  }
+  void add_Z_AXIS(rfmVectorSpecification Z_AXIS) {
+    fbb_.AddElement<uint8_t>(RFMObjectReferencedAxes::VT_Z_AXIS, static_cast<uint8_t>(Z_AXIS), 0);
+  }
+  explicit RFMObjectReferencedAxesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFMObjectReferencedAxes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFMObjectReferencedAxes>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFMObjectReferencedAxes> CreateRFMObjectReferencedAxes(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PRIMARY_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SECONDARY_OBJECT_ID = 0,
+    rfmVectorSpecification X_AXIS = rfmVectorSpecification_UNSPECIFIED,
+    rfmVectorSpecification Y_AXIS = rfmVectorSpecification_UNSPECIFIED,
+    rfmVectorSpecification Z_AXIS = rfmVectorSpecification_UNSPECIFIED) {
+  RFMObjectReferencedAxesBuilder builder_(_fbb);
+  builder_.add_SECONDARY_OBJECT_ID(SECONDARY_OBJECT_ID);
+  builder_.add_PRIMARY_OBJECT_ID(PRIMARY_OBJECT_ID);
+  builder_.add_Z_AXIS(Z_AXIS);
+  builder_.add_Y_AXIS(Y_AXIS);
+  builder_.add_X_AXIS(X_AXIS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFMObjectReferencedAxes> CreateRFMObjectReferencedAxesDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PRIMARY_OBJECT_ID = nullptr,
+    const char *SECONDARY_OBJECT_ID = nullptr,
+    rfmVectorSpecification X_AXIS = rfmVectorSpecification_UNSPECIFIED,
+    rfmVectorSpecification Y_AXIS = rfmVectorSpecification_UNSPECIFIED,
+    rfmVectorSpecification Z_AXIS = rfmVectorSpecification_UNSPECIFIED) {
+  auto PRIMARY_OBJECT_ID__ = PRIMARY_OBJECT_ID ? _fbb.CreateString(PRIMARY_OBJECT_ID) : 0;
+  auto SECONDARY_OBJECT_ID__ = SECONDARY_OBJECT_ID ? _fbb.CreateString(SECONDARY_OBJECT_ID) : 0;
+  return CreateRFMObjectReferencedAxes(
+      _fbb,
+      PRIMARY_OBJECT_ID__,
+      SECONDARY_OBJECT_ID__,
+      X_AXIS,
+      Y_AXIS,
+      Z_AXIS);
+}
+
+/// Axes built by aligning one vector with a reference direction and using a
+/// second vector as a constraint. Vectors are 3-element, expressed in the
+/// coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
+struct RFMLocalAlignedConstrainedAxes FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMLocalAlignedConstrainedAxesBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REFERENCE_OBJECT_ID = 4,
+    VT_REFERENCE_COORDINATE_SYSTEM_NAME = 6,
+    VT_ALIGNMENT_VECTOR = 8,
+    VT_ALIGNMENT_REFERENCE_VECTOR = 10,
+    VT_CONSTRAINT_VECTOR = 12,
+    VT_CONSTRAINT_REFERENCE_VECTOR = 14
+  };
+  const ::flatbuffers::String *REFERENCE_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_OBJECT_ID);
+  }
+  const ::flatbuffers::String *REFERENCE_COORDINATE_SYSTEM_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_COORDINATE_SYSTEM_NAME);
+  }
+  const ::flatbuffers::Vector<double> *ALIGNMENT_VECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ALIGNMENT_VECTOR);
+  }
+  const ::flatbuffers::Vector<double> *ALIGNMENT_REFERENCE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ALIGNMENT_REFERENCE_VECTOR);
+  }
+  const ::flatbuffers::Vector<double> *CONSTRAINT_VECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CONSTRAINT_VECTOR);
+  }
+  const ::flatbuffers::Vector<double> *CONSTRAINT_REFERENCE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CONSTRAINT_REFERENCE_VECTOR);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_REFERENCE_OBJECT_ID) &&
+           verifier.VerifyString(REFERENCE_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_REFERENCE_COORDINATE_SYSTEM_NAME) &&
+           verifier.VerifyString(REFERENCE_COORDINATE_SYSTEM_NAME()) &&
+           VerifyOffset(verifier, VT_ALIGNMENT_VECTOR) &&
+           verifier.VerifyVector(ALIGNMENT_VECTOR()) &&
+           VerifyOffset(verifier, VT_ALIGNMENT_REFERENCE_VECTOR) &&
+           verifier.VerifyVector(ALIGNMENT_REFERENCE_VECTOR()) &&
+           VerifyOffset(verifier, VT_CONSTRAINT_VECTOR) &&
+           verifier.VerifyVector(CONSTRAINT_VECTOR()) &&
+           VerifyOffset(verifier, VT_CONSTRAINT_REFERENCE_VECTOR) &&
+           verifier.VerifyVector(CONSTRAINT_REFERENCE_VECTOR()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFMLocalAlignedConstrainedAxesBuilder {
+  typedef RFMLocalAlignedConstrainedAxes Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REFERENCE_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_OBJECT_ID) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_OBJECT_ID, REFERENCE_OBJECT_ID);
+  }
+  void add_REFERENCE_COORDINATE_SYSTEM_NAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_COORDINATE_SYSTEM_NAME) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_COORDINATE_SYSTEM_NAME, REFERENCE_COORDINATE_SYSTEM_NAME);
+  }
+  void add_ALIGNMENT_VECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> ALIGNMENT_VECTOR) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_VECTOR, ALIGNMENT_VECTOR);
+  }
+  void add_ALIGNMENT_REFERENCE_VECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> ALIGNMENT_REFERENCE_VECTOR) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_REFERENCE_VECTOR, ALIGNMENT_REFERENCE_VECTOR);
+  }
+  void add_CONSTRAINT_VECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> CONSTRAINT_VECTOR) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_VECTOR, CONSTRAINT_VECTOR);
+  }
+  void add_CONSTRAINT_REFERENCE_VECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> CONSTRAINT_REFERENCE_VECTOR) {
+    fbb_.AddOffset(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_REFERENCE_VECTOR, CONSTRAINT_REFERENCE_VECTOR);
+  }
+  explicit RFMLocalAlignedConstrainedAxesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> CreateRFMLocalAlignedConstrainedAxes(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_COORDINATE_SYSTEM_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ALIGNMENT_VECTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ALIGNMENT_REFERENCE_VECTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CONSTRAINT_VECTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CONSTRAINT_REFERENCE_VECTOR = 0) {
+  RFMLocalAlignedConstrainedAxesBuilder builder_(_fbb);
+  builder_.add_CONSTRAINT_REFERENCE_VECTOR(CONSTRAINT_REFERENCE_VECTOR);
+  builder_.add_CONSTRAINT_VECTOR(CONSTRAINT_VECTOR);
+  builder_.add_ALIGNMENT_REFERENCE_VECTOR(ALIGNMENT_REFERENCE_VECTOR);
+  builder_.add_ALIGNMENT_VECTOR(ALIGNMENT_VECTOR);
+  builder_.add_REFERENCE_COORDINATE_SYSTEM_NAME(REFERENCE_COORDINATE_SYSTEM_NAME);
+  builder_.add_REFERENCE_OBJECT_ID(REFERENCE_OBJECT_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> CreateRFMLocalAlignedConstrainedAxesDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *REFERENCE_OBJECT_ID = nullptr,
+    const char *REFERENCE_COORDINATE_SYSTEM_NAME = nullptr,
+    const std::vector<double> *ALIGNMENT_VECTOR = nullptr,
+    const std::vector<double> *ALIGNMENT_REFERENCE_VECTOR = nullptr,
+    const std::vector<double> *CONSTRAINT_VECTOR = nullptr,
+    const std::vector<double> *CONSTRAINT_REFERENCE_VECTOR = nullptr) {
+  auto REFERENCE_OBJECT_ID__ = REFERENCE_OBJECT_ID ? _fbb.CreateString(REFERENCE_OBJECT_ID) : 0;
+  auto REFERENCE_COORDINATE_SYSTEM_NAME__ = REFERENCE_COORDINATE_SYSTEM_NAME ? _fbb.CreateString(REFERENCE_COORDINATE_SYSTEM_NAME) : 0;
+  auto ALIGNMENT_VECTOR__ = ALIGNMENT_VECTOR ? _fbb.CreateVector<double>(*ALIGNMENT_VECTOR) : 0;
+  auto ALIGNMENT_REFERENCE_VECTOR__ = ALIGNMENT_REFERENCE_VECTOR ? _fbb.CreateVector<double>(*ALIGNMENT_REFERENCE_VECTOR) : 0;
+  auto CONSTRAINT_VECTOR__ = CONSTRAINT_VECTOR ? _fbb.CreateVector<double>(*CONSTRAINT_VECTOR) : 0;
+  auto CONSTRAINT_REFERENCE_VECTOR__ = CONSTRAINT_REFERENCE_VECTOR ? _fbb.CreateVector<double>(*CONSTRAINT_REFERENCE_VECTOR) : 0;
+  return CreateRFMLocalAlignedConstrainedAxes(
+      _fbb,
+      REFERENCE_OBJECT_ID__,
+      REFERENCE_COORDINATE_SYSTEM_NAME__,
+      ALIGNMENT_VECTOR__,
+      ALIGNMENT_REFERENCE_VECTOR__,
+      CONSTRAINT_VECTOR__,
+      CONSTRAINT_REFERENCE_VECTOR__);
+}
+
+/// A fully specified coordinate system: an axis set, an origin, and the epoch
+/// and time system the axis set is evaluated at. This is the unit a frames
+/// consumer needs; the pre-existing RFMUnion members name an axis convention
+/// alone and cannot express an origin.
+struct RFMCoordinateSystem FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMCoordinateSystemBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_AXIS_TYPE = 6,
+    VT_ORIGIN = 8,
+    VT_AXIS_REFERENCE_BODY_ID = 10,
+    VT_EPOCH = 12,
+    VT_EPOCH_TIME_SYSTEM = 14,
+    VT_OBJECT_REFERENCED_AXES = 16,
+    VT_LOCAL_ALIGNED_CONSTRAINED_AXES = 18,
+    VT_KERNEL_FRAME_NAME = 20,
+    VT_KERNEL_FRAME_ID = 22,
+    VT_EOP_DATA_SET_CID = 24
+  };
+  /// Stable name for this coordinate system within the producing data set.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Orientation rule.
+  rfmAxisType AXIS_TYPE() const {
+    return static_cast<rfmAxisType>(GetField<uint8_t>(VT_AXIS_TYPE, 0));
+  }
+  /// Centre of the system.
+  const RFMOrigin *ORIGIN() const {
+    return GetPointer<const RFMOrigin *>(VT_ORIGIN);
+  }
+  /// Ephemeris body code whose equator/rotation defines the axes, for the
+  /// body-referenced axis types. Independent of ORIGIN.
+  int32_t AXIS_REFERENCE_BODY_ID() const {
+    return GetField<int32_t>(VT_AXIS_REFERENCE_BODY_ID, 0);
+  }
+  /// Reference epoch the axis set is evaluated at, ISO 8601. Required for the
+  /// of-date and of-epoch axis types; ignored by the inertial ones.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Time system the EPOCH is expressed in, named by the $TIM timingStandard
+  /// member name (for example "UTC", "TAI", "TT", "TDB", "A1").
+  const ::flatbuffers::String *EPOCH_TIME_SYSTEM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_TIME_SYSTEM);
+  }
+  /// Extra parameters for OBJECT_REFERENCED axes.
+  const RFMObjectReferencedAxes *OBJECT_REFERENCED_AXES() const {
+    return GetPointer<const RFMObjectReferencedAxes *>(VT_OBJECT_REFERENCED_AXES);
+  }
+  /// Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
+  const RFMLocalAlignedConstrainedAxes *LOCAL_ALIGNED_CONSTRAINED_AXES() const {
+    return GetPointer<const RFMLocalAlignedConstrainedAxes *>(VT_LOCAL_ALIGNED_CONSTRAINED_AXES);
+  }
+  /// Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
+  const ::flatbuffers::String *KERNEL_FRAME_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KERNEL_FRAME_NAME);
+  }
+  /// Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
+  int32_t KERNEL_FRAME_ID() const {
+    return GetField<int32_t>(VT_KERNEL_FRAME_ID, 0);
+  }
+  /// Content identifier of the Earth-orientation data set used to realise
+  /// this system, when the axis chain requires one. Recorded so that two
+  /// consumers can prove they used the same table rather than assume it.
+  const ::flatbuffers::String *EOP_DATA_SET_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EOP_DATA_SET_CID);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyField<uint8_t>(verifier, VT_AXIS_TYPE, 1) &&
+           VerifyOffset(verifier, VT_ORIGIN) &&
+           verifier.VerifyTable(ORIGIN()) &&
+           VerifyField<int32_t>(verifier, VT_AXIS_REFERENCE_BODY_ID, 4) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_EPOCH_TIME_SYSTEM) &&
+           verifier.VerifyString(EPOCH_TIME_SYSTEM()) &&
+           VerifyOffset(verifier, VT_OBJECT_REFERENCED_AXES) &&
+           verifier.VerifyTable(OBJECT_REFERENCED_AXES()) &&
+           VerifyOffset(verifier, VT_LOCAL_ALIGNED_CONSTRAINED_AXES) &&
+           verifier.VerifyTable(LOCAL_ALIGNED_CONSTRAINED_AXES()) &&
+           VerifyOffset(verifier, VT_KERNEL_FRAME_NAME) &&
+           verifier.VerifyString(KERNEL_FRAME_NAME()) &&
+           VerifyField<int32_t>(verifier, VT_KERNEL_FRAME_ID, 4) &&
+           VerifyOffset(verifier, VT_EOP_DATA_SET_CID) &&
+           verifier.VerifyString(EOP_DATA_SET_CID()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFMCoordinateSystemBuilder {
+  typedef RFMCoordinateSystem Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_NAME, NAME);
+  }
+  void add_AXIS_TYPE(rfmAxisType AXIS_TYPE) {
+    fbb_.AddElement<uint8_t>(RFMCoordinateSystem::VT_AXIS_TYPE, static_cast<uint8_t>(AXIS_TYPE), 0);
+  }
+  void add_ORIGIN(::flatbuffers::Offset<RFMOrigin> ORIGIN) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_ORIGIN, ORIGIN);
+  }
+  void add_AXIS_REFERENCE_BODY_ID(int32_t AXIS_REFERENCE_BODY_ID) {
+    fbb_.AddElement<int32_t>(RFMCoordinateSystem::VT_AXIS_REFERENCE_BODY_ID, AXIS_REFERENCE_BODY_ID, 0);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_EPOCH, EPOCH);
+  }
+  void add_EPOCH_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> EPOCH_TIME_SYSTEM) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_EPOCH_TIME_SYSTEM, EPOCH_TIME_SYSTEM);
+  }
+  void add_OBJECT_REFERENCED_AXES(::flatbuffers::Offset<RFMObjectReferencedAxes> OBJECT_REFERENCED_AXES) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_OBJECT_REFERENCED_AXES, OBJECT_REFERENCED_AXES);
+  }
+  void add_LOCAL_ALIGNED_CONSTRAINED_AXES(::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> LOCAL_ALIGNED_CONSTRAINED_AXES) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_LOCAL_ALIGNED_CONSTRAINED_AXES, LOCAL_ALIGNED_CONSTRAINED_AXES);
+  }
+  void add_KERNEL_FRAME_NAME(::flatbuffers::Offset<::flatbuffers::String> KERNEL_FRAME_NAME) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_KERNEL_FRAME_NAME, KERNEL_FRAME_NAME);
+  }
+  void add_KERNEL_FRAME_ID(int32_t KERNEL_FRAME_ID) {
+    fbb_.AddElement<int32_t>(RFMCoordinateSystem::VT_KERNEL_FRAME_ID, KERNEL_FRAME_ID, 0);
+  }
+  void add_EOP_DATA_SET_CID(::flatbuffers::Offset<::flatbuffers::String> EOP_DATA_SET_CID) {
+    fbb_.AddOffset(RFMCoordinateSystem::VT_EOP_DATA_SET_CID, EOP_DATA_SET_CID);
+  }
+  explicit RFMCoordinateSystemBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFMCoordinateSystem> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFMCoordinateSystem>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFMCoordinateSystem> CreateRFMCoordinateSystem(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    rfmAxisType AXIS_TYPE = rfmAxisType_UNSPECIFIED,
+    ::flatbuffers::Offset<RFMOrigin> ORIGIN = 0,
+    int32_t AXIS_REFERENCE_BODY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_TIME_SYSTEM = 0,
+    ::flatbuffers::Offset<RFMObjectReferencedAxes> OBJECT_REFERENCED_AXES = 0,
+    ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> LOCAL_ALIGNED_CONSTRAINED_AXES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KERNEL_FRAME_NAME = 0,
+    int32_t KERNEL_FRAME_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EOP_DATA_SET_CID = 0) {
+  RFMCoordinateSystemBuilder builder_(_fbb);
+  builder_.add_EOP_DATA_SET_CID(EOP_DATA_SET_CID);
+  builder_.add_KERNEL_FRAME_ID(KERNEL_FRAME_ID);
+  builder_.add_KERNEL_FRAME_NAME(KERNEL_FRAME_NAME);
+  builder_.add_LOCAL_ALIGNED_CONSTRAINED_AXES(LOCAL_ALIGNED_CONSTRAINED_AXES);
+  builder_.add_OBJECT_REFERENCED_AXES(OBJECT_REFERENCED_AXES);
+  builder_.add_EPOCH_TIME_SYSTEM(EPOCH_TIME_SYSTEM);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_AXIS_REFERENCE_BODY_ID(AXIS_REFERENCE_BODY_ID);
+  builder_.add_ORIGIN(ORIGIN);
+  builder_.add_NAME(NAME);
+  builder_.add_AXIS_TYPE(AXIS_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFMCoordinateSystem> CreateRFMCoordinateSystemDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    rfmAxisType AXIS_TYPE = rfmAxisType_UNSPECIFIED,
+    ::flatbuffers::Offset<RFMOrigin> ORIGIN = 0,
+    int32_t AXIS_REFERENCE_BODY_ID = 0,
+    const char *EPOCH = nullptr,
+    const char *EPOCH_TIME_SYSTEM = nullptr,
+    ::flatbuffers::Offset<RFMObjectReferencedAxes> OBJECT_REFERENCED_AXES = 0,
+    ::flatbuffers::Offset<RFMLocalAlignedConstrainedAxes> LOCAL_ALIGNED_CONSTRAINED_AXES = 0,
+    const char *KERNEL_FRAME_NAME = nullptr,
+    int32_t KERNEL_FRAME_ID = 0,
+    const char *EOP_DATA_SET_CID = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto EPOCH_TIME_SYSTEM__ = EPOCH_TIME_SYSTEM ? _fbb.CreateString(EPOCH_TIME_SYSTEM) : 0;
+  auto KERNEL_FRAME_NAME__ = KERNEL_FRAME_NAME ? _fbb.CreateString(KERNEL_FRAME_NAME) : 0;
+  auto EOP_DATA_SET_CID__ = EOP_DATA_SET_CID ? _fbb.CreateString(EOP_DATA_SET_CID) : 0;
+  return CreateRFMCoordinateSystem(
+      _fbb,
+      NAME__,
+      AXIS_TYPE,
+      ORIGIN,
+      AXIS_REFERENCE_BODY_ID,
+      EPOCH__,
+      EPOCH_TIME_SYSTEM__,
+      OBJECT_REFERENCED_AXES,
+      LOCAL_ALIGNED_CONSTRAINED_AXES,
+      KERNEL_FRAME_NAME__,
+      KERNEL_FRAME_ID,
+      EOP_DATA_SET_CID__);
+}
 
 struct CelestialFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CelestialFrameWrapperBuilder Builder;
@@ -734,6 +1688,49 @@ inline ::flatbuffers::Offset<CustomFrameWrapper> CreateCustomFrameWrapper(
   return builder_.Finish();
 }
 
+struct RFMCoordinateSystemWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMCoordinateSystemWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COORDINATE_SYSTEM = 4
+  };
+  const RFMCoordinateSystem *COORDINATE_SYSTEM() const {
+    return GetPointer<const RFMCoordinateSystem *>(VT_COORDINATE_SYSTEM);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COORDINATE_SYSTEM) &&
+           verifier.VerifyTable(COORDINATE_SYSTEM()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFMCoordinateSystemWrapperBuilder {
+  typedef RFMCoordinateSystemWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COORDINATE_SYSTEM(::flatbuffers::Offset<RFMCoordinateSystem> COORDINATE_SYSTEM) {
+    fbb_.AddOffset(RFMCoordinateSystemWrapper::VT_COORDINATE_SYSTEM, COORDINATE_SYSTEM);
+  }
+  explicit RFMCoordinateSystemWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFMCoordinateSystemWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFMCoordinateSystemWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFMCoordinateSystemWrapper> CreateRFMCoordinateSystemWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<RFMCoordinateSystem> COORDINATE_SYSTEM = 0) {
+  RFMCoordinateSystemWrapperBuilder builder_(_fbb);
+  builder_.add_COORDINATE_SYSTEM(COORDINATE_SYSTEM);
+  return builder_.Finish();
+}
+
 /// Reference Frame Message
 struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFMBuilder Builder;
@@ -761,6 +1758,9 @@ struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const CustomFrameWrapper *REFERENCE_FRAME_as_CustomFrameWrapper() const {
     return REFERENCE_FRAME_type() == RFMUnion_CustomFrameWrapper ? static_cast<const CustomFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const RFMCoordinateSystemWrapper *REFERENCE_FRAME_as_RFMCoordinateSystemWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_RFMCoordinateSystemWrapper ? static_cast<const RFMCoordinateSystemWrapper *>(REFERENCE_FRAME()) : nullptr;
   }
   int32_t INDEX() const {
     return GetField<int32_t>(VT_INDEX, 0);
@@ -795,6 +1795,10 @@ template<> inline const OrbitFrameWrapper *RFM::REFERENCE_FRAME_as<OrbitFrameWra
 
 template<> inline const CustomFrameWrapper *RFM::REFERENCE_FRAME_as<CustomFrameWrapper>() const {
   return REFERENCE_FRAME_as_CustomFrameWrapper();
+}
+
+template<> inline const RFMCoordinateSystemWrapper *RFM::REFERENCE_FRAME_as<RFMCoordinateSystemWrapper>() const {
+  return REFERENCE_FRAME_as_RFMCoordinateSystemWrapper();
 }
 
 struct RFMBuilder {
@@ -873,6 +1877,10 @@ inline bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const v
     }
     case RFMUnion_CustomFrameWrapper: {
       auto ptr = reinterpret_cast<const CustomFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_RFMCoordinateSystemWrapper: {
+      auto ptr = reinterpret_cast<const RFMCoordinateSystemWrapper *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

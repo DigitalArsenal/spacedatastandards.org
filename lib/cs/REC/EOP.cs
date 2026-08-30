@@ -66,6 +66,44 @@ public struct EOP : IFlatbufferObject
   public float UT1_MINUS_UTC_UNCERTAINTY_SECONDS { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// 1-sigma uncertainty in the Length of Day correction, seconds.
   public float LENGTH_OF_DAY_UNCERTAINTY_SECONDS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// x component of Pole Wander in radians, double precision. Authoritative
+  /// over X_POLE_WANDER_RADIANS when present.
+  public double X_POLE_WANDER_RADIANS_HP { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// y component of Pole Wander in radians, double precision. Authoritative
+  /// over Y_POLE_WANDER_RADIANS when present.
+  public double Y_POLE_WANDER_RADIANS_HP { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// x component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  public double X_CELESTIAL_POLE_OFFSET_RADIANS_HP { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// y component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  public double Y_CELESTIAL_POLE_OFFSET_RADIANS_HP { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// UT1 minus UTC in seconds, double precision. Authoritative over
+  /// UT1_MINUS_UTC_SECONDS when present.
+  public double UT1_MINUS_UTC_SECONDS_HP { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Correction to Length of Day in seconds, double precision. Authoritative
+  /// over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+  public double LENGTH_OF_DAY_CORRECTION_SECONDS_HP { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+  /// WHICH issue of the series a consumer is holding; two rows for the same
+  /// MJD from different data-set epochs are different values, not duplicates.
+  public string DATA_SET_EPOCH { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATA_SET_EPOCHBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetDATA_SET_EPOCHBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetDATA_SET_EPOCHArray() { return __p.__vector_as_array<byte>(52); }
+  /// Content identifier of the complete published data set this row was taken
+  /// from. Every frames consumer that must agree bit-for-bit records this so
+  /// the source is provable rather than assumed.
+  public string DATA_SET_CID { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATA_SET_CIDBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetDATA_SET_CIDBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetDATA_SET_CIDArray() { return __p.__vector_as_array<byte>(54); }
 
   public static Offset<EOP> CreateEOP(FlatBufferBuilder builder,
       StringOffset DATEOffset = default(StringOffset),
@@ -85,8 +123,24 @@ public struct EOP : IFlatbufferObject
       float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
       float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
       float UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0f,
-      float LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0f) {
-    builder.StartTable(18);
+      float LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0f,
+      double X_POLE_WANDER_RADIANS_HP = 0.0,
+      double Y_POLE_WANDER_RADIANS_HP = 0.0,
+      double X_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0,
+      double Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0,
+      double UT1_MINUS_UTC_SECONDS_HP = 0.0,
+      double LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
+      StringOffset DATA_SET_EPOCHOffset = default(StringOffset),
+      StringOffset DATA_SET_CIDOffset = default(StringOffset)) {
+    builder.StartTable(26);
+    EOP.AddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
+    EOP.AddUT1_MINUS_UTC_SECONDS_HP(builder, UT1_MINUS_UTC_SECONDS_HP);
+    EOP.AddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    EOP.AddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    EOP.AddY_POLE_WANDER_RADIANS_HP(builder, Y_POLE_WANDER_RADIANS_HP);
+    EOP.AddX_POLE_WANDER_RADIANS_HP(builder, X_POLE_WANDER_RADIANS_HP);
+    EOP.AddDATA_SET_CID(builder, DATA_SET_CIDOffset);
+    EOP.AddDATA_SET_EPOCH(builder, DATA_SET_EPOCHOffset);
     EOP.AddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
     EOP.AddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
     EOP.AddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
@@ -108,7 +162,7 @@ public struct EOP : IFlatbufferObject
     return EOP.EndEOP(builder);
   }
 
-  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddDATE(FlatBufferBuilder builder, StringOffset DATEOffset) { builder.AddOffset(0, DATEOffset.Value, 0); }
   public static void AddMJD(FlatBufferBuilder builder, uint MJD) { builder.AddUint(1, MJD, 0); }
   public static void AddX_POLE_WANDER_RADIANS(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.AddFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -127,6 +181,14 @@ public struct EOP : IFlatbufferObject
   public static void AddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(FlatBufferBuilder builder, float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) { builder.AddFloat(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f); }
   public static void AddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(FlatBufferBuilder builder, float UT1_MINUS_UTC_UNCERTAINTY_SECONDS) { builder.AddFloat(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0f); }
   public static void AddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(FlatBufferBuilder builder, float LENGTH_OF_DAY_UNCERTAINTY_SECONDS) { builder.AddFloat(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0f); }
+  public static void AddX_POLE_WANDER_RADIANS_HP(FlatBufferBuilder builder, double X_POLE_WANDER_RADIANS_HP) { builder.AddDouble(18, X_POLE_WANDER_RADIANS_HP, 0.0); }
+  public static void AddY_POLE_WANDER_RADIANS_HP(FlatBufferBuilder builder, double Y_POLE_WANDER_RADIANS_HP) { builder.AddDouble(19, Y_POLE_WANDER_RADIANS_HP, 0.0); }
+  public static void AddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(FlatBufferBuilder builder, double X_CELESTIAL_POLE_OFFSET_RADIANS_HP) { builder.AddDouble(20, X_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0); }
+  public static void AddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(FlatBufferBuilder builder, double Y_CELESTIAL_POLE_OFFSET_RADIANS_HP) { builder.AddDouble(21, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0); }
+  public static void AddUT1_MINUS_UTC_SECONDS_HP(FlatBufferBuilder builder, double UT1_MINUS_UTC_SECONDS_HP) { builder.AddDouble(22, UT1_MINUS_UTC_SECONDS_HP, 0.0); }
+  public static void AddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(FlatBufferBuilder builder, double LENGTH_OF_DAY_CORRECTION_SECONDS_HP) { builder.AddDouble(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0); }
+  public static void AddDATA_SET_EPOCH(FlatBufferBuilder builder, StringOffset DATA_SET_EPOCHOffset) { builder.AddOffset(24, DATA_SET_EPOCHOffset.Value, 0); }
+  public static void AddDATA_SET_CID(FlatBufferBuilder builder, StringOffset DATA_SET_CIDOffset) { builder.AddOffset(25, DATA_SET_CIDOffset.Value, 0); }
   public static Offset<EOP> EndEOP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOP>(o);
@@ -157,10 +219,20 @@ public struct EOP : IFlatbufferObject
     _o.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = this.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
     _o.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = this.UT1_MINUS_UTC_UNCERTAINTY_SECONDS;
     _o.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS;
+    _o.X_POLE_WANDER_RADIANS_HP = this.X_POLE_WANDER_RADIANS_HP;
+    _o.Y_POLE_WANDER_RADIANS_HP = this.Y_POLE_WANDER_RADIANS_HP;
+    _o.X_CELESTIAL_POLE_OFFSET_RADIANS_HP = this.X_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+    _o.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = this.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+    _o.UT1_MINUS_UTC_SECONDS_HP = this.UT1_MINUS_UTC_SECONDS_HP;
+    _o.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
+    _o.DATA_SET_EPOCH = this.DATA_SET_EPOCH;
+    _o.DATA_SET_CID = this.DATA_SET_CID;
   }
   public static Offset<EOP> Pack(FlatBufferBuilder builder, EOPT _o) {
     if (_o == null) return default(Offset<EOP>);
     var _DATE = _o.DATE == null ? default(StringOffset) : builder.CreateString(_o.DATE);
+    var _DATA_SET_EPOCH = _o.DATA_SET_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.DATA_SET_EPOCH);
+    var _DATA_SET_CID = _o.DATA_SET_CID == null ? default(StringOffset) : builder.CreateString(_o.DATA_SET_CID);
     return CreateEOP(
       builder,
       _DATE,
@@ -180,7 +252,15 @@ public struct EOP : IFlatbufferObject
       _o.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
       _o.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
       _o.UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
-      _o.LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+      _o.LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+      _o.X_POLE_WANDER_RADIANS_HP,
+      _o.Y_POLE_WANDER_RADIANS_HP,
+      _o.X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      _o.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+      _o.UT1_MINUS_UTC_SECONDS_HP,
+      _o.LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+      _DATA_SET_EPOCH,
+      _DATA_SET_CID);
   }
 }
 
@@ -204,6 +284,14 @@ public class EOPT
   public float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS { get; set; }
   public float UT1_MINUS_UTC_UNCERTAINTY_SECONDS { get; set; }
   public float LENGTH_OF_DAY_UNCERTAINTY_SECONDS { get; set; }
+  public double X_POLE_WANDER_RADIANS_HP { get; set; }
+  public double Y_POLE_WANDER_RADIANS_HP { get; set; }
+  public double X_CELESTIAL_POLE_OFFSET_RADIANS_HP { get; set; }
+  public double Y_CELESTIAL_POLE_OFFSET_RADIANS_HP { get; set; }
+  public double UT1_MINUS_UTC_SECONDS_HP { get; set; }
+  public double LENGTH_OF_DAY_CORRECTION_SECONDS_HP { get; set; }
+  public string DATA_SET_EPOCH { get; set; }
+  public string DATA_SET_CID { get; set; }
 
   public EOPT() {
     this.DATE = null;
@@ -224,6 +312,14 @@ public class EOPT
     this.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f;
     this.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0f;
     this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0f;
+    this.X_POLE_WANDER_RADIANS_HP = 0.0;
+    this.Y_POLE_WANDER_RADIANS_HP = 0.0;
+    this.X_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0;
+    this.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0;
+    this.UT1_MINUS_UTC_SECONDS_HP = 0.0;
+    this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0;
+    this.DATA_SET_EPOCH = null;
+    this.DATA_SET_CID = null;
   }
   public static EOPT DeserializeFromBinary(byte[] fbBuffer) {
     return EOP.GetRootAsEOP(new ByteBuffer(fbBuffer)).UnPack();
@@ -259,6 +355,14 @@ static public class EOPVerify
       && verifier.VerifyField(tablePos, 34 /*Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 36 /*UT1_MINUS_UTC_UNCERTAINTY_SECONDS*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 38 /*LENGTH_OF_DAY_UNCERTAINTY_SECONDS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 40 /*X_POLE_WANDER_RADIANS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*Y_POLE_WANDER_RADIANS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*X_CELESTIAL_POLE_OFFSET_RADIANS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*Y_CELESTIAL_POLE_OFFSET_RADIANS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*UT1_MINUS_UTC_SECONDS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*LENGTH_OF_DAY_CORRECTION_SECONDS_HP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 52 /*DATA_SET_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 54 /*DATA_SET_CID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

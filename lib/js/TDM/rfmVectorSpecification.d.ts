@@ -1,0 +1,31 @@
+/**
+ * Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
+ */
+export declare enum rfmVectorSpecification {
+    UNSPECIFIED = 0,
+    /**
+     * Primary-to-secondary position direction.
+     */
+    RADIAL = 1,
+    /**
+     * Negated RADIAL.
+     */
+    ANTI_RADIAL = 2,
+    /**
+     * Relative velocity direction.
+     */
+    VELOCITY = 3,
+    /**
+     * Negated VELOCITY.
+     */
+    ANTI_VELOCITY = 4,
+    /**
+     * Orbit normal, RADIAL crossed into VELOCITY.
+     */
+    ORBIT_NORMAL = 5,
+    /**
+     * Negated ORBIT_NORMAL.
+     */
+    ANTI_ORBIT_NORMAL = 6
+}
+//# sourceMappingURL=rfmVectorSpecification.d.ts.map

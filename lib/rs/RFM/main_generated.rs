@@ -764,19 +764,557 @@ impl<'a> ::flatbuffers::Verifiable for CustomFrame {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for CustomFrame {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_RFMUNION: u8 = 0;
+pub const ENUM_MIN_RFM_AXIS_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFMUNION: u8 = 4;
+pub const ENUM_MAX_RFM_AXIS_TYPE: u8 = 24;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFMUNION: [RFMUnion; 5] = [
+pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 25] = [
+  rfmAxisType::UNSPECIFIED,
+  rfmAxisType::MEAN_EQUATOR_EQUINOX_J2000,
+  rfmAxisType::MEAN_ECLIPTIC_EQUINOX_J2000,
+  rfmAxisType::ICRF,
+  rfmAxisType::TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE,
+  rfmAxisType::MEAN_OF_DATE_EQUATOR,
+  rfmAxisType::MEAN_OF_DATE_ECLIPTIC,
+  rfmAxisType::TRUE_OF_DATE_EQUATOR,
+  rfmAxisType::TRUE_OF_DATE_ECLIPTIC,
+  rfmAxisType::MEAN_OF_EPOCH_EQUATOR,
+  rfmAxisType::MEAN_OF_EPOCH_ECLIPTIC,
+  rfmAxisType::TRUE_OF_EPOCH_EQUATOR,
+  rfmAxisType::TRUE_OF_EPOCH_ECLIPTIC,
+  rfmAxisType::BODY_FIXED,
+  rfmAxisType::BODY_INERTIAL,
+  rfmAxisType::OBJECT_REFERENCED,
+  rfmAxisType::LOCAL_ALIGNED_CONSTRAINED,
+  rfmAxisType::BODY_EQUATOR,
+  rfmAxisType::SOLAR_ECLIPTIC_MAGNETOSPHERIC,
+  rfmAxisType::SOLAR_MAGNETOSPHERIC,
+  rfmAxisType::TOPOCENTRIC,
+  rfmAxisType::BODY_SPIN_SUN,
+  rfmAxisType::EPHEMERIS_KERNEL_DEFINED,
+  rfmAxisType::MEAN_OF_DATE_EQUATOR_FK5,
+  rfmAxisType::TRUE_OF_DATE_EQUATOR_FK5,
+];
+
+/// Axis-set capability classes for a fully specified coordinate system.
+/// These name the ORIENTATION rule only; the ORIGIN is carried separately in
+/// RFMOrigin, so any axis set below combines with any origin. Append new
+/// values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfmAxisType(pub u8);
+#[allow(non_upper_case_globals)]
+impl rfmAxisType {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// Mean equator and mean equinox of the J2000.0 epoch.
+  pub const MEAN_EQUATOR_EQUINOX_J2000: Self = Self(1);
+  /// Mean ecliptic and mean equinox of the J2000.0 epoch.
+  pub const MEAN_ECLIPTIC_EQUINOX_J2000: Self = Self(2);
+  /// International Celestial Reference Frame axes.
+  pub const ICRF: Self = Self(3);
+  /// True equator, mean equinox of date.
+  pub const TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE: Self = Self(4);
+  /// Mean equator of date (precession applied to the epoch of the state).
+  pub const MEAN_OF_DATE_EQUATOR: Self = Self(5);
+  /// Mean ecliptic of date.
+  pub const MEAN_OF_DATE_ECLIPTIC: Self = Self(6);
+  /// True equator of date (precession and nutation applied).
+  pub const TRUE_OF_DATE_EQUATOR: Self = Self(7);
+  /// True ecliptic of date.
+  pub const TRUE_OF_DATE_ECLIPTIC: Self = Self(8);
+  /// Mean equator of a fixed reference epoch.
+  pub const MEAN_OF_EPOCH_EQUATOR: Self = Self(9);
+  /// Mean ecliptic of a fixed reference epoch.
+  pub const MEAN_OF_EPOCH_ECLIPTIC: Self = Self(10);
+  /// True equator of a fixed reference epoch.
+  pub const TRUE_OF_EPOCH_EQUATOR: Self = Self(11);
+  /// True ecliptic of a fixed reference epoch.
+  pub const TRUE_OF_EPOCH_ECLIPTIC: Self = Self(12);
+  /// Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID,
+  /// per its published rotation elements.
+  pub const BODY_FIXED: Self = Self(13);
+  /// Non-rotating axes aligned with the reference body's equator and prime
+  /// meridian at the reference epoch.
+  pub const BODY_INERTIAL: Self = Self(14);
+  /// Axes built from the relative geometry of two named objects; see
+  /// RFMObjectReferencedAxes.
+  pub const OBJECT_REFERENCED: Self = Self(15);
+  /// Axes built by aligning one vector and constraining a second; see
+  /// RFMLocalAlignedConstrainedAxes.
+  pub const LOCAL_ALIGNED_CONSTRAINED: Self = Self(16);
+  /// Axes in the reference body's equatorial plane at the requested epoch.
+  pub const BODY_EQUATOR: Self = Self(17);
+  /// Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the
+  /// ecliptic north, commonly abbreviated GSE.
+  pub const SOLAR_ECLIPTIC_MAGNETOSPHERIC: Self = Self(18);
+  /// Solar-magnetospheric axes: X toward the Sun, Z in the plane containing
+  /// the body magnetic dipole, commonly abbreviated GSM.
+  pub const SOLAR_MAGNETOSPHERIC: Self = Self(19);
+  /// Local horizon axes at a surface site; the site is carried on RFMOrigin.
+  pub const TOPOCENTRIC: Self = Self(20);
+  /// Axes fixed by the body spin axis and the body-to-Sun direction.
+  pub const BODY_SPIN_SUN: Self = Self(21);
+  /// Axes defined by a loaded ephemeris/orientation kernel; identified by
+  /// KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem.
+  pub const EPHEMERIS_KERNEL_DEFINED: Self = Self(22);
+  /// LEGACY, retained and NAMED rather than left implicit: mean equator of
+  /// date computed with the IAU-76/FK5 precession theory instead of the
+  /// IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the
+  /// milliarcsecond level and the two are not interchangeable.
+  pub const MEAN_OF_DATE_EQUATOR_FK5: Self = Self(23);
+  /// LEGACY, retained and NAMED: true equator of date computed with the
+  /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
+  pub const TRUE_OF_DATE_EQUATOR_FK5: Self = Self(24);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 24;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::MEAN_EQUATOR_EQUINOX_J2000,
+    Self::MEAN_ECLIPTIC_EQUINOX_J2000,
+    Self::ICRF,
+    Self::TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE,
+    Self::MEAN_OF_DATE_EQUATOR,
+    Self::MEAN_OF_DATE_ECLIPTIC,
+    Self::TRUE_OF_DATE_EQUATOR,
+    Self::TRUE_OF_DATE_ECLIPTIC,
+    Self::MEAN_OF_EPOCH_EQUATOR,
+    Self::MEAN_OF_EPOCH_ECLIPTIC,
+    Self::TRUE_OF_EPOCH_EQUATOR,
+    Self::TRUE_OF_EPOCH_ECLIPTIC,
+    Self::BODY_FIXED,
+    Self::BODY_INERTIAL,
+    Self::OBJECT_REFERENCED,
+    Self::LOCAL_ALIGNED_CONSTRAINED,
+    Self::BODY_EQUATOR,
+    Self::SOLAR_ECLIPTIC_MAGNETOSPHERIC,
+    Self::SOLAR_MAGNETOSPHERIC,
+    Self::TOPOCENTRIC,
+    Self::BODY_SPIN_SUN,
+    Self::EPHEMERIS_KERNEL_DEFINED,
+    Self::MEAN_OF_DATE_EQUATOR_FK5,
+    Self::TRUE_OF_DATE_EQUATOR_FK5,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::MEAN_EQUATOR_EQUINOX_J2000 => Some("MEAN_EQUATOR_EQUINOX_J2000"),
+      Self::MEAN_ECLIPTIC_EQUINOX_J2000 => Some("MEAN_ECLIPTIC_EQUINOX_J2000"),
+      Self::ICRF => Some("ICRF"),
+      Self::TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE => Some("TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE"),
+      Self::MEAN_OF_DATE_EQUATOR => Some("MEAN_OF_DATE_EQUATOR"),
+      Self::MEAN_OF_DATE_ECLIPTIC => Some("MEAN_OF_DATE_ECLIPTIC"),
+      Self::TRUE_OF_DATE_EQUATOR => Some("TRUE_OF_DATE_EQUATOR"),
+      Self::TRUE_OF_DATE_ECLIPTIC => Some("TRUE_OF_DATE_ECLIPTIC"),
+      Self::MEAN_OF_EPOCH_EQUATOR => Some("MEAN_OF_EPOCH_EQUATOR"),
+      Self::MEAN_OF_EPOCH_ECLIPTIC => Some("MEAN_OF_EPOCH_ECLIPTIC"),
+      Self::TRUE_OF_EPOCH_EQUATOR => Some("TRUE_OF_EPOCH_EQUATOR"),
+      Self::TRUE_OF_EPOCH_ECLIPTIC => Some("TRUE_OF_EPOCH_ECLIPTIC"),
+      Self::BODY_FIXED => Some("BODY_FIXED"),
+      Self::BODY_INERTIAL => Some("BODY_INERTIAL"),
+      Self::OBJECT_REFERENCED => Some("OBJECT_REFERENCED"),
+      Self::LOCAL_ALIGNED_CONSTRAINED => Some("LOCAL_ALIGNED_CONSTRAINED"),
+      Self::BODY_EQUATOR => Some("BODY_EQUATOR"),
+      Self::SOLAR_ECLIPTIC_MAGNETOSPHERIC => Some("SOLAR_ECLIPTIC_MAGNETOSPHERIC"),
+      Self::SOLAR_MAGNETOSPHERIC => Some("SOLAR_MAGNETOSPHERIC"),
+      Self::TOPOCENTRIC => Some("TOPOCENTRIC"),
+      Self::BODY_SPIN_SUN => Some("BODY_SPIN_SUN"),
+      Self::EPHEMERIS_KERNEL_DEFINED => Some("EPHEMERIS_KERNEL_DEFINED"),
+      Self::MEAN_OF_DATE_EQUATOR_FK5 => Some("MEAN_OF_DATE_EQUATOR_FK5"),
+      Self::TRUE_OF_DATE_EQUATOR_FK5 => Some("TRUE_OF_DATE_EQUATOR_FK5"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfmAxisType {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfmAxisType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfmAxisType {
+    type Output = rfmAxisType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfmAxisType {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfmAxisType {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfmAxisType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFM_ORIGIN_KIND: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFM_ORIGIN_KIND: u8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFM_ORIGIN_KIND: [rfmOriginKind; 6] = [
+  rfmOriginKind::UNSPECIFIED,
+  rfmOriginKind::CELESTIAL_BODY,
+  rfmOriginKind::BARYCENTRE,
+  rfmOriginKind::LIBRATION_POINT,
+  rfmOriginKind::SPACE_OBJECT,
+  rfmOriginKind::GROUND_SITE,
+];
+
+/// What kind of point a coordinate system is centred on. Append new values
+/// only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfmOriginKind(pub u8);
+#[allow(non_upper_case_globals)]
+impl rfmOriginKind {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// The centre of mass of a single celestial body.
+  pub const CELESTIAL_BODY: Self = Self(1);
+  /// The barycentre of a named system of bodies.
+  pub const BARYCENTRE: Self = Self(2);
+  /// A libration (Lagrange) point of a two-body system.
+  pub const LIBRATION_POINT: Self = Self(3);
+  /// Another tracked space object, identified by OBJECT_ID.
+  pub const SPACE_OBJECT: Self = Self(4);
+  /// A fixed site on a body surface, identified by SITE_ID and the geodetic
+  /// fields on RFMOrigin.
+  pub const GROUND_SITE: Self = Self(5);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::CELESTIAL_BODY,
+    Self::BARYCENTRE,
+    Self::LIBRATION_POINT,
+    Self::SPACE_OBJECT,
+    Self::GROUND_SITE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::CELESTIAL_BODY => Some("CELESTIAL_BODY"),
+      Self::BARYCENTRE => Some("BARYCENTRE"),
+      Self::LIBRATION_POINT => Some("LIBRATION_POINT"),
+      Self::SPACE_OBJECT => Some("SPACE_OBJECT"),
+      Self::GROUND_SITE => Some("GROUND_SITE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfmOriginKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfmOriginKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfmOriginKind {
+    type Output = rfmOriginKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfmOriginKind {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfmOriginKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfmOriginKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFM_LIBRATION_POINT: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFM_LIBRATION_POINT: u8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFM_LIBRATION_POINT: [rfmLibrationPoint; 6] = [
+  rfmLibrationPoint::UNSPECIFIED,
+  rfmLibrationPoint::L1,
+  rfmLibrationPoint::L2,
+  rfmLibrationPoint::L3,
+  rfmLibrationPoint::L4,
+  rfmLibrationPoint::L5,
+];
+
+/// Libration point of the primary/secondary pair named on RFMOrigin. Append
+/// new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfmLibrationPoint(pub u8);
+#[allow(non_upper_case_globals)]
+impl rfmLibrationPoint {
+  pub const UNSPECIFIED: Self = Self(0);
+  pub const L1: Self = Self(1);
+  pub const L2: Self = Self(2);
+  pub const L3: Self = Self(3);
+  pub const L4: Self = Self(4);
+  pub const L5: Self = Self(5);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::L1,
+    Self::L2,
+    Self::L3,
+    Self::L4,
+    Self::L5,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::L1 => Some("L1"),
+      Self::L2 => Some("L2"),
+      Self::L3 => Some("L3"),
+      Self::L4 => Some("L4"),
+      Self::L5 => Some("L5"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfmLibrationPoint {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfmLibrationPoint {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfmLibrationPoint {
+    type Output = rfmLibrationPoint;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfmLibrationPoint {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfmLibrationPoint {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfmLibrationPoint {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFM_VECTOR_SPECIFICATION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFM_VECTOR_SPECIFICATION: u8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFM_VECTOR_SPECIFICATION: [rfmVectorSpecification; 7] = [
+  rfmVectorSpecification::UNSPECIFIED,
+  rfmVectorSpecification::RADIAL,
+  rfmVectorSpecification::ANTI_RADIAL,
+  rfmVectorSpecification::VELOCITY,
+  rfmVectorSpecification::ANTI_VELOCITY,
+  rfmVectorSpecification::ORBIT_NORMAL,
+  rfmVectorSpecification::ANTI_ORBIT_NORMAL,
+];
+
+/// Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfmVectorSpecification(pub u8);
+#[allow(non_upper_case_globals)]
+impl rfmVectorSpecification {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// Primary-to-secondary position direction.
+  pub const RADIAL: Self = Self(1);
+  /// Negated RADIAL.
+  pub const ANTI_RADIAL: Self = Self(2);
+  /// Relative velocity direction.
+  pub const VELOCITY: Self = Self(3);
+  /// Negated VELOCITY.
+  pub const ANTI_VELOCITY: Self = Self(4);
+  /// Orbit normal, RADIAL crossed into VELOCITY.
+  pub const ORBIT_NORMAL: Self = Self(5);
+  /// Negated ORBIT_NORMAL.
+  pub const ANTI_ORBIT_NORMAL: Self = Self(6);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::RADIAL,
+    Self::ANTI_RADIAL,
+    Self::VELOCITY,
+    Self::ANTI_VELOCITY,
+    Self::ORBIT_NORMAL,
+    Self::ANTI_ORBIT_NORMAL,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::RADIAL => Some("RADIAL"),
+      Self::ANTI_RADIAL => Some("ANTI_RADIAL"),
+      Self::VELOCITY => Some("VELOCITY"),
+      Self::ANTI_VELOCITY => Some("ANTI_VELOCITY"),
+      Self::ORBIT_NORMAL => Some("ORBIT_NORMAL"),
+      Self::ANTI_ORBIT_NORMAL => Some("ANTI_ORBIT_NORMAL"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for rfmVectorSpecification {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for rfmVectorSpecification {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for rfmVectorSpecification {
+    type Output = rfmVectorSpecification;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rfmVectorSpecification {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rfmVectorSpecification {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rfmVectorSpecification {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFMUNION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFMUNION: u8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFMUNION: [RFMUnion; 6] = [
   RFMUnion::NONE,
   RFMUnion::CelestialFrameWrapper,
   RFMUnion::SpacecraftFrameWrapper,
   RFMUnion::OrbitFrameWrapper,
   RFMUnion::CustomFrameWrapper,
+  RFMUnion::RFMCoordinateSystemWrapper,
 ];
 
+/// Union ordinals are WIRE. Append new members LAST; never reorder.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct RFMUnion(pub u8);
@@ -787,15 +1325,17 @@ impl RFMUnion {
   pub const SpacecraftFrameWrapper: Self = Self(2);
   pub const OrbitFrameWrapper: Self = Self(3);
   pub const CustomFrameWrapper: Self = Self(4);
+  pub const RFMCoordinateSystemWrapper: Self = Self(5);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 4;
+  pub const ENUM_MAX: u8 = 5;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::CelestialFrameWrapper,
     Self::SpacecraftFrameWrapper,
     Self::OrbitFrameWrapper,
     Self::CustomFrameWrapper,
+    Self::RFMCoordinateSystemWrapper,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -805,6 +1345,7 @@ impl RFMUnion {
       Self::SpacecraftFrameWrapper => Some("SpacecraftFrameWrapper"),
       Self::OrbitFrameWrapper => Some("OrbitFrameWrapper"),
       Self::CustomFrameWrapper => Some("CustomFrameWrapper"),
+      Self::RFMCoordinateSystemWrapper => Some("RFMCoordinateSystemWrapper"),
       _ => None,
     }
   }
@@ -870,6 +1411,7 @@ pub enum RFMUnionT {
   SpacecraftFrameWrapper(alloc::boxed::Box<SpacecraftFrameWrapperT>),
   OrbitFrameWrapper(alloc::boxed::Box<OrbitFrameWrapperT>),
   CustomFrameWrapper(alloc::boxed::Box<CustomFrameWrapperT>),
+  RFMCoordinateSystemWrapper(alloc::boxed::Box<RFMCoordinateSystemWrapperT>),
 }
 impl Default for RFMUnionT {
   fn default() -> Self {
@@ -884,6 +1426,7 @@ impl RFMUnionT {
       Self::SpacecraftFrameWrapper(_) => RFMUnion::SpacecraftFrameWrapper,
       Self::OrbitFrameWrapper(_) => RFMUnion::OrbitFrameWrapper,
       Self::CustomFrameWrapper(_) => RFMUnion::CustomFrameWrapper,
+      Self::RFMCoordinateSystemWrapper(_) => RFMUnion::RFMCoordinateSystemWrapper,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -893,6 +1436,7 @@ impl RFMUnionT {
       Self::SpacecraftFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
       Self::OrbitFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
       Self::CustomFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RFMCoordinateSystemWrapper(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned CelestialFrameWrapperT, setting the union to NONE.
@@ -978,6 +1522,1356 @@ impl RFMUnionT {
   /// If the union variant matches, return a mutable reference to the CustomFrameWrapperT.
   pub fn as_custom_frame_wrapper_mut(&mut self) -> Option<&mut CustomFrameWrapperT> {
     if let Self::CustomFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RFMCoordinateSystemWrapperT, setting the union to NONE.
+  pub fn take_rfmcoordinate_system_wrapper(&mut self) -> Option<alloc::boxed::Box<RFMCoordinateSystemWrapperT>> {
+    if let Self::RFMCoordinateSystemWrapper(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::RFMCoordinateSystemWrapper(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RFMCoordinateSystemWrapperT.
+  pub fn as_rfmcoordinate_system_wrapper(&self) -> Option<&RFMCoordinateSystemWrapperT> {
+    if let Self::RFMCoordinateSystemWrapper(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RFMCoordinateSystemWrapperT.
+  pub fn as_rfmcoordinate_system_wrapper_mut(&mut self) -> Option<&mut RFMCoordinateSystemWrapperT> {
+    if let Self::RFMCoordinateSystemWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+}
+pub enum RFMOriginOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// The point a coordinate system is centred on. Body and barycentre
+/// identifiers are integer ephemeris body codes; text NAME is descriptive
+/// only and is never the machine key.
+pub struct RFMOrigin<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFMOrigin<'a> {
+  type Inner = RFMOrigin<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFMOrigin<'a> {
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CELESTIAL_BODY_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_BARYCENTRE_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_LIBRATION_POINT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LIBRATION_PRIMARY_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_LIBRATION_SECONDARY_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 16;
+  pub const VT_SITE_ID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SITE_BODY_ID: ::flatbuffers::VOffsetT = 20;
+  pub const VT_SITE_LATITUDE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_SITE_LONGITUDE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SITE_ALTITUDE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFMOrigin { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFMOriginArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFMOrigin<'bldr>> {
+    let mut builder = RFMOriginBuilder::new(_fbb);
+    builder.add_SITE_ALTITUDE(args.SITE_ALTITUDE);
+    builder.add_SITE_LONGITUDE(args.SITE_LONGITUDE);
+    builder.add_SITE_LATITUDE(args.SITE_LATITUDE);
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_SITE_BODY_ID(args.SITE_BODY_ID);
+    if let Some(x) = args.SITE_ID { builder.add_SITE_ID(x); }
+    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
+    builder.add_LIBRATION_SECONDARY_ID(args.LIBRATION_SECONDARY_ID);
+    builder.add_LIBRATION_PRIMARY_ID(args.LIBRATION_PRIMARY_ID);
+    builder.add_BARYCENTRE_ID(args.BARYCENTRE_ID);
+    builder.add_CELESTIAL_BODY_ID(args.CELESTIAL_BODY_ID);
+    builder.add_LIBRATION_POINT(args.LIBRATION_POINT);
+    builder.add_KIND(args.KIND);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFMOriginT {
+    let KIND = self.KIND();
+    let CELESTIAL_BODY_ID = self.CELESTIAL_BODY_ID();
+    let BARYCENTRE_ID = self.BARYCENTRE_ID();
+    let LIBRATION_POINT = self.LIBRATION_POINT();
+    let LIBRATION_PRIMARY_ID = self.LIBRATION_PRIMARY_ID();
+    let LIBRATION_SECONDARY_ID = self.LIBRATION_SECONDARY_ID();
+    let OBJECT_ID = self.OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SITE_ID = self.SITE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SITE_BODY_ID = self.SITE_BODY_ID();
+    let SITE_LATITUDE = self.SITE_LATITUDE();
+    let SITE_LONGITUDE = self.SITE_LONGITUDE();
+    let SITE_ALTITUDE = self.SITE_ALTITUDE();
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    RFMOriginT {
+      KIND,
+      CELESTIAL_BODY_ID,
+      BARYCENTRE_ID,
+      LIBRATION_POINT,
+      LIBRATION_PRIMARY_ID,
+      LIBRATION_SECONDARY_ID,
+      OBJECT_ID,
+      SITE_ID,
+      SITE_BODY_ID,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
+      SITE_ALTITUDE,
+      NAME,
+    }
+  }
+
+  #[inline]
+  pub fn KIND(&self) -> rfmOriginKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmOriginKind>(RFMOrigin::VT_KIND, Some(rfmOriginKind::UNSPECIFIED)).unwrap()}
+  }
+  /// Ephemeris body code when KIND is CELESTIAL_BODY.
+  #[inline]
+  pub fn CELESTIAL_BODY_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMOrigin::VT_CELESTIAL_BODY_ID, Some(0)).unwrap()}
+  }
+  /// Ephemeris body code of the barycentre when KIND is BARYCENTRE.
+  #[inline]
+  pub fn BARYCENTRE_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMOrigin::VT_BARYCENTRE_ID, Some(0)).unwrap()}
+  }
+  /// Which libration point, when KIND is LIBRATION_POINT.
+  #[inline]
+  pub fn LIBRATION_POINT(&self) -> rfmLibrationPoint {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmLibrationPoint>(RFMOrigin::VT_LIBRATION_POINT, Some(rfmLibrationPoint::UNSPECIFIED)).unwrap()}
+  }
+  /// Ephemeris body code of the libration system primary.
+  #[inline]
+  pub fn LIBRATION_PRIMARY_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMOrigin::VT_LIBRATION_PRIMARY_ID, Some(0)).unwrap()}
+  }
+  /// Ephemeris body code of the libration system secondary.
+  #[inline]
+  pub fn LIBRATION_SECONDARY_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMOrigin::VT_LIBRATION_SECONDARY_ID, Some(0)).unwrap()}
+  }
+  /// Identifier of the space object when KIND is SPACE_OBJECT.
+  #[inline]
+  pub fn OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMOrigin::VT_OBJECT_ID, None)}
+  }
+  /// Identifier of the surface site when KIND is GROUND_SITE.
+  #[inline]
+  pub fn SITE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMOrigin::VT_SITE_ID, None)}
+  }
+  /// Ephemeris body code of the body the site sits on.
+  #[inline]
+  pub fn SITE_BODY_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMOrigin::VT_SITE_BODY_ID, Some(0)).unwrap()}
+  }
+  /// Geodetic latitude of the site, degrees, positive north.
+  #[inline]
+  pub fn SITE_LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFMOrigin::VT_SITE_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Geodetic longitude of the site, degrees, positive east.
+  #[inline]
+  pub fn SITE_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFMOrigin::VT_SITE_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Height of the site above the reference ellipsoid, metres.
+  #[inline]
+  pub fn SITE_ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFMOrigin::VT_SITE_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// Human-readable label. Descriptive only.
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMOrigin::VT_NAME, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFMOrigin<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<rfmOriginKind>("KIND", Self::VT_KIND, false)?
+     .visit_field::<i32>("CELESTIAL_BODY_ID", Self::VT_CELESTIAL_BODY_ID, false)?
+     .visit_field::<i32>("BARYCENTRE_ID", Self::VT_BARYCENTRE_ID, false)?
+     .visit_field::<rfmLibrationPoint>("LIBRATION_POINT", Self::VT_LIBRATION_POINT, false)?
+     .visit_field::<i32>("LIBRATION_PRIMARY_ID", Self::VT_LIBRATION_PRIMARY_ID, false)?
+     .visit_field::<i32>("LIBRATION_SECONDARY_ID", Self::VT_LIBRATION_SECONDARY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SITE_ID", Self::VT_SITE_ID, false)?
+     .visit_field::<i32>("SITE_BODY_ID", Self::VT_SITE_BODY_ID, false)?
+     .visit_field::<f64>("SITE_LATITUDE", Self::VT_SITE_LATITUDE, false)?
+     .visit_field::<f64>("SITE_LONGITUDE", Self::VT_SITE_LONGITUDE, false)?
+     .visit_field::<f64>("SITE_ALTITUDE", Self::VT_SITE_ALTITUDE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFMOriginArgs<'a> {
+    pub KIND: rfmOriginKind,
+    pub CELESTIAL_BODY_ID: i32,
+    pub BARYCENTRE_ID: i32,
+    pub LIBRATION_POINT: rfmLibrationPoint,
+    pub LIBRATION_PRIMARY_ID: i32,
+    pub LIBRATION_SECONDARY_ID: i32,
+    pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SITE_BODY_ID: i32,
+    pub SITE_LATITUDE: f64,
+    pub SITE_LONGITUDE: f64,
+    pub SITE_ALTITUDE: f64,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for RFMOriginArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFMOriginArgs {
+      KIND: rfmOriginKind::UNSPECIFIED,
+      CELESTIAL_BODY_ID: 0,
+      BARYCENTRE_ID: 0,
+      LIBRATION_POINT: rfmLibrationPoint::UNSPECIFIED,
+      LIBRATION_PRIMARY_ID: 0,
+      LIBRATION_SECONDARY_ID: 0,
+      OBJECT_ID: None,
+      SITE_ID: None,
+      SITE_BODY_ID: 0,
+      SITE_LATITUDE: 0.0,
+      SITE_LONGITUDE: 0.0,
+      SITE_ALTITUDE: 0.0,
+      NAME: None,
+    }
+  }
+}
+
+pub struct RFMOriginBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMOriginBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: rfmOriginKind) {
+    self.fbb_.push_slot::<rfmOriginKind>(RFMOrigin::VT_KIND, KIND, rfmOriginKind::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_CELESTIAL_BODY_ID(&mut self, CELESTIAL_BODY_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMOrigin::VT_CELESTIAL_BODY_ID, CELESTIAL_BODY_ID, 0);
+  }
+  #[inline]
+  pub fn add_BARYCENTRE_ID(&mut self, BARYCENTRE_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMOrigin::VT_BARYCENTRE_ID, BARYCENTRE_ID, 0);
+  }
+  #[inline]
+  pub fn add_LIBRATION_POINT(&mut self, LIBRATION_POINT: rfmLibrationPoint) {
+    self.fbb_.push_slot::<rfmLibrationPoint>(RFMOrigin::VT_LIBRATION_POINT, LIBRATION_POINT, rfmLibrationPoint::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_LIBRATION_PRIMARY_ID(&mut self, LIBRATION_PRIMARY_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMOrigin::VT_LIBRATION_PRIMARY_ID, LIBRATION_PRIMARY_ID, 0);
+  }
+  #[inline]
+  pub fn add_LIBRATION_SECONDARY_ID(&mut self, LIBRATION_SECONDARY_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMOrigin::VT_LIBRATION_SECONDARY_ID, LIBRATION_SECONDARY_ID, 0);
+  }
+  #[inline]
+  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMOrigin::VT_OBJECT_ID, OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_SITE_ID(&mut self, SITE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMOrigin::VT_SITE_ID, SITE_ID);
+  }
+  #[inline]
+  pub fn add_SITE_BODY_ID(&mut self, SITE_BODY_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMOrigin::VT_SITE_BODY_ID, SITE_BODY_ID, 0);
+  }
+  #[inline]
+  pub fn add_SITE_LATITUDE(&mut self, SITE_LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(RFMOrigin::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_SITE_LONGITUDE(&mut self, SITE_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(RFMOrigin::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_SITE_ALTITUDE(&mut self, SITE_ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(RFMOrigin::VT_SITE_ALTITUDE, SITE_ALTITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMOrigin::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMOriginBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFMOriginBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFMOrigin<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFMOrigin<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFMOrigin");
+      ds.field("KIND", &self.KIND());
+      ds.field("CELESTIAL_BODY_ID", &self.CELESTIAL_BODY_ID());
+      ds.field("BARYCENTRE_ID", &self.BARYCENTRE_ID());
+      ds.field("LIBRATION_POINT", &self.LIBRATION_POINT());
+      ds.field("LIBRATION_PRIMARY_ID", &self.LIBRATION_PRIMARY_ID());
+      ds.field("LIBRATION_SECONDARY_ID", &self.LIBRATION_SECONDARY_ID());
+      ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("SITE_ID", &self.SITE_ID());
+      ds.field("SITE_BODY_ID", &self.SITE_BODY_ID());
+      ds.field("SITE_LATITUDE", &self.SITE_LATITUDE());
+      ds.field("SITE_LONGITUDE", &self.SITE_LONGITUDE());
+      ds.field("SITE_ALTITUDE", &self.SITE_ALTITUDE());
+      ds.field("NAME", &self.NAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFMOriginT {
+  pub KIND: rfmOriginKind,
+  pub CELESTIAL_BODY_ID: i32,
+  pub BARYCENTRE_ID: i32,
+  pub LIBRATION_POINT: rfmLibrationPoint,
+  pub LIBRATION_PRIMARY_ID: i32,
+  pub LIBRATION_SECONDARY_ID: i32,
+  pub OBJECT_ID: Option<alloc::string::String>,
+  pub SITE_ID: Option<alloc::string::String>,
+  pub SITE_BODY_ID: i32,
+  pub SITE_LATITUDE: f64,
+  pub SITE_LONGITUDE: f64,
+  pub SITE_ALTITUDE: f64,
+  pub NAME: Option<alloc::string::String>,
+}
+impl Default for RFMOriginT {
+  fn default() -> Self {
+    Self {
+      KIND: rfmOriginKind::UNSPECIFIED,
+      CELESTIAL_BODY_ID: 0,
+      BARYCENTRE_ID: 0,
+      LIBRATION_POINT: rfmLibrationPoint::UNSPECIFIED,
+      LIBRATION_PRIMARY_ID: 0,
+      LIBRATION_SECONDARY_ID: 0,
+      OBJECT_ID: None,
+      SITE_ID: None,
+      SITE_BODY_ID: 0,
+      SITE_LATITUDE: 0.0,
+      SITE_LONGITUDE: 0.0,
+      SITE_ALTITUDE: 0.0,
+      NAME: None,
+    }
+  }
+}
+impl RFMOriginT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFMOrigin<'b>> {
+    let KIND = self.KIND;
+    let CELESTIAL_BODY_ID = self.CELESTIAL_BODY_ID;
+    let BARYCENTRE_ID = self.BARYCENTRE_ID;
+    let LIBRATION_POINT = self.LIBRATION_POINT;
+    let LIBRATION_PRIMARY_ID = self.LIBRATION_PRIMARY_ID;
+    let LIBRATION_SECONDARY_ID = self.LIBRATION_SECONDARY_ID;
+    let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SITE_ID = self.SITE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SITE_BODY_ID = self.SITE_BODY_ID;
+    let SITE_LATITUDE = self.SITE_LATITUDE;
+    let SITE_LONGITUDE = self.SITE_LONGITUDE;
+    let SITE_ALTITUDE = self.SITE_ALTITUDE;
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    RFMOrigin::create(_fbb, &RFMOriginArgs{
+      KIND,
+      CELESTIAL_BODY_ID,
+      BARYCENTRE_ID,
+      LIBRATION_POINT,
+      LIBRATION_PRIMARY_ID,
+      LIBRATION_SECONDARY_ID,
+      OBJECT_ID,
+      SITE_ID,
+      SITE_BODY_ID,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
+      SITE_ALTITUDE,
+      NAME,
+    })
+  }
+}
+pub enum RFMObjectReferencedAxesOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Axes built from the relative geometry of two objects. Exactly two of the
+/// three axis assignments are independent; the third completes the triad.
+pub struct RFMObjectReferencedAxes<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFMObjectReferencedAxes<'a> {
+  type Inner = RFMObjectReferencedAxes<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFMObjectReferencedAxes<'a> {
+  pub const VT_PRIMARY_OBJECT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SECONDARY_OBJECT_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_X_AXIS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_Y_AXIS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_Z_AXIS: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFMObjectReferencedAxes { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFMObjectReferencedAxesArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFMObjectReferencedAxes<'bldr>> {
+    let mut builder = RFMObjectReferencedAxesBuilder::new(_fbb);
+    if let Some(x) = args.SECONDARY_OBJECT_ID { builder.add_SECONDARY_OBJECT_ID(x); }
+    if let Some(x) = args.PRIMARY_OBJECT_ID { builder.add_PRIMARY_OBJECT_ID(x); }
+    builder.add_Z_AXIS(args.Z_AXIS);
+    builder.add_Y_AXIS(args.Y_AXIS);
+    builder.add_X_AXIS(args.X_AXIS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFMObjectReferencedAxesT {
+    let PRIMARY_OBJECT_ID = self.PRIMARY_OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SECONDARY_OBJECT_ID = self.SECONDARY_OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let X_AXIS = self.X_AXIS();
+    let Y_AXIS = self.Y_AXIS();
+    let Z_AXIS = self.Z_AXIS();
+    RFMObjectReferencedAxesT {
+      PRIMARY_OBJECT_ID,
+      SECONDARY_OBJECT_ID,
+      X_AXIS,
+      Y_AXIS,
+      Z_AXIS,
+    }
+  }
+
+  #[inline]
+  pub fn PRIMARY_OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMObjectReferencedAxes::VT_PRIMARY_OBJECT_ID, None)}
+  }
+  #[inline]
+  pub fn SECONDARY_OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMObjectReferencedAxes::VT_SECONDARY_OBJECT_ID, None)}
+  }
+  #[inline]
+  pub fn X_AXIS(&self) -> rfmVectorSpecification {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_X_AXIS, Some(rfmVectorSpecification::UNSPECIFIED)).unwrap()}
+  }
+  #[inline]
+  pub fn Y_AXIS(&self) -> rfmVectorSpecification {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_Y_AXIS, Some(rfmVectorSpecification::UNSPECIFIED)).unwrap()}
+  }
+  #[inline]
+  pub fn Z_AXIS(&self) -> rfmVectorSpecification {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_Z_AXIS, Some(rfmVectorSpecification::UNSPECIFIED)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFMObjectReferencedAxes<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRIMARY_OBJECT_ID", Self::VT_PRIMARY_OBJECT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SECONDARY_OBJECT_ID", Self::VT_SECONDARY_OBJECT_ID, false)?
+     .visit_field::<rfmVectorSpecification>("X_AXIS", Self::VT_X_AXIS, false)?
+     .visit_field::<rfmVectorSpecification>("Y_AXIS", Self::VT_Y_AXIS, false)?
+     .visit_field::<rfmVectorSpecification>("Z_AXIS", Self::VT_Z_AXIS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFMObjectReferencedAxesArgs<'a> {
+    pub PRIMARY_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SECONDARY_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub X_AXIS: rfmVectorSpecification,
+    pub Y_AXIS: rfmVectorSpecification,
+    pub Z_AXIS: rfmVectorSpecification,
+}
+impl<'a> Default for RFMObjectReferencedAxesArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFMObjectReferencedAxesArgs {
+      PRIMARY_OBJECT_ID: None,
+      SECONDARY_OBJECT_ID: None,
+      X_AXIS: rfmVectorSpecification::UNSPECIFIED,
+      Y_AXIS: rfmVectorSpecification::UNSPECIFIED,
+      Z_AXIS: rfmVectorSpecification::UNSPECIFIED,
+    }
+  }
+}
+
+pub struct RFMObjectReferencedAxesBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMObjectReferencedAxesBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PRIMARY_OBJECT_ID(&mut self, PRIMARY_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMObjectReferencedAxes::VT_PRIMARY_OBJECT_ID, PRIMARY_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_SECONDARY_OBJECT_ID(&mut self, SECONDARY_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMObjectReferencedAxes::VT_SECONDARY_OBJECT_ID, SECONDARY_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_X_AXIS(&mut self, X_AXIS: rfmVectorSpecification) {
+    self.fbb_.push_slot::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_X_AXIS, X_AXIS, rfmVectorSpecification::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_Y_AXIS(&mut self, Y_AXIS: rfmVectorSpecification) {
+    self.fbb_.push_slot::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_Y_AXIS, Y_AXIS, rfmVectorSpecification::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_Z_AXIS(&mut self, Z_AXIS: rfmVectorSpecification) {
+    self.fbb_.push_slot::<rfmVectorSpecification>(RFMObjectReferencedAxes::VT_Z_AXIS, Z_AXIS, rfmVectorSpecification::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMObjectReferencedAxesBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFMObjectReferencedAxesBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFMObjectReferencedAxes<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFMObjectReferencedAxes<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFMObjectReferencedAxes");
+      ds.field("PRIMARY_OBJECT_ID", &self.PRIMARY_OBJECT_ID());
+      ds.field("SECONDARY_OBJECT_ID", &self.SECONDARY_OBJECT_ID());
+      ds.field("X_AXIS", &self.X_AXIS());
+      ds.field("Y_AXIS", &self.Y_AXIS());
+      ds.field("Z_AXIS", &self.Z_AXIS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFMObjectReferencedAxesT {
+  pub PRIMARY_OBJECT_ID: Option<alloc::string::String>,
+  pub SECONDARY_OBJECT_ID: Option<alloc::string::String>,
+  pub X_AXIS: rfmVectorSpecification,
+  pub Y_AXIS: rfmVectorSpecification,
+  pub Z_AXIS: rfmVectorSpecification,
+}
+impl Default for RFMObjectReferencedAxesT {
+  fn default() -> Self {
+    Self {
+      PRIMARY_OBJECT_ID: None,
+      SECONDARY_OBJECT_ID: None,
+      X_AXIS: rfmVectorSpecification::UNSPECIFIED,
+      Y_AXIS: rfmVectorSpecification::UNSPECIFIED,
+      Z_AXIS: rfmVectorSpecification::UNSPECIFIED,
+    }
+  }
+}
+impl RFMObjectReferencedAxesT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFMObjectReferencedAxes<'b>> {
+    let PRIMARY_OBJECT_ID = self.PRIMARY_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SECONDARY_OBJECT_ID = self.SECONDARY_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let X_AXIS = self.X_AXIS;
+    let Y_AXIS = self.Y_AXIS;
+    let Z_AXIS = self.Z_AXIS;
+    RFMObjectReferencedAxes::create(_fbb, &RFMObjectReferencedAxesArgs{
+      PRIMARY_OBJECT_ID,
+      SECONDARY_OBJECT_ID,
+      X_AXIS,
+      Y_AXIS,
+      Z_AXIS,
+    })
+  }
+}
+pub enum RFMLocalAlignedConstrainedAxesOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Axes built by aligning one vector with a reference direction and using a
+/// second vector as a constraint. Vectors are 3-element, expressed in the
+/// coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
+pub struct RFMLocalAlignedConstrainedAxes<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFMLocalAlignedConstrainedAxes<'a> {
+  type Inner = RFMLocalAlignedConstrainedAxes<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFMLocalAlignedConstrainedAxes<'a> {
+  pub const VT_REFERENCE_OBJECT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_REFERENCE_COORDINATE_SYSTEM_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ALIGNMENT_VECTOR: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ALIGNMENT_REFERENCE_VECTOR: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CONSTRAINT_VECTOR: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CONSTRAINT_REFERENCE_VECTOR: ::flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFMLocalAlignedConstrainedAxes { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFMLocalAlignedConstrainedAxesArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes<'bldr>> {
+    let mut builder = RFMLocalAlignedConstrainedAxesBuilder::new(_fbb);
+    if let Some(x) = args.CONSTRAINT_REFERENCE_VECTOR { builder.add_CONSTRAINT_REFERENCE_VECTOR(x); }
+    if let Some(x) = args.CONSTRAINT_VECTOR { builder.add_CONSTRAINT_VECTOR(x); }
+    if let Some(x) = args.ALIGNMENT_REFERENCE_VECTOR { builder.add_ALIGNMENT_REFERENCE_VECTOR(x); }
+    if let Some(x) = args.ALIGNMENT_VECTOR { builder.add_ALIGNMENT_VECTOR(x); }
+    if let Some(x) = args.REFERENCE_COORDINATE_SYSTEM_NAME { builder.add_REFERENCE_COORDINATE_SYSTEM_NAME(x); }
+    if let Some(x) = args.REFERENCE_OBJECT_ID { builder.add_REFERENCE_OBJECT_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFMLocalAlignedConstrainedAxesT {
+    let REFERENCE_OBJECT_ID = self.REFERENCE_OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_COORDINATE_SYSTEM_NAME = self.REFERENCE_COORDINATE_SYSTEM_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALIGNMENT_VECTOR = self.ALIGNMENT_VECTOR().map(|x| {
+      x.into_iter().collect()
+    });
+    let ALIGNMENT_REFERENCE_VECTOR = self.ALIGNMENT_REFERENCE_VECTOR().map(|x| {
+      x.into_iter().collect()
+    });
+    let CONSTRAINT_VECTOR = self.CONSTRAINT_VECTOR().map(|x| {
+      x.into_iter().collect()
+    });
+    let CONSTRAINT_REFERENCE_VECTOR = self.CONSTRAINT_REFERENCE_VECTOR().map(|x| {
+      x.into_iter().collect()
+    });
+    RFMLocalAlignedConstrainedAxesT {
+      REFERENCE_OBJECT_ID,
+      REFERENCE_COORDINATE_SYSTEM_NAME,
+      ALIGNMENT_VECTOR,
+      ALIGNMENT_REFERENCE_VECTOR,
+      CONSTRAINT_VECTOR,
+      CONSTRAINT_REFERENCE_VECTOR,
+    }
+  }
+
+  #[inline]
+  pub fn REFERENCE_OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_OBJECT_ID, None)}
+  }
+  #[inline]
+  pub fn REFERENCE_COORDINATE_SYSTEM_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_COORDINATE_SYSTEM_NAME, None)}
+  }
+  #[inline]
+  pub fn ALIGNMENT_VECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_VECTOR, None)}
+  }
+  #[inline]
+  pub fn ALIGNMENT_REFERENCE_VECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_REFERENCE_VECTOR, None)}
+  }
+  #[inline]
+  pub fn CONSTRAINT_VECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_VECTOR, None)}
+  }
+  #[inline]
+  pub fn CONSTRAINT_REFERENCE_VECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_REFERENCE_VECTOR, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFMLocalAlignedConstrainedAxes<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_OBJECT_ID", Self::VT_REFERENCE_OBJECT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_COORDINATE_SYSTEM_NAME", Self::VT_REFERENCE_COORDINATE_SYSTEM_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ALIGNMENT_VECTOR", Self::VT_ALIGNMENT_VECTOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ALIGNMENT_REFERENCE_VECTOR", Self::VT_ALIGNMENT_REFERENCE_VECTOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CONSTRAINT_VECTOR", Self::VT_CONSTRAINT_VECTOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CONSTRAINT_REFERENCE_VECTOR", Self::VT_CONSTRAINT_REFERENCE_VECTOR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFMLocalAlignedConstrainedAxesArgs<'a> {
+    pub REFERENCE_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_COORDINATE_SYSTEM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALIGNMENT_VECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ALIGNMENT_REFERENCE_VECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CONSTRAINT_VECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CONSTRAINT_REFERENCE_VECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+}
+impl<'a> Default for RFMLocalAlignedConstrainedAxesArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFMLocalAlignedConstrainedAxesArgs {
+      REFERENCE_OBJECT_ID: None,
+      REFERENCE_COORDINATE_SYSTEM_NAME: None,
+      ALIGNMENT_VECTOR: None,
+      ALIGNMENT_REFERENCE_VECTOR: None,
+      CONSTRAINT_VECTOR: None,
+      CONSTRAINT_REFERENCE_VECTOR: None,
+    }
+  }
+}
+
+pub struct RFMLocalAlignedConstrainedAxesBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMLocalAlignedConstrainedAxesBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_REFERENCE_OBJECT_ID(&mut self, REFERENCE_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_OBJECT_ID, REFERENCE_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_REFERENCE_COORDINATE_SYSTEM_NAME(&mut self, REFERENCE_COORDINATE_SYSTEM_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_REFERENCE_COORDINATE_SYSTEM_NAME, REFERENCE_COORDINATE_SYSTEM_NAME);
+  }
+  #[inline]
+  pub fn add_ALIGNMENT_VECTOR(&mut self, ALIGNMENT_VECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_VECTOR, ALIGNMENT_VECTOR);
+  }
+  #[inline]
+  pub fn add_ALIGNMENT_REFERENCE_VECTOR(&mut self, ALIGNMENT_REFERENCE_VECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_ALIGNMENT_REFERENCE_VECTOR, ALIGNMENT_REFERENCE_VECTOR);
+  }
+  #[inline]
+  pub fn add_CONSTRAINT_VECTOR(&mut self, CONSTRAINT_VECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_VECTOR, CONSTRAINT_VECTOR);
+  }
+  #[inline]
+  pub fn add_CONSTRAINT_REFERENCE_VECTOR(&mut self, CONSTRAINT_REFERENCE_VECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMLocalAlignedConstrainedAxes::VT_CONSTRAINT_REFERENCE_VECTOR, CONSTRAINT_REFERENCE_VECTOR);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMLocalAlignedConstrainedAxesBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFMLocalAlignedConstrainedAxesBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFMLocalAlignedConstrainedAxes<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFMLocalAlignedConstrainedAxes");
+      ds.field("REFERENCE_OBJECT_ID", &self.REFERENCE_OBJECT_ID());
+      ds.field("REFERENCE_COORDINATE_SYSTEM_NAME", &self.REFERENCE_COORDINATE_SYSTEM_NAME());
+      ds.field("ALIGNMENT_VECTOR", &self.ALIGNMENT_VECTOR());
+      ds.field("ALIGNMENT_REFERENCE_VECTOR", &self.ALIGNMENT_REFERENCE_VECTOR());
+      ds.field("CONSTRAINT_VECTOR", &self.CONSTRAINT_VECTOR());
+      ds.field("CONSTRAINT_REFERENCE_VECTOR", &self.CONSTRAINT_REFERENCE_VECTOR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFMLocalAlignedConstrainedAxesT {
+  pub REFERENCE_OBJECT_ID: Option<alloc::string::String>,
+  pub REFERENCE_COORDINATE_SYSTEM_NAME: Option<alloc::string::String>,
+  pub ALIGNMENT_VECTOR: Option<alloc::vec::Vec<f64>>,
+  pub ALIGNMENT_REFERENCE_VECTOR: Option<alloc::vec::Vec<f64>>,
+  pub CONSTRAINT_VECTOR: Option<alloc::vec::Vec<f64>>,
+  pub CONSTRAINT_REFERENCE_VECTOR: Option<alloc::vec::Vec<f64>>,
+}
+impl Default for RFMLocalAlignedConstrainedAxesT {
+  fn default() -> Self {
+    Self {
+      REFERENCE_OBJECT_ID: None,
+      REFERENCE_COORDINATE_SYSTEM_NAME: None,
+      ALIGNMENT_VECTOR: None,
+      ALIGNMENT_REFERENCE_VECTOR: None,
+      CONSTRAINT_VECTOR: None,
+      CONSTRAINT_REFERENCE_VECTOR: None,
+    }
+  }
+}
+impl RFMLocalAlignedConstrainedAxesT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes<'b>> {
+    let REFERENCE_OBJECT_ID = self.REFERENCE_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_COORDINATE_SYSTEM_NAME = self.REFERENCE_COORDINATE_SYSTEM_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALIGNMENT_VECTOR = self.ALIGNMENT_VECTOR.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ALIGNMENT_REFERENCE_VECTOR = self.ALIGNMENT_REFERENCE_VECTOR.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CONSTRAINT_VECTOR = self.CONSTRAINT_VECTOR.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CONSTRAINT_REFERENCE_VECTOR = self.CONSTRAINT_REFERENCE_VECTOR.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    RFMLocalAlignedConstrainedAxes::create(_fbb, &RFMLocalAlignedConstrainedAxesArgs{
+      REFERENCE_OBJECT_ID,
+      REFERENCE_COORDINATE_SYSTEM_NAME,
+      ALIGNMENT_VECTOR,
+      ALIGNMENT_REFERENCE_VECTOR,
+      CONSTRAINT_VECTOR,
+      CONSTRAINT_REFERENCE_VECTOR,
+    })
+  }
+}
+pub enum RFMCoordinateSystemOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A fully specified coordinate system: an axis set, an origin, and the epoch
+/// and time system the axis set is evaluated at. This is the unit a frames
+/// consumer needs; the pre-existing RFMUnion members name an axis convention
+/// alone and cannot express an origin.
+pub struct RFMCoordinateSystem<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFMCoordinateSystem<'a> {
+  type Inner = RFMCoordinateSystem<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFMCoordinateSystem<'a> {
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_AXIS_TYPE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ORIGIN: ::flatbuffers::VOffsetT = 8;
+  pub const VT_AXIS_REFERENCE_BODY_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 12;
+  pub const VT_EPOCH_TIME_SYSTEM: ::flatbuffers::VOffsetT = 14;
+  pub const VT_OBJECT_REFERENCED_AXES: ::flatbuffers::VOffsetT = 16;
+  pub const VT_LOCAL_ALIGNED_CONSTRAINED_AXES: ::flatbuffers::VOffsetT = 18;
+  pub const VT_KERNEL_FRAME_NAME: ::flatbuffers::VOffsetT = 20;
+  pub const VT_KERNEL_FRAME_ID: ::flatbuffers::VOffsetT = 22;
+  pub const VT_EOP_DATA_SET_CID: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFMCoordinateSystem { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFMCoordinateSystemArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFMCoordinateSystem<'bldr>> {
+    let mut builder = RFMCoordinateSystemBuilder::new(_fbb);
+    if let Some(x) = args.EOP_DATA_SET_CID { builder.add_EOP_DATA_SET_CID(x); }
+    builder.add_KERNEL_FRAME_ID(args.KERNEL_FRAME_ID);
+    if let Some(x) = args.KERNEL_FRAME_NAME { builder.add_KERNEL_FRAME_NAME(x); }
+    if let Some(x) = args.LOCAL_ALIGNED_CONSTRAINED_AXES { builder.add_LOCAL_ALIGNED_CONSTRAINED_AXES(x); }
+    if let Some(x) = args.OBJECT_REFERENCED_AXES { builder.add_OBJECT_REFERENCED_AXES(x); }
+    if let Some(x) = args.EPOCH_TIME_SYSTEM { builder.add_EPOCH_TIME_SYSTEM(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.add_AXIS_REFERENCE_BODY_ID(args.AXIS_REFERENCE_BODY_ID);
+    if let Some(x) = args.ORIGIN { builder.add_ORIGIN(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_AXIS_TYPE(args.AXIS_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFMCoordinateSystemT {
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let AXIS_TYPE = self.AXIS_TYPE();
+    let ORIGIN = self.ORIGIN().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let AXIS_REFERENCE_BODY_ID = self.AXIS_REFERENCE_BODY_ID();
+    let EPOCH = self.EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPOCH_TIME_SYSTEM = self.EPOCH_TIME_SYSTEM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_REFERENCED_AXES = self.OBJECT_REFERENCED_AXES().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let LOCAL_ALIGNED_CONSTRAINED_AXES = self.LOCAL_ALIGNED_CONSTRAINED_AXES().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let KERNEL_FRAME_NAME = self.KERNEL_FRAME_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let KERNEL_FRAME_ID = self.KERNEL_FRAME_ID();
+    let EOP_DATA_SET_CID = self.EOP_DATA_SET_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    RFMCoordinateSystemT {
+      NAME,
+      AXIS_TYPE,
+      ORIGIN,
+      AXIS_REFERENCE_BODY_ID,
+      EPOCH,
+      EPOCH_TIME_SYSTEM,
+      OBJECT_REFERENCED_AXES,
+      LOCAL_ALIGNED_CONSTRAINED_AXES,
+      KERNEL_FRAME_NAME,
+      KERNEL_FRAME_ID,
+      EOP_DATA_SET_CID,
+    }
+  }
+
+  /// Stable name for this coordinate system within the producing data set.
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_NAME, None)}
+  }
+  /// Orientation rule.
+  #[inline]
+  pub fn AXIS_TYPE(&self) -> rfmAxisType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfmAxisType>(RFMCoordinateSystem::VT_AXIS_TYPE, Some(rfmAxisType::UNSPECIFIED)).unwrap()}
+  }
+  /// Centre of the system.
+  #[inline]
+  pub fn ORIGIN(&self) -> Option<RFMOrigin<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMOrigin>>(RFMCoordinateSystem::VT_ORIGIN, None)}
+  }
+  /// Ephemeris body code whose equator/rotation defines the axes, for the
+  /// body-referenced axis types. Independent of ORIGIN.
+  #[inline]
+  pub fn AXIS_REFERENCE_BODY_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMCoordinateSystem::VT_AXIS_REFERENCE_BODY_ID, Some(0)).unwrap()}
+  }
+  /// Reference epoch the axis set is evaluated at, ISO 8601. Required for the
+  /// of-date and of-epoch axis types; ignored by the inertial ones.
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_EPOCH, None)}
+  }
+  /// Time system the EPOCH is expressed in, named by the $TIM timingStandard
+  /// member name (for example "UTC", "TAI", "TT", "TDB", "A1").
+  #[inline]
+  pub fn EPOCH_TIME_SYSTEM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_EPOCH_TIME_SYSTEM, None)}
+  }
+  /// Extra parameters for OBJECT_REFERENCED axes.
+  #[inline]
+  pub fn OBJECT_REFERENCED_AXES(&self) -> Option<RFMObjectReferencedAxes<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMObjectReferencedAxes>>(RFMCoordinateSystem::VT_OBJECT_REFERENCED_AXES, None)}
+  }
+  /// Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
+  #[inline]
+  pub fn LOCAL_ALIGNED_CONSTRAINED_AXES(&self) -> Option<RFMLocalAlignedConstrainedAxes<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMLocalAlignedConstrainedAxes>>(RFMCoordinateSystem::VT_LOCAL_ALIGNED_CONSTRAINED_AXES, None)}
+  }
+  /// Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
+  #[inline]
+  pub fn KERNEL_FRAME_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_KERNEL_FRAME_NAME, None)}
+  }
+  /// Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
+  #[inline]
+  pub fn KERNEL_FRAME_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(RFMCoordinateSystem::VT_KERNEL_FRAME_ID, Some(0)).unwrap()}
+  }
+  /// Content identifier of the Earth-orientation data set used to realise
+  /// this system, when the axis chain requires one. Recorded so that two
+  /// consumers can prove they used the same table rather than assume it.
+  #[inline]
+  pub fn EOP_DATA_SET_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_EOP_DATA_SET_CID, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFMCoordinateSystem<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<rfmAxisType>("AXIS_TYPE", Self::VT_AXIS_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFMOrigin>>("ORIGIN", Self::VT_ORIGIN, false)?
+     .visit_field::<i32>("AXIS_REFERENCE_BODY_ID", Self::VT_AXIS_REFERENCE_BODY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_TIME_SYSTEM", Self::VT_EPOCH_TIME_SYSTEM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFMObjectReferencedAxes>>("OBJECT_REFERENCED_AXES", Self::VT_OBJECT_REFERENCED_AXES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFMLocalAlignedConstrainedAxes>>("LOCAL_ALIGNED_CONSTRAINED_AXES", Self::VT_LOCAL_ALIGNED_CONSTRAINED_AXES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KERNEL_FRAME_NAME", Self::VT_KERNEL_FRAME_NAME, false)?
+     .visit_field::<i32>("KERNEL_FRAME_ID", Self::VT_KERNEL_FRAME_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EOP_DATA_SET_CID", Self::VT_EOP_DATA_SET_CID, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFMCoordinateSystemArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AXIS_TYPE: rfmAxisType,
+    pub ORIGIN: Option<::flatbuffers::WIPOffset<RFMOrigin<'a>>>,
+    pub AXIS_REFERENCE_BODY_ID: i32,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_TIME_SYSTEM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_REFERENCED_AXES: Option<::flatbuffers::WIPOffset<RFMObjectReferencedAxes<'a>>>,
+    pub LOCAL_ALIGNED_CONSTRAINED_AXES: Option<::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes<'a>>>,
+    pub KERNEL_FRAME_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KERNEL_FRAME_ID: i32,
+    pub EOP_DATA_SET_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for RFMCoordinateSystemArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFMCoordinateSystemArgs {
+      NAME: None,
+      AXIS_TYPE: rfmAxisType::UNSPECIFIED,
+      ORIGIN: None,
+      AXIS_REFERENCE_BODY_ID: 0,
+      EPOCH: None,
+      EPOCH_TIME_SYSTEM: None,
+      OBJECT_REFERENCED_AXES: None,
+      LOCAL_ALIGNED_CONSTRAINED_AXES: None,
+      KERNEL_FRAME_NAME: None,
+      KERNEL_FRAME_ID: 0,
+      EOP_DATA_SET_CID: None,
+    }
+  }
+}
+
+pub struct RFMCoordinateSystemBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMCoordinateSystemBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_AXIS_TYPE(&mut self, AXIS_TYPE: rfmAxisType) {
+    self.fbb_.push_slot::<rfmAxisType>(RFMCoordinateSystem::VT_AXIS_TYPE, AXIS_TYPE, rfmAxisType::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_ORIGIN(&mut self, ORIGIN: ::flatbuffers::WIPOffset<RFMOrigin<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMOrigin>>(RFMCoordinateSystem::VT_ORIGIN, ORIGIN);
+  }
+  #[inline]
+  pub fn add_AXIS_REFERENCE_BODY_ID(&mut self, AXIS_REFERENCE_BODY_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMCoordinateSystem::VT_AXIS_REFERENCE_BODY_ID, AXIS_REFERENCE_BODY_ID, 0);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_EPOCH_TIME_SYSTEM(&mut self, EPOCH_TIME_SYSTEM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_EPOCH_TIME_SYSTEM, EPOCH_TIME_SYSTEM);
+  }
+  #[inline]
+  pub fn add_OBJECT_REFERENCED_AXES(&mut self, OBJECT_REFERENCED_AXES: ::flatbuffers::WIPOffset<RFMObjectReferencedAxes<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMObjectReferencedAxes>>(RFMCoordinateSystem::VT_OBJECT_REFERENCED_AXES, OBJECT_REFERENCED_AXES);
+  }
+  #[inline]
+  pub fn add_LOCAL_ALIGNED_CONSTRAINED_AXES(&mut self, LOCAL_ALIGNED_CONSTRAINED_AXES: ::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMLocalAlignedConstrainedAxes>>(RFMCoordinateSystem::VT_LOCAL_ALIGNED_CONSTRAINED_AXES, LOCAL_ALIGNED_CONSTRAINED_AXES);
+  }
+  #[inline]
+  pub fn add_KERNEL_FRAME_NAME(&mut self, KERNEL_FRAME_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_KERNEL_FRAME_NAME, KERNEL_FRAME_NAME);
+  }
+  #[inline]
+  pub fn add_KERNEL_FRAME_ID(&mut self, KERNEL_FRAME_ID: i32) {
+    self.fbb_.push_slot::<i32>(RFMCoordinateSystem::VT_KERNEL_FRAME_ID, KERNEL_FRAME_ID, 0);
+  }
+  #[inline]
+  pub fn add_EOP_DATA_SET_CID(&mut self, EOP_DATA_SET_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_EOP_DATA_SET_CID, EOP_DATA_SET_CID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMCoordinateSystemBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFMCoordinateSystemBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFMCoordinateSystem<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFMCoordinateSystem<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFMCoordinateSystem");
+      ds.field("NAME", &self.NAME());
+      ds.field("AXIS_TYPE", &self.AXIS_TYPE());
+      ds.field("ORIGIN", &self.ORIGIN());
+      ds.field("AXIS_REFERENCE_BODY_ID", &self.AXIS_REFERENCE_BODY_ID());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("EPOCH_TIME_SYSTEM", &self.EPOCH_TIME_SYSTEM());
+      ds.field("OBJECT_REFERENCED_AXES", &self.OBJECT_REFERENCED_AXES());
+      ds.field("LOCAL_ALIGNED_CONSTRAINED_AXES", &self.LOCAL_ALIGNED_CONSTRAINED_AXES());
+      ds.field("KERNEL_FRAME_NAME", &self.KERNEL_FRAME_NAME());
+      ds.field("KERNEL_FRAME_ID", &self.KERNEL_FRAME_ID());
+      ds.field("EOP_DATA_SET_CID", &self.EOP_DATA_SET_CID());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFMCoordinateSystemT {
+  pub NAME: Option<alloc::string::String>,
+  pub AXIS_TYPE: rfmAxisType,
+  pub ORIGIN: Option<alloc::boxed::Box<RFMOriginT>>,
+  pub AXIS_REFERENCE_BODY_ID: i32,
+  pub EPOCH: Option<alloc::string::String>,
+  pub EPOCH_TIME_SYSTEM: Option<alloc::string::String>,
+  pub OBJECT_REFERENCED_AXES: Option<alloc::boxed::Box<RFMObjectReferencedAxesT>>,
+  pub LOCAL_ALIGNED_CONSTRAINED_AXES: Option<alloc::boxed::Box<RFMLocalAlignedConstrainedAxesT>>,
+  pub KERNEL_FRAME_NAME: Option<alloc::string::String>,
+  pub KERNEL_FRAME_ID: i32,
+  pub EOP_DATA_SET_CID: Option<alloc::string::String>,
+}
+impl Default for RFMCoordinateSystemT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      AXIS_TYPE: rfmAxisType::UNSPECIFIED,
+      ORIGIN: None,
+      AXIS_REFERENCE_BODY_ID: 0,
+      EPOCH: None,
+      EPOCH_TIME_SYSTEM: None,
+      OBJECT_REFERENCED_AXES: None,
+      LOCAL_ALIGNED_CONSTRAINED_AXES: None,
+      KERNEL_FRAME_NAME: None,
+      KERNEL_FRAME_ID: 0,
+      EOP_DATA_SET_CID: None,
+    }
+  }
+}
+impl RFMCoordinateSystemT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFMCoordinateSystem<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let AXIS_TYPE = self.AXIS_TYPE;
+    let ORIGIN = self.ORIGIN.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let AXIS_REFERENCE_BODY_ID = self.AXIS_REFERENCE_BODY_ID;
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH_TIME_SYSTEM = self.EPOCH_TIME_SYSTEM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_REFERENCED_AXES = self.OBJECT_REFERENCED_AXES.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let LOCAL_ALIGNED_CONSTRAINED_AXES = self.LOCAL_ALIGNED_CONSTRAINED_AXES.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let KERNEL_FRAME_NAME = self.KERNEL_FRAME_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KERNEL_FRAME_ID = self.KERNEL_FRAME_ID;
+    let EOP_DATA_SET_CID = self.EOP_DATA_SET_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    RFMCoordinateSystem::create(_fbb, &RFMCoordinateSystemArgs{
+      NAME,
+      AXIS_TYPE,
+      ORIGIN,
+      AXIS_REFERENCE_BODY_ID,
+      EPOCH,
+      EPOCH_TIME_SYSTEM,
+      OBJECT_REFERENCED_AXES,
+      LOCAL_ALIGNED_CONSTRAINED_AXES,
+      KERNEL_FRAME_NAME,
+      KERNEL_FRAME_ID,
+      EOP_DATA_SET_CID,
+    })
   }
 }
 pub enum CelestialFrameWrapperOffset {}
@@ -1480,6 +3374,135 @@ impl CustomFrameWrapperT {
     })
   }
 }
+pub enum RFMCoordinateSystemWrapperOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct RFMCoordinateSystemWrapper<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFMCoordinateSystemWrapper<'a> {
+  type Inner = RFMCoordinateSystemWrapper<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> RFMCoordinateSystemWrapper<'a> {
+  pub const VT_COORDINATE_SYSTEM: ::flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    RFMCoordinateSystemWrapper { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args RFMCoordinateSystemWrapperArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<RFMCoordinateSystemWrapper<'bldr>> {
+    let mut builder = RFMCoordinateSystemWrapperBuilder::new(_fbb);
+    if let Some(x) = args.COORDINATE_SYSTEM { builder.add_COORDINATE_SYSTEM(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> RFMCoordinateSystemWrapperT {
+    let COORDINATE_SYSTEM = self.COORDINATE_SYSTEM().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    RFMCoordinateSystemWrapperT {
+      COORDINATE_SYSTEM,
+    }
+  }
+
+  #[inline]
+  pub fn COORDINATE_SYSTEM(&self) -> Option<RFMCoordinateSystem<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>(RFMCoordinateSystemWrapper::VT_COORDINATE_SYSTEM, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for RFMCoordinateSystemWrapper<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>("COORDINATE_SYSTEM", Self::VT_COORDINATE_SYSTEM, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct RFMCoordinateSystemWrapperArgs<'a> {
+    pub COORDINATE_SYSTEM: Option<::flatbuffers::WIPOffset<RFMCoordinateSystem<'a>>>,
+}
+impl<'a> Default for RFMCoordinateSystemWrapperArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    RFMCoordinateSystemWrapperArgs {
+      COORDINATE_SYSTEM: None,
+    }
+  }
+}
+
+pub struct RFMCoordinateSystemWrapperBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMCoordinateSystemWrapperBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COORDINATE_SYSTEM(&mut self, COORDINATE_SYSTEM: ::flatbuffers::WIPOffset<RFMCoordinateSystem<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMCoordinateSystem>>(RFMCoordinateSystemWrapper::VT_COORDINATE_SYSTEM, COORDINATE_SYSTEM);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMCoordinateSystemWrapperBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    RFMCoordinateSystemWrapperBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFMCoordinateSystemWrapper<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for RFMCoordinateSystemWrapper<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("RFMCoordinateSystemWrapper");
+      ds.field("COORDINATE_SYSTEM", &self.COORDINATE_SYSTEM());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFMCoordinateSystemWrapperT {
+  pub COORDINATE_SYSTEM: Option<alloc::boxed::Box<RFMCoordinateSystemT>>,
+}
+impl Default for RFMCoordinateSystemWrapperT {
+  fn default() -> Self {
+    Self {
+      COORDINATE_SYSTEM: None,
+    }
+  }
+}
+impl RFMCoordinateSystemWrapperT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<RFMCoordinateSystemWrapper<'b>> {
+    let COORDINATE_SYSTEM = self.COORDINATE_SYSTEM.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    RFMCoordinateSystemWrapper::create(_fbb, &RFMCoordinateSystemWrapperArgs{
+      COORDINATE_SYSTEM,
+    })
+  }
+}
 pub enum RFMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1540,6 +3563,11 @@ impl<'a> RFM<'a> {
       RFMUnion::CustomFrameWrapper => RFMUnionT::CustomFrameWrapper(alloc::boxed::Box::new(
         self.REFERENCE_FRAME_as_custom_frame_wrapper()
             .expect("Invalid union table, expected `RFMUnion::CustomFrameWrapper`.")
+            .unpack()
+      )),
+      RFMUnion::RFMCoordinateSystemWrapper => RFMUnionT::RFMCoordinateSystemWrapper(alloc::boxed::Box::new(
+        self.REFERENCE_FRAME_as_rfmcoordinate_system_wrapper()
+            .expect("Invalid union table, expected `RFMUnion::RFMCoordinateSystemWrapper`.")
             .unpack()
       )),
       _ => RFMUnionT::NONE,
@@ -1643,6 +3671,21 @@ impl<'a> RFM<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn REFERENCE_FRAME_as_rfmcoordinate_system_wrapper(&self) -> Option<RFMCoordinateSystemWrapper<'a>> {
+    if self.REFERENCE_FRAME_type() == RFMUnion::RFMCoordinateSystemWrapper {
+      self.REFERENCE_FRAME().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RFMCoordinateSystemWrapper::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for RFM<'_> {
@@ -1657,6 +3700,7 @@ impl ::flatbuffers::Verifiable for RFM<'_> {
           RFMUnion::SpacecraftFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SpacecraftFrameWrapper>>("RFMUnion::SpacecraftFrameWrapper", pos),
           RFMUnion::OrbitFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<OrbitFrameWrapper>>("RFMUnion::OrbitFrameWrapper", pos),
           RFMUnion::CustomFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CustomFrameWrapper>>("RFMUnion::CustomFrameWrapper", pos),
+          RFMUnion::RFMCoordinateSystemWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystemWrapper>>("RFMUnion::RFMCoordinateSystemWrapper", pos),
           _ => Ok(()),
         }
      })?
@@ -1748,6 +3792,13 @@ impl ::core::fmt::Debug for RFM<'_> {
         },
         RFMUnion::CustomFrameWrapper => {
           if let Some(x) = self.REFERENCE_FRAME_as_custom_frame_wrapper() {
+            ds.field("REFERENCE_FRAME", &x)
+          } else {
+            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RFMUnion::RFMCoordinateSystemWrapper => {
+          if let Some(x) = self.REFERENCE_FRAME_as_rfmcoordinate_system_wrapper() {
             ds.field("REFERENCE_FRAME", &x)
           } else {
             ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")

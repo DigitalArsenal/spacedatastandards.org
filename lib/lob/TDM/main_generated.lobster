@@ -231,12 +231,130 @@ enum CustomFrame:
     /// Radial-UTF: Radial, Along-track, Cross-track variant.
     CustomFrame_UVW = 17
 
+/// Axis-set capability classes for a fully specified coordinate system.
+/// These name the ORIENTATION rule only; the ORIGIN is carried separately in
+/// RFMOrigin, so any axis set below combines with any origin. Append new
+/// values only; never reorder or reuse existing values.
+enum rfmAxisType:
+    rfmAxisType_UNSPECIFIED = 0
+    /// Mean equator and mean equinox of the J2000.0 epoch.
+    rfmAxisType_MEAN_EQUATOR_EQUINOX_J2000 = 1
+    /// Mean ecliptic and mean equinox of the J2000.0 epoch.
+    rfmAxisType_MEAN_ECLIPTIC_EQUINOX_J2000 = 2
+    /// International Celestial Reference Frame axes.
+    rfmAxisType_ICRF = 3
+    /// True equator, mean equinox of date.
+    rfmAxisType_TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE = 4
+    /// Mean equator of date (precession applied to the epoch of the state).
+    rfmAxisType_MEAN_OF_DATE_EQUATOR = 5
+    /// Mean ecliptic of date.
+    rfmAxisType_MEAN_OF_DATE_ECLIPTIC = 6
+    /// True equator of date (precession and nutation applied).
+    rfmAxisType_TRUE_OF_DATE_EQUATOR = 7
+    /// True ecliptic of date.
+    rfmAxisType_TRUE_OF_DATE_ECLIPTIC = 8
+    /// Mean equator of a fixed reference epoch.
+    rfmAxisType_MEAN_OF_EPOCH_EQUATOR = 9
+    /// Mean ecliptic of a fixed reference epoch.
+    rfmAxisType_MEAN_OF_EPOCH_ECLIPTIC = 10
+    /// True equator of a fixed reference epoch.
+    rfmAxisType_TRUE_OF_EPOCH_EQUATOR = 11
+    /// True ecliptic of a fixed reference epoch.
+    rfmAxisType_TRUE_OF_EPOCH_ECLIPTIC = 12
+    /// Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID,
+    /// per its published rotation elements.
+    rfmAxisType_BODY_FIXED = 13
+    /// Non-rotating axes aligned with the reference body's equator and prime
+    /// meridian at the reference epoch.
+    rfmAxisType_BODY_INERTIAL = 14
+    /// Axes built from the relative geometry of two named objects; see
+    /// RFMObjectReferencedAxes.
+    rfmAxisType_OBJECT_REFERENCED = 15
+    /// Axes built by aligning one vector and constraining a second; see
+    /// RFMLocalAlignedConstrainedAxes.
+    rfmAxisType_LOCAL_ALIGNED_CONSTRAINED = 16
+    /// Axes in the reference body's equatorial plane at the requested epoch.
+    rfmAxisType_BODY_EQUATOR = 17
+    /// Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the
+    /// ecliptic north, commonly abbreviated GSE.
+    rfmAxisType_SOLAR_ECLIPTIC_MAGNETOSPHERIC = 18
+    /// Solar-magnetospheric axes: X toward the Sun, Z in the plane containing
+    /// the body magnetic dipole, commonly abbreviated GSM.
+    rfmAxisType_SOLAR_MAGNETOSPHERIC = 19
+    /// Local horizon axes at a surface site; the site is carried on RFMOrigin.
+    rfmAxisType_TOPOCENTRIC = 20
+    /// Axes fixed by the body spin axis and the body-to-Sun direction.
+    rfmAxisType_BODY_SPIN_SUN = 21
+    /// Axes defined by a loaded ephemeris/orientation kernel; identified by
+    /// KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem.
+    rfmAxisType_EPHEMERIS_KERNEL_DEFINED = 22
+    /// LEGACY, retained and NAMED rather than left implicit: mean equator of
+    /// date computed with the IAU-76/FK5 precession theory instead of the
+    /// IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the
+    /// milliarcsecond level and the two are not interchangeable.
+    rfmAxisType_MEAN_OF_DATE_EQUATOR_FK5 = 23
+    /// LEGACY, retained and NAMED: true equator of date computed with the
+    /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
+    rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5 = 24
+
+/// What kind of point a coordinate system is centred on. Append new values
+/// only; never reorder or reuse existing values.
+enum rfmOriginKind:
+    rfmOriginKind_UNSPECIFIED = 0
+    /// The centre of mass of a single celestial body.
+    rfmOriginKind_CELESTIAL_BODY = 1
+    /// The barycentre of a named system of bodies.
+    rfmOriginKind_BARYCENTRE = 2
+    /// A libration (Lagrange) point of a two-body system.
+    rfmOriginKind_LIBRATION_POINT = 3
+    /// Another tracked space object, identified by OBJECT_ID.
+    rfmOriginKind_SPACE_OBJECT = 4
+    /// A fixed site on a body surface, identified by SITE_ID and the geodetic
+    /// fields on RFMOrigin.
+    rfmOriginKind_GROUND_SITE = 5
+
+/// Libration point of the primary/secondary pair named on RFMOrigin. Append
+/// new values only; never reorder or reuse existing values.
+enum rfmLibrationPoint:
+    rfmLibrationPoint_UNSPECIFIED = 0
+    rfmLibrationPoint_L1 = 1
+    rfmLibrationPoint_L2 = 2
+    rfmLibrationPoint_L3 = 3
+    rfmLibrationPoint_L4 = 4
+    rfmLibrationPoint_L5 = 5
+
+/// Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
+enum rfmVectorSpecification:
+    rfmVectorSpecification_UNSPECIFIED = 0
+    /// Primary-to-secondary position direction.
+    rfmVectorSpecification_RADIAL = 1
+    /// Negated RADIAL.
+    rfmVectorSpecification_ANTI_RADIAL = 2
+    /// Relative velocity direction.
+    rfmVectorSpecification_VELOCITY = 3
+    /// Negated VELOCITY.
+    rfmVectorSpecification_ANTI_VELOCITY = 4
+    /// Orbit normal, RADIAL crossed into VELOCITY.
+    rfmVectorSpecification_ORBIT_NORMAL = 5
+    /// Negated ORBIT_NORMAL.
+    rfmVectorSpecification_ANTI_ORBIT_NORMAL = 6
+
+/// Union ordinals are WIRE. Append new members LAST; never reorder.
 enum RFMUnion:
     RFMUnion_NONE = 0
     RFMUnion_CelestialFrameWrapper = 1
     RFMUnion_SpacecraftFrameWrapper = 2
     RFMUnion_OrbitFrameWrapper = 3
     RFMUnion_CustomFrameWrapper = 4
+    RFMUnion_RFMCoordinateSystemWrapper = 5
+
+class RFMOrigin
+
+class RFMObjectReferencedAxes
+
+class RFMLocalAlignedConstrainedAxes
+
+class RFMCoordinateSystem
 
 class CelestialFrameWrapper
 
@@ -246,7 +364,311 @@ class OrbitFrameWrapper
 
 class CustomFrameWrapper
 
+class RFMCoordinateSystemWrapper
+
 class RFM
+
+/// The point a coordinate system is centred on. Body and barycentre
+/// identifiers are integer ephemeris body codes; text NAME is descriptive
+/// only and is never the machine key.
+class RFMOrigin : flatbuffers.handle
+    def KIND() -> rfmOriginKind:
+        return rfmOriginKind(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    /// Ephemeris body code when KIND is CELESTIAL_BODY.
+    def CELESTIAL_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 6, 0)
+    /// Ephemeris body code of the barycentre when KIND is BARYCENTRE.
+    def BARYCENTRE_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 8, 0)
+    /// Which libration point, when KIND is LIBRATION_POINT.
+    def LIBRATION_POINT() -> rfmLibrationPoint:
+        return rfmLibrationPoint(flatbuffers.field_uint8(buf_, pos_, 10, 0))
+    /// Ephemeris body code of the libration system primary.
+    def LIBRATION_PRIMARY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 12, 0)
+    /// Ephemeris body code of the libration system secondary.
+    def LIBRATION_SECONDARY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 14, 0)
+    /// Identifier of the space object when KIND is SPACE_OBJECT.
+    def OBJECT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Identifier of the surface site when KIND is GROUND_SITE.
+    def SITE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Ephemeris body code of the body the site sits on.
+    def SITE_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 20, 0)
+    /// Geodetic latitude of the site, degrees, positive north.
+    def SITE_LATITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Geodetic longitude of the site, degrees, positive east.
+    def SITE_LONGITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Height of the site above the reference ellipsoid, metres.
+    def SITE_ALTITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Human-readable label. Descriptive only.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+
+def GetRootAsRFMOrigin(buf:string): return RFMOrigin { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFMOriginBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_KIND(KIND:rfmOriginKind):
+        b_.PrependUint8Slot(0, KIND, 0)
+        return this
+    def add_CELESTIAL_BODY_ID(CELESTIAL_BODY_ID:int):
+        b_.PrependInt32Slot(1, CELESTIAL_BODY_ID, 0)
+        return this
+    def add_BARYCENTRE_ID(BARYCENTRE_ID:int):
+        b_.PrependInt32Slot(2, BARYCENTRE_ID, 0)
+        return this
+    def add_LIBRATION_POINT(LIBRATION_POINT:rfmLibrationPoint):
+        b_.PrependUint8Slot(3, LIBRATION_POINT, 0)
+        return this
+    def add_LIBRATION_PRIMARY_ID(LIBRATION_PRIMARY_ID:int):
+        b_.PrependInt32Slot(4, LIBRATION_PRIMARY_ID, 0)
+        return this
+    def add_LIBRATION_SECONDARY_ID(LIBRATION_SECONDARY_ID:int):
+        b_.PrependInt32Slot(5, LIBRATION_SECONDARY_ID, 0)
+        return this
+    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, OBJECT_ID)
+        return this
+    def add_SITE_ID(SITE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, SITE_ID)
+        return this
+    def add_SITE_BODY_ID(SITE_BODY_ID:int):
+        b_.PrependInt32Slot(8, SITE_BODY_ID, 0)
+        return this
+    def add_SITE_LATITUDE(SITE_LATITUDE:float):
+        b_.PrependFloat64Slot(9, SITE_LATITUDE, 0.0)
+        return this
+    def add_SITE_LONGITUDE(SITE_LONGITUDE:float):
+        b_.PrependFloat64Slot(10, SITE_LONGITUDE, 0.0)
+        return this
+    def add_SITE_ALTITUDE(SITE_ALTITUDE:float):
+        b_.PrependFloat64Slot(11, SITE_ALTITUDE, 0.0)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, NAME)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Axes built from the relative geometry of two objects. Exactly two of the
+/// three axis assignments are independent; the third completes the triad.
+class RFMObjectReferencedAxes : flatbuffers.handle
+    def PRIMARY_OBJECT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def SECONDARY_OBJECT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def X_AXIS() -> rfmVectorSpecification:
+        return rfmVectorSpecification(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    def Y_AXIS() -> rfmVectorSpecification:
+        return rfmVectorSpecification(flatbuffers.field_uint8(buf_, pos_, 10, 0))
+    def Z_AXIS() -> rfmVectorSpecification:
+        return rfmVectorSpecification(flatbuffers.field_uint8(buf_, pos_, 12, 0))
+
+def GetRootAsRFMObjectReferencedAxes(buf:string): return RFMObjectReferencedAxes { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFMObjectReferencedAxesBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_PRIMARY_OBJECT_ID(PRIMARY_OBJECT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PRIMARY_OBJECT_ID)
+        return this
+    def add_SECONDARY_OBJECT_ID(SECONDARY_OBJECT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SECONDARY_OBJECT_ID)
+        return this
+    def add_X_AXIS(X_AXIS:rfmVectorSpecification):
+        b_.PrependUint8Slot(2, X_AXIS, 0)
+        return this
+    def add_Y_AXIS(Y_AXIS:rfmVectorSpecification):
+        b_.PrependUint8Slot(3, Y_AXIS, 0)
+        return this
+    def add_Z_AXIS(Z_AXIS:rfmVectorSpecification):
+        b_.PrependUint8Slot(4, Z_AXIS, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Axes built by aligning one vector with a reference direction and using a
+/// second vector as a constraint. Vectors are 3-element, expressed in the
+/// coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
+class RFMLocalAlignedConstrainedAxes : flatbuffers.handle
+    def REFERENCE_OBJECT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def REFERENCE_COORDINATE_SYSTEM_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def ALIGNMENT_VECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def ALIGNMENT_VECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    def ALIGNMENT_REFERENCE_VECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def ALIGNMENT_REFERENCE_VECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    def CONSTRAINT_VECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def CONSTRAINT_VECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    def CONSTRAINT_REFERENCE_VECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
+    def CONSTRAINT_REFERENCE_VECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAsRFMLocalAlignedConstrainedAxes(buf:string): return RFMLocalAlignedConstrainedAxes { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFMLocalAlignedConstrainedAxesBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_REFERENCE_OBJECT_ID(REFERENCE_OBJECT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, REFERENCE_OBJECT_ID)
+        return this
+    def add_REFERENCE_COORDINATE_SYSTEM_NAME(REFERENCE_COORDINATE_SYSTEM_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REFERENCE_COORDINATE_SYSTEM_NAME)
+        return this
+    def add_ALIGNMENT_VECTOR(ALIGNMENT_VECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ALIGNMENT_VECTOR)
+        return this
+    def add_ALIGNMENT_REFERENCE_VECTOR(ALIGNMENT_REFERENCE_VECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, ALIGNMENT_REFERENCE_VECTOR)
+        return this
+    def add_CONSTRAINT_VECTOR(CONSTRAINT_VECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, CONSTRAINT_VECTOR)
+        return this
+    def add_CONSTRAINT_REFERENCE_VECTOR(CONSTRAINT_REFERENCE_VECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, CONSTRAINT_REFERENCE_VECTOR)
+        return this
+    def end():
+        return b_.EndObject()
+
+def RFMLocalAlignedConstrainedAxesStartALIGNMENTVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RFMLocalAlignedConstrainedAxesCreateALIGNMENTVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def RFMLocalAlignedConstrainedAxesStartALIGNMENTREFERENCEVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RFMLocalAlignedConstrainedAxesCreateALIGNMENTREFERENCEVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def RFMLocalAlignedConstrainedAxesStartCONSTRAINTVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RFMLocalAlignedConstrainedAxesCreateCONSTRAINTVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def RFMLocalAlignedConstrainedAxesStartCONSTRAINTREFERENCEVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RFMLocalAlignedConstrainedAxesCreateCONSTRAINTREFERENCEVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// A fully specified coordinate system: an axis set, an origin, and the epoch
+/// and time system the axis set is evaluated at. This is the unit a frames
+/// consumer needs; the pre-existing RFMUnion members name an axis convention
+/// alone and cannot express an origin.
+class RFMCoordinateSystem : flatbuffers.handle
+    /// Stable name for this coordinate system within the producing data set.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Orientation rule.
+    def AXIS_TYPE() -> rfmAxisType:
+        return rfmAxisType(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    /// Centre of the system.
+    def ORIGIN() -> RFMOrigin?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: RFMOrigin { buf_, o } else: nil
+    /// Ephemeris body code whose equator/rotation defines the axes, for the
+    /// body-referenced axis types. Independent of ORIGIN.
+    def AXIS_REFERENCE_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 10, 0)
+    /// Reference epoch the axis set is evaluated at, ISO 8601. Required for the
+    /// of-date and of-epoch axis types; ignored by the inertial ones.
+    def EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Time system the EPOCH is expressed in, named by the $TIM timingStandard
+    /// member name (for example "UTC", "TAI", "TT", "TDB", "A1").
+    def EPOCH_TIME_SYSTEM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Extra parameters for OBJECT_REFERENCED axes.
+    def OBJECT_REFERENCED_AXES() -> RFMObjectReferencedAxes?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: RFMObjectReferencedAxes { buf_, o } else: nil
+    /// Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
+    def LOCAL_ALIGNED_CONSTRAINED_AXES() -> RFMLocalAlignedConstrainedAxes?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: RFMLocalAlignedConstrainedAxes { buf_, o } else: nil
+    /// Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
+    def KERNEL_FRAME_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
+    def KERNEL_FRAME_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 22, 0)
+    /// Content identifier of the Earth-orientation data set used to realise
+    /// this system, when the axis chain requires one. Recorded so that two
+    /// consumers can prove they used the same table rather than assume it.
+    def EOP_DATA_SET_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+
+def GetRootAsRFMCoordinateSystem(buf:string): return RFMCoordinateSystem { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFMCoordinateSystemBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_AXIS_TYPE(AXIS_TYPE:rfmAxisType):
+        b_.PrependUint8Slot(1, AXIS_TYPE, 0)
+        return this
+    def add_ORIGIN(ORIGIN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ORIGIN)
+        return this
+    def add_AXIS_REFERENCE_BODY_ID(AXIS_REFERENCE_BODY_ID:int):
+        b_.PrependInt32Slot(3, AXIS_REFERENCE_BODY_ID, 0)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, EPOCH)
+        return this
+    def add_EPOCH_TIME_SYSTEM(EPOCH_TIME_SYSTEM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, EPOCH_TIME_SYSTEM)
+        return this
+    def add_OBJECT_REFERENCED_AXES(OBJECT_REFERENCED_AXES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, OBJECT_REFERENCED_AXES)
+        return this
+    def add_LOCAL_ALIGNED_CONSTRAINED_AXES(LOCAL_ALIGNED_CONSTRAINED_AXES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, LOCAL_ALIGNED_CONSTRAINED_AXES)
+        return this
+    def add_KERNEL_FRAME_NAME(KERNEL_FRAME_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, KERNEL_FRAME_NAME)
+        return this
+    def add_KERNEL_FRAME_ID(KERNEL_FRAME_ID:int):
+        b_.PrependInt32Slot(9, KERNEL_FRAME_ID, 0)
+        return this
+    def add_EOP_DATA_SET_CID(EOP_DATA_SET_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, EOP_DATA_SET_CID)
+        return this
+    def end():
+        return b_.EndObject()
 
 class CelestialFrameWrapper : flatbuffers.handle
     def frame() -> CelestialFrame:
@@ -316,6 +738,24 @@ struct CustomFrameWrapperBuilder:
     def end():
         return b_.EndObject()
 
+class RFMCoordinateSystemWrapper : flatbuffers.handle
+    def COORDINATE_SYSTEM() -> RFMCoordinateSystem?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: RFMCoordinateSystem { buf_, o } else: nil
+
+def GetRootAsRFMCoordinateSystemWrapper(buf:string): return RFMCoordinateSystemWrapper { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFMCoordinateSystemWrapperBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_COORDINATE_SYSTEM(COORDINATE_SYSTEM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COORDINATE_SYSTEM)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Reference Frame Message
 class RFM : flatbuffers.handle
     def REFERENCE_FRAME_type() -> RFMUnion:
@@ -328,6 +768,8 @@ class RFM : flatbuffers.handle
         return OrbitFrameWrapper { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def REFERENCE_FRAME_as_CustomFrameWrapper():
         return CustomFrameWrapper { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def REFERENCE_FRAME_as_RFMCoordinateSystemWrapper():
+        return RFMCoordinateSystemWrapper { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def INDEX() -> int:
         return flatbuffers.field_int32(buf_, pos_, 8, 0)
     def NAME() -> string:

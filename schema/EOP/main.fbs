@@ -1,5 +1,5 @@
-// Hash: 7a1e91cb42b8cc42d009b37166b36f68d13df3f845373decb38e309ed02eff7d
-// Version: 1.0.2
+// Hash: 264779b1eb4cec7f12c2c4f0b1a69eaa1cfa195f699511b2691eba98fc12b6fe
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 enum DataType: byte {
   OBSERVED = 0,
@@ -94,6 +94,59 @@ table EOP {
 
   /// 1-sigma uncertainty in the Length of Day correction, seconds.
   LENGTH_OF_DAY_UNCERTAINTY_SECONDS: float;
+
+  // ---------------------------------------------------------------------
+  // DOUBLE-PRECISION SERIES (appended; the float fields above are RETAINED)
+  //
+  // PRECEDENCE. When a _HP field is present it is AUTHORITATIVE and the
+  // corresponding float field is a lossy convenience copy of the same
+  // quantity; a consumer that reads both MUST use the _HP value. When a _HP
+  // field is absent the float field is the only value and remains valid.
+  // A producer that writes a _HP field SHOULD also write the float field
+  // rounded from it so that readers pinned to an earlier version stay correct.
+  //
+  // WHY. The float fields cannot represent the published finals2000A series
+  // at its stated precision: float32 near a UT1-UTC magnitude of 0.9 s
+  // resolves to about 6e-8 s, which is roughly 60x coarser than the 1e-9 s
+  // agreement a frames consumer is required to demonstrate at the table
+  // nodes. The same argument applies to the polar-motion and celestial-pole
+  // offsets at 1e-9 arcsec. The float fields are NOT retyped and NOT retired
+  // -- that would be a breaking change to every released consumer.
+  // ---------------------------------------------------------------------
+
+  /// x component of Pole Wander in radians, double precision. Authoritative
+  /// over X_POLE_WANDER_RADIANS when present.
+  X_POLE_WANDER_RADIANS_HP: double;
+
+  /// y component of Pole Wander in radians, double precision. Authoritative
+  /// over Y_POLE_WANDER_RADIANS when present.
+  Y_POLE_WANDER_RADIANS_HP: double;
+
+  /// x component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  X_CELESTIAL_POLE_OFFSET_RADIANS_HP: double;
+
+  /// y component of the Celestial Pole Offset in radians, double precision.
+  /// Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: double;
+
+  /// UT1 minus UTC in seconds, double precision. Authoritative over
+  /// UT1_MINUS_UTC_SECONDS when present.
+  UT1_MINUS_UTC_SECONDS_HP: double;
+
+  /// Correction to Length of Day in seconds, double precision. Authoritative
+  /// over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+  LENGTH_OF_DAY_CORRECTION_SECONDS_HP: double;
+
+  /// Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+  /// WHICH issue of the series a consumer is holding; two rows for the same
+  /// MJD from different data-set epochs are different values, not duplicates.
+  DATA_SET_EPOCH: string;
+
+  /// Content identifier of the complete published data set this row was taken
+  /// from. Every frames consumer that must agree bit-for-bit records this so
+  /// the source is provable rather than assumed.
+  DATA_SET_CID: string;
 }
 
 root_type EOP;

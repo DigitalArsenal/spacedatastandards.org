@@ -25,6 +25,7 @@ public struct RFM : IFlatbufferObject
   public SpacecraftFrameWrapper REFERENCE_FRAMEAsSpacecraftFrameWrapper() { return REFERENCE_FRAME<SpacecraftFrameWrapper>().Value; }
   public OrbitFrameWrapper REFERENCE_FRAMEAsOrbitFrameWrapper() { return REFERENCE_FRAME<OrbitFrameWrapper>().Value; }
   public CustomFrameWrapper REFERENCE_FRAMEAsCustomFrameWrapper() { return REFERENCE_FRAME<CustomFrameWrapper>().Value; }
+  public RFMCoordinateSystemWrapper REFERENCE_FRAMEAsRFMCoordinateSystemWrapper() { return REFERENCE_FRAME<RFMCoordinateSystemWrapper>().Value; }
   public int INDEX { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -79,6 +80,9 @@ public struct RFM : IFlatbufferObject
         break;
       case RFMUnion.CustomFrameWrapper:
         _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<CustomFrameWrapper>().HasValue ? this.REFERENCE_FRAME<CustomFrameWrapper>().Value.UnPack() : null;
+        break;
+      case RFMUnion.RFMCoordinateSystemWrapper:
+        _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<RFMCoordinateSystemWrapper>().HasValue ? this.REFERENCE_FRAME<RFMCoordinateSystemWrapper>().Value.UnPack() : null;
         break;
     }
     _o.INDEX = this.INDEX;

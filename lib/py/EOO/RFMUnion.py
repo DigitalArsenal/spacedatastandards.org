@@ -2,12 +2,14 @@
 
 # namespace:
 
+# Union ordinals are WIRE. Append new members LAST; never reorder.
 class RFMUnion(object):
     NONE = 0
     CelestialFrameWrapper = 1
     SpacecraftFrameWrapper = 2
     OrbitFrameWrapper = 3
     CustomFrameWrapper = 4
+    RFMCoordinateSystemWrapper = 5
 
 def RFMUnionCreator(unionType, table):
     from flatbuffers.table import Table
@@ -25,4 +27,7 @@ def RFMUnionCreator(unionType, table):
     if unionType == RFMUnion.CustomFrameWrapper:
         import CustomFrameWrapper
         return CustomFrameWrapper.CustomFrameWrapperT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RFMUnion.RFMCoordinateSystemWrapper:
+        import RFMCoordinateSystemWrapper
+        return RFMCoordinateSystemWrapper.RFMCoordinateSystemWrapperT.InitFromBuf(table.Bytes, table.Pos)
     return None

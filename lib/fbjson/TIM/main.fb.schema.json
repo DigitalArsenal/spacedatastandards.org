@@ -21,7 +21,8 @@
         "QZSS",
         "BDT",
         "NAVIC",
-        "SBAS"
+        "SBAS",
+        "A1"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -97,6 +98,10 @@
         "SBAS": {
           "value": 17,
           "description": "Satellite-Based Augmentation System Time"
+        },
+        "A1": {
+          "value": 18,
+          "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
         }
       }
     },
@@ -363,6 +368,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -544,6 +553,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -760,6 +773,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },

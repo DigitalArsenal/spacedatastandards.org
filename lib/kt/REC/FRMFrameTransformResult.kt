@@ -62,6 +62,85 @@ class FRMFrameTransformResult : Table() {
         }
     val traceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun traceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+     * TARGET_REPRESENTATION.
+     */
+    val targetState : FRMStateVector? get() = targetState(FRMStateVector())
+    fun targetState(obj: FRMStateVector) : FRMStateVector? {
+        val o = __offset(12)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Rotation from the source axes to the target axes at EPOCH.
+     */
+    val rotationDcm : FRMMatrix3? get() = rotationDcm(FRMMatrix3())
+    fun rotationDcm(obj: FRMMatrix3) : FRMMatrix3? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Time derivative of ROTATION_DCM, per second. Required for a velocity
+     * transform between relatively rotating axis sets.
+     */
+    val rotationDcmRate : FRMMatrix3? get() = rotationDcmRate(FRMMatrix3())
+    fun rotationDcmRate(obj: FRMMatrix3) : FRMMatrix3? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Angular velocity of the target axes with respect to the source axes,
+     * radians per second, expressed in the source axes.
+     */
+    val angularVelocityRadS : FRMVector3? get() = angularVelocityRadS(FRMVector3())
+    fun angularVelocityRadS(obj: FRMVector3) : FRMVector3? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Epoch of the Earth-orientation data set actually used, ISO 8601.
+     */
+    val eopDataSetEpoch : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val eopDataSetEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun eopDataSetEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Content identifier of the Earth-orientation data set actually used.
+     */
+    val eopDataSetCid : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val eopDataSetCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun eopDataSetCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFRMFrameTransformResult(_bb: ByteBuffer): FRMFrameTransformResult = getRootAsFRMFrameTransformResult(_bb, FRMFrameTransformResult())
@@ -69,19 +148,31 @@ class FRMFrameTransformResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFRMFrameTransformResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, positionOffset: Int, traceIdOffset: Int) : Int {
-            builder.startTable(4)
+        fun createFRMFrameTransformResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, positionOffset: Int, traceIdOffset: Int, targetStateOffset: Int, rotationDcmOffset: Int, rotationDcmRateOffset: Int, angularVelocityRadSOffset: Int, eopDataSetEpochOffset: Int, eopDataSetCidOffset: Int) : Int {
+            builder.startTable(10)
+            addEOPDATASETCID(builder, eopDataSetCidOffset)
+            addEOPDATASETEPOCH(builder, eopDataSetEpochOffset)
+            addANGULARVELOCITYRADS(builder, angularVelocityRadSOffset)
+            addROTATIONDCMRATE(builder, rotationDcmRateOffset)
+            addROTATIONDCM(builder, rotationDcmOffset)
+            addTARGETSTATE(builder, targetStateOffset)
             addTRACEID(builder, traceIdOffset)
             addPOSITION(builder, positionOffset)
             addERRORMESSAGE(builder, errorMessageOffset)
             addSTATUS(builder, status)
             return endFRMFrameTransformResult(builder)
         }
-        fun startFRMFrameTransformResult(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startFRMFrameTransformResult(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addERRORMESSAGE(builder: FlatBufferBuilder, errorMessage: Int) = builder.addOffset(1, errorMessage, 0)
         fun addPOSITION(builder: FlatBufferBuilder, position: Int) = builder.addOffset(2, position, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: Int) = builder.addOffset(3, traceId, 0)
+        fun addTARGETSTATE(builder: FlatBufferBuilder, targetState: Int) = builder.addOffset(4, targetState, 0)
+        fun addROTATIONDCM(builder: FlatBufferBuilder, rotationDcm: Int) = builder.addOffset(5, rotationDcm, 0)
+        fun addROTATIONDCMRATE(builder: FlatBufferBuilder, rotationDcmRate: Int) = builder.addOffset(6, rotationDcmRate, 0)
+        fun addANGULARVELOCITYRADS(builder: FlatBufferBuilder, angularVelocityRadS: Int) = builder.addOffset(7, angularVelocityRadS, 0)
+        fun addEOPDATASETEPOCH(builder: FlatBufferBuilder, eopDataSetEpoch: Int) = builder.addOffset(8, eopDataSetEpoch, 0)
+        fun addEOPDATASETCID(builder: FlatBufferBuilder, eopDataSetCid: Int) = builder.addOffset(9, eopDataSetCid, 0)
         fun endFRMFrameTransformResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

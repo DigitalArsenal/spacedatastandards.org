@@ -6,10 +6,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TIMING_STANDARD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TIMING_STANDARD: i8 = 17;
+pub const ENUM_MAX_TIMING_STANDARD: i8 = 18;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 18] = [
+pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 19] = [
   timingStandard::GMST,
   timingStandard::GPS,
   timingStandard::MET,
@@ -28,6 +28,7 @@ pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 18] = [
   timingStandard::BDT,
   timingStandard::NAVIC,
   timingStandard::SBAS,
+  timingStandard::A1,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -71,9 +72,13 @@ impl timingStandard {
   pub const NAVIC: Self = Self(16);
   /// Satellite-Based Augmentation System Time
   pub const SBAS: Self = Self(17);
+  /// Atomic time scale of the reference atomic-time network, offset from
+  /// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+  /// exactly. Appended last; never reorder or reuse existing values.
+  pub const A1: Self = Self(18);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 17;
+  pub const ENUM_MAX: i8 = 18;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::GMST,
     Self::GPS,
@@ -93,6 +98,7 @@ impl timingStandard {
     Self::BDT,
     Self::NAVIC,
     Self::SBAS,
+    Self::A1,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -115,6 +121,7 @@ impl timingStandard {
       Self::BDT => Some("BDT"),
       Self::NAVIC => Some("NAVIC"),
       Self::SBAS => Some("SBAS"),
+      Self::A1 => Some("A1"),
       _ => None,
     }
   }

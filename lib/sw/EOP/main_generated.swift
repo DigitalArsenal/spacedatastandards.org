@@ -93,6 +93,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: VOffset = 34
     static let UT1_MINUS_UTC_UNCERTAINTY_SECONDS: VOffset = 36
     static let LENGTH_OF_DAY_UNCERTAINTY_SECONDS: VOffset = 38
+    static let X_POLE_WANDER_RADIANS_HP: VOffset = 40
+    static let Y_POLE_WANDER_RADIANS_HP: VOffset = 42
+    static let X_CELESTIAL_POLE_OFFSET_RADIANS_HP: VOffset = 44
+    static let Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: VOffset = 46
+    static let UT1_MINUS_UTC_SECONDS_HP: VOffset = 48
+    static let LENGTH_OF_DAY_CORRECTION_SECONDS_HP: VOffset = 50
+    static let DATA_SET_EPOCH: VOffset = 52
+    static let DATA_SET_CID: VOffset = 54
   }
 
   ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
@@ -137,7 +145,35 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32 { let o = _accessor.offset(VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  1-sigma uncertainty in the Length of Day correction, seconds.
   public var LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32 { let o = _accessor.offset(VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  ///  x component of Pole Wander in radians, double precision. Authoritative
+  ///  over X_POLE_WANDER_RADIANS when present.
+  public var X_POLE_WANDER_RADIANS_HP: Double { let o = _accessor.offset(VT.X_POLE_WANDER_RADIANS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  y component of Pole Wander in radians, double precision. Authoritative
+  ///  over Y_POLE_WANDER_RADIANS when present.
+  public var Y_POLE_WANDER_RADIANS_HP: Double { let o = _accessor.offset(VT.Y_POLE_WANDER_RADIANS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  x component of the Celestial Pole Offset in radians, double precision.
+  ///  Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  public var X_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double { let o = _accessor.offset(VT.X_CELESTIAL_POLE_OFFSET_RADIANS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  y component of the Celestial Pole Offset in radians, double precision.
+  ///  Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  public var Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double { let o = _accessor.offset(VT.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  UT1 minus UTC in seconds, double precision. Authoritative over
+  ///  UT1_MINUS_UTC_SECONDS when present.
+  public var UT1_MINUS_UTC_SECONDS_HP: Double { let o = _accessor.offset(VT.UT1_MINUS_UTC_SECONDS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Correction to Length of Day in seconds, double precision. Authoritative
+  ///  over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+  public var LENGTH_OF_DAY_CORRECTION_SECONDS_HP: Double { let o = _accessor.offset(VT.LENGTH_OF_DAY_CORRECTION_SECONDS_HP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+  ///  WHICH issue of the series a consumer is holding; two rows for the same
+  ///  MJD from different data-set epochs are different values, not duplicates.
+  public var DATA_SET_EPOCH: String? { let o = _accessor.offset(VT.DATA_SET_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_SET_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_SET_EPOCH) }
+  ///  Content identifier of the complete published data set this row was taken
+  ///  from. Every frames consumer that must agree bit-for-bit records this so
+  ///  the source is provable rather than assumed.
+  public var DATA_SET_CID: String? { let o = _accessor.offset(VT.DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_SET_CID) }
+  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
   public static func add(MJD: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MJD, def: 0, at: VT.MJD) }
   public static func add(X_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS, def: 0.0, at: VT.X_POLE_WANDER_RADIANS) }
@@ -156,6 +192,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, def: 0.0, at: VT.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) }
   public static func add(UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1_MINUS_UTC_UNCERTAINTY_SECONDS, def: 0.0, at: VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS) }
   public static func add(LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_UNCERTAINTY_SECONDS, def: 0.0, at: VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS) }
+  public static func add(X_POLE_WANDER_RADIANS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS_HP, def: 0.0, at: VT.X_POLE_WANDER_RADIANS_HP) }
+  public static func add(Y_POLE_WANDER_RADIANS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_POLE_WANDER_RADIANS_HP, def: 0.0, at: VT.Y_POLE_WANDER_RADIANS_HP) }
+  public static func add(X_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_CELESTIAL_POLE_OFFSET_RADIANS_HP, def: 0.0, at: VT.X_CELESTIAL_POLE_OFFSET_RADIANS_HP) }
+  public static func add(Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, def: 0.0, at: VT.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP) }
+  public static func add(UT1_MINUS_UTC_SECONDS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1_MINUS_UTC_SECONDS_HP, def: 0.0, at: VT.UT1_MINUS_UTC_SECONDS_HP) }
+  public static func add(LENGTH_OF_DAY_CORRECTION_SECONDS_HP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_CORRECTION_SECONDS_HP, def: 0.0, at: VT.LENGTH_OF_DAY_CORRECTION_SECONDS_HP) }
+  public static func add(DATA_SET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_SET_EPOCH, at: VT.DATA_SET_EPOCH) }
+  public static func add(DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_SET_CID, at: VT.DATA_SET_CID) }
   public static func endEOP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOP(
     _ fbb: inout FlatBufferBuilder,
@@ -176,7 +220,15 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 = 0.0,
     Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 = 0.0,
     UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32 = 0.0,
-    LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32 = 0.0
+    LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32 = 0.0,
+    X_POLE_WANDER_RADIANS_HP: Double = 0.0,
+    Y_POLE_WANDER_RADIANS_HP: Double = 0.0,
+    X_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double = 0.0,
+    Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: Double = 0.0,
+    UT1_MINUS_UTC_SECONDS_HP: Double = 0.0,
+    LENGTH_OF_DAY_CORRECTION_SECONDS_HP: Double = 0.0,
+    DATA_SET_EPOCHOffset DATA_SET_EPOCH: Offset = Offset(),
+    DATA_SET_CIDOffset DATA_SET_CID: Offset = Offset()
   ) -> Offset {
     let __start = EOP.startEOP(&fbb)
     EOP.add(DATE: DATE, &fbb)
@@ -197,6 +249,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EOP.add(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, &fbb)
     EOP.add(UT1_MINUS_UTC_UNCERTAINTY_SECONDS: UT1_MINUS_UTC_UNCERTAINTY_SECONDS, &fbb)
     EOP.add(LENGTH_OF_DAY_UNCERTAINTY_SECONDS: LENGTH_OF_DAY_UNCERTAINTY_SECONDS, &fbb)
+    EOP.add(X_POLE_WANDER_RADIANS_HP: X_POLE_WANDER_RADIANS_HP, &fbb)
+    EOP.add(Y_POLE_WANDER_RADIANS_HP: Y_POLE_WANDER_RADIANS_HP, &fbb)
+    EOP.add(X_CELESTIAL_POLE_OFFSET_RADIANS_HP: X_CELESTIAL_POLE_OFFSET_RADIANS_HP, &fbb)
+    EOP.add(Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, &fbb)
+    EOP.add(UT1_MINUS_UTC_SECONDS_HP: UT1_MINUS_UTC_SECONDS_HP, &fbb)
+    EOP.add(LENGTH_OF_DAY_CORRECTION_SECONDS_HP: LENGTH_OF_DAY_CORRECTION_SECONDS_HP, &fbb)
+    EOP.add(DATA_SET_EPOCH: DATA_SET_EPOCH, &fbb)
+    EOP.add(DATA_SET_CID: DATA_SET_CID, &fbb)
     return EOP.endEOP(&fbb, start: __start)
   }
 
@@ -220,6 +280,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, fieldName: "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", required: false, type: Float32.self)
     try _v.visit(field: VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS, fieldName: "UT1_MINUS_UTC_UNCERTAINTY_SECONDS", required: false, type: Float32.self)
     try _v.visit(field: VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS, fieldName: "LENGTH_OF_DAY_UNCERTAINTY_SECONDS", required: false, type: Float32.self)
+    try _v.visit(field: VT.X_POLE_WANDER_RADIANS_HP, fieldName: "X_POLE_WANDER_RADIANS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_POLE_WANDER_RADIANS_HP, fieldName: "Y_POLE_WANDER_RADIANS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.X_CELESTIAL_POLE_OFFSET_RADIANS_HP, fieldName: "X_CELESTIAL_POLE_OFFSET_RADIANS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, fieldName: "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.UT1_MINUS_UTC_SECONDS_HP, fieldName: "UT1_MINUS_UTC_SECONDS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.LENGTH_OF_DAY_CORRECTION_SECONDS_HP, fieldName: "LENGTH_OF_DAY_CORRECTION_SECONDS_HP", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_SET_EPOCH, fieldName: "DATA_SET_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_SET_CID, fieldName: "DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

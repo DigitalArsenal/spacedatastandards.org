@@ -75,5 +75,11 @@ class timingStandard private constructor() {
          * Satellite-Based Augmentation System Time
          */
         const val SBAS: Byte = 17
+        /**
+         * Atomic time scale of the reference atomic-time network, offset from
+         * International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+         * exactly. Appended last; never reorder or reuse existing values.
+         */
+        const val A1: Byte = 18
     }
 }

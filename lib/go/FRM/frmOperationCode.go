@@ -4,30 +4,48 @@ package FRM
 
 import "strconv"
 
+/// Operations this record can request. Values 1-4 are the original
+/// position-only planet-centred-inertial / planet-centred-fixed / geodetic
+/// conversions and are FROZEN. Append new values only; never reorder.
 type frmOperationCode int8
 
 const (
-	frmOperationCodeUNKNOWN     frmOperationCode = 0
-	frmOperationCodePCI_TO_PCPF frmOperationCode = 1
-	frmOperationCodePCPF_TO_PCI frmOperationCode = 2
-	frmOperationCodeLLA_TO_PCPF frmOperationCode = 3
-	frmOperationCodePCPF_TO_LLA frmOperationCode = 4
+	frmOperationCodeUNKNOWN                      frmOperationCode = 0
+	frmOperationCodePCI_TO_PCPF                  frmOperationCode = 1
+	frmOperationCodePCPF_TO_PCI                  frmOperationCode = 2
+	frmOperationCodeLLA_TO_PCPF                  frmOperationCode = 3
+	frmOperationCodePCPF_TO_LLA                  frmOperationCode = 4
+	/// Transform a full state (position AND velocity) from SOURCE_COORDINATE_SYSTEM
+	/// to TARGET_COORDINATE_SYSTEM at EPOCH, expressed in TARGET_REPRESENTATION.
+	frmOperationCodeSTATE_TRANSFORM              frmOperationCode = 5
+	/// Return only the rotation from SOURCE_COORDINATE_SYSTEM to
+	/// TARGET_COORDINATE_SYSTEM at EPOCH, with its time derivative and the
+	/// angular velocity of the target axes. No state is required.
+	frmOperationCodeFRAME_ROTATION               frmOperationCode = 6
+	/// Convert a state between element sets within ONE coordinate system.
+	frmOperationCodeSTATE_REPRESENTATION_CONVERT frmOperationCode = 7
 )
 
 var EnumNamesfrmOperationCode = map[frmOperationCode]string{
-	frmOperationCodeUNKNOWN:     "UNKNOWN",
-	frmOperationCodePCI_TO_PCPF: "PCI_TO_PCPF",
-	frmOperationCodePCPF_TO_PCI: "PCPF_TO_PCI",
-	frmOperationCodeLLA_TO_PCPF: "LLA_TO_PCPF",
-	frmOperationCodePCPF_TO_LLA: "PCPF_TO_LLA",
+	frmOperationCodeUNKNOWN:                      "UNKNOWN",
+	frmOperationCodePCI_TO_PCPF:                  "PCI_TO_PCPF",
+	frmOperationCodePCPF_TO_PCI:                  "PCPF_TO_PCI",
+	frmOperationCodeLLA_TO_PCPF:                  "LLA_TO_PCPF",
+	frmOperationCodePCPF_TO_LLA:                  "PCPF_TO_LLA",
+	frmOperationCodeSTATE_TRANSFORM:              "STATE_TRANSFORM",
+	frmOperationCodeFRAME_ROTATION:               "FRAME_ROTATION",
+	frmOperationCodeSTATE_REPRESENTATION_CONVERT: "STATE_REPRESENTATION_CONVERT",
 }
 
 var EnumValuesfrmOperationCode = map[string]frmOperationCode{
-	"UNKNOWN":     frmOperationCodeUNKNOWN,
-	"PCI_TO_PCPF": frmOperationCodePCI_TO_PCPF,
-	"PCPF_TO_PCI": frmOperationCodePCPF_TO_PCI,
-	"LLA_TO_PCPF": frmOperationCodeLLA_TO_PCPF,
-	"PCPF_TO_LLA": frmOperationCodePCPF_TO_LLA,
+	"UNKNOWN":                      frmOperationCodeUNKNOWN,
+	"PCI_TO_PCPF":                  frmOperationCodePCI_TO_PCPF,
+	"PCPF_TO_PCI":                  frmOperationCodePCPF_TO_PCI,
+	"LLA_TO_PCPF":                  frmOperationCodeLLA_TO_PCPF,
+	"PCPF_TO_LLA":                  frmOperationCodePCPF_TO_LLA,
+	"STATE_TRANSFORM":              frmOperationCodeSTATE_TRANSFORM,
+	"FRAME_ROTATION":               frmOperationCodeFRAME_ROTATION,
+	"STATE_REPRESENTATION_CONVERT": frmOperationCodeSTATE_REPRESENTATION_CONVERT,
 }
 
 func (v frmOperationCode) String() string {

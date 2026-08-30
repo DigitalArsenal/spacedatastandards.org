@@ -1,13 +1,273 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
     "frmOperationCode" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "PCI_TO_PCPF", "PCPF_TO_PCI", "LLA_TO_PCPF", "PCPF_TO_LLA"]
+      "enum": ["UNKNOWN", "PCI_TO_PCPF", "PCPF_TO_PCI", "LLA_TO_PCPF", "PCPF_TO_LLA", "STATE_TRANSFORM", "FRAME_ROTATION", "STATE_REPRESENTATION_CONVERT"]
     },
     "frmResultStatus" : {
       "type" : "string",
-      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION"]
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION", "UNSUPPORTED_AXIS_TYPE", "UNSUPPORTED_STATE_REPRESENTATION", "MISSING_EOP_DATA", "SINGULAR_ELEMENT_SET"]
+    },
+    "frmStateRepresentation" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CARTESIAN", "KEPLERIAN", "MODIFIED_KEPLERIAN", "SPHERICAL_AZFPA", "SPHERICAL_RADEC", "EQUINOCTIAL", "MODIFIED_EQUINOCTIAL", "ALTERNATE_EQUINOCTIAL", "DELAUNAY", "PLANETODETIC", "INCOMING_ASYMPTOTE", "OUTGOING_ASYMPTOTE", "BROUWER_MEAN_SHORT", "BROUWER_MEAN_LONG"]
+    },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
     },
     "FRMVector3" : {
       "type" : "object",
@@ -57,6 +317,44 @@
       },
       "additionalProperties" : false
     },
+    "FRMStateVector" : {
+      "type" : "object",
+      "description" : "A state in a named element set at a named epoch. ELEMENTS is the element\nset's own 6 values in the order documented on frmStateRepresentation.\nPOSITION and VELOCITY are the Cartesian projection of the same state and\nare populated when REPRESENTATION is CARTESIAN or when the provider can\nsupply them; a consumer MUST NOT infer velocity from POSITION alone.",
+      "properties" : {
+        "REPRESENTATION" : {
+                "$ref" : "#/definitions/frmStateRepresentation"
+              },
+        "ELEMENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The 6 element values of REPRESENTATION, SI units and radians."
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Cartesian position, metres."
+              },
+        "VELOCITY" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Cartesian velocity, metres per second."
+              },
+        "COORDINATE_SYSTEM_NAME" : {
+                "type" : "string",
+                "description" : "Name of the coordinate system these elements are expressed in; resolves\nagainst RFMCoordinateSystem.NAME."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of this state, ISO 8601."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "GRAVITATIONAL_PARAMETER" : {
+                "type" : "number",
+                "description" : "Gravitational parameter, m^3/s^2, of the origin body when the element\nset requires one. Absent means the provider's default for the origin."
+              }
+      },
+      "additionalProperties" : false
+    },
     "FRMFrameTransformRequest" : {
       "type" : "object",
       "properties" : {
@@ -77,6 +375,34 @@
               },
         "TRACE_ID" : {
                 "type" : "string"
+              },
+        "SOURCE_COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "Coordinate system the request's state is expressed in."
+              },
+        "TARGET_COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "Coordinate system the result is required in."
+              },
+        "SOURCE_STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "The full input state, carrying velocity as well as position. POSITION\nabove is position-only and remains the input for operations 1-4."
+              },
+        "TARGET_REPRESENTATION" : {
+                "$ref" : "#/definitions/frmStateRepresentation",
+                "description" : "Element set the result must be expressed in."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the transform is evaluated at, ISO 8601. Required for every\ntime-dependent axis chain."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH, named by the $TIM timingStandard member name."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set the caller requires\nthe provider to use. A provider that cannot honour it returns\nMISSING_EOP_DATA rather than substituting another table."
               }
       },
       "additionalProperties" : false
@@ -95,6 +421,30 @@
               },
         "TRACE_ID" : {
                 "type" : "string"
+              },
+        "TARGET_STATE" : {
+                "$ref" : "#/definitions/FRMStateVector",
+                "description" : "The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and\nTARGET_REPRESENTATION."
+              },
+        "ROTATION_DCM" : {
+                "$ref" : "#/definitions/FRMMatrix3",
+                "description" : "Rotation from the source axes to the target axes at EPOCH."
+              },
+        "ROTATION_DCM_RATE" : {
+                "$ref" : "#/definitions/FRMMatrix3",
+                "description" : "Time derivative of ROTATION_DCM, per second. Required for a velocity\ntransform between relatively rotating axis sets."
+              },
+        "ANGULAR_VELOCITY_RAD_S" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Angular velocity of the target axes with respect to the source axes,\nradians per second, expressed in the source axes."
+              },
+        "EOP_DATA_SET_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the Earth-orientation data set actually used, ISO 8601."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set actually used."
               }
       },
       "additionalProperties" : false

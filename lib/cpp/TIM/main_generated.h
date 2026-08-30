@@ -65,11 +65,15 @@ enum timingStandard : int8_t {
   timingStandard_NAVIC = 16,
   /// Satellite-Based Augmentation System Time
   timingStandard_SBAS = 17,
+  /// Atomic time scale of the reference atomic-time network, offset from
+  /// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+  /// exactly. Appended last; never reorder or reuse existing values.
+  timingStandard_A1 = 18,
   timingStandard_MIN = timingStandard_GMST,
-  timingStandard_MAX = timingStandard_SBAS
+  timingStandard_MAX = timingStandard_A1
 };
 
-inline const timingStandard (&EnumValuestimingStandard())[18] {
+inline const timingStandard (&EnumValuestimingStandard())[19] {
   static const timingStandard values[] = {
     timingStandard_GMST,
     timingStandard_GPS,
@@ -88,13 +92,14 @@ inline const timingStandard (&EnumValuestimingStandard())[18] {
     timingStandard_QZSS,
     timingStandard_BDT,
     timingStandard_NAVIC,
-    timingStandard_SBAS
+    timingStandard_SBAS,
+    timingStandard_A1
   };
   return values;
 }
 
 inline const char * const *EnumNamestimingStandard() {
-  static const char * const names[19] = {
+  static const char * const names[20] = {
     "GMST",
     "GPS",
     "MET",
@@ -113,13 +118,14 @@ inline const char * const *EnumNamestimingStandard() {
     "BDT",
     "NAVIC",
     "SBAS",
+    "A1",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametimingStandard(timingStandard e) {
-  if (::flatbuffers::IsOutRange(e, timingStandard_GMST, timingStandard_SBAS)) return "";
+  if (::flatbuffers::IsOutRange(e, timingStandard_GMST, timingStandard_A1)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestimingStandard()[index];
 }

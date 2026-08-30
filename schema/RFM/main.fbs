@@ -1,5 +1,5 @@
-// Hash: 72b21b19a524e5f150649d411f1c00fa64c5e83e57201f88085c725be2d27653
-// Version: 4.0.10
+// Hash: f2663d83de23818ebdcbdc7c20bb341202fc6101bc2b6af2cb2751b39414a30e
+// Version: 4.0.11
 // -----------------------------------END_HEADER
 /// https://www.sanaregistry.org/r/celestial_body_reference_frames/
 /// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
@@ -309,17 +309,241 @@ enum CustomFrame : byte {
   UVW
 }
 
+/// Axis-set capability classes for a fully specified coordinate system.
+/// These name the ORIENTATION rule only; the ORIGIN is carried separately in
+/// RFMOrigin, so any axis set below combines with any origin. Append new
+/// values only; never reorder or reuse existing values.
+enum rfmAxisType : ubyte {
+  UNSPECIFIED = 0,
+  /// Mean equator and mean equinox of the J2000.0 epoch.
+  MEAN_EQUATOR_EQUINOX_J2000 = 1,
+  /// Mean ecliptic and mean equinox of the J2000.0 epoch.
+  MEAN_ECLIPTIC_EQUINOX_J2000 = 2,
+  /// International Celestial Reference Frame axes.
+  ICRF = 3,
+  /// True equator, mean equinox of date.
+  TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE = 4,
+  /// Mean equator of date (precession applied to the epoch of the state).
+  MEAN_OF_DATE_EQUATOR = 5,
+  /// Mean ecliptic of date.
+  MEAN_OF_DATE_ECLIPTIC = 6,
+  /// True equator of date (precession and nutation applied).
+  TRUE_OF_DATE_EQUATOR = 7,
+  /// True ecliptic of date.
+  TRUE_OF_DATE_ECLIPTIC = 8,
+  /// Mean equator of a fixed reference epoch.
+  MEAN_OF_EPOCH_EQUATOR = 9,
+  /// Mean ecliptic of a fixed reference epoch.
+  MEAN_OF_EPOCH_ECLIPTIC = 10,
+  /// True equator of a fixed reference epoch.
+  TRUE_OF_EPOCH_EQUATOR = 11,
+  /// True ecliptic of a fixed reference epoch.
+  TRUE_OF_EPOCH_ECLIPTIC = 12,
+  /// Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID,
+  /// per its published rotation elements.
+  BODY_FIXED = 13,
+  /// Non-rotating axes aligned with the reference body's equator and prime
+  /// meridian at the reference epoch.
+  BODY_INERTIAL = 14,
+  /// Axes built from the relative geometry of two named objects; see
+  /// RFMObjectReferencedAxes.
+  OBJECT_REFERENCED = 15,
+  /// Axes built by aligning one vector and constraining a second; see
+  /// RFMLocalAlignedConstrainedAxes.
+  LOCAL_ALIGNED_CONSTRAINED = 16,
+  /// Axes in the reference body's equatorial plane at the requested epoch.
+  BODY_EQUATOR = 17,
+  /// Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the
+  /// ecliptic north, commonly abbreviated GSE.
+  SOLAR_ECLIPTIC_MAGNETOSPHERIC = 18,
+  /// Solar-magnetospheric axes: X toward the Sun, Z in the plane containing
+  /// the body magnetic dipole, commonly abbreviated GSM.
+  SOLAR_MAGNETOSPHERIC = 19,
+  /// Local horizon axes at a surface site; the site is carried on RFMOrigin.
+  TOPOCENTRIC = 20,
+  /// Axes fixed by the body spin axis and the body-to-Sun direction.
+  BODY_SPIN_SUN = 21,
+  /// Axes defined by a loaded ephemeris/orientation kernel; identified by
+  /// KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem.
+  EPHEMERIS_KERNEL_DEFINED = 22,
+  /// LEGACY, retained and NAMED rather than left implicit: mean equator of
+  /// date computed with the IAU-76/FK5 precession theory instead of the
+  /// IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the
+  /// milliarcsecond level and the two are not interchangeable.
+  MEAN_OF_DATE_EQUATOR_FK5 = 23,
+  /// LEGACY, retained and NAMED: true equator of date computed with the
+  /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
+  TRUE_OF_DATE_EQUATOR_FK5 = 24
+}
+
+/// What kind of point a coordinate system is centred on. Append new values
+/// only; never reorder or reuse existing values.
+enum rfmOriginKind : ubyte {
+  UNSPECIFIED = 0,
+  /// The centre of mass of a single celestial body.
+  CELESTIAL_BODY = 1,
+  /// The barycentre of a named system of bodies.
+  BARYCENTRE = 2,
+  /// A libration (Lagrange) point of a two-body system.
+  LIBRATION_POINT = 3,
+  /// Another tracked space object, identified by OBJECT_ID.
+  SPACE_OBJECT = 4,
+  /// A fixed site on a body surface, identified by SITE_ID and the geodetic
+  /// fields on RFMOrigin.
+  GROUND_SITE = 5
+}
+
+/// Libration point of the primary/secondary pair named on RFMOrigin. Append
+/// new values only; never reorder or reuse existing values.
+enum rfmLibrationPoint : ubyte {
+  UNSPECIFIED = 0,
+  L1 = 1,
+  L2 = 2,
+  L3 = 3,
+  L4 = 4,
+  L5 = 5
+}
+
+/// Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
+enum rfmVectorSpecification : ubyte {
+  UNSPECIFIED = 0,
+  /// Primary-to-secondary position direction.
+  RADIAL = 1,
+  /// Negated RADIAL.
+  ANTI_RADIAL = 2,
+  /// Relative velocity direction.
+  VELOCITY = 3,
+  /// Negated VELOCITY.
+  ANTI_VELOCITY = 4,
+  /// Orbit normal, RADIAL crossed into VELOCITY.
+  ORBIT_NORMAL = 5,
+  /// Negated ORBIT_NORMAL.
+  ANTI_ORBIT_NORMAL = 6
+}
+
+/// The point a coordinate system is centred on. Body and barycentre
+/// identifiers are integer ephemeris body codes; text NAME is descriptive
+/// only and is never the machine key.
+table RFMOrigin {
+  KIND: rfmOriginKind = UNSPECIFIED;
+
+  /// Ephemeris body code when KIND is CELESTIAL_BODY.
+  CELESTIAL_BODY_ID: int;
+
+  /// Ephemeris body code of the barycentre when KIND is BARYCENTRE.
+  BARYCENTRE_ID: int;
+
+  /// Which libration point, when KIND is LIBRATION_POINT.
+  LIBRATION_POINT: rfmLibrationPoint = UNSPECIFIED;
+
+  /// Ephemeris body code of the libration system primary.
+  LIBRATION_PRIMARY_ID: int;
+
+  /// Ephemeris body code of the libration system secondary.
+  LIBRATION_SECONDARY_ID: int;
+
+  /// Identifier of the space object when KIND is SPACE_OBJECT.
+  OBJECT_ID: string;
+
+  /// Identifier of the surface site when KIND is GROUND_SITE.
+  SITE_ID: string;
+
+  /// Ephemeris body code of the body the site sits on.
+  SITE_BODY_ID: int;
+
+  /// Geodetic latitude of the site, degrees, positive north.
+  SITE_LATITUDE: double;
+
+  /// Geodetic longitude of the site, degrees, positive east.
+  SITE_LONGITUDE: double;
+
+  /// Height of the site above the reference ellipsoid, metres.
+  SITE_ALTITUDE: double;
+
+  /// Human-readable label. Descriptive only.
+  NAME: string;
+}
+
+/// Axes built from the relative geometry of two objects. Exactly two of the
+/// three axis assignments are independent; the third completes the triad.
+table RFMObjectReferencedAxes {
+  PRIMARY_OBJECT_ID: string;
+  SECONDARY_OBJECT_ID: string;
+  X_AXIS: rfmVectorSpecification = UNSPECIFIED;
+  Y_AXIS: rfmVectorSpecification = UNSPECIFIED;
+  Z_AXIS: rfmVectorSpecification = UNSPECIFIED;
+}
+
+/// Axes built by aligning one vector with a reference direction and using a
+/// second vector as a constraint. Vectors are 3-element, expressed in the
+/// coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
+table RFMLocalAlignedConstrainedAxes {
+  REFERENCE_OBJECT_ID: string;
+  REFERENCE_COORDINATE_SYSTEM_NAME: string;
+  ALIGNMENT_VECTOR: [double];
+  ALIGNMENT_REFERENCE_VECTOR: [double];
+  CONSTRAINT_VECTOR: [double];
+  CONSTRAINT_REFERENCE_VECTOR: [double];
+}
+
+/// A fully specified coordinate system: an axis set, an origin, and the epoch
+/// and time system the axis set is evaluated at. This is the unit a frames
+/// consumer needs; the pre-existing RFMUnion members name an axis convention
+/// alone and cannot express an origin.
+table RFMCoordinateSystem {
+  /// Stable name for this coordinate system within the producing data set.
+  NAME: string;
+
+  /// Orientation rule.
+  AXIS_TYPE: rfmAxisType = UNSPECIFIED;
+
+  /// Centre of the system.
+  ORIGIN: RFMOrigin;
+
+  /// Ephemeris body code whose equator/rotation defines the axes, for the
+  /// body-referenced axis types. Independent of ORIGIN.
+  AXIS_REFERENCE_BODY_ID: int;
+
+  /// Reference epoch the axis set is evaluated at, ISO 8601. Required for the
+  /// of-date and of-epoch axis types; ignored by the inertial ones.
+  EPOCH: string;
+
+  /// Time system the EPOCH is expressed in, named by the $TIM timingStandard
+  /// member name (for example "UTC", "TAI", "TT", "TDB", "A1").
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Extra parameters for OBJECT_REFERENCED axes.
+  OBJECT_REFERENCED_AXES: RFMObjectReferencedAxes;
+
+  /// Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
+  LOCAL_ALIGNED_CONSTRAINED_AXES: RFMLocalAlignedConstrainedAxes;
+
+  /// Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
+  KERNEL_FRAME_NAME: string;
+
+  /// Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
+  KERNEL_FRAME_ID: int;
+
+  /// Content identifier of the Earth-orientation data set used to realise
+  /// this system, when the axis chain requires one. Recorded so that two
+  /// consumers can prove they used the same table rather than assume it.
+  EOP_DATA_SET_CID: string;
+}
+
 // wrapper tables for each enum
 table CelestialFrameWrapper { frame: CelestialFrame; }
 table SpacecraftFrameWrapper { frame: SpacecraftFrame; }
 table OrbitFrameWrapper     { frame: OrbitFrame; }
 table CustomFrameWrapper    { frame: CustomFrame; }
+table RFMCoordinateSystemWrapper { COORDINATE_SYSTEM: RFMCoordinateSystem; }
 
+/// Union ordinals are WIRE. Append new members LAST; never reorder.
 union RFMUnion {
   CelestialFrameWrapper,
   SpacecraftFrameWrapper,
   OrbitFrameWrapper,
-  CustomFrameWrapper
+  CustomFrameWrapper,
+  RFMCoordinateSystemWrapper
 }
 
 /// Reference Frame Message

@@ -90,6 +90,50 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
      * 1-sigma uncertainty in the Length of Day correction, seconds.
      */
     LENGTH_OF_DAY_UNCERTAINTY_SECONDS(): number;
+    /**
+     * x component of Pole Wander in radians, double precision. Authoritative
+     * over X_POLE_WANDER_RADIANS when present.
+     */
+    X_POLE_WANDER_RADIANS_HP(): number;
+    /**
+     * y component of Pole Wander in radians, double precision. Authoritative
+     * over Y_POLE_WANDER_RADIANS when present.
+     */
+    Y_POLE_WANDER_RADIANS_HP(): number;
+    /**
+     * x component of the Celestial Pole Offset in radians, double precision.
+     * Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+     */
+    X_CELESTIAL_POLE_OFFSET_RADIANS_HP(): number;
+    /**
+     * y component of the Celestial Pole Offset in radians, double precision.
+     * Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+     */
+    Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(): number;
+    /**
+     * UT1 minus UTC in seconds, double precision. Authoritative over
+     * UT1_MINUS_UTC_SECONDS when present.
+     */
+    UT1_MINUS_UTC_SECONDS_HP(): number;
+    /**
+     * Correction to Length of Day in seconds, double precision. Authoritative
+     * over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+     */
+    LENGTH_OF_DAY_CORRECTION_SECONDS_HP(): number;
+    /**
+     * Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+     * WHICH issue of the series a consumer is holding; two rows for the same
+     * MJD from different data-set epochs are different values, not duplicates.
+     */
+    DATA_SET_EPOCH(): string | null;
+    DATA_SET_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Content identifier of the complete published data set this row was taken
+     * from. Every frames consumer that must agree bit-for-bit records this so
+     * the source is provable rather than assumed.
+     */
+    DATA_SET_CID(): string | null;
+    DATA_SET_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startEOP(builder: flatbuffers.Builder): void;
     static addDate(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset): void;
     static addMjd(builder: flatbuffers.Builder, MJD: number): void;
@@ -109,10 +153,18 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
     static addYCelestialPoleOffsetUncertaintyRadians(builder: flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number): void;
     static addUt1MinusUtcUncertaintySeconds(builder: flatbuffers.Builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number): void;
     static addLengthOfDayUncertaintySeconds(builder: flatbuffers.Builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number): void;
+    static addXPoleWanderRadiansHp(builder: flatbuffers.Builder, X_POLE_WANDER_RADIANS_HP: number): void;
+    static addYPoleWanderRadiansHp(builder: flatbuffers.Builder, Y_POLE_WANDER_RADIANS_HP: number): void;
+    static addXCelestialPoleOffsetRadiansHp(builder: flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP: number): void;
+    static addYCelestialPoleOffsetRadiansHp(builder: flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: number): void;
+    static addUt1MinusUtcSecondsHp(builder: flatbuffers.Builder, UT1_MINUS_UTC_SECONDS_HP: number): void;
+    static addLengthOfDayCorrectionSecondsHp(builder: flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP: number): void;
+    static addDataSetEpoch(builder: flatbuffers.Builder, DATA_SET_EPOCHOffset: flatbuffers.Offset): void;
+    static addDataSetCid(builder: flatbuffers.Builder, DATA_SET_CIDOffset: flatbuffers.Offset): void;
     static endEOP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEOP(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset, MJD: number, X_POLE_WANDER_RADIANS: number, Y_POLE_WANDER_RADIANS: number, X_CELESTIAL_POLE_OFFSET_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_RADIANS: number, UT1_MINUS_UTC_SECONDS: number, TAI_MINUS_UTC_SECONDS: number, LENGTH_OF_DAY_CORRECTION_SECONDS: number, DATA_TYPE: DataType, SERIES: eopSeries, IAU_CONVENTION: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number): flatbuffers.Offset;
+    static createEOP(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset, MJD: number, X_POLE_WANDER_RADIANS: number, Y_POLE_WANDER_RADIANS: number, X_CELESTIAL_POLE_OFFSET_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_RADIANS: number, UT1_MINUS_UTC_SECONDS: number, TAI_MINUS_UTC_SECONDS: number, LENGTH_OF_DAY_CORRECTION_SECONDS: number, DATA_TYPE: DataType, SERIES: eopSeries, IAU_CONVENTION: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number, X_POLE_WANDER_RADIANS_HP: number, Y_POLE_WANDER_RADIANS_HP: number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP: number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: number, UT1_MINUS_UTC_SECONDS_HP: number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP: number, DATA_SET_EPOCHOffset: flatbuffers.Offset, DATA_SET_CIDOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EOPT;
     unpackTo(_o: EOPT): void;
 }
@@ -135,7 +187,15 @@ export declare class EOPT implements flatbuffers.IGeneratedObject {
     Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number;
     UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number;
     LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number;
-    constructor(DATE?: string | Uint8Array | null, MJD?: number, X_POLE_WANDER_RADIANS?: number, Y_POLE_WANDER_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS?: number, UT1_MINUS_UTC_SECONDS?: number, TAI_MINUS_UTC_SECONDS?: number, LENGTH_OF_DAY_CORRECTION_SECONDS?: number, DATA_TYPE?: DataType, SERIES?: eopSeries, IAU_CONVENTION?: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS?: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS?: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS?: number);
+    X_POLE_WANDER_RADIANS_HP: number;
+    Y_POLE_WANDER_RADIANS_HP: number;
+    X_CELESTIAL_POLE_OFFSET_RADIANS_HP: number;
+    Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: number;
+    UT1_MINUS_UTC_SECONDS_HP: number;
+    LENGTH_OF_DAY_CORRECTION_SECONDS_HP: number;
+    DATA_SET_EPOCH: string | Uint8Array | null;
+    DATA_SET_CID: string | Uint8Array | null;
+    constructor(DATE?: string | Uint8Array | null, MJD?: number, X_POLE_WANDER_RADIANS?: number, Y_POLE_WANDER_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS?: number, UT1_MINUS_UTC_SECONDS?: number, TAI_MINUS_UTC_SECONDS?: number, LENGTH_OF_DAY_CORRECTION_SECONDS?: number, DATA_TYPE?: DataType, SERIES?: eopSeries, IAU_CONVENTION?: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS?: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS?: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS?: number, X_POLE_WANDER_RADIANS_HP?: number, Y_POLE_WANDER_RADIANS_HP?: number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, UT1_MINUS_UTC_SECONDS_HP?: number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP?: number, DATA_SET_EPOCH?: string | Uint8Array | null, DATA_SET_CID?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EOP.d.ts.map

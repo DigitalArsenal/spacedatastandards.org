@@ -147,8 +147,137 @@ func (rcv *FRMFrameTransformRequest) TraceId() []byte {
 	return rcv.TRACE_ID()
 }
 
+/// Coordinate system the request's state is expressed in.
+func (rcv *FRMFrameTransformRequest) SOURCE_COORDINATE_SYSTEM(obj *RFMCoordinateSystem) *RFMCoordinateSystem {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFMCoordinateSystem)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) SourceCoordinateSystem(obj *RFMCoordinateSystem) *RFMCoordinateSystem {
+	return rcv.SOURCE_COORDINATE_SYSTEM(obj)
+}
+
+/// Coordinate system the request's state is expressed in.
+/// Coordinate system the result is required in.
+func (rcv *FRMFrameTransformRequest) TARGET_COORDINATE_SYSTEM(obj *RFMCoordinateSystem) *RFMCoordinateSystem {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFMCoordinateSystem)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) TargetCoordinateSystem(obj *RFMCoordinateSystem) *RFMCoordinateSystem {
+	return rcv.TARGET_COORDINATE_SYSTEM(obj)
+}
+
+/// Coordinate system the result is required in.
+/// The full input state, carrying velocity as well as position. POSITION
+/// above is position-only and remains the input for operations 1-4.
+func (rcv *FRMFrameTransformRequest) SOURCE_STATE(obj *FRMStateVector) *FRMStateVector {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMStateVector)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) SourceState(obj *FRMStateVector) *FRMStateVector {
+	return rcv.SOURCE_STATE(obj)
+}
+
+/// The full input state, carrying velocity as well as position. POSITION
+/// above is position-only and remains the input for operations 1-4.
+/// Element set the result must be expressed in.
+func (rcv *FRMFrameTransformRequest) TARGET_REPRESENTATION() frmStateRepresentation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return frmStateRepresentation(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *FRMFrameTransformRequest) TargetRepresentation() frmStateRepresentation {
+	return rcv.TARGET_REPRESENTATION()
+}
+
+/// Element set the result must be expressed in.
+func (rcv *FRMFrameTransformRequest) MutateTARGET_REPRESENTATION(n frmStateRepresentation) bool {
+	return rcv._tab.MutateByteSlot(22, byte(n))
+}
+
+func (rcv *FRMFrameTransformRequest) MutateTargetRepresentation(n frmStateRepresentation) bool {
+	return rcv.MutateTARGET_REPRESENTATION(n)
+}
+
+/// Epoch the transform is evaluated at, ISO 8601. Required for every
+/// time-dependent axis chain.
+func (rcv *FRMFrameTransformRequest) EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
+/// Epoch the transform is evaluated at, ISO 8601. Required for every
+/// time-dependent axis chain.
+/// Time system of EPOCH, named by the $TIM timingStandard member name.
+func (rcv *FRMFrameTransformRequest) EPOCH_TIME_SYSTEM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) EpochTimeSystem() []byte {
+	return rcv.EPOCH_TIME_SYSTEM()
+}
+
+/// Time system of EPOCH, named by the $TIM timingStandard member name.
+/// Content identifier of the Earth-orientation data set the caller requires
+/// the provider to use. A provider that cannot honour it returns
+/// MISSING_EOP_DATA rather than substituting another table.
+func (rcv *FRMFrameTransformRequest) EOP_DATA_SET_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformRequest) EopDataSetCid() []byte {
+	return rcv.EOP_DATA_SET_CID()
+}
+
+/// Content identifier of the Earth-orientation data set the caller requires
+/// the provider to use. A provider that cannot honour it returns
+/// MISSING_EOP_DATA rather than substituting another table.
 func FRMFrameTransformRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(13)
 }
 func FRMFrameTransformRequestAddOPERATION(builder *flatbuffers.Builder, OPERATION frmOperationCode) {
 	builder.PrependInt8Slot(0, int8(OPERATION), 0)
@@ -185,6 +314,48 @@ func FRMFrameTransformRequestAddTRACE_ID(builder *flatbuffers.Builder, TRACE_ID 
 }
 func FRMFrameTransformRequestAddTraceId(builder *flatbuffers.Builder, TRACE_ID flatbuffers.UOffsetT) {
 	FRMFrameTransformRequestAddTRACE_ID(builder, TRACE_ID)
+}
+func FRMFrameTransformRequestAddSOURCE_COORDINATE_SYSTEM(builder *flatbuffers.Builder, SOURCE_COORDINATE_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SOURCE_COORDINATE_SYSTEM), 0)
+}
+func FRMFrameTransformRequestAddSourceCoordinateSystem(builder *flatbuffers.Builder, SOURCE_COORDINATE_SYSTEM flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEM)
+}
+func FRMFrameTransformRequestAddTARGET_COORDINATE_SYSTEM(builder *flatbuffers.Builder, TARGET_COORDINATE_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TARGET_COORDINATE_SYSTEM), 0)
+}
+func FRMFrameTransformRequestAddTargetCoordinateSystem(builder *flatbuffers.Builder, TARGET_COORDINATE_SYSTEM flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEM)
+}
+func FRMFrameTransformRequestAddSOURCE_STATE(builder *flatbuffers.Builder, SOURCE_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SOURCE_STATE), 0)
+}
+func FRMFrameTransformRequestAddSourceState(builder *flatbuffers.Builder, SOURCE_STATE flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddSOURCE_STATE(builder, SOURCE_STATE)
+}
+func FRMFrameTransformRequestAddTARGET_REPRESENTATION(builder *flatbuffers.Builder, TARGET_REPRESENTATION frmStateRepresentation) {
+	builder.PrependByteSlot(9, byte(TARGET_REPRESENTATION), 0)
+}
+func FRMFrameTransformRequestAddTargetRepresentation(builder *flatbuffers.Builder, TARGET_REPRESENTATION frmStateRepresentation) {
+	FRMFrameTransformRequestAddTARGET_REPRESENTATION(builder, TARGET_REPRESENTATION)
+}
+func FRMFrameTransformRequestAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func FRMFrameTransformRequestAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddEPOCH(builder, EPOCH)
+}
+func FRMFrameTransformRequestAddEPOCH_TIME_SYSTEM(builder *flatbuffers.Builder, EPOCH_TIME_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(EPOCH_TIME_SYSTEM), 0)
+}
+func FRMFrameTransformRequestAddEpochTimeSystem(builder *flatbuffers.Builder, EPOCH_TIME_SYSTEM flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEM)
+}
+func FRMFrameTransformRequestAddEOP_DATA_SET_CID(builder *flatbuffers.Builder, EOP_DATA_SET_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(EOP_DATA_SET_CID), 0)
+}
+func FRMFrameTransformRequestAddEopDataSetCid(builder *flatbuffers.Builder, EOP_DATA_SET_CID flatbuffers.UOffsetT) {
+	FRMFrameTransformRequestAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
 }
 func FRMFrameTransformRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

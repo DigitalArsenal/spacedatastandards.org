@@ -1,18 +1,79 @@
-// Hash: 69c8fc014a5b3bc275028a21d3b5ffb9e707fffd98b8c48957b2e34aa0427e34
-// Version: 0.0.2
+// Hash: ad0b25e28c45872f59ed05d8e47c51481f7be1914fdb133b714a87533ff2794a
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+
+/// Operations this record can request. Values 1-4 are the original
+/// position-only planet-centred-inertial / planet-centred-fixed / geodetic
+/// conversions and are FROZEN. Append new values only; never reorder.
 enum frmOperationCode : byte {
   UNKNOWN = 0,
   PCI_TO_PCPF = 1,
   PCPF_TO_PCI = 2,
   LLA_TO_PCPF = 3,
   PCPF_TO_LLA = 4,
+  /// Transform a full state (position AND velocity) from SOURCE_COORDINATE_SYSTEM
+  /// to TARGET_COORDINATE_SYSTEM at EPOCH, expressed in TARGET_REPRESENTATION.
+  STATE_TRANSFORM = 5,
+  /// Return only the rotation from SOURCE_COORDINATE_SYSTEM to
+  /// TARGET_COORDINATE_SYSTEM at EPOCH, with its time derivative and the
+  /// angular velocity of the target axes. No state is required.
+  FRAME_ROTATION = 6,
+  /// Convert a state between element sets within ONE coordinate system.
+  STATE_REPRESENTATION_CONVERT = 7,
 }
 
+/// Append new values only; never reorder or reuse existing values.
 enum frmResultStatus : byte {
   OK = 0,
   INVALID_INPUT = 1,
   UNSUPPORTED_OPERATION = 2,
+  /// The provider does not implement the requested axis set.
+  UNSUPPORTED_AXIS_TYPE = 3,
+  /// The provider does not implement the requested element set.
+  UNSUPPORTED_STATE_REPRESENTATION = 4,
+  /// The axis chain needs Earth-orientation data that was not supplied or
+  /// does not span EPOCH. The provider MUST fail here rather than silently
+  /// extrapolate.
+  MISSING_EOP_DATA = 5,
+  /// The state is at a singularity of the requested element set (for example
+  /// e -> 0 for Keplerian). The provider MUST report this rather than
+  /// substitute a different element set.
+  SINGULAR_ELEMENT_SET = 6,
+}
+
+/// Orbit state element sets. Append new values only; never reorder or reuse
+/// existing values.
+enum frmStateRepresentation : ubyte {
+  UNSPECIFIED = 0,
+  /// Position and velocity components, 6 elements.
+  CARTESIAN = 1,
+  /// SMA, ECC, INC, RAAN, AOP, TA.
+  KEPLERIAN = 2,
+  /// RadPer, RadApo, INC, RAAN, AOP, TA.
+  MODIFIED_KEPLERIAN = 3,
+  /// RMAG, RA, DEC, VMAG, azimuth, flight-path angle.
+  SPHERICAL_AZFPA = 4,
+  /// RMAG, RA, DEC, VMAG, right ascension of velocity, declination of velocity.
+  SPHERICAL_RADEC = 5,
+  /// SMA, h, k, p, q, mean longitude.
+  EQUINOCTIAL = 6,
+  /// p, f, g, h, k, true longitude.
+  MODIFIED_EQUINOCTIAL = 7,
+  /// Equinoctial variant using mean motion in place of the semi-major axis.
+  ALTERNATE_EQUINOCTIAL = 8,
+  /// Delaunay canonical variables l, g, h, L, G, H.
+  DELAUNAY = 9,
+  /// Geodetic latitude/longitude/height with the horizon velocity triple.
+  PLANETODETIC = 10,
+  /// Incoming asymptote (B-plane) element set.
+  INCOMING_ASYMPTOTE = 11,
+  /// Outgoing asymptote (B-plane) element set.
+  OUTGOING_ASYMPTOTE = 12,
+  /// Brouwer-Lyddane mean elements, short-period terms only.
+  BROUWER_MEAN_SHORT = 13,
+  /// Brouwer-Lyddane mean elements, short and long period terms.
+  BROUWER_MEAN_LONG = 14
 }
 
 table FRMVector3 {
@@ -33,6 +94,38 @@ table FRMMatrix3 {
   M33:double;
 }
 
+/// A state in a named element set at a named epoch. ELEMENTS is the element
+/// set's own 6 values in the order documented on frmStateRepresentation.
+/// POSITION and VELOCITY are the Cartesian projection of the same state and
+/// are populated when REPRESENTATION is CARTESIAN or when the provider can
+/// supply them; a consumer MUST NOT infer velocity from POSITION alone.
+table FRMStateVector {
+  REPRESENTATION: frmStateRepresentation = UNSPECIFIED;
+
+  /// The 6 element values of REPRESENTATION, SI units and radians.
+  ELEMENTS: [double];
+
+  /// Cartesian position, metres.
+  POSITION: FRMVector3;
+
+  /// Cartesian velocity, metres per second.
+  VELOCITY: FRMVector3;
+
+  /// Name of the coordinate system these elements are expressed in; resolves
+  /// against RFMCoordinateSystem.NAME.
+  COORDINATE_SYSTEM_NAME: string;
+
+  /// Epoch of this state, ISO 8601.
+  EPOCH: string;
+
+  /// Time system of EPOCH, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Gravitational parameter, m^3/s^2, of the origin body when the element
+  /// set requires one. Absent means the provider's default for the origin.
+  GRAVITATIONAL_PARAMETER: double;
+}
+
 table FRMFrameTransformRequest {
   OPERATION:frmOperationCode;
   POSITION:FRMVector3;
@@ -40,6 +133,34 @@ table FRMFrameTransformRequest {
   EQUATORIAL_RADIUS_M:double;
   POLAR_RADIUS_M:double;
   TRACE_ID:string;
+
+  // --- appended for STATE_TRANSFORM / FRAME_ROTATION / ---------------------
+  // --- STATE_REPRESENTATION_CONVERT. Ignored by operations 1-4. ------------
+
+  /// Coordinate system the request's state is expressed in.
+  SOURCE_COORDINATE_SYSTEM: RFMCoordinateSystem;
+
+  /// Coordinate system the result is required in.
+  TARGET_COORDINATE_SYSTEM: RFMCoordinateSystem;
+
+  /// The full input state, carrying velocity as well as position. POSITION
+  /// above is position-only and remains the input for operations 1-4.
+  SOURCE_STATE: FRMStateVector;
+
+  /// Element set the result must be expressed in.
+  TARGET_REPRESENTATION: frmStateRepresentation = UNSPECIFIED;
+
+  /// Epoch the transform is evaluated at, ISO 8601. Required for every
+  /// time-dependent axis chain.
+  EPOCH: string;
+
+  /// Time system of EPOCH, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Content identifier of the Earth-orientation data set the caller requires
+  /// the provider to use. A provider that cannot honour it returns
+  /// MISSING_EOP_DATA rather than substituting another table.
+  EOP_DATA_SET_CID: string;
 }
 
 table FRMFrameTransformResult {
@@ -47,6 +168,29 @@ table FRMFrameTransformResult {
   ERROR_MESSAGE:string;
   POSITION:FRMVector3;
   TRACE_ID:string;
+
+  // --- appended; empty for operations 1-4 ---------------------------------
+
+  /// The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+  /// TARGET_REPRESENTATION.
+  TARGET_STATE: FRMStateVector;
+
+  /// Rotation from the source axes to the target axes at EPOCH.
+  ROTATION_DCM: FRMMatrix3;
+
+  /// Time derivative of ROTATION_DCM, per second. Required for a velocity
+  /// transform between relatively rotating axis sets.
+  ROTATION_DCM_RATE: FRMMatrix3;
+
+  /// Angular velocity of the target axes with respect to the source axes,
+  /// radians per second, expressed in the source axes.
+  ANGULAR_VELOCITY_RAD_S: FRMVector3;
+
+  /// Epoch of the Earth-orientation data set actually used, ISO 8601.
+  EOP_DATA_SET_EPOCH: string;
+
+  /// Content identifier of the Earth-orientation data set actually used.
+  EOP_DATA_SET_CID: string;
 }
 
 table FRM {

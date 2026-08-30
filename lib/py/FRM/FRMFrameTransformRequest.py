@@ -78,8 +78,80 @@ class FRMFrameTransformRequest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Coordinate system the request's state is expressed in.
+    # FRMFrameTransformRequest
+    def SOURCE_COORDINATE_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFMCoordinateSystem import RFMCoordinateSystem
+            obj = RFMCoordinateSystem()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Coordinate system the result is required in.
+    # FRMFrameTransformRequest
+    def TARGET_COORDINATE_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFMCoordinateSystem import RFMCoordinateSystem
+            obj = RFMCoordinateSystem()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The full input state, carrying velocity as well as position. POSITION
+    # above is position-only and remains the input for operations 1-4.
+    # FRMFrameTransformRequest
+    def SOURCE_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMStateVector import FRMStateVector
+            obj = FRMStateVector()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Element set the result must be expressed in.
+    # FRMFrameTransformRequest
+    def TARGET_REPRESENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Epoch the transform is evaluated at, ISO 8601. Required for every
+    # time-dependent axis chain.
+    # FRMFrameTransformRequest
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time system of EPOCH, named by the $TIM timingStandard member name.
+    # FRMFrameTransformRequest
+    def EPOCH_TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the Earth-orientation data set the caller requires
+    # the provider to use. A provider that cannot honour it returns
+    # MISSING_EOP_DATA rather than substituting another table.
+    # FRMFrameTransformRequest
+    def EOP_DATA_SET_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def FRMFrameTransformRequestStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(13)
 
 def Start(builder):
     FRMFrameTransformRequestStart(builder)
@@ -120,6 +192,48 @@ def FRMFrameTransformRequestAddTRACE_ID(builder, TRACE_ID):
 def AddTRACE_ID(builder, TRACE_ID):
     FRMFrameTransformRequestAddTRACE_ID(builder, TRACE_ID)
 
+def FRMFrameTransformRequestAddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_COORDINATE_SYSTEM), 0)
+
+def AddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEM):
+    FRMFrameTransformRequestAddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEM)
+
+def FRMFrameTransformRequestAddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_COORDINATE_SYSTEM), 0)
+
+def AddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEM):
+    FRMFrameTransformRequestAddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEM)
+
+def FRMFrameTransformRequestAddSOURCE_STATE(builder, SOURCE_STATE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_STATE), 0)
+
+def AddSOURCE_STATE(builder, SOURCE_STATE):
+    FRMFrameTransformRequestAddSOURCE_STATE(builder, SOURCE_STATE)
+
+def FRMFrameTransformRequestAddTARGET_REPRESENTATION(builder, TARGET_REPRESENTATION):
+    builder.PrependUint8Slot(9, TARGET_REPRESENTATION, 0)
+
+def AddTARGET_REPRESENTATION(builder, TARGET_REPRESENTATION):
+    FRMFrameTransformRequestAddTARGET_REPRESENTATION(builder, TARGET_REPRESENTATION)
+
+def FRMFrameTransformRequestAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    FRMFrameTransformRequestAddEPOCH(builder, EPOCH)
+
+def FRMFrameTransformRequestAddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_TIME_SYSTEM), 0)
+
+def AddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEM):
+    FRMFrameTransformRequestAddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEM)
+
+def FRMFrameTransformRequestAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(EOP_DATA_SET_CID), 0)
+
+def AddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
+    FRMFrameTransformRequestAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
+
 def FRMFrameTransformRequestEnd(builder):
     return builder.EndObject()
 
@@ -127,7 +241,9 @@ def End(builder):
     return FRMFrameTransformRequestEnd(builder)
 
 import FRMMatrix3
+import FRMStateVector
 import FRMVector3
+import RFMCoordinateSystem
 try:
     from typing import Optional
 except:
@@ -144,6 +260,13 @@ class FRMFrameTransformRequestT(object):
         EQUATORIAL_RADIUS_M = 0.0,
         POLAR_RADIUS_M = 0.0,
         TRACE_ID = None,
+        SOURCE_COORDINATE_SYSTEM = None,
+        TARGET_COORDINATE_SYSTEM = None,
+        SOURCE_STATE = None,
+        TARGET_REPRESENTATION = 0,
+        EPOCH = None,
+        EPOCH_TIME_SYSTEM = None,
+        EOP_DATA_SET_CID = None,
     ):
         self.OPERATION = OPERATION  # type: int
         self.POSITION = POSITION  # type: Optional[FRMVector3.FRMVector3T]
@@ -151,6 +274,13 @@ class FRMFrameTransformRequestT(object):
         self.EQUATORIAL_RADIUS_M = EQUATORIAL_RADIUS_M  # type: float
         self.POLAR_RADIUS_M = POLAR_RADIUS_M  # type: float
         self.TRACE_ID = TRACE_ID  # type: Optional[str]
+        self.SOURCE_COORDINATE_SYSTEM = SOURCE_COORDINATE_SYSTEM  # type: Optional[RFMCoordinateSystem.RFMCoordinateSystemT]
+        self.TARGET_COORDINATE_SYSTEM = TARGET_COORDINATE_SYSTEM  # type: Optional[RFMCoordinateSystem.RFMCoordinateSystemT]
+        self.SOURCE_STATE = SOURCE_STATE  # type: Optional[FRMStateVector.FRMStateVectorT]
+        self.TARGET_REPRESENTATION = TARGET_REPRESENTATION  # type: int
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.EPOCH_TIME_SYSTEM = EPOCH_TIME_SYSTEM  # type: Optional[str]
+        self.EOP_DATA_SET_CID = EOP_DATA_SET_CID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -181,6 +311,16 @@ class FRMFrameTransformRequestT(object):
         self.EQUATORIAL_RADIUS_M = FRMFrameTransformRequest.EQUATORIAL_RADIUS_M()
         self.POLAR_RADIUS_M = FRMFrameTransformRequest.POLAR_RADIUS_M()
         self.TRACE_ID = FRMFrameTransformRequest.TRACE_ID()
+        if FRMFrameTransformRequest.SOURCE_COORDINATE_SYSTEM() is not None:
+            self.SOURCE_COORDINATE_SYSTEM = RFMCoordinateSystem.RFMCoordinateSystemT.InitFromObj(FRMFrameTransformRequest.SOURCE_COORDINATE_SYSTEM())
+        if FRMFrameTransformRequest.TARGET_COORDINATE_SYSTEM() is not None:
+            self.TARGET_COORDINATE_SYSTEM = RFMCoordinateSystem.RFMCoordinateSystemT.InitFromObj(FRMFrameTransformRequest.TARGET_COORDINATE_SYSTEM())
+        if FRMFrameTransformRequest.SOURCE_STATE() is not None:
+            self.SOURCE_STATE = FRMStateVector.FRMStateVectorT.InitFromObj(FRMFrameTransformRequest.SOURCE_STATE())
+        self.TARGET_REPRESENTATION = FRMFrameTransformRequest.TARGET_REPRESENTATION()
+        self.EPOCH = FRMFrameTransformRequest.EPOCH()
+        self.EPOCH_TIME_SYSTEM = FRMFrameTransformRequest.EPOCH_TIME_SYSTEM()
+        self.EOP_DATA_SET_CID = FRMFrameTransformRequest.EOP_DATA_SET_CID()
 
     # FRMFrameTransformRequestT
     def Pack(self, builder):
@@ -190,6 +330,18 @@ class FRMFrameTransformRequestT(object):
             TRANSFORM_DCM = self.TRANSFORM_DCM.Pack(builder)
         if self.TRACE_ID is not None:
             TRACE_ID = builder.CreateString(self.TRACE_ID)
+        if self.SOURCE_COORDINATE_SYSTEM is not None:
+            SOURCE_COORDINATE_SYSTEM = self.SOURCE_COORDINATE_SYSTEM.Pack(builder)
+        if self.TARGET_COORDINATE_SYSTEM is not None:
+            TARGET_COORDINATE_SYSTEM = self.TARGET_COORDINATE_SYSTEM.Pack(builder)
+        if self.SOURCE_STATE is not None:
+            SOURCE_STATE = self.SOURCE_STATE.Pack(builder)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.EPOCH_TIME_SYSTEM is not None:
+            EPOCH_TIME_SYSTEM = builder.CreateString(self.EPOCH_TIME_SYSTEM)
+        if self.EOP_DATA_SET_CID is not None:
+            EOP_DATA_SET_CID = builder.CreateString(self.EOP_DATA_SET_CID)
         FRMFrameTransformRequestStart(builder)
         FRMFrameTransformRequestAddOPERATION(builder, self.OPERATION)
         if self.POSITION is not None:
@@ -200,5 +352,18 @@ class FRMFrameTransformRequestT(object):
         FRMFrameTransformRequestAddPOLAR_RADIUS_M(builder, self.POLAR_RADIUS_M)
         if self.TRACE_ID is not None:
             FRMFrameTransformRequestAddTRACE_ID(builder, TRACE_ID)
+        if self.SOURCE_COORDINATE_SYSTEM is not None:
+            FRMFrameTransformRequestAddSOURCE_COORDINATE_SYSTEM(builder, SOURCE_COORDINATE_SYSTEM)
+        if self.TARGET_COORDINATE_SYSTEM is not None:
+            FRMFrameTransformRequestAddTARGET_COORDINATE_SYSTEM(builder, TARGET_COORDINATE_SYSTEM)
+        if self.SOURCE_STATE is not None:
+            FRMFrameTransformRequestAddSOURCE_STATE(builder, SOURCE_STATE)
+        FRMFrameTransformRequestAddTARGET_REPRESENTATION(builder, self.TARGET_REPRESENTATION)
+        if self.EPOCH is not None:
+            FRMFrameTransformRequestAddEPOCH(builder, EPOCH)
+        if self.EPOCH_TIME_SYSTEM is not None:
+            FRMFrameTransformRequestAddEPOCH_TIME_SYSTEM(builder, EPOCH_TIME_SYSTEM)
+        if self.EOP_DATA_SET_CID is not None:
+            FRMFrameTransformRequestAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
         FRMFrameTransformRequest = FRMFrameTransformRequestEnd(builder)
         return FRMFrameTransformRequest

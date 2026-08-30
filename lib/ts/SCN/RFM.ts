@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CelestialFrameWrapper, CelestialFrameWrapperT } from './CelestialFrameWrapper.js';
 import { CustomFrameWrapper, CustomFrameWrapperT } from './CustomFrameWrapper.js';
 import { OrbitFrameWrapper, OrbitFrameWrapperT } from './OrbitFrameWrapper.js';
+import { RFMCoordinateSystemWrapper, RFMCoordinateSystemWrapperT } from './RFMCoordinateSystemWrapper.js';
 import { RFMUnion, unionToRfmunion, unionListToRfmunion } from './RFMUnion.js';
 import { SpacecraftFrameWrapper, SpacecraftFrameWrapperT } from './SpacecraftFrameWrapper.js';
 
@@ -129,7 +130,7 @@ unpackTo(_o: RFMT): void {
 export class RFMT implements flatbuffers.IGeneratedObject {
 constructor(
   public REFERENCE_FRAME_type: RFMUnion = RFMUnion.NONE,
-  public REFERENCE_FRAME: CelestialFrameWrapperT|CustomFrameWrapperT|OrbitFrameWrapperT|SpacecraftFrameWrapperT|null = null,
+  public REFERENCE_FRAME: CelestialFrameWrapperT|CustomFrameWrapperT|OrbitFrameWrapperT|RFMCoordinateSystemWrapperT|SpacecraftFrameWrapperT|null = null,
   public INDEX: number = 0,
   public NAME: string|Uint8Array|null = null
 ){}

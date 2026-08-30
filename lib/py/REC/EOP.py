@@ -178,8 +178,82 @@ class EOP(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
+    # x component of Pole Wander in radians, double precision. Authoritative
+    # over X_POLE_WANDER_RADIANS when present.
+    # EOP
+    def X_POLE_WANDER_RADIANS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # y component of Pole Wander in radians, double precision. Authoritative
+    # over Y_POLE_WANDER_RADIANS when present.
+    # EOP
+    def Y_POLE_WANDER_RADIANS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # x component of the Celestial Pole Offset in radians, double precision.
+    # Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+    # EOP
+    def X_CELESTIAL_POLE_OFFSET_RADIANS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # y component of the Celestial Pole Offset in radians, double precision.
+    # Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+    # EOP
+    def Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # UT1 minus UTC in seconds, double precision. Authoritative over
+    # UT1_MINUS_UTC_SECONDS when present.
+    # EOP
+    def UT1_MINUS_UTC_SECONDS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Correction to Length of Day in seconds, double precision. Authoritative
+    # over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+    # EOP
+    def LENGTH_OF_DAY_CORRECTION_SECONDS_HP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+    # WHICH issue of the series a consumer is holding; two rows for the same
+    # MJD from different data-set epochs are different values, not duplicates.
+    # EOP
+    def DATA_SET_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the complete published data set this row was taken
+    # from. Every frames consumer that must agree bit-for-bit records this so
+    # the source is provable rather than assumed.
+    # EOP
+    def DATA_SET_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def EOPStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(26)
 
 def Start(builder):
     EOPStart(builder)
@@ -292,6 +366,54 @@ def EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_S
 def AddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS):
     EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
 
+def EOPAddX_POLE_WANDER_RADIANS_HP(builder, X_POLE_WANDER_RADIANS_HP):
+    builder.PrependFloat64Slot(18, X_POLE_WANDER_RADIANS_HP, 0.0)
+
+def AddX_POLE_WANDER_RADIANS_HP(builder, X_POLE_WANDER_RADIANS_HP):
+    EOPAddX_POLE_WANDER_RADIANS_HP(builder, X_POLE_WANDER_RADIANS_HP)
+
+def EOPAddY_POLE_WANDER_RADIANS_HP(builder, Y_POLE_WANDER_RADIANS_HP):
+    builder.PrependFloat64Slot(19, Y_POLE_WANDER_RADIANS_HP, 0.0)
+
+def AddY_POLE_WANDER_RADIANS_HP(builder, Y_POLE_WANDER_RADIANS_HP):
+    EOPAddY_POLE_WANDER_RADIANS_HP(builder, Y_POLE_WANDER_RADIANS_HP)
+
+def EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP):
+    builder.PrependFloat64Slot(20, X_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0)
+
+def AddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP):
+    EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP)
+
+def EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP):
+    builder.PrependFloat64Slot(21, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0)
+
+def AddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP):
+    EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP)
+
+def EOPAddUT1_MINUS_UTC_SECONDS_HP(builder, UT1_MINUS_UTC_SECONDS_HP):
+    builder.PrependFloat64Slot(22, UT1_MINUS_UTC_SECONDS_HP, 0.0)
+
+def AddUT1_MINUS_UTC_SECONDS_HP(builder, UT1_MINUS_UTC_SECONDS_HP):
+    EOPAddUT1_MINUS_UTC_SECONDS_HP(builder, UT1_MINUS_UTC_SECONDS_HP)
+
+def EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP):
+    builder.PrependFloat64Slot(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0)
+
+def AddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP):
+    EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP)
+
+def EOPAddDATA_SET_EPOCH(builder, DATA_SET_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_SET_EPOCH), 0)
+
+def AddDATA_SET_EPOCH(builder, DATA_SET_EPOCH):
+    EOPAddDATA_SET_EPOCH(builder, DATA_SET_EPOCH)
+
+def EOPAddDATA_SET_CID(builder, DATA_SET_CID):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_SET_CID), 0)
+
+def AddDATA_SET_CID(builder, DATA_SET_CID):
+    EOPAddDATA_SET_CID(builder, DATA_SET_CID)
+
 def EOPEnd(builder):
     return builder.EndObject()
 
@@ -322,6 +444,14 @@ class EOPT(object):
         Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0,
         UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0,
         LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0,
+        X_POLE_WANDER_RADIANS_HP = 0.0,
+        Y_POLE_WANDER_RADIANS_HP = 0.0,
+        X_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0,
+        Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = 0.0,
+        UT1_MINUS_UTC_SECONDS_HP = 0.0,
+        LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
+        DATA_SET_EPOCH = None,
+        DATA_SET_CID = None,
     ):
         self.DATE = DATE  # type: Optional[str]
         self.MJD = MJD  # type: int
@@ -341,6 +471,14 @@ class EOPT(object):
         self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS  # type: float
         self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = UT1_MINUS_UTC_UNCERTAINTY_SECONDS  # type: float
         self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = LENGTH_OF_DAY_UNCERTAINTY_SECONDS  # type: float
+        self.X_POLE_WANDER_RADIANS_HP = X_POLE_WANDER_RADIANS_HP  # type: float
+        self.Y_POLE_WANDER_RADIANS_HP = Y_POLE_WANDER_RADIANS_HP  # type: float
+        self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP = X_CELESTIAL_POLE_OFFSET_RADIANS_HP  # type: float
+        self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = Y_CELESTIAL_POLE_OFFSET_RADIANS_HP  # type: float
+        self.UT1_MINUS_UTC_SECONDS_HP = UT1_MINUS_UTC_SECONDS_HP  # type: float
+        self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = LENGTH_OF_DAY_CORRECTION_SECONDS_HP  # type: float
+        self.DATA_SET_EPOCH = DATA_SET_EPOCH  # type: Optional[str]
+        self.DATA_SET_CID = DATA_SET_CID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -381,11 +519,23 @@ class EOPT(object):
         self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = EOP.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
         self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = EOP.UT1_MINUS_UTC_UNCERTAINTY_SECONDS()
         self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = EOP.LENGTH_OF_DAY_UNCERTAINTY_SECONDS()
+        self.X_POLE_WANDER_RADIANS_HP = EOP.X_POLE_WANDER_RADIANS_HP()
+        self.Y_POLE_WANDER_RADIANS_HP = EOP.Y_POLE_WANDER_RADIANS_HP()
+        self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP = EOP.X_CELESTIAL_POLE_OFFSET_RADIANS_HP()
+        self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = EOP.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP()
+        self.UT1_MINUS_UTC_SECONDS_HP = EOP.UT1_MINUS_UTC_SECONDS_HP()
+        self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = EOP.LENGTH_OF_DAY_CORRECTION_SECONDS_HP()
+        self.DATA_SET_EPOCH = EOP.DATA_SET_EPOCH()
+        self.DATA_SET_CID = EOP.DATA_SET_CID()
 
     # EOPT
     def Pack(self, builder):
         if self.DATE is not None:
             DATE = builder.CreateString(self.DATE)
+        if self.DATA_SET_EPOCH is not None:
+            DATA_SET_EPOCH = builder.CreateString(self.DATA_SET_EPOCH)
+        if self.DATA_SET_CID is not None:
+            DATA_SET_CID = builder.CreateString(self.DATA_SET_CID)
         EOPStart(builder)
         if self.DATE is not None:
             EOPAddDATE(builder, DATE)
@@ -406,5 +556,15 @@ class EOPT(object):
         EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
         EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS)
         EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
+        EOPAddX_POLE_WANDER_RADIANS_HP(builder, self.X_POLE_WANDER_RADIANS_HP)
+        EOPAddY_POLE_WANDER_RADIANS_HP(builder, self.Y_POLE_WANDER_RADIANS_HP)
+        EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, self.X_CELESTIAL_POLE_OFFSET_RADIANS_HP)
+        EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, self.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP)
+        EOPAddUT1_MINUS_UTC_SECONDS_HP(builder, self.UT1_MINUS_UTC_SECONDS_HP)
+        EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP)
+        if self.DATA_SET_EPOCH is not None:
+            EOPAddDATA_SET_EPOCH(builder, DATA_SET_EPOCH)
+        if self.DATA_SET_CID is not None:
+            EOPAddDATA_SET_CID(builder, DATA_SET_CID)
         EOP = EOPEnd(builder)
         return EOP

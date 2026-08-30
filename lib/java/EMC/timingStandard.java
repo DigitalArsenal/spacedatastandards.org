@@ -75,8 +75,14 @@ public final class timingStandard {
    * Satellite-Based Augmentation System Time
    */
   public static final byte SBAS = 17;
+  /**
+   * Atomic time scale of the reference atomic-time network, offset from
+   * International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+   * exactly. Appended last; never reorder or reuse existing values.
+   */
+  public static final byte A1 = 18;
 
-  public static final String[] names = { "GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", };
+  public static final String[] names = { "GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", "A1", };
 
   public static String name(int e) { return names[e]; }
 }

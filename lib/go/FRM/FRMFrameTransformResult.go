@@ -102,8 +102,118 @@ func (rcv *FRMFrameTransformResult) TraceId() []byte {
 	return rcv.TRACE_ID()
 }
 
+/// The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+/// TARGET_REPRESENTATION.
+func (rcv *FRMFrameTransformResult) TARGET_STATE(obj *FRMStateVector) *FRMStateVector {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMStateVector)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) TargetState(obj *FRMStateVector) *FRMStateVector {
+	return rcv.TARGET_STATE(obj)
+}
+
+/// The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+/// TARGET_REPRESENTATION.
+/// Rotation from the source axes to the target axes at EPOCH.
+func (rcv *FRMFrameTransformResult) ROTATION_DCM(obj *FRMMatrix3) *FRMMatrix3 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMMatrix3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) RotationDcm(obj *FRMMatrix3) *FRMMatrix3 {
+	return rcv.ROTATION_DCM(obj)
+}
+
+/// Rotation from the source axes to the target axes at EPOCH.
+/// Time derivative of ROTATION_DCM, per second. Required for a velocity
+/// transform between relatively rotating axis sets.
+func (rcv *FRMFrameTransformResult) ROTATION_DCM_RATE(obj *FRMMatrix3) *FRMMatrix3 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMMatrix3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) RotationDcmRate(obj *FRMMatrix3) *FRMMatrix3 {
+	return rcv.ROTATION_DCM_RATE(obj)
+}
+
+/// Time derivative of ROTATION_DCM, per second. Required for a velocity
+/// transform between relatively rotating axis sets.
+/// Angular velocity of the target axes with respect to the source axes,
+/// radians per second, expressed in the source axes.
+func (rcv *FRMFrameTransformResult) ANGULAR_VELOCITY_RAD_S(obj *FRMVector3) *FRMVector3 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMVector3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) AngularVelocityRadS(obj *FRMVector3) *FRMVector3 {
+	return rcv.ANGULAR_VELOCITY_RAD_S(obj)
+}
+
+/// Angular velocity of the target axes with respect to the source axes,
+/// radians per second, expressed in the source axes.
+/// Epoch of the Earth-orientation data set actually used, ISO 8601.
+func (rcv *FRMFrameTransformResult) EOP_DATA_SET_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) EopDataSetEpoch() []byte {
+	return rcv.EOP_DATA_SET_EPOCH()
+}
+
+/// Epoch of the Earth-orientation data set actually used, ISO 8601.
+/// Content identifier of the Earth-orientation data set actually used.
+func (rcv *FRMFrameTransformResult) EOP_DATA_SET_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FRMFrameTransformResult) EopDataSetCid() []byte {
+	return rcv.EOP_DATA_SET_CID()
+}
+
+/// Content identifier of the Earth-orientation data set actually used.
 func FRMFrameTransformResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(10)
 }
 func FRMFrameTransformResultAddSTATUS(builder *flatbuffers.Builder, STATUS frmResultStatus) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -128,6 +238,42 @@ func FRMFrameTransformResultAddTRACE_ID(builder *flatbuffers.Builder, TRACE_ID f
 }
 func FRMFrameTransformResultAddTraceId(builder *flatbuffers.Builder, TRACE_ID flatbuffers.UOffsetT) {
 	FRMFrameTransformResultAddTRACE_ID(builder, TRACE_ID)
+}
+func FRMFrameTransformResultAddTARGET_STATE(builder *flatbuffers.Builder, TARGET_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TARGET_STATE), 0)
+}
+func FRMFrameTransformResultAddTargetState(builder *flatbuffers.Builder, TARGET_STATE flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddTARGET_STATE(builder, TARGET_STATE)
+}
+func FRMFrameTransformResultAddROTATION_DCM(builder *flatbuffers.Builder, ROTATION_DCM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ROTATION_DCM), 0)
+}
+func FRMFrameTransformResultAddRotationDcm(builder *flatbuffers.Builder, ROTATION_DCM flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddROTATION_DCM(builder, ROTATION_DCM)
+}
+func FRMFrameTransformResultAddROTATION_DCM_RATE(builder *flatbuffers.Builder, ROTATION_DCM_RATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ROTATION_DCM_RATE), 0)
+}
+func FRMFrameTransformResultAddRotationDcmRate(builder *flatbuffers.Builder, ROTATION_DCM_RATE flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddROTATION_DCM_RATE(builder, ROTATION_DCM_RATE)
+}
+func FRMFrameTransformResultAddANGULAR_VELOCITY_RAD_S(builder *flatbuffers.Builder, ANGULAR_VELOCITY_RAD_S flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ANGULAR_VELOCITY_RAD_S), 0)
+}
+func FRMFrameTransformResultAddAngularVelocityRadS(builder *flatbuffers.Builder, ANGULAR_VELOCITY_RAD_S flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddANGULAR_VELOCITY_RAD_S(builder, ANGULAR_VELOCITY_RAD_S)
+}
+func FRMFrameTransformResultAddEOP_DATA_SET_EPOCH(builder *flatbuffers.Builder, EOP_DATA_SET_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EOP_DATA_SET_EPOCH), 0)
+}
+func FRMFrameTransformResultAddEopDataSetEpoch(builder *flatbuffers.Builder, EOP_DATA_SET_EPOCH flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddEOP_DATA_SET_EPOCH(builder, EOP_DATA_SET_EPOCH)
+}
+func FRMFrameTransformResultAddEOP_DATA_SET_CID(builder *flatbuffers.Builder, EOP_DATA_SET_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(EOP_DATA_SET_CID), 0)
+}
+func FRMFrameTransformResultAddEopDataSetCid(builder *flatbuffers.Builder, EOP_DATA_SET_CID flatbuffers.UOffsetT) {
+	FRMFrameTransformResultAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
 }
 func FRMFrameTransformResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

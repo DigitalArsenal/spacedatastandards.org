@@ -521,6 +521,253 @@
         }
       }
     },
+    "rfmAxisType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEAN_EQUATOR_EQUINOX_J2000",
+        "MEAN_ECLIPTIC_EQUINOX_J2000",
+        "ICRF",
+        "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+        "MEAN_OF_DATE_EQUATOR",
+        "MEAN_OF_DATE_ECLIPTIC",
+        "TRUE_OF_DATE_EQUATOR",
+        "TRUE_OF_DATE_ECLIPTIC",
+        "MEAN_OF_EPOCH_EQUATOR",
+        "MEAN_OF_EPOCH_ECLIPTIC",
+        "TRUE_OF_EPOCH_EQUATOR",
+        "TRUE_OF_EPOCH_ECLIPTIC",
+        "BODY_FIXED",
+        "BODY_INERTIAL",
+        "OBJECT_REFERENCED",
+        "LOCAL_ALIGNED_CONSTRAINED",
+        "BODY_EQUATOR",
+        "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+        "SOLAR_MAGNETOSPHERIC",
+        "TOPOCENTRIC",
+        "BODY_SPIN_SUN",
+        "EPHEMERIS_KERNEL_DEFINED",
+        "MEAN_OF_DATE_EQUATOR_FK5",
+        "TRUE_OF_DATE_EQUATOR_FK5"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MEAN_EQUATOR_EQUINOX_J2000": {
+          "value": 1,
+          "description": "Mean equator and mean equinox of the J2000.0 epoch."
+        },
+        "MEAN_ECLIPTIC_EQUINOX_J2000": {
+          "value": 2,
+          "description": "Mean ecliptic and mean equinox of the J2000.0 epoch."
+        },
+        "ICRF": {
+          "value": 3,
+          "description": "International Celestial Reference Frame axes."
+        },
+        "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE": {
+          "value": 4,
+          "description": "True equator, mean equinox of date."
+        },
+        "MEAN_OF_DATE_EQUATOR": {
+          "value": 5,
+          "description": "Mean equator of date (precession applied to the epoch of the state)."
+        },
+        "MEAN_OF_DATE_ECLIPTIC": {
+          "value": 6,
+          "description": "Mean ecliptic of date."
+        },
+        "TRUE_OF_DATE_EQUATOR": {
+          "value": 7,
+          "description": "True equator of date (precession and nutation applied)."
+        },
+        "TRUE_OF_DATE_ECLIPTIC": {
+          "value": 8,
+          "description": "True ecliptic of date."
+        },
+        "MEAN_OF_EPOCH_EQUATOR": {
+          "value": 9,
+          "description": "Mean equator of a fixed reference epoch."
+        },
+        "MEAN_OF_EPOCH_ECLIPTIC": {
+          "value": 10,
+          "description": "Mean ecliptic of a fixed reference epoch."
+        },
+        "TRUE_OF_EPOCH_EQUATOR": {
+          "value": 11,
+          "description": "True equator of a fixed reference epoch."
+        },
+        "TRUE_OF_EPOCH_ECLIPTIC": {
+          "value": 12,
+          "description": "True ecliptic of a fixed reference epoch."
+        },
+        "BODY_FIXED": {
+          "value": 13,
+          "description": "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+        },
+        "BODY_INERTIAL": {
+          "value": 14,
+          "description": "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+        },
+        "OBJECT_REFERENCED": {
+          "value": 15,
+          "description": "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+        },
+        "LOCAL_ALIGNED_CONSTRAINED": {
+          "value": 16,
+          "description": "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+        },
+        "BODY_EQUATOR": {
+          "value": 17,
+          "description": "Axes in the reference body's equatorial plane at the requested epoch."
+        },
+        "SOLAR_ECLIPTIC_MAGNETOSPHERIC": {
+          "value": 18,
+          "description": "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+        },
+        "SOLAR_MAGNETOSPHERIC": {
+          "value": 19,
+          "description": "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+        },
+        "TOPOCENTRIC": {
+          "value": 20,
+          "description": "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+        },
+        "BODY_SPIN_SUN": {
+          "value": 21,
+          "description": "Axes fixed by the body spin axis and the body-to-Sun direction."
+        },
+        "EPHEMERIS_KERNEL_DEFINED": {
+          "value": 22,
+          "description": "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+        },
+        "MEAN_OF_DATE_EQUATOR_FK5": {
+          "value": 23,
+          "description": "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+        },
+        "TRUE_OF_DATE_EQUATOR_FK5": {
+          "value": 24,
+          "description": "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+        }
+      }
+    },
+    "rfmOriginKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CELESTIAL_BODY",
+        "BARYCENTRE",
+        "LIBRATION_POINT",
+        "SPACE_OBJECT",
+        "GROUND_SITE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CELESTIAL_BODY": {
+          "value": 1,
+          "description": "The centre of mass of a single celestial body."
+        },
+        "BARYCENTRE": {
+          "value": 2,
+          "description": "The barycentre of a named system of bodies."
+        },
+        "LIBRATION_POINT": {
+          "value": 3,
+          "description": "A libration (Lagrange) point of a two-body system."
+        },
+        "SPACE_OBJECT": {
+          "value": 4,
+          "description": "Another tracked space object, identified by OBJECT_ID."
+        },
+        "GROUND_SITE": {
+          "value": 5,
+          "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+        }
+      }
+    },
+    "rfmLibrationPoint": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "L1": {
+          "value": 1
+        },
+        "L2": {
+          "value": 2
+        },
+        "L3": {
+          "value": 3
+        },
+        "L4": {
+          "value": 4
+        },
+        "L5": {
+          "value": 5
+        }
+      }
+    },
+    "rfmVectorSpecification": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RADIAL",
+        "ANTI_RADIAL",
+        "VELOCITY",
+        "ANTI_VELOCITY",
+        "ORBIT_NORMAL",
+        "ANTI_ORBIT_NORMAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RADIAL": {
+          "value": 1,
+          "description": "Primary-to-secondary position direction."
+        },
+        "ANTI_RADIAL": {
+          "value": 2,
+          "description": "Negated RADIAL."
+        },
+        "VELOCITY": {
+          "value": 3,
+          "description": "Relative velocity direction."
+        },
+        "ANTI_VELOCITY": {
+          "value": 4,
+          "description": "Negated VELOCITY."
+        },
+        "ORBIT_NORMAL": {
+          "value": 5,
+          "description": "Orbit normal, RADIAL crossed into VELOCITY."
+        },
+        "ANTI_ORBIT_NORMAL": {
+          "value": 6,
+          "description": "Negated ORBIT_NORMAL."
+        }
+      }
+    },
     "RFMUnion": {
       "type": "string",
       "enum": [
@@ -528,7 +775,8 @@
         "CelestialFrameWrapper",
         "SpacecraftFrameWrapper",
         "OrbitFrameWrapper",
-        "CustomFrameWrapper"
+        "CustomFrameWrapper",
+        "RFMCoordinateSystemWrapper"
       ]
     },
     "timingStandard": {
@@ -551,7 +799,8 @@
         "QZSS",
         "BDT",
         "NAVIC",
-        "SBAS"
+        "SBAS",
+        "A1"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -627,6 +876,10 @@
         "SBAS": {
           "value": 17,
           "description": "Satellite-Based Augmentation System Time"
+        },
+        "A1": {
+          "value": 18,
+          "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
         }
       }
     },
@@ -2586,6 +2839,468 @@
       },
       "additionalProperties": false
     },
+    "RFMOrigin": {
+      "type": "object",
+      "description": "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/rfmOriginKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CELESTIAL_BODY": {
+              "value": 1,
+              "description": "The centre of mass of a single celestial body."
+            },
+            "BARYCENTRE": {
+              "value": 2,
+              "description": "The barycentre of a named system of bodies."
+            },
+            "LIBRATION_POINT": {
+              "value": 3,
+              "description": "A libration (Lagrange) point of a two-body system."
+            },
+            "SPACE_OBJECT": {
+              "value": 4,
+              "description": "Another tracked space object, identified by OBJECT_ID."
+            },
+            "GROUND_SITE": {
+              "value": 5,
+              "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CELESTIAL_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code when KIND is CELESTIAL_BODY.",
+          "x-flatbuffer-type": "int"
+        },
+        "BARYCENTRE_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the barycentre when KIND is BARYCENTRE.",
+          "x-flatbuffer-type": "int"
+        },
+        "LIBRATION_POINT": {
+          "$ref": "#/definitions/rfmLibrationPoint",
+          "description": "Which libration point, when KIND is LIBRATION_POINT.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "L1": {
+              "value": 1
+            },
+            "L2": {
+              "value": 2
+            },
+            "L3": {
+              "value": 3
+            },
+            "L4": {
+              "value": 4
+            },
+            "L5": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LIBRATION_PRIMARY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the libration system primary.",
+          "x-flatbuffer-type": "int"
+        },
+        "LIBRATION_SECONDARY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the libration system secondary.",
+          "x-flatbuffer-type": "int"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "Identifier of the space object when KIND is SPACE_OBJECT.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "Identifier of the surface site when KIND is GROUND_SITE.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the body the site sits on.",
+          "x-flatbuffer-type": "int"
+        },
+        "SITE_LATITUDE": {
+          "type": "number",
+          "description": "Geodetic latitude of the site, degrees, positive north.",
+          "x-flatbuffer-type": "double"
+        },
+        "SITE_LONGITUDE": {
+          "type": "number",
+          "description": "Geodetic longitude of the site, degrees, positive east.",
+          "x-flatbuffer-type": "double"
+        },
+        "SITE_ALTITUDE": {
+          "type": "number",
+          "description": "Height of the site above the reference ellipsoid, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable label. Descriptive only.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMObjectReferencedAxes": {
+      "type": "object",
+      "description": "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties": {
+        "PRIMARY_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SECONDARY_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "X_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "Y_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "Z_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMLocalAlignedConstrainedAxes": {
+      "type": "object",
+      "description": "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties": {
+        "REFERENCE_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_COORDINATE_SYSTEM_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALIGNMENT_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "ALIGNMENT_REFERENCE_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINT_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINT_REFERENCE_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMCoordinateSystem": {
+      "type": "object",
+      "description": "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Stable name for this coordinate system within the producing data set.",
+          "x-flatbuffer-type": "string"
+        },
+        "AXIS_TYPE": {
+          "$ref": "#/definitions/rfmAxisType",
+          "description": "Orientation rule.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MEAN_EQUATOR_EQUINOX_J2000": {
+              "value": 1,
+              "description": "Mean equator and mean equinox of the J2000.0 epoch."
+            },
+            "MEAN_ECLIPTIC_EQUINOX_J2000": {
+              "value": 2,
+              "description": "Mean ecliptic and mean equinox of the J2000.0 epoch."
+            },
+            "ICRF": {
+              "value": 3,
+              "description": "International Celestial Reference Frame axes."
+            },
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE": {
+              "value": 4,
+              "description": "True equator, mean equinox of date."
+            },
+            "MEAN_OF_DATE_EQUATOR": {
+              "value": 5,
+              "description": "Mean equator of date (precession applied to the epoch of the state)."
+            },
+            "MEAN_OF_DATE_ECLIPTIC": {
+              "value": 6,
+              "description": "Mean ecliptic of date."
+            },
+            "TRUE_OF_DATE_EQUATOR": {
+              "value": 7,
+              "description": "True equator of date (precession and nutation applied)."
+            },
+            "TRUE_OF_DATE_ECLIPTIC": {
+              "value": 8,
+              "description": "True ecliptic of date."
+            },
+            "MEAN_OF_EPOCH_EQUATOR": {
+              "value": 9,
+              "description": "Mean equator of a fixed reference epoch."
+            },
+            "MEAN_OF_EPOCH_ECLIPTIC": {
+              "value": 10,
+              "description": "Mean ecliptic of a fixed reference epoch."
+            },
+            "TRUE_OF_EPOCH_EQUATOR": {
+              "value": 11,
+              "description": "True equator of a fixed reference epoch."
+            },
+            "TRUE_OF_EPOCH_ECLIPTIC": {
+              "value": 12,
+              "description": "True ecliptic of a fixed reference epoch."
+            },
+            "BODY_FIXED": {
+              "value": 13,
+              "description": "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+            },
+            "BODY_INERTIAL": {
+              "value": 14,
+              "description": "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+            },
+            "OBJECT_REFERENCED": {
+              "value": 15,
+              "description": "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+            },
+            "LOCAL_ALIGNED_CONSTRAINED": {
+              "value": 16,
+              "description": "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+            },
+            "BODY_EQUATOR": {
+              "value": 17,
+              "description": "Axes in the reference body's equatorial plane at the requested epoch."
+            },
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC": {
+              "value": 18,
+              "description": "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+            },
+            "SOLAR_MAGNETOSPHERIC": {
+              "value": 19,
+              "description": "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+            },
+            "TOPOCENTRIC": {
+              "value": 20,
+              "description": "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+            },
+            "BODY_SPIN_SUN": {
+              "value": 21,
+              "description": "Axes fixed by the body spin axis and the body-to-Sun direction."
+            },
+            "EPHEMERIS_KERNEL_DEFINED": {
+              "value": 22,
+              "description": "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+            },
+            "MEAN_OF_DATE_EQUATOR_FK5": {
+              "value": 23,
+              "description": "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+            },
+            "TRUE_OF_DATE_EQUATOR_FK5": {
+              "value": 24,
+              "description": "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ORIGIN": {
+          "$ref": "#/definitions/RFMOrigin",
+          "description": "Centre of the system.",
+          "x-flatbuffer-type": "RFMOrigin"
+        },
+        "AXIS_REFERENCE_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN.",
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\").",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_REFERENCED_AXES": {
+          "$ref": "#/definitions/RFMObjectReferencedAxes",
+          "description": "Extra parameters for OBJECT_REFERENCED axes.",
+          "x-flatbuffer-type": "RFMObjectReferencedAxes"
+        },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES": {
+          "$ref": "#/definitions/RFMLocalAlignedConstrainedAxes",
+          "description": "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.",
+          "x-flatbuffer-type": "RFMLocalAlignedConstrainedAxes"
+        },
+        "KERNEL_FRAME_NAME": {
+          "type": "string",
+          "description": "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.",
+          "x-flatbuffer-type": "string"
+        },
+        "KERNEL_FRAME_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.",
+          "x-flatbuffer-type": "int"
+        },
+        "EOP_DATA_SET_CID": {
+          "type": "string",
+          "description": "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "CelestialFrameWrapper": {
       "type": "object",
       "properties": {
@@ -2950,6 +3665,16 @@
       },
       "additionalProperties": false
     },
+    "RFMCoordinateSystemWrapper": {
+      "type": "object",
+      "properties": {
+        "COORDINATE_SYSTEM": {
+          "$ref": "#/definitions/RFMCoordinateSystem",
+          "x-flatbuffer-type": "RFMCoordinateSystem"
+        }
+      },
+      "additionalProperties": false
+    },
     "RFM": {
       "type": "object",
       "description": "Reference Frame Message",
@@ -2970,6 +3695,9 @@
             },
             {
               "$ref": "#/definitions/CustomFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/RFMCoordinateSystemWrapper"
             }
           ],
           "x-flatbuffer-type": "RFMUnion"
@@ -3133,6 +3861,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -3314,6 +4046,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -3530,6 +4266,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -5689,6 +6429,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },
@@ -6052,6 +6796,10 @@
             "SBAS": {
               "value": 17,
               "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
             }
           }
         },

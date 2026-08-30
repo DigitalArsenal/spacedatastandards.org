@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CelestialFrameWrapperT } from './CelestialFrameWrapper.js';
 import { CustomFrameWrapperT } from './CustomFrameWrapper.js';
 import { OrbitFrameWrapperT } from './OrbitFrameWrapper.js';
+import { RFMCoordinateSystemWrapperT } from './RFMCoordinateSystemWrapper.js';
 import { RFMUnion } from './RFMUnion.js';
 import { SpacecraftFrameWrapperT } from './SpacecraftFrameWrapper.js';
 /**
@@ -33,10 +34,10 @@ export declare class RFM implements flatbuffers.IUnpackableObject<RFMT> {
 }
 export declare class RFMT implements flatbuffers.IGeneratedObject {
     REFERENCE_FRAME_type: RFMUnion;
-    REFERENCE_FRAME: CelestialFrameWrapperT | CustomFrameWrapperT | OrbitFrameWrapperT | SpacecraftFrameWrapperT | null;
+    REFERENCE_FRAME: CelestialFrameWrapperT | CustomFrameWrapperT | OrbitFrameWrapperT | RFMCoordinateSystemWrapperT | SpacecraftFrameWrapperT | null;
     INDEX: number;
     NAME: string | Uint8Array | null;
-    constructor(REFERENCE_FRAME_type?: RFMUnion, REFERENCE_FRAME?: CelestialFrameWrapperT | CustomFrameWrapperT | OrbitFrameWrapperT | SpacecraftFrameWrapperT | null, INDEX?: number, NAME?: string | Uint8Array | null);
+    constructor(REFERENCE_FRAME_type?: RFMUnion, REFERENCE_FRAME?: CelestialFrameWrapperT | CustomFrameWrapperT | OrbitFrameWrapperT | RFMCoordinateSystemWrapperT | SpacecraftFrameWrapperT | null, INDEX?: number, NAME?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFM.d.ts.map

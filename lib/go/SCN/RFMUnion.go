@@ -4,30 +4,34 @@ package SCN
 
 import "strconv"
 
+/// Union ordinals are WIRE. Append new members LAST; never reorder.
 type RFMUnion byte
 
 const (
-	RFMUnionNONE                   RFMUnion = 0
-	RFMUnionCelestialFrameWrapper  RFMUnion = 1
-	RFMUnionSpacecraftFrameWrapper RFMUnion = 2
-	RFMUnionOrbitFrameWrapper      RFMUnion = 3
-	RFMUnionCustomFrameWrapper     RFMUnion = 4
+	RFMUnionNONE                       RFMUnion = 0
+	RFMUnionCelestialFrameWrapper      RFMUnion = 1
+	RFMUnionSpacecraftFrameWrapper     RFMUnion = 2
+	RFMUnionOrbitFrameWrapper          RFMUnion = 3
+	RFMUnionCustomFrameWrapper         RFMUnion = 4
+	RFMUnionRFMCoordinateSystemWrapper RFMUnion = 5
 )
 
 var EnumNamesRFMUnion = map[RFMUnion]string{
-	RFMUnionNONE:                   "NONE",
-	RFMUnionCelestialFrameWrapper:  "CelestialFrameWrapper",
-	RFMUnionSpacecraftFrameWrapper: "SpacecraftFrameWrapper",
-	RFMUnionOrbitFrameWrapper:      "OrbitFrameWrapper",
-	RFMUnionCustomFrameWrapper:     "CustomFrameWrapper",
+	RFMUnionNONE:                       "NONE",
+	RFMUnionCelestialFrameWrapper:      "CelestialFrameWrapper",
+	RFMUnionSpacecraftFrameWrapper:     "SpacecraftFrameWrapper",
+	RFMUnionOrbitFrameWrapper:          "OrbitFrameWrapper",
+	RFMUnionCustomFrameWrapper:         "CustomFrameWrapper",
+	RFMUnionRFMCoordinateSystemWrapper: "RFMCoordinateSystemWrapper",
 }
 
 var EnumValuesRFMUnion = map[string]RFMUnion{
-	"NONE":                   RFMUnionNONE,
-	"CelestialFrameWrapper":  RFMUnionCelestialFrameWrapper,
-	"SpacecraftFrameWrapper": RFMUnionSpacecraftFrameWrapper,
-	"OrbitFrameWrapper":      RFMUnionOrbitFrameWrapper,
-	"CustomFrameWrapper":     RFMUnionCustomFrameWrapper,
+	"NONE":                       RFMUnionNONE,
+	"CelestialFrameWrapper":      RFMUnionCelestialFrameWrapper,
+	"SpacecraftFrameWrapper":     RFMUnionSpacecraftFrameWrapper,
+	"OrbitFrameWrapper":          RFMUnionOrbitFrameWrapper,
+	"CustomFrameWrapper":         RFMUnionCustomFrameWrapper,
+	"RFMCoordinateSystemWrapper": RFMUnionRFMCoordinateSystemWrapper,
 }
 
 func (v RFMUnion) String() string {

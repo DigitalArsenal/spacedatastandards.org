@@ -70,6 +70,96 @@ class FRMFrameTransformRequest : Table() {
         }
     val traceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun traceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Coordinate system the request's state is expressed in.
+     */
+    val sourceCoordinateSystem : RFMCoordinateSystem? get() = sourceCoordinateSystem(RFMCoordinateSystem())
+    fun sourceCoordinateSystem(obj: RFMCoordinateSystem) : RFMCoordinateSystem? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Coordinate system the result is required in.
+     */
+    val targetCoordinateSystem : RFMCoordinateSystem? get() = targetCoordinateSystem(RFMCoordinateSystem())
+    fun targetCoordinateSystem(obj: RFMCoordinateSystem) : RFMCoordinateSystem? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * The full input state, carrying velocity as well as position. POSITION
+     * above is position-only and remains the input for operations 1-4.
+     */
+    val sourceState : FRMStateVector? get() = sourceState(FRMStateVector())
+    fun sourceState(obj: FRMStateVector) : FRMStateVector? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Element set the result must be expressed in.
+     */
+    val targetRepresentation : UByte
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Epoch the transform is evaluated at, ISO 8601. Required for every
+     * time-dependent axis chain.
+     */
+    val epoch : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Time system of EPOCH, named by the $TIM timingStandard member name.
+     */
+    val epochTimeSystem : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val epochTimeSystemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun epochTimeSystemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Content identifier of the Earth-orientation data set the caller requires
+     * the provider to use. A provider that cannot honour it returns
+     * MISSING_EOP_DATA rather than substituting another table.
+     */
+    val eopDataSetCid : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val eopDataSetCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun eopDataSetCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFRMFrameTransformRequest(_bb: ByteBuffer): FRMFrameTransformRequest = getRootAsFRMFrameTransformRequest(_bb, FRMFrameTransformRequest())
@@ -77,23 +167,37 @@ class FRMFrameTransformRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFRMFrameTransformRequest(builder: FlatBufferBuilder, operation: Byte, positionOffset: Int, transformDcmOffset: Int, equatorialRadiusM: Double, polarRadiusM: Double, traceIdOffset: Int) : Int {
-            builder.startTable(6)
+        fun createFRMFrameTransformRequest(builder: FlatBufferBuilder, operation: Byte, positionOffset: Int, transformDcmOffset: Int, equatorialRadiusM: Double, polarRadiusM: Double, traceIdOffset: Int, sourceCoordinateSystemOffset: Int, targetCoordinateSystemOffset: Int, sourceStateOffset: Int, targetRepresentation: UByte, epochOffset: Int, epochTimeSystemOffset: Int, eopDataSetCidOffset: Int) : Int {
+            builder.startTable(13)
             addPOLARRADIUSM(builder, polarRadiusM)
             addEQUATORIALRADIUSM(builder, equatorialRadiusM)
+            addEOPDATASETCID(builder, eopDataSetCidOffset)
+            addEPOCHTIMESYSTEM(builder, epochTimeSystemOffset)
+            addEPOCH(builder, epochOffset)
+            addSOURCESTATE(builder, sourceStateOffset)
+            addTARGETCOORDINATESYSTEM(builder, targetCoordinateSystemOffset)
+            addSOURCECOORDINATESYSTEM(builder, sourceCoordinateSystemOffset)
             addTRACEID(builder, traceIdOffset)
             addTRANSFORMDCM(builder, transformDcmOffset)
             addPOSITION(builder, positionOffset)
+            addTARGETREPRESENTATION(builder, targetRepresentation)
             addOPERATION(builder, operation)
             return endFRMFrameTransformRequest(builder)
         }
-        fun startFRMFrameTransformRequest(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startFRMFrameTransformRequest(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addOPERATION(builder: FlatBufferBuilder, operation: Byte) = builder.addByte(0, operation, 0)
         fun addPOSITION(builder: FlatBufferBuilder, position: Int) = builder.addOffset(1, position, 0)
         fun addTRANSFORMDCM(builder: FlatBufferBuilder, transformDcm: Int) = builder.addOffset(2, transformDcm, 0)
         fun addEQUATORIALRADIUSM(builder: FlatBufferBuilder, equatorialRadiusM: Double) = builder.addDouble(3, equatorialRadiusM, 0.0)
         fun addPOLARRADIUSM(builder: FlatBufferBuilder, polarRadiusM: Double) = builder.addDouble(4, polarRadiusM, 0.0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: Int) = builder.addOffset(5, traceId, 0)
+        fun addSOURCECOORDINATESYSTEM(builder: FlatBufferBuilder, sourceCoordinateSystem: Int) = builder.addOffset(6, sourceCoordinateSystem, 0)
+        fun addTARGETCOORDINATESYSTEM(builder: FlatBufferBuilder, targetCoordinateSystem: Int) = builder.addOffset(7, targetCoordinateSystem, 0)
+        fun addSOURCESTATE(builder: FlatBufferBuilder, sourceState: Int) = builder.addOffset(8, sourceState, 0)
+        fun addTARGETREPRESENTATION(builder: FlatBufferBuilder, targetRepresentation: UByte) = builder.addByte(9, targetRepresentation.toByte(), 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(10, epoch, 0)
+        fun addEPOCHTIMESYSTEM(builder: FlatBufferBuilder, epochTimeSystem: Int) = builder.addOffset(11, epochTimeSystem, 0)
+        fun addEOPDATASETCID(builder: FlatBufferBuilder, eopDataSetCid: Int) = builder.addOffset(12, eopDataSetCid, 0)
         fun endFRMFrameTransformRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

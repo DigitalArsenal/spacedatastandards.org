@@ -60,8 +60,75 @@ class FRMFrameTransformResult(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+    # TARGET_REPRESENTATION.
+    # FRMFrameTransformResult
+    def TARGET_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMStateVector import FRMStateVector
+            obj = FRMStateVector()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Rotation from the source axes to the target axes at EPOCH.
+    # FRMFrameTransformResult
+    def ROTATION_DCM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMMatrix3 import FRMMatrix3
+            obj = FRMMatrix3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Time derivative of ROTATION_DCM, per second. Required for a velocity
+    # transform between relatively rotating axis sets.
+    # FRMFrameTransformResult
+    def ROTATION_DCM_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMMatrix3 import FRMMatrix3
+            obj = FRMMatrix3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Angular velocity of the target axes with respect to the source axes,
+    # radians per second, expressed in the source axes.
+    # FRMFrameTransformResult
+    def ANGULAR_VELOCITY_RAD_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMVector3 import FRMVector3
+            obj = FRMVector3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Epoch of the Earth-orientation data set actually used, ISO 8601.
+    # FRMFrameTransformResult
+    def EOP_DATA_SET_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the Earth-orientation data set actually used.
+    # FRMFrameTransformResult
+    def EOP_DATA_SET_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def FRMFrameTransformResultStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(10)
 
 def Start(builder):
     FRMFrameTransformResultStart(builder)
@@ -90,12 +157,50 @@ def FRMFrameTransformResultAddTRACE_ID(builder, TRACE_ID):
 def AddTRACE_ID(builder, TRACE_ID):
     FRMFrameTransformResultAddTRACE_ID(builder, TRACE_ID)
 
+def FRMFrameTransformResultAddTARGET_STATE(builder, TARGET_STATE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_STATE), 0)
+
+def AddTARGET_STATE(builder, TARGET_STATE):
+    FRMFrameTransformResultAddTARGET_STATE(builder, TARGET_STATE)
+
+def FRMFrameTransformResultAddROTATION_DCM(builder, ROTATION_DCM):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ROTATION_DCM), 0)
+
+def AddROTATION_DCM(builder, ROTATION_DCM):
+    FRMFrameTransformResultAddROTATION_DCM(builder, ROTATION_DCM)
+
+def FRMFrameTransformResultAddROTATION_DCM_RATE(builder, ROTATION_DCM_RATE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ROTATION_DCM_RATE), 0)
+
+def AddROTATION_DCM_RATE(builder, ROTATION_DCM_RATE):
+    FRMFrameTransformResultAddROTATION_DCM_RATE(builder, ROTATION_DCM_RATE)
+
+def FRMFrameTransformResultAddANGULAR_VELOCITY_RAD_S(builder, ANGULAR_VELOCITY_RAD_S):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ANGULAR_VELOCITY_RAD_S), 0)
+
+def AddANGULAR_VELOCITY_RAD_S(builder, ANGULAR_VELOCITY_RAD_S):
+    FRMFrameTransformResultAddANGULAR_VELOCITY_RAD_S(builder, ANGULAR_VELOCITY_RAD_S)
+
+def FRMFrameTransformResultAddEOP_DATA_SET_EPOCH(builder, EOP_DATA_SET_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EOP_DATA_SET_EPOCH), 0)
+
+def AddEOP_DATA_SET_EPOCH(builder, EOP_DATA_SET_EPOCH):
+    FRMFrameTransformResultAddEOP_DATA_SET_EPOCH(builder, EOP_DATA_SET_EPOCH)
+
+def FRMFrameTransformResultAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EOP_DATA_SET_CID), 0)
+
+def AddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
+    FRMFrameTransformResultAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
+
 def FRMFrameTransformResultEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return FRMFrameTransformResultEnd(builder)
 
+import FRMMatrix3
+import FRMStateVector
 import FRMVector3
 try:
     from typing import Optional
@@ -111,11 +216,23 @@ class FRMFrameTransformResultT(object):
         ERROR_MESSAGE = None,
         POSITION = None,
         TRACE_ID = None,
+        TARGET_STATE = None,
+        ROTATION_DCM = None,
+        ROTATION_DCM_RATE = None,
+        ANGULAR_VELOCITY_RAD_S = None,
+        EOP_DATA_SET_EPOCH = None,
+        EOP_DATA_SET_CID = None,
     ):
         self.STATUS = STATUS  # type: int
         self.ERROR_MESSAGE = ERROR_MESSAGE  # type: Optional[str]
         self.POSITION = POSITION  # type: Optional[FRMVector3.FRMVector3T]
         self.TRACE_ID = TRACE_ID  # type: Optional[str]
+        self.TARGET_STATE = TARGET_STATE  # type: Optional[FRMStateVector.FRMStateVectorT]
+        self.ROTATION_DCM = ROTATION_DCM  # type: Optional[FRMMatrix3.FRMMatrix3T]
+        self.ROTATION_DCM_RATE = ROTATION_DCM_RATE  # type: Optional[FRMMatrix3.FRMMatrix3T]
+        self.ANGULAR_VELOCITY_RAD_S = ANGULAR_VELOCITY_RAD_S  # type: Optional[FRMVector3.FRMVector3T]
+        self.EOP_DATA_SET_EPOCH = EOP_DATA_SET_EPOCH  # type: Optional[str]
+        self.EOP_DATA_SET_CID = EOP_DATA_SET_CID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -143,6 +260,16 @@ class FRMFrameTransformResultT(object):
         if FRMFrameTransformResult.POSITION() is not None:
             self.POSITION = FRMVector3.FRMVector3T.InitFromObj(FRMFrameTransformResult.POSITION())
         self.TRACE_ID = FRMFrameTransformResult.TRACE_ID()
+        if FRMFrameTransformResult.TARGET_STATE() is not None:
+            self.TARGET_STATE = FRMStateVector.FRMStateVectorT.InitFromObj(FRMFrameTransformResult.TARGET_STATE())
+        if FRMFrameTransformResult.ROTATION_DCM() is not None:
+            self.ROTATION_DCM = FRMMatrix3.FRMMatrix3T.InitFromObj(FRMFrameTransformResult.ROTATION_DCM())
+        if FRMFrameTransformResult.ROTATION_DCM_RATE() is not None:
+            self.ROTATION_DCM_RATE = FRMMatrix3.FRMMatrix3T.InitFromObj(FRMFrameTransformResult.ROTATION_DCM_RATE())
+        if FRMFrameTransformResult.ANGULAR_VELOCITY_RAD_S() is not None:
+            self.ANGULAR_VELOCITY_RAD_S = FRMVector3.FRMVector3T.InitFromObj(FRMFrameTransformResult.ANGULAR_VELOCITY_RAD_S())
+        self.EOP_DATA_SET_EPOCH = FRMFrameTransformResult.EOP_DATA_SET_EPOCH()
+        self.EOP_DATA_SET_CID = FRMFrameTransformResult.EOP_DATA_SET_CID()
 
     # FRMFrameTransformResultT
     def Pack(self, builder):
@@ -152,6 +279,18 @@ class FRMFrameTransformResultT(object):
             POSITION = self.POSITION.Pack(builder)
         if self.TRACE_ID is not None:
             TRACE_ID = builder.CreateString(self.TRACE_ID)
+        if self.TARGET_STATE is not None:
+            TARGET_STATE = self.TARGET_STATE.Pack(builder)
+        if self.ROTATION_DCM is not None:
+            ROTATION_DCM = self.ROTATION_DCM.Pack(builder)
+        if self.ROTATION_DCM_RATE is not None:
+            ROTATION_DCM_RATE = self.ROTATION_DCM_RATE.Pack(builder)
+        if self.ANGULAR_VELOCITY_RAD_S is not None:
+            ANGULAR_VELOCITY_RAD_S = self.ANGULAR_VELOCITY_RAD_S.Pack(builder)
+        if self.EOP_DATA_SET_EPOCH is not None:
+            EOP_DATA_SET_EPOCH = builder.CreateString(self.EOP_DATA_SET_EPOCH)
+        if self.EOP_DATA_SET_CID is not None:
+            EOP_DATA_SET_CID = builder.CreateString(self.EOP_DATA_SET_CID)
         FRMFrameTransformResultStart(builder)
         FRMFrameTransformResultAddSTATUS(builder, self.STATUS)
         if self.ERROR_MESSAGE is not None:
@@ -160,5 +299,17 @@ class FRMFrameTransformResultT(object):
             FRMFrameTransformResultAddPOSITION(builder, POSITION)
         if self.TRACE_ID is not None:
             FRMFrameTransformResultAddTRACE_ID(builder, TRACE_ID)
+        if self.TARGET_STATE is not None:
+            FRMFrameTransformResultAddTARGET_STATE(builder, TARGET_STATE)
+        if self.ROTATION_DCM is not None:
+            FRMFrameTransformResultAddROTATION_DCM(builder, ROTATION_DCM)
+        if self.ROTATION_DCM_RATE is not None:
+            FRMFrameTransformResultAddROTATION_DCM_RATE(builder, ROTATION_DCM_RATE)
+        if self.ANGULAR_VELOCITY_RAD_S is not None:
+            FRMFrameTransformResultAddANGULAR_VELOCITY_RAD_S(builder, ANGULAR_VELOCITY_RAD_S)
+        if self.EOP_DATA_SET_EPOCH is not None:
+            FRMFrameTransformResultAddEOP_DATA_SET_EPOCH(builder, EOP_DATA_SET_EPOCH)
+        if self.EOP_DATA_SET_CID is not None:
+            FRMFrameTransformResultAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
         FRMFrameTransformResult = FRMFrameTransformResultEnd(builder)
         return FRMFrameTransformResult

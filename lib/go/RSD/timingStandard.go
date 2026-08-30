@@ -43,6 +43,10 @@ const (
 	timingStandardNAVIC   timingStandard = 16
 	/// Satellite-Based Augmentation System Time
 	timingStandardSBAS    timingStandard = 17
+	/// Atomic time scale of the reference atomic-time network, offset from
+	/// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+	/// exactly. Appended last; never reorder or reuse existing values.
+	timingStandardA1      timingStandard = 18
 )
 
 var EnumNamestimingStandard = map[timingStandard]string{
@@ -64,6 +68,7 @@ var EnumNamestimingStandard = map[timingStandard]string{
 	timingStandardBDT:     "BDT",
 	timingStandardNAVIC:   "NAVIC",
 	timingStandardSBAS:    "SBAS",
+	timingStandardA1:      "A1",
 }
 
 var EnumValuestimingStandard = map[string]timingStandard{
@@ -85,6 +90,7 @@ var EnumValuestimingStandard = map[string]timingStandard{
 	"BDT":     timingStandardBDT,
 	"NAVIC":   timingStandardNAVIC,
 	"SBAS":    timingStandardSBAS,
+	"A1":      timingStandardA1,
 }
 
 func (v timingStandard) String() string {

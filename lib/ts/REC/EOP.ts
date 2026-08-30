@@ -185,8 +185,86 @@ LENGTH_OF_DAY_UNCERTAINTY_SECONDS():number {
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * x component of Pole Wander in radians, double precision. Authoritative
+ * over X_POLE_WANDER_RADIANS when present.
+ */
+X_POLE_WANDER_RADIANS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * y component of Pole Wander in radians, double precision. Authoritative
+ * over Y_POLE_WANDER_RADIANS when present.
+ */
+Y_POLE_WANDER_RADIANS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * x component of the Celestial Pole Offset in radians, double precision.
+ * Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+ */
+X_CELESTIAL_POLE_OFFSET_RADIANS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * y component of the Celestial Pole Offset in radians, double precision.
+ * Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+ */
+Y_CELESTIAL_POLE_OFFSET_RADIANS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * UT1 minus UTC in seconds, double precision. Authoritative over
+ * UT1_MINUS_UTC_SECONDS when present.
+ */
+UT1_MINUS_UTC_SECONDS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Correction to Length of Day in seconds, double precision. Authoritative
+ * over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+ */
+LENGTH_OF_DAY_CORRECTION_SECONDS_HP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+ * WHICH issue of the series a consumer is holding; two rows for the same
+ * MJD from different data-set epochs are different values, not duplicates.
+ */
+DATA_SET_EPOCH():string|null
+DATA_SET_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATA_SET_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the complete published data set this row was taken
+ * from. Every frames consumer that must agree bit-for-bit records this so
+ * the source is provable rather than assumed.
+ */
+DATA_SET_CID():string|null
+DATA_SET_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATA_SET_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startEOP(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(26);
 }
 
 static addDate(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset) {
@@ -261,6 +339,38 @@ static addLengthOfDayUncertaintySeconds(builder:flatbuffers.Builder, LENGTH_OF_D
   builder.addFieldFloat32(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0);
 }
 
+static addXPoleWanderRadiansHp(builder:flatbuffers.Builder, X_POLE_WANDER_RADIANS_HP:number) {
+  builder.addFieldFloat64(18, X_POLE_WANDER_RADIANS_HP, 0.0);
+}
+
+static addYPoleWanderRadiansHp(builder:flatbuffers.Builder, Y_POLE_WANDER_RADIANS_HP:number) {
+  builder.addFieldFloat64(19, Y_POLE_WANDER_RADIANS_HP, 0.0);
+}
+
+static addXCelestialPoleOffsetRadiansHp(builder:flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP:number) {
+  builder.addFieldFloat64(20, X_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0);
+}
+
+static addYCelestialPoleOffsetRadiansHp(builder:flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP:number) {
+  builder.addFieldFloat64(21, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, 0.0);
+}
+
+static addUt1MinusUtcSecondsHp(builder:flatbuffers.Builder, UT1_MINUS_UTC_SECONDS_HP:number) {
+  builder.addFieldFloat64(22, UT1_MINUS_UTC_SECONDS_HP, 0.0);
+}
+
+static addLengthOfDayCorrectionSecondsHp(builder:flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP:number) {
+  builder.addFieldFloat64(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0);
+}
+
+static addDataSetEpoch(builder:flatbuffers.Builder, DATA_SET_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, DATA_SET_EPOCHOffset, 0);
+}
+
+static addDataSetCid(builder:flatbuffers.Builder, DATA_SET_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, DATA_SET_CIDOffset, 0);
+}
+
 static endEOP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -274,7 +384,7 @@ static finishSizePrefixedEOPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOP', true);
 }
 
-static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD:number, X_POLE_WANDER_RADIANS:number, Y_POLE_WANDER_RADIANS:number, X_CELESTIAL_POLE_OFFSET_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_RADIANS:number, UT1_MINUS_UTC_SECONDS:number, TAI_MINUS_UTC_SECONDS:number, LENGTH_OF_DAY_CORRECTION_SECONDS:number, DATA_TYPE:DataType, SERIES:eopSeries, IAU_CONVENTION:iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS:number, Y_POLE_WANDER_UNCERTAINTY_RADIANS:number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS:number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS:number):flatbuffers.Offset {
+static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD:number, X_POLE_WANDER_RADIANS:number, Y_POLE_WANDER_RADIANS:number, X_CELESTIAL_POLE_OFFSET_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_RADIANS:number, UT1_MINUS_UTC_SECONDS:number, TAI_MINUS_UTC_SECONDS:number, LENGTH_OF_DAY_CORRECTION_SECONDS:number, DATA_TYPE:DataType, SERIES:eopSeries, IAU_CONVENTION:iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS:number, Y_POLE_WANDER_UNCERTAINTY_RADIANS:number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS:number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS:number, X_POLE_WANDER_RADIANS_HP:number, Y_POLE_WANDER_RADIANS_HP:number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP:number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP:number, UT1_MINUS_UTC_SECONDS_HP:number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP:number, DATA_SET_EPOCHOffset:flatbuffers.Offset, DATA_SET_CIDOffset:flatbuffers.Offset):flatbuffers.Offset {
   EOP.startEOP(builder);
   EOP.addDate(builder, DATEOffset);
   EOP.addMjd(builder, MJD);
@@ -294,6 +404,14 @@ static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD
   EOP.addYCelestialPoleOffsetUncertaintyRadians(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
   EOP.addUt1MinusUtcUncertaintySeconds(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
   EOP.addLengthOfDayUncertaintySeconds(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+  EOP.addXPoleWanderRadiansHp(builder, X_POLE_WANDER_RADIANS_HP);
+  EOP.addYPoleWanderRadiansHp(builder, Y_POLE_WANDER_RADIANS_HP);
+  EOP.addXCelestialPoleOffsetRadiansHp(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+  EOP.addYCelestialPoleOffsetRadiansHp(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+  EOP.addUt1MinusUtcSecondsHp(builder, UT1_MINUS_UTC_SECONDS_HP);
+  EOP.addLengthOfDayCorrectionSecondsHp(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
+  EOP.addDataSetEpoch(builder, DATA_SET_EPOCHOffset);
+  EOP.addDataSetCid(builder, DATA_SET_CIDOffset);
   return EOP.endEOP(builder);
 }
 
@@ -316,7 +434,15 @@ unpack(): EOPT {
     this.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(),
     this.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(),
     this.UT1_MINUS_UTC_UNCERTAINTY_SECONDS(),
-    this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS()
+    this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS(),
+    this.X_POLE_WANDER_RADIANS_HP(),
+    this.Y_POLE_WANDER_RADIANS_HP(),
+    this.X_CELESTIAL_POLE_OFFSET_RADIANS_HP(),
+    this.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(),
+    this.UT1_MINUS_UTC_SECONDS_HP(),
+    this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP(),
+    this.DATA_SET_EPOCH(),
+    this.DATA_SET_CID()
   );
 }
 
@@ -340,6 +466,14 @@ unpackTo(_o: EOPT): void {
   _o.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = this.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS();
   _o.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = this.UT1_MINUS_UTC_UNCERTAINTY_SECONDS();
   _o.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS();
+  _o.X_POLE_WANDER_RADIANS_HP = this.X_POLE_WANDER_RADIANS_HP();
+  _o.Y_POLE_WANDER_RADIANS_HP = this.Y_POLE_WANDER_RADIANS_HP();
+  _o.X_CELESTIAL_POLE_OFFSET_RADIANS_HP = this.X_CELESTIAL_POLE_OFFSET_RADIANS_HP();
+  _o.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = this.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP();
+  _o.UT1_MINUS_UTC_SECONDS_HP = this.UT1_MINUS_UTC_SECONDS_HP();
+  _o.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP();
+  _o.DATA_SET_EPOCH = this.DATA_SET_EPOCH();
+  _o.DATA_SET_CID = this.DATA_SET_CID();
 }
 }
 
@@ -362,12 +496,22 @@ constructor(
   public X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number = 0.0,
   public Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number = 0.0,
   public UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number = 0.0,
-  public LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number = 0.0
+  public LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number = 0.0,
+  public X_POLE_WANDER_RADIANS_HP: number = 0.0,
+  public Y_POLE_WANDER_RADIANS_HP: number = 0.0,
+  public X_CELESTIAL_POLE_OFFSET_RADIANS_HP: number = 0.0,
+  public Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: number = 0.0,
+  public UT1_MINUS_UTC_SECONDS_HP: number = 0.0,
+  public LENGTH_OF_DAY_CORRECTION_SECONDS_HP: number = 0.0,
+  public DATA_SET_EPOCH: string|Uint8Array|null = null,
+  public DATA_SET_CID: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DATE = (this.DATE !== null ? builder.createString(this.DATE!) : 0);
+  const DATA_SET_EPOCH = (this.DATA_SET_EPOCH !== null ? builder.createString(this.DATA_SET_EPOCH!) : 0);
+  const DATA_SET_CID = (this.DATA_SET_CID !== null ? builder.createString(this.DATA_SET_CID!) : 0);
 
   return EOP.createEOP(builder,
     DATE,
@@ -387,7 +531,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
     this.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
     this.UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
-    this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS
+    this.LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+    this.X_POLE_WANDER_RADIANS_HP,
+    this.Y_POLE_WANDER_RADIANS_HP,
+    this.X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+    this.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+    this.UT1_MINUS_UTC_SECONDS_HP,
+    this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+    DATA_SET_EPOCH,
+    DATA_SET_CID
   );
 }
 }

@@ -4,24 +4,45 @@ package FRM
 
 import "strconv"
 
+/// Append new values only; never reorder or reuse existing values.
 type frmResultStatus int8
 
 const (
-	frmResultStatusOK                    frmResultStatus = 0
-	frmResultStatusINVALID_INPUT         frmResultStatus = 1
-	frmResultStatusUNSUPPORTED_OPERATION frmResultStatus = 2
+	frmResultStatusOK                               frmResultStatus = 0
+	frmResultStatusINVALID_INPUT                    frmResultStatus = 1
+	frmResultStatusUNSUPPORTED_OPERATION            frmResultStatus = 2
+	/// The provider does not implement the requested axis set.
+	frmResultStatusUNSUPPORTED_AXIS_TYPE            frmResultStatus = 3
+	/// The provider does not implement the requested element set.
+	frmResultStatusUNSUPPORTED_STATE_REPRESENTATION frmResultStatus = 4
+	/// The axis chain needs Earth-orientation data that was not supplied or
+	/// does not span EPOCH. The provider MUST fail here rather than silently
+	/// extrapolate.
+	frmResultStatusMISSING_EOP_DATA                 frmResultStatus = 5
+	/// The state is at a singularity of the requested element set (for example
+	/// e -> 0 for Keplerian). The provider MUST report this rather than
+	/// substitute a different element set.
+	frmResultStatusSINGULAR_ELEMENT_SET             frmResultStatus = 6
 )
 
 var EnumNamesfrmResultStatus = map[frmResultStatus]string{
-	frmResultStatusOK:                    "OK",
-	frmResultStatusINVALID_INPUT:         "INVALID_INPUT",
-	frmResultStatusUNSUPPORTED_OPERATION: "UNSUPPORTED_OPERATION",
+	frmResultStatusOK:                               "OK",
+	frmResultStatusINVALID_INPUT:                    "INVALID_INPUT",
+	frmResultStatusUNSUPPORTED_OPERATION:            "UNSUPPORTED_OPERATION",
+	frmResultStatusUNSUPPORTED_AXIS_TYPE:            "UNSUPPORTED_AXIS_TYPE",
+	frmResultStatusUNSUPPORTED_STATE_REPRESENTATION: "UNSUPPORTED_STATE_REPRESENTATION",
+	frmResultStatusMISSING_EOP_DATA:                 "MISSING_EOP_DATA",
+	frmResultStatusSINGULAR_ELEMENT_SET:             "SINGULAR_ELEMENT_SET",
 }
 
 var EnumValuesfrmResultStatus = map[string]frmResultStatus{
-	"OK":                    frmResultStatusOK,
-	"INVALID_INPUT":         frmResultStatusINVALID_INPUT,
-	"UNSUPPORTED_OPERATION": frmResultStatusUNSUPPORTED_OPERATION,
+	"OK":                               frmResultStatusOK,
+	"INVALID_INPUT":                    frmResultStatusINVALID_INPUT,
+	"UNSUPPORTED_OPERATION":            frmResultStatusUNSUPPORTED_OPERATION,
+	"UNSUPPORTED_AXIS_TYPE":            frmResultStatusUNSUPPORTED_AXIS_TYPE,
+	"UNSUPPORTED_STATE_REPRESENTATION": frmResultStatusUNSUPPORTED_STATE_REPRESENTATION,
+	"MISSING_EOP_DATA":                 frmResultStatusMISSING_EOP_DATA,
+	"SINGULAR_ELEMENT_SET":             frmResultStatusSINGULAR_ELEMENT_SET,
 }
 
 func (v frmResultStatus) String() string {

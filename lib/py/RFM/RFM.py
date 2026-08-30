@@ -99,6 +99,7 @@ def End(builder):
 import CelestialFrameWrapper
 import CustomFrameWrapper
 import OrbitFrameWrapper
+import RFMCoordinateSystemWrapper
 import RFMUnion
 import SpacecraftFrameWrapper
 try:
@@ -117,7 +118,7 @@ class RFMT(object):
         NAME = None,
     ):
         self.REFERENCE_FRAME_type = REFERENCE_FRAME_type  # type: int
-        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Union[None, 'CelestialFrameWrapper.CelestialFrameWrapperT', 'SpacecraftFrameWrapper.SpacecraftFrameWrapperT', 'OrbitFrameWrapper.OrbitFrameWrapperT', 'CustomFrameWrapper.CustomFrameWrapperT']
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Union[None, 'CelestialFrameWrapper.CelestialFrameWrapperT', 'SpacecraftFrameWrapper.SpacecraftFrameWrapperT', 'OrbitFrameWrapper.OrbitFrameWrapperT', 'CustomFrameWrapper.CustomFrameWrapperT', 'RFMCoordinateSystemWrapper.RFMCoordinateSystemWrapperT']
         self.INDEX = INDEX  # type: int
         self.NAME = NAME  # type: Optional[str]
 

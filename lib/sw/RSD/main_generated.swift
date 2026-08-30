@@ -48,8 +48,12 @@ public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
   case navic = 16
   ///  Satellite-Based Augmentation System Time
   case sbas = 17
+  ///  Atomic time scale of the reference atomic-time network, offset from
+  ///  International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+  ///  exactly. Appended last; never reorder or reuse existing values.
+  case a1 = 18
 
-  public static var max: timingStandard { return .sbas }
+  public static var max: timingStandard { return .a1 }
   public static var min: timingStandard { return .gmst }
 }
 

@@ -1,5 +1,5 @@
-// Hash: f38b417630f4f99c53bdccf82a96fb793531bc5ee52777491f81f7558ff43dac
-// Version: 1.0.9
+// Hash: f7e080b0872b6370a94fef692bb80095c9a4303ee515c27082ce60e4d7029ecd
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 enum timingStandard : byte {
   /// Greenwich Mean Sidereal Time
@@ -37,7 +37,11 @@ enum timingStandard : byte {
   /// Navigation with Indian Constellation Time
   NAVIC,
   /// Satellite-Based Augmentation System Time
-  SBAS
+  SBAS,
+  /// Atomic time scale of the reference atomic-time network, offset from
+  /// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+  /// exactly. Appended last; never reorder or reuse existing values.
+  A1
 }
 
 enum timEpochRepresentation : byte {

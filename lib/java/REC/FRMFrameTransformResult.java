@@ -33,13 +33,60 @@ public final class FRMFrameTransformResult extends com.google.flatbuffers.Table 
   public String TRACE_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACE_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer TRACE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+   * TARGET_REPRESENTATION.
+   */
+  public FRMStateVector TARGET_STATE() { return TARGET_STATE(new FRMStateVector()); }
+  public FRMStateVector TARGET_STATE(FRMStateVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Rotation from the source axes to the target axes at EPOCH.
+   */
+  public FRMMatrix3 ROTATION_DCM() { return ROTATION_DCM(new FRMMatrix3()); }
+  public FRMMatrix3 ROTATION_DCM(FRMMatrix3 obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Time derivative of ROTATION_DCM, per second. Required for a velocity
+   * transform between relatively rotating axis sets.
+   */
+  public FRMMatrix3 ROTATION_DCM_RATE() { return ROTATION_DCM_RATE(new FRMMatrix3()); }
+  public FRMMatrix3 ROTATION_DCM_RATE(FRMMatrix3 obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Angular velocity of the target axes with respect to the source axes,
+   * radians per second, expressed in the source axes.
+   */
+  public FRMVector3 ANGULAR_VELOCITY_RAD_S() { return ANGULAR_VELOCITY_RAD_S(new FRMVector3()); }
+  public FRMVector3 ANGULAR_VELOCITY_RAD_S(FRMVector3 obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Epoch of the Earth-orientation data set actually used, ISO 8601.
+   */
+  public String EOP_DATA_SET_EPOCH() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EOP_DATA_SET_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer EOP_DATA_SET_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Content identifier of the Earth-orientation data set actually used.
+   */
+  public String EOP_DATA_SET_CID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EOP_DATA_SET_CIDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer EOP_DATA_SET_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
 
   public static int createFRMFrameTransformResult(FlatBufferBuilder builder,
       byte STATUS,
       int ERROR_MESSAGEOffset,
       int POSITIONOffset,
-      int TRACE_IDOffset) {
-    builder.startTable(4);
+      int TRACE_IDOffset,
+      int TARGET_STATEOffset,
+      int ROTATION_DCMOffset,
+      int ROTATION_DCM_RATEOffset,
+      int ANGULAR_VELOCITY_RAD_SOffset,
+      int EOP_DATA_SET_EPOCHOffset,
+      int EOP_DATA_SET_CIDOffset) {
+    builder.startTable(10);
+    FRMFrameTransformResult.addEopDataSetCid(builder, EOP_DATA_SET_CIDOffset);
+    FRMFrameTransformResult.addEopDataSetEpoch(builder, EOP_DATA_SET_EPOCHOffset);
+    FRMFrameTransformResult.addAngularVelocityRadS(builder, ANGULAR_VELOCITY_RAD_SOffset);
+    FRMFrameTransformResult.addRotationDcmRate(builder, ROTATION_DCM_RATEOffset);
+    FRMFrameTransformResult.addRotationDcm(builder, ROTATION_DCMOffset);
+    FRMFrameTransformResult.addTargetState(builder, TARGET_STATEOffset);
     FRMFrameTransformResult.addTraceId(builder, TRACE_IDOffset);
     FRMFrameTransformResult.addPosition(builder, POSITIONOffset);
     FRMFrameTransformResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
@@ -47,11 +94,17 @@ public final class FRMFrameTransformResult extends com.google.flatbuffers.Table 
     return FRMFrameTransformResult.endFRMFrameTransformResult(builder);
   }
 
-  public static void startFRMFrameTransformResult(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startFRMFrameTransformResult(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addErrorMessage(FlatBufferBuilder builder, int ERROR_MESSAGEOffset) { builder.addOffset(1, ERROR_MESSAGEOffset, 0); }
   public static void addPosition(FlatBufferBuilder builder, int POSITIONOffset) { builder.addOffset(2, POSITIONOffset, 0); }
   public static void addTraceId(FlatBufferBuilder builder, int TRACE_IDOffset) { builder.addOffset(3, TRACE_IDOffset, 0); }
+  public static void addTargetState(FlatBufferBuilder builder, int TARGET_STATEOffset) { builder.addOffset(4, TARGET_STATEOffset, 0); }
+  public static void addRotationDcm(FlatBufferBuilder builder, int ROTATION_DCMOffset) { builder.addOffset(5, ROTATION_DCMOffset, 0); }
+  public static void addRotationDcmRate(FlatBufferBuilder builder, int ROTATION_DCM_RATEOffset) { builder.addOffset(6, ROTATION_DCM_RATEOffset, 0); }
+  public static void addAngularVelocityRadS(FlatBufferBuilder builder, int ANGULAR_VELOCITY_RAD_SOffset) { builder.addOffset(7, ANGULAR_VELOCITY_RAD_SOffset, 0); }
+  public static void addEopDataSetEpoch(FlatBufferBuilder builder, int EOP_DATA_SET_EPOCHOffset) { builder.addOffset(8, EOP_DATA_SET_EPOCHOffset, 0); }
+  public static void addEopDataSetCid(FlatBufferBuilder builder, int EOP_DATA_SET_CIDOffset) { builder.addOffset(9, EOP_DATA_SET_CIDOffset, 0); }
   public static int endFRMFrameTransformResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

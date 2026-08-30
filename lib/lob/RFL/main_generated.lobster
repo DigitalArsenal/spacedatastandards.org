@@ -38,6 +38,10 @@ enum timingStandard:
     timingStandard_NAVIC = 16
     /// Satellite-Based Augmentation System Time
     timingStandard_SBAS = 17
+    /// Atomic time scale of the reference atomic-time network, offset from
+    /// International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
+    /// exactly. Appended last; never reorder or reuse existing values.
+    timingStandard_A1 = 18
 
 enum timEpochRepresentation:
     /// Julian Date day count.

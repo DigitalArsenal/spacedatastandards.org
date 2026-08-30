@@ -239,6 +239,46 @@
           "type": "number",
           "description": "1-sigma uncertainty in the Length of Day correction, seconds.",
           "x-flatbuffer-type": "float"
+        },
+        "X_POLE_WANDER_RADIANS_HP": {
+          "type": "number",
+          "description": "x component of Pole Wander in radians, double precision. Authoritative\nover X_POLE_WANDER_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_POLE_WANDER_RADIANS_HP": {
+          "type": "number",
+          "description": "y component of Pole Wander in radians, double precision. Authoritative\nover Y_POLE_WANDER_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "X_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+          "type": "number",
+          "description": "x component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+          "type": "number",
+          "description": "y component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "UT1_MINUS_UTC_SECONDS_HP": {
+          "type": "number",
+          "description": "UT1 minus UTC in seconds, double precision. Authoritative over\nUT1_MINUS_UTC_SECONDS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "LENGTH_OF_DAY_CORRECTION_SECONDS_HP": {
+          "type": "number",
+          "description": "Correction to Length of Day in seconds, double precision. Authoritative\nover LENGTH_OF_DAY_CORRECTION_SECONDS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_SET_EPOCH": {
+          "type": "string",
+          "description": "Epoch of the data set this row was published in, ISO 8601 UTC. Identifies\nWHICH issue of the series a consumer is holding; two rows for the same\nMJD from different data-set epochs are different values, not duplicates.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_SET_CID": {
+          "type": "string",
+          "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

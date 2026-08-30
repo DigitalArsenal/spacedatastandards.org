@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { FRMMatrix3, FRMMatrix3T } from './FRMMatrix3.js';
+import { FRMStateVector, FRMStateVectorT } from './FRMStateVector.js';
 import { FRMVector3, FRMVector3T } from './FRMVector3.js';
 import { frmResultStatus } from './frmResultStatus.js';
 
@@ -50,8 +52,63 @@ TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+ * TARGET_REPRESENTATION.
+ */
+TARGET_STATE(obj?:FRMStateVector):FRMStateVector|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? (obj || new FRMStateVector()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Rotation from the source axes to the target axes at EPOCH.
+ */
+ROTATION_DCM(obj?:FRMMatrix3):FRMMatrix3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? (obj || new FRMMatrix3()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Time derivative of ROTATION_DCM, per second. Required for a velocity
+ * transform between relatively rotating axis sets.
+ */
+ROTATION_DCM_RATE(obj?:FRMMatrix3):FRMMatrix3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new FRMMatrix3()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Angular velocity of the target axes with respect to the source axes,
+ * radians per second, expressed in the source axes.
+ */
+ANGULAR_VELOCITY_RAD_S(obj?:FRMVector3):FRMVector3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new FRMVector3()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Epoch of the Earth-orientation data set actually used, ISO 8601.
+ */
+EOP_DATA_SET_EPOCH():string|null
+EOP_DATA_SET_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EOP_DATA_SET_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the Earth-orientation data set actually used.
+ */
+EOP_DATA_SET_CID():string|null
+EOP_DATA_SET_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EOP_DATA_SET_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startFRMFrameTransformResult(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(10);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:frmResultStatus) {
@@ -70,6 +127,30 @@ static addTraceId(builder:flatbuffers.Builder, TRACE_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(3, TRACE_IDOffset, 0);
 }
 
+static addTargetState(builder:flatbuffers.Builder, TARGET_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, TARGET_STATEOffset, 0);
+}
+
+static addRotationDcm(builder:flatbuffers.Builder, ROTATION_DCMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, ROTATION_DCMOffset, 0);
+}
+
+static addRotationDcmRate(builder:flatbuffers.Builder, ROTATION_DCM_RATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, ROTATION_DCM_RATEOffset, 0);
+}
+
+static addAngularVelocityRadS(builder:flatbuffers.Builder, ANGULAR_VELOCITY_RAD_SOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, ANGULAR_VELOCITY_RAD_SOffset, 0);
+}
+
+static addEopDataSetEpoch(builder:flatbuffers.Builder, EOP_DATA_SET_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, EOP_DATA_SET_EPOCHOffset, 0);
+}
+
+static addEopDataSetCid(builder:flatbuffers.Builder, EOP_DATA_SET_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, EOP_DATA_SET_CIDOffset, 0);
+}
+
 static endFRMFrameTransformResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -81,7 +162,13 @@ unpack(): FRMFrameTransformResultT {
     this.STATUS(),
     this.ERROR_MESSAGE(),
     (this.POSITION() !== null ? this.POSITION()!.unpack() : null),
-    this.TRACE_ID()
+    this.TRACE_ID(),
+    (this.TARGET_STATE() !== null ? this.TARGET_STATE()!.unpack() : null),
+    (this.ROTATION_DCM() !== null ? this.ROTATION_DCM()!.unpack() : null),
+    (this.ROTATION_DCM_RATE() !== null ? this.ROTATION_DCM_RATE()!.unpack() : null),
+    (this.ANGULAR_VELOCITY_RAD_S() !== null ? this.ANGULAR_VELOCITY_RAD_S()!.unpack() : null),
+    this.EOP_DATA_SET_EPOCH(),
+    this.EOP_DATA_SET_CID()
   );
 }
 
@@ -91,6 +178,12 @@ unpackTo(_o: FRMFrameTransformResultT): void {
   _o.ERROR_MESSAGE = this.ERROR_MESSAGE();
   _o.POSITION = (this.POSITION() !== null ? this.POSITION()!.unpack() : null);
   _o.TRACE_ID = this.TRACE_ID();
+  _o.TARGET_STATE = (this.TARGET_STATE() !== null ? this.TARGET_STATE()!.unpack() : null);
+  _o.ROTATION_DCM = (this.ROTATION_DCM() !== null ? this.ROTATION_DCM()!.unpack() : null);
+  _o.ROTATION_DCM_RATE = (this.ROTATION_DCM_RATE() !== null ? this.ROTATION_DCM_RATE()!.unpack() : null);
+  _o.ANGULAR_VELOCITY_RAD_S = (this.ANGULAR_VELOCITY_RAD_S() !== null ? this.ANGULAR_VELOCITY_RAD_S()!.unpack() : null);
+  _o.EOP_DATA_SET_EPOCH = this.EOP_DATA_SET_EPOCH();
+  _o.EOP_DATA_SET_CID = this.EOP_DATA_SET_CID();
 }
 }
 
@@ -99,7 +192,13 @@ constructor(
   public STATUS: frmResultStatus = frmResultStatus.OK,
   public ERROR_MESSAGE: string|Uint8Array|null = null,
   public POSITION: FRMVector3T|null = null,
-  public TRACE_ID: string|Uint8Array|null = null
+  public TRACE_ID: string|Uint8Array|null = null,
+  public TARGET_STATE: FRMStateVectorT|null = null,
+  public ROTATION_DCM: FRMMatrix3T|null = null,
+  public ROTATION_DCM_RATE: FRMMatrix3T|null = null,
+  public ANGULAR_VELOCITY_RAD_S: FRMVector3T|null = null,
+  public EOP_DATA_SET_EPOCH: string|Uint8Array|null = null,
+  public EOP_DATA_SET_CID: string|Uint8Array|null = null
 ){}
 
 
@@ -107,12 +206,24 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ERROR_MESSAGE = (this.ERROR_MESSAGE !== null ? builder.createString(this.ERROR_MESSAGE!) : 0);
   const POSITION = (this.POSITION !== null ? this.POSITION!.pack(builder) : 0);
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
+  const TARGET_STATE = (this.TARGET_STATE !== null ? this.TARGET_STATE!.pack(builder) : 0);
+  const ROTATION_DCM = (this.ROTATION_DCM !== null ? this.ROTATION_DCM!.pack(builder) : 0);
+  const ROTATION_DCM_RATE = (this.ROTATION_DCM_RATE !== null ? this.ROTATION_DCM_RATE!.pack(builder) : 0);
+  const ANGULAR_VELOCITY_RAD_S = (this.ANGULAR_VELOCITY_RAD_S !== null ? this.ANGULAR_VELOCITY_RAD_S!.pack(builder) : 0);
+  const EOP_DATA_SET_EPOCH = (this.EOP_DATA_SET_EPOCH !== null ? builder.createString(this.EOP_DATA_SET_EPOCH!) : 0);
+  const EOP_DATA_SET_CID = (this.EOP_DATA_SET_CID !== null ? builder.createString(this.EOP_DATA_SET_CID!) : 0);
 
   FRMFrameTransformResult.startFRMFrameTransformResult(builder);
   FRMFrameTransformResult.addStatus(builder, this.STATUS);
   FRMFrameTransformResult.addErrorMessage(builder, ERROR_MESSAGE);
   FRMFrameTransformResult.addPosition(builder, POSITION);
   FRMFrameTransformResult.addTraceId(builder, TRACE_ID);
+  FRMFrameTransformResult.addTargetState(builder, TARGET_STATE);
+  FRMFrameTransformResult.addRotationDcm(builder, ROTATION_DCM);
+  FRMFrameTransformResult.addRotationDcmRate(builder, ROTATION_DCM_RATE);
+  FRMFrameTransformResult.addAngularVelocityRadS(builder, ANGULAR_VELOCITY_RAD_S);
+  FRMFrameTransformResult.addEopDataSetEpoch(builder, EOP_DATA_SET_EPOCH);
+  FRMFrameTransformResult.addEopDataSetCid(builder, EOP_DATA_SET_CID);
 
   return FRMFrameTransformResult.endFRMFrameTransformResult(builder);
 }

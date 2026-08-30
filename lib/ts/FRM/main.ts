@@ -2,10 +2,31 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+export * from './CelestialFrame.js';
+export * from './CelestialFrameWrapper.js';
+export * from './CustomFrame.js';
+export * from './CustomFrameWrapper.js';
 export * from './FRM.js';
 export * from './FRMFrameTransformRequest.js';
 export * from './FRMFrameTransformResult.js';
 export * from './FRMMatrix3.js';
 export * from './frmOperationCode.js';
 export * from './frmResultStatus.js';
+export * from './frmStateRepresentation.js';
+export * from './FRMStateVector.js';
 export * from './FRMVector3.js';
+export * from './OrbitFrame.js';
+export * from './OrbitFrameWrapper.js';
+export * from './RFM.js';
+export * from './rfmAxisType.js';
+export * from './RFMCoordinateSystem.js';
+export * from './RFMCoordinateSystemWrapper.js';
+export * from './rfmLibrationPoint.js';
+export * from './RFMLocalAlignedConstrainedAxes.js';
+export * from './RFMObjectReferencedAxes.js';
+export * from './RFMOrigin.js';
+export * from './rfmOriginKind.js';
+export * from './RFMUnion.js';
+export * from './rfmVectorSpecification.js';
+export * from './SpacecraftFrame.js';
+export * from './SpacecraftFrameWrapper.js';
