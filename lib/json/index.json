@@ -27000,7 +27000,8 @@
                     },
                     "required": [
                         "PROBLEM_ID",
-                        "PROPAGATOR_PORT_ID"
+                        "PROPAGATOR_PORT_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 }
@@ -97672,7 +97673,8 @@
                     },
                     "required": [
                         "SOLUTION_SET_ID",
-                        "PROBLEM_ID"
+                        "PROBLEM_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 },
@@ -104203,7 +104205,8 @@
                     },
                     "required": [
                         "PROBLEM_ID",
-                        "PROPAGATOR_PORT_ID"
+                        "PROPAGATOR_PORT_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 },
@@ -146733,7 +146736,8 @@
                     },
                     "required": [
                         "SOLUTION_SET_ID",
-                        "PROBLEM_ID"
+                        "PROBLEM_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 }

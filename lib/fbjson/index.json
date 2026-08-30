@@ -74722,12 +74722,14 @@
                         },
                         "ATTESTATION": {
                             "$ref": "#/definitions/SLPAttestation",
-                            "x-flatbuffer-type": "SLPAttestation"
+                            "x-flatbuffer-type": "SLPAttestation",
+                            "x-flatbuffer-required": true
                         }
                     },
                     "required": [
                         "PROBLEM_ID",
-                        "PROPAGATOR_PORT_ID"
+                        "PROPAGATOR_PORT_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 }
@@ -220882,12 +220884,14 @@
                         },
                         "ATTESTATION": {
                             "$ref": "#/definitions/PSSAttestation",
-                            "x-flatbuffer-type": "PSSAttestation"
+                            "x-flatbuffer-type": "PSSAttestation",
+                            "x-flatbuffer-required": true
                         }
                     },
                     "required": [
                         "SOLUTION_SET_ID",
-                        "PROBLEM_ID"
+                        "PROBLEM_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 },
@@ -233880,12 +233884,14 @@
                         },
                         "ATTESTATION": {
                             "$ref": "#/definitions/SLPAttestation",
-                            "x-flatbuffer-type": "SLPAttestation"
+                            "x-flatbuffer-type": "SLPAttestation",
+                            "x-flatbuffer-required": true
                         }
                     },
                     "required": [
                         "PROBLEM_ID",
-                        "PROPAGATOR_PORT_ID"
+                        "PROPAGATOR_PORT_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 },
@@ -324255,12 +324261,14 @@
                         },
                         "ATTESTATION": {
                             "$ref": "#/definitions/PSSAttestation",
-                            "x-flatbuffer-type": "PSSAttestation"
+                            "x-flatbuffer-type": "PSSAttestation",
+                            "x-flatbuffer-required": true
                         }
                     },
                     "required": [
                         "SOLUTION_SET_ID",
-                        "PROBLEM_ID"
+                        "PROBLEM_ID",
+                        "ATTESTATION"
                     ],
                     "additionalProperties": false
                 }

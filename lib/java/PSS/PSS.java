@@ -80,6 +80,7 @@ public final class PSS extends com.google.flatbuffers.Table {
     int o = builder.endTable();
     builder.required(o, 4);  // SOLUTION_SET_ID
     builder.required(o, 6);  // PROBLEM_ID
+    builder.required(o, 14);  // ATTESTATION
     return o;
   }
   public static void finishPSSBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$PSS"); }

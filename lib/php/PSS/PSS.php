@@ -128,6 +128,7 @@ class PSS extends Table
         $o = $builder->endObject();
         $builder->required($o, 4);  // SOLUTION_SET_ID
         $builder->required($o, 6);  // PROBLEM_ID
+        $builder->required($o, 14);  // ATTESTATION
         return $o;
     }
 
@@ -248,6 +249,7 @@ class PSS extends Table
         $o = $builder->endObject();
         $builder->required($o, 4);  // SOLUTION_SET_ID
         $builder->required($o, 6);  // PROBLEM_ID
+        $builder->required($o, 14);  // ATTESTATION
         return $o;
     }
 

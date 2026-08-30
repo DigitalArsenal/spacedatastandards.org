@@ -126,6 +126,7 @@ public final class SLP extends com.google.flatbuffers.Table {
     int o = builder.endTable();
     builder.required(o, 4);  // PROBLEM_ID
     builder.required(o, 10);  // PROPAGATOR_PORT_ID
+    builder.required(o, 28);  // ATTESTATION
     return o;
   }
   public static void finishSLPBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$SLP"); }

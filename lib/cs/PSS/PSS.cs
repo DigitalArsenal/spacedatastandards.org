@@ -84,6 +84,7 @@ public struct PSS : IFlatbufferObject
     int o = builder.EndTable();
     builder.Required(o, 4);  // SOLUTION_SET_ID
     builder.Required(o, 6);  // PROBLEM_ID
+    builder.Required(o, 14);  // ATTESTATION
     return new Offset<PSS>(o);
   }
   public static void FinishPSSBuffer(FlatBufferBuilder builder, Offset<PSS> offset) { builder.Finish(offset.Value, "$PSS"); }
@@ -170,7 +171,7 @@ static public class PSSVerify
       && verifier.VerifyVectorOfStrings(tablePos, 8 /*OBJECTIVE_IDS*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 10 /*SOLUTIONS*/, PSSSolutionVerify.Verify, false)
       && verifier.VerifyString(tablePos, 12 /*GENERATED_AT*/, false)
-      && verifier.VerifyTable(tablePos, 14 /*ATTESTATION*/, PSSAttestationVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 14 /*ATTESTATION*/, PSSAttestationVerify.Verify, true)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

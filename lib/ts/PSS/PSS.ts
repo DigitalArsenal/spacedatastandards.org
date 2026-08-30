@@ -134,6 +134,7 @@ static endPSS(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // SOLUTION_SET_ID
   builder.requiredField(offset, 6) // PROBLEM_ID
+  builder.requiredField(offset, 14) // ATTESTATION
   return offset;
 }
 

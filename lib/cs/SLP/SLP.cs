@@ -132,6 +132,7 @@ public struct SLP : IFlatbufferObject
     int o = builder.EndTable();
     builder.Required(o, 4);  // PROBLEM_ID
     builder.Required(o, 10);  // PROPAGATOR_PORT_ID
+    builder.Required(o, 28);  // ATTESTATION
     return new Offset<SLP>(o);
   }
   public static void FinishSLPBuffer(FlatBufferBuilder builder, Offset<SLP> offset) { builder.Finish(offset.Value, "$SLP"); }
@@ -265,7 +266,7 @@ static public class SLPVerify
       && verifier.VerifyTable(tablePos, 22 /*SETTINGS*/, SLPSolverSettingsVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 24 /*REPORT*/, SLPSolverReportVerify.Verify, false)
       && verifier.VerifyString(tablePos, 26 /*CREATED_AT*/, false)
-      && verifier.VerifyTable(tablePos, 28 /*ATTESTATION*/, SLPAttestationVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 28 /*ATTESTATION*/, SLPAttestationVerify.Verify, true)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

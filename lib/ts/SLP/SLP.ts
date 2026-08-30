@@ -222,6 +222,7 @@ static endSLP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PROBLEM_ID
   builder.requiredField(offset, 10) // PROPAGATOR_PORT_ID
+  builder.requiredField(offset, 28) // ATTESTATION
   return offset;
 }
 

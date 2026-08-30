@@ -1445,7 +1445,7 @@ struct SLP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(REPORT()) &&
            VerifyOffset(verifier, VT_CREATED_AT) &&
            verifier.VerifyString(CREATED_AT()) &&
-           VerifyOffset(verifier, VT_ATTESTATION) &&
+           VerifyOffsetRequired(verifier, VT_ATTESTATION) &&
            verifier.VerifyTable(ATTESTATION()) &&
            verifier.EndTable();
   }
@@ -1503,6 +1503,7 @@ struct SLPBuilder {
     auto o = ::flatbuffers::Offset<SLP>(end);
     fbb_.Required(o, SLP::VT_PROBLEM_ID);
     fbb_.Required(o, SLP::VT_PROPAGATOR_PORT_ID);
+    fbb_.Required(o, SLP::VT_ATTESTATION);
     return o;
   }
 };

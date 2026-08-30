@@ -100,13 +100,13 @@ class PSS : Table() {
         }
     val generatedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun generatedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
-    val attestation : PSSAttestation? get() = attestation(PSSAttestation())
-    fun attestation(obj: PSSAttestation) : PSSAttestation? {
+    val attestation : PSSAttestation get() = attestation(PSSAttestation())
+    fun attestation(obj: PSSAttestation) : PSSAttestation {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
-            null
+            throw AssertionError("No value for (required) field attestation")
         }
     }
     companion object {
@@ -154,6 +154,7 @@ class PSS : Table() {
             val o = builder.endTable()
                 builder.required(o, 4)
                 builder.required(o, 6)
+                builder.required(o, 14)
             return o
         }
         fun finishPSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PSS")

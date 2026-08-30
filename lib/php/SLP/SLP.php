@@ -196,6 +196,7 @@ class SLP extends Table
         $o = $builder->endObject();
         $builder->required($o, 4);  // PROBLEM_ID
         $builder->required($o, 10);  // PROPAGATOR_PORT_ID
+        $builder->required($o, 28);  // ATTESTATION
         return $o;
     }
 
@@ -410,6 +411,7 @@ class SLP extends Table
         $o = $builder->endObject();
         $builder->required($o, 4);  // PROBLEM_ID
         $builder->required($o, 10);  // PROPAGATOR_PORT_ID
+        $builder->required($o, 28);  // ATTESTATION
         return $o;
     }
 

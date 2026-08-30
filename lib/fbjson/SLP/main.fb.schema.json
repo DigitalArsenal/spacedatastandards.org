@@ -11447,12 +11447,14 @@
         },
         "ATTESTATION": {
           "$ref": "#/definitions/SLPAttestation",
-          "x-flatbuffer-type": "SLPAttestation"
+          "x-flatbuffer-type": "SLPAttestation",
+          "x-flatbuffer-required": true
         }
       },
       "required": [
         "PROBLEM_ID",
-        "PROPAGATOR_PORT_ID"
+        "PROPAGATOR_PORT_ID",
+        "ATTESTATION"
       ],
       "additionalProperties": false
     }

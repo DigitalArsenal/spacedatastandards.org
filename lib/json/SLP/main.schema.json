@@ -1266,7 +1266,7 @@
                 "$ref" : "#/definitions/SLPAttestation"
               }
       },
-      "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID"],
+      "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID", "ATTESTATION"],
       "additionalProperties" : false
     }
   },

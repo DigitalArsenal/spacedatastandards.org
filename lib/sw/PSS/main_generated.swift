@@ -529,7 +529,7 @@ public struct PSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public func SOLUTIONSBy(key: String) -> PSSSolution? { let o = _accessor.offset(VT.SOLUTIONS); return o == 0 ? nil : PSSSolution.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
   public var GENERATED_AT: String? { let o = _accessor.offset(VT.GENERATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
   public var GENERATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GENERATED_AT) }
-  public var ATTESTATION: PSSAttestation? { let o = _accessor.offset(VT.ATTESTATION); return o == 0 ? nil : PSSAttestation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ATTESTATION: PSSAttestation! { let o = _accessor.offset(VT.ATTESTATION); return PSSAttestation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startPSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(SOLUTION_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLUTION_SET_ID, at: VT.SOLUTION_SET_ID) }
   public static func add(PROBLEM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBLEM_ID, at: VT.PROBLEM_ID) }
@@ -537,7 +537,7 @@ public struct PSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(SOLUTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLUTIONS, at: VT.SOLUTIONS) }
   public static func add(GENERATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GENERATED_AT, at: VT.GENERATED_AT) }
   public static func add(ATTESTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTESTATION, at: VT.ATTESTATION) }
-  public static func endPSS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func endPSS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 14]); return end }
   public static func createPSS(
     _ fbb: inout FlatBufferBuilder,
     SOLUTION_SET_IDOffset SOLUTION_SET_ID: Offset,
@@ -545,7 +545,7 @@ public struct PSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     OBJECTIVE_IDSVectorOffset OBJECTIVE_IDS: Offset = Offset(),
     SOLUTIONSVectorOffset SOLUTIONS: Offset = Offset(),
     GENERATED_ATOffset GENERATED_AT: Offset = Offset(),
-    ATTESTATIONOffset ATTESTATION: Offset = Offset()
+    ATTESTATIONOffset ATTESTATION: Offset
   ) -> Offset {
     let __start = PSS.startPSS(&fbb)
     PSS.add(SOLUTION_SET_ID: SOLUTION_SET_ID, &fbb)
@@ -564,7 +564,7 @@ public struct PSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.OBJECTIVE_IDS, fieldName: "OBJECTIVE_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.SOLUTIONS, fieldName: "SOLUTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<PSSSolution>, PSSSolution>>.self)
     try _v.visit(field: VT.GENERATED_AT, fieldName: "GENERATED_AT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ATTESTATION, fieldName: "ATTESTATION", required: false, type: ForwardOffset<PSSAttestation>.self)
+    try _v.visit(field: VT.ATTESTATION, fieldName: "ATTESTATION", required: true, type: ForwardOffset<PSSAttestation>.self)
     _v.finish()
   }
 }

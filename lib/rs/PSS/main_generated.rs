@@ -1589,9 +1589,10 @@ impl<'a> PSS<'a> {
     let GENERATED_AT = self.GENERATED_AT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let ATTESTATION = self.ATTESTATION().map(|x| {
+    let ATTESTATION = {
+      let x = self.ATTESTATION();
       alloc::boxed::Box::new(x.unpack())
-    });
+    };
     PSST {
       SOLUTION_SET_ID,
       PROBLEM_ID,
@@ -1638,11 +1639,11 @@ impl<'a> PSS<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PSS::VT_GENERATED_AT, None)}
   }
   #[inline]
-  pub fn ATTESTATION(&self) -> Option<PSSAttestation<'a>> {
+  pub fn ATTESTATION(&self) -> PSSAttestation<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PSSAttestation>>(PSS::VT_ATTESTATION, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PSSAttestation>>(PSS::VT_ATTESTATION, None).unwrap()}
   }
 }
 
@@ -1657,7 +1658,7 @@ impl ::flatbuffers::Verifiable for PSS<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OBJECTIVE_IDS", Self::VT_OBJECTIVE_IDS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PSSSolution>>>>("SOLUTIONS", Self::VT_SOLUTIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GENERATED_AT", Self::VT_GENERATED_AT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<PSSAttestation>>("ATTESTATION", Self::VT_ATTESTATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PSSAttestation>>("ATTESTATION", Self::VT_ATTESTATION, true)?
      .finish();
     Ok(())
   }
@@ -1679,7 +1680,7 @@ impl<'a> Default for PSSArgs<'a> {
       OBJECTIVE_IDS: None,
       SOLUTIONS: None,
       GENERATED_AT: None,
-      ATTESTATION: None,
+      ATTESTATION: None, // required field
     }
   }
 }
@@ -1726,6 +1727,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PSSBuilder<'a, 'b, A> {
     let o = self.fbb_.end_table(self.start_);
     self.fbb_.required(o, PSS::VT_SOLUTION_SET_ID,"SOLUTION_SET_ID");
     self.fbb_.required(o, PSS::VT_PROBLEM_ID,"PROBLEM_ID");
+    self.fbb_.required(o, PSS::VT_ATTESTATION,"ATTESTATION");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
@@ -1750,7 +1752,7 @@ pub struct PSST {
   pub OBJECTIVE_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub SOLUTIONS: Option<alloc::vec::Vec<PSSSolutionT>>,
   pub GENERATED_AT: Option<alloc::string::String>,
-  pub ATTESTATION: Option<alloc::boxed::Box<PSSAttestationT>>,
+  pub ATTESTATION: alloc::boxed::Box<PSSAttestationT>,
 }
 impl Default for PSST {
   fn default() -> Self {
@@ -1760,7 +1762,7 @@ impl Default for PSST {
       OBJECTIVE_IDS: None,
       SOLUTIONS: None,
       GENERATED_AT: None,
-      ATTESTATION: None,
+      ATTESTATION: Default::default(),
     }
   }
 }
@@ -1786,7 +1788,8 @@ impl PSST {
     let GENERATED_AT = self.GENERATED_AT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ATTESTATION = self.ATTESTATION.as_ref().map(|x|{
+    let ATTESTATION = Some({
+      let x = &self.ATTESTATION;
       x.pack(_fbb)
     });
     PSS::create(_fbb, &PSSArgs{

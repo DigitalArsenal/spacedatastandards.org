@@ -30103,7 +30103,7 @@
                 "$ref" : "#/definitions/PSSAttestation"
               }
       },
-      "required" : ["SOLUTION_SET_ID", "PROBLEM_ID"],
+      "required" : ["SOLUTION_SET_ID", "PROBLEM_ID", "ATTESTATION"],
       "additionalProperties" : false
     },
     "PUR" : {
@@ -35729,7 +35729,7 @@
                 "$ref" : "#/definitions/SLPAttestation"
               }
       },
-      "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID"],
+      "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID", "ATTESTATION"],
       "additionalProperties" : false
     },
     "SNR" : {

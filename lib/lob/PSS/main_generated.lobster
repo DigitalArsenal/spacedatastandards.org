@@ -309,9 +309,9 @@ class PSS : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 10)
     def GENERATED_AT() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
-    def ATTESTATION() -> PSSAttestation?:
+    def ATTESTATION() -> PSSAttestation:
         let o = flatbuffers.field_table(buf_, pos_, 14)
-        return if o: PSSAttestation { buf_, o } else: nil
+        return PSSAttestation { buf_, assert o }
 
 def GetRootAsPSS(buf:string): return PSS { buf, flatbuffers.indirect(buf, 0) }
 

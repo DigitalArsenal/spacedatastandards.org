@@ -798,7 +798,7 @@ struct PSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(SOLUTIONS()) &&
            VerifyOffset(verifier, VT_GENERATED_AT) &&
            verifier.VerifyString(GENERATED_AT()) &&
-           VerifyOffset(verifier, VT_ATTESTATION) &&
+           VerifyOffsetRequired(verifier, VT_ATTESTATION) &&
            verifier.VerifyTable(ATTESTATION()) &&
            verifier.EndTable();
   }
@@ -835,6 +835,7 @@ struct PSSBuilder {
     auto o = ::flatbuffers::Offset<PSS>(end);
     fbb_.Required(o, PSS::VT_SOLUTION_SET_ID);
     fbb_.Required(o, PSS::VT_PROBLEM_ID);
+    fbb_.Required(o, PSS::VT_ATTESTATION);
     return o;
   }
 };

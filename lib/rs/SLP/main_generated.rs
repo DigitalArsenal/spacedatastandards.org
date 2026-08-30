@@ -2983,9 +2983,10 @@ impl<'a> SLP<'a> {
     let CREATED_AT = self.CREATED_AT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let ATTESTATION = self.ATTESTATION().map(|x| {
+    let ATTESTATION = {
+      let x = self.ATTESTATION();
       alloc::boxed::Box::new(x.unpack())
-    });
+    };
     SLPT {
       PROBLEM_ID,
       NAME,
@@ -3088,11 +3089,11 @@ impl<'a> SLP<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLP::VT_CREATED_AT, None)}
   }
   #[inline]
-  pub fn ATTESTATION(&self) -> Option<SLPAttestation<'a>> {
+  pub fn ATTESTATION(&self) -> SLPAttestation<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SLPAttestation>>(SLP::VT_ATTESTATION, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SLPAttestation>>(SLP::VT_ATTESTATION, None).unwrap()}
   }
 }
 
@@ -3114,7 +3115,7 @@ impl ::flatbuffers::Verifiable for SLP<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SLPSolverSettings>>("SETTINGS", Self::VT_SETTINGS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SLPSolverReport>>("REPORT", Self::VT_REPORT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<SLPAttestation>>("ATTESTATION", Self::VT_ATTESTATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SLPAttestation>>("ATTESTATION", Self::VT_ATTESTATION, true)?
      .finish();
     Ok(())
   }
@@ -3150,7 +3151,7 @@ impl<'a> Default for SLPArgs<'a> {
       SETTINGS: None,
       REPORT: None,
       CREATED_AT: None,
-      ATTESTATION: None,
+      ATTESTATION: None, // required field
     }
   }
 }
@@ -3225,6 +3226,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SLPBuilder<'a, 'b, A> {
     let o = self.fbb_.end_table(self.start_);
     self.fbb_.required(o, SLP::VT_PROBLEM_ID,"PROBLEM_ID");
     self.fbb_.required(o, SLP::VT_PROPAGATOR_PORT_ID,"PROPAGATOR_PORT_ID");
+    self.fbb_.required(o, SLP::VT_ATTESTATION,"ATTESTATION");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
@@ -3263,7 +3265,7 @@ pub struct SLPT {
   pub SETTINGS: Option<alloc::boxed::Box<SLPSolverSettingsT>>,
   pub REPORT: Option<alloc::boxed::Box<SLPSolverReportT>>,
   pub CREATED_AT: Option<alloc::string::String>,
-  pub ATTESTATION: Option<alloc::boxed::Box<SLPAttestationT>>,
+  pub ATTESTATION: alloc::boxed::Box<SLPAttestationT>,
 }
 impl Default for SLPT {
   fn default() -> Self {
@@ -3280,7 +3282,7 @@ impl Default for SLPT {
       SETTINGS: None,
       REPORT: None,
       CREATED_AT: None,
-      ATTESTATION: None,
+      ATTESTATION: Default::default(),
     }
   }
 }
@@ -3325,7 +3327,8 @@ impl SLPT {
     let CREATED_AT = self.CREATED_AT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ATTESTATION = self.ATTESTATION.as_ref().map(|x|{
+    let ATTESTATION = Some({
+      let x = &self.ATTESTATION;
       x.pack(_fbb)
     });
     SLP::create(_fbb, &SLPArgs{

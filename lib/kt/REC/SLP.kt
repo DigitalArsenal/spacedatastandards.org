@@ -200,13 +200,13 @@ class SLP : Table() {
         }
     val createdAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
     fun createdAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
-    val attestation : SLPAttestation? get() = attestation(SLPAttestation())
-    fun attestation(obj: SLPAttestation) : SLPAttestation? {
+    val attestation : SLPAttestation get() = attestation(SLPAttestation())
+    fun attestation(obj: SLPAttestation) : SLPAttestation {
         val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
-            null
+            throw AssertionError("No value for (required) field attestation")
         }
     }
     companion object {
@@ -276,6 +276,7 @@ class SLP : Table() {
             val o = builder.endTable()
                 builder.required(o, 4)
                 builder.required(o, 10)
+                builder.required(o, 28)
             return o
         }
         fun finishSLPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SLP")
