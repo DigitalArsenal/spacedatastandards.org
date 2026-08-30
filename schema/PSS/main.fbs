@@ -1,5 +1,5 @@
-// Hash: ed06f68102ec86309cb49d360a2f4e805ec1adabeb144e16b610f54e7d523837
-// Version: 1.202.0
+// Hash: 169c5c8c1826b8a4d2597e92c9e31628b72344aad8285a5b4edda59d229c5359
+// Version: 1.202.1
 // -----------------------------------END_HEADER
 /// Pareto Solution Set ($PSS)
 ///
@@ -72,7 +72,7 @@ table PSS {
   OBJECTIVE_IDS: [string];
   SOLUTIONS: [PSSSolution];
   GENERATED_AT: string;
-  ATTESTATION: PSSAttestation;
+  ATTESTATION: PSSAttestation (required);
 }
 
 root_type PSS;

@@ -1,5 +1,5 @@
-// Hash: 073ad2c2ef944e6f805a810b341483ec9ea260ee2407607a5a678be272857a97
-// Version: 1.202.0
+// Hash: 86b18008d074fe6eef4b7ab734886765c7cf49583b0c1d8257da38b6bf29d6cf
+// Version: 1.202.1
 // -----------------------------------END_HEADER
 include "../PCE/main.fbs";
 
@@ -156,7 +156,7 @@ table SLP {
   SETTINGS: SLPSolverSettings;
   REPORT: SLPSolverReport;
   CREATED_AT: string;
-  ATTESTATION: SLPAttestation;
+  ATTESTATION: SLPAttestation (required);
 }
 
 root_type SLP;
