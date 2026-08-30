@@ -183,7 +183,7 @@ describe("AEM/TDM/OEM message-format extensions and the NCD container descriptor
 
   // ── $NCD ────────────────────────────────────────────────────────────────────
 
-  it("NCD is appended LAST to the RecordType union and renumbers nothing", async () => {
+  it("NCD keeps its frozen RecordType ordinal when later records append", async () => {
     const rec = await fs.readFile(fbs("REC"), "utf8");
     const union = rec.match(/union\s+RecordType\s*\{([\s\S]*?)\n\}/);
     assert.ok(union, "RecordType union not found");
@@ -191,10 +191,11 @@ describe("AEM/TDM/OEM message-format extensions and the NCD container descriptor
       .split(/[\n,]/)
       .map((entry) => entry.replace(/\/\/.*$/, "").trim())
       .filter((entry) => /^[A-Z][A-Z0-9]{2}$/.test(entry));
-    assert.equal(members.at(-1), "NCD", "NCD must be the LAST union member");
-    // A member's position IS its wire value. Everything below NCD keeps the
-    // ordinal it already had.
-    assert.equal(ordinals.ordinals.NCD, members.length);
+    // A member's position IS its wire value. NCD remains 230; additive
+    // standards must follow it instead of preserving a stale "last" claim.
+    assert.equal(members.indexOf("NCD") + 1, 230);
+    assert.equal(ordinals.ordinals.NCD, 230);
+    assert.deepEqual(members.slice(230), ["MEM", "ODR", "TRH"]);
     assert.equal(ordinals.ordinals.PCE, 229);
     assert.equal(ordinals.ordinals.EVL, 228);
     assert.equal(ordinals.ordinals.BPF, 227);
