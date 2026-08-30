@@ -239,6 +239,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -488,11 +489,12 @@ enum RecordType : uint8_t {
   RecordType_VCF = 224,
   RecordType_STX = 225,
   RecordType_TXS = 226,
+  RecordType_BPF = 227,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_TXS
+  RecordType_MAX = RecordType_BPF
 };
 
-inline const RecordType (&EnumValuesRecordType())[227] {
+inline const RecordType (&EnumValuesRecordType())[228] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -720,13 +722,14 @@ inline const RecordType (&EnumValuesRecordType())[227] {
     RecordType_IRM,
     RecordType_VCF,
     RecordType_STX,
-    RecordType_TXS
+    RecordType_TXS,
+    RecordType_BPF
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[228] = {
+  static const char * const names[229] = {
     "NONE",
     "ACL",
     "ACM",
@@ -954,13 +957,14 @@ inline const char * const *EnumNamesRecordType() {
     "VCF",
     "STX",
     "TXS",
+    "BPF",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_TXS)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_BPF)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1873,6 +1877,10 @@ template<> struct RecordTypeTraits<TXS> {
   static const RecordType enum_value = RecordType_TXS;
 };
 
+template<> struct RecordTypeTraits<BPF> {
+  static const RecordType enum_value = RecordType_BPF;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2571,6 +2579,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const TXS *value_as_TXS() const {
     return value_type() == RecordType_TXS ? static_cast<const TXS *>(value()) : nullptr;
+  }
+  const BPF *value_as_BPF() const {
+    return value_type() == RecordType_BPF ? static_cast<const BPF *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3490,6 +3501,10 @@ template<> inline const STX *Record::value_as<STX>() const {
 
 template<> inline const TXS *Record::value_as<TXS>() const {
   return value_as_TXS();
+}
+
+template<> inline const BPF *Record::value_as<BPF>() const {
+  return value_as_BPF();
 }
 
 struct RecordBuilder {
@@ -4519,6 +4534,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_TXS: {
       auto ptr = reinterpret_cast<const TXS *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_BPF: {
+      auto ptr = reinterpret_cast<const BPF *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -1,0 +1,69 @@
+/**
+ * Build Profile ($BPF)
+ *
+ * The authoring-time configuration of one composed build: which variable
+ * parts of a build template are embedded, which modules roll in and at what
+ * protection tier, the runtime lock the produced artifact enforces, the
+ * distribution-control mode, and the template the profile was authored
+ * against. It is a CONFIGURATION record, not a grant and not an entitlement:
+ * it names no licensee, carries no key material, and confers no rights.
+ *
+ * Related records, and why this is not one of them:
+ *   - `$PLK` is a per-licensee license key with issuer/licensee identity,
+ *     activation counts and a validity window. `$BPF` has no licensee.
+ *   - `$LGR` is a delivery-time grant carrying wrapped content keys and a
+ *     provider signature. `$BPF` carries neither.
+ *   - `$PLG` is the module descriptor. `$BPF` REFERENCES it per selected
+ *     module and never restates a module's manifest.
+ *   - `$APP` is the launchable-app manifest. It is the portability wrapper
+ *     for a `$BPF`, never a substitute for it.
+ *
+ * The domain-restriction spelling is deliberately the ratified `$PLK`
+ * spelling — `ALLOWED_DOMAINS` / `ALLOWED_TLDS` — so a lock authored here
+ * and a lock issued there are the same vocabulary on the wire.
+ * Class of variable part a build template exposes as a named slot.
+ * Capability classes only; a deployment's own slot names ride in
+ * `BPFPart.PART_ID`, never in this vocabulary. Append new values only;
+ * never reorder or reuse existing values.
+ */
+export declare enum bpfPartKind {
+    /**
+     * The publisher did not classify the part. A consumer renders it by
+     * PART_ID and never infers a class.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * The compiled engine binary payload.
+     */
+    ENGINE_BINARY = 1,
+    /**
+     * Embedded imagery data.
+     */
+    IMAGERY_DATA = 2,
+    /**
+     * Embedded endpoint/locator data.
+     */
+    URL_DATA = 3,
+    /**
+     * Embedded end-user documentation.
+     */
+    DOCUMENTATION = 4,
+    /**
+     * The cross-origin-isolation loader pair required for shared-memory
+     * execution in a browsing context.
+     */
+    ISOLATION_LOADER = 5,
+    /**
+     * Debug source maps.
+     */
+    SOURCE_MAPS = 6,
+    /**
+     * A module payload embedded in the artifact.
+     */
+    MODULE = 7,
+    /**
+     * A part outside every class above.
+     */
+    OTHER = 8
+}
+//# sourceMappingURL=bpfPartKind.d.ts.map

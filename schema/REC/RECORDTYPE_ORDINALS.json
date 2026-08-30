@@ -3,8 +3,8 @@
   "union": "RecordType",
   "source": "schema/REC/main.fbs",
   "note": "Ordinal 0 is the implicit FlatBuffers union NONE and is not listed.",
-  "frozen_through": 226,
-  "member_count": 226,
+  "frozen_through": 227,
+  "member_count": 227,
   "history": [
     {
       "date": "2026-07-10",
@@ -250,6 +250,7 @@
     "IRM": 223,
     "VCF": 224,
     "STX": 225,
-    "TXS": 226
+    "TXS": 226,
+    "BPF": 227
   }
 }

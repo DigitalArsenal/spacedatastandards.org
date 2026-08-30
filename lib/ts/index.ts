@@ -18,6 +18,7 @@ export * as BAL from './BAL/main.js';
 export * as BEM from './BEM/main.js';
 export * as BMC from './BMC/main.js';
 export * as BOV from './BOV/main.js';
+export * as BPF from './BPF/main.js';
 export * as BSP from './BSP/main.js';
 export * as BUS from './BUS/main.js';
 export * as CAQ from './CAQ/main.js';

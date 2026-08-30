@@ -1,5 +1,5 @@
-// Hash: a09c8bf21de5f08cf8f8eba9f97a6a6bd59b2cfe8267606ee701eaadee20de48
-// Version: 1.44.62
+// Hash: e6a8b7fb4ac537cd348663f4b829fff66cdfa9707d9f5eceabe50e5603556a1f
+// Version: 1.44.63
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -21,6 +21,7 @@ include "../BAL/main.fbs";
 include "../BEM/main.fbs";
 include "../BMC/main.fbs";
 include "../BOV/main.fbs";
+include "../BPF/main.fbs";
 include "../BSP/main.fbs";
 include "../BUS/main.fbs";
 include "../CAQ/main.fbs";
@@ -299,7 +300,7 @@ union RecordType {
   TFN, TMS, VEP, EGP,
   APL, EMC, EPF, GEL,
   PAP, RSD, IRM, VCF,
-  STX, TXS
+  STX, TXS, BPF
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

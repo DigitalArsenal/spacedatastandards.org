@@ -245,6 +245,7 @@ public enum RecordType : byte
   VCF = 224,
   STX = 225,
   TXS = 226,
+  BPF = 227,
 };
 
 public class RecordTypeUnion {
@@ -709,6 +710,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSTX(STXT _stx) { return new RecordTypeUnion{ Type = RecordType.STX, Value = _stx }; }
   public TXST AsTXS() { return this.As<TXST>(); }
   public static RecordTypeUnion FromTXS(TXST _txs) { return new RecordTypeUnion{ Type = RecordType.TXS, Value = _txs }; }
+  public BPFT AsBPF() { return this.As<BPFT>(); }
+  public static RecordTypeUnion FromBPF(BPFT _bpf) { return new RecordTypeUnion{ Type = RecordType.BPF, Value = _bpf }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -939,6 +942,7 @@ public class RecordTypeUnion {
       case RecordType.VCF: return VCF.Pack(builder, _o.AsVCF()).Value;
       case RecordType.STX: return STX.Pack(builder, _o.AsSTX()).Value;
       case RecordType.TXS: return TXS.Pack(builder, _o.AsTXS()).Value;
+      case RecordType.BPF: return BPF.Pack(builder, _o.AsBPF()).Value;
     }
   }
 }
@@ -1629,6 +1633,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.TXS:
         result = TXSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.BPF:
+        result = BPFVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

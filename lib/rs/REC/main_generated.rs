@@ -227,6 +227,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -361,10 +362,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 226;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 227;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 227] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 228] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -592,6 +593,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 227] = [
   RecordType::VCF,
   RecordType::STX,
   RecordType::TXS,
+  RecordType::BPF,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -840,9 +842,10 @@ impl RecordType {
   pub const VCF: Self = Self(224);
   pub const STX: Self = Self(225);
   pub const TXS: Self = Self(226);
+  pub const BPF: Self = Self(227);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 226;
+  pub const ENUM_MAX: u8 = 227;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1071,6 +1074,7 @@ impl RecordType {
     Self::VCF,
     Self::STX,
     Self::TXS,
+    Self::BPF,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1302,6 +1306,7 @@ impl RecordType {
       Self::VCF => Some("VCF"),
       Self::STX => Some("STX"),
       Self::TXS => Some("TXS"),
+      Self::BPF => Some("BPF"),
       _ => None,
     }
   }
@@ -1589,6 +1594,7 @@ pub enum RecordTypeT {
   VCF(alloc::boxed::Box<VCFT>),
   STX(alloc::boxed::Box<STXT>),
   TXS(alloc::boxed::Box<TXST>),
+  BPF(alloc::boxed::Box<BPFT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1825,6 +1831,7 @@ impl RecordTypeT {
       Self::VCF(_) => RecordType::VCF,
       Self::STX(_) => RecordType::STX,
       Self::TXS(_) => RecordType::TXS,
+      Self::BPF(_) => RecordType::BPF,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2056,6 +2063,7 @@ impl RecordTypeT {
       Self::VCF(v) => Some(v.pack(fbb).as_union_value()),
       Self::STX(v) => Some(v.pack(fbb).as_union_value()),
       Self::TXS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::BPF(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6804,6 +6812,27 @@ impl RecordTypeT {
   pub fn as_txs_mut(&mut self) -> Option<&mut TXST> {
     if let Self::TXS(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned BPFT, setting the union to NONE.
+  pub fn take_bpf(&mut self) -> Option<alloc::boxed::Box<BPFT>> {
+    if let Self::BPF(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::BPF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the BPFT.
+  pub fn as_bpf(&self) -> Option<&BPFT> {
+    if let Self::BPF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the BPFT.
+  pub fn as_bpf_mut(&mut self) -> Option<&mut BPFT> {
+    if let Self::BPF(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7973,6 +8002,11 @@ impl<'a> Record<'a> {
       RecordType::TXS => RecordTypeT::TXS(alloc::boxed::Box::new(
         self.value_as_txs()
             .expect("Invalid union table, expected `RecordType::TXS`.")
+            .unpack()
+      )),
+      RecordType::BPF => RecordTypeT::BPF(alloc::boxed::Box::new(
+        self.value_as_bpf()
+            .expect("Invalid union table, expected `RecordType::BPF`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -11399,6 +11433,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_bpf(&self) -> Option<BPF<'a>> {
+    if self.value_type() == RecordType::BPF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { BPF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -11635,6 +11684,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::VCF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VCF>>("RecordType::VCF", pos),
           RecordType::STX => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<STX>>("RecordType::STX", pos),
           RecordType::TXS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TXS>>("RecordType::TXS", pos),
+          RecordType::BPF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<BPF>>("RecordType::BPF", pos),
           _ => Ok(()),
         }
      })?
@@ -13273,6 +13323,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::TXS => {
           if let Some(x) = self.value_as_txs() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::BPF => {
+          if let Some(x) = self.value_as_bpf() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

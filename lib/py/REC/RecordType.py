@@ -244,6 +244,7 @@ class RecordType(object):
     VCF = 224
     STX = 225
     TXS = 226
+    BPF = 227
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -927,4 +928,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.TXS:
         import TXS
         return TXS.TXST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.BPF:
+        import BPF
+        return BPF.BPFT.InitFromBuf(table.Bytes, table.Pos)
     return None

@@ -246,5 +246,6 @@ class RecordType private constructor() {
         const val VCF: UByte = 224u
         const val STX: UByte = 225u
         const val TXS: UByte = 226u
+        const val BPF: UByte = 227u
     }
 }
