@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "trpPredicateKind" : {
+      "type" : "string",
+      "enum": ["MinValueLocked", "ValueForDuration", "AllowedTokens", "TrustedConnections"]
+    },
+    "trpCombinator" : {
+      "type" : "string",
+      "enum": ["All", "Any"]
+    },
+    "TRPAsset" : {
+      "type" : "object",
+      "description" : "Asset admitted by a value or token predicate.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string",
+                "description" : "CAIP-2 style chain identifier, e.g. \"eip155:1\" or\n\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\". Vendor and organization names\nare forbidden; a chain is named only by its identifier."
+              },
+        "TOKEN_ADDRESS" : {
+                "type" : "string",
+                "description" : "Chain-local token address, or empty for the chain's native asset."
+              },
+        "TOKEN_SYMBOL" : {
+                "type" : "string",
+                "description" : "Published token symbol used for display and matching."
+              },
+        "DECIMALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of decimal places used by the smallest-unit integer balance."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRPPredicate" : {
+      "type" : "object",
+      "description" : "One independently measurable predicate in a trust rule policy.",
+      "properties" : {
+        "PREDICATE_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier unique within the policy."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/trpPredicateKind",
+                "description" : "Predicate operation to evaluate."
+              },
+        "MIN_VALUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum qualifying value expressed as a uint64 in the smallest unit."
+              },
+        "VALUE_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency or unit used to compare normalized values."
+              },
+        "MIN_HELD_SECONDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum continuous holding duration in seconds."
+              },
+        "ASSETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPAsset"},
+                "description" : "Assets admitted by this predicate."
+              },
+        "REQUIRED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "X, the number of named trusters that must match."
+              },
+        "TRUSTER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The N named `$TRE` trusters considered by a trusted-connections predicate."
+              },
+        "MIN_EDGE_WEIGHT" : {
+                "type" : "number",
+                "description" : "Minimum accepted `$TRE.WEIGHT` for a matching trust edge."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRPGroup" : {
+      "type" : "object",
+      "description" : "Recursive boolean group for a compound trust rule set.",
+      "properties" : {
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier unique within the policy."
+              },
+        "COMBINATOR" : {
+                "$ref" : "#/definitions/trpCombinator",
+                "description" : "Boolean operation applied across direct predicates and child groups."
+              },
+        "PREDICATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPPredicate"},
+                "description" : "Predicates evaluated directly within this group."
+              },
+        "GROUPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPGroup"},
+                "description" : "Nested groups used to express compound rule sets."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRP" : {
+      "type" : "object",
+      "description" : "Trust Rule Policy - Signed compound criteria for evaluating one subject.",
+      "properties" : {
+        "POLICY_ID" : {
+                "type" : "string",
+                "description" : "Stable policy identifier."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable policy name."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable policy description."
+              },
+        "ROOT" : {
+                "$ref" : "#/definitions/TRPGroup",
+                "description" : "Root of the compound rule tree."
+              },
+        "EVALUATION_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Periodic evaluation cadence in milliseconds. The 10000 default is the\n0.1 Hz baseline and is configurable by the policy author."
+              },
+        "EVENT_SOURCES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Event names that may trigger evaluation, e.g. \"trust-edge\", \"trust-node\",\n\"entity-profile\", or \"chain-balance\"."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "Whether evaluators should currently apply this policy."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this policy was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this policy was last updated."
+              },
+        "EVALUATOR_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the evaluator that issued this policy record."
+              },
+        "EVALUATOR_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Evaluator signature over the policy record."
+              }
+      },
+      "required" : ["POLICY_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TRP"
+}

@@ -248,6 +248,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -506,11 +509,14 @@ enum RecordType : uint8_t {
   RecordType_TRH = 233,
   RecordType_SLP = 234,
   RecordType_PSS = 235,
+  RecordType_ICN = 236,
+  RecordType_TRP = 237,
+  RecordType_TRV = 238,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_PSS
+  RecordType_MAX = RecordType_TRV
 };
 
-inline const RecordType (&EnumValuesRecordType())[236] {
+inline const RecordType (&EnumValuesRecordType())[239] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -747,13 +753,16 @@ inline const RecordType (&EnumValuesRecordType())[236] {
     RecordType_ODR,
     RecordType_TRH,
     RecordType_SLP,
-    RecordType_PSS
+    RecordType_PSS,
+    RecordType_ICN,
+    RecordType_TRP,
+    RecordType_TRV
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[237] = {
+  static const char * const names[240] = {
     "NONE",
     "ACL",
     "ACM",
@@ -990,13 +999,16 @@ inline const char * const *EnumNamesRecordType() {
     "TRH",
     "SLP",
     "PSS",
+    "ICN",
+    "TRP",
+    "TRV",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_PSS)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_TRV)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1945,6 +1957,18 @@ template<> struct RecordTypeTraits<PSS> {
   static const RecordType enum_value = RecordType_PSS;
 };
 
+template<> struct RecordTypeTraits<ICN> {
+  static const RecordType enum_value = RecordType_ICN;
+};
+
+template<> struct RecordTypeTraits<TRP> {
+  static const RecordType enum_value = RecordType_TRP;
+};
+
+template<> struct RecordTypeTraits<TRV> {
+  static const RecordType enum_value = RecordType_TRV;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2670,6 +2694,15 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const PSS *value_as_PSS() const {
     return value_type() == RecordType_PSS ? static_cast<const PSS *>(value()) : nullptr;
+  }
+  const ICN *value_as_ICN() const {
+    return value_type() == RecordType_ICN ? static_cast<const ICN *>(value()) : nullptr;
+  }
+  const TRP *value_as_TRP() const {
+    return value_type() == RecordType_TRP ? static_cast<const TRP *>(value()) : nullptr;
+  }
+  const TRV *value_as_TRV() const {
+    return value_type() == RecordType_TRV ? static_cast<const TRV *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3625,6 +3658,18 @@ template<> inline const SLP *Record::value_as<SLP>() const {
 
 template<> inline const PSS *Record::value_as<PSS>() const {
   return value_as_PSS();
+}
+
+template<> inline const ICN *Record::value_as<ICN>() const {
+  return value_as_ICN();
+}
+
+template<> inline const TRP *Record::value_as<TRP>() const {
+  return value_as_TRP();
+}
+
+template<> inline const TRV *Record::value_as<TRV>() const {
+  return value_as_TRV();
 }
 
 struct RecordBuilder {
@@ -4690,6 +4735,18 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_PSS: {
       auto ptr = reinterpret_cast<const PSS *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ICN: {
+      auto ptr = reinterpret_cast<const ICN *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TRP: {
+      auto ptr = reinterpret_cast<const TRP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TRV: {
+      auto ptr = reinterpret_cast<const TRV *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

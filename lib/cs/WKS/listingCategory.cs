@@ -13,4 +13,6 @@ public enum listingCategory : sbyte
 {
   DataStream = 0,
   WasmModule = 1,
+  /// Provider-operated service.
+  Service = 2,
 };

@@ -91,7 +91,7 @@
     },
     "listingCategory" : {
       "type" : "string",
-      "enum": ["DataStream", "WasmModule"]
+      "enum": ["DataStream", "WasmModule", "Service"]
     },
     "grantLifecycleStatus" : {
       "type" : "string",
@@ -1025,6 +1025,22 @@
       "type" : "string",
       "enum": ["OUTLIER"]
     },
+    "icnConnectorKind" : {
+      "type" : "string",
+      "enum": ["UploadSession", "HttpsPull", "FilesystemWatch"]
+    },
+    "icnConnectorStatus" : {
+      "type" : "string",
+      "enum": ["Draft", "Validated", "Active", "Paused", "Error", "Retired"]
+    },
+    "icnPostIngestAction" : {
+      "type" : "string",
+      "enum": ["LeaveInPlace", "Archive", "DeleteAfterVerification"]
+    },
+    "icnAuthKind" : {
+      "type" : "string",
+      "enum": ["None", "BearerToken", "ApiKeyHeader"]
+    },
     "ionoLayer" : {
       "type" : "string",
       "enum": ["D", "E", "ES", "F", "F1", "F2", "TOPSIDE"]
@@ -1957,6 +1973,14 @@
       "type" : "string",
       "enum": ["NEAREST", "BILINEAR", "BICUBIC", "KRIGING"]
     },
+    "trpPredicateKind" : {
+      "type" : "string",
+      "enum": ["MinValueLocked", "ValueForDuration", "AllowedTokens", "TrustedConnections"]
+    },
+    "trpCombinator" : {
+      "type" : "string",
+      "enum": ["All", "Any"]
+    },
     "trsSolverTier" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "LOS_OCCLUSION", "DIFFRACTION_ASSISTED", "SPECULAR_SINGLE_BOUNCE"]
@@ -2147,7 +2171,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS", "ICN", "TRP", "TRV"]
     },
     "LKS" : {
       "type" : "object",
@@ -20083,6 +20107,130 @@
                 "type" : "string"
               }
       },
+      "additionalProperties" : false
+    },
+    "ICN" : {
+      "type" : "object",
+      "description" : "Ingest Connector - Configuration and lifecycle of one ingest source.",
+      "properties" : {
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Stable connector identifier."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/icnConnectorKind",
+                "description" : "Transport or source shape used by this connector."
+              },
+        "TARGET_SCHEMA" : {
+                "type" : "string",
+                "description" : "Target SDS schema filename, e.g. \"OMM.fbs\"."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/icnConnectorStatus",
+                "description" : "Connector lifecycle state, independent of any `$STF` listing status."
+              },
+        "STATUS_MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable detail about the current status."
+              },
+        "ENDPOINT_URL" : {
+                "type" : "string",
+                "description" : "HTTPS endpoint from which records are pulled."
+              },
+        "HTTP_METHOD" : {
+                "type" : "string",
+                "description" : "HTTP method used for an endpoint request."
+              },
+        "AUTH_KIND" : {
+                "$ref" : "#/definitions/icnAuthKind",
+                "description" : "Authentication shape used for an endpoint request."
+              },
+        "AUTH_HEADER_NAME" : {
+                "type" : "string",
+                "description" : "Header name used when AUTH_KIND is ApiKeyHeader."
+              },
+        "CREDENTIAL_REFERENCE" : {
+                "type" : "string",
+                "description" : "Credential-store key resolved only at execution time. A secret never\nappears in an ICN record."
+              },
+        "POLL_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interval in milliseconds between endpoint polls."
+              },
+        "DIRECTORY_PATH" : {
+                "type" : "string",
+                "description" : "Directory scanned by a filesystem-watch connector."
+              },
+        "FILE_PATTERN" : {
+                "type" : "string",
+                "description" : "File-selection pattern applied within DIRECTORY_PATH."
+              },
+        "SCAN_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interval in milliseconds between directory scans."
+              },
+        "SETTLE_DELAY_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minimum unchanged time in milliseconds before a file is ingested."
+              },
+        "POST_INGEST_ACTION" : {
+                "$ref" : "#/definitions/icnPostIngestAction",
+                "description" : "Disposition of a source file after verified ingest."
+              },
+        "UPLOAD_SESSION_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the bounded upload session."
+              },
+        "UPLOAD_FILE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of files accepted into the upload session."
+              },
+        "UPLOAD_TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total uploaded byte count across all session files."
+              },
+        "UPLOAD_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "Content hash covering the uploaded session payload."
+              },
+        "DETECTED_FORMAT" : {
+                "type" : "string",
+                "description" : "Detected source serialization or container format."
+              },
+        "SAMPLE_RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of records detected in the validation sample."
+              },
+        "LAST_INGEST_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds of the last successful ingest."
+              },
+        "LAST_ERROR_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds of the last ingest error."
+              },
+        "LAST_ERROR" : {
+                "type" : "string",
+                "description" : "Human-readable detail about the last ingest error."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this connector was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this connector was last updated."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the provider that issued this connector record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the connector record."
+              }
+      },
+      "required" : ["CONNECTOR_ID"],
       "additionalProperties" : false
     },
     "ionoDataPoint" : {
@@ -39309,6 +39457,147 @@
       },
       "additionalProperties" : false
     },
+    "TRPAsset" : {
+      "type" : "object",
+      "description" : "Asset admitted by a value or token predicate.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string",
+                "description" : "CAIP-2 style chain identifier, e.g. \"eip155:1\" or\n\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\". Vendor and organization names\nare forbidden; a chain is named only by its identifier."
+              },
+        "TOKEN_ADDRESS" : {
+                "type" : "string",
+                "description" : "Chain-local token address, or empty for the chain's native asset."
+              },
+        "TOKEN_SYMBOL" : {
+                "type" : "string",
+                "description" : "Published token symbol used for display and matching."
+              },
+        "DECIMALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of decimal places used by the smallest-unit integer balance."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRPPredicate" : {
+      "type" : "object",
+      "description" : "One independently measurable predicate in a trust rule policy.",
+      "properties" : {
+        "PREDICATE_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier unique within the policy."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/trpPredicateKind",
+                "description" : "Predicate operation to evaluate."
+              },
+        "MIN_VALUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum qualifying value expressed as a uint64 in the smallest unit."
+              },
+        "VALUE_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency or unit used to compare normalized values."
+              },
+        "MIN_HELD_SECONDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum continuous holding duration in seconds."
+              },
+        "ASSETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPAsset"},
+                "description" : "Assets admitted by this predicate."
+              },
+        "REQUIRED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "X, the number of named trusters that must match."
+              },
+        "TRUSTER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The N named `$TRE` trusters considered by a trusted-connections predicate."
+              },
+        "MIN_EDGE_WEIGHT" : {
+                "type" : "number",
+                "description" : "Minimum accepted `$TRE.WEIGHT` for a matching trust edge."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRPGroup" : {
+      "type" : "object",
+      "description" : "Recursive boolean group for a compound trust rule set.",
+      "properties" : {
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier unique within the policy."
+              },
+        "COMBINATOR" : {
+                "$ref" : "#/definitions/trpCombinator",
+                "description" : "Boolean operation applied across direct predicates and child groups."
+              },
+        "PREDICATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPPredicate"},
+                "description" : "Predicates evaluated directly within this group."
+              },
+        "GROUPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRPGroup"},
+                "description" : "Nested groups used to express compound rule sets."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRP" : {
+      "type" : "object",
+      "description" : "Trust Rule Policy - Signed compound criteria for evaluating one subject.",
+      "properties" : {
+        "POLICY_ID" : {
+                "type" : "string",
+                "description" : "Stable policy identifier."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable policy name."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable policy description."
+              },
+        "ROOT" : {
+                "$ref" : "#/definitions/TRPGroup",
+                "description" : "Root of the compound rule tree."
+              },
+        "EVALUATION_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Periodic evaluation cadence in milliseconds. The 10000 default is the\n0.1 Hz baseline and is configurable by the policy author."
+              },
+        "EVENT_SOURCES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Event names that may trigger evaluation, e.g. \"trust-edge\", \"trust-node\",\n\"entity-profile\", or \"chain-balance\"."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "Whether evaluators should currently apply this policy."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this policy was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this policy was last updated."
+              },
+        "EVALUATOR_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the evaluator that issued this policy record."
+              },
+        "EVALUATOR_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Evaluator signature over the policy record."
+              }
+      },
+      "required" : ["POLICY_ID"],
+      "additionalProperties" : false
+    },
     "TRSRequest" : {
       "type" : "object",
       "description" : "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
@@ -39540,6 +39829,152 @@
                 "$ref" : "#/definitions/TRSResult"
               }
       },
+      "additionalProperties" : false
+    },
+    "TRVBondEvidence" : {
+      "type" : "object",
+      "description" : "Chain evidence supporting a value-based predicate result.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string",
+                "description" : "Chain identifier using the same identifier-only convention as TRPAsset."
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "Chain-local address whose balance was evaluated."
+              },
+        "TOKEN_ADDRESS" : {
+                "type" : "string",
+                "description" : "Chain-local token address, or empty for the chain's native asset."
+              },
+        "BALANCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Observed uint64 balance expressed in the asset's smallest unit."
+              },
+        "DECIMALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of decimal places used by BALANCE."
+              },
+        "VALUE_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency or unit used for normalized valuation."
+              },
+        "NORMALIZED_VALUE" : {
+                "type" : "number",
+                "description" : "Balance normalized into VALUE_CURRENCY."
+              },
+        "HELD_SINCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds from which the balance is proven to have\nbeen continuously held, established from chain history."
+              },
+        "OBSERVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when the balance was observed."
+              },
+        "BLOCK_REFERENCE" : {
+                "type" : "string",
+                "description" : "Chain-specific block identifier anchoring the observation."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "Replayable query or query description used to obtain the evidence."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRVPredicateResult" : {
+      "type" : "object",
+      "description" : "Outcome and evidence for one policy predicate.",
+      "properties" : {
+        "PREDICATE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the evaluated `$TRP` predicate."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/trpPredicateKind",
+                "description" : "Predicate operation copied from the evaluated policy."
+              },
+        "PASSED" : {
+                "type" : "boolean",
+                "description" : "Whether this predicate passed."
+              },
+        "MEASURED_VALUE" : {
+                "type" : "number",
+                "description" : "Value measured by the evaluator."
+              },
+        "REQUIRED_VALUE" : {
+                "type" : "number",
+                "description" : "Threshold required by the evaluated predicate."
+              },
+        "BOND_EVIDENCE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRVBondEvidence"},
+                "description" : "Chain evidence used by value and duration predicates."
+              },
+        "TRUSTER_IDS_MATCHED" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Named `$TRE` trusters whose qualifying edges matched."
+              },
+        "EVIDENCE_TEXT" : {
+                "type" : "string",
+                "description" : "Human-readable evidence summary."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRV" : {
+      "type" : "object",
+      "description" : "Trust Rule Verdict.\n\nA TRV records one reproducible evaluation of a `$TRP` policy for a subject.\nThis record replaces ad-hoc trust status events.",
+      "properties" : {
+        "VERDICT_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this evaluation."
+              },
+        "POLICY_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the evaluated `$TRP` policy."
+              },
+        "SUBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the subject evaluated by the policy."
+              },
+        "PASSED" : {
+                "type" : "boolean",
+                "description" : "Whether the complete policy passed."
+              },
+        "PREVIOUS_PASSED" : {
+                "type" : "boolean",
+                "description" : "Pass state produced by the immediately preceding evaluation."
+              },
+        "SCORE" : {
+                "type" : "number",
+                "description" : "Score produced by this evaluation."
+              },
+        "PREVIOUS_SCORE" : {
+                "type" : "number",
+                "description" : "Score produced by the immediately preceding evaluation."
+              },
+        "RESULTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TRVPredicateResult"},
+                "description" : "Per-predicate results and their evidence."
+              },
+        "TRIGGER" : {
+                "type" : "string",
+                "description" : "Evaluation trigger: \"interval\" or an event source name."
+              },
+        "EVALUATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when the evaluation completed."
+              },
+        "EVALUATOR_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the evaluator that issued this verdict."
+              },
+        "EVALUATOR_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Evaluator signature over the verdict record."
+              }
+      },
+      "required" : ["VERDICT_ID", "POLICY_ID", "SUBJECT_ID"],
       "additionalProperties" : false
     },
     "VAMVector3" : {
@@ -43211,7 +43646,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" },{ "$ref" : "#/definitions/ICN" },{ "$ref" : "#/definitions/TRP" },{ "$ref" : "#/definitions/TRV" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

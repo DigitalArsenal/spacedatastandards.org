@@ -147,29 +147,33 @@ inline const char *EnumNamepaymentMethod(paymentMethod e) {
 enum listingCategory : int8_t {
   listingCategory_DataStream = 0,
   listingCategory_WasmModule = 1,
+  /// Provider-operated service.
+  listingCategory_Service = 2,
   listingCategory_MIN = listingCategory_DataStream,
-  listingCategory_MAX = listingCategory_WasmModule
+  listingCategory_MAX = listingCategory_Service
 };
 
-inline const listingCategory (&EnumValueslistingCategory())[2] {
+inline const listingCategory (&EnumValueslistingCategory())[3] {
   static const listingCategory values[] = {
     listingCategory_DataStream,
-    listingCategory_WasmModule
+    listingCategory_WasmModule,
+    listingCategory_Service
   };
   return values;
 }
 
 inline const char * const *EnumNameslistingCategory() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "DataStream",
     "WasmModule",
+    "Service",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamelistingCategory(listingCategory e) {
-  if (::flatbuffers::IsOutRange(e, listingCategory_DataStream, listingCategory_WasmModule)) return "";
+  if (::flatbuffers::IsOutRange(e, listingCategory_DataStream, listingCategory_Service)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameslistingCategory()[index];
 }

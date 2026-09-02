@@ -253,6 +253,9 @@ class RecordType
     const TRH = 233;
     const SLP = 234;
     const PSS = 235;
+    const ICN = 236;
+    const TRP = 237;
+    const TRV = 238;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -491,6 +494,9 @@ class RecordType
         RecordType::TRH=>"TRH",
         RecordType::SLP=>"SLP",
         RecordType::PSS=>"PSS",
+        RecordType::ICN=>"ICN",
+        RecordType::TRP=>"TRP",
+        RecordType::TRV=>"TRV",
     );
 
     public static function Name($e)

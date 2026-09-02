@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "icnConnectorKind": {
+      "type": "string",
+      "enum": [
+        "UploadSession",
+        "HttpsPull",
+        "FilesystemWatch"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UploadSession": {
+          "value": 0,
+          "description": "Files are supplied through a bounded upload session."
+        },
+        "HttpsPull": {
+          "value": 1,
+          "description": "Records are pulled from an HTTPS endpoint."
+        },
+        "FilesystemWatch": {
+          "value": 2,
+          "description": "A directory is scanned for settled files."
+        }
+      }
+    },
+    "icnConnectorStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Validated",
+        "Active",
+        "Paused",
+        "Error",
+        "Retired"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Draft": {
+          "value": 0,
+          "description": "Configuration exists but has not been validated."
+        },
+        "Validated": {
+          "value": 1,
+          "description": "Configuration passed validation but is not ingesting."
+        },
+        "Active": {
+          "value": 2,
+          "description": "Connector is ingesting according to its configured trigger."
+        },
+        "Paused": {
+          "value": 3,
+          "description": "Connector is intentionally suspended."
+        },
+        "Error": {
+          "value": 4,
+          "description": "Connector requires attention after a failed operation."
+        },
+        "Retired": {
+          "value": 5,
+          "description": "Connector is permanently out of service."
+        }
+      }
+    },
+    "icnPostIngestAction": {
+      "type": "string",
+      "enum": [
+        "LeaveInPlace",
+        "Archive",
+        "DeleteAfterVerification"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LeaveInPlace": {
+          "value": 0,
+          "description": "Keep the source file at its original location."
+        },
+        "Archive": {
+          "value": 1,
+          "description": "Move the source file to an archive location."
+        },
+        "DeleteAfterVerification": {
+          "value": 2,
+          "description": "Delete the source file only after the ingested records are verified."
+        }
+      }
+    },
+    "icnAuthKind": {
+      "type": "string",
+      "enum": [
+        "None",
+        "BearerToken",
+        "ApiKeyHeader"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0,
+          "description": "No authentication header is sent."
+        },
+        "BearerToken": {
+          "value": 1,
+          "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+        },
+        "ApiKeyHeader": {
+          "value": 2,
+          "description": "A credential is sent under AUTH_HEADER_NAME."
+        }
+      }
+    },
+    "ICN": {
+      "type": "object",
+      "description": "Ingest Connector - Configuration and lifecycle of one ingest source.",
+      "properties": {
+        "CONNECTOR_ID": {
+          "type": "string",
+          "description": "Stable connector identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/icnConnectorKind",
+          "description": "Transport or source shape used by this connector.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UploadSession": {
+              "value": 0,
+              "description": "Files are supplied through a bounded upload session."
+            },
+            "HttpsPull": {
+              "value": 1,
+              "description": "Records are pulled from an HTTPS endpoint."
+            },
+            "FilesystemWatch": {
+              "value": 2,
+              "description": "A directory is scanned for settled files."
+            }
+          }
+        },
+        "TARGET_SCHEMA": {
+          "type": "string",
+          "description": "Target SDS schema filename, e.g. \"OMM.fbs\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/icnConnectorStatus",
+          "description": "Connector lifecycle state, independent of any `$STF` listing status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Draft": {
+              "value": 0,
+              "description": "Configuration exists but has not been validated."
+            },
+            "Validated": {
+              "value": 1,
+              "description": "Configuration passed validation but is not ingesting."
+            },
+            "Active": {
+              "value": 2,
+              "description": "Connector is ingesting according to its configured trigger."
+            },
+            "Paused": {
+              "value": 3,
+              "description": "Connector is intentionally suspended."
+            },
+            "Error": {
+              "value": 4,
+              "description": "Connector requires attention after a failed operation."
+            },
+            "Retired": {
+              "value": 5,
+              "description": "Connector is permanently out of service."
+            }
+          }
+        },
+        "STATUS_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable detail about the current status.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENDPOINT_URL": {
+          "type": "string",
+          "description": "HTTPS endpoint from which records are pulled.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_METHOD": {
+          "type": "string",
+          "description": "HTTP method used for an endpoint request.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTH_KIND": {
+          "$ref": "#/definitions/icnAuthKind",
+          "description": "Authentication shape used for an endpoint request.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0,
+              "description": "No authentication header is sent."
+            },
+            "BearerToken": {
+              "value": 1,
+              "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+            },
+            "ApiKeyHeader": {
+              "value": 2,
+              "description": "A credential is sent under AUTH_HEADER_NAME."
+            }
+          }
+        },
+        "AUTH_HEADER_NAME": {
+          "type": "string",
+          "description": "Header name used when AUTH_KIND is ApiKeyHeader.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREDENTIAL_REFERENCE": {
+          "type": "string",
+          "description": "Credential-store key resolved only at execution time. A secret never\nappears in an ICN record.",
+          "x-flatbuffer-type": "string"
+        },
+        "POLL_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between endpoint polls.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DIRECTORY_PATH": {
+          "type": "string",
+          "description": "Directory scanned by a filesystem-watch connector.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_PATTERN": {
+          "type": "string",
+          "description": "File-selection pattern applied within DIRECTORY_PATH.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between directory scans.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SETTLE_DELAY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Minimum unchanged time in milliseconds before a file is ingested.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POST_INGEST_ACTION": {
+          "$ref": "#/definitions/icnPostIngestAction",
+          "description": "Disposition of a source file after verified ingest.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LeaveInPlace": {
+              "value": 0,
+              "description": "Keep the source file at its original location."
+            },
+            "Archive": {
+              "value": 1,
+              "description": "Move the source file to an archive location."
+            },
+            "DeleteAfterVerification": {
+              "value": 2,
+              "description": "Delete the source file only after the ingested records are verified."
+            }
+          }
+        },
+        "UPLOAD_SESSION_ID": {
+          "type": "string",
+          "description": "Identifier of the bounded upload session.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPLOAD_FILE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of files accepted into the upload session.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UPLOAD_TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total uploaded byte count across all session files.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPLOAD_CONTENT_HASH": {
+          "type": "string",
+          "description": "Content hash covering the uploaded session payload.",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTED_FORMAT": {
+          "type": "string",
+          "description": "Detected source serialization or container format.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLE_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records detected in the validation sample.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_INGEST_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last successful ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last ingest error.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR": {
+          "type": "string",
+          "description": "Human-readable detail about the last ingest error.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the provider that issued this connector record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the connector record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "CONNECTOR_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ICN",
+  "x-flatbuffer-root-type": "ICN",
+  "x-flatbuffer-file-identifier": "$ICN"
+}

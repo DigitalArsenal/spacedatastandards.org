@@ -1,0 +1,103 @@
+// Hash: 96458a921223a9fa276aa35d337969441667ca952639e11b979c0f4e79327782
+// Version: 1.206.0
+// -----------------------------------END_HEADER
+/// Trust predicate evaluated by a rule policy. Append new values only; never
+/// reorder or reuse existing values.
+enum trpPredicateKind : byte {
+  /// A subject must hold at least the configured value.
+  MinValueLocked,
+  /// A subject must have held the configured value for a minimum duration.
+  ValueForDuration,
+  /// A subject's qualifying value must use an allowed asset.
+  AllowedTokens,
+  /// A subject must satisfy an X-of-N trusted-connection rule.
+  TrustedConnections
+}
+
+/// Boolean combinator applied to a predicate group. Append new values only;
+/// never reorder or reuse existing values.
+enum trpCombinator : byte {
+  /// Every direct predicate and child group must pass.
+  All,
+  /// At least one direct predicate or child group must pass.
+  Any
+}
+
+/// Asset admitted by a value or token predicate.
+table TRPAsset {
+  /// CAIP-2 style chain identifier, e.g. "eip155:1" or
+  /// "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp". Vendor and organization names
+  /// are forbidden; a chain is named only by its identifier.
+  CHAIN_ID: string;
+  /// Chain-local token address, or empty for the chain's native asset.
+  TOKEN_ADDRESS: string;
+  /// Published token symbol used for display and matching.
+  TOKEN_SYMBOL: string;
+  /// Number of decimal places used by the smallest-unit integer balance.
+  DECIMALS: ubyte;
+}
+
+/// One independently measurable predicate in a trust rule policy.
+table TRPPredicate {
+  /// Stable identifier unique within the policy.
+  PREDICATE_ID: string;
+  /// Predicate operation to evaluate.
+  KIND: trpPredicateKind;
+  /// Minimum qualifying value expressed as a uint64 in the smallest unit.
+  MIN_VALUE: uint64;
+  /// Currency or unit used to compare normalized values.
+  VALUE_CURRENCY: string;
+  /// Minimum continuous holding duration in seconds.
+  MIN_HELD_SECONDS: uint64;
+  /// Assets admitted by this predicate.
+  ASSETS: [TRPAsset];
+  /// X, the number of named trusters that must match.
+  REQUIRED_COUNT: uint32;
+  /// The N named `$TRE` trusters considered by a trusted-connections predicate.
+  TRUSTER_IDS: [string];
+  /// Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
+  MIN_EDGE_WEIGHT: double;
+}
+
+/// Recursive boolean group for a compound trust rule set.
+table TRPGroup {
+  /// Stable identifier unique within the policy.
+  GROUP_ID: string;
+  /// Boolean operation applied across direct predicates and child groups.
+  COMBINATOR: trpCombinator;
+  /// Predicates evaluated directly within this group.
+  PREDICATES: [TRPPredicate];
+  /// Nested groups used to express compound rule sets.
+  GROUPS: [TRPGroup];
+}
+
+/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+table TRP {
+  /// Stable policy identifier.
+  POLICY_ID: string (required);
+  /// Human-readable policy name.
+  NAME: string;
+  /// Human-readable policy description.
+  DESCRIPTION: string;
+  /// Root of the compound rule tree.
+  ROOT: TRPGroup;
+  /// Periodic evaluation cadence in milliseconds. The 10000 default is the
+  /// 0.1 Hz baseline and is configurable by the policy author.
+  EVALUATION_INTERVAL_MS: uint32 = 10000;
+  /// Event names that may trigger evaluation, e.g. "trust-edge", "trust-node",
+  /// "entity-profile", or "chain-balance".
+  EVENT_SOURCES: [string];
+  /// Whether evaluators should currently apply this policy.
+  ACTIVE: bool;
+  /// Unix timestamp in milliseconds when this policy was created.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds when this policy was last updated.
+  UPDATED_AT: uint64;
+  /// Peer identifier of the evaluator that issued this policy record.
+  EVALUATOR_PEER_ID: string;
+  /// Evaluator signature over the policy record.
+  EVALUATOR_SIGNATURE: [ubyte];
+}
+
+root_type TRP;
+file_identifier "$TRP";

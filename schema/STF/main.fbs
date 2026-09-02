@@ -1,5 +1,5 @@
-// Hash: 6dc035193f559376c01f7756ab2e11d93834ee65754fca543c1a1b414ab6e366
-// Version: 1.0.4
+// Hash: 16f6cbfd9328aac34201b55ed9b77675183631e17f388158811b39b92385d110
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../CCT/main.fbs";
 
@@ -44,7 +44,9 @@ enum paymentMethod : byte {
 /// delivered as a data stream or as a module artifact.
 enum listingCategory : byte {
   DataStream,
-  WasmModule
+  WasmModule,
+  /// Provider-operated service.
+  Service
 }
 
 /// Field-level stream policy bound into protected delivery and grants.

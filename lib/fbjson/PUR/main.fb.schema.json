@@ -217,7 +217,8 @@
       "type": "string",
       "enum": [
         "DataStream",
-        "WasmModule"
+        "WasmModule",
+        "Service"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -227,6 +228,10 @@
         },
         "WasmModule": {
           "value": 1
+        },
+        "Service": {
+          "value": 2,
+          "description": "Provider-operated service."
         }
       }
     },
@@ -1199,6 +1204,10 @@
             },
             "WasmModule": {
               "value": 1
+            },
+            "Service": {
+              "value": 2,
+              "description": "Provider-operated service."
             }
           }
         },

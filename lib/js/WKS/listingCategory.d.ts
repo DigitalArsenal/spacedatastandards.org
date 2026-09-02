@@ -9,6 +9,10 @@
  */
 export declare enum listingCategory {
     DataStream = 0,
-    WasmModule = 1
+    WasmModule = 1,
+    /**
+     * Provider-operated service.
+     */
+    Service = 2
 }
 //# sourceMappingURL=listingCategory.d.ts.map

@@ -255,6 +255,9 @@ public struct Record : IFlatbufferObject
   public TRH valueAsTRH() { return value<TRH>().Value; }
   public SLP valueAsSLP() { return value<SLP>().Value; }
   public PSS valueAsPSS() { return value<PSS>().Value; }
+  public ICN valueAsICN() { return value<ICN>().Value; }
+  public TRP valueAsTRP() { return value<TRP>().Value; }
+  public TRV valueAsTRV() { return value<TRV>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -997,6 +1000,15 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PSS:
         _o.value.Value = this.value<PSS>().HasValue ? this.value<PSS>().Value.UnPack() : null;
+        break;
+      case RecordType.ICN:
+        _o.value.Value = this.value<ICN>().HasValue ? this.value<ICN>().Value.UnPack() : null;
+        break;
+      case RecordType.TRP:
+        _o.value.Value = this.value<TRP>().HasValue ? this.value<TRP>().Value.UnPack() : null;
+        break;
+      case RecordType.TRV:
+        _o.value.Value = this.value<TRV>().HasValue ? this.value<TRV>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

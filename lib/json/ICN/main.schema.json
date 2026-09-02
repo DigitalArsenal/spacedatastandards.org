@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "icnConnectorKind" : {
+      "type" : "string",
+      "enum": ["UploadSession", "HttpsPull", "FilesystemWatch"]
+    },
+    "icnConnectorStatus" : {
+      "type" : "string",
+      "enum": ["Draft", "Validated", "Active", "Paused", "Error", "Retired"]
+    },
+    "icnPostIngestAction" : {
+      "type" : "string",
+      "enum": ["LeaveInPlace", "Archive", "DeleteAfterVerification"]
+    },
+    "icnAuthKind" : {
+      "type" : "string",
+      "enum": ["None", "BearerToken", "ApiKeyHeader"]
+    },
+    "ICN" : {
+      "type" : "object",
+      "description" : "Ingest Connector - Configuration and lifecycle of one ingest source.",
+      "properties" : {
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Stable connector identifier."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/icnConnectorKind",
+                "description" : "Transport or source shape used by this connector."
+              },
+        "TARGET_SCHEMA" : {
+                "type" : "string",
+                "description" : "Target SDS schema filename, e.g. \"OMM.fbs\"."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/icnConnectorStatus",
+                "description" : "Connector lifecycle state, independent of any `$STF` listing status."
+              },
+        "STATUS_MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable detail about the current status."
+              },
+        "ENDPOINT_URL" : {
+                "type" : "string",
+                "description" : "HTTPS endpoint from which records are pulled."
+              },
+        "HTTP_METHOD" : {
+                "type" : "string",
+                "description" : "HTTP method used for an endpoint request."
+              },
+        "AUTH_KIND" : {
+                "$ref" : "#/definitions/icnAuthKind",
+                "description" : "Authentication shape used for an endpoint request."
+              },
+        "AUTH_HEADER_NAME" : {
+                "type" : "string",
+                "description" : "Header name used when AUTH_KIND is ApiKeyHeader."
+              },
+        "CREDENTIAL_REFERENCE" : {
+                "type" : "string",
+                "description" : "Credential-store key resolved only at execution time. A secret never\nappears in an ICN record."
+              },
+        "POLL_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interval in milliseconds between endpoint polls."
+              },
+        "DIRECTORY_PATH" : {
+                "type" : "string",
+                "description" : "Directory scanned by a filesystem-watch connector."
+              },
+        "FILE_PATTERN" : {
+                "type" : "string",
+                "description" : "File-selection pattern applied within DIRECTORY_PATH."
+              },
+        "SCAN_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Interval in milliseconds between directory scans."
+              },
+        "SETTLE_DELAY_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minimum unchanged time in milliseconds before a file is ingested."
+              },
+        "POST_INGEST_ACTION" : {
+                "$ref" : "#/definitions/icnPostIngestAction",
+                "description" : "Disposition of a source file after verified ingest."
+              },
+        "UPLOAD_SESSION_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the bounded upload session."
+              },
+        "UPLOAD_FILE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of files accepted into the upload session."
+              },
+        "UPLOAD_TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total uploaded byte count across all session files."
+              },
+        "UPLOAD_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "Content hash covering the uploaded session payload."
+              },
+        "DETECTED_FORMAT" : {
+                "type" : "string",
+                "description" : "Detected source serialization or container format."
+              },
+        "SAMPLE_RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of records detected in the validation sample."
+              },
+        "LAST_INGEST_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds of the last successful ingest."
+              },
+        "LAST_ERROR_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds of the last ingest error."
+              },
+        "LAST_ERROR" : {
+                "type" : "string",
+                "description" : "Human-readable detail about the last ingest error."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this connector was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this connector was last updated."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the provider that issued this connector record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the connector record."
+              }
+      },
+      "required" : ["CONNECTOR_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ICN"
+}

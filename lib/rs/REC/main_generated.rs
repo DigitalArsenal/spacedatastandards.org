@@ -236,6 +236,9 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -370,10 +373,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 235;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 238;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 236] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 239] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -610,6 +613,9 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 236] = [
   RecordType::TRH,
   RecordType::SLP,
   RecordType::PSS,
+  RecordType::ICN,
+  RecordType::TRP,
+  RecordType::TRV,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -867,9 +873,12 @@ impl RecordType {
   pub const TRH: Self = Self(233);
   pub const SLP: Self = Self(234);
   pub const PSS: Self = Self(235);
+  pub const ICN: Self = Self(236);
+  pub const TRP: Self = Self(237);
+  pub const TRV: Self = Self(238);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 235;
+  pub const ENUM_MAX: u8 = 238;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1107,6 +1116,9 @@ impl RecordType {
     Self::TRH,
     Self::SLP,
     Self::PSS,
+    Self::ICN,
+    Self::TRP,
+    Self::TRV,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1347,6 +1359,9 @@ impl RecordType {
       Self::TRH => Some("TRH"),
       Self::SLP => Some("SLP"),
       Self::PSS => Some("PSS"),
+      Self::ICN => Some("ICN"),
+      Self::TRP => Some("TRP"),
+      Self::TRV => Some("TRV"),
       _ => None,
     }
   }
@@ -1643,6 +1658,9 @@ pub enum RecordTypeT {
   TRH(alloc::boxed::Box<TRHT>),
   SLP(alloc::boxed::Box<SLPT>),
   PSS(alloc::boxed::Box<PSST>),
+  ICN(alloc::boxed::Box<ICNT>),
+  TRP(alloc::boxed::Box<TRPT>),
+  TRV(alloc::boxed::Box<TRVT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1888,6 +1906,9 @@ impl RecordTypeT {
       Self::TRH(_) => RecordType::TRH,
       Self::SLP(_) => RecordType::SLP,
       Self::PSS(_) => RecordType::PSS,
+      Self::ICN(_) => RecordType::ICN,
+      Self::TRP(_) => RecordType::TRP,
+      Self::TRV(_) => RecordType::TRV,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2128,6 +2149,9 @@ impl RecordTypeT {
       Self::TRH(v) => Some(v.pack(fbb).as_union_value()),
       Self::SLP(v) => Some(v.pack(fbb).as_union_value()),
       Self::PSS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ICN(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TRP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TRV(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7065,6 +7089,69 @@ impl RecordTypeT {
   pub fn as_pss_mut(&mut self) -> Option<&mut PSST> {
     if let Self::PSS(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned ICNT, setting the union to NONE.
+  pub fn take_icn(&mut self) -> Option<alloc::boxed::Box<ICNT>> {
+    if let Self::ICN(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::ICN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ICNT.
+  pub fn as_icn(&self) -> Option<&ICNT> {
+    if let Self::ICN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ICNT.
+  pub fn as_icn_mut(&mut self) -> Option<&mut ICNT> {
+    if let Self::ICN(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TRPT, setting the union to NONE.
+  pub fn take_trp(&mut self) -> Option<alloc::boxed::Box<TRPT>> {
+    if let Self::TRP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TRP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TRPT.
+  pub fn as_trp(&self) -> Option<&TRPT> {
+    if let Self::TRP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TRPT.
+  pub fn as_trp_mut(&mut self) -> Option<&mut TRPT> {
+    if let Self::TRP(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TRVT, setting the union to NONE.
+  pub fn take_trv(&mut self) -> Option<alloc::boxed::Box<TRVT>> {
+    if let Self::TRV(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TRV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TRVT.
+  pub fn as_trv(&self) -> Option<&TRVT> {
+    if let Self::TRV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TRVT.
+  pub fn as_trv_mut(&mut self) -> Option<&mut TRVT> {
+    if let Self::TRV(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8279,6 +8366,21 @@ impl<'a> Record<'a> {
       RecordType::PSS => RecordTypeT::PSS(alloc::boxed::Box::new(
         self.value_as_pss()
             .expect("Invalid union table, expected `RecordType::PSS`.")
+            .unpack()
+      )),
+      RecordType::ICN => RecordTypeT::ICN(alloc::boxed::Box::new(
+        self.value_as_icn()
+            .expect("Invalid union table, expected `RecordType::ICN`.")
+            .unpack()
+      )),
+      RecordType::TRP => RecordTypeT::TRP(alloc::boxed::Box::new(
+        self.value_as_trp()
+            .expect("Invalid union table, expected `RecordType::TRP`.")
+            .unpack()
+      )),
+      RecordType::TRV => RecordTypeT::TRV(alloc::boxed::Box::new(
+        self.value_as_trv()
+            .expect("Invalid union table, expected `RecordType::TRV`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -11840,6 +11942,51 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_icn(&self) -> Option<ICN<'a>> {
+    if self.value_type() == RecordType::ICN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ICN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_trp(&self) -> Option<TRP<'a>> {
+    if self.value_type() == RecordType::TRP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TRP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_trv(&self) -> Option<TRV<'a>> {
+    if self.value_type() == RecordType::TRV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TRV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12085,6 +12232,9 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::TRH => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRH>>("RecordType::TRH", pos),
           RecordType::SLP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SLP>>("RecordType::SLP", pos),
           RecordType::PSS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PSS>>("RecordType::PSS", pos),
+          RecordType::ICN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ICN>>("RecordType::ICN", pos),
+          RecordType::TRP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRP>>("RecordType::TRP", pos),
+          RecordType::TRV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRV>>("RecordType::TRV", pos),
           _ => Ok(()),
         }
      })?
@@ -13786,6 +13936,27 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::PSS => {
           if let Some(x) = self.value_as_pss() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ICN => {
+          if let Some(x) = self.value_as_icn() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TRP => {
+          if let Some(x) = self.value_as_trp() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TRV => {
+          if let Some(x) = self.value_as_trv() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

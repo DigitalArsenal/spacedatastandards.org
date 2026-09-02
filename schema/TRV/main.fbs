@@ -1,0 +1,85 @@
+// Hash: 43c6a3cb96e98d0f0aed60d56b36eaa4606a1751a5e7faf3c8a2424f5ea9d716
+// Version: 1.206.0
+// -----------------------------------END_HEADER
+include "../TRP/main.fbs";
+
+/// Chain evidence supporting a value-based predicate result.
+table TRVBondEvidence {
+  /// Chain identifier using the same identifier-only convention as TRPAsset.
+  CHAIN_ID: string;
+  /// Chain-local address whose balance was evaluated.
+  ADDRESS: string;
+  /// Chain-local token address, or empty for the chain's native asset.
+  TOKEN_ADDRESS: string;
+  /// Observed uint64 balance expressed in the asset's smallest unit.
+  BALANCE: uint64;
+  /// Number of decimal places used by BALANCE.
+  DECIMALS: ubyte;
+  /// Currency or unit used for normalized valuation.
+  VALUE_CURRENCY: string;
+  /// Balance normalized into VALUE_CURRENCY.
+  NORMALIZED_VALUE: double;
+  /// Unix timestamp in milliseconds from which the balance is proven to have
+  /// been continuously held, established from chain history.
+  HELD_SINCE: uint64;
+  /// Unix timestamp in milliseconds when the balance was observed.
+  OBSERVED_AT: uint64;
+  /// Chain-specific block identifier anchoring the observation.
+  BLOCK_REFERENCE: string;
+  /// Replayable query or query description used to obtain the evidence.
+  SOURCE_QUERY: string;
+}
+
+/// Outcome and evidence for one policy predicate.
+table TRVPredicateResult {
+  /// Identifier of the evaluated `$TRP` predicate.
+  PREDICATE_ID: string;
+  /// Predicate operation copied from the evaluated policy.
+  KIND: trpPredicateKind;
+  /// Whether this predicate passed.
+  PASSED: bool;
+  /// Value measured by the evaluator.
+  MEASURED_VALUE: double;
+  /// Threshold required by the evaluated predicate.
+  REQUIRED_VALUE: double;
+  /// Chain evidence used by value and duration predicates.
+  BOND_EVIDENCE: [TRVBondEvidence];
+  /// Named `$TRE` trusters whose qualifying edges matched.
+  TRUSTER_IDS_MATCHED: [string];
+  /// Human-readable evidence summary.
+  EVIDENCE_TEXT: string;
+}
+
+/// Trust Rule Verdict.
+///
+/// A TRV records one reproducible evaluation of a `$TRP` policy for a subject.
+/// This record replaces ad-hoc trust status events.
+table TRV {
+  /// Stable identifier for this evaluation.
+  VERDICT_ID: string (required);
+  /// Identifier of the evaluated `$TRP` policy.
+  POLICY_ID: string (required);
+  /// Identifier of the subject evaluated by the policy.
+  SUBJECT_ID: string (required);
+  /// Whether the complete policy passed.
+  PASSED: bool;
+  /// Pass state produced by the immediately preceding evaluation.
+  PREVIOUS_PASSED: bool;
+  /// Score produced by this evaluation.
+  SCORE: double;
+  /// Score produced by the immediately preceding evaluation.
+  PREVIOUS_SCORE: double;
+  /// Per-predicate results and their evidence.
+  RESULTS: [TRVPredicateResult];
+  /// Evaluation trigger: "interval" or an event source name.
+  TRIGGER: string;
+  /// Unix timestamp in milliseconds when the evaluation completed.
+  EVALUATED_AT: uint64;
+  /// Peer identifier of the evaluator that issued this verdict.
+  EVALUATOR_PEER_ID: string;
+  /// Evaluator signature over the verdict record.
+  EVALUATOR_SIGNATURE: [ubyte];
+}
+
+root_type TRV;
+file_identifier "$TRV";

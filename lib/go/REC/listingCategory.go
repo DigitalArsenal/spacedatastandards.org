@@ -16,16 +16,20 @@ type listingCategory int8
 const (
 	listingCategoryDataStream listingCategory = 0
 	listingCategoryWasmModule listingCategory = 1
+	/// Provider-operated service.
+	listingCategoryService    listingCategory = 2
 )
 
 var EnumNameslistingCategory = map[listingCategory]string{
 	listingCategoryDataStream: "DataStream",
 	listingCategoryWasmModule: "WasmModule",
+	listingCategoryService:    "Service",
 }
 
 var EnumValueslistingCategory = map[string]listingCategory{
 	"DataStream": listingCategoryDataStream,
 	"WasmModule": listingCategoryWasmModule,
+	"Service":    listingCategoryService,
 }
 
 func (v listingCategory) String() string {

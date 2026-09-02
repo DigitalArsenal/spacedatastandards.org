@@ -1269,7 +1269,8 @@
       "type": "string",
       "enum": [
         "DataStream",
-        "WasmModule"
+        "WasmModule",
+        "Service"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -1279,6 +1280,10 @@
         },
         "WasmModule": {
           "value": 1
+        },
+        "Service": {
+          "value": 2,
+          "description": "Provider-operated service."
         }
       }
     },
@@ -12209,6 +12214,117 @@
         }
       }
     },
+    "icnConnectorKind": {
+      "type": "string",
+      "enum": [
+        "UploadSession",
+        "HttpsPull",
+        "FilesystemWatch"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UploadSession": {
+          "value": 0,
+          "description": "Files are supplied through a bounded upload session."
+        },
+        "HttpsPull": {
+          "value": 1,
+          "description": "Records are pulled from an HTTPS endpoint."
+        },
+        "FilesystemWatch": {
+          "value": 2,
+          "description": "A directory is scanned for settled files."
+        }
+      }
+    },
+    "icnConnectorStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Validated",
+        "Active",
+        "Paused",
+        "Error",
+        "Retired"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Draft": {
+          "value": 0,
+          "description": "Configuration exists but has not been validated."
+        },
+        "Validated": {
+          "value": 1,
+          "description": "Configuration passed validation but is not ingesting."
+        },
+        "Active": {
+          "value": 2,
+          "description": "Connector is ingesting according to its configured trigger."
+        },
+        "Paused": {
+          "value": 3,
+          "description": "Connector is intentionally suspended."
+        },
+        "Error": {
+          "value": 4,
+          "description": "Connector requires attention after a failed operation."
+        },
+        "Retired": {
+          "value": 5,
+          "description": "Connector is permanently out of service."
+        }
+      }
+    },
+    "icnPostIngestAction": {
+      "type": "string",
+      "enum": [
+        "LeaveInPlace",
+        "Archive",
+        "DeleteAfterVerification"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LeaveInPlace": {
+          "value": 0,
+          "description": "Keep the source file at its original location."
+        },
+        "Archive": {
+          "value": 1,
+          "description": "Move the source file to an archive location."
+        },
+        "DeleteAfterVerification": {
+          "value": 2,
+          "description": "Delete the source file only after the ingested records are verified."
+        }
+      }
+    },
+    "icnAuthKind": {
+      "type": "string",
+      "enum": [
+        "None",
+        "BearerToken",
+        "ApiKeyHeader"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0,
+          "description": "No authentication header is sent."
+        },
+        "BearerToken": {
+          "value": 1,
+          "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+        },
+        "ApiKeyHeader": {
+          "value": 2,
+          "description": "A credential is sent under AUTH_HEADER_NAME."
+        }
+      }
+    },
     "ionoLayer": {
       "type": "string",
       "enum": [
@@ -20800,6 +20916,54 @@
         }
       }
     },
+    "trpPredicateKind": {
+      "type": "string",
+      "enum": [
+        "MinValueLocked",
+        "ValueForDuration",
+        "AllowedTokens",
+        "TrustedConnections"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MinValueLocked": {
+          "value": 0,
+          "description": "A subject must hold at least the configured value."
+        },
+        "ValueForDuration": {
+          "value": 1,
+          "description": "A subject must have held the configured value for a minimum duration."
+        },
+        "AllowedTokens": {
+          "value": 2,
+          "description": "A subject's qualifying value must use an allowed asset."
+        },
+        "TrustedConnections": {
+          "value": 3,
+          "description": "A subject must satisfy an X-of-N trusted-connection rule."
+        }
+      }
+    },
+    "trpCombinator": {
+      "type": "string",
+      "enum": [
+        "All",
+        "Any"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "All": {
+          "value": 0,
+          "description": "Every direct predicate and child group must pass."
+        },
+        "Any": {
+          "value": 1,
+          "description": "At least one direct predicate or child group must pass."
+        }
+      }
+    },
     "trsSolverTier": {
       "type": "string",
       "enum": [
@@ -22574,7 +22738,10 @@
         "ODR",
         "TRH",
         "SLP",
-        "PSS"
+        "PSS",
+        "ICN",
+        "TRP",
+        "TRV"
       ]
     },
     "LKS": {
@@ -27206,6 +27373,10 @@
             },
             "WasmModule": {
               "value": 1
+            },
+            "Service": {
+              "value": 2,
+              "description": "Provider-operated service."
             }
           }
         },
@@ -61299,6 +61470,259 @@
           "x-flatbuffer-type": "string"
         }
       },
+      "additionalProperties": false
+    },
+    "ICN": {
+      "type": "object",
+      "description": "Ingest Connector - Configuration and lifecycle of one ingest source.",
+      "properties": {
+        "CONNECTOR_ID": {
+          "type": "string",
+          "description": "Stable connector identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/icnConnectorKind",
+          "description": "Transport or source shape used by this connector.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UploadSession": {
+              "value": 0,
+              "description": "Files are supplied through a bounded upload session."
+            },
+            "HttpsPull": {
+              "value": 1,
+              "description": "Records are pulled from an HTTPS endpoint."
+            },
+            "FilesystemWatch": {
+              "value": 2,
+              "description": "A directory is scanned for settled files."
+            }
+          }
+        },
+        "TARGET_SCHEMA": {
+          "type": "string",
+          "description": "Target SDS schema filename, e.g. \"OMM.fbs\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/icnConnectorStatus",
+          "description": "Connector lifecycle state, independent of any `$STF` listing status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Draft": {
+              "value": 0,
+              "description": "Configuration exists but has not been validated."
+            },
+            "Validated": {
+              "value": 1,
+              "description": "Configuration passed validation but is not ingesting."
+            },
+            "Active": {
+              "value": 2,
+              "description": "Connector is ingesting according to its configured trigger."
+            },
+            "Paused": {
+              "value": 3,
+              "description": "Connector is intentionally suspended."
+            },
+            "Error": {
+              "value": 4,
+              "description": "Connector requires attention after a failed operation."
+            },
+            "Retired": {
+              "value": 5,
+              "description": "Connector is permanently out of service."
+            }
+          }
+        },
+        "STATUS_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable detail about the current status.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENDPOINT_URL": {
+          "type": "string",
+          "description": "HTTPS endpoint from which records are pulled.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_METHOD": {
+          "type": "string",
+          "description": "HTTP method used for an endpoint request.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTH_KIND": {
+          "$ref": "#/definitions/icnAuthKind",
+          "description": "Authentication shape used for an endpoint request.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0,
+              "description": "No authentication header is sent."
+            },
+            "BearerToken": {
+              "value": 1,
+              "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+            },
+            "ApiKeyHeader": {
+              "value": 2,
+              "description": "A credential is sent under AUTH_HEADER_NAME."
+            }
+          }
+        },
+        "AUTH_HEADER_NAME": {
+          "type": "string",
+          "description": "Header name used when AUTH_KIND is ApiKeyHeader.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREDENTIAL_REFERENCE": {
+          "type": "string",
+          "description": "Credential-store key resolved only at execution time. A secret never\nappears in an ICN record.",
+          "x-flatbuffer-type": "string"
+        },
+        "POLL_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between endpoint polls.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DIRECTORY_PATH": {
+          "type": "string",
+          "description": "Directory scanned by a filesystem-watch connector.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_PATTERN": {
+          "type": "string",
+          "description": "File-selection pattern applied within DIRECTORY_PATH.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between directory scans.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SETTLE_DELAY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Minimum unchanged time in milliseconds before a file is ingested.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POST_INGEST_ACTION": {
+          "$ref": "#/definitions/icnPostIngestAction",
+          "description": "Disposition of a source file after verified ingest.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LeaveInPlace": {
+              "value": 0,
+              "description": "Keep the source file at its original location."
+            },
+            "Archive": {
+              "value": 1,
+              "description": "Move the source file to an archive location."
+            },
+            "DeleteAfterVerification": {
+              "value": 2,
+              "description": "Delete the source file only after the ingested records are verified."
+            }
+          }
+        },
+        "UPLOAD_SESSION_ID": {
+          "type": "string",
+          "description": "Identifier of the bounded upload session.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPLOAD_FILE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of files accepted into the upload session.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UPLOAD_TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total uploaded byte count across all session files.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPLOAD_CONTENT_HASH": {
+          "type": "string",
+          "description": "Content hash covering the uploaded session payload.",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTED_FORMAT": {
+          "type": "string",
+          "description": "Detected source serialization or container format.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLE_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records detected in the validation sample.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_INGEST_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last successful ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last ingest error.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR": {
+          "type": "string",
+          "description": "Human-readable detail about the last ingest error.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the provider that issued this connector record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the connector record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "CONNECTOR_ID"
+      ],
       "additionalProperties": false
     },
     "ionoDataPoint": {
@@ -97512,6 +97936,243 @@
       },
       "additionalProperties": false
     },
+    "TRPAsset": {
+      "type": "object",
+      "description": "Asset admitted by a value or token predicate.",
+      "properties": {
+        "CHAIN_ID": {
+          "type": "string",
+          "description": "CAIP-2 style chain identifier, e.g. \"eip155:1\" or\n\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\". Vendor and organization names\nare forbidden; a chain is named only by its identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_ADDRESS": {
+          "type": "string",
+          "description": "Chain-local token address, or empty for the chain's native asset.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_SYMBOL": {
+          "type": "string",
+          "description": "Published token symbol used for display and matching.",
+          "x-flatbuffer-type": "string"
+        },
+        "DECIMALS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of decimal places used by the smallest-unit integer balance.",
+          "x-flatbuffer-type": "ubyte"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRPPredicate": {
+      "type": "object",
+      "description": "One independently measurable predicate in a trust rule policy.",
+      "properties": {
+        "PREDICATE_ID": {
+          "type": "string",
+          "description": "Stable identifier unique within the policy.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/trpPredicateKind",
+          "description": "Predicate operation to evaluate.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MinValueLocked": {
+              "value": 0,
+              "description": "A subject must hold at least the configured value."
+            },
+            "ValueForDuration": {
+              "value": 1,
+              "description": "A subject must have held the configured value for a minimum duration."
+            },
+            "AllowedTokens": {
+              "value": 2,
+              "description": "A subject's qualifying value must use an allowed asset."
+            },
+            "TrustedConnections": {
+              "value": 3,
+              "description": "A subject must satisfy an X-of-N trusted-connection rule."
+            }
+          }
+        },
+        "MIN_VALUE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Minimum qualifying value expressed as a uint64 in the smallest unit.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "VALUE_CURRENCY": {
+          "type": "string",
+          "description": "Currency or unit used to compare normalized values.",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_HELD_SECONDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Minimum continuous holding duration in seconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ASSETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRPAsset"
+          },
+          "description": "Assets admitted by this predicate.",
+          "x-flatbuffer-type": "[TRPAsset]"
+        },
+        "REQUIRED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "X, the number of named trusters that must match.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TRUSTER_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The N named `$TRE` trusters considered by a trusted-connections predicate.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MIN_EDGE_WEIGHT": {
+          "type": "number",
+          "description": "Minimum accepted `$TRE.WEIGHT` for a matching trust edge.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRPGroup": {
+      "type": "object",
+      "description": "Recursive boolean group for a compound trust rule set.",
+      "properties": {
+        "GROUP_ID": {
+          "type": "string",
+          "description": "Stable identifier unique within the policy.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMBINATOR": {
+          "$ref": "#/definitions/trpCombinator",
+          "description": "Boolean operation applied across direct predicates and child groups.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "All": {
+              "value": 0,
+              "description": "Every direct predicate and child group must pass."
+            },
+            "Any": {
+              "value": 1,
+              "description": "At least one direct predicate or child group must pass."
+            }
+          }
+        },
+        "PREDICATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRPPredicate"
+          },
+          "description": "Predicates evaluated directly within this group.",
+          "x-flatbuffer-type": "[TRPPredicate]"
+        },
+        "GROUPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRPGroup"
+          },
+          "description": "Nested groups used to express compound rule sets.",
+          "x-flatbuffer-type": "[TRPGroup]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRP": {
+      "type": "object",
+      "description": "Trust Rule Policy - Signed compound criteria for evaluating one subject.",
+      "properties": {
+        "POLICY_ID": {
+          "type": "string",
+          "description": "Stable policy identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable policy name.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable policy description.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROOT": {
+          "$ref": "#/definitions/TRPGroup",
+          "description": "Root of the compound rule tree.",
+          "x-flatbuffer-type": "TRPGroup"
+        },
+        "EVALUATION_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Periodic evaluation cadence in milliseconds. The 10000 default is the\n0.1 Hz baseline and is configurable by the policy author.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "10000"
+        },
+        "EVENT_SOURCES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Event names that may trigger evaluation, e.g. \"trust-edge\", \"trust-node\",\n\"entity-profile\", or \"chain-balance\".",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "Whether evaluators should currently apply this policy.",
+          "x-flatbuffer-type": "bool"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this policy was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this policy was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EVALUATOR_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the evaluator that issued this policy record.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVALUATOR_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Evaluator signature over the policy record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "POLICY_ID"
+      ],
+      "additionalProperties": false
+    },
     "TRSRequest": {
       "type": "object",
       "description": "One terrain raster solve request.\n\nFRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X\nis east, Y is north, Z is up. Both grids share the same analysis-frame\nbounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic\ncoordinates are carried explicitly in GRID_LONGITUDE_RAD /\nGRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed\ngeometry instead of interpolating it.",
@@ -97952,6 +98613,233 @@
           "x-flatbuffer-type": "TRSResult"
         }
       },
+      "additionalProperties": false
+    },
+    "TRVBondEvidence": {
+      "type": "object",
+      "description": "Chain evidence supporting a value-based predicate result.",
+      "properties": {
+        "CHAIN_ID": {
+          "type": "string",
+          "description": "Chain identifier using the same identifier-only convention as TRPAsset.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "type": "string",
+          "description": "Chain-local address whose balance was evaluated.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_ADDRESS": {
+          "type": "string",
+          "description": "Chain-local token address, or empty for the chain's native asset.",
+          "x-flatbuffer-type": "string"
+        },
+        "BALANCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Observed uint64 balance expressed in the asset's smallest unit.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DECIMALS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of decimal places used by BALANCE.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "VALUE_CURRENCY": {
+          "type": "string",
+          "description": "Currency or unit used for normalized valuation.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORMALIZED_VALUE": {
+          "type": "number",
+          "description": "Balance normalized into VALUE_CURRENCY.",
+          "x-flatbuffer-type": "double"
+        },
+        "HELD_SINCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds from which the balance is proven to have\nbeen continuously held, established from chain history.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBSERVED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when the balance was observed.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BLOCK_REFERENCE": {
+          "type": "string",
+          "description": "Chain-specific block identifier anchoring the observation.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "Replayable query or query description used to obtain the evidence.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRVPredicateResult": {
+      "type": "object",
+      "description": "Outcome and evidence for one policy predicate.",
+      "properties": {
+        "PREDICATE_ID": {
+          "type": "string",
+          "description": "Identifier of the evaluated `$TRP` predicate.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/trpPredicateKind",
+          "description": "Predicate operation copied from the evaluated policy.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MinValueLocked": {
+              "value": 0,
+              "description": "A subject must hold at least the configured value."
+            },
+            "ValueForDuration": {
+              "value": 1,
+              "description": "A subject must have held the configured value for a minimum duration."
+            },
+            "AllowedTokens": {
+              "value": 2,
+              "description": "A subject's qualifying value must use an allowed asset."
+            },
+            "TrustedConnections": {
+              "value": 3,
+              "description": "A subject must satisfy an X-of-N trusted-connection rule."
+            }
+          }
+        },
+        "PASSED": {
+          "type": "boolean",
+          "description": "Whether this predicate passed.",
+          "x-flatbuffer-type": "bool"
+        },
+        "MEASURED_VALUE": {
+          "type": "number",
+          "description": "Value measured by the evaluator.",
+          "x-flatbuffer-type": "double"
+        },
+        "REQUIRED_VALUE": {
+          "type": "number",
+          "description": "Threshold required by the evaluated predicate.",
+          "x-flatbuffer-type": "double"
+        },
+        "BOND_EVIDENCE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRVBondEvidence"
+          },
+          "description": "Chain evidence used by value and duration predicates.",
+          "x-flatbuffer-type": "[TRVBondEvidence]"
+        },
+        "TRUSTER_IDS_MATCHED": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Named `$TRE` trusters whose qualifying edges matched.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EVIDENCE_TEXT": {
+          "type": "string",
+          "description": "Human-readable evidence summary.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TRV": {
+      "type": "object",
+      "description": "Trust Rule Verdict.\n\nA TRV records one reproducible evaluation of a `$TRP` policy for a subject.\nThis record replaces ad-hoc trust status events.",
+      "properties": {
+        "VERDICT_ID": {
+          "type": "string",
+          "description": "Stable identifier for this evaluation.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POLICY_ID": {
+          "type": "string",
+          "description": "Identifier of the evaluated `$TRP` policy.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "description": "Identifier of the subject evaluated by the policy.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PASSED": {
+          "type": "boolean",
+          "description": "Whether the complete policy passed.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PREVIOUS_PASSED": {
+          "type": "boolean",
+          "description": "Pass state produced by the immediately preceding evaluation.",
+          "x-flatbuffer-type": "bool"
+        },
+        "SCORE": {
+          "type": "number",
+          "description": "Score produced by this evaluation.",
+          "x-flatbuffer-type": "double"
+        },
+        "PREVIOUS_SCORE": {
+          "type": "number",
+          "description": "Score produced by the immediately preceding evaluation.",
+          "x-flatbuffer-type": "double"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TRVPredicateResult"
+          },
+          "description": "Per-predicate results and their evidence.",
+          "x-flatbuffer-type": "[TRVPredicateResult]"
+        },
+        "TRIGGER": {
+          "type": "string",
+          "description": "Evaluation trigger: \"interval\" or an event source name.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVALUATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when the evaluation completed.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EVALUATOR_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the evaluator that issued this verdict.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVALUATOR_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Evaluator signature over the verdict record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "VERDICT_ID",
+        "POLICY_ID",
+        "SUBJECT_ID"
+      ],
       "additionalProperties": false
     },
     "VAMVector3": {
@@ -104669,6 +105557,15 @@
             },
             {
               "$ref": "#/definitions/PSS"
+            },
+            {
+              "$ref": "#/definitions/ICN"
+            },
+            {
+              "$ref": "#/definitions/TRP"
+            },
+            {
+              "$ref": "#/definitions/TRV"
             }
           ],
           "description": "The record data (union of all supported standards)",

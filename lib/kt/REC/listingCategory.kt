@@ -14,5 +14,9 @@ class listingCategory private constructor() {
     companion object {
         const val DataStream: Byte = 0
         const val WasmModule: Byte = 1
+        /**
+         * Provider-operated service.
+         */
+        const val Service: Byte = 2
     }
 }

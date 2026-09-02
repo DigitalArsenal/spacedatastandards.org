@@ -221,12 +221,13 @@ impl ::flatbuffers::SimpleToVerifyInSlice for paymentMethod {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_LISTING_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LISTING_CATEGORY: i8 = 1;
+pub const ENUM_MAX_LISTING_CATEGORY: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LISTING_CATEGORY: [listingCategory; 2] = [
+pub const ENUM_VALUES_LISTING_CATEGORY: [listingCategory; 3] = [
   listingCategory::DataStream,
   listingCategory::WasmModule,
+  listingCategory::Service,
 ];
 
 /// Listing kind for marketplace entries.
@@ -243,18 +244,22 @@ pub struct listingCategory(pub i8);
 impl listingCategory {
   pub const DataStream: Self = Self(0);
   pub const WasmModule: Self = Self(1);
+  /// Provider-operated service.
+  pub const Service: Self = Self(2);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_MAX: i8 = 2;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::DataStream,
     Self::WasmModule,
+    Self::Service,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::DataStream => Some("DataStream"),
       Self::WasmModule => Some("WasmModule"),
+      Self::Service => Some("Service"),
       _ => None,
     }
   }

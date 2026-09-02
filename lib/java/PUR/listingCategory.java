@@ -14,8 +14,12 @@ public final class listingCategory {
   private listingCategory() { }
   public static final byte DataStream = 0;
   public static final byte WasmModule = 1;
+  /**
+   * Provider-operated service.
+   */
+  public static final byte Service = 2;
 
-  public static final String[] names = { "DataStream", "WasmModule", };
+  public static final String[] names = { "DataStream", "WasmModule", "Service", };
 
   public static String name(int e) { return names[e]; }
 }

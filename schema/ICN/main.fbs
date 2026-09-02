@@ -1,0 +1,124 @@
+// Hash: 7c96d1db32ebb5d11a1c8ed712ba6ff0fd54745cccc66e284555646973ab2536
+// Version: 1.206.0
+// -----------------------------------END_HEADER
+/// Ingest Connector.
+///
+/// An ICN describes one configured source of records entering an ingest flow.
+/// Connector lifecycle STATUS is independent of any `$STF` listing status;
+/// changing one never implies a change to the other.
+
+/// Transport or source shape used by an ingest connector. Append new values
+/// only; never reorder or reuse existing values.
+enum icnConnectorKind : byte {
+  /// Files are supplied through a bounded upload session.
+  UploadSession,
+  /// Records are pulled from an HTTPS endpoint.
+  HttpsPull,
+  /// A directory is scanned for settled files.
+  FilesystemWatch
+}
+
+/// Lifecycle state of an ingest connector. Append new values only; never
+/// reorder or reuse existing values.
+enum icnConnectorStatus : byte {
+  /// Configuration exists but has not been validated.
+  Draft,
+  /// Configuration passed validation but is not ingesting.
+  Validated,
+  /// Connector is ingesting according to its configured trigger.
+  Active,
+  /// Connector is intentionally suspended.
+  Paused,
+  /// Connector requires attention after a failed operation.
+  Error,
+  /// Connector is permanently out of service.
+  Retired
+}
+
+/// Disposition of a source file after verified ingest. Append new values only;
+/// never reorder or reuse existing values.
+enum icnPostIngestAction : byte {
+  /// Keep the source file at its original location.
+  LeaveInPlace,
+  /// Move the source file to an archive location.
+  Archive,
+  /// Delete the source file only after the ingested records are verified.
+  DeleteAfterVerification
+}
+
+/// Authentication shape for an HTTPS pull. Append new values only; never
+/// reorder or reuse existing values.
+enum icnAuthKind : byte {
+  /// No authentication header is sent.
+  None,
+  /// A bearer token is resolved from CREDENTIAL_REFERENCE.
+  BearerToken,
+  /// A credential is sent under AUTH_HEADER_NAME.
+  ApiKeyHeader
+}
+
+/// Ingest Connector - Configuration and lifecycle of one ingest source.
+table ICN {
+  /// Stable connector identifier.
+  CONNECTOR_ID: string (required);
+  /// Transport or source shape used by this connector.
+  KIND: icnConnectorKind;
+  /// Target SDS schema filename, e.g. "OMM.fbs".
+  TARGET_SCHEMA: string;
+  /// Connector lifecycle state, independent of any `$STF` listing status.
+  STATUS: icnConnectorStatus;
+  /// Human-readable detail about the current status.
+  STATUS_MESSAGE: string;
+  /// HTTPS endpoint from which records are pulled.
+  ENDPOINT_URL: string;
+  /// HTTP method used for an endpoint request.
+  HTTP_METHOD: string;
+  /// Authentication shape used for an endpoint request.
+  AUTH_KIND: icnAuthKind;
+  /// Header name used when AUTH_KIND is ApiKeyHeader.
+  AUTH_HEADER_NAME: string;
+  /// Credential-store key resolved only at execution time. A secret never
+  /// appears in an ICN record.
+  CREDENTIAL_REFERENCE: string;
+  /// Interval in milliseconds between endpoint polls.
+  POLL_INTERVAL_MS: uint32;
+  /// Directory scanned by a filesystem-watch connector.
+  DIRECTORY_PATH: string;
+  /// File-selection pattern applied within DIRECTORY_PATH.
+  FILE_PATTERN: string;
+  /// Interval in milliseconds between directory scans.
+  SCAN_INTERVAL_MS: uint32;
+  /// Minimum unchanged time in milliseconds before a file is ingested.
+  SETTLE_DELAY_MS: uint32;
+  /// Disposition of a source file after verified ingest.
+  POST_INGEST_ACTION: icnPostIngestAction;
+  /// Identifier of the bounded upload session.
+  UPLOAD_SESSION_ID: string;
+  /// Number of files accepted into the upload session.
+  UPLOAD_FILE_COUNT: uint32;
+  /// Total uploaded byte count across all session files.
+  UPLOAD_TOTAL_BYTES: uint64;
+  /// Content hash covering the uploaded session payload.
+  UPLOAD_CONTENT_HASH: string;
+  /// Detected source serialization or container format.
+  DETECTED_FORMAT: string;
+  /// Number of records detected in the validation sample.
+  SAMPLE_RECORD_COUNT: uint32;
+  /// Unix timestamp in milliseconds of the last successful ingest.
+  LAST_INGEST_AT: uint64;
+  /// Unix timestamp in milliseconds of the last ingest error.
+  LAST_ERROR_AT: uint64;
+  /// Human-readable detail about the last ingest error.
+  LAST_ERROR: string;
+  /// Unix timestamp in milliseconds when this connector was created.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds when this connector was last updated.
+  UPDATED_AT: uint64;
+  /// Peer identifier of the provider that issued this connector record.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the connector record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type ICN;
+file_identifier "$ICN";

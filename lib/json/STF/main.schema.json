@@ -15,7 +15,7 @@
     },
     "listingCategory" : {
       "type" : "string",
-      "enum": ["DataStream", "WasmModule"]
+      "enum": ["DataStream", "WasmModule", "Service"]
     },
     "CCTCategory" : {
       "type" : "object",

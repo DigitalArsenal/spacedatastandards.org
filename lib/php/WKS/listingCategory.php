@@ -12,10 +12,13 @@ class listingCategory
 {
     const DataStream = 0;
     const WasmModule = 1;
+    /// Provider-operated service.
+    const Service = 2;
 
     private static $names = array(
         listingCategory::DataStream=>"DataStream",
         listingCategory::WasmModule=>"WasmModule",
+        listingCategory::Service=>"Service",
     );
 
     public static function Name($e)

@@ -254,6 +254,9 @@ public enum RecordType : byte
   TRH = 233,
   SLP = 234,
   PSS = 235,
+  ICN = 236,
+  TRP = 237,
+  TRV = 238,
 };
 
 public class RecordTypeUnion {
@@ -736,6 +739,12 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSLP(SLPT _slp) { return new RecordTypeUnion{ Type = RecordType.SLP, Value = _slp }; }
   public PSST AsPSS() { return this.As<PSST>(); }
   public static RecordTypeUnion FromPSS(PSST _pss) { return new RecordTypeUnion{ Type = RecordType.PSS, Value = _pss }; }
+  public ICNT AsICN() { return this.As<ICNT>(); }
+  public static RecordTypeUnion FromICN(ICNT _icn) { return new RecordTypeUnion{ Type = RecordType.ICN, Value = _icn }; }
+  public TRPT AsTRP() { return this.As<TRPT>(); }
+  public static RecordTypeUnion FromTRP(TRPT _trp) { return new RecordTypeUnion{ Type = RecordType.TRP, Value = _trp }; }
+  public TRVT AsTRV() { return this.As<TRVT>(); }
+  public static RecordTypeUnion FromTRV(TRVT _trv) { return new RecordTypeUnion{ Type = RecordType.TRV, Value = _trv }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -975,6 +984,9 @@ public class RecordTypeUnion {
       case RecordType.TRH: return TRH.Pack(builder, _o.AsTRH()).Value;
       case RecordType.SLP: return SLP.Pack(builder, _o.AsSLP()).Value;
       case RecordType.PSS: return PSS.Pack(builder, _o.AsPSS()).Value;
+      case RecordType.ICN: return ICN.Pack(builder, _o.AsICN()).Value;
+      case RecordType.TRP: return TRP.Pack(builder, _o.AsTRP()).Value;
+      case RecordType.TRV: return TRV.Pack(builder, _o.AsTRV()).Value;
     }
   }
 }
@@ -1692,6 +1704,15 @@ static public class RecordTypeVerify
         break;
       case RecordType.PSS:
         result = PSSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ICN:
+        result = ICNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRP:
+        result = TRPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRV:
+        result = TRVVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
