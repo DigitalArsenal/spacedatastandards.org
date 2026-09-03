@@ -25,7 +25,13 @@ struct SCHEMA_STANDARD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_KEY = 4,
     VT_IDL = 6,
-    VT_FILES = 8
+    VT_FILES = 8,
+    VT_NAME = 10,
+    VT_DESCRIPTION = 12,
+    VT_FILE_IDENTIFIER = 14,
+    VT_SCHEMA_HASH = 16,
+    VT_ROUTED = 18,
+    VT_RECORD_TYPE_ORDINAL = 20
   };
   /// Unique identifier for the standard
   const ::flatbuffers::String *key() const {
@@ -39,6 +45,30 @@ struct SCHEMA_STANDARD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *files() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FILES);
   }
+  /// Human-readable name of the standard.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// One-paragraph description of the standard.
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Four-character file identifier, e.g. "$OMM".
+  const ::flatbuffers::String *FILE_IDENTIFIER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_IDENTIFIER);
+  }
+  /// Hash of the standard's schema text.
+  const ::flatbuffers::String *SCHEMA_HASH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_HASH);
+  }
+  /// True when the reporting node routes the standard through its store.
+  bool ROUTED() const {
+    return GetField<uint8_t>(VT_ROUTED, 0) != 0;
+  }
+  /// Position of the standard in the record union; append-only forever.
+  uint16_t RECORD_TYPE_ORDINAL() const {
+    return GetField<uint16_t>(VT_RECORD_TYPE_ORDINAL, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -49,6 +79,16 @@ struct SCHEMA_STANDARD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_FILES) &&
            verifier.VerifyVector(files()) &&
            verifier.VerifyVectorOfStrings(files()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_FILE_IDENTIFIER) &&
+           verifier.VerifyString(FILE_IDENTIFIER()) &&
+           VerifyOffset(verifier, VT_SCHEMA_HASH) &&
+           verifier.VerifyString(SCHEMA_HASH()) &&
+           VerifyField<uint8_t>(verifier, VT_ROUTED, 1) &&
+           VerifyField<uint16_t>(verifier, VT_RECORD_TYPE_ORDINAL, 2) &&
            verifier.EndTable();
   }
 };
@@ -66,6 +106,24 @@ struct SCHEMA_STANDARDBuilder {
   void add_files(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> files) {
     fbb_.AddOffset(SCHEMA_STANDARD::VT_FILES, files);
   }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(SCHEMA_STANDARD::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(SCHEMA_STANDARD::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_FILE_IDENTIFIER(::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER) {
+    fbb_.AddOffset(SCHEMA_STANDARD::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  }
+  void add_SCHEMA_HASH(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_HASH) {
+    fbb_.AddOffset(SCHEMA_STANDARD::VT_SCHEMA_HASH, SCHEMA_HASH);
+  }
+  void add_ROUTED(bool ROUTED) {
+    fbb_.AddElement<uint8_t>(SCHEMA_STANDARD::VT_ROUTED, static_cast<uint8_t>(ROUTED), 0);
+  }
+  void add_RECORD_TYPE_ORDINAL(uint16_t RECORD_TYPE_ORDINAL) {
+    fbb_.AddElement<uint16_t>(SCHEMA_STANDARD::VT_RECORD_TYPE_ORDINAL, RECORD_TYPE_ORDINAL, 0);
+  }
   explicit SCHEMA_STANDARDBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -81,11 +139,23 @@ inline ::flatbuffers::Offset<SCHEMA_STANDARD> CreateSCHEMA_STANDARD(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> key = 0,
     ::flatbuffers::Offset<::flatbuffers::String> idl = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> files = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> files = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_HASH = 0,
+    bool ROUTED = false,
+    uint16_t RECORD_TYPE_ORDINAL = 0) {
   SCHEMA_STANDARDBuilder builder_(_fbb);
+  builder_.add_SCHEMA_HASH(SCHEMA_HASH);
+  builder_.add_FILE_IDENTIFIER(FILE_IDENTIFIER);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
   builder_.add_files(files);
   builder_.add_idl(idl);
   builder_.add_key(key);
+  builder_.add_RECORD_TYPE_ORDINAL(RECORD_TYPE_ORDINAL);
+  builder_.add_ROUTED(ROUTED);
   return builder_.Finish();
 }
 
@@ -93,15 +163,31 @@ inline ::flatbuffers::Offset<SCHEMA_STANDARD> CreateSCHEMA_STANDARDDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *key = nullptr,
     const char *idl = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *files = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *files = nullptr,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const char *FILE_IDENTIFIER = nullptr,
+    const char *SCHEMA_HASH = nullptr,
+    bool ROUTED = false,
+    uint16_t RECORD_TYPE_ORDINAL = 0) {
   auto key__ = key ? _fbb.CreateString(key) : 0;
   auto idl__ = idl ? _fbb.CreateString(idl) : 0;
   auto files__ = files ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*files) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto FILE_IDENTIFIER__ = FILE_IDENTIFIER ? _fbb.CreateString(FILE_IDENTIFIER) : 0;
+  auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateString(SCHEMA_HASH) : 0;
   return CreateSCHEMA_STANDARD(
       _fbb,
       key__,
       idl__,
-      files__);
+      files__,
+      NAME__,
+      DESCRIPTION__,
+      FILE_IDENTIFIER__,
+      SCHEMA_HASH__,
+      ROUTED,
+      RECORD_TYPE_ORDINAL);
 }
 
 /// Schema Manifest
@@ -109,7 +195,9 @@ struct SCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VERSION = 4,
-    VT_RECORDS = 6
+    VT_RECORDS = 6,
+    VT_STANDARDS_VERSION = 8,
+    VT_GENERATED_AT_MS = 10
   };
   /// Version of Space Data Standards
   const ::flatbuffers::String *version() const {
@@ -119,6 +207,14 @@ struct SCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCHEMA_STANDARD>> *RECORDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCHEMA_STANDARD>> *>(VT_RECORDS);
   }
+  /// Version of the standards package the reporting node runs.
+  const ::flatbuffers::String *STANDARDS_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STANDARDS_VERSION);
+  }
+  /// Unix milliseconds when this registry frame was generated.
+  int64_t GENERATED_AT_MS() const {
+    return GetField<int64_t>(VT_GENERATED_AT_MS, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -127,6 +223,9 @@ struct SCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_RECORDS) &&
            verifier.VerifyVector(RECORDS()) &&
            verifier.VerifyVectorOfTables(RECORDS()) &&
+           VerifyOffset(verifier, VT_STANDARDS_VERSION) &&
+           verifier.VerifyString(STANDARDS_VERSION()) &&
+           VerifyField<int64_t>(verifier, VT_GENERATED_AT_MS, 8) &&
            verifier.EndTable();
   }
 };
@@ -140,6 +239,12 @@ struct SCMBuilder {
   }
   void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCHEMA_STANDARD>>> RECORDS) {
     fbb_.AddOffset(SCM::VT_RECORDS, RECORDS);
+  }
+  void add_STANDARDS_VERSION(::flatbuffers::Offset<::flatbuffers::String> STANDARDS_VERSION) {
+    fbb_.AddOffset(SCM::VT_STANDARDS_VERSION, STANDARDS_VERSION);
+  }
+  void add_GENERATED_AT_MS(int64_t GENERATED_AT_MS) {
+    fbb_.AddElement<int64_t>(SCM::VT_GENERATED_AT_MS, GENERATED_AT_MS, 0);
   }
   explicit SCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -155,8 +260,12 @@ struct SCMBuilder {
 inline ::flatbuffers::Offset<SCM> CreateSCM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> version = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCHEMA_STANDARD>>> RECORDS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCHEMA_STANDARD>>> RECORDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STANDARDS_VERSION = 0,
+    int64_t GENERATED_AT_MS = 0) {
   SCMBuilder builder_(_fbb);
+  builder_.add_GENERATED_AT_MS(GENERATED_AT_MS);
+  builder_.add_STANDARDS_VERSION(STANDARDS_VERSION);
   builder_.add_RECORDS(RECORDS);
   builder_.add_version(version);
   return builder_.Finish();
@@ -165,13 +274,18 @@ inline ::flatbuffers::Offset<SCM> CreateSCM(
 inline ::flatbuffers::Offset<SCM> CreateSCMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *version = nullptr,
-    const std::vector<::flatbuffers::Offset<SCHEMA_STANDARD>> *RECORDS = nullptr) {
+    const std::vector<::flatbuffers::Offset<SCHEMA_STANDARD>> *RECORDS = nullptr,
+    const char *STANDARDS_VERSION = nullptr,
+    int64_t GENERATED_AT_MS = 0) {
   auto version__ = version ? _fbb.CreateString(version) : 0;
   auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<SCHEMA_STANDARD>>(*RECORDS) : 0;
+  auto STANDARDS_VERSION__ = STANDARDS_VERSION ? _fbb.CreateString(STANDARDS_VERSION) : 0;
   return CreateSCM(
       _fbb,
       version__,
-      RECORDS__);
+      RECORDS__,
+      STANDARDS_VERSION__,
+      GENERATED_AT_MS);
 }
 
 inline const SCM *GetSCM(const void *buf) {

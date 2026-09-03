@@ -1,0 +1,15 @@
+/**
+ * Comparison operator of a field filter. Append new values only; never
+ * reorder or reuse existing values.
+ */
+export declare enum qrpFilterOp {
+    Eq = 0,
+    Ne = 1,
+    Lt = 2,
+    Lte = 3,
+    Gt = 4,
+    Gte = 5,
+    Contains = 6,
+    In = 7
+}
+//# sourceMappingURL=qrpFilterOp.d.ts.map

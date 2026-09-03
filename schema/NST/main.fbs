@@ -1,0 +1,80 @@
+// Hash: 3a3f956fc69b8dc74c11d6db599bf870e08c362b1ed6c1086ab5e47fd4bb8889
+// Version: 1.207.0
+// -----------------------------------END_HEADER
+/// Node Status Record (NST)
+/// Description
+/// Presence and identity of the peers a node knows about, as a node reports
+/// them to operator dashboards: who the peer is (its identity record fields),
+/// how it can be reached, whether it is online, where it is, which software
+/// and standards versions it runs, and how the row reached the board. The
+/// SOURCE field is the provenance of the row itself so an operator can always
+/// answer "how did this peer get here?": declared in configuration, pinned by
+/// an operator, or seen on a live connection. A set carries every row the
+/// emitting node currently admits and the emitting node's own row.
+
+/// One known peer as reported by the emitting node.
+table NSTNode {
+  /// Peer identifier (multihash, base58).
+  PEER_ID: string;
+  /// Distinguished name from the peer's identity record.
+  DN: string;
+  ORGANIZATION: string;
+  TRUST_LEVEL: string;
+  ROLE: string;
+  AGENT_VERSION: string;
+  /// Multiformat addresses the peer is known by.
+  MULTIFORMAT_ADDRESS: [string];
+  /// Unix seconds of last observation; 0 = never.
+  LAST_SEEN: int64;
+  IS_ONLINE: bool;
+  /// Round-trip latency to the peer, milliseconds; 0 = unknown.
+  LATENCY_MS: float;
+  /// Full vCard 4.0 text derived from the peer's identity record.
+  VCARD: string;
+  /// Resolved coordinates; 0,0 = unresolved.
+  LAT: float;
+  LON: float;
+  GEO_COUNTRY: string;
+  GEO_CITY: string;
+  /// True on the node emitting this set.
+  IS_SELF: bool;
+  /// Seconds since the emitting process started (self only).
+  UPTIME_S: int64;
+  SUITE_VERSION: string;
+  STANDARDS_VERSION: string;
+  /// How this row reached the board: exactly one of "config" (declared in the
+  /// node's configuration), "pinned" (pinned by an operator) or "connected"
+  /// (seen right now on a live connection).
+  SOURCE: string;
+  /// True for configuration and operator pins; a pinned peer keeps its row
+  /// while unreachable.
+  PINNED: bool;
+  /// For SOURCE "config" the configuration key an operator can edit; for
+  /// SOURCE "pinned" the operator's own note. Never a manufactured label.
+  PIN_NOTE: string;
+  /// Peers this peer is currently connected to, for the connection graph.
+  CONNECTED_PEER_IDS: [string];
+  /// Signing public key from the peer's identity record.
+  SIGNING_PUBLIC_KEY: string;
+  /// Encryption public key from the peer's identity record.
+  ENCRYPTION_PUBLIC_KEY: string;
+  /// Content identifier of the peer's identity record.
+  EPM_CID: string;
+  /// Version of the content-addressed storage daemon the peer runs.
+  STORAGE_DAEMON_VERSION: string;
+  /// Onion-service address when the peer is reachable over an anonymity
+  /// network.
+  ONION_ADDRESS: string;
+}
+
+/// Node Status Record - the set of peers a node reports.
+table NST {
+  NODES: [NSTNode];
+  /// Unix milliseconds when this set was generated.
+  GENERATED_AT: int64;
+  /// Peer identifier of the emitting node.
+  SOURCE_PEER_ID: string;
+}
+
+root_type NST;
+file_identifier "$NST";

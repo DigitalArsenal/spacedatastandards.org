@@ -217,7 +217,30 @@ struct ICN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CREATED_AT = 54,
     VT_UPDATED_AT = 56,
     VT_PROVIDER_PEER_ID = 58,
-    VT_PROVIDER_SIGNATURE = 60
+    VT_PROVIDER_SIGNATURE = 60,
+    VT_ORIGIN_ID = 62,
+    VT_ORIGIN_NAME = 64,
+    VT_DATASET_ID = 66,
+    VT_PROVIDER_ID = 68,
+    VT_SOURCE_NAME = 70,
+    VT_LICENSE = 72,
+    VT_LICENSE_URL = 74,
+    VT_CITATION = 76,
+    VT_MIN_FETCH_INTERVAL_MS = 78,
+    VT_NEXT_ELIGIBLE_AT = 80,
+    VT_LAST_HTTP_STATUS = 82,
+    VT_LAST_SOURCE_ETAG = 84,
+    VT_LAST_SOURCE_LAST_MODIFIED = 86,
+    VT_LAST_BATCH_ID = 88,
+    VT_LAST_RECORD_COUNT = 90,
+    VT_LAST_INSERTED_COUNT = 92,
+    VT_LAST_DURATION_MS = 94,
+    VT_FETCH_COUNT = 96,
+    VT_INGEST_COUNT = 98,
+    VT_LAST_PUBLICATION_CID = 100,
+    VT_LAST_PNM_CID = 102,
+    VT_FEED_HEAD = 104,
+    VT_EMITS_SCHEMAS = 106
   };
   /// Stable connector identifier.
   const ::flatbuffers::String *CONNECTOR_ID() const {
@@ -336,6 +359,98 @@ struct ICN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *PROVIDER_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PROVIDER_SIGNATURE);
   }
+  /// Upstream publisher the connector retrieves records from, as a host name
+  /// or stable identifier.
+  const ::flatbuffers::String *ORIGIN_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN_ID);
+  }
+  /// Display name of the upstream publisher.
+  const ::flatbuffers::String *ORIGIN_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN_NAME);
+  }
+  /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  const ::flatbuffers::String *DATASET_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATASET_ID);
+  }
+  /// Provider identifier the lane's records are stored under.
+  const ::flatbuffers::String *PROVIDER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROVIDER_ID);
+  }
+  /// Source name the lane's records are stored under.
+  const ::flatbuffers::String *SOURCE_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_NAME);
+  }
+  /// Licence under which the upstream publisher offers the records.
+  const ::flatbuffers::String *LICENSE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LICENSE);
+  }
+  const ::flatbuffers::String *LICENSE_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LICENSE_URL);
+  }
+  /// Citation the upstream publisher asks for.
+  const ::flatbuffers::String *CITATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CITATION);
+  }
+  /// Minimum interval between fetches of the same dataset, milliseconds.
+  uint64_t MIN_FETCH_INTERVAL_MS() const {
+    return GetField<uint64_t>(VT_MIN_FETCH_INTERVAL_MS, 0);
+  }
+  /// Unix milliseconds when the next fetch is eligible.
+  uint64_t NEXT_ELIGIBLE_AT() const {
+    return GetField<uint64_t>(VT_NEXT_ELIGIBLE_AT, 0);
+  }
+  /// HTTP status of the last fetch.
+  uint16_t LAST_HTTP_STATUS() const {
+    return GetField<uint16_t>(VT_LAST_HTTP_STATUS, 0);
+  }
+  /// Entity tag returned by the last fetch.
+  const ::flatbuffers::String *LAST_SOURCE_ETAG() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_SOURCE_ETAG);
+  }
+  /// Last-Modified value returned by the last fetch.
+  const ::flatbuffers::String *LAST_SOURCE_LAST_MODIFIED() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_SOURCE_LAST_MODIFIED);
+  }
+  /// Batch identifier of the last ingest.
+  const ::flatbuffers::String *LAST_BATCH_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_BATCH_ID);
+  }
+  /// Records parsed by the last ingest.
+  uint64_t LAST_RECORD_COUNT() const {
+    return GetField<uint64_t>(VT_LAST_RECORD_COUNT, 0);
+  }
+  /// Records newly inserted by the last ingest.
+  uint64_t LAST_INSERTED_COUNT() const {
+    return GetField<uint64_t>(VT_LAST_INSERTED_COUNT, 0);
+  }
+  /// Duration of the last fetch and ingest, milliseconds.
+  uint64_t LAST_DURATION_MS() const {
+    return GetField<uint64_t>(VT_LAST_DURATION_MS, 0);
+  }
+  /// Fetches attempted over the connector's lifetime.
+  uint64_t FETCH_COUNT() const {
+    return GetField<uint64_t>(VT_FETCH_COUNT, 0);
+  }
+  /// Ingests completed over the connector's lifetime.
+  uint64_t INGEST_COUNT() const {
+    return GetField<uint64_t>(VT_INGEST_COUNT, 0);
+  }
+  /// Content identifier of the last publication manifest emitted.
+  const ::flatbuffers::String *LAST_PUBLICATION_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_PUBLICATION_CID);
+  }
+  /// Content identifier of the last publish notification emitted.
+  const ::flatbuffers::String *LAST_PNM_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_PNM_CID);
+  }
+  /// Feed head the connector last advanced to.
+  const ::flatbuffers::String *FEED_HEAD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FEED_HEAD);
+  }
+  /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *EMITS_SCHEMAS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_EMITS_SCHEMAS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -383,6 +498,45 @@ struct ICN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PROVIDER_PEER_ID()) &&
            VerifyOffset(verifier, VT_PROVIDER_SIGNATURE) &&
            verifier.VerifyVector(PROVIDER_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_ORIGIN_ID) &&
+           verifier.VerifyString(ORIGIN_ID()) &&
+           VerifyOffset(verifier, VT_ORIGIN_NAME) &&
+           verifier.VerifyString(ORIGIN_NAME()) &&
+           VerifyOffset(verifier, VT_DATASET_ID) &&
+           verifier.VerifyString(DATASET_ID()) &&
+           VerifyOffset(verifier, VT_PROVIDER_ID) &&
+           verifier.VerifyString(PROVIDER_ID()) &&
+           VerifyOffset(verifier, VT_SOURCE_NAME) &&
+           verifier.VerifyString(SOURCE_NAME()) &&
+           VerifyOffset(verifier, VT_LICENSE) &&
+           verifier.VerifyString(LICENSE()) &&
+           VerifyOffset(verifier, VT_LICENSE_URL) &&
+           verifier.VerifyString(LICENSE_URL()) &&
+           VerifyOffset(verifier, VT_CITATION) &&
+           verifier.VerifyString(CITATION()) &&
+           VerifyField<uint64_t>(verifier, VT_MIN_FETCH_INTERVAL_MS, 8) &&
+           VerifyField<uint64_t>(verifier, VT_NEXT_ELIGIBLE_AT, 8) &&
+           VerifyField<uint16_t>(verifier, VT_LAST_HTTP_STATUS, 2) &&
+           VerifyOffset(verifier, VT_LAST_SOURCE_ETAG) &&
+           verifier.VerifyString(LAST_SOURCE_ETAG()) &&
+           VerifyOffset(verifier, VT_LAST_SOURCE_LAST_MODIFIED) &&
+           verifier.VerifyString(LAST_SOURCE_LAST_MODIFIED()) &&
+           VerifyOffset(verifier, VT_LAST_BATCH_ID) &&
+           verifier.VerifyString(LAST_BATCH_ID()) &&
+           VerifyField<uint64_t>(verifier, VT_LAST_RECORD_COUNT, 8) &&
+           VerifyField<uint64_t>(verifier, VT_LAST_INSERTED_COUNT, 8) &&
+           VerifyField<uint64_t>(verifier, VT_LAST_DURATION_MS, 8) &&
+           VerifyField<uint64_t>(verifier, VT_FETCH_COUNT, 8) &&
+           VerifyField<uint64_t>(verifier, VT_INGEST_COUNT, 8) &&
+           VerifyOffset(verifier, VT_LAST_PUBLICATION_CID) &&
+           verifier.VerifyString(LAST_PUBLICATION_CID()) &&
+           VerifyOffset(verifier, VT_LAST_PNM_CID) &&
+           verifier.VerifyString(LAST_PNM_CID()) &&
+           VerifyOffset(verifier, VT_FEED_HEAD) &&
+           verifier.VerifyString(FEED_HEAD()) &&
+           VerifyOffset(verifier, VT_EMITS_SCHEMAS) &&
+           verifier.VerifyVector(EMITS_SCHEMAS()) &&
+           verifier.VerifyVectorOfStrings(EMITS_SCHEMAS()) &&
            verifier.EndTable();
   }
 };
@@ -478,6 +632,75 @@ struct ICNBuilder {
   void add_PROVIDER_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE) {
     fbb_.AddOffset(ICN::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
   }
+  void add_ORIGIN_ID(::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID) {
+    fbb_.AddOffset(ICN::VT_ORIGIN_ID, ORIGIN_ID);
+  }
+  void add_ORIGIN_NAME(::flatbuffers::Offset<::flatbuffers::String> ORIGIN_NAME) {
+    fbb_.AddOffset(ICN::VT_ORIGIN_NAME, ORIGIN_NAME);
+  }
+  void add_DATASET_ID(::flatbuffers::Offset<::flatbuffers::String> DATASET_ID) {
+    fbb_.AddOffset(ICN::VT_DATASET_ID, DATASET_ID);
+  }
+  void add_PROVIDER_ID(::flatbuffers::Offset<::flatbuffers::String> PROVIDER_ID) {
+    fbb_.AddOffset(ICN::VT_PROVIDER_ID, PROVIDER_ID);
+  }
+  void add_SOURCE_NAME(::flatbuffers::Offset<::flatbuffers::String> SOURCE_NAME) {
+    fbb_.AddOffset(ICN::VT_SOURCE_NAME, SOURCE_NAME);
+  }
+  void add_LICENSE(::flatbuffers::Offset<::flatbuffers::String> LICENSE) {
+    fbb_.AddOffset(ICN::VT_LICENSE, LICENSE);
+  }
+  void add_LICENSE_URL(::flatbuffers::Offset<::flatbuffers::String> LICENSE_URL) {
+    fbb_.AddOffset(ICN::VT_LICENSE_URL, LICENSE_URL);
+  }
+  void add_CITATION(::flatbuffers::Offset<::flatbuffers::String> CITATION) {
+    fbb_.AddOffset(ICN::VT_CITATION, CITATION);
+  }
+  void add_MIN_FETCH_INTERVAL_MS(uint64_t MIN_FETCH_INTERVAL_MS) {
+    fbb_.AddElement<uint64_t>(ICN::VT_MIN_FETCH_INTERVAL_MS, MIN_FETCH_INTERVAL_MS, 0);
+  }
+  void add_NEXT_ELIGIBLE_AT(uint64_t NEXT_ELIGIBLE_AT) {
+    fbb_.AddElement<uint64_t>(ICN::VT_NEXT_ELIGIBLE_AT, NEXT_ELIGIBLE_AT, 0);
+  }
+  void add_LAST_HTTP_STATUS(uint16_t LAST_HTTP_STATUS) {
+    fbb_.AddElement<uint16_t>(ICN::VT_LAST_HTTP_STATUS, LAST_HTTP_STATUS, 0);
+  }
+  void add_LAST_SOURCE_ETAG(::flatbuffers::Offset<::flatbuffers::String> LAST_SOURCE_ETAG) {
+    fbb_.AddOffset(ICN::VT_LAST_SOURCE_ETAG, LAST_SOURCE_ETAG);
+  }
+  void add_LAST_SOURCE_LAST_MODIFIED(::flatbuffers::Offset<::flatbuffers::String> LAST_SOURCE_LAST_MODIFIED) {
+    fbb_.AddOffset(ICN::VT_LAST_SOURCE_LAST_MODIFIED, LAST_SOURCE_LAST_MODIFIED);
+  }
+  void add_LAST_BATCH_ID(::flatbuffers::Offset<::flatbuffers::String> LAST_BATCH_ID) {
+    fbb_.AddOffset(ICN::VT_LAST_BATCH_ID, LAST_BATCH_ID);
+  }
+  void add_LAST_RECORD_COUNT(uint64_t LAST_RECORD_COUNT) {
+    fbb_.AddElement<uint64_t>(ICN::VT_LAST_RECORD_COUNT, LAST_RECORD_COUNT, 0);
+  }
+  void add_LAST_INSERTED_COUNT(uint64_t LAST_INSERTED_COUNT) {
+    fbb_.AddElement<uint64_t>(ICN::VT_LAST_INSERTED_COUNT, LAST_INSERTED_COUNT, 0);
+  }
+  void add_LAST_DURATION_MS(uint64_t LAST_DURATION_MS) {
+    fbb_.AddElement<uint64_t>(ICN::VT_LAST_DURATION_MS, LAST_DURATION_MS, 0);
+  }
+  void add_FETCH_COUNT(uint64_t FETCH_COUNT) {
+    fbb_.AddElement<uint64_t>(ICN::VT_FETCH_COUNT, FETCH_COUNT, 0);
+  }
+  void add_INGEST_COUNT(uint64_t INGEST_COUNT) {
+    fbb_.AddElement<uint64_t>(ICN::VT_INGEST_COUNT, INGEST_COUNT, 0);
+  }
+  void add_LAST_PUBLICATION_CID(::flatbuffers::Offset<::flatbuffers::String> LAST_PUBLICATION_CID) {
+    fbb_.AddOffset(ICN::VT_LAST_PUBLICATION_CID, LAST_PUBLICATION_CID);
+  }
+  void add_LAST_PNM_CID(::flatbuffers::Offset<::flatbuffers::String> LAST_PNM_CID) {
+    fbb_.AddOffset(ICN::VT_LAST_PNM_CID, LAST_PNM_CID);
+  }
+  void add_FEED_HEAD(::flatbuffers::Offset<::flatbuffers::String> FEED_HEAD) {
+    fbb_.AddOffset(ICN::VT_FEED_HEAD, FEED_HEAD);
+  }
+  void add_EMITS_SCHEMAS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> EMITS_SCHEMAS) {
+    fbb_.AddOffset(ICN::VT_EMITS_SCHEMAS, EMITS_SCHEMAS);
+  }
   explicit ICNBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -520,13 +743,58 @@ inline ::flatbuffers::Offset<ICN> CreateICN(
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGIN_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATASET_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LICENSE_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
+    uint64_t MIN_FETCH_INTERVAL_MS = 0,
+    uint64_t NEXT_ELIGIBLE_AT = 0,
+    uint16_t LAST_HTTP_STATUS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_SOURCE_ETAG = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_SOURCE_LAST_MODIFIED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_BATCH_ID = 0,
+    uint64_t LAST_RECORD_COUNT = 0,
+    uint64_t LAST_INSERTED_COUNT = 0,
+    uint64_t LAST_DURATION_MS = 0,
+    uint64_t FETCH_COUNT = 0,
+    uint64_t INGEST_COUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_PUBLICATION_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_PNM_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FEED_HEAD = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> EMITS_SCHEMAS = 0) {
   ICNBuilder builder_(_fbb);
+  builder_.add_INGEST_COUNT(INGEST_COUNT);
+  builder_.add_FETCH_COUNT(FETCH_COUNT);
+  builder_.add_LAST_DURATION_MS(LAST_DURATION_MS);
+  builder_.add_LAST_INSERTED_COUNT(LAST_INSERTED_COUNT);
+  builder_.add_LAST_RECORD_COUNT(LAST_RECORD_COUNT);
+  builder_.add_NEXT_ELIGIBLE_AT(NEXT_ELIGIBLE_AT);
+  builder_.add_MIN_FETCH_INTERVAL_MS(MIN_FETCH_INTERVAL_MS);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_LAST_ERROR_AT(LAST_ERROR_AT);
   builder_.add_LAST_INGEST_AT(LAST_INGEST_AT);
   builder_.add_UPLOAD_TOTAL_BYTES(UPLOAD_TOTAL_BYTES);
+  builder_.add_EMITS_SCHEMAS(EMITS_SCHEMAS);
+  builder_.add_FEED_HEAD(FEED_HEAD);
+  builder_.add_LAST_PNM_CID(LAST_PNM_CID);
+  builder_.add_LAST_PUBLICATION_CID(LAST_PUBLICATION_CID);
+  builder_.add_LAST_BATCH_ID(LAST_BATCH_ID);
+  builder_.add_LAST_SOURCE_LAST_MODIFIED(LAST_SOURCE_LAST_MODIFIED);
+  builder_.add_LAST_SOURCE_ETAG(LAST_SOURCE_ETAG);
+  builder_.add_CITATION(CITATION);
+  builder_.add_LICENSE_URL(LICENSE_URL);
+  builder_.add_LICENSE(LICENSE);
+  builder_.add_SOURCE_NAME(SOURCE_NAME);
+  builder_.add_PROVIDER_ID(PROVIDER_ID);
+  builder_.add_DATASET_ID(DATASET_ID);
+  builder_.add_ORIGIN_NAME(ORIGIN_NAME);
+  builder_.add_ORIGIN_ID(ORIGIN_ID);
   builder_.add_PROVIDER_SIGNATURE(PROVIDER_SIGNATURE);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
   builder_.add_LAST_ERROR(LAST_ERROR);
@@ -547,6 +815,7 @@ inline ::flatbuffers::Offset<ICN> CreateICN(
   builder_.add_STATUS_MESSAGE(STATUS_MESSAGE);
   builder_.add_TARGET_SCHEMA(TARGET_SCHEMA);
   builder_.add_CONNECTOR_ID(CONNECTOR_ID);
+  builder_.add_LAST_HTTP_STATUS(LAST_HTTP_STATUS);
   builder_.add_POST_INGEST_ACTION(POST_INGEST_ACTION);
   builder_.add_AUTH_KIND(AUTH_KIND);
   builder_.add_STATUS(STATUS);
@@ -584,7 +853,30 @@ inline ::flatbuffers::Offset<ICN> CreateICNDirect(
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
     const char *PROVIDER_PEER_ID = nullptr,
-    const std::vector<uint8_t> *PROVIDER_SIGNATURE = nullptr) {
+    const std::vector<uint8_t> *PROVIDER_SIGNATURE = nullptr,
+    const char *ORIGIN_ID = nullptr,
+    const char *ORIGIN_NAME = nullptr,
+    const char *DATASET_ID = nullptr,
+    const char *PROVIDER_ID = nullptr,
+    const char *SOURCE_NAME = nullptr,
+    const char *LICENSE = nullptr,
+    const char *LICENSE_URL = nullptr,
+    const char *CITATION = nullptr,
+    uint64_t MIN_FETCH_INTERVAL_MS = 0,
+    uint64_t NEXT_ELIGIBLE_AT = 0,
+    uint16_t LAST_HTTP_STATUS = 0,
+    const char *LAST_SOURCE_ETAG = nullptr,
+    const char *LAST_SOURCE_LAST_MODIFIED = nullptr,
+    const char *LAST_BATCH_ID = nullptr,
+    uint64_t LAST_RECORD_COUNT = 0,
+    uint64_t LAST_INSERTED_COUNT = 0,
+    uint64_t LAST_DURATION_MS = 0,
+    uint64_t FETCH_COUNT = 0,
+    uint64_t INGEST_COUNT = 0,
+    const char *LAST_PUBLICATION_CID = nullptr,
+    const char *LAST_PNM_CID = nullptr,
+    const char *FEED_HEAD = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *EMITS_SCHEMAS = nullptr) {
   auto CONNECTOR_ID__ = CONNECTOR_ID ? _fbb.CreateString(CONNECTOR_ID) : 0;
   auto TARGET_SCHEMA__ = TARGET_SCHEMA ? _fbb.CreateString(TARGET_SCHEMA) : 0;
   auto STATUS_MESSAGE__ = STATUS_MESSAGE ? _fbb.CreateString(STATUS_MESSAGE) : 0;
@@ -600,6 +892,21 @@ inline ::flatbuffers::Offset<ICN> CreateICNDirect(
   auto LAST_ERROR__ = LAST_ERROR ? _fbb.CreateString(LAST_ERROR) : 0;
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_SIGNATURE__ = PROVIDER_SIGNATURE ? _fbb.CreateVector<uint8_t>(*PROVIDER_SIGNATURE) : 0;
+  auto ORIGIN_ID__ = ORIGIN_ID ? _fbb.CreateString(ORIGIN_ID) : 0;
+  auto ORIGIN_NAME__ = ORIGIN_NAME ? _fbb.CreateString(ORIGIN_NAME) : 0;
+  auto DATASET_ID__ = DATASET_ID ? _fbb.CreateString(DATASET_ID) : 0;
+  auto PROVIDER_ID__ = PROVIDER_ID ? _fbb.CreateString(PROVIDER_ID) : 0;
+  auto SOURCE_NAME__ = SOURCE_NAME ? _fbb.CreateString(SOURCE_NAME) : 0;
+  auto LICENSE__ = LICENSE ? _fbb.CreateString(LICENSE) : 0;
+  auto LICENSE_URL__ = LICENSE_URL ? _fbb.CreateString(LICENSE_URL) : 0;
+  auto CITATION__ = CITATION ? _fbb.CreateString(CITATION) : 0;
+  auto LAST_SOURCE_ETAG__ = LAST_SOURCE_ETAG ? _fbb.CreateString(LAST_SOURCE_ETAG) : 0;
+  auto LAST_SOURCE_LAST_MODIFIED__ = LAST_SOURCE_LAST_MODIFIED ? _fbb.CreateString(LAST_SOURCE_LAST_MODIFIED) : 0;
+  auto LAST_BATCH_ID__ = LAST_BATCH_ID ? _fbb.CreateString(LAST_BATCH_ID) : 0;
+  auto LAST_PUBLICATION_CID__ = LAST_PUBLICATION_CID ? _fbb.CreateString(LAST_PUBLICATION_CID) : 0;
+  auto LAST_PNM_CID__ = LAST_PNM_CID ? _fbb.CreateString(LAST_PNM_CID) : 0;
+  auto FEED_HEAD__ = FEED_HEAD ? _fbb.CreateString(FEED_HEAD) : 0;
+  auto EMITS_SCHEMAS__ = EMITS_SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*EMITS_SCHEMAS) : 0;
   return CreateICN(
       _fbb,
       CONNECTOR_ID__,
@@ -630,7 +937,30 @@ inline ::flatbuffers::Offset<ICN> CreateICNDirect(
       CREATED_AT,
       UPDATED_AT,
       PROVIDER_PEER_ID__,
-      PROVIDER_SIGNATURE__);
+      PROVIDER_SIGNATURE__,
+      ORIGIN_ID__,
+      ORIGIN_NAME__,
+      DATASET_ID__,
+      PROVIDER_ID__,
+      SOURCE_NAME__,
+      LICENSE__,
+      LICENSE_URL__,
+      CITATION__,
+      MIN_FETCH_INTERVAL_MS,
+      NEXT_ELIGIBLE_AT,
+      LAST_HTTP_STATUS,
+      LAST_SOURCE_ETAG__,
+      LAST_SOURCE_LAST_MODIFIED__,
+      LAST_BATCH_ID__,
+      LAST_RECORD_COUNT,
+      LAST_INSERTED_COUNT,
+      LAST_DURATION_MS,
+      FETCH_COUNT,
+      INGEST_COUNT,
+      LAST_PUBLICATION_CID__,
+      LAST_PNM_CID__,
+      FEED_HEAD__,
+      EMITS_SCHEMAS__);
 }
 
 inline const ICN *GetICN(const void *buf) {

@@ -62,8 +62,64 @@ filesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Human-readable name of the standard.
+ */
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * One-paragraph description of the standard.
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Four-character file identifier, e.g. "$OMM".
+ */
+FILE_IDENTIFIER():string|null
+FILE_IDENTIFIER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FILE_IDENTIFIER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Hash of the standard's schema text.
+ */
+SCHEMA_HASH():string|null
+SCHEMA_HASH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SCHEMA_HASH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True when the reporting node routes the standard through its store.
+ */
+ROUTED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Position of the standard in the record union; append-only forever.
+ */
+RECORD_TYPE_ORDINAL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
 static startSCHEMA_STANDARD(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(9);
 }
 
 static addKey(builder:flatbuffers.Builder, keyOffset:flatbuffers.Offset) {
@@ -90,16 +146,46 @@ static startFilesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, NAMEOffset, 0);
+}
+
+static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, DESCRIPTIONOffset, 0);
+}
+
+static addFileIdentifier(builder:flatbuffers.Builder, FILE_IDENTIFIEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, FILE_IDENTIFIEROffset, 0);
+}
+
+static addSchemaHash(builder:flatbuffers.Builder, SCHEMA_HASHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SCHEMA_HASHOffset, 0);
+}
+
+static addRouted(builder:flatbuffers.Builder, ROUTED:boolean) {
+  builder.addFieldInt8(7, +ROUTED, +false);
+}
+
+static addRecordTypeOrdinal(builder:flatbuffers.Builder, RECORD_TYPE_ORDINAL:number) {
+  builder.addFieldInt16(8, RECORD_TYPE_ORDINAL, 0);
+}
+
 static endSCHEMA_STANDARD(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createSCHEMA_STANDARD(builder:flatbuffers.Builder, keyOffset:flatbuffers.Offset, idlOffset:flatbuffers.Offset, filesOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSCHEMA_STANDARD(builder:flatbuffers.Builder, keyOffset:flatbuffers.Offset, idlOffset:flatbuffers.Offset, filesOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, ROUTED:boolean, RECORD_TYPE_ORDINAL:number):flatbuffers.Offset {
   SCHEMA_STANDARD.startSCHEMA_STANDARD(builder);
   SCHEMA_STANDARD.addKey(builder, keyOffset);
   SCHEMA_STANDARD.addIdl(builder, idlOffset);
   SCHEMA_STANDARD.addFiles(builder, filesOffset);
+  SCHEMA_STANDARD.addName(builder, NAMEOffset);
+  SCHEMA_STANDARD.addDescription(builder, DESCRIPTIONOffset);
+  SCHEMA_STANDARD.addFileIdentifier(builder, FILE_IDENTIFIEROffset);
+  SCHEMA_STANDARD.addSchemaHash(builder, SCHEMA_HASHOffset);
+  SCHEMA_STANDARD.addRouted(builder, ROUTED);
+  SCHEMA_STANDARD.addRecordTypeOrdinal(builder, RECORD_TYPE_ORDINAL);
   return SCHEMA_STANDARD.endSCHEMA_STANDARD(builder);
 }
 
@@ -107,7 +193,13 @@ unpack(): SCHEMA_STANDARDT {
   return new SCHEMA_STANDARDT(
     this.key(),
     this.idl(),
-    this.bb!.createScalarList<string>(this.files.bind(this), this.filesLength())
+    this.bb!.createScalarList<string>(this.files.bind(this), this.filesLength()),
+    this.NAME(),
+    this.DESCRIPTION(),
+    this.FILE_IDENTIFIER(),
+    this.SCHEMA_HASH(),
+    this.ROUTED(),
+    this.RECORD_TYPE_ORDINAL()
   );
 }
 
@@ -116,6 +208,12 @@ unpackTo(_o: SCHEMA_STANDARDT): void {
   _o.key = this.key();
   _o.idl = this.idl();
   _o.files = this.bb!.createScalarList<string>(this.files.bind(this), this.filesLength());
+  _o.NAME = this.NAME();
+  _o.DESCRIPTION = this.DESCRIPTION();
+  _o.FILE_IDENTIFIER = this.FILE_IDENTIFIER();
+  _o.SCHEMA_HASH = this.SCHEMA_HASH();
+  _o.ROUTED = this.ROUTED();
+  _o.RECORD_TYPE_ORDINAL = this.RECORD_TYPE_ORDINAL();
 }
 }
 
@@ -123,7 +221,13 @@ export class SCHEMA_STANDARDT implements flatbuffers.IGeneratedObject {
 constructor(
   public key: string|Uint8Array|null = null,
   public idl: string|Uint8Array|null = null,
-  public files: (string)[] = []
+  public files: (string)[] = [],
+  public NAME: string|Uint8Array|null = null,
+  public DESCRIPTION: string|Uint8Array|null = null,
+  public FILE_IDENTIFIER: string|Uint8Array|null = null,
+  public SCHEMA_HASH: string|Uint8Array|null = null,
+  public ROUTED: boolean = false,
+  public RECORD_TYPE_ORDINAL: number = 0
 ){}
 
 
@@ -131,11 +235,21 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const key = (this.key !== null ? builder.createString(this.key!) : 0);
   const idl = (this.idl !== null ? builder.createString(this.idl!) : 0);
   const files = SCHEMA_STANDARD.createFilesVector(builder, builder.createObjectOffsetList(this.files));
+  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
+  const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
+  const FILE_IDENTIFIER = (this.FILE_IDENTIFIER !== null ? builder.createString(this.FILE_IDENTIFIER!) : 0);
+  const SCHEMA_HASH = (this.SCHEMA_HASH !== null ? builder.createString(this.SCHEMA_HASH!) : 0);
 
   return SCHEMA_STANDARD.createSCHEMA_STANDARD(builder,
     key,
     idl,
-    files
+    files,
+    NAME,
+    DESCRIPTION,
+    FILE_IDENTIFIER,
+    SCHEMA_HASH,
+    this.ROUTED,
+    this.RECORD_TYPE_ORDINAL
   );
 }
 }

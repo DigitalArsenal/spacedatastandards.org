@@ -548,15 +548,49 @@ inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
 struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LCCBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OWNER = 4
+    VT_OWNER = 4,
+    VT_NAME = 6,
+    VT_DESCRIPTION = 8,
+    VT_ACTIVE = 10,
+    VT_SOURCE_URL = 12,
+    VT_RETRIEVED_AT = 14
   };
   legacyCountryCode OWNER() const {
     return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+  }
+  /// Display name of the owner or source the code stands for.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Longer description of the owner or source.
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// True while the code is in current use by the publishing catalogue.
+  bool ACTIVE() const {
+    return GetField<uint8_t>(VT_ACTIVE, 0) != 0;
+  }
+  /// URL of the reference table the row was retrieved from.
+  const ::flatbuffers::String *SOURCE_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_URL);
+  }
+  /// ISO 8601 UTC time the reference table was retrieved.
+  const ::flatbuffers::String *RETRIEVED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RETRIEVED_AT);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyField<uint8_t>(verifier, VT_ACTIVE, 1) &&
+           VerifyOffset(verifier, VT_SOURCE_URL) &&
+           verifier.VerifyString(SOURCE_URL()) &&
+           VerifyOffset(verifier, VT_RETRIEVED_AT) &&
+           verifier.VerifyString(RETRIEVED_AT()) &&
            verifier.EndTable();
   }
 };
@@ -567,6 +601,21 @@ struct LCCBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_OWNER(legacyCountryCode OWNER) {
     fbb_.AddElement<int8_t>(LCC::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(LCC::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(LCC::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_ACTIVE(bool ACTIVE) {
+    fbb_.AddElement<uint8_t>(LCC::VT_ACTIVE, static_cast<uint8_t>(ACTIVE), 0);
+  }
+  void add_SOURCE_URL(::flatbuffers::Offset<::flatbuffers::String> SOURCE_URL) {
+    fbb_.AddOffset(LCC::VT_SOURCE_URL, SOURCE_URL);
+  }
+  void add_RETRIEVED_AT(::flatbuffers::Offset<::flatbuffers::String> RETRIEVED_AT) {
+    fbb_.AddOffset(LCC::VT_RETRIEVED_AT, RETRIEVED_AT);
   }
   explicit LCCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -581,10 +630,42 @@ struct LCCBuilder {
 
 inline ::flatbuffers::Offset<LCC> CreateLCC(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    legacyCountryCode OWNER = legacyCountryCode_AB) {
+    legacyCountryCode OWNER = legacyCountryCode_AB,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    bool ACTIVE = false,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RETRIEVED_AT = 0) {
   LCCBuilder builder_(_fbb);
+  builder_.add_RETRIEVED_AT(RETRIEVED_AT);
+  builder_.add_SOURCE_URL(SOURCE_URL);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
+  builder_.add_ACTIVE(ACTIVE);
   builder_.add_OWNER(OWNER);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<LCC> CreateLCCDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    legacyCountryCode OWNER = legacyCountryCode_AB,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    bool ACTIVE = false,
+    const char *SOURCE_URL = nullptr,
+    const char *RETRIEVED_AT = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto SOURCE_URL__ = SOURCE_URL ? _fbb.CreateString(SOURCE_URL) : 0;
+  auto RETRIEVED_AT__ = RETRIEVED_AT ? _fbb.CreateString(RETRIEVED_AT) : 0;
+  return CreateLCC(
+      _fbb,
+      OWNER,
+      NAME__,
+      DESCRIPTION__,
+      ACTIVE,
+      SOURCE_URL__,
+      RETRIEVED_AT__);
 }
 
 inline const LCC *GetLCC(const void *buf) {

@@ -50,23 +50,66 @@ class LCC extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \legacyCountryCode::AB;
     }
 
+    /// Display name of the owner or source the code stands for.
+    public function getNAME()
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Longer description of the owner or source.
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True while the code is in current use by the publishing catalogue.
+    /**
+     * @return bool
+     */
+    public function getACTIVE()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// URL of the reference table the row was retrieved from.
+    public function getSOURCE_URL()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ISO 8601 UTC time the reference table was retrieved.
+    public function getRETRIEVED_AT()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startLCC(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(1);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LCC
      */
-    public static function createLCC(FlatBufferBuilder $builder, $OWNER)
+    public static function createLCC(FlatBufferBuilder $builder, $OWNER, $NAME, $DESCRIPTION, $ACTIVE, $SOURCE_URL, $RETRIEVED_AT)
     {
-        $builder->startObject(1);
+        $builder->startObject(6);
         self::addOWNER($builder, $OWNER);
+        self::addNAME($builder, $NAME);
+        self::addDESCRIPTION($builder, $DESCRIPTION);
+        self::addACTIVE($builder, $ACTIVE);
+        self::addSOURCE_URL($builder, $SOURCE_URL);
+        self::addRETRIEVED_AT($builder, $RETRIEVED_AT);
         $o = $builder->endObject();
         return $o;
     }
@@ -79,6 +122,56 @@ class LCC extends Table
     public static function addOWNER(FlatBufferBuilder $builder, $OWNER)
     {
         $builder->addSbyteX(0, $OWNER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
+    {
+        $builder->addOffsetX(1, $NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(2, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addACTIVE(FlatBufferBuilder $builder, $ACTIVE)
+    {
+        $builder->addBoolX(3, $ACTIVE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_URL(FlatBufferBuilder $builder, $SOURCE_URL)
+    {
+        $builder->addOffsetX(4, $SOURCE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addRETRIEVED_AT(FlatBufferBuilder $builder, $RETRIEVED_AT)
+    {
+        $builder->addOffsetX(5, $RETRIEVED_AT, 0);
     }
 
     /**

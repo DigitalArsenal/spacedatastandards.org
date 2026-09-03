@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "qrpKind": {
+      "type": "string",
+      "enum": [
+        "Request",
+        "Page",
+        "Error"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Request": {
+          "value": 0
+        },
+        "Page": {
+          "value": 1
+        },
+        "Error": {
+          "value": 2
+        }
+      }
+    },
+    "qrpStatus": {
+      "type": "string",
+      "enum": [
+        "Ok",
+        "Partial",
+        "Busy",
+        "Cold",
+        "Error"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Ok": {
+          "value": 0
+        },
+        "Partial": {
+          "value": 1,
+          "description": "A bounded scan returned before covering every stored record."
+        },
+        "Busy": {
+          "value": 2,
+          "description": "The store is busy; retry after RETRY_AFTER_MS."
+        },
+        "Cold": {
+          "value": 3,
+          "description": "The serving snapshot is not warm yet; retry after RETRY_AFTER_MS."
+        },
+        "Error": {
+          "value": 4
+        }
+      }
+    },
+    "qrpFilterOp": {
+      "type": "string",
+      "enum": [
+        "Eq",
+        "Ne",
+        "Lt",
+        "Lte",
+        "Gt",
+        "Gte",
+        "Contains",
+        "In"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Eq": {
+          "value": 0
+        },
+        "Ne": {
+          "value": 1
+        },
+        "Lt": {
+          "value": 2
+        },
+        "Lte": {
+          "value": 3
+        },
+        "Gt": {
+          "value": 4
+        },
+        "Gte": {
+          "value": 5
+        },
+        "Contains": {
+          "value": 6
+        },
+        "In": {
+          "value": 7
+        }
+      }
+    },
+    "QRPFilter": {
+      "type": "object",
+      "description": "One field filter of a request.",
+      "properties": {
+        "FIELD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OP": {
+          "$ref": "#/definitions/qrpFilterOp",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Eq": {
+              "value": 0
+            },
+            "Ne": {
+              "value": 1
+            },
+            "Lt": {
+              "value": 2
+            },
+            "Lte": {
+              "value": 3
+            },
+            "Gt": {
+              "value": 4
+            },
+            "Gte": {
+              "value": 5
+            },
+            "Contains": {
+              "value": 6
+            },
+            "In": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "Eq"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Value as text; for In, values separated by commas.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QRPColumn": {
+      "type": "object",
+      "description": "One column descriptor of a page, in record field order.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Scalar type of the field as declared in the standard, e.g. \"string\",\n\"double\", \"int64\", \"bool\", \"enum\".",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIT": {
+          "type": "string",
+          "description": "Unit of the field when the standard declares one, else empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "SORTABLE": {
+          "type": "boolean",
+          "description": "True when the serving node can order the page by this column.",
+          "x-flatbuffer-type": "bool"
+        },
+        "INDEXED": {
+          "type": "boolean",
+          "description": "True when the serving node holds an index on this column.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QRP": {
+      "type": "object",
+      "description": "Query Page - request, page header or error frame.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/qrpKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Request": {
+              "value": 0
+            },
+            "Page": {
+              "value": 1
+            },
+            "Error": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "Request"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/qrpStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Ok": {
+              "value": 0
+            },
+            "Partial": {
+              "value": 1,
+              "description": "A bounded scan returned before covering every stored record."
+            },
+            "Busy": {
+              "value": 2,
+              "description": "The store is busy; retry after RETRY_AFTER_MS."
+            },
+            "Cold": {
+              "value": 3,
+              "description": "The serving snapshot is not warm yet; retry after RETRY_AFTER_MS."
+            },
+            "Error": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Ok"
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Stable error code when STATUS is Error, Busy or Cold.",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "description": "Human-readable detail for an error, warning or partial page.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRY_AFTER_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Milliseconds a client should wait before retrying; 0 = no advice.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Standard code of the records selected, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_IDENTIFIER": {
+          "type": "string",
+          "description": "File identifier of the record frames that follow a page header.",
+          "x-flatbuffer-type": "string"
+        },
+        "SQL": {
+          "type": "string",
+          "description": "SQL selection over the standard's table, when the lane accepts SQL.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEARCH": {
+          "type": "string",
+          "description": "Free-text search over the standard's indexed text fields.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILTERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPFilter"
+          },
+          "x-flatbuffer-type": "[QRPFilter]"
+        },
+        "SORT_FIELD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SORT_DESC": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BATCH_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER_PEER_ID": {
+          "type": "string",
+          "description": "Restrict to records whose producer is this peer.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Restrict to records retrieved from this upstream origin.",
+          "x-flatbuffer-type": "string"
+        },
+        "FROM_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch window, Unix milliseconds; 0 = unbounded.",
+          "x-flatbuffer-type": "int64"
+        },
+        "TO_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "PAGE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "1-based page number requested or served.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LIMIT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Page size requested or served.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CURSOR": {
+          "type": "string",
+          "description": "Opaque cursor of this page.",
+          "x-flatbuffer-type": "string"
+        },
+        "NEXT_CURSOR": {
+          "type": "string",
+          "description": "Opaque cursor of the next page; empty when this is the last page.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Record frames that follow this page header.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records matching the selection when known; 0 = unknown.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SCANNED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records the serving node scanned to build this page.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "STORED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records the serving node holds for the standard.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PARTIAL": {
+          "type": "boolean",
+          "description": "True when a bounded scan returned before covering every stored record.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRUNCATED": {
+          "type": "boolean",
+          "description": "True when the page was cut at a byte or row budget.",
+          "x-flatbuffer-type": "bool"
+        },
+        "AS_OF_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the serving numbers were last true.",
+          "x-flatbuffer-type": "int64"
+        },
+        "STALE": {
+          "type": "boolean",
+          "description": "True when the page was served from a stale snapshot.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ELAPSED_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Milliseconds the serving node spent producing the page.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when the page was generated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "ETAG": {
+          "type": "string",
+          "description": "Entity tag of the page for conditional requests.",
+          "x-flatbuffer-type": "string"
+        },
+        "CID": {
+          "type": "string",
+          "description": "Content identifier named by a request or a reply (record, manifest,\narchive).",
+          "x-flatbuffer-type": "string"
+        },
+        "ARCHIVE_ID": {
+          "type": "string",
+          "description": "Archive identifier named by a request or a reply.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLUMNS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPColumn"
+          },
+          "x-flatbuffer-type": "[QRPColumn]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/QRP",
+  "x-flatbuffer-root-type": "QRP",
+  "x-flatbuffer-file-identifier": "$QRP"
+}

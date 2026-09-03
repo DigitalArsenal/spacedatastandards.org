@@ -1,5 +1,5 @@
-// Hash: 819a40979c746d4e712fb62c1af54592b0067a6e8166afad9d83ed494bff7a37
-// Version: 1.99.0
+// Hash: 6df79e6beb28f3a4bc1ac7e980665216b770e4da238cd827f6750f496901efdc
+// Version: 1.99.1
 // -----------------------------------END_HEADER
 /// Data Sync Status
 ///
@@ -12,6 +12,32 @@ enum dssSyncState : byte {
   SYNCED,
   CAPPED,
   ERROR
+}
+
+/// Retention policy for a lane on this node. Append new values only; never
+/// reorder or reuse existing values.
+enum dssPinPolicy : byte {
+  None,
+  /// Keep a bounded local cache.
+  Cache,
+  /// Pin every publication.
+  Pin,
+  /// Pin and archive every publication.
+  Archive
+}
+
+/// Action a client requests on a lane. Append new values only; never reorder
+/// or reuse existing values.
+enum dssAction : byte {
+  None,
+  /// Run one bounded catch-up pass now.
+  Sync,
+  Subscribe,
+  Unsubscribe,
+  Pin,
+  Unpin,
+  /// Rebuild the local materialisation from pinned publications.
+  Hydrate
 }
 
 table DSS {
@@ -49,6 +75,42 @@ table DSS {
   VERIFIED_CHUNKS:[string];
   LAST_SYNCED_AT:string;
   ERROR:string;
+
+  /// Standard code of the lane, e.g. "OMM".
+  SCHEMA_NAME: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  /// Stable dataset identifier within the origin.
+  DATASET_ID: string;
+  /// Ingest connector that produces the lane, when known.
+  CONNECTOR_ID: string;
+  /// Channel identifier the lane is announced on.
+  CHANNEL_ID: string;
+  /// Publish/subscribe topic of the lane.
+  TOPIC: string;
+  /// True when this node subscribes to the lane.
+  SUBSCRIBED: bool;
+  PIN_POLICY: dssPinPolicy = None;
+  /// Visibility of the lane, e.g. "public", "private".
+  VISIBILITY: string;
+  /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  ENCRYPTION_STATE: string;
+  /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  GRANT_STATE: string;
+  /// Feed head this node has materialised up to.
+  FEED_HEAD: string;
+  /// Content identifier of the newest publication manifest known.
+  LAST_PUBLICATION_CID: string;
+  /// Content identifier of the newest publish notification known.
+  LAST_PNM_CID: string;
+  /// Rows materialised since the previous SYNCED state.
+  DELTA_ROWS: uint64;
+  /// Unix milliseconds the current or last sync pass started; 0 = never.
+  LAST_SYNC_STARTED_AT: uint64;
+  /// Action a client requests when sending this record to a node.
+  REQUESTED_ACTION: dssAction = None;
+  /// Upstream publisher of the lane's records.
+  ORIGIN_ID: string;
 }
 
 root_type DSS;

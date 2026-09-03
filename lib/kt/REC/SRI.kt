@@ -126,6 +126,91 @@ class SRI : Table() {
         }
     val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Content identifier of the record bytes.
+     */
+    val cid : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val cidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun cidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Byte offset of the record frame within its export or archive stream.
+     */
+    val byteOffset : ULong
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Byte length of the record frame.
+     */
+    val byteLength : UInt
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Epoch of the record, Unix milliseconds; 0 = none.
+     */
+    val epochMs : ULong
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Entity key of the record within its standard, e.g. a catalogue number.
+     */
+    val entityKey : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val entityKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun entityKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val providerId : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun providerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    val sourceName : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun sourceNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    val batchId : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val batchIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun batchIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSRI(_bb: ByteBuffer): SRI = getRootAsSRI(_bb, SRI())
@@ -134,9 +219,17 @@ class SRI : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SRIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SRI")
-        fun createSRI(builder: FlatBufferBuilder, recordKeyOffset: Int, schemaNameOffset: Int, roleOffset: Int, attachedViaOffset: Int, payloadKindOffset: Int, updatedAtMs: Double, reservedOffset: Int) : Int {
-            builder.startTable(7)
+        fun createSRI(builder: FlatBufferBuilder, recordKeyOffset: Int, schemaNameOffset: Int, roleOffset: Int, attachedViaOffset: Int, payloadKindOffset: Int, updatedAtMs: Double, reservedOffset: Int, cidOffset: Int, byteOffset: ULong, byteLength: UInt, epochMs: ULong, entityKeyOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, batchIdOffset: Int) : Int {
+            builder.startTable(15)
+            addEPOCHMS(builder, epochMs)
+            addBYTEOFFSET(builder, byteOffset)
             addUPDATEDATMS(builder, updatedAtMs)
+            addBATCHID(builder, batchIdOffset)
+            addSOURCENAME(builder, sourceNameOffset)
+            addPROVIDERID(builder, providerIdOffset)
+            addENTITYKEY(builder, entityKeyOffset)
+            addBYTELENGTH(builder, byteLength)
+            addCID(builder, cidOffset)
             addRESERVED(builder, reservedOffset)
             addPAYLOADKIND(builder, payloadKindOffset)
             addATTACHEDVIA(builder, attachedViaOffset)
@@ -145,7 +238,7 @@ class SRI : Table() {
             addRECORDKEY(builder, recordKeyOffset)
             return endSRI(builder)
         }
-        fun startSRI(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startSRI(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addRECORDKEY(builder: FlatBufferBuilder, recordKey: Int) = builder.addOffset(0, recordKey, 0)
         fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(1, schemaName, 0)
         fun addROLE(builder: FlatBufferBuilder, role: Int) = builder.addOffset(2, role, 0)
@@ -162,6 +255,14 @@ class SRI : Table() {
             return builder.endVector()
         }
         fun startReservedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(7, cid, 0)
+        fun addBYTEOFFSET(builder: FlatBufferBuilder, byteOffset: ULong) = builder.addLong(8, byteOffset.toLong(), 0)
+        fun addBYTELENGTH(builder: FlatBufferBuilder, byteLength: UInt) = builder.addInt(9, byteLength.toInt(), 0)
+        fun addEPOCHMS(builder: FlatBufferBuilder, epochMs: ULong) = builder.addLong(10, epochMs.toLong(), 0)
+        fun addENTITYKEY(builder: FlatBufferBuilder, entityKey: Int) = builder.addOffset(11, entityKey, 0)
+        fun addPROVIDERID(builder: FlatBufferBuilder, providerId: Int) = builder.addOffset(12, providerId, 0)
+        fun addSOURCENAME(builder: FlatBufferBuilder, sourceName: Int) = builder.addOffset(13, sourceName, 0)
+        fun addBATCHID(builder: FlatBufferBuilder, batchId: Int) = builder.addOffset(14, batchId, 0)
         fun endSRI(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

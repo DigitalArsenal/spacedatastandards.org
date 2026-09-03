@@ -229,10 +229,25 @@ class EOP {
   ///  the source is provable rather than assumed.
   String? get DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
   String? get dataSetCid => DATA_SET_CID;
+  ///  Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  ///  radians, as published beside the CIP offsets by combined rapid-service
+  ///  series.
+  double get NUTATION_DPSI_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get nutationDpsiRadians => NUTATION_DPSI_RADIANS;
+  ///  Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  ///  radians.
+  double get NUTATION_DEPS_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get nutationDepsRadians => NUTATION_DEPS_RADIANS;
+  ///  1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  double get NUTATION_DPSI_UNCERTAINTY_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  double get nutationDpsiUncertaintyRadians => NUTATION_DPSI_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  double get NUTATION_DEPS_UNCERTAINTY_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get nutationDepsUncertaintyRadians => NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
   @override
   String toString() {
-    return 'EOP{DATE: ${DATE}, MJD: ${MJD}, xPoleWanderRadians: ${xPoleWanderRadians}, yPoleWanderRadians: ${yPoleWanderRadians}, xCelestialPoleOffsetRadians: ${xCelestialPoleOffsetRadians}, yCelestialPoleOffsetRadians: ${yCelestialPoleOffsetRadians}, ut1MinusUtcSeconds: ${ut1MinusUtcSeconds}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, lengthOfDayCorrectionSeconds: ${lengthOfDayCorrectionSeconds}, dataType: ${dataType}, SERIES: ${SERIES}, iauConvention: ${iauConvention}, xPoleWanderUncertaintyRadians: ${xPoleWanderUncertaintyRadians}, yPoleWanderUncertaintyRadians: ${yPoleWanderUncertaintyRadians}, xCelestialPoleOffsetUncertaintyRadians: ${xCelestialPoleOffsetUncertaintyRadians}, yCelestialPoleOffsetUncertaintyRadians: ${yCelestialPoleOffsetUncertaintyRadians}, ut1MinusUtcUncertaintySeconds: ${ut1MinusUtcUncertaintySeconds}, lengthOfDayUncertaintySeconds: ${lengthOfDayUncertaintySeconds}, xPoleWanderRadiansHp: ${xPoleWanderRadiansHp}, yPoleWanderRadiansHp: ${yPoleWanderRadiansHp}, xCelestialPoleOffsetRadiansHp: ${xCelestialPoleOffsetRadiansHp}, yCelestialPoleOffsetRadiansHp: ${yCelestialPoleOffsetRadiansHp}, ut1MinusUtcSecondsHp: ${ut1MinusUtcSecondsHp}, lengthOfDayCorrectionSecondsHp: ${lengthOfDayCorrectionSecondsHp}, dataSetEpoch: ${dataSetEpoch}, dataSetCid: ${dataSetCid}}';
+    return 'EOP{DATE: ${DATE}, MJD: ${MJD}, xPoleWanderRadians: ${xPoleWanderRadians}, yPoleWanderRadians: ${yPoleWanderRadians}, xCelestialPoleOffsetRadians: ${xCelestialPoleOffsetRadians}, yCelestialPoleOffsetRadians: ${yCelestialPoleOffsetRadians}, ut1MinusUtcSeconds: ${ut1MinusUtcSeconds}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, lengthOfDayCorrectionSeconds: ${lengthOfDayCorrectionSeconds}, dataType: ${dataType}, SERIES: ${SERIES}, iauConvention: ${iauConvention}, xPoleWanderUncertaintyRadians: ${xPoleWanderUncertaintyRadians}, yPoleWanderUncertaintyRadians: ${yPoleWanderUncertaintyRadians}, xCelestialPoleOffsetUncertaintyRadians: ${xCelestialPoleOffsetUncertaintyRadians}, yCelestialPoleOffsetUncertaintyRadians: ${yCelestialPoleOffsetUncertaintyRadians}, ut1MinusUtcUncertaintySeconds: ${ut1MinusUtcUncertaintySeconds}, lengthOfDayUncertaintySeconds: ${lengthOfDayUncertaintySeconds}, xPoleWanderRadiansHp: ${xPoleWanderRadiansHp}, yPoleWanderRadiansHp: ${yPoleWanderRadiansHp}, xCelestialPoleOffsetRadiansHp: ${xCelestialPoleOffsetRadiansHp}, yCelestialPoleOffsetRadiansHp: ${yCelestialPoleOffsetRadiansHp}, ut1MinusUtcSecondsHp: ${ut1MinusUtcSecondsHp}, lengthOfDayCorrectionSecondsHp: ${lengthOfDayCorrectionSecondsHp}, dataSetEpoch: ${dataSetEpoch}, dataSetCid: ${dataSetCid}, nutationDpsiRadians: ${nutationDpsiRadians}, nutationDepsRadians: ${nutationDepsRadians}, nutationDpsiUncertaintyRadians: ${nutationDpsiUncertaintyRadians}, nutationDepsUncertaintyRadians: ${nutationDepsUncertaintyRadians}}';
   }
 }
 
@@ -250,7 +265,7 @@ class EOPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(26);
+    fbBuilder.startTable(30);
   }
 
   int addDateOffset(int? offset) {
@@ -357,6 +372,22 @@ class EOPBuilder {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
+  int addNutationDpsiRadians(double? NUTATION_DPSI_RADIANS) {
+    fbBuilder.addFloat64(26, NUTATION_DPSI_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDepsRadians(double? NUTATION_DEPS_RADIANS) {
+    fbBuilder.addFloat64(27, NUTATION_DEPS_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDpsiUncertaintyRadians(double? NUTATION_DPSI_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat64(28, NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDepsUncertaintyRadians(double? NUTATION_DEPS_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat64(29, NUTATION_DEPS_UNCERTAINTY_RADIANS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -390,6 +421,10 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
   final double? _LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
   final String? _DATA_SET_EPOCH;
   final String? _DATA_SET_CID;
+  final double? _NUTATION_DPSI_RADIANS;
+  final double? _NUTATION_DEPS_RADIANS;
+  final double? _NUTATION_DPSI_UNCERTAINTY_RADIANS;
+  final double? _NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
   EOPObjectBuilder({
     String? DATE,
@@ -441,6 +476,14 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
     String? dataSetEpoch,
     String? DATA_SET_CID,
     String? dataSetCid,
+    double? NUTATION_DPSI_RADIANS,
+    double? nutationDpsiRadians,
+    double? NUTATION_DEPS_RADIANS,
+    double? nutationDepsRadians,
+    double? NUTATION_DPSI_UNCERTAINTY_RADIANS,
+    double? nutationDpsiUncertaintyRadians,
+    double? NUTATION_DEPS_UNCERTAINTY_RADIANS,
+    double? nutationDepsUncertaintyRadians,
   })
       : _DATE = DATE,
         _MJD = MJD,
@@ -467,7 +510,11 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
         _UT1_MINUS_UTC_SECONDS_HP = ut1MinusUtcSecondsHp ?? UT1_MINUS_UTC_SECONDS_HP,
         _LENGTH_OF_DAY_CORRECTION_SECONDS_HP = lengthOfDayCorrectionSecondsHp ?? LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
         _DATA_SET_EPOCH = dataSetEpoch ?? DATA_SET_EPOCH,
-        _DATA_SET_CID = dataSetCid ?? DATA_SET_CID;
+        _DATA_SET_CID = dataSetCid ?? DATA_SET_CID,
+        _NUTATION_DPSI_RADIANS = nutationDpsiRadians ?? NUTATION_DPSI_RADIANS,
+        _NUTATION_DEPS_RADIANS = nutationDepsRadians ?? NUTATION_DEPS_RADIANS,
+        _NUTATION_DPSI_UNCERTAINTY_RADIANS = nutationDpsiUncertaintyRadians ?? NUTATION_DPSI_UNCERTAINTY_RADIANS,
+        _NUTATION_DEPS_UNCERTAINTY_RADIANS = nutationDepsUncertaintyRadians ?? NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -478,7 +525,7 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DATA_SET_EPOCH!);
     final int? DATA_SET_CIDOffset = _DATA_SET_CID == null ? null
         : fbBuilder.writeString(_DATA_SET_CID!);
-    fbBuilder.startTable(26);
+    fbBuilder.startTable(30);
     fbBuilder.addOffset(0, DATEOffset);
     fbBuilder.addUint32(1, _MJD);
     fbBuilder.addFloat32(2, _X_POLE_WANDER_RADIANS);
@@ -505,6 +552,10 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(23, _LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
     fbBuilder.addOffset(24, DATA_SET_EPOCHOffset);
     fbBuilder.addOffset(25, DATA_SET_CIDOffset);
+    fbBuilder.addFloat64(26, _NUTATION_DPSI_RADIANS);
+    fbBuilder.addFloat64(27, _NUTATION_DEPS_RADIANS);
+    fbBuilder.addFloat64(28, _NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat64(29, _NUTATION_DEPS_UNCERTAINTY_RADIANS);
     return fbBuilder.endTable();
   }
 

@@ -128,13 +128,28 @@ class EOP : flatbuffers.handle
     /// the source is provable rather than assumed.
     def DATA_SET_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 54)
+    /// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+    /// radians, as published beside the CIP offsets by combined rapid-service
+    /// series.
+    def NUTATION_DPSI_RADIANS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+    /// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+    /// radians.
+    def NUTATION_DEPS_RADIANS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
+    /// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+    def NUTATION_DPSI_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
+    /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+    def NUTATION_DEPS_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
 
 def GetRootAsEOP(buf:string): return EOP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(26)
+        b_.StartObject(30)
         return this
     def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
@@ -213,6 +228,18 @@ struct EOPBuilder:
         return this
     def add_DATA_SET_CID(DATA_SET_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(25, DATA_SET_CID)
+        return this
+    def add_NUTATION_DPSI_RADIANS(NUTATION_DPSI_RADIANS:float):
+        b_.PrependFloat64Slot(26, NUTATION_DPSI_RADIANS, 0.0)
+        return this
+    def add_NUTATION_DEPS_RADIANS(NUTATION_DEPS_RADIANS:float):
+        b_.PrependFloat64Slot(27, NUTATION_DEPS_RADIANS, 0.0)
+        return this
+    def add_NUTATION_DPSI_UNCERTAINTY_RADIANS(NUTATION_DPSI_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat64Slot(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_NUTATION_DEPS_UNCERTAINTY_RADIANS(NUTATION_DEPS_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat64Slot(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0)
         return this
     def end():
         return b_.EndObject()

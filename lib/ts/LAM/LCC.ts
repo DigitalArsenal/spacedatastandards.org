@@ -37,12 +37,80 @@ OWNER():legacyCountryCode {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : legacyCountryCode.AB;
 }
 
+/**
+ * Display name of the owner or source the code stands for.
+ */
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Longer description of the owner or source.
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True while the code is in current use by the publishing catalogue.
+ */
+ACTIVE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * URL of the reference table the row was retrieved from.
+ */
+SOURCE_URL():string|null
+SOURCE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ISO 8601 UTC time the reference table was retrieved.
+ */
+RETRIEVED_AT():string|null
+RETRIEVED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RETRIEVED_AT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startLCC(builder:flatbuffers.Builder) {
-  builder.startObject(1);
+  builder.startObject(6);
 }
 
 static addOwner(builder:flatbuffers.Builder, OWNER:legacyCountryCode) {
   builder.addFieldInt8(0, OWNER, legacyCountryCode.AB);
+}
+
+static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, NAMEOffset, 0);
+}
+
+static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, DESCRIPTIONOffset, 0);
+}
+
+static addActive(builder:flatbuffers.Builder, ACTIVE:boolean) {
+  builder.addFieldInt8(3, +ACTIVE, +false);
+}
+
+static addSourceUrl(builder:flatbuffers.Builder, SOURCE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, SOURCE_URLOffset, 0);
+}
+
+static addRetrievedAt(builder:flatbuffers.Builder, RETRIEVED_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, RETRIEVED_ATOffset, 0);
 }
 
 static endLCC(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -58,33 +126,63 @@ static finishSizePrefixedLCCBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LCC', true);
 }
 
-static createLCC(builder:flatbuffers.Builder, OWNER:legacyCountryCode):flatbuffers.Offset {
+static createLCC(builder:flatbuffers.Builder, OWNER:legacyCountryCode, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, ACTIVE:boolean, SOURCE_URLOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset):flatbuffers.Offset {
   LCC.startLCC(builder);
   LCC.addOwner(builder, OWNER);
+  LCC.addName(builder, NAMEOffset);
+  LCC.addDescription(builder, DESCRIPTIONOffset);
+  LCC.addActive(builder, ACTIVE);
+  LCC.addSourceUrl(builder, SOURCE_URLOffset);
+  LCC.addRetrievedAt(builder, RETRIEVED_ATOffset);
   return LCC.endLCC(builder);
 }
 
 unpack(): LCCT {
   return new LCCT(
-    this.OWNER()
+    this.OWNER(),
+    this.NAME(),
+    this.DESCRIPTION(),
+    this.ACTIVE(),
+    this.SOURCE_URL(),
+    this.RETRIEVED_AT()
   );
 }
 
 
 unpackTo(_o: LCCT): void {
   _o.OWNER = this.OWNER();
+  _o.NAME = this.NAME();
+  _o.DESCRIPTION = this.DESCRIPTION();
+  _o.ACTIVE = this.ACTIVE();
+  _o.SOURCE_URL = this.SOURCE_URL();
+  _o.RETRIEVED_AT = this.RETRIEVED_AT();
 }
 }
 
 export class LCCT implements flatbuffers.IGeneratedObject {
 constructor(
-  public OWNER: legacyCountryCode = legacyCountryCode.AB
+  public OWNER: legacyCountryCode = legacyCountryCode.AB,
+  public NAME: string|Uint8Array|null = null,
+  public DESCRIPTION: string|Uint8Array|null = null,
+  public ACTIVE: boolean = false,
+  public SOURCE_URL: string|Uint8Array|null = null,
+  public RETRIEVED_AT: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
+  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
+  const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
+  const SOURCE_URL = (this.SOURCE_URL !== null ? builder.createString(this.SOURCE_URL!) : 0);
+  const RETRIEVED_AT = (this.RETRIEVED_AT !== null ? builder.createString(this.RETRIEVED_AT!) : 0);
+
   return LCC.createLCC(builder,
-    this.OWNER
+    this.OWNER,
+    NAME,
+    DESCRIPTION,
+    this.ACTIVE,
+    SOURCE_URL,
+    RETRIEVED_AT
   );
 }
 }

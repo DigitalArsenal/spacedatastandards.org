@@ -200,8 +200,138 @@ func (rcv *SRI) MutateReserved(j int, n byte) bool {
 	return rcv.MutateRESERVED(j, n)
 }
 
+/// Content identifier of the record bytes.
+func (rcv *SRI) CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SRI) Cid() []byte {
+	return rcv.CID()
+}
+
+/// Content identifier of the record bytes.
+/// Byte offset of the record frame within its export or archive stream.
+func (rcv *SRI) BYTE_OFFSET() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SRI) ByteOffset() uint64 {
+	return rcv.BYTE_OFFSET()
+}
+
+/// Byte offset of the record frame within its export or archive stream.
+func (rcv *SRI) MutateBYTE_OFFSET(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(20, n)
+}
+
+func (rcv *SRI) MutateByteOffset(n uint64) bool {
+	return rcv.MutateBYTE_OFFSET(n)
+}
+
+/// Byte length of the record frame.
+func (rcv *SRI) BYTE_LENGTH() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SRI) ByteLength() uint32 {
+	return rcv.BYTE_LENGTH()
+}
+
+/// Byte length of the record frame.
+func (rcv *SRI) MutateBYTE_LENGTH(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(22, n)
+}
+
+func (rcv *SRI) MutateByteLength(n uint32) bool {
+	return rcv.MutateBYTE_LENGTH(n)
+}
+
+/// Epoch of the record, Unix milliseconds; 0 = none.
+func (rcv *SRI) EPOCH_MS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SRI) EpochMs() uint64 {
+	return rcv.EPOCH_MS()
+}
+
+/// Epoch of the record, Unix milliseconds; 0 = none.
+func (rcv *SRI) MutateEPOCH_MS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(24, n)
+}
+
+func (rcv *SRI) MutateEpochMs(n uint64) bool {
+	return rcv.MutateEPOCH_MS(n)
+}
+
+/// Entity key of the record within its standard, e.g. a catalogue number.
+func (rcv *SRI) ENTITY_KEY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SRI) EntityKey() []byte {
+	return rcv.ENTITY_KEY()
+}
+
+/// Entity key of the record within its standard, e.g. a catalogue number.
+func (rcv *SRI) PROVIDER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SRI) ProviderId() []byte {
+	return rcv.PROVIDER_ID()
+}
+
+func (rcv *SRI) SOURCE_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SRI) SourceName() []byte {
+	return rcv.SOURCE_NAME()
+}
+
+func (rcv *SRI) BATCH_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SRI) BatchId() []byte {
+	return rcv.BATCH_ID()
+}
+
 func SRIStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(15)
 }
 func SRIAddRECORD_KEY(builder *flatbuffers.Builder, RECORD_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RECORD_KEY), 0)
@@ -250,6 +380,54 @@ func SRIStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuff
 }
 func SRIStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SRIStartRESERVEDVector(builder, numElems)
+}
+func SRIAddCID(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CID), 0)
+}
+func SRIAddCid(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
+	SRIAddCID(builder, CID)
+}
+func SRIAddBYTE_OFFSET(builder *flatbuffers.Builder, BYTE_OFFSET uint64) {
+	builder.PrependUint64Slot(8, BYTE_OFFSET, 0)
+}
+func SRIAddByteOffset(builder *flatbuffers.Builder, BYTE_OFFSET uint64) {
+	SRIAddBYTE_OFFSET(builder, BYTE_OFFSET)
+}
+func SRIAddBYTE_LENGTH(builder *flatbuffers.Builder, BYTE_LENGTH uint32) {
+	builder.PrependUint32Slot(9, BYTE_LENGTH, 0)
+}
+func SRIAddByteLength(builder *flatbuffers.Builder, BYTE_LENGTH uint32) {
+	SRIAddBYTE_LENGTH(builder, BYTE_LENGTH)
+}
+func SRIAddEPOCH_MS(builder *flatbuffers.Builder, EPOCH_MS uint64) {
+	builder.PrependUint64Slot(10, EPOCH_MS, 0)
+}
+func SRIAddEpochMs(builder *flatbuffers.Builder, EPOCH_MS uint64) {
+	SRIAddEPOCH_MS(builder, EPOCH_MS)
+}
+func SRIAddENTITY_KEY(builder *flatbuffers.Builder, ENTITY_KEY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ENTITY_KEY), 0)
+}
+func SRIAddEntityKey(builder *flatbuffers.Builder, ENTITY_KEY flatbuffers.UOffsetT) {
+	SRIAddENTITY_KEY(builder, ENTITY_KEY)
+}
+func SRIAddPROVIDER_ID(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(PROVIDER_ID), 0)
+}
+func SRIAddProviderId(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	SRIAddPROVIDER_ID(builder, PROVIDER_ID)
+}
+func SRIAddSOURCE_NAME(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SOURCE_NAME), 0)
+}
+func SRIAddSourceName(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	SRIAddSOURCE_NAME(builder, SOURCE_NAME)
+}
+func SRIAddBATCH_ID(builder *flatbuffers.Builder, BATCH_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(BATCH_ID), 0)
+}
+func SRIAddBatchId(builder *flatbuffers.Builder, BATCH_ID flatbuffers.UOffsetT) {
+	SRIAddBATCH_ID(builder, BATCH_ID)
 }
 func SRIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

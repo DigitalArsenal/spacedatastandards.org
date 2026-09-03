@@ -109,8 +109,73 @@ reservedArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Content identifier of the record bytes.
+ */
+CID():string|null
+CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Byte offset of the record frame within its export or archive stream.
+ */
+BYTE_OFFSET():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Byte length of the record frame.
+ */
+BYTE_LENGTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Epoch of the record, Unix milliseconds; 0 = none.
+ */
+EPOCH_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Entity key of the record within its standard, e.g. a catalogue number.
+ */
+ENTITY_KEY():string|null
+ENTITY_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ENTITY_KEY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+PROVIDER_ID():string|null
+PROVIDER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+SOURCE_NAME():string|null
+SOURCE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+BATCH_ID():string|null
+BATCH_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BATCH_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSRI(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(15);
 }
 
 static addRecordKey(builder:flatbuffers.Builder, RECORD_KEYOffset:flatbuffers.Offset) {
@@ -153,6 +218,38 @@ static startReservedVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addCid(builder:flatbuffers.Builder, CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, CIDOffset, 0);
+}
+
+static addByteOffset(builder:flatbuffers.Builder, BYTE_OFFSET:bigint) {
+  builder.addFieldInt64(8, BYTE_OFFSET, BigInt('0'));
+}
+
+static addByteLength(builder:flatbuffers.Builder, BYTE_LENGTH:number) {
+  builder.addFieldInt32(9, BYTE_LENGTH, 0);
+}
+
+static addEpochMs(builder:flatbuffers.Builder, EPOCH_MS:bigint) {
+  builder.addFieldInt64(10, EPOCH_MS, BigInt('0'));
+}
+
+static addEntityKey(builder:flatbuffers.Builder, ENTITY_KEYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, ENTITY_KEYOffset, 0);
+}
+
+static addProviderId(builder:flatbuffers.Builder, PROVIDER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, PROVIDER_IDOffset, 0);
+}
+
+static addSourceName(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, SOURCE_NAMEOffset, 0);
+}
+
+static addBatchId(builder:flatbuffers.Builder, BATCH_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, BATCH_IDOffset, 0);
+}
+
 static endSRI(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -166,7 +263,7 @@ static finishSizePrefixedSRIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SRI', true);
 }
 
-static createSRI(builder:flatbuffers.Builder, RECORD_KEYOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, ATTACHED_VIAOffset:flatbuffers.Offset, PAYLOAD_KINDOffset:flatbuffers.Offset, UPDATED_AT_MS:number, RESERVEDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSRI(builder:flatbuffers.Builder, RECORD_KEYOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, ATTACHED_VIAOffset:flatbuffers.Offset, PAYLOAD_KINDOffset:flatbuffers.Offset, UPDATED_AT_MS:number, RESERVEDOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, BYTE_OFFSET:bigint, BYTE_LENGTH:number, EPOCH_MS:bigint, ENTITY_KEYOffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, BATCH_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   SRI.startSRI(builder);
   SRI.addRecordKey(builder, RECORD_KEYOffset);
   SRI.addSchemaName(builder, SCHEMA_NAMEOffset);
@@ -175,6 +272,14 @@ static createSRI(builder:flatbuffers.Builder, RECORD_KEYOffset:flatbuffers.Offse
   SRI.addPayloadKind(builder, PAYLOAD_KINDOffset);
   SRI.addUpdatedAtMs(builder, UPDATED_AT_MS);
   SRI.addReserved(builder, RESERVEDOffset);
+  SRI.addCid(builder, CIDOffset);
+  SRI.addByteOffset(builder, BYTE_OFFSET);
+  SRI.addByteLength(builder, BYTE_LENGTH);
+  SRI.addEpochMs(builder, EPOCH_MS);
+  SRI.addEntityKey(builder, ENTITY_KEYOffset);
+  SRI.addProviderId(builder, PROVIDER_IDOffset);
+  SRI.addSourceName(builder, SOURCE_NAMEOffset);
+  SRI.addBatchId(builder, BATCH_IDOffset);
   return SRI.endSRI(builder);
 }
 
@@ -186,7 +291,15 @@ unpack(): SRIT {
     this.ATTACHED_VIA(),
     this.PAYLOAD_KIND(),
     this.UPDATED_AT_MS(),
-    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength())
+    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength()),
+    this.CID(),
+    this.BYTE_OFFSET(),
+    this.BYTE_LENGTH(),
+    this.EPOCH_MS(),
+    this.ENTITY_KEY(),
+    this.PROVIDER_ID(),
+    this.SOURCE_NAME(),
+    this.BATCH_ID()
   );
 }
 
@@ -199,6 +312,14 @@ unpackTo(_o: SRIT): void {
   _o.PAYLOAD_KIND = this.PAYLOAD_KIND();
   _o.UPDATED_AT_MS = this.UPDATED_AT_MS();
   _o.RESERVED = this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength());
+  _o.CID = this.CID();
+  _o.BYTE_OFFSET = this.BYTE_OFFSET();
+  _o.BYTE_LENGTH = this.BYTE_LENGTH();
+  _o.EPOCH_MS = this.EPOCH_MS();
+  _o.ENTITY_KEY = this.ENTITY_KEY();
+  _o.PROVIDER_ID = this.PROVIDER_ID();
+  _o.SOURCE_NAME = this.SOURCE_NAME();
+  _o.BATCH_ID = this.BATCH_ID();
 }
 }
 
@@ -210,7 +331,15 @@ constructor(
   public ATTACHED_VIA: string|Uint8Array|null = null,
   public PAYLOAD_KIND: string|Uint8Array|null = null,
   public UPDATED_AT_MS: number = 0.0,
-  public RESERVED: (number)[] = []
+  public RESERVED: (number)[] = [],
+  public CID: string|Uint8Array|null = null,
+  public BYTE_OFFSET: bigint = BigInt('0'),
+  public BYTE_LENGTH: number = 0,
+  public EPOCH_MS: bigint = BigInt('0'),
+  public ENTITY_KEY: string|Uint8Array|null = null,
+  public PROVIDER_ID: string|Uint8Array|null = null,
+  public SOURCE_NAME: string|Uint8Array|null = null,
+  public BATCH_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -221,6 +350,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ATTACHED_VIA = (this.ATTACHED_VIA !== null ? builder.createString(this.ATTACHED_VIA!) : 0);
   const PAYLOAD_KIND = (this.PAYLOAD_KIND !== null ? builder.createString(this.PAYLOAD_KIND!) : 0);
   const RESERVED = SRI.createReservedVector(builder, this.RESERVED);
+  const CID = (this.CID !== null ? builder.createString(this.CID!) : 0);
+  const ENTITY_KEY = (this.ENTITY_KEY !== null ? builder.createString(this.ENTITY_KEY!) : 0);
+  const PROVIDER_ID = (this.PROVIDER_ID !== null ? builder.createString(this.PROVIDER_ID!) : 0);
+  const SOURCE_NAME = (this.SOURCE_NAME !== null ? builder.createString(this.SOURCE_NAME!) : 0);
+  const BATCH_ID = (this.BATCH_ID !== null ? builder.createString(this.BATCH_ID!) : 0);
 
   return SRI.createSRI(builder,
     RECORD_KEY,
@@ -229,7 +363,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ATTACHED_VIA,
     PAYLOAD_KIND,
     this.UPDATED_AT_MS,
-    RESERVED
+    RESERVED,
+    CID,
+    this.BYTE_OFFSET,
+    this.BYTE_LENGTH,
+    this.EPOCH_MS,
+    ENTITY_KEY,
+    PROVIDER_ID,
+    SOURCE_NAME,
+    BATCH_ID
   );
 }
 }

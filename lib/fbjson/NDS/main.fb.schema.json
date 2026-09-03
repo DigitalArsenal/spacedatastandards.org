@@ -1,0 +1,467 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ndsPublisherRung": {
+      "type": "string",
+      "enum": [
+        "SourceTag",
+        "Signed",
+        "Bonded"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SourceTag": {
+          "value": 0,
+          "description": "Only a source tag string is known; nothing has been verified."
+        },
+        "Signed": {
+          "value": 1,
+          "description": "The producer's signed identity record verifies in this node's directory."
+        },
+        "Bonded": {
+          "value": 2,
+          "description": "The producer additionally carries a verified domain proof."
+        }
+      }
+    },
+    "ndsIngestEventKind": {
+      "type": "string",
+      "enum": [
+        "Stall",
+        "Reject",
+        "Recover"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Stall": {
+          "value": 0
+        },
+        "Reject": {
+          "value": 1
+        },
+        "Recover": {
+          "value": 2
+        }
+      }
+    },
+    "NDSSchemaStat": {
+      "type": "object",
+      "description": "One standard's record footprint in the node store.",
+      "properties": {
+        "SCHEMA": {
+          "type": "string",
+          "description": "Standard code, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORD_COUNT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "NEWEST_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Newest record epoch held, Unix milliseconds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "OLDEST_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Oldest record epoch held, Unix milliseconds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDSSourceStat": {
+      "type": "object",
+      "description": "One (standard, provider, source, batch) ingest lane's live progress and\nprovenance.",
+      "properties": {
+        "SCHEMA": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BATCH_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORD_COUNT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "FIRST_INGEST_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "LAST_INGEST_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WINDOW_RECORDS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Records observed in the current rolling window.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PRIOR_WINDOW_RECORDS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Records observed in the immediately preceding rolling window.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WINDOW_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Rolling-window width in milliseconds.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PRODUCER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the producer whose signed identity covers this lane's\npublications.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER_EPM_CID": {
+          "type": "string",
+          "description": "Content identifier of the producer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Upstream publisher the producer retrieved the records from, as a host\nname or stable identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_NAME": {
+          "type": "string",
+          "description": "Display name of the upstream publisher.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Upstream URL the records were retrieved from.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Licence under which the upstream publisher offers the records.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONNECTOR_ID": {
+          "type": "string",
+          "description": "Ingest connector that produced this lane (`$ICN` CONNECTOR_ID).",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLISHER_RUNG": {
+          "$ref": "#/definitions/ndsPublisherRung",
+          "description": "Verification rung of the producer claim.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SourceTag": {
+              "value": 0,
+              "description": "Only a source tag string is known; nothing has been verified."
+            },
+            "Signed": {
+              "value": 1,
+              "description": "The producer's signed identity record verifies in this node's directory."
+            },
+            "Bonded": {
+              "value": 2,
+              "description": "The producer additionally carries a verified domain proof."
+            }
+          },
+          "x-flatbuffer-default": "SourceTag"
+        },
+        "EVIDENCE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Evidence references supporting PUBLISHER_RUNG (record CIDs, proof ids).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LAST_PUBLICATION_CID": {
+          "type": "string",
+          "description": "Content identifier of the lane's newest publication manifest.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_PNM_CID": {
+          "type": "string",
+          "description": "Content identifier of the lane's newest publish notification.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDSIngestEvent": {
+      "type": "object",
+      "description": "One source-ingest transition surfaced to the dashboard.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/ndsIngestEventKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Stall": {
+              "value": 0
+            },
+            "Reject": {
+              "value": 1
+            },
+            "Recover": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "Stall"
+        },
+        "SCHEMA": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds when the transition occurred.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDSTopicStat": {
+      "type": "object",
+      "description": "Live traffic for one publish/subscribe topic.",
+      "properties": {
+        "TOPIC": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RATE_PER_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAST_SEEN_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = not observed.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SUBSCRIBED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDSModuleStat": {
+      "type": "object",
+      "description": "Runtime counters for one installed module or flow.",
+      "properties": {
+        "MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Runtime state, e.g. \"running\", \"installed\", \"error\".",
+          "x-flatbuffer-type": "string"
+        },
+        "RUN_COUNT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "ERROR_COUNT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "LAST_RUN_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = never.",
+          "x-flatbuffer-type": "int64"
+        },
+        "NEXT_RUN_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = not scheduled.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDSTrustEngineStat": {
+      "type": "object",
+      "description": "Counters for the node's trust rule evaluation engine.",
+      "properties": {
+        "MIN_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Minimum interval between evaluation passes, milliseconds.",
+          "x-flatbuffer-type": "int64"
+        },
+        "RUNS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "LAST_RUN_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds; 0 = never.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NDS": {
+      "type": "object",
+      "description": "Node Data Statistics - one node's data-plane snapshot.",
+      "properties": {
+        "GENERATED_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds when this snapshot was assembled.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SCHEMAS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NDSSchemaStat"
+          },
+          "x-flatbuffer-type": "[NDSSchemaStat]"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NDSSourceStat"
+          },
+          "x-flatbuffer-type": "[NDSSourceStat]"
+        },
+        "TOTAL_RECORDS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "STALE": {
+          "type": "boolean",
+          "description": "True when the assembling read hit its store budget and this snapshot\ncarries the last-known-good numbers.",
+          "x-flatbuffer-type": "bool"
+        },
+        "AS_OF": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds the store numbers were last true; 0 = never read.",
+          "x-flatbuffer-type": "int64"
+        },
+        "EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NDSIngestEvent"
+          },
+          "x-flatbuffer-type": "[NDSIngestEvent]"
+        },
+        "TOPICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NDSTopicStat"
+          },
+          "x-flatbuffer-type": "[NDSTopicStat]"
+        },
+        "MODULES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NDSModuleStat"
+          },
+          "x-flatbuffer-type": "[NDSModuleStat]"
+        },
+        "TRUST_ENGINE": {
+          "$ref": "#/definitions/NDSTrustEngineStat",
+          "x-flatbuffer-type": "NDSTrustEngineStat"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/NDS",
+  "x-flatbuffer-root-type": "NDS",
+  "x-flatbuffer-file-identifier": "$NDS"
+}

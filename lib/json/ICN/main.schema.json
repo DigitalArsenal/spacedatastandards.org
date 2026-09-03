@@ -136,6 +136,97 @@
         "PROVIDER_SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Provider signature over the connector record."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher the connector retrieves records from, as a host name\nor stable identifier."
+              },
+        "ORIGIN_NAME" : {
+                "type" : "string",
+                "description" : "Display name of the upstream publisher."
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier within the origin, e.g. \"gp-full-catalog\"."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Provider identifier the lane's records are stored under."
+              },
+        "SOURCE_NAME" : {
+                "type" : "string",
+                "description" : "Source name the lane's records are stored under."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence under which the upstream publisher offers the records."
+              },
+        "LICENSE_URL" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Citation the upstream publisher asks for."
+              },
+        "MIN_FETCH_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum interval between fetches of the same dataset, milliseconds."
+              },
+        "NEXT_ELIGIBLE_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds when the next fetch is eligible."
+              },
+        "LAST_HTTP_STATUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "HTTP status of the last fetch."
+              },
+        "LAST_SOURCE_ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag returned by the last fetch."
+              },
+        "LAST_SOURCE_LAST_MODIFIED" : {
+                "type" : "string",
+                "description" : "Last-Modified value returned by the last fetch."
+              },
+        "LAST_BATCH_ID" : {
+                "type" : "string",
+                "description" : "Batch identifier of the last ingest."
+              },
+        "LAST_RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records parsed by the last ingest."
+              },
+        "LAST_INSERTED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records newly inserted by the last ingest."
+              },
+        "LAST_DURATION_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Duration of the last fetch and ingest, milliseconds."
+              },
+        "FETCH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Fetches attempted over the connector's lifetime."
+              },
+        "INGEST_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Ingests completed over the connector's lifetime."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the last publication manifest emitted."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the last publish notification emitted."
+              },
+        "FEED_HEAD" : {
+                "type" : "string",
+                "description" : "Feed head the connector last advanced to."
+              },
+        "EMITS_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Standard codes the connector emits, e.g. [\"OMM\", \"MPE\"]."
               }
       },
       "required" : ["CONNECTOR_ID"],

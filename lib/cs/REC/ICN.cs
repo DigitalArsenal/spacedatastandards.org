@@ -169,6 +169,137 @@ public struct ICN : IFlatbufferObject
   public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
   public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(60); }
+  /// Upstream publisher the connector retrieves records from, as a host name
+  /// or stable identifier.
+  public string ORIGIN_ID { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGIN_IDBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetORIGIN_IDBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetORIGIN_IDArray() { return __p.__vector_as_array<byte>(62); }
+  /// Display name of the upstream publisher.
+  public string ORIGIN_NAME { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGIN_NAMEBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetORIGIN_NAMEBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetORIGIN_NAMEArray() { return __p.__vector_as_array<byte>(64); }
+  /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  public string DATASET_ID { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATASET_IDBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetDATASET_IDBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetDATASET_IDArray() { return __p.__vector_as_array<byte>(66); }
+  /// Provider identifier the lane's records are stored under.
+  public string PROVIDER_ID { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_IDBytes() { return __p.__vector_as_span<byte>(68, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_IDBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public byte[] GetPROVIDER_IDArray() { return __p.__vector_as_array<byte>(68); }
+  /// Source name the lane's records are stored under.
+  public string SOURCE_NAME { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_NAMEBytes() { return __p.__vector_as_span<byte>(70, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_NAMEBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public byte[] GetSOURCE_NAMEArray() { return __p.__vector_as_array<byte>(70); }
+  /// Licence under which the upstream publisher offers the records.
+  public string LICENSE { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(72, 1); }
+#else
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(72); }
+  public string LICENSE_URL { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLICENSE_URLBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetLICENSE_URLBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetLICENSE_URLArray() { return __p.__vector_as_array<byte>(74); }
+  /// Citation the upstream publisher asks for.
+  public string CITATION { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCITATIONBytes() { return __p.__vector_as_span<byte>(76, 1); }
+#else
+  public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(76); }
+#endif
+  public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(76); }
+  /// Minimum interval between fetches of the same dataset, milliseconds.
+  public ulong MIN_FETCH_INTERVAL_MS { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix milliseconds when the next fetch is eligible.
+  public ulong NEXT_ELIGIBLE_AT { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// HTTP status of the last fetch.
+  public ushort LAST_HTTP_STATUS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Entity tag returned by the last fetch.
+  public string LAST_SOURCE_ETAG { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_SOURCE_ETAGBytes() { return __p.__vector_as_span<byte>(84, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_SOURCE_ETAGBytes() { return __p.__vector_as_arraysegment(84); }
+#endif
+  public byte[] GetLAST_SOURCE_ETAGArray() { return __p.__vector_as_array<byte>(84); }
+  /// Last-Modified value returned by the last fetch.
+  public string LAST_SOURCE_LAST_MODIFIED { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_SOURCE_LAST_MODIFIEDBytes() { return __p.__vector_as_span<byte>(86, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_SOURCE_LAST_MODIFIEDBytes() { return __p.__vector_as_arraysegment(86); }
+#endif
+  public byte[] GetLAST_SOURCE_LAST_MODIFIEDArray() { return __p.__vector_as_array<byte>(86); }
+  /// Batch identifier of the last ingest.
+  public string LAST_BATCH_ID { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_BATCH_IDBytes() { return __p.__vector_as_span<byte>(88, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_BATCH_IDBytes() { return __p.__vector_as_arraysegment(88); }
+#endif
+  public byte[] GetLAST_BATCH_IDArray() { return __p.__vector_as_array<byte>(88); }
+  /// Records parsed by the last ingest.
+  public ulong LAST_RECORD_COUNT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Records newly inserted by the last ingest.
+  public ulong LAST_INSERTED_COUNT { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Duration of the last fetch and ingest, milliseconds.
+  public ulong LAST_DURATION_MS { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Fetches attempted over the connector's lifetime.
+  public ulong FETCH_COUNT { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Ingests completed over the connector's lifetime.
+  public ulong INGEST_COUNT { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Content identifier of the last publication manifest emitted.
+  public string LAST_PUBLICATION_CID { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_PUBLICATION_CIDBytes() { return __p.__vector_as_span<byte>(100, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_PUBLICATION_CIDBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public byte[] GetLAST_PUBLICATION_CIDArray() { return __p.__vector_as_array<byte>(100); }
+  /// Content identifier of the last publish notification emitted.
+  public string LAST_PNM_CID { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_PNM_CIDBytes() { return __p.__vector_as_span<byte>(102, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_PNM_CIDBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public byte[] GetLAST_PNM_CIDArray() { return __p.__vector_as_array<byte>(102); }
+  /// Feed head the connector last advanced to.
+  public string FEED_HEAD { get { int o = __p.__offset(104); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFEED_HEADBytes() { return __p.__vector_as_span<byte>(104, 1); }
+#else
+  public ArraySegment<byte>? GetFEED_HEADBytes() { return __p.__vector_as_arraysegment(104); }
+#endif
+  public byte[] GetFEED_HEADArray() { return __p.__vector_as_array<byte>(104); }
+  /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  public string EMITS_SCHEMAS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int EMITS_SCHEMASLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ICN> CreateICN(FlatBufferBuilder builder,
       StringOffset CONNECTOR_IDOffset = default(StringOffset),
@@ -199,13 +330,58 @@ public struct ICN : IFlatbufferObject
       ulong CREATED_AT = 0,
       ulong UPDATED_AT = 0,
       StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
-      VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(29);
+      VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset),
+      StringOffset ORIGIN_IDOffset = default(StringOffset),
+      StringOffset ORIGIN_NAMEOffset = default(StringOffset),
+      StringOffset DATASET_IDOffset = default(StringOffset),
+      StringOffset PROVIDER_IDOffset = default(StringOffset),
+      StringOffset SOURCE_NAMEOffset = default(StringOffset),
+      StringOffset LICENSEOffset = default(StringOffset),
+      StringOffset LICENSE_URLOffset = default(StringOffset),
+      StringOffset CITATIONOffset = default(StringOffset),
+      ulong MIN_FETCH_INTERVAL_MS = 0,
+      ulong NEXT_ELIGIBLE_AT = 0,
+      ushort LAST_HTTP_STATUS = 0,
+      StringOffset LAST_SOURCE_ETAGOffset = default(StringOffset),
+      StringOffset LAST_SOURCE_LAST_MODIFIEDOffset = default(StringOffset),
+      StringOffset LAST_BATCH_IDOffset = default(StringOffset),
+      ulong LAST_RECORD_COUNT = 0,
+      ulong LAST_INSERTED_COUNT = 0,
+      ulong LAST_DURATION_MS = 0,
+      ulong FETCH_COUNT = 0,
+      ulong INGEST_COUNT = 0,
+      StringOffset LAST_PUBLICATION_CIDOffset = default(StringOffset),
+      StringOffset LAST_PNM_CIDOffset = default(StringOffset),
+      StringOffset FEED_HEADOffset = default(StringOffset),
+      VectorOffset EMITS_SCHEMASOffset = default(VectorOffset)) {
+    builder.StartTable(52);
+    ICN.AddINGEST_COUNT(builder, INGEST_COUNT);
+    ICN.AddFETCH_COUNT(builder, FETCH_COUNT);
+    ICN.AddLAST_DURATION_MS(builder, LAST_DURATION_MS);
+    ICN.AddLAST_INSERTED_COUNT(builder, LAST_INSERTED_COUNT);
+    ICN.AddLAST_RECORD_COUNT(builder, LAST_RECORD_COUNT);
+    ICN.AddNEXT_ELIGIBLE_AT(builder, NEXT_ELIGIBLE_AT);
+    ICN.AddMIN_FETCH_INTERVAL_MS(builder, MIN_FETCH_INTERVAL_MS);
     ICN.AddUPDATED_AT(builder, UPDATED_AT);
     ICN.AddCREATED_AT(builder, CREATED_AT);
     ICN.AddLAST_ERROR_AT(builder, LAST_ERROR_AT);
     ICN.AddLAST_INGEST_AT(builder, LAST_INGEST_AT);
     ICN.AddUPLOAD_TOTAL_BYTES(builder, UPLOAD_TOTAL_BYTES);
+    ICN.AddEMITS_SCHEMAS(builder, EMITS_SCHEMASOffset);
+    ICN.AddFEED_HEAD(builder, FEED_HEADOffset);
+    ICN.AddLAST_PNM_CID(builder, LAST_PNM_CIDOffset);
+    ICN.AddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CIDOffset);
+    ICN.AddLAST_BATCH_ID(builder, LAST_BATCH_IDOffset);
+    ICN.AddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIEDOffset);
+    ICN.AddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAGOffset);
+    ICN.AddCITATION(builder, CITATIONOffset);
+    ICN.AddLICENSE_URL(builder, LICENSE_URLOffset);
+    ICN.AddLICENSE(builder, LICENSEOffset);
+    ICN.AddSOURCE_NAME(builder, SOURCE_NAMEOffset);
+    ICN.AddPROVIDER_ID(builder, PROVIDER_IDOffset);
+    ICN.AddDATASET_ID(builder, DATASET_IDOffset);
+    ICN.AddORIGIN_NAME(builder, ORIGIN_NAMEOffset);
+    ICN.AddORIGIN_ID(builder, ORIGIN_IDOffset);
     ICN.AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset);
     ICN.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
     ICN.AddLAST_ERROR(builder, LAST_ERROROffset);
@@ -226,6 +402,7 @@ public struct ICN : IFlatbufferObject
     ICN.AddSTATUS_MESSAGE(builder, STATUS_MESSAGEOffset);
     ICN.AddTARGET_SCHEMA(builder, TARGET_SCHEMAOffset);
     ICN.AddCONNECTOR_ID(builder, CONNECTOR_IDOffset);
+    ICN.AddLAST_HTTP_STATUS(builder, LAST_HTTP_STATUS);
     ICN.AddPOST_INGEST_ACTION(builder, POST_INGEST_ACTION);
     ICN.AddAUTH_KIND(builder, AUTH_KIND);
     ICN.AddSTATUS(builder, STATUS);
@@ -233,7 +410,7 @@ public struct ICN : IFlatbufferObject
     return ICN.EndICN(builder);
   }
 
-  public static void StartICN(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartICN(FlatBufferBuilder builder) { builder.StartTable(52); }
   public static void AddCONNECTOR_ID(FlatBufferBuilder builder, StringOffset CONNECTOR_IDOffset) { builder.AddOffset(0, CONNECTOR_IDOffset.Value, 0); }
   public static void AddKIND(FlatBufferBuilder builder, icnConnectorKind KIND) { builder.AddSbyte(1, (sbyte)KIND, 0); }
   public static void AddTARGET_SCHEMA(FlatBufferBuilder builder, StringOffset TARGET_SCHEMAOffset) { builder.AddOffset(2, TARGET_SCHEMAOffset.Value, 0); }
@@ -268,6 +445,34 @@ public struct ICN : IFlatbufferObject
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROVIDER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddORIGIN_ID(FlatBufferBuilder builder, StringOffset ORIGIN_IDOffset) { builder.AddOffset(29, ORIGIN_IDOffset.Value, 0); }
+  public static void AddORIGIN_NAME(FlatBufferBuilder builder, StringOffset ORIGIN_NAMEOffset) { builder.AddOffset(30, ORIGIN_NAMEOffset.Value, 0); }
+  public static void AddDATASET_ID(FlatBufferBuilder builder, StringOffset DATASET_IDOffset) { builder.AddOffset(31, DATASET_IDOffset.Value, 0); }
+  public static void AddPROVIDER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_IDOffset) { builder.AddOffset(32, PROVIDER_IDOffset.Value, 0); }
+  public static void AddSOURCE_NAME(FlatBufferBuilder builder, StringOffset SOURCE_NAMEOffset) { builder.AddOffset(33, SOURCE_NAMEOffset.Value, 0); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(34, LICENSEOffset.Value, 0); }
+  public static void AddLICENSE_URL(FlatBufferBuilder builder, StringOffset LICENSE_URLOffset) { builder.AddOffset(35, LICENSE_URLOffset.Value, 0); }
+  public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(36, CITATIONOffset.Value, 0); }
+  public static void AddMIN_FETCH_INTERVAL_MS(FlatBufferBuilder builder, ulong MIN_FETCH_INTERVAL_MS) { builder.AddUlong(37, MIN_FETCH_INTERVAL_MS, 0); }
+  public static void AddNEXT_ELIGIBLE_AT(FlatBufferBuilder builder, ulong NEXT_ELIGIBLE_AT) { builder.AddUlong(38, NEXT_ELIGIBLE_AT, 0); }
+  public static void AddLAST_HTTP_STATUS(FlatBufferBuilder builder, ushort LAST_HTTP_STATUS) { builder.AddUshort(39, LAST_HTTP_STATUS, 0); }
+  public static void AddLAST_SOURCE_ETAG(FlatBufferBuilder builder, StringOffset LAST_SOURCE_ETAGOffset) { builder.AddOffset(40, LAST_SOURCE_ETAGOffset.Value, 0); }
+  public static void AddLAST_SOURCE_LAST_MODIFIED(FlatBufferBuilder builder, StringOffset LAST_SOURCE_LAST_MODIFIEDOffset) { builder.AddOffset(41, LAST_SOURCE_LAST_MODIFIEDOffset.Value, 0); }
+  public static void AddLAST_BATCH_ID(FlatBufferBuilder builder, StringOffset LAST_BATCH_IDOffset) { builder.AddOffset(42, LAST_BATCH_IDOffset.Value, 0); }
+  public static void AddLAST_RECORD_COUNT(FlatBufferBuilder builder, ulong LAST_RECORD_COUNT) { builder.AddUlong(43, LAST_RECORD_COUNT, 0); }
+  public static void AddLAST_INSERTED_COUNT(FlatBufferBuilder builder, ulong LAST_INSERTED_COUNT) { builder.AddUlong(44, LAST_INSERTED_COUNT, 0); }
+  public static void AddLAST_DURATION_MS(FlatBufferBuilder builder, ulong LAST_DURATION_MS) { builder.AddUlong(45, LAST_DURATION_MS, 0); }
+  public static void AddFETCH_COUNT(FlatBufferBuilder builder, ulong FETCH_COUNT) { builder.AddUlong(46, FETCH_COUNT, 0); }
+  public static void AddINGEST_COUNT(FlatBufferBuilder builder, ulong INGEST_COUNT) { builder.AddUlong(47, INGEST_COUNT, 0); }
+  public static void AddLAST_PUBLICATION_CID(FlatBufferBuilder builder, StringOffset LAST_PUBLICATION_CIDOffset) { builder.AddOffset(48, LAST_PUBLICATION_CIDOffset.Value, 0); }
+  public static void AddLAST_PNM_CID(FlatBufferBuilder builder, StringOffset LAST_PNM_CIDOffset) { builder.AddOffset(49, LAST_PNM_CIDOffset.Value, 0); }
+  public static void AddFEED_HEAD(FlatBufferBuilder builder, StringOffset FEED_HEADOffset) { builder.AddOffset(50, FEED_HEADOffset.Value, 0); }
+  public static void AddEMITS_SCHEMAS(FlatBufferBuilder builder, VectorOffset EMITS_SCHEMASOffset) { builder.AddOffset(51, EMITS_SCHEMASOffset.Value, 0); }
+  public static VectorOffset CreateEMITS_SCHEMASVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEMITS_SCHEMASVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEMITS_SCHEMASVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEMITS_SCHEMASVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEMITS_SCHEMASVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ICN> EndICN(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // CONNECTOR_ID
@@ -311,6 +516,30 @@ public struct ICN : IFlatbufferObject
     _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
     _o.PROVIDER_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.PROVIDER_SIGNATURELength; ++_j) {_o.PROVIDER_SIGNATURE.Add(this.PROVIDER_SIGNATURE(_j));}
+    _o.ORIGIN_ID = this.ORIGIN_ID;
+    _o.ORIGIN_NAME = this.ORIGIN_NAME;
+    _o.DATASET_ID = this.DATASET_ID;
+    _o.PROVIDER_ID = this.PROVIDER_ID;
+    _o.SOURCE_NAME = this.SOURCE_NAME;
+    _o.LICENSE = this.LICENSE;
+    _o.LICENSE_URL = this.LICENSE_URL;
+    _o.CITATION = this.CITATION;
+    _o.MIN_FETCH_INTERVAL_MS = this.MIN_FETCH_INTERVAL_MS;
+    _o.NEXT_ELIGIBLE_AT = this.NEXT_ELIGIBLE_AT;
+    _o.LAST_HTTP_STATUS = this.LAST_HTTP_STATUS;
+    _o.LAST_SOURCE_ETAG = this.LAST_SOURCE_ETAG;
+    _o.LAST_SOURCE_LAST_MODIFIED = this.LAST_SOURCE_LAST_MODIFIED;
+    _o.LAST_BATCH_ID = this.LAST_BATCH_ID;
+    _o.LAST_RECORD_COUNT = this.LAST_RECORD_COUNT;
+    _o.LAST_INSERTED_COUNT = this.LAST_INSERTED_COUNT;
+    _o.LAST_DURATION_MS = this.LAST_DURATION_MS;
+    _o.FETCH_COUNT = this.FETCH_COUNT;
+    _o.INGEST_COUNT = this.INGEST_COUNT;
+    _o.LAST_PUBLICATION_CID = this.LAST_PUBLICATION_CID;
+    _o.LAST_PNM_CID = this.LAST_PNM_CID;
+    _o.FEED_HEAD = this.FEED_HEAD;
+    _o.EMITS_SCHEMAS = new List<string>();
+    for (var _j = 0; _j < this.EMITS_SCHEMASLength; ++_j) {_o.EMITS_SCHEMAS.Add(this.EMITS_SCHEMAS(_j));}
   }
   public static Offset<ICN> Pack(FlatBufferBuilder builder, ICNT _o) {
     if (_o == null) return default(Offset<ICN>);
@@ -332,6 +561,26 @@ public struct ICN : IFlatbufferObject
     if (_o.PROVIDER_SIGNATURE != null) {
       var __PROVIDER_SIGNATURE = _o.PROVIDER_SIGNATURE.ToArray();
       _PROVIDER_SIGNATURE = CreatePROVIDER_SIGNATUREVector(builder, __PROVIDER_SIGNATURE);
+    }
+    var _ORIGIN_ID = _o.ORIGIN_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIGIN_ID);
+    var _ORIGIN_NAME = _o.ORIGIN_NAME == null ? default(StringOffset) : builder.CreateString(_o.ORIGIN_NAME);
+    var _DATASET_ID = _o.DATASET_ID == null ? default(StringOffset) : builder.CreateString(_o.DATASET_ID);
+    var _PROVIDER_ID = _o.PROVIDER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_ID);
+    var _SOURCE_NAME = _o.SOURCE_NAME == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_NAME);
+    var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
+    var _LICENSE_URL = _o.LICENSE_URL == null ? default(StringOffset) : builder.CreateString(_o.LICENSE_URL);
+    var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
+    var _LAST_SOURCE_ETAG = _o.LAST_SOURCE_ETAG == null ? default(StringOffset) : builder.CreateString(_o.LAST_SOURCE_ETAG);
+    var _LAST_SOURCE_LAST_MODIFIED = _o.LAST_SOURCE_LAST_MODIFIED == null ? default(StringOffset) : builder.CreateString(_o.LAST_SOURCE_LAST_MODIFIED);
+    var _LAST_BATCH_ID = _o.LAST_BATCH_ID == null ? default(StringOffset) : builder.CreateString(_o.LAST_BATCH_ID);
+    var _LAST_PUBLICATION_CID = _o.LAST_PUBLICATION_CID == null ? default(StringOffset) : builder.CreateString(_o.LAST_PUBLICATION_CID);
+    var _LAST_PNM_CID = _o.LAST_PNM_CID == null ? default(StringOffset) : builder.CreateString(_o.LAST_PNM_CID);
+    var _FEED_HEAD = _o.FEED_HEAD == null ? default(StringOffset) : builder.CreateString(_o.FEED_HEAD);
+    var _EMITS_SCHEMAS = default(VectorOffset);
+    if (_o.EMITS_SCHEMAS != null) {
+      var __EMITS_SCHEMAS = new StringOffset[_o.EMITS_SCHEMAS.Count];
+      for (var _j = 0; _j < __EMITS_SCHEMAS.Length; ++_j) { __EMITS_SCHEMAS[_j] = builder.CreateString(_o.EMITS_SCHEMAS[_j]); }
+      _EMITS_SCHEMAS = CreateEMITS_SCHEMASVector(builder, __EMITS_SCHEMAS);
     }
     return CreateICN(
       builder,
@@ -363,7 +612,30 @@ public struct ICN : IFlatbufferObject
       _o.CREATED_AT,
       _o.UPDATED_AT,
       _PROVIDER_PEER_ID,
-      _PROVIDER_SIGNATURE);
+      _PROVIDER_SIGNATURE,
+      _ORIGIN_ID,
+      _ORIGIN_NAME,
+      _DATASET_ID,
+      _PROVIDER_ID,
+      _SOURCE_NAME,
+      _LICENSE,
+      _LICENSE_URL,
+      _CITATION,
+      _o.MIN_FETCH_INTERVAL_MS,
+      _o.NEXT_ELIGIBLE_AT,
+      _o.LAST_HTTP_STATUS,
+      _LAST_SOURCE_ETAG,
+      _LAST_SOURCE_LAST_MODIFIED,
+      _LAST_BATCH_ID,
+      _o.LAST_RECORD_COUNT,
+      _o.LAST_INSERTED_COUNT,
+      _o.LAST_DURATION_MS,
+      _o.FETCH_COUNT,
+      _o.INGEST_COUNT,
+      _LAST_PUBLICATION_CID,
+      _LAST_PNM_CID,
+      _FEED_HEAD,
+      _EMITS_SCHEMAS);
   }
 }
 
@@ -398,6 +670,29 @@ public class ICNT
   public ulong UPDATED_AT { get; set; }
   public string PROVIDER_PEER_ID { get; set; }
   public List<byte> PROVIDER_SIGNATURE { get; set; }
+  public string ORIGIN_ID { get; set; }
+  public string ORIGIN_NAME { get; set; }
+  public string DATASET_ID { get; set; }
+  public string PROVIDER_ID { get; set; }
+  public string SOURCE_NAME { get; set; }
+  public string LICENSE { get; set; }
+  public string LICENSE_URL { get; set; }
+  public string CITATION { get; set; }
+  public ulong MIN_FETCH_INTERVAL_MS { get; set; }
+  public ulong NEXT_ELIGIBLE_AT { get; set; }
+  public ushort LAST_HTTP_STATUS { get; set; }
+  public string LAST_SOURCE_ETAG { get; set; }
+  public string LAST_SOURCE_LAST_MODIFIED { get; set; }
+  public string LAST_BATCH_ID { get; set; }
+  public ulong LAST_RECORD_COUNT { get; set; }
+  public ulong LAST_INSERTED_COUNT { get; set; }
+  public ulong LAST_DURATION_MS { get; set; }
+  public ulong FETCH_COUNT { get; set; }
+  public ulong INGEST_COUNT { get; set; }
+  public string LAST_PUBLICATION_CID { get; set; }
+  public string LAST_PNM_CID { get; set; }
+  public string FEED_HEAD { get; set; }
+  public List<string> EMITS_SCHEMAS { get; set; }
 
   public ICNT() {
     this.CONNECTOR_ID = null;
@@ -429,6 +724,29 @@ public class ICNT
     this.UPDATED_AT = 0;
     this.PROVIDER_PEER_ID = null;
     this.PROVIDER_SIGNATURE = null;
+    this.ORIGIN_ID = null;
+    this.ORIGIN_NAME = null;
+    this.DATASET_ID = null;
+    this.PROVIDER_ID = null;
+    this.SOURCE_NAME = null;
+    this.LICENSE = null;
+    this.LICENSE_URL = null;
+    this.CITATION = null;
+    this.MIN_FETCH_INTERVAL_MS = 0;
+    this.NEXT_ELIGIBLE_AT = 0;
+    this.LAST_HTTP_STATUS = 0;
+    this.LAST_SOURCE_ETAG = null;
+    this.LAST_SOURCE_LAST_MODIFIED = null;
+    this.LAST_BATCH_ID = null;
+    this.LAST_RECORD_COUNT = 0;
+    this.LAST_INSERTED_COUNT = 0;
+    this.LAST_DURATION_MS = 0;
+    this.FETCH_COUNT = 0;
+    this.INGEST_COUNT = 0;
+    this.LAST_PUBLICATION_CID = null;
+    this.LAST_PNM_CID = null;
+    this.FEED_HEAD = null;
+    this.EMITS_SCHEMAS = null;
   }
   public static ICNT DeserializeFromBinary(byte[] fbBuffer) {
     return ICN.GetRootAsICN(new ByteBuffer(fbBuffer)).UnPack();
@@ -475,6 +793,29 @@ static public class ICNVerify
       && verifier.VerifyField(tablePos, 56 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 58 /*PROVIDER_PEER_ID*/, false)
       && verifier.VerifyVectorOfData(tablePos, 60 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 62 /*ORIGIN_ID*/, false)
+      && verifier.VerifyString(tablePos, 64 /*ORIGIN_NAME*/, false)
+      && verifier.VerifyString(tablePos, 66 /*DATASET_ID*/, false)
+      && verifier.VerifyString(tablePos, 68 /*PROVIDER_ID*/, false)
+      && verifier.VerifyString(tablePos, 70 /*SOURCE_NAME*/, false)
+      && verifier.VerifyString(tablePos, 72 /*LICENSE*/, false)
+      && verifier.VerifyString(tablePos, 74 /*LICENSE_URL*/, false)
+      && verifier.VerifyString(tablePos, 76 /*CITATION*/, false)
+      && verifier.VerifyField(tablePos, 78 /*MIN_FETCH_INTERVAL_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*NEXT_ELIGIBLE_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*LAST_HTTP_STATUS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyString(tablePos, 84 /*LAST_SOURCE_ETAG*/, false)
+      && verifier.VerifyString(tablePos, 86 /*LAST_SOURCE_LAST_MODIFIED*/, false)
+      && verifier.VerifyString(tablePos, 88 /*LAST_BATCH_ID*/, false)
+      && verifier.VerifyField(tablePos, 90 /*LAST_RECORD_COUNT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*LAST_INSERTED_COUNT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*LAST_DURATION_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*FETCH_COUNT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 98 /*INGEST_COUNT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 100 /*LAST_PUBLICATION_CID*/, false)
+      && verifier.VerifyString(tablePos, 102 /*LAST_PNM_CID*/, false)
+      && verifier.VerifyString(tablePos, 104 /*FEED_HEAD*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 106 /*EMITS_SCHEMAS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

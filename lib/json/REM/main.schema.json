@@ -761,6 +761,26 @@
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name of the owner or source the code stands for."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Longer description of the owner or source."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "True while the code is in current use by the publishing catalogue."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "URL of the reference table the row was retrieved from."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the reference table was retrieved."
               }
       },
       "additionalProperties" : false

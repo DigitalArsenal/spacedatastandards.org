@@ -28,6 +28,46 @@ public enum dssSyncState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 }
 
 
+///  Retention policy for a lane on this node. Append new values only; never
+///  reorder or reuse existing values.
+public enum dssPinPolicy: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  ///  Keep a bounded local cache.
+  case cache = 1
+  ///  Pin every publication.
+  case pin = 2
+  ///  Pin and archive every publication.
+  case archive = 3
+
+  public static var max: dssPinPolicy { return .archive }
+  public static var min: dssPinPolicy { return .none_ }
+}
+
+
+///  Action a client requests on a lane. Append new values only; never reorder
+///  or reuse existing values.
+public enum dssAction: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  ///  Run one bounded catch-up pass now.
+  case sync = 1
+  case subscribe = 2
+  case unsubscribe = 3
+  case pin = 4
+  case unpin = 5
+  ///  Rebuild the local materialisation from pinned publications.
+  case hydrate = 6
+
+  public static var max: dssAction { return .hydrate }
+  public static var min: dssAction { return .none_ }
+}
+
+
 public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -74,6 +114,25 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let VERIFIED_CHUNKS: VOffset = 66
     static let LAST_SYNCED_AT: VOffset = 68
     static let ERROR: VOffset = 70
+    static let SCHEMA_NAME: VOffset = 72
+    static let PROVIDER_ID: VOffset = 74
+    static let SOURCE_NAME: VOffset = 76
+    static let DATASET_ID: VOffset = 78
+    static let CONNECTOR_ID: VOffset = 80
+    static let CHANNEL_ID: VOffset = 82
+    static let TOPIC: VOffset = 84
+    static let SUBSCRIBED: VOffset = 86
+    static let PIN_POLICY: VOffset = 88
+    static let VISIBILITY: VOffset = 90
+    static let ENCRYPTION_STATE: VOffset = 92
+    static let GRANT_STATE: VOffset = 94
+    static let FEED_HEAD: VOffset = 96
+    static let LAST_PUBLICATION_CID: VOffset = 98
+    static let LAST_PNM_CID: VOffset = 100
+    static let DELTA_ROWS: VOffset = 102
+    static let LAST_SYNC_STARTED_AT: VOffset = 104
+    static let REQUESTED_ACTION: VOffset = 106
+    static let ORIGIN_ID: VOffset = 108
   }
 
   public var STATUS: dssSyncState { let o = _accessor.offset(VT.STATUS); return o == 0 ? .idle : dssSyncState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .idle }
@@ -123,7 +182,56 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var LAST_SYNCED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_SYNCED_AT) }
   public var ERROR: String? { let o = _accessor.offset(VT.ERROR); return o == 0 ? nil : _accessor.string(at: o) }
   public var ERRORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR) }
-  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 34) }
+  ///  Standard code of the lane, e.g. "OMM".
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
+  public var PROVIDER_ID: String? { let o = _accessor.offset(VT.PROVIDER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_ID) }
+  public var SOURCE_NAME: String? { let o = _accessor.offset(VT.SOURCE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_NAME) }
+  ///  Stable dataset identifier within the origin.
+  public var DATASET_ID: String? { let o = _accessor.offset(VT.DATASET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATASET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_ID) }
+  ///  Ingest connector that produces the lane, when known.
+  public var CONNECTOR_ID: String? { let o = _accessor.offset(VT.CONNECTOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONNECTOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONNECTOR_ID) }
+  ///  Channel identifier the lane is announced on.
+  public var CHANNEL_ID: String? { let o = _accessor.offset(VT.CHANNEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANNEL_ID) }
+  ///  Publish/subscribe topic of the lane.
+  public var TOPIC: String? { let o = _accessor.offset(VT.TOPIC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TOPICSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOPIC) }
+  ///  True when this node subscribes to the lane.
+  public var SUBSCRIBED: Bool { let o = _accessor.offset(VT.SUBSCRIBED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var PIN_POLICY: dssPinPolicy { let o = _accessor.offset(VT.PIN_POLICY); return o == 0 ? .none_ : dssPinPolicy(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  ///  Visibility of the lane, e.g. "public", "private".
+  public var VISIBILITY: String? { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VISIBILITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VISIBILITY) }
+  ///  Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  public var ENCRYPTION_STATE: String? { let o = _accessor.offset(VT.ENCRYPTION_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCRYPTION_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCRYPTION_STATE) }
+  ///  Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  public var GRANT_STATE: String? { let o = _accessor.offset(VT.GRANT_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANT_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANT_STATE) }
+  ///  Feed head this node has materialised up to.
+  public var FEED_HEAD: String? { let o = _accessor.offset(VT.FEED_HEAD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FEED_HEADSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FEED_HEAD) }
+  ///  Content identifier of the newest publication manifest known.
+  public var LAST_PUBLICATION_CID: String? { let o = _accessor.offset(VT.LAST_PUBLICATION_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_PUBLICATION_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_PUBLICATION_CID) }
+  ///  Content identifier of the newest publish notification known.
+  public var LAST_PNM_CID: String? { let o = _accessor.offset(VT.LAST_PNM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_PNM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_PNM_CID) }
+  ///  Rows materialised since the previous SYNCED state.
+  public var DELTA_ROWS: UInt64 { let o = _accessor.offset(VT.DELTA_ROWS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix milliseconds the current or last sync pass started; 0 = never.
+  public var LAST_SYNC_STARTED_AT: UInt64 { let o = _accessor.offset(VT.LAST_SYNC_STARTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Action a client requests when sending this record to a node.
+  public var REQUESTED_ACTION: dssAction { let o = _accessor.offset(VT.REQUESTED_ACTION); return o == 0 ? .none_ : dssAction(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  ///  Upstream publisher of the lane's records.
+  public var ORIGIN_ID: String? { let o = _accessor.offset(VT.ORIGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_ID) }
+  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
   public static func add(STATUS: dssSyncState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(SYNCED_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYNCED_ROWS, def: 0, at: VT.SYNCED_ROWS) }
   public static func add(TOTAL_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_ROWS, def: 0, at: VT.TOTAL_ROWS) }
@@ -161,6 +269,26 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(VERIFIED_CHUNKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFIED_CHUNKS, at: VT.VERIFIED_CHUNKS) }
   public static func add(LAST_SYNCED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_SYNCED_AT, at: VT.LAST_SYNCED_AT) }
   public static func add(ERROR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR, at: VT.ERROR) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(PROVIDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_ID, at: VT.PROVIDER_ID) }
+  public static func add(SOURCE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAME, at: VT.SOURCE_NAME) }
+  public static func add(DATASET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_ID, at: VT.DATASET_ID) }
+  public static func add(CONNECTOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONNECTOR_ID, at: VT.CONNECTOR_ID) }
+  public static func add(CHANNEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_ID, at: VT.CHANNEL_ID) }
+  public static func add(TOPIC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOPIC, at: VT.TOPIC) }
+  public static func add(SUBSCRIBED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSCRIBED, def: false,
+   at: VT.SUBSCRIBED) }
+  public static func add(PIN_POLICY: dssPinPolicy, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIN_POLICY.rawValue, def: 0, at: VT.PIN_POLICY) }
+  public static func add(VISIBILITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VISIBILITY, at: VT.VISIBILITY) }
+  public static func add(ENCRYPTION_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION_STATE, at: VT.ENCRYPTION_STATE) }
+  public static func add(GRANT_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_STATE, at: VT.GRANT_STATE) }
+  public static func add(FEED_HEAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEED_HEAD, at: VT.FEED_HEAD) }
+  public static func add(LAST_PUBLICATION_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_PUBLICATION_CID, at: VT.LAST_PUBLICATION_CID) }
+  public static func add(LAST_PNM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_PNM_CID, at: VT.LAST_PNM_CID) }
+  public static func add(DELTA_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_ROWS, def: 0, at: VT.DELTA_ROWS) }
+  public static func add(LAST_SYNC_STARTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_SYNC_STARTED_AT, def: 0, at: VT.LAST_SYNC_STARTED_AT) }
+  public static func add(REQUESTED_ACTION: dssAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_ACTION.rawValue, def: 0, at: VT.REQUESTED_ACTION) }
+  public static func add(ORIGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_ID, at: VT.ORIGIN_ID) }
   public static func endDSS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDSS(
     _ fbb: inout FlatBufferBuilder,
@@ -197,7 +325,26 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SYNC_FILTEROffset SYNC_FILTER: Offset = Offset(),
     VERIFIED_CHUNKSVectorOffset VERIFIED_CHUNKS: Offset = Offset(),
     LAST_SYNCED_ATOffset LAST_SYNCED_AT: Offset = Offset(),
-    ERROROffset ERROR: Offset = Offset()
+    ERROROffset ERROR: Offset = Offset(),
+    SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
+    PROVIDER_IDOffset PROVIDER_ID: Offset = Offset(),
+    SOURCE_NAMEOffset SOURCE_NAME: Offset = Offset(),
+    DATASET_IDOffset DATASET_ID: Offset = Offset(),
+    CONNECTOR_IDOffset CONNECTOR_ID: Offset = Offset(),
+    CHANNEL_IDOffset CHANNEL_ID: Offset = Offset(),
+    TOPICOffset TOPIC: Offset = Offset(),
+    SUBSCRIBED: Bool = false,
+    PIN_POLICY: dssPinPolicy = .none_,
+    VISIBILITYOffset VISIBILITY: Offset = Offset(),
+    ENCRYPTION_STATEOffset ENCRYPTION_STATE: Offset = Offset(),
+    GRANT_STATEOffset GRANT_STATE: Offset = Offset(),
+    FEED_HEADOffset FEED_HEAD: Offset = Offset(),
+    LAST_PUBLICATION_CIDOffset LAST_PUBLICATION_CID: Offset = Offset(),
+    LAST_PNM_CIDOffset LAST_PNM_CID: Offset = Offset(),
+    DELTA_ROWS: UInt64 = 0,
+    LAST_SYNC_STARTED_AT: UInt64 = 0,
+    REQUESTED_ACTION: dssAction = .none_,
+    ORIGIN_IDOffset ORIGIN_ID: Offset = Offset()
   ) -> Offset {
     let __start = DSS.startDSS(&fbb)
     DSS.add(STATUS: STATUS, &fbb)
@@ -234,6 +381,25 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DSS.addVectorOf(VERIFIED_CHUNKS: VERIFIED_CHUNKS, &fbb)
     DSS.add(LAST_SYNCED_AT: LAST_SYNCED_AT, &fbb)
     DSS.add(ERROR: ERROR, &fbb)
+    DSS.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
+    DSS.add(PROVIDER_ID: PROVIDER_ID, &fbb)
+    DSS.add(SOURCE_NAME: SOURCE_NAME, &fbb)
+    DSS.add(DATASET_ID: DATASET_ID, &fbb)
+    DSS.add(CONNECTOR_ID: CONNECTOR_ID, &fbb)
+    DSS.add(CHANNEL_ID: CHANNEL_ID, &fbb)
+    DSS.add(TOPIC: TOPIC, &fbb)
+    DSS.add(SUBSCRIBED: SUBSCRIBED, &fbb)
+    DSS.add(PIN_POLICY: PIN_POLICY, &fbb)
+    DSS.add(VISIBILITY: VISIBILITY, &fbb)
+    DSS.add(ENCRYPTION_STATE: ENCRYPTION_STATE, &fbb)
+    DSS.add(GRANT_STATE: GRANT_STATE, &fbb)
+    DSS.add(FEED_HEAD: FEED_HEAD, &fbb)
+    DSS.add(LAST_PUBLICATION_CID: LAST_PUBLICATION_CID, &fbb)
+    DSS.add(LAST_PNM_CID: LAST_PNM_CID, &fbb)
+    DSS.add(DELTA_ROWS: DELTA_ROWS, &fbb)
+    DSS.add(LAST_SYNC_STARTED_AT: LAST_SYNC_STARTED_AT, &fbb)
+    DSS.add(REQUESTED_ACTION: REQUESTED_ACTION, &fbb)
+    DSS.add(ORIGIN_ID: ORIGIN_ID, &fbb)
     return DSS.endDSS(&fbb, start: __start)
   }
 
@@ -273,6 +439,25 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.VERIFIED_CHUNKS, fieldName: "VERIFIED_CHUNKS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.LAST_SYNCED_AT, fieldName: "LAST_SYNCED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ERROR, fieldName: "ERROR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_ID, fieldName: "PROVIDER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_NAME, fieldName: "SOURCE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_ID, fieldName: "DATASET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONNECTOR_ID, fieldName: "CONNECTOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_ID, fieldName: "CHANNEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TOPIC, fieldName: "TOPIC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUBSCRIBED, fieldName: "SUBSCRIBED", required: false, type: Bool.self)
+    try _v.visit(field: VT.PIN_POLICY, fieldName: "PIN_POLICY", required: false, type: dssPinPolicy.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTION_STATE, fieldName: "ENCRYPTION_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANT_STATE, fieldName: "GRANT_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FEED_HEAD, fieldName: "FEED_HEAD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_PUBLICATION_CID, fieldName: "LAST_PUBLICATION_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_PNM_CID, fieldName: "LAST_PNM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELTA_ROWS, fieldName: "DELTA_ROWS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LAST_SYNC_STARTED_AT, fieldName: "LAST_SYNC_STARTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REQUESTED_ACTION, fieldName: "REQUESTED_ACTION", required: false, type: dssAction.self)
+    try _v.visit(field: VT.ORIGIN_ID, fieldName: "ORIGIN_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

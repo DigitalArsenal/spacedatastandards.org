@@ -75,25 +75,79 @@ class SCHEMA_STANDARD extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Human-readable name of the standard.
+    public function getNAME()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// One-paragraph description of the standard.
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Four-character file identifier, e.g. "$OMM".
+    public function getFILE_IDENTIFIER()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Hash of the standard's schema text.
+    public function getSCHEMA_HASH()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True when the reporting node routes the standard through its store.
+    /**
+     * @return bool
+     */
+    public function getROUTED()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Position of the standard in the record union; append-only forever.
+    /**
+     * @return ushort
+     */
+    public function getRECORD_TYPE_ORDINAL()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCHEMA_STANDARD(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCHEMA_STANDARD
      */
-    public static function createSCHEMA_STANDARD(FlatBufferBuilder $builder, $key, $idl, $files)
+    public static function createSCHEMA_STANDARD(FlatBufferBuilder $builder, $key, $idl, $files, $NAME, $DESCRIPTION, $FILE_IDENTIFIER, $SCHEMA_HASH, $ROUTED, $RECORD_TYPE_ORDINAL)
     {
-        $builder->startObject(3);
+        $builder->startObject(9);
         self::addkey($builder, $key);
         self::addidl($builder, $idl);
         self::addfiles($builder, $files);
+        self::addNAME($builder, $NAME);
+        self::addDESCRIPTION($builder, $DESCRIPTION);
+        self::addFILE_IDENTIFIER($builder, $FILE_IDENTIFIER);
+        self::addSCHEMA_HASH($builder, $SCHEMA_HASH);
+        self::addROUTED($builder, $ROUTED);
+        self::addRECORD_TYPE_ORDINAL($builder, $RECORD_TYPE_ORDINAL);
         $o = $builder->endObject();
         return $o;
     }
@@ -150,6 +204,66 @@ class SCHEMA_STANDARD extends Table
     public static function startfilesVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
+    {
+        $builder->addOffsetX(3, $NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(4, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFILE_IDENTIFIER(FlatBufferBuilder $builder, $FILE_IDENTIFIER)
+    {
+        $builder->addOffsetX(5, $FILE_IDENTIFIER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSCHEMA_HASH(FlatBufferBuilder $builder, $SCHEMA_HASH)
+    {
+        $builder->addOffsetX(6, $SCHEMA_HASH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addROUTED(FlatBufferBuilder $builder, $ROUTED)
+    {
+        $builder->addBoolX(7, $ROUTED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addRECORD_TYPE_ORDINAL(FlatBufferBuilder $builder, $RECORD_TYPE_ORDINAL)
+    {
+        $builder->addUshortX(8, $RECORD_TYPE_ORDINAL, 0);
     }
 
     /**

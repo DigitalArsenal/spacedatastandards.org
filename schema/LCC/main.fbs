@@ -1,5 +1,5 @@
-// Hash: f4ca2876e82fadd42986ca54d6047bbc7552086059bcd79ade2eca5fb8bc9db6
-// Version: 1.0.1
+// Hash: 8de08061564e9e1f0c59d38be648e505bb3fdf77f14d6a51495da8b933ba71dc
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 enum legacyCountryCode : byte {
   /// Arab Satellite Communications Organization
@@ -259,6 +259,17 @@ enum legacyCountryCode : byte {
 /// Legacy Country Code
 table LCC {
   OWNER: legacyCountryCode;
+
+  /// Display name of the owner or source the code stands for.
+  NAME: string;
+  /// Longer description of the owner or source.
+  DESCRIPTION: string;
+  /// True while the code is in current use by the publishing catalogue.
+  ACTIVE: bool;
+  /// URL of the reference table the row was retrieved from.
+  SOURCE_URL: string;
+  /// ISO 8601 UTC time the reference table was retrieved.
+  RETRIEVED_AT: string;
 }
 root_type LCC;
 file_identifier "$LCC";

@@ -51,6 +51,92 @@ class _dssSyncStateReader extends fb.Reader<dssSyncState> {
       dssSyncState.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Retention policy for a lane on this node. Append new values only; never
+///  reorder or reuse existing values.
+enum dssPinPolicy {
+  None(0),
+  Cache(1),
+  Pin(2),
+  Archive(3);
+
+  final int value;
+  const dssPinPolicy(this.value);
+
+  factory dssPinPolicy.fromValue(int value) {
+    switch (value) {
+      case 0: return dssPinPolicy.None;
+      case 1: return dssPinPolicy.Cache;
+      case 2: return dssPinPolicy.Pin;
+      case 3: return dssPinPolicy.Archive;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static dssPinPolicy? _createOrNull(int? value) =>
+      value == null ? null : dssPinPolicy.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<dssPinPolicy> reader = _dssPinPolicyReader();
+}
+
+class _dssPinPolicyReader extends fb.Reader<dssPinPolicy> {
+  const _dssPinPolicyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  dssPinPolicy read(fb.BufferContext bc, int offset) =>
+      dssPinPolicy.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Action a client requests on a lane. Append new values only; never reorder
+///  or reuse existing values.
+enum dssAction {
+  None(0),
+  Sync(1),
+  Subscribe(2),
+  Unsubscribe(3),
+  Pin(4),
+  Unpin(5),
+  Hydrate(6);
+
+  final int value;
+  const dssAction(this.value);
+
+  factory dssAction.fromValue(int value) {
+    switch (value) {
+      case 0: return dssAction.None;
+      case 1: return dssAction.Sync;
+      case 2: return dssAction.Subscribe;
+      case 3: return dssAction.Unsubscribe;
+      case 4: return dssAction.Pin;
+      case 5: return dssAction.Unpin;
+      case 6: return dssAction.Hydrate;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static dssAction? _createOrNull(int? value) =>
+      value == null ? null : dssAction.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<dssAction> reader = _dssActionReader();
+}
+
+class _dssActionReader extends fb.Reader<dssAction> {
+  const _dssActionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  dssAction read(fb.BufferContext bc, int offset) =>
+      dssAction.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 class DSS {
   DSS._(this._bc, this._bcOffset);
   factory DSS(List<int> bytes) {
@@ -127,10 +213,61 @@ class DSS {
   String? get LAST_SYNCED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
   String? get lastSyncedAt => LAST_SYNCED_AT;
   String? get ERROR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Standard code of the lane, e.g. "OMM".
+  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get schemaName => SCHEMA_NAME;
+  String? get PROVIDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get providerId => PROVIDER_ID;
+  String? get SOURCE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get sourceName => SOURCE_NAME;
+  ///  Stable dataset identifier within the origin.
+  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get datasetId => DATASET_ID;
+  ///  Ingest connector that produces the lane, when known.
+  String? get CONNECTOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get connectorId => CONNECTOR_ID;
+  ///  Channel identifier the lane is announced on.
+  String? get CHANNEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get channelId => CHANNEL_ID;
+  ///  Publish/subscribe topic of the lane.
+  String? get TOPIC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  ///  True when this node subscribes to the lane.
+  bool get SUBSCRIBED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 86, false);
+  dssPinPolicy get PIN_POLICY => dssPinPolicy.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 88, 0));
+  dssPinPolicy get pinPolicy => PIN_POLICY;
+  ///  Visibility of the lane, e.g. "public", "private".
+  String? get VISIBILITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  ///  Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  String? get ENCRYPTION_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
+  String? get encryptionState => ENCRYPTION_STATE;
+  ///  Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  String? get GRANT_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get grantState => GRANT_STATE;
+  ///  Feed head this node has materialised up to.
+  String? get FEED_HEAD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  String? get feedHead => FEED_HEAD;
+  ///  Content identifier of the newest publication manifest known.
+  String? get LAST_PUBLICATION_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
+  String? get lastPublicationCid => LAST_PUBLICATION_CID;
+  ///  Content identifier of the newest publish notification known.
+  String? get LAST_PNM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get lastPnmCid => LAST_PNM_CID;
+  ///  Rows materialised since the previous SYNCED state.
+  int get DELTA_ROWS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 102, 0);
+  int get deltaRows => DELTA_ROWS;
+  ///  Unix milliseconds the current or last sync pass started; 0 = never.
+  int get LAST_SYNC_STARTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 104, 0);
+  int get lastSyncStartedAt => LAST_SYNC_STARTED_AT;
+  ///  Action a client requests when sending this record to a node.
+  dssAction get REQUESTED_ACTION => dssAction.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 106, 0));
+  dssAction get requestedAction => REQUESTED_ACTION;
+  ///  Upstream publisher of the lane's records.
+  String? get ORIGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 108);
+  String? get originId => ORIGIN_ID;
 
   @override
   String toString() {
-    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}}';
+    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}, schemaName: ${schemaName}, providerId: ${providerId}, sourceName: ${sourceName}, datasetId: ${datasetId}, connectorId: ${connectorId}, channelId: ${channelId}, TOPIC: ${TOPIC}, SUBSCRIBED: ${SUBSCRIBED}, pinPolicy: ${pinPolicy}, VISIBILITY: ${VISIBILITY}, encryptionState: ${encryptionState}, grantState: ${grantState}, feedHead: ${feedHead}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, deltaRows: ${deltaRows}, lastSyncStartedAt: ${lastSyncStartedAt}, requestedAction: ${requestedAction}, originId: ${originId}}';
   }
 }
 
@@ -148,7 +285,7 @@ class DSSBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(34);
+    fbBuilder.startTable(53);
   }
 
   int addStatus(dssSyncState? STATUS) {
@@ -287,6 +424,82 @@ class DSSBuilder {
     fbBuilder.addOffset(33, offset);
     return fbBuilder.offset;
   }
+  int addSchemaNameOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderIdOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceNameOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetIdOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addConnectorIdOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelIdOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addTopicOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addSubscribed(bool? SUBSCRIBED) {
+    fbBuilder.addBool(41, SUBSCRIBED);
+    return fbBuilder.offset;
+  }
+  int addPinPolicy(dssPinPolicy? PIN_POLICY) {
+    fbBuilder.addInt8(42, PIN_POLICY?.value);
+    return fbBuilder.offset;
+  }
+  int addVisibilityOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addEncryptionStateOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantStateOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addFeedHeadOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addLastPublicationCidOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addLastPnmCidOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaRows(int? DELTA_ROWS) {
+    fbBuilder.addUint64(49, DELTA_ROWS);
+    return fbBuilder.offset;
+  }
+  int addLastSyncStartedAt(int? LAST_SYNC_STARTED_AT) {
+    fbBuilder.addUint64(50, LAST_SYNC_STARTED_AT);
+    return fbBuilder.offset;
+  }
+  int addRequestedAction(dssAction? REQUESTED_ACTION) {
+    fbBuilder.addInt8(51, REQUESTED_ACTION?.value);
+    return fbBuilder.offset;
+  }
+  int addOriginIdOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -328,6 +541,25 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _VERIFIED_CHUNKS;
   final String? _LAST_SYNCED_AT;
   final String? _ERROR;
+  final String? _SCHEMA_NAME;
+  final String? _PROVIDER_ID;
+  final String? _SOURCE_NAME;
+  final String? _DATASET_ID;
+  final String? _CONNECTOR_ID;
+  final String? _CHANNEL_ID;
+  final String? _TOPIC;
+  final bool? _SUBSCRIBED;
+  final dssPinPolicy? _PIN_POLICY;
+  final String? _VISIBILITY;
+  final String? _ENCRYPTION_STATE;
+  final String? _GRANT_STATE;
+  final String? _FEED_HEAD;
+  final String? _LAST_PUBLICATION_CID;
+  final String? _LAST_PNM_CID;
+  final int? _DELTA_ROWS;
+  final int? _LAST_SYNC_STARTED_AT;
+  final dssAction? _REQUESTED_ACTION;
+  final String? _ORIGIN_ID;
 
   DSSObjectBuilder({
     dssSyncState? STATUS,
@@ -394,6 +626,41 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     String? LAST_SYNCED_AT,
     String? lastSyncedAt,
     String? ERROR,
+    String? SCHEMA_NAME,
+    String? schemaName,
+    String? PROVIDER_ID,
+    String? providerId,
+    String? SOURCE_NAME,
+    String? sourceName,
+    String? DATASET_ID,
+    String? datasetId,
+    String? CONNECTOR_ID,
+    String? connectorId,
+    String? CHANNEL_ID,
+    String? channelId,
+    String? TOPIC,
+    bool? SUBSCRIBED,
+    dssPinPolicy? PIN_POLICY,
+    dssPinPolicy? pinPolicy,
+    String? VISIBILITY,
+    String? ENCRYPTION_STATE,
+    String? encryptionState,
+    String? GRANT_STATE,
+    String? grantState,
+    String? FEED_HEAD,
+    String? feedHead,
+    String? LAST_PUBLICATION_CID,
+    String? lastPublicationCid,
+    String? LAST_PNM_CID,
+    String? lastPnmCid,
+    int? DELTA_ROWS,
+    int? deltaRows,
+    int? LAST_SYNC_STARTED_AT,
+    int? lastSyncStartedAt,
+    dssAction? REQUESTED_ACTION,
+    dssAction? requestedAction,
+    String? ORIGIN_ID,
+    String? originId,
   })
       : _STATUS = STATUS,
         _SYNCED_ROWS = syncedRows ?? SYNCED_ROWS,
@@ -428,7 +695,26 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         _SYNC_FILTER = syncFilter ?? SYNC_FILTER,
         _VERIFIED_CHUNKS = verifiedChunks ?? VERIFIED_CHUNKS,
         _LAST_SYNCED_AT = lastSyncedAt ?? LAST_SYNCED_AT,
-        _ERROR = ERROR;
+        _ERROR = ERROR,
+        _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
+        _PROVIDER_ID = providerId ?? PROVIDER_ID,
+        _SOURCE_NAME = sourceName ?? SOURCE_NAME,
+        _DATASET_ID = datasetId ?? DATASET_ID,
+        _CONNECTOR_ID = connectorId ?? CONNECTOR_ID,
+        _CHANNEL_ID = channelId ?? CHANNEL_ID,
+        _TOPIC = TOPIC,
+        _SUBSCRIBED = SUBSCRIBED,
+        _PIN_POLICY = pinPolicy ?? PIN_POLICY,
+        _VISIBILITY = VISIBILITY,
+        _ENCRYPTION_STATE = encryptionState ?? ENCRYPTION_STATE,
+        _GRANT_STATE = grantState ?? GRANT_STATE,
+        _FEED_HEAD = feedHead ?? FEED_HEAD,
+        _LAST_PUBLICATION_CID = lastPublicationCid ?? LAST_PUBLICATION_CID,
+        _LAST_PNM_CID = lastPnmCid ?? LAST_PNM_CID,
+        _DELTA_ROWS = deltaRows ?? DELTA_ROWS,
+        _LAST_SYNC_STARTED_AT = lastSyncStartedAt ?? LAST_SYNC_STARTED_AT,
+        _REQUESTED_ACTION = requestedAction ?? REQUESTED_ACTION,
+        _ORIGIN_ID = originId ?? ORIGIN_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -461,7 +747,35 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LAST_SYNCED_AT!);
     final int? ERROROffset = _ERROR == null ? null
         : fbBuilder.writeString(_ERROR!);
-    fbBuilder.startTable(34);
+    final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
+        : fbBuilder.writeString(_SCHEMA_NAME!);
+    final int? PROVIDER_IDOffset = _PROVIDER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_ID!);
+    final int? SOURCE_NAMEOffset = _SOURCE_NAME == null ? null
+        : fbBuilder.writeString(_SOURCE_NAME!);
+    final int? DATASET_IDOffset = _DATASET_ID == null ? null
+        : fbBuilder.writeString(_DATASET_ID!);
+    final int? CONNECTOR_IDOffset = _CONNECTOR_ID == null ? null
+        : fbBuilder.writeString(_CONNECTOR_ID!);
+    final int? CHANNEL_IDOffset = _CHANNEL_ID == null ? null
+        : fbBuilder.writeString(_CHANNEL_ID!);
+    final int? TOPICOffset = _TOPIC == null ? null
+        : fbBuilder.writeString(_TOPIC!);
+    final int? VISIBILITYOffset = _VISIBILITY == null ? null
+        : fbBuilder.writeString(_VISIBILITY!);
+    final int? ENCRYPTION_STATEOffset = _ENCRYPTION_STATE == null ? null
+        : fbBuilder.writeString(_ENCRYPTION_STATE!);
+    final int? GRANT_STATEOffset = _GRANT_STATE == null ? null
+        : fbBuilder.writeString(_GRANT_STATE!);
+    final int? FEED_HEADOffset = _FEED_HEAD == null ? null
+        : fbBuilder.writeString(_FEED_HEAD!);
+    final int? LAST_PUBLICATION_CIDOffset = _LAST_PUBLICATION_CID == null ? null
+        : fbBuilder.writeString(_LAST_PUBLICATION_CID!);
+    final int? LAST_PNM_CIDOffset = _LAST_PNM_CID == null ? null
+        : fbBuilder.writeString(_LAST_PNM_CID!);
+    final int? ORIGIN_IDOffset = _ORIGIN_ID == null ? null
+        : fbBuilder.writeString(_ORIGIN_ID!);
+    fbBuilder.startTable(53);
     fbBuilder.addInt8(0, _STATUS?.value);
     fbBuilder.addUint64(1, _SYNCED_ROWS);
     fbBuilder.addUint64(2, _TOTAL_ROWS);
@@ -496,6 +810,25 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(31, VERIFIED_CHUNKSOffset);
     fbBuilder.addOffset(32, LAST_SYNCED_ATOffset);
     fbBuilder.addOffset(33, ERROROffset);
+    fbBuilder.addOffset(34, SCHEMA_NAMEOffset);
+    fbBuilder.addOffset(35, PROVIDER_IDOffset);
+    fbBuilder.addOffset(36, SOURCE_NAMEOffset);
+    fbBuilder.addOffset(37, DATASET_IDOffset);
+    fbBuilder.addOffset(38, CONNECTOR_IDOffset);
+    fbBuilder.addOffset(39, CHANNEL_IDOffset);
+    fbBuilder.addOffset(40, TOPICOffset);
+    fbBuilder.addBool(41, _SUBSCRIBED);
+    fbBuilder.addInt8(42, _PIN_POLICY?.value);
+    fbBuilder.addOffset(43, VISIBILITYOffset);
+    fbBuilder.addOffset(44, ENCRYPTION_STATEOffset);
+    fbBuilder.addOffset(45, GRANT_STATEOffset);
+    fbBuilder.addOffset(46, FEED_HEADOffset);
+    fbBuilder.addOffset(47, LAST_PUBLICATION_CIDOffset);
+    fbBuilder.addOffset(48, LAST_PNM_CIDOffset);
+    fbBuilder.addUint64(49, _DELTA_ROWS);
+    fbBuilder.addUint64(50, _LAST_SYNC_STARTED_AT);
+    fbBuilder.addInt8(51, _REQUESTED_ACTION?.value);
+    fbBuilder.addOffset(52, ORIGIN_IDOffset);
     return fbBuilder.endTable();
   }
 

@@ -282,8 +282,205 @@ class ICN(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
+    # Upstream publisher the connector retrieves records from, as a host name
+    # or stable identifier.
+    # ICN
+    def ORIGIN_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Display name of the upstream publisher.
+    # ICN
+    def ORIGIN_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+    # ICN
+    def DATASET_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Provider identifier the lane's records are stored under.
+    # ICN
+    def PROVIDER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source name the lane's records are stored under.
+    # ICN
+    def SOURCE_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Licence under which the upstream publisher offers the records.
+    # ICN
+    def LICENSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ICN
+    def LICENSE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Citation the upstream publisher asks for.
+    # ICN
+    def CITATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Minimum interval between fetches of the same dataset, milliseconds.
+    # ICN
+    def MIN_FETCH_INTERVAL_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix milliseconds when the next fetch is eligible.
+    # ICN
+    def NEXT_ELIGIBLE_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # HTTP status of the last fetch.
+    # ICN
+    def LAST_HTTP_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Entity tag returned by the last fetch.
+    # ICN
+    def LAST_SOURCE_ETAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Last-Modified value returned by the last fetch.
+    # ICN
+    def LAST_SOURCE_LAST_MODIFIED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Batch identifier of the last ingest.
+    # ICN
+    def LAST_BATCH_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Records parsed by the last ingest.
+    # ICN
+    def LAST_RECORD_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Records newly inserted by the last ingest.
+    # ICN
+    def LAST_INSERTED_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Duration of the last fetch and ingest, milliseconds.
+    # ICN
+    def LAST_DURATION_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Fetches attempted over the connector's lifetime.
+    # ICN
+    def FETCH_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Ingests completed over the connector's lifetime.
+    # ICN
+    def INGEST_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Content identifier of the last publication manifest emitted.
+    # ICN
+    def LAST_PUBLICATION_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the last publish notification emitted.
+    # ICN
+    def LAST_PNM_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Feed head the connector last advanced to.
+    # ICN
+    def FEED_HEAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Standard codes the connector emits, e.g. ["OMM", "MPE"].
+    # ICN
+    def EMITS_SCHEMAS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # ICN
+    def EMITS_SCHEMASLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ICN
+    def EMITS_SCHEMASIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
 def ICNStart(builder):
-    builder.StartObject(29)
+    builder.StartObject(52)
 
 def Start(builder):
     ICNStart(builder)
@@ -478,6 +675,156 @@ def ICNCreatePROVIDER_SIGNATUREVector(builder, data):
 def CreatePROVIDER_SIGNATUREVector(builder, data):
     ICNCreatePROVIDER_SIGNATUREVector(builder, data)
 
+def ICNAddORIGIN_ID(builder, ORIGIN_ID):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN_ID), 0)
+
+def AddORIGIN_ID(builder, ORIGIN_ID):
+    ICNAddORIGIN_ID(builder, ORIGIN_ID)
+
+def ICNAddORIGIN_NAME(builder, ORIGIN_NAME):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN_NAME), 0)
+
+def AddORIGIN_NAME(builder, ORIGIN_NAME):
+    ICNAddORIGIN_NAME(builder, ORIGIN_NAME)
+
+def ICNAddDATASET_ID(builder, DATASET_ID):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(DATASET_ID), 0)
+
+def AddDATASET_ID(builder, DATASET_ID):
+    ICNAddDATASET_ID(builder, DATASET_ID)
+
+def ICNAddPROVIDER_ID(builder, PROVIDER_ID):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_ID), 0)
+
+def AddPROVIDER_ID(builder, PROVIDER_ID):
+    ICNAddPROVIDER_ID(builder, PROVIDER_ID)
+
+def ICNAddSOURCE_NAME(builder, SOURCE_NAME):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_NAME), 0)
+
+def AddSOURCE_NAME(builder, SOURCE_NAME):
+    ICNAddSOURCE_NAME(builder, SOURCE_NAME)
+
+def ICNAddLICENSE(builder, LICENSE):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
+
+def AddLICENSE(builder, LICENSE):
+    ICNAddLICENSE(builder, LICENSE)
+
+def ICNAddLICENSE_URL(builder, LICENSE_URL):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE_URL), 0)
+
+def AddLICENSE_URL(builder, LICENSE_URL):
+    ICNAddLICENSE_URL(builder, LICENSE_URL)
+
+def ICNAddCITATION(builder, CITATION):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(CITATION), 0)
+
+def AddCITATION(builder, CITATION):
+    ICNAddCITATION(builder, CITATION)
+
+def ICNAddMIN_FETCH_INTERVAL_MS(builder, MIN_FETCH_INTERVAL_MS):
+    builder.PrependUint64Slot(37, MIN_FETCH_INTERVAL_MS, 0)
+
+def AddMIN_FETCH_INTERVAL_MS(builder, MIN_FETCH_INTERVAL_MS):
+    ICNAddMIN_FETCH_INTERVAL_MS(builder, MIN_FETCH_INTERVAL_MS)
+
+def ICNAddNEXT_ELIGIBLE_AT(builder, NEXT_ELIGIBLE_AT):
+    builder.PrependUint64Slot(38, NEXT_ELIGIBLE_AT, 0)
+
+def AddNEXT_ELIGIBLE_AT(builder, NEXT_ELIGIBLE_AT):
+    ICNAddNEXT_ELIGIBLE_AT(builder, NEXT_ELIGIBLE_AT)
+
+def ICNAddLAST_HTTP_STATUS(builder, LAST_HTTP_STATUS):
+    builder.PrependUint16Slot(39, LAST_HTTP_STATUS, 0)
+
+def AddLAST_HTTP_STATUS(builder, LAST_HTTP_STATUS):
+    ICNAddLAST_HTTP_STATUS(builder, LAST_HTTP_STATUS)
+
+def ICNAddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAG):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_SOURCE_ETAG), 0)
+
+def AddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAG):
+    ICNAddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAG)
+
+def ICNAddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIED):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_SOURCE_LAST_MODIFIED), 0)
+
+def AddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIED):
+    ICNAddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIED)
+
+def ICNAddLAST_BATCH_ID(builder, LAST_BATCH_ID):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_BATCH_ID), 0)
+
+def AddLAST_BATCH_ID(builder, LAST_BATCH_ID):
+    ICNAddLAST_BATCH_ID(builder, LAST_BATCH_ID)
+
+def ICNAddLAST_RECORD_COUNT(builder, LAST_RECORD_COUNT):
+    builder.PrependUint64Slot(43, LAST_RECORD_COUNT, 0)
+
+def AddLAST_RECORD_COUNT(builder, LAST_RECORD_COUNT):
+    ICNAddLAST_RECORD_COUNT(builder, LAST_RECORD_COUNT)
+
+def ICNAddLAST_INSERTED_COUNT(builder, LAST_INSERTED_COUNT):
+    builder.PrependUint64Slot(44, LAST_INSERTED_COUNT, 0)
+
+def AddLAST_INSERTED_COUNT(builder, LAST_INSERTED_COUNT):
+    ICNAddLAST_INSERTED_COUNT(builder, LAST_INSERTED_COUNT)
+
+def ICNAddLAST_DURATION_MS(builder, LAST_DURATION_MS):
+    builder.PrependUint64Slot(45, LAST_DURATION_MS, 0)
+
+def AddLAST_DURATION_MS(builder, LAST_DURATION_MS):
+    ICNAddLAST_DURATION_MS(builder, LAST_DURATION_MS)
+
+def ICNAddFETCH_COUNT(builder, FETCH_COUNT):
+    builder.PrependUint64Slot(46, FETCH_COUNT, 0)
+
+def AddFETCH_COUNT(builder, FETCH_COUNT):
+    ICNAddFETCH_COUNT(builder, FETCH_COUNT)
+
+def ICNAddINGEST_COUNT(builder, INGEST_COUNT):
+    builder.PrependUint64Slot(47, INGEST_COUNT, 0)
+
+def AddINGEST_COUNT(builder, INGEST_COUNT):
+    ICNAddINGEST_COUNT(builder, INGEST_COUNT)
+
+def ICNAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_PUBLICATION_CID), 0)
+
+def AddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID):
+    ICNAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+
+def ICNAddLAST_PNM_CID(builder, LAST_PNM_CID):
+    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_PNM_CID), 0)
+
+def AddLAST_PNM_CID(builder, LAST_PNM_CID):
+    ICNAddLAST_PNM_CID(builder, LAST_PNM_CID)
+
+def ICNAddFEED_HEAD(builder, FEED_HEAD):
+    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(FEED_HEAD), 0)
+
+def AddFEED_HEAD(builder, FEED_HEAD):
+    ICNAddFEED_HEAD(builder, FEED_HEAD)
+
+def ICNAddEMITS_SCHEMAS(builder, EMITS_SCHEMAS):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(EMITS_SCHEMAS), 0)
+
+def AddEMITS_SCHEMAS(builder, EMITS_SCHEMAS):
+    ICNAddEMITS_SCHEMAS(builder, EMITS_SCHEMAS)
+
+def ICNStartEMITS_SCHEMASVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEMITS_SCHEMASVector(builder, numElems):
+    return ICNStartEMITS_SCHEMASVector(builder, numElems)
+
+def ICNCreateEMITS_SCHEMASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEMITS_SCHEMASVector(builder, data):
+    ICNCreateEMITS_SCHEMASVector(builder, data)
+
 def ICNEnd(builder):
     return builder.EndObject()
 
@@ -523,6 +870,29 @@ class ICNT(object):
         UPDATED_AT = 0,
         PROVIDER_PEER_ID = None,
         PROVIDER_SIGNATURE = None,
+        ORIGIN_ID = None,
+        ORIGIN_NAME = None,
+        DATASET_ID = None,
+        PROVIDER_ID = None,
+        SOURCE_NAME = None,
+        LICENSE = None,
+        LICENSE_URL = None,
+        CITATION = None,
+        MIN_FETCH_INTERVAL_MS = 0,
+        NEXT_ELIGIBLE_AT = 0,
+        LAST_HTTP_STATUS = 0,
+        LAST_SOURCE_ETAG = None,
+        LAST_SOURCE_LAST_MODIFIED = None,
+        LAST_BATCH_ID = None,
+        LAST_RECORD_COUNT = 0,
+        LAST_INSERTED_COUNT = 0,
+        LAST_DURATION_MS = 0,
+        FETCH_COUNT = 0,
+        INGEST_COUNT = 0,
+        LAST_PUBLICATION_CID = None,
+        LAST_PNM_CID = None,
+        FEED_HEAD = None,
+        EMITS_SCHEMAS = None,
     ):
         self.CONNECTOR_ID = CONNECTOR_ID  # type: Optional[str]
         self.KIND = KIND  # type: int
@@ -553,6 +923,29 @@ class ICNT(object):
         self.UPDATED_AT = UPDATED_AT  # type: int
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
         self.PROVIDER_SIGNATURE = PROVIDER_SIGNATURE  # type: Optional[List[int]]
+        self.ORIGIN_ID = ORIGIN_ID  # type: Optional[str]
+        self.ORIGIN_NAME = ORIGIN_NAME  # type: Optional[str]
+        self.DATASET_ID = DATASET_ID  # type: Optional[str]
+        self.PROVIDER_ID = PROVIDER_ID  # type: Optional[str]
+        self.SOURCE_NAME = SOURCE_NAME  # type: Optional[str]
+        self.LICENSE = LICENSE  # type: Optional[str]
+        self.LICENSE_URL = LICENSE_URL  # type: Optional[str]
+        self.CITATION = CITATION  # type: Optional[str]
+        self.MIN_FETCH_INTERVAL_MS = MIN_FETCH_INTERVAL_MS  # type: int
+        self.NEXT_ELIGIBLE_AT = NEXT_ELIGIBLE_AT  # type: int
+        self.LAST_HTTP_STATUS = LAST_HTTP_STATUS  # type: int
+        self.LAST_SOURCE_ETAG = LAST_SOURCE_ETAG  # type: Optional[str]
+        self.LAST_SOURCE_LAST_MODIFIED = LAST_SOURCE_LAST_MODIFIED  # type: Optional[str]
+        self.LAST_BATCH_ID = LAST_BATCH_ID  # type: Optional[str]
+        self.LAST_RECORD_COUNT = LAST_RECORD_COUNT  # type: int
+        self.LAST_INSERTED_COUNT = LAST_INSERTED_COUNT  # type: int
+        self.LAST_DURATION_MS = LAST_DURATION_MS  # type: int
+        self.FETCH_COUNT = FETCH_COUNT  # type: int
+        self.INGEST_COUNT = INGEST_COUNT  # type: int
+        self.LAST_PUBLICATION_CID = LAST_PUBLICATION_CID  # type: Optional[str]
+        self.LAST_PNM_CID = LAST_PNM_CID  # type: Optional[str]
+        self.FEED_HEAD = FEED_HEAD  # type: Optional[str]
+        self.EMITS_SCHEMAS = EMITS_SCHEMAS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -610,6 +1003,32 @@ class ICNT(object):
                     self.PROVIDER_SIGNATURE.append(ICN.PROVIDER_SIGNATURE(i))
             else:
                 self.PROVIDER_SIGNATURE = ICN.PROVIDER_SIGNATUREAsNumpy()
+        self.ORIGIN_ID = ICN.ORIGIN_ID()
+        self.ORIGIN_NAME = ICN.ORIGIN_NAME()
+        self.DATASET_ID = ICN.DATASET_ID()
+        self.PROVIDER_ID = ICN.PROVIDER_ID()
+        self.SOURCE_NAME = ICN.SOURCE_NAME()
+        self.LICENSE = ICN.LICENSE()
+        self.LICENSE_URL = ICN.LICENSE_URL()
+        self.CITATION = ICN.CITATION()
+        self.MIN_FETCH_INTERVAL_MS = ICN.MIN_FETCH_INTERVAL_MS()
+        self.NEXT_ELIGIBLE_AT = ICN.NEXT_ELIGIBLE_AT()
+        self.LAST_HTTP_STATUS = ICN.LAST_HTTP_STATUS()
+        self.LAST_SOURCE_ETAG = ICN.LAST_SOURCE_ETAG()
+        self.LAST_SOURCE_LAST_MODIFIED = ICN.LAST_SOURCE_LAST_MODIFIED()
+        self.LAST_BATCH_ID = ICN.LAST_BATCH_ID()
+        self.LAST_RECORD_COUNT = ICN.LAST_RECORD_COUNT()
+        self.LAST_INSERTED_COUNT = ICN.LAST_INSERTED_COUNT()
+        self.LAST_DURATION_MS = ICN.LAST_DURATION_MS()
+        self.FETCH_COUNT = ICN.FETCH_COUNT()
+        self.INGEST_COUNT = ICN.INGEST_COUNT()
+        self.LAST_PUBLICATION_CID = ICN.LAST_PUBLICATION_CID()
+        self.LAST_PNM_CID = ICN.LAST_PNM_CID()
+        self.FEED_HEAD = ICN.FEED_HEAD()
+        if not ICN.EMITS_SCHEMASIsNone():
+            self.EMITS_SCHEMAS = []
+            for i in range(ICN.EMITS_SCHEMASLength()):
+                self.EMITS_SCHEMAS.append(ICN.EMITS_SCHEMAS(i))
 
     # ICNT
     def Pack(self, builder):
@@ -649,6 +1068,42 @@ class ICNT(object):
                 for i in reversed(range(len(self.PROVIDER_SIGNATURE))):
                     builder.PrependUint8(self.PROVIDER_SIGNATURE[i])
                 PROVIDER_SIGNATURE = builder.EndVector()
+        if self.ORIGIN_ID is not None:
+            ORIGIN_ID = builder.CreateString(self.ORIGIN_ID)
+        if self.ORIGIN_NAME is not None:
+            ORIGIN_NAME = builder.CreateString(self.ORIGIN_NAME)
+        if self.DATASET_ID is not None:
+            DATASET_ID = builder.CreateString(self.DATASET_ID)
+        if self.PROVIDER_ID is not None:
+            PROVIDER_ID = builder.CreateString(self.PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            SOURCE_NAME = builder.CreateString(self.SOURCE_NAME)
+        if self.LICENSE is not None:
+            LICENSE = builder.CreateString(self.LICENSE)
+        if self.LICENSE_URL is not None:
+            LICENSE_URL = builder.CreateString(self.LICENSE_URL)
+        if self.CITATION is not None:
+            CITATION = builder.CreateString(self.CITATION)
+        if self.LAST_SOURCE_ETAG is not None:
+            LAST_SOURCE_ETAG = builder.CreateString(self.LAST_SOURCE_ETAG)
+        if self.LAST_SOURCE_LAST_MODIFIED is not None:
+            LAST_SOURCE_LAST_MODIFIED = builder.CreateString(self.LAST_SOURCE_LAST_MODIFIED)
+        if self.LAST_BATCH_ID is not None:
+            LAST_BATCH_ID = builder.CreateString(self.LAST_BATCH_ID)
+        if self.LAST_PUBLICATION_CID is not None:
+            LAST_PUBLICATION_CID = builder.CreateString(self.LAST_PUBLICATION_CID)
+        if self.LAST_PNM_CID is not None:
+            LAST_PNM_CID = builder.CreateString(self.LAST_PNM_CID)
+        if self.FEED_HEAD is not None:
+            FEED_HEAD = builder.CreateString(self.FEED_HEAD)
+        if self.EMITS_SCHEMAS is not None:
+            EMITS_SCHEMASlist = []
+            for i in range(len(self.EMITS_SCHEMAS)):
+                EMITS_SCHEMASlist.append(builder.CreateString(self.EMITS_SCHEMAS[i]))
+            ICNStartEMITS_SCHEMASVector(builder, len(self.EMITS_SCHEMAS))
+            for i in reversed(range(len(self.EMITS_SCHEMAS))):
+                builder.PrependUOffsetTRelative(EMITS_SCHEMASlist[i])
+            EMITS_SCHEMAS = builder.EndVector()
         ICNStart(builder)
         if self.CONNECTOR_ID is not None:
             ICNAddCONNECTOR_ID(builder, CONNECTOR_ID)
@@ -694,5 +1149,43 @@ class ICNT(object):
             ICNAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
         if self.PROVIDER_SIGNATURE is not None:
             ICNAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
+        if self.ORIGIN_ID is not None:
+            ICNAddORIGIN_ID(builder, ORIGIN_ID)
+        if self.ORIGIN_NAME is not None:
+            ICNAddORIGIN_NAME(builder, ORIGIN_NAME)
+        if self.DATASET_ID is not None:
+            ICNAddDATASET_ID(builder, DATASET_ID)
+        if self.PROVIDER_ID is not None:
+            ICNAddPROVIDER_ID(builder, PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            ICNAddSOURCE_NAME(builder, SOURCE_NAME)
+        if self.LICENSE is not None:
+            ICNAddLICENSE(builder, LICENSE)
+        if self.LICENSE_URL is not None:
+            ICNAddLICENSE_URL(builder, LICENSE_URL)
+        if self.CITATION is not None:
+            ICNAddCITATION(builder, CITATION)
+        ICNAddMIN_FETCH_INTERVAL_MS(builder, self.MIN_FETCH_INTERVAL_MS)
+        ICNAddNEXT_ELIGIBLE_AT(builder, self.NEXT_ELIGIBLE_AT)
+        ICNAddLAST_HTTP_STATUS(builder, self.LAST_HTTP_STATUS)
+        if self.LAST_SOURCE_ETAG is not None:
+            ICNAddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAG)
+        if self.LAST_SOURCE_LAST_MODIFIED is not None:
+            ICNAddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIED)
+        if self.LAST_BATCH_ID is not None:
+            ICNAddLAST_BATCH_ID(builder, LAST_BATCH_ID)
+        ICNAddLAST_RECORD_COUNT(builder, self.LAST_RECORD_COUNT)
+        ICNAddLAST_INSERTED_COUNT(builder, self.LAST_INSERTED_COUNT)
+        ICNAddLAST_DURATION_MS(builder, self.LAST_DURATION_MS)
+        ICNAddFETCH_COUNT(builder, self.FETCH_COUNT)
+        ICNAddINGEST_COUNT(builder, self.INGEST_COUNT)
+        if self.LAST_PUBLICATION_CID is not None:
+            ICNAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+        if self.LAST_PNM_CID is not None:
+            ICNAddLAST_PNM_CID(builder, LAST_PNM_CID)
+        if self.FEED_HEAD is not None:
+            ICNAddFEED_HEAD(builder, FEED_HEAD)
+        if self.EMITS_SCHEMAS is not None:
+            ICNAddEMITS_SCHEMAS(builder, EMITS_SCHEMAS)
         ICN = ICNEnd(builder)
         return ICN

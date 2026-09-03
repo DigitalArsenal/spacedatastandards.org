@@ -131,6 +131,125 @@ public struct DSS : IFlatbufferObject
   public ArraySegment<byte>? GetERRORBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
   public byte[] GetERRORArray() { return __p.__vector_as_array<byte>(70); }
+  /// Standard code of the lane, e.g. "OMM".
+  public string SCHEMA_NAME { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSCHEMA_NAMEBytes() { return __p.__vector_as_span<byte>(72, 1); }
+#else
+  public ArraySegment<byte>? GetSCHEMA_NAMEBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public byte[] GetSCHEMA_NAMEArray() { return __p.__vector_as_array<byte>(72); }
+  public string PROVIDER_ID { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_IDBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_IDBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetPROVIDER_IDArray() { return __p.__vector_as_array<byte>(74); }
+  public string SOURCE_NAME { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_NAMEBytes() { return __p.__vector_as_span<byte>(76, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_NAMEBytes() { return __p.__vector_as_arraysegment(76); }
+#endif
+  public byte[] GetSOURCE_NAMEArray() { return __p.__vector_as_array<byte>(76); }
+  /// Stable dataset identifier within the origin.
+  public string DATASET_ID { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATASET_IDBytes() { return __p.__vector_as_span<byte>(78, 1); }
+#else
+  public ArraySegment<byte>? GetDATASET_IDBytes() { return __p.__vector_as_arraysegment(78); }
+#endif
+  public byte[] GetDATASET_IDArray() { return __p.__vector_as_array<byte>(78); }
+  /// Ingest connector that produces the lane, when known.
+  public string CONNECTOR_ID { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCONNECTOR_IDBytes() { return __p.__vector_as_span<byte>(80, 1); }
+#else
+  public ArraySegment<byte>? GetCONNECTOR_IDBytes() { return __p.__vector_as_arraysegment(80); }
+#endif
+  public byte[] GetCONNECTOR_IDArray() { return __p.__vector_as_array<byte>(80); }
+  /// Channel identifier the lane is announced on.
+  public string CHANNEL_ID { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCHANNEL_IDBytes() { return __p.__vector_as_span<byte>(82, 1); }
+#else
+  public ArraySegment<byte>? GetCHANNEL_IDBytes() { return __p.__vector_as_arraysegment(82); }
+#endif
+  public byte[] GetCHANNEL_IDArray() { return __p.__vector_as_array<byte>(82); }
+  /// Publish/subscribe topic of the lane.
+  public string TOPIC { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTOPICBytes() { return __p.__vector_as_span<byte>(84, 1); }
+#else
+  public ArraySegment<byte>? GetTOPICBytes() { return __p.__vector_as_arraysegment(84); }
+#endif
+  public byte[] GetTOPICArray() { return __p.__vector_as_array<byte>(84); }
+  /// True when this node subscribes to the lane.
+  public bool SUBSCRIBED { get { int o = __p.__offset(86); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public dssPinPolicy PIN_POLICY { get { int o = __p.__offset(88); return o != 0 ? (dssPinPolicy)__p.bb.GetSbyte(o + __p.bb_pos) : dssPinPolicy.None; } }
+  /// Visibility of the lane, e.g. "public", "private".
+  public string VISIBILITY { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetVISIBILITYBytes() { return __p.__vector_as_span<byte>(90, 1); }
+#else
+  public ArraySegment<byte>? GetVISIBILITYBytes() { return __p.__vector_as_arraysegment(90); }
+#endif
+  public byte[] GetVISIBILITYArray() { return __p.__vector_as_array<byte>(90); }
+  /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  public string ENCRYPTION_STATE { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENCRYPTION_STATEBytes() { return __p.__vector_as_span<byte>(92, 1); }
+#else
+  public ArraySegment<byte>? GetENCRYPTION_STATEBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public byte[] GetENCRYPTION_STATEArray() { return __p.__vector_as_array<byte>(92); }
+  /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  public string GRANT_STATE { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGRANT_STATEBytes() { return __p.__vector_as_span<byte>(94, 1); }
+#else
+  public ArraySegment<byte>? GetGRANT_STATEBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public byte[] GetGRANT_STATEArray() { return __p.__vector_as_array<byte>(94); }
+  /// Feed head this node has materialised up to.
+  public string FEED_HEAD { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFEED_HEADBytes() { return __p.__vector_as_span<byte>(96, 1); }
+#else
+  public ArraySegment<byte>? GetFEED_HEADBytes() { return __p.__vector_as_arraysegment(96); }
+#endif
+  public byte[] GetFEED_HEADArray() { return __p.__vector_as_array<byte>(96); }
+  /// Content identifier of the newest publication manifest known.
+  public string LAST_PUBLICATION_CID { get { int o = __p.__offset(98); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_PUBLICATION_CIDBytes() { return __p.__vector_as_span<byte>(98, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_PUBLICATION_CIDBytes() { return __p.__vector_as_arraysegment(98); }
+#endif
+  public byte[] GetLAST_PUBLICATION_CIDArray() { return __p.__vector_as_array<byte>(98); }
+  /// Content identifier of the newest publish notification known.
+  public string LAST_PNM_CID { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_PNM_CIDBytes() { return __p.__vector_as_span<byte>(100, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_PNM_CIDBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public byte[] GetLAST_PNM_CIDArray() { return __p.__vector_as_array<byte>(100); }
+  /// Rows materialised since the previous SYNCED state.
+  public ulong DELTA_ROWS { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix milliseconds the current or last sync pass started; 0 = never.
+  public ulong LAST_SYNC_STARTED_AT { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Action a client requests when sending this record to a node.
+  public dssAction REQUESTED_ACTION { get { int o = __p.__offset(106); return o != 0 ? (dssAction)__p.bb.GetSbyte(o + __p.bb_pos) : dssAction.None; } }
+  /// Upstream publisher of the lane's records.
+  public string ORIGIN_ID { get { int o = __p.__offset(108); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGIN_IDBytes() { return __p.__vector_as_span<byte>(108, 1); }
+#else
+  public ArraySegment<byte>? GetORIGIN_IDBytes() { return __p.__vector_as_arraysegment(108); }
+#endif
+  public byte[] GetORIGIN_IDArray() { return __p.__vector_as_array<byte>(108); }
 
   public static Offset<DSS> CreateDSS(FlatBufferBuilder builder,
       dssSyncState STATUS = dssSyncState.IDLE,
@@ -166,8 +285,29 @@ public struct DSS : IFlatbufferObject
       StringOffset SYNC_FILTEROffset = default(StringOffset),
       VectorOffset VERIFIED_CHUNKSOffset = default(VectorOffset),
       StringOffset LAST_SYNCED_ATOffset = default(StringOffset),
-      StringOffset ERROROffset = default(StringOffset)) {
-    builder.StartTable(34);
+      StringOffset ERROROffset = default(StringOffset),
+      StringOffset SCHEMA_NAMEOffset = default(StringOffset),
+      StringOffset PROVIDER_IDOffset = default(StringOffset),
+      StringOffset SOURCE_NAMEOffset = default(StringOffset),
+      StringOffset DATASET_IDOffset = default(StringOffset),
+      StringOffset CONNECTOR_IDOffset = default(StringOffset),
+      StringOffset CHANNEL_IDOffset = default(StringOffset),
+      StringOffset TOPICOffset = default(StringOffset),
+      bool SUBSCRIBED = false,
+      dssPinPolicy PIN_POLICY = dssPinPolicy.None,
+      StringOffset VISIBILITYOffset = default(StringOffset),
+      StringOffset ENCRYPTION_STATEOffset = default(StringOffset),
+      StringOffset GRANT_STATEOffset = default(StringOffset),
+      StringOffset FEED_HEADOffset = default(StringOffset),
+      StringOffset LAST_PUBLICATION_CIDOffset = default(StringOffset),
+      StringOffset LAST_PNM_CIDOffset = default(StringOffset),
+      ulong DELTA_ROWS = 0,
+      ulong LAST_SYNC_STARTED_AT = 0,
+      dssAction REQUESTED_ACTION = dssAction.None,
+      StringOffset ORIGIN_IDOffset = default(StringOffset)) {
+    builder.StartTable(53);
+    DSS.AddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT);
+    DSS.AddDELTA_ROWS(builder, DELTA_ROWS);
     DSS.AddFLATSQL_MATERIALIZATION_MS(builder, FLATSQL_MATERIALIZATION_MS);
     DSS.AddVERIFICATION_MS(builder, VERIFICATION_MS);
     DSS.AddNETWORK_TRANSFER_MS(builder, NETWORK_TRANSFER_MS);
@@ -184,6 +324,20 @@ public struct DSS : IFlatbufferObject
     DSS.AddLOCAL_ROWS(builder, LOCAL_ROWS);
     DSS.AddTOTAL_ROWS(builder, TOTAL_ROWS);
     DSS.AddSYNCED_ROWS(builder, SYNCED_ROWS);
+    DSS.AddORIGIN_ID(builder, ORIGIN_IDOffset);
+    DSS.AddLAST_PNM_CID(builder, LAST_PNM_CIDOffset);
+    DSS.AddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CIDOffset);
+    DSS.AddFEED_HEAD(builder, FEED_HEADOffset);
+    DSS.AddGRANT_STATE(builder, GRANT_STATEOffset);
+    DSS.AddENCRYPTION_STATE(builder, ENCRYPTION_STATEOffset);
+    DSS.AddVISIBILITY(builder, VISIBILITYOffset);
+    DSS.AddTOPIC(builder, TOPICOffset);
+    DSS.AddCHANNEL_ID(builder, CHANNEL_IDOffset);
+    DSS.AddCONNECTOR_ID(builder, CONNECTOR_IDOffset);
+    DSS.AddDATASET_ID(builder, DATASET_IDOffset);
+    DSS.AddSOURCE_NAME(builder, SOURCE_NAMEOffset);
+    DSS.AddPROVIDER_ID(builder, PROVIDER_IDOffset);
+    DSS.AddSCHEMA_NAME(builder, SCHEMA_NAMEOffset);
     DSS.AddERROR(builder, ERROROffset);
     DSS.AddLAST_SYNCED_AT(builder, LAST_SYNCED_ATOffset);
     DSS.AddVERIFIED_CHUNKS(builder, VERIFIED_CHUNKSOffset);
@@ -198,6 +352,9 @@ public struct DSS : IFlatbufferObject
     DSS.AddSNAPSHOT_ID(builder, SNAPSHOT_IDOffset);
     DSS.AddPROVIDER_PUBLIC_KEY(builder, PROVIDER_PUBLIC_KEYOffset);
     DSS.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
+    DSS.AddREQUESTED_ACTION(builder, REQUESTED_ACTION);
+    DSS.AddPIN_POLICY(builder, PIN_POLICY);
+    DSS.AddSUBSCRIBED(builder, SUBSCRIBED);
     DSS.AddWIRE_SPEED_TARGET_MET(builder, WIRE_SPEED_TARGET_MET);
     DSS.AddHAS_WIRE_SPEED_TARGET_MET(builder, HAS_WIRE_SPEED_TARGET_MET);
     DSS.AddHAS_WIRE_SPEED_UTILIZATION(builder, HAS_WIRE_SPEED_UTILIZATION);
@@ -205,7 +362,7 @@ public struct DSS : IFlatbufferObject
     return DSS.EndDSS(builder);
   }
 
-  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(34); }
+  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(53); }
   public static void AddSTATUS(FlatBufferBuilder builder, dssSyncState STATUS) { builder.AddSbyte(0, (sbyte)STATUS, 0); }
   public static void AddSYNCED_ROWS(FlatBufferBuilder builder, ulong SYNCED_ROWS) { builder.AddUlong(1, SYNCED_ROWS, 0); }
   public static void AddTOTAL_ROWS(FlatBufferBuilder builder, ulong TOTAL_ROWS) { builder.AddUlong(2, TOTAL_ROWS, 0); }
@@ -245,6 +402,25 @@ public struct DSS : IFlatbufferObject
   public static void StartVERIFIED_CHUNKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddLAST_SYNCED_AT(FlatBufferBuilder builder, StringOffset LAST_SYNCED_ATOffset) { builder.AddOffset(32, LAST_SYNCED_ATOffset.Value, 0); }
   public static void AddERROR(FlatBufferBuilder builder, StringOffset ERROROffset) { builder.AddOffset(33, ERROROffset.Value, 0); }
+  public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(34, SCHEMA_NAMEOffset.Value, 0); }
+  public static void AddPROVIDER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_IDOffset) { builder.AddOffset(35, PROVIDER_IDOffset.Value, 0); }
+  public static void AddSOURCE_NAME(FlatBufferBuilder builder, StringOffset SOURCE_NAMEOffset) { builder.AddOffset(36, SOURCE_NAMEOffset.Value, 0); }
+  public static void AddDATASET_ID(FlatBufferBuilder builder, StringOffset DATASET_IDOffset) { builder.AddOffset(37, DATASET_IDOffset.Value, 0); }
+  public static void AddCONNECTOR_ID(FlatBufferBuilder builder, StringOffset CONNECTOR_IDOffset) { builder.AddOffset(38, CONNECTOR_IDOffset.Value, 0); }
+  public static void AddCHANNEL_ID(FlatBufferBuilder builder, StringOffset CHANNEL_IDOffset) { builder.AddOffset(39, CHANNEL_IDOffset.Value, 0); }
+  public static void AddTOPIC(FlatBufferBuilder builder, StringOffset TOPICOffset) { builder.AddOffset(40, TOPICOffset.Value, 0); }
+  public static void AddSUBSCRIBED(FlatBufferBuilder builder, bool SUBSCRIBED) { builder.AddBool(41, SUBSCRIBED, false); }
+  public static void AddPIN_POLICY(FlatBufferBuilder builder, dssPinPolicy PIN_POLICY) { builder.AddSbyte(42, (sbyte)PIN_POLICY, 0); }
+  public static void AddVISIBILITY(FlatBufferBuilder builder, StringOffset VISIBILITYOffset) { builder.AddOffset(43, VISIBILITYOffset.Value, 0); }
+  public static void AddENCRYPTION_STATE(FlatBufferBuilder builder, StringOffset ENCRYPTION_STATEOffset) { builder.AddOffset(44, ENCRYPTION_STATEOffset.Value, 0); }
+  public static void AddGRANT_STATE(FlatBufferBuilder builder, StringOffset GRANT_STATEOffset) { builder.AddOffset(45, GRANT_STATEOffset.Value, 0); }
+  public static void AddFEED_HEAD(FlatBufferBuilder builder, StringOffset FEED_HEADOffset) { builder.AddOffset(46, FEED_HEADOffset.Value, 0); }
+  public static void AddLAST_PUBLICATION_CID(FlatBufferBuilder builder, StringOffset LAST_PUBLICATION_CIDOffset) { builder.AddOffset(47, LAST_PUBLICATION_CIDOffset.Value, 0); }
+  public static void AddLAST_PNM_CID(FlatBufferBuilder builder, StringOffset LAST_PNM_CIDOffset) { builder.AddOffset(48, LAST_PNM_CIDOffset.Value, 0); }
+  public static void AddDELTA_ROWS(FlatBufferBuilder builder, ulong DELTA_ROWS) { builder.AddUlong(49, DELTA_ROWS, 0); }
+  public static void AddLAST_SYNC_STARTED_AT(FlatBufferBuilder builder, ulong LAST_SYNC_STARTED_AT) { builder.AddUlong(50, LAST_SYNC_STARTED_AT, 0); }
+  public static void AddREQUESTED_ACTION(FlatBufferBuilder builder, dssAction REQUESTED_ACTION) { builder.AddSbyte(51, (sbyte)REQUESTED_ACTION, 0); }
+  public static void AddORIGIN_ID(FlatBufferBuilder builder, StringOffset ORIGIN_IDOffset) { builder.AddOffset(52, ORIGIN_IDOffset.Value, 0); }
   public static Offset<DSS> EndDSS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DSS>(o);
@@ -292,6 +468,25 @@ public struct DSS : IFlatbufferObject
     for (var _j = 0; _j < this.VERIFIED_CHUNKSLength; ++_j) {_o.VERIFIED_CHUNKS.Add(this.VERIFIED_CHUNKS(_j));}
     _o.LAST_SYNCED_AT = this.LAST_SYNCED_AT;
     _o.ERROR = this.ERROR;
+    _o.SCHEMA_NAME = this.SCHEMA_NAME;
+    _o.PROVIDER_ID = this.PROVIDER_ID;
+    _o.SOURCE_NAME = this.SOURCE_NAME;
+    _o.DATASET_ID = this.DATASET_ID;
+    _o.CONNECTOR_ID = this.CONNECTOR_ID;
+    _o.CHANNEL_ID = this.CHANNEL_ID;
+    _o.TOPIC = this.TOPIC;
+    _o.SUBSCRIBED = this.SUBSCRIBED;
+    _o.PIN_POLICY = this.PIN_POLICY;
+    _o.VISIBILITY = this.VISIBILITY;
+    _o.ENCRYPTION_STATE = this.ENCRYPTION_STATE;
+    _o.GRANT_STATE = this.GRANT_STATE;
+    _o.FEED_HEAD = this.FEED_HEAD;
+    _o.LAST_PUBLICATION_CID = this.LAST_PUBLICATION_CID;
+    _o.LAST_PNM_CID = this.LAST_PNM_CID;
+    _o.DELTA_ROWS = this.DELTA_ROWS;
+    _o.LAST_SYNC_STARTED_AT = this.LAST_SYNC_STARTED_AT;
+    _o.REQUESTED_ACTION = this.REQUESTED_ACTION;
+    _o.ORIGIN_ID = this.ORIGIN_ID;
   }
   public static Offset<DSS> Pack(FlatBufferBuilder builder, DSST _o) {
     if (_o == null) return default(Offset<DSS>);
@@ -314,6 +509,20 @@ public struct DSS : IFlatbufferObject
     }
     var _LAST_SYNCED_AT = _o.LAST_SYNCED_AT == null ? default(StringOffset) : builder.CreateString(_o.LAST_SYNCED_AT);
     var _ERROR = _o.ERROR == null ? default(StringOffset) : builder.CreateString(_o.ERROR);
+    var _SCHEMA_NAME = _o.SCHEMA_NAME == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_NAME);
+    var _PROVIDER_ID = _o.PROVIDER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_ID);
+    var _SOURCE_NAME = _o.SOURCE_NAME == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_NAME);
+    var _DATASET_ID = _o.DATASET_ID == null ? default(StringOffset) : builder.CreateString(_o.DATASET_ID);
+    var _CONNECTOR_ID = _o.CONNECTOR_ID == null ? default(StringOffset) : builder.CreateString(_o.CONNECTOR_ID);
+    var _CHANNEL_ID = _o.CHANNEL_ID == null ? default(StringOffset) : builder.CreateString(_o.CHANNEL_ID);
+    var _TOPIC = _o.TOPIC == null ? default(StringOffset) : builder.CreateString(_o.TOPIC);
+    var _VISIBILITY = _o.VISIBILITY == null ? default(StringOffset) : builder.CreateString(_o.VISIBILITY);
+    var _ENCRYPTION_STATE = _o.ENCRYPTION_STATE == null ? default(StringOffset) : builder.CreateString(_o.ENCRYPTION_STATE);
+    var _GRANT_STATE = _o.GRANT_STATE == null ? default(StringOffset) : builder.CreateString(_o.GRANT_STATE);
+    var _FEED_HEAD = _o.FEED_HEAD == null ? default(StringOffset) : builder.CreateString(_o.FEED_HEAD);
+    var _LAST_PUBLICATION_CID = _o.LAST_PUBLICATION_CID == null ? default(StringOffset) : builder.CreateString(_o.LAST_PUBLICATION_CID);
+    var _LAST_PNM_CID = _o.LAST_PNM_CID == null ? default(StringOffset) : builder.CreateString(_o.LAST_PNM_CID);
+    var _ORIGIN_ID = _o.ORIGIN_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIGIN_ID);
     return CreateDSS(
       builder,
       _o.STATUS,
@@ -349,7 +558,26 @@ public struct DSS : IFlatbufferObject
       _SYNC_FILTER,
       _VERIFIED_CHUNKS,
       _LAST_SYNCED_AT,
-      _ERROR);
+      _ERROR,
+      _SCHEMA_NAME,
+      _PROVIDER_ID,
+      _SOURCE_NAME,
+      _DATASET_ID,
+      _CONNECTOR_ID,
+      _CHANNEL_ID,
+      _TOPIC,
+      _o.SUBSCRIBED,
+      _o.PIN_POLICY,
+      _VISIBILITY,
+      _ENCRYPTION_STATE,
+      _GRANT_STATE,
+      _FEED_HEAD,
+      _LAST_PUBLICATION_CID,
+      _LAST_PNM_CID,
+      _o.DELTA_ROWS,
+      _o.LAST_SYNC_STARTED_AT,
+      _o.REQUESTED_ACTION,
+      _ORIGIN_ID);
   }
 }
 
@@ -389,6 +617,25 @@ public class DSST
   public List<string> VERIFIED_CHUNKS { get; set; }
   public string LAST_SYNCED_AT { get; set; }
   public string ERROR { get; set; }
+  public string SCHEMA_NAME { get; set; }
+  public string PROVIDER_ID { get; set; }
+  public string SOURCE_NAME { get; set; }
+  public string DATASET_ID { get; set; }
+  public string CONNECTOR_ID { get; set; }
+  public string CHANNEL_ID { get; set; }
+  public string TOPIC { get; set; }
+  public bool SUBSCRIBED { get; set; }
+  public dssPinPolicy PIN_POLICY { get; set; }
+  public string VISIBILITY { get; set; }
+  public string ENCRYPTION_STATE { get; set; }
+  public string GRANT_STATE { get; set; }
+  public string FEED_HEAD { get; set; }
+  public string LAST_PUBLICATION_CID { get; set; }
+  public string LAST_PNM_CID { get; set; }
+  public ulong DELTA_ROWS { get; set; }
+  public ulong LAST_SYNC_STARTED_AT { get; set; }
+  public dssAction REQUESTED_ACTION { get; set; }
+  public string ORIGIN_ID { get; set; }
 
   public DSST() {
     this.STATUS = dssSyncState.IDLE;
@@ -425,6 +672,25 @@ public class DSST
     this.VERIFIED_CHUNKS = null;
     this.LAST_SYNCED_AT = null;
     this.ERROR = null;
+    this.SCHEMA_NAME = null;
+    this.PROVIDER_ID = null;
+    this.SOURCE_NAME = null;
+    this.DATASET_ID = null;
+    this.CONNECTOR_ID = null;
+    this.CHANNEL_ID = null;
+    this.TOPIC = null;
+    this.SUBSCRIBED = false;
+    this.PIN_POLICY = dssPinPolicy.None;
+    this.VISIBILITY = null;
+    this.ENCRYPTION_STATE = null;
+    this.GRANT_STATE = null;
+    this.FEED_HEAD = null;
+    this.LAST_PUBLICATION_CID = null;
+    this.LAST_PNM_CID = null;
+    this.DELTA_ROWS = 0;
+    this.LAST_SYNC_STARTED_AT = 0;
+    this.REQUESTED_ACTION = dssAction.None;
+    this.ORIGIN_ID = null;
   }
   public static DSST DeserializeFromBinary(byte[] fbBuffer) {
     return DSS.GetRootAsDSS(new ByteBuffer(fbBuffer)).UnPack();
@@ -476,6 +742,25 @@ static public class DSSVerify
       && verifier.VerifyVectorOfStrings(tablePos, 66 /*VERIFIED_CHUNKS*/, false)
       && verifier.VerifyString(tablePos, 68 /*LAST_SYNCED_AT*/, false)
       && verifier.VerifyString(tablePos, 70 /*ERROR*/, false)
+      && verifier.VerifyString(tablePos, 72 /*SCHEMA_NAME*/, false)
+      && verifier.VerifyString(tablePos, 74 /*PROVIDER_ID*/, false)
+      && verifier.VerifyString(tablePos, 76 /*SOURCE_NAME*/, false)
+      && verifier.VerifyString(tablePos, 78 /*DATASET_ID*/, false)
+      && verifier.VerifyString(tablePos, 80 /*CONNECTOR_ID*/, false)
+      && verifier.VerifyString(tablePos, 82 /*CHANNEL_ID*/, false)
+      && verifier.VerifyString(tablePos, 84 /*TOPIC*/, false)
+      && verifier.VerifyField(tablePos, 86 /*SUBSCRIBED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 88 /*PIN_POLICY*/, 1 /*dssPinPolicy*/, 1, false)
+      && verifier.VerifyString(tablePos, 90 /*VISIBILITY*/, false)
+      && verifier.VerifyString(tablePos, 92 /*ENCRYPTION_STATE*/, false)
+      && verifier.VerifyString(tablePos, 94 /*GRANT_STATE*/, false)
+      && verifier.VerifyString(tablePos, 96 /*FEED_HEAD*/, false)
+      && verifier.VerifyString(tablePos, 98 /*LAST_PUBLICATION_CID*/, false)
+      && verifier.VerifyString(tablePos, 100 /*LAST_PNM_CID*/, false)
+      && verifier.VerifyField(tablePos, 102 /*DELTA_ROWS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*LAST_SYNC_STARTED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 106 /*REQUESTED_ACTION*/, 1 /*dssAction*/, 1, false)
+      && verifier.VerifyString(tablePos, 108 /*ORIGIN_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

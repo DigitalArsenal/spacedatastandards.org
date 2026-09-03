@@ -3,4 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './DSS.js';
+export * from './dssAction.js';
+export * from './dssPinPolicy.js';
 export * from './dssSyncState.js';

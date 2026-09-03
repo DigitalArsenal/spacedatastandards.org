@@ -258,5 +258,10 @@ class RecordType private constructor() {
         const val ICN: UByte = 236u
         const val TRP: UByte = 237u
         const val TRV: UByte = 238u
+        const val ACT: UByte = 239u
+        const val AGR: UByte = 240u
+        const val NDS: UByte = 241u
+        const val NST: UByte = 242u
+        const val QRP: UByte = 243u
     }
 }

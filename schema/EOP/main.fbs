@@ -1,5 +1,5 @@
-// Hash: 264779b1eb4cec7f12c2c4f0b1a69eaa1cfa195f699511b2691eba98fc12b6fe
-// Version: 1.0.3
+// Hash: af297c00d27ae50b46ff5aa76a6a0accb93ce4c82719d5d202be40de00f7e8c0
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 enum DataType: byte {
   OBSERVED = 0,
@@ -147,6 +147,18 @@ table EOP {
   /// from. Every frames consumer that must agree bit-for-bit records this so
   /// the source is provable rather than assumed.
   DATA_SET_CID: string;
+
+  /// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  /// radians, as published beside the CIP offsets by combined rapid-service
+  /// series.
+  NUTATION_DPSI_RADIANS: double;
+  /// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  /// radians.
+  NUTATION_DEPS_RADIANS: double;
+  /// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  NUTATION_DPSI_UNCERTAINTY_RADIANS: double;
+  /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  NUTATION_DEPS_UNCERTAINTY_RADIANS: double;
 }
 
 root_type EOP;

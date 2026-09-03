@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "agrKind": {
+      "type": "string",
+      "enum": [
+        "Histogram",
+        "Category",
+        "Series",
+        "Scatter",
+        "Pivot"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Histogram": {
+          "value": 0
+        },
+        "Category": {
+          "value": 1
+        },
+        "Series": {
+          "value": 2
+        },
+        "Scatter": {
+          "value": 3
+        },
+        "Pivot": {
+          "value": 4
+        }
+      }
+    },
+    "AGRBin": {
+      "type": "object",
+      "description": "One histogram bin over [LOW, HIGH).",
+      "properties": {
+        "LOW": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HIGH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AGRCategory": {
+      "type": "object",
+      "description": "One category tally.",
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AGRSeries": {
+      "type": "object",
+      "description": "One named series with parallel X and Y vectors.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "Y": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AGRPivotCell": {
+      "type": "object",
+      "description": "One pivot cell.",
+      "properties": {
+        "ROW_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COL_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AGR": {
+      "type": "object",
+      "description": "Aggregation Result - one summary over one standard's records.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/agrKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Histogram": {
+              "value": 0
+            },
+            "Category": {
+              "value": 1
+            },
+            "Series": {
+              "value": 2
+            },
+            "Scatter": {
+              "value": 3
+            },
+            "Pivot": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Histogram"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Standard code of the records aggregated, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SQL": {
+          "type": "string",
+          "description": "SQL selection the aggregate was computed over, when any.",
+          "x-flatbuffer-type": "string"
+        },
+        "X_FIELD": {
+          "type": "string",
+          "description": "Field on the X axis; may be a derived field the serving node computes.",
+          "x-flatbuffer-type": "string"
+        },
+        "Y_FIELDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Fields on the Y axis, one series each.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "X_IS_TIME": {
+          "type": "boolean",
+          "description": "True when X values are Unix milliseconds.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_UNIT": {
+          "type": "string",
+          "description": "Unit of X when the standard declares one.",
+          "x-flatbuffer-type": "string"
+        },
+        "BINS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AGRBin"
+          },
+          "x-flatbuffer-type": "[AGRBin]"
+        },
+        "CATEGORIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AGRCategory"
+          },
+          "x-flatbuffer-type": "[AGRCategory]"
+        },
+        "SERIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AGRSeries"
+          },
+          "x-flatbuffer-type": "[AGRSeries]"
+        },
+        "PIVOT": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AGRPivotCell"
+          },
+          "x-flatbuffer-type": "[AGRPivotCell]"
+        },
+        "ROW_KEYS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Row keys of a pivot in display order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COL_KEYS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Column keys of a pivot in display order.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SCANNED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records scanned to compute the aggregate.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MATCHED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records that matched the selection.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "STORED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records the serving node holds for the standard.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PARTIAL": {
+          "type": "boolean",
+          "description": "True when a bounded scan returned before covering every stored record.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRUNCATED": {
+          "type": "boolean",
+          "description": "True when a category or pivot was cut to its top entries.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ELAPSED_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Milliseconds the serving node spent computing the aggregate.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AS_OF_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the serving numbers were last true.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AGR",
+  "x-flatbuffer-root-type": "AGR",
+  "x-flatbuffer-file-identifier": "$AGR"
+}

@@ -239,6 +239,11 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -373,10 +378,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 238;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 243;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 239] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 244] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -616,6 +621,11 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 239] = [
   RecordType::ICN,
   RecordType::TRP,
   RecordType::TRV,
+  RecordType::ACT,
+  RecordType::AGR,
+  RecordType::NDS,
+  RecordType::NST,
+  RecordType::QRP,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -876,9 +886,14 @@ impl RecordType {
   pub const ICN: Self = Self(236);
   pub const TRP: Self = Self(237);
   pub const TRV: Self = Self(238);
+  pub const ACT: Self = Self(239);
+  pub const AGR: Self = Self(240);
+  pub const NDS: Self = Self(241);
+  pub const NST: Self = Self(242);
+  pub const QRP: Self = Self(243);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 238;
+  pub const ENUM_MAX: u8 = 243;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1119,6 +1134,11 @@ impl RecordType {
     Self::ICN,
     Self::TRP,
     Self::TRV,
+    Self::ACT,
+    Self::AGR,
+    Self::NDS,
+    Self::NST,
+    Self::QRP,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1362,6 +1382,11 @@ impl RecordType {
       Self::ICN => Some("ICN"),
       Self::TRP => Some("TRP"),
       Self::TRV => Some("TRV"),
+      Self::ACT => Some("ACT"),
+      Self::AGR => Some("AGR"),
+      Self::NDS => Some("NDS"),
+      Self::NST => Some("NST"),
+      Self::QRP => Some("QRP"),
       _ => None,
     }
   }
@@ -1661,6 +1686,11 @@ pub enum RecordTypeT {
   ICN(alloc::boxed::Box<ICNT>),
   TRP(alloc::boxed::Box<TRPT>),
   TRV(alloc::boxed::Box<TRVT>),
+  ACT(alloc::boxed::Box<ACTT>),
+  AGR(alloc::boxed::Box<AGRT>),
+  NDS(alloc::boxed::Box<NDST>),
+  NST(alloc::boxed::Box<NSTT>),
+  QRP(alloc::boxed::Box<QRPT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1909,6 +1939,11 @@ impl RecordTypeT {
       Self::ICN(_) => RecordType::ICN,
       Self::TRP(_) => RecordType::TRP,
       Self::TRV(_) => RecordType::TRV,
+      Self::ACT(_) => RecordType::ACT,
+      Self::AGR(_) => RecordType::AGR,
+      Self::NDS(_) => RecordType::NDS,
+      Self::NST(_) => RecordType::NST,
+      Self::QRP(_) => RecordType::QRP,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2152,6 +2187,11 @@ impl RecordTypeT {
       Self::ICN(v) => Some(v.pack(fbb).as_union_value()),
       Self::TRP(v) => Some(v.pack(fbb).as_union_value()),
       Self::TRV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ACT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AGR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::NDS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::NST(v) => Some(v.pack(fbb).as_union_value()),
+      Self::QRP(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7152,6 +7192,111 @@ impl RecordTypeT {
   pub fn as_trv_mut(&mut self) -> Option<&mut TRVT> {
     if let Self::TRV(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned ACTT, setting the union to NONE.
+  pub fn take_act(&mut self) -> Option<alloc::boxed::Box<ACTT>> {
+    if let Self::ACT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::ACT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ACTT.
+  pub fn as_act(&self) -> Option<&ACTT> {
+    if let Self::ACT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ACTT.
+  pub fn as_act_mut(&mut self) -> Option<&mut ACTT> {
+    if let Self::ACT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned AGRT, setting the union to NONE.
+  pub fn take_agr(&mut self) -> Option<alloc::boxed::Box<AGRT>> {
+    if let Self::AGR(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::AGR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the AGRT.
+  pub fn as_agr(&self) -> Option<&AGRT> {
+    if let Self::AGR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the AGRT.
+  pub fn as_agr_mut(&mut self) -> Option<&mut AGRT> {
+    if let Self::AGR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned NDST, setting the union to NONE.
+  pub fn take_nds(&mut self) -> Option<alloc::boxed::Box<NDST>> {
+    if let Self::NDS(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::NDS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the NDST.
+  pub fn as_nds(&self) -> Option<&NDST> {
+    if let Self::NDS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the NDST.
+  pub fn as_nds_mut(&mut self) -> Option<&mut NDST> {
+    if let Self::NDS(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned NSTT, setting the union to NONE.
+  pub fn take_nst(&mut self) -> Option<alloc::boxed::Box<NSTT>> {
+    if let Self::NST(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::NST(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the NSTT.
+  pub fn as_nst(&self) -> Option<&NSTT> {
+    if let Self::NST(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the NSTT.
+  pub fn as_nst_mut(&mut self) -> Option<&mut NSTT> {
+    if let Self::NST(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned QRPT, setting the union to NONE.
+  pub fn take_qrp(&mut self) -> Option<alloc::boxed::Box<QRPT>> {
+    if let Self::QRP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::QRP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the QRPT.
+  pub fn as_qrp(&self) -> Option<&QRPT> {
+    if let Self::QRP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the QRPT.
+  pub fn as_qrp_mut(&mut self) -> Option<&mut QRPT> {
+    if let Self::QRP(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8381,6 +8526,31 @@ impl<'a> Record<'a> {
       RecordType::TRV => RecordTypeT::TRV(alloc::boxed::Box::new(
         self.value_as_trv()
             .expect("Invalid union table, expected `RecordType::TRV`.")
+            .unpack()
+      )),
+      RecordType::ACT => RecordTypeT::ACT(alloc::boxed::Box::new(
+        self.value_as_act()
+            .expect("Invalid union table, expected `RecordType::ACT`.")
+            .unpack()
+      )),
+      RecordType::AGR => RecordTypeT::AGR(alloc::boxed::Box::new(
+        self.value_as_agr()
+            .expect("Invalid union table, expected `RecordType::AGR`.")
+            .unpack()
+      )),
+      RecordType::NDS => RecordTypeT::NDS(alloc::boxed::Box::new(
+        self.value_as_nds()
+            .expect("Invalid union table, expected `RecordType::NDS`.")
+            .unpack()
+      )),
+      RecordType::NST => RecordTypeT::NST(alloc::boxed::Box::new(
+        self.value_as_nst()
+            .expect("Invalid union table, expected `RecordType::NST`.")
+            .unpack()
+      )),
+      RecordType::QRP => RecordTypeT::QRP(alloc::boxed::Box::new(
+        self.value_as_qrp()
+            .expect("Invalid union table, expected `RecordType::QRP`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -11987,6 +12157,81 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_act(&self) -> Option<ACT<'a>> {
+    if self.value_type() == RecordType::ACT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ACT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_agr(&self) -> Option<AGR<'a>> {
+    if self.value_type() == RecordType::AGR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AGR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_nds(&self) -> Option<NDS<'a>> {
+    if self.value_type() == RecordType::NDS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { NDS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_nst(&self) -> Option<NST<'a>> {
+    if self.value_type() == RecordType::NST {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { NST::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_qrp(&self) -> Option<QRP<'a>> {
+    if self.value_type() == RecordType::QRP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { QRP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12235,6 +12480,11 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::ICN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ICN>>("RecordType::ICN", pos),
           RecordType::TRP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRP>>("RecordType::TRP", pos),
           RecordType::TRV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRV>>("RecordType::TRV", pos),
+          RecordType::ACT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ACT>>("RecordType::ACT", pos),
+          RecordType::AGR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<AGR>>("RecordType::AGR", pos),
+          RecordType::NDS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<NDS>>("RecordType::NDS", pos),
+          RecordType::NST => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<NST>>("RecordType::NST", pos),
+          RecordType::QRP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<QRP>>("RecordType::QRP", pos),
           _ => Ok(()),
         }
      })?
@@ -13957,6 +14207,41 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::TRV => {
           if let Some(x) = self.value_as_trv() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ACT => {
+          if let Some(x) = self.value_as_act() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AGR => {
+          if let Some(x) = self.value_as_agr() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::NDS => {
+          if let Some(x) = self.value_as_nds() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::NST => {
+          if let Some(x) = self.value_as_nst() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::QRP => {
+          if let Some(x) = self.value_as_qrp() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

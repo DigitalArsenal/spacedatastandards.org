@@ -74,14 +74,122 @@ func (rcv *LCC) MutateOwner(n legacyCountryCode) bool {
 	return rcv.MutateOWNER(n)
 }
 
+/// Display name of the owner or source the code stands for.
+func (rcv *LCC) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LCC) Name() []byte {
+	return rcv.NAME()
+}
+
+/// Display name of the owner or source the code stands for.
+/// Longer description of the owner or source.
+func (rcv *LCC) DESCRIPTION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LCC) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
+/// Longer description of the owner or source.
+/// True while the code is in current use by the publishing catalogue.
+func (rcv *LCC) ACTIVE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *LCC) Active() bool {
+	return rcv.ACTIVE()
+}
+
+/// True while the code is in current use by the publishing catalogue.
+func (rcv *LCC) MutateACTIVE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *LCC) MutateActive(n bool) bool {
+	return rcv.MutateACTIVE(n)
+}
+
+/// URL of the reference table the row was retrieved from.
+func (rcv *LCC) SOURCE_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LCC) SourceUrl() []byte {
+	return rcv.SOURCE_URL()
+}
+
+/// URL of the reference table the row was retrieved from.
+/// ISO 8601 UTC time the reference table was retrieved.
+func (rcv *LCC) RETRIEVED_AT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LCC) RetrievedAt() []byte {
+	return rcv.RETRIEVED_AT()
+}
+
+/// ISO 8601 UTC time the reference table was retrieved.
 func LCCStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(6)
 }
 func LCCAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	builder.PrependInt8Slot(0, int8(OWNER), 0)
 }
 func LCCAddOwner(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	LCCAddOWNER(builder, OWNER)
+}
+func LCCAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func LCCAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	LCCAddNAME(builder, NAME)
+}
+func LCCAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func LCCAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	LCCAddDESCRIPTION(builder, DESCRIPTION)
+}
+func LCCAddACTIVE(builder *flatbuffers.Builder, ACTIVE bool) {
+	builder.PrependBoolSlot(3, ACTIVE, false)
+}
+func LCCAddActive(builder *flatbuffers.Builder, ACTIVE bool) {
+	LCCAddACTIVE(builder, ACTIVE)
+}
+func LCCAddSOURCE_URL(builder *flatbuffers.Builder, SOURCE_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SOURCE_URL), 0)
+}
+func LCCAddSourceUrl(builder *flatbuffers.Builder, SOURCE_URL flatbuffers.UOffsetT) {
+	LCCAddSOURCE_URL(builder, SOURCE_URL)
+}
+func LCCAddRETRIEVED_AT(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(RETRIEVED_AT), 0)
+}
+func LCCAddRetrievedAt(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.UOffsetT) {
+	LCCAddRETRIEVED_AT(builder, RETRIEVED_AT)
 }
 func LCCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

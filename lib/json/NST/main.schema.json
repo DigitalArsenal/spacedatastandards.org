@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "NSTNode" : {
+      "type" : "object",
+      "description" : "Node Status Record (NST)\nDescription\nPresence and identity of the peers a node knows about, as a node reports\nthem to operator dashboards: who the peer is (its identity record fields),\nhow it can be reached, whether it is online, where it is, which software\nand standards versions it runs, and how the row reached the board. The\nSOURCE field is the provenance of the row itself so an operator can always\nanswer \"how did this peer get here?\": declared in configuration, pinned by\nan operator, or seen on a live connection. A set carries every row the\nemitting node currently admits and the emitting node's own row.\nOne known peer as reported by the emitting node.",
+      "properties" : {
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier (multihash, base58)."
+              },
+        "DN" : {
+                "type" : "string",
+                "description" : "Distinguished name from the peer's identity record."
+              },
+        "ORGANIZATION" : {
+                "type" : "string"
+              },
+        "TRUST_LEVEL" : {
+                "type" : "string"
+              },
+        "ROLE" : {
+                "type" : "string"
+              },
+        "AGENT_VERSION" : {
+                "type" : "string"
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Multiformat addresses the peer is known by."
+              },
+        "LAST_SEEN" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds of last observation; 0 = never."
+              },
+        "IS_ONLINE" : {
+                "type" : "boolean"
+              },
+        "LATENCY_MS" : {
+                "type" : "number",
+                "description" : "Round-trip latency to the peer, milliseconds; 0 = unknown."
+              },
+        "VCARD" : {
+                "type" : "string",
+                "description" : "Full vCard 4.0 text derived from the peer's identity record."
+              },
+        "LAT" : {
+                "type" : "number",
+                "description" : "Resolved coordinates; 0,0 = unresolved."
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "GEO_COUNTRY" : {
+                "type" : "string"
+              },
+        "GEO_CITY" : {
+                "type" : "string"
+              },
+        "IS_SELF" : {
+                "type" : "boolean",
+                "description" : "True on the node emitting this set."
+              },
+        "UPTIME_S" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Seconds since the emitting process started (self only)."
+              },
+        "SUITE_VERSION" : {
+                "type" : "string"
+              },
+        "STANDARDS_VERSION" : {
+                "type" : "string"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "How this row reached the board: exactly one of \"config\" (declared in the\nnode's configuration), \"pinned\" (pinned by an operator) or \"connected\"\n(seen right now on a live connection)."
+              },
+        "PINNED" : {
+                "type" : "boolean",
+                "description" : "True for configuration and operator pins; a pinned peer keeps its row\nwhile unreachable."
+              },
+        "PIN_NOTE" : {
+                "type" : "string",
+                "description" : "For SOURCE \"config\" the configuration key an operator can edit; for\nSOURCE \"pinned\" the operator's own note. Never a manufactured label."
+              },
+        "CONNECTED_PEER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Peers this peer is currently connected to, for the connection graph."
+              },
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Signing public key from the peer's identity record."
+              },
+        "ENCRYPTION_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Encryption public key from the peer's identity record."
+              },
+        "EPM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the peer's identity record."
+              },
+        "STORAGE_DAEMON_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the content-addressed storage daemon the peer runs."
+              },
+        "ONION_ADDRESS" : {
+                "type" : "string",
+                "description" : "Onion-service address when the peer is reachable over an anonymity\nnetwork."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NST" : {
+      "type" : "object",
+      "description" : "Node Status Record - the set of peers a node reports.",
+      "properties" : {
+        "NODES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NSTNode"}
+              },
+        "GENERATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this set was generated."
+              },
+        "SOURCE_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the emitting node."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NST"
+}

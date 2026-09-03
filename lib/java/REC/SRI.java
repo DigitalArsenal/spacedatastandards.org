@@ -73,6 +73,39 @@ public final class SRI extends com.google.flatbuffers.Table {
   public ByteVector reservedVector(ByteVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer RESERVEDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer RESERVEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Content identifier of the record bytes.
+   */
+  public String CID() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CIDAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Byte offset of the record frame within its export or archive stream.
+   */
+  public long BYTE_OFFSET() { int o = __offset(20); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Byte length of the record frame.
+   */
+  public long BYTE_LENGTH() { int o = __offset(22); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Epoch of the record, Unix milliseconds; 0 = none.
+   */
+  public long EPOCH_MS() { int o = __offset(24); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Entity key of the record within its standard, e.g. a catalogue number.
+   */
+  public String ENTITY_KEY() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENTITY_KEYAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer ENTITY_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  public String PROVIDER_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer PROVIDER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  public String SOURCE_NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer SOURCE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  public String BATCH_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BATCH_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer BATCH_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
 
   public static int createSRI(FlatBufferBuilder builder,
       int RECORD_KEYOffset,
@@ -81,9 +114,25 @@ public final class SRI extends com.google.flatbuffers.Table {
       int ATTACHED_VIAOffset,
       int PAYLOAD_KINDOffset,
       double UPDATED_AT_MS,
-      int RESERVEDOffset) {
-    builder.startTable(7);
+      int RESERVEDOffset,
+      int CIDOffset,
+      long BYTE_OFFSET,
+      long BYTE_LENGTH,
+      long EPOCH_MS,
+      int ENTITY_KEYOffset,
+      int PROVIDER_IDOffset,
+      int SOURCE_NAMEOffset,
+      int BATCH_IDOffset) {
+    builder.startTable(15);
+    SRI.addEpochMs(builder, EPOCH_MS);
+    SRI.addByteOffset(builder, BYTE_OFFSET);
     SRI.addUpdatedAtMs(builder, UPDATED_AT_MS);
+    SRI.addBatchId(builder, BATCH_IDOffset);
+    SRI.addSourceName(builder, SOURCE_NAMEOffset);
+    SRI.addProviderId(builder, PROVIDER_IDOffset);
+    SRI.addEntityKey(builder, ENTITY_KEYOffset);
+    SRI.addByteLength(builder, BYTE_LENGTH);
+    SRI.addCid(builder, CIDOffset);
     SRI.addReserved(builder, RESERVEDOffset);
     SRI.addPayloadKind(builder, PAYLOAD_KINDOffset);
     SRI.addAttachedVia(builder, ATTACHED_VIAOffset);
@@ -93,7 +142,7 @@ public final class SRI extends com.google.flatbuffers.Table {
     return SRI.endSRI(builder);
   }
 
-  public static void startSRI(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startSRI(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addRecordKey(FlatBufferBuilder builder, int RECORD_KEYOffset) { builder.addOffset(0, RECORD_KEYOffset, 0); }
   public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(1, SCHEMA_NAMEOffset, 0); }
   public static void addRole(FlatBufferBuilder builder, int ROLEOffset) { builder.addOffset(2, ROLEOffset, 0); }
@@ -104,6 +153,14 @@ public final class SRI extends com.google.flatbuffers.Table {
   public static int createReservedVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createReservedVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startReservedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(7, CIDOffset, 0); }
+  public static void addByteOffset(FlatBufferBuilder builder, long BYTE_OFFSET) { builder.addLong(8, BYTE_OFFSET, 0L); }
+  public static void addByteLength(FlatBufferBuilder builder, long BYTE_LENGTH) { builder.addInt(9, (int) BYTE_LENGTH, (int) 0L); }
+  public static void addEpochMs(FlatBufferBuilder builder, long EPOCH_MS) { builder.addLong(10, EPOCH_MS, 0L); }
+  public static void addEntityKey(FlatBufferBuilder builder, int ENTITY_KEYOffset) { builder.addOffset(11, ENTITY_KEYOffset, 0); }
+  public static void addProviderId(FlatBufferBuilder builder, int PROVIDER_IDOffset) { builder.addOffset(12, PROVIDER_IDOffset, 0); }
+  public static void addSourceName(FlatBufferBuilder builder, int SOURCE_NAMEOffset) { builder.addOffset(13, SOURCE_NAMEOffset, 0); }
+  public static void addBatchId(FlatBufferBuilder builder, int BATCH_IDOffset) { builder.addOffset(14, BATCH_IDOffset, 0); }
   public static int endSRI(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

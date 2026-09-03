@@ -104,6 +104,17 @@ public struct EOP : IFlatbufferObject
   public ArraySegment<byte>? GetDATA_SET_CIDBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
   public byte[] GetDATA_SET_CIDArray() { return __p.__vector_as_array<byte>(54); }
+  /// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  /// radians, as published beside the CIP offsets by combined rapid-service
+  /// series.
+  public double NUTATION_DPSI_RADIANS { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  /// radians.
+  public double NUTATION_DEPS_RADIANS { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  public double NUTATION_DPSI_UNCERTAINTY_RADIANS { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  public double NUTATION_DEPS_UNCERTAINTY_RADIANS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<EOP> CreateEOP(FlatBufferBuilder builder,
       StringOffset DATEOffset = default(StringOffset),
@@ -131,8 +142,16 @@ public struct EOP : IFlatbufferObject
       double UT1_MINUS_UTC_SECONDS_HP = 0.0,
       double LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
       StringOffset DATA_SET_EPOCHOffset = default(StringOffset),
-      StringOffset DATA_SET_CIDOffset = default(StringOffset)) {
-    builder.StartTable(26);
+      StringOffset DATA_SET_CIDOffset = default(StringOffset),
+      double NUTATION_DPSI_RADIANS = 0.0,
+      double NUTATION_DEPS_RADIANS = 0.0,
+      double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
+      double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
+    builder.StartTable(30);
+    EOP.AddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS);
+    EOP.AddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    EOP.AddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS);
+    EOP.AddNUTATION_DPSI_RADIANS(builder, NUTATION_DPSI_RADIANS);
     EOP.AddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
     EOP.AddUT1_MINUS_UTC_SECONDS_HP(builder, UT1_MINUS_UTC_SECONDS_HP);
     EOP.AddY_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
@@ -162,7 +181,7 @@ public struct EOP : IFlatbufferObject
     return EOP.EndEOP(builder);
   }
 
-  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(26); }
+  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(30); }
   public static void AddDATE(FlatBufferBuilder builder, StringOffset DATEOffset) { builder.AddOffset(0, DATEOffset.Value, 0); }
   public static void AddMJD(FlatBufferBuilder builder, uint MJD) { builder.AddUint(1, MJD, 0); }
   public static void AddX_POLE_WANDER_RADIANS(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.AddFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -189,6 +208,10 @@ public struct EOP : IFlatbufferObject
   public static void AddLENGTH_OF_DAY_CORRECTION_SECONDS_HP(FlatBufferBuilder builder, double LENGTH_OF_DAY_CORRECTION_SECONDS_HP) { builder.AddDouble(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0); }
   public static void AddDATA_SET_EPOCH(FlatBufferBuilder builder, StringOffset DATA_SET_EPOCHOffset) { builder.AddOffset(24, DATA_SET_EPOCHOffset.Value, 0); }
   public static void AddDATA_SET_CID(FlatBufferBuilder builder, StringOffset DATA_SET_CIDOffset) { builder.AddOffset(25, DATA_SET_CIDOffset.Value, 0); }
+  public static void AddNUTATION_DPSI_RADIANS(FlatBufferBuilder builder, double NUTATION_DPSI_RADIANS) { builder.AddDouble(26, NUTATION_DPSI_RADIANS, 0.0); }
+  public static void AddNUTATION_DEPS_RADIANS(FlatBufferBuilder builder, double NUTATION_DEPS_RADIANS) { builder.AddDouble(27, NUTATION_DEPS_RADIANS, 0.0); }
+  public static void AddNUTATION_DPSI_UNCERTAINTY_RADIANS(FlatBufferBuilder builder, double NUTATION_DPSI_UNCERTAINTY_RADIANS) { builder.AddDouble(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0); }
+  public static void AddNUTATION_DEPS_UNCERTAINTY_RADIANS(FlatBufferBuilder builder, double NUTATION_DEPS_UNCERTAINTY_RADIANS) { builder.AddDouble(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0); }
   public static Offset<EOP> EndEOP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOP>(o);
@@ -227,6 +250,10 @@ public struct EOP : IFlatbufferObject
     _o.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
     _o.DATA_SET_EPOCH = this.DATA_SET_EPOCH;
     _o.DATA_SET_CID = this.DATA_SET_CID;
+    _o.NUTATION_DPSI_RADIANS = this.NUTATION_DPSI_RADIANS;
+    _o.NUTATION_DEPS_RADIANS = this.NUTATION_DEPS_RADIANS;
+    _o.NUTATION_DPSI_UNCERTAINTY_RADIANS = this.NUTATION_DPSI_UNCERTAINTY_RADIANS;
+    _o.NUTATION_DEPS_UNCERTAINTY_RADIANS = this.NUTATION_DEPS_UNCERTAINTY_RADIANS;
   }
   public static Offset<EOP> Pack(FlatBufferBuilder builder, EOPT _o) {
     if (_o == null) return default(Offset<EOP>);
@@ -260,7 +287,11 @@ public struct EOP : IFlatbufferObject
       _o.UT1_MINUS_UTC_SECONDS_HP,
       _o.LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
       _DATA_SET_EPOCH,
-      _DATA_SET_CID);
+      _DATA_SET_CID,
+      _o.NUTATION_DPSI_RADIANS,
+      _o.NUTATION_DEPS_RADIANS,
+      _o.NUTATION_DPSI_UNCERTAINTY_RADIANS,
+      _o.NUTATION_DEPS_UNCERTAINTY_RADIANS);
   }
 }
 
@@ -292,6 +323,10 @@ public class EOPT
   public double LENGTH_OF_DAY_CORRECTION_SECONDS_HP { get; set; }
   public string DATA_SET_EPOCH { get; set; }
   public string DATA_SET_CID { get; set; }
+  public double NUTATION_DPSI_RADIANS { get; set; }
+  public double NUTATION_DEPS_RADIANS { get; set; }
+  public double NUTATION_DPSI_UNCERTAINTY_RADIANS { get; set; }
+  public double NUTATION_DEPS_UNCERTAINTY_RADIANS { get; set; }
 
   public EOPT() {
     this.DATE = null;
@@ -320,6 +355,10 @@ public class EOPT
     this.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0;
     this.DATA_SET_EPOCH = null;
     this.DATA_SET_CID = null;
+    this.NUTATION_DPSI_RADIANS = 0.0;
+    this.NUTATION_DEPS_RADIANS = 0.0;
+    this.NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0;
+    this.NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0;
   }
   public static EOPT DeserializeFromBinary(byte[] fbBuffer) {
     return EOP.GetRootAsEOP(new ByteBuffer(fbBuffer)).UnPack();
@@ -363,6 +402,10 @@ static public class EOPVerify
       && verifier.VerifyField(tablePos, 50 /*LENGTH_OF_DAY_CORRECTION_SECONDS_HP*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 52 /*DATA_SET_EPOCH*/, false)
       && verifier.VerifyString(tablePos, 54 /*DATA_SET_CID*/, false)
+      && verifier.VerifyField(tablePos, 56 /*NUTATION_DPSI_RADIANS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*NUTATION_DEPS_RADIANS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*NUTATION_DPSI_UNCERTAINTY_RADIANS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*NUTATION_DEPS_UNCERTAINTY_RADIANS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

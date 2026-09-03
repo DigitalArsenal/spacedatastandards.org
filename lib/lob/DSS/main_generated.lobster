@@ -13,6 +13,30 @@ enum dssSyncState:
     dssSyncState_CAPPED = 3
     dssSyncState_ERROR = 4
 
+/// Retention policy for a lane on this node. Append new values only; never
+/// reorder or reuse existing values.
+enum dssPinPolicy:
+    dssPinPolicy_None = 0
+    /// Keep a bounded local cache.
+    dssPinPolicy_Cache = 1
+    /// Pin every publication.
+    dssPinPolicy_Pin = 2
+    /// Pin and archive every publication.
+    dssPinPolicy_Archive = 3
+
+/// Action a client requests on a lane. Append new values only; never reorder
+/// or reuse existing values.
+enum dssAction:
+    dssAction_None = 0
+    /// Run one bounded catch-up pass now.
+    dssAction_Sync = 1
+    dssAction_Subscribe = 2
+    dssAction_Unsubscribe = 3
+    dssAction_Pin = 4
+    dssAction_Unpin = 5
+    /// Rebuild the local materialisation from pinned publications.
+    dssAction_Hydrate = 6
+
 class DSS
 
 class DSS : flatbuffers.handle
@@ -86,13 +110,67 @@ class DSS : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 68)
     def ERROR() -> string:
         return flatbuffers.field_string(buf_, pos_, 70)
+    /// Standard code of the lane, e.g. "OMM".
+    def SCHEMA_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 72)
+    def PROVIDER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
+    def SOURCE_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 76)
+    /// Stable dataset identifier within the origin.
+    def DATASET_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 78)
+    /// Ingest connector that produces the lane, when known.
+    def CONNECTOR_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 80)
+    /// Channel identifier the lane is announced on.
+    def CHANNEL_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 82)
+    /// Publish/subscribe topic of the lane.
+    def TOPIC() -> string:
+        return flatbuffers.field_string(buf_, pos_, 84)
+    /// True when this node subscribes to the lane.
+    def SUBSCRIBED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 86, 0))
+    def PIN_POLICY() -> dssPinPolicy:
+        return dssPinPolicy(flatbuffers.field_int8(buf_, pos_, 88, 0))
+    /// Visibility of the lane, e.g. "public", "private".
+    def VISIBILITY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 90)
+    /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+    def ENCRYPTION_STATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 92)
+    /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+    def GRANT_STATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 94)
+    /// Feed head this node has materialised up to.
+    def FEED_HEAD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 96)
+    /// Content identifier of the newest publication manifest known.
+    def LAST_PUBLICATION_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 98)
+    /// Content identifier of the newest publish notification known.
+    def LAST_PNM_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 100)
+    /// Rows materialised since the previous SYNCED state.
+    def DELTA_ROWS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 102, 0)
+    /// Unix milliseconds the current or last sync pass started; 0 = never.
+    def LAST_SYNC_STARTED_AT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 104, 0)
+    /// Action a client requests when sending this record to a node.
+    def REQUESTED_ACTION() -> dssAction:
+        return dssAction(flatbuffers.field_int8(buf_, pos_, 106, 0))
+    /// Upstream publisher of the lane's records.
+    def ORIGIN_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 108)
 
 def GetRootAsDSS(buf:string): return DSS { buf, flatbuffers.indirect(buf, 0) }
 
 struct DSSBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(34)
+        b_.StartObject(53)
         return this
     def add_STATUS(STATUS:dssSyncState):
         b_.PrependInt8Slot(0, STATUS, 0)
@@ -195,6 +273,63 @@ struct DSSBuilder:
         return this
     def add_ERROR(ERROR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(33, ERROR)
+        return this
+    def add_SCHEMA_NAME(SCHEMA_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, SCHEMA_NAME)
+        return this
+    def add_PROVIDER_ID(PROVIDER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, PROVIDER_ID)
+        return this
+    def add_SOURCE_NAME(SOURCE_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, SOURCE_NAME)
+        return this
+    def add_DATASET_ID(DATASET_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(37, DATASET_ID)
+        return this
+    def add_CONNECTOR_ID(CONNECTOR_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(38, CONNECTOR_ID)
+        return this
+    def add_CHANNEL_ID(CHANNEL_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(39, CHANNEL_ID)
+        return this
+    def add_TOPIC(TOPIC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(40, TOPIC)
+        return this
+    def add_SUBSCRIBED(SUBSCRIBED:bool):
+        b_.PrependBoolSlot(41, SUBSCRIBED, 0)
+        return this
+    def add_PIN_POLICY(PIN_POLICY:dssPinPolicy):
+        b_.PrependInt8Slot(42, PIN_POLICY, 0)
+        return this
+    def add_VISIBILITY(VISIBILITY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, VISIBILITY)
+        return this
+    def add_ENCRYPTION_STATE(ENCRYPTION_STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(44, ENCRYPTION_STATE)
+        return this
+    def add_GRANT_STATE(GRANT_STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, GRANT_STATE)
+        return this
+    def add_FEED_HEAD(FEED_HEAD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(46, FEED_HEAD)
+        return this
+    def add_LAST_PUBLICATION_CID(LAST_PUBLICATION_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(47, LAST_PUBLICATION_CID)
+        return this
+    def add_LAST_PNM_CID(LAST_PNM_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(48, LAST_PNM_CID)
+        return this
+    def add_DELTA_ROWS(DELTA_ROWS:int):
+        b_.PrependUint64Slot(49, DELTA_ROWS, 0)
+        return this
+    def add_LAST_SYNC_STARTED_AT(LAST_SYNC_STARTED_AT:int):
+        b_.PrependUint64Slot(50, LAST_SYNC_STARTED_AT, 0)
+        return this
+    def add_REQUESTED_ACTION(REQUESTED_ACTION:dssAction):
+        b_.PrependInt8Slot(51, REQUESTED_ACTION, 0)
+        return this
+    def add_ORIGIN_ID(ORIGIN_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(52, ORIGIN_ID)
         return this
     def end():
         return b_.EndObject()

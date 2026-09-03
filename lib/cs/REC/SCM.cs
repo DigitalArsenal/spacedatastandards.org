@@ -30,17 +30,31 @@ public struct SCM : IFlatbufferObject
   /// Standards Dictionary
   public SCHEMA_STANDARD? RECORDS(int j) { int o = __p.__offset(6); return o != 0 ? (SCHEMA_STANDARD?)(new SCHEMA_STANDARD()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RECORDSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Version of the standards package the reporting node runs.
+  public string STANDARDS_VERSION { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTANDARDS_VERSIONBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
+  public ArraySegment<byte>? GetSTANDARDS_VERSIONBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetSTANDARDS_VERSIONArray() { return __p.__vector_as_array<byte>(8); }
+  /// Unix milliseconds when this registry frame was generated.
+  public long GENERATED_AT_MS { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
 
   public static Offset<SCM> CreateSCM(FlatBufferBuilder builder,
       StringOffset versionOffset = default(StringOffset),
-      VectorOffset RECORDSOffset = default(VectorOffset)) {
-    builder.StartTable(2);
+      VectorOffset RECORDSOffset = default(VectorOffset),
+      StringOffset STANDARDS_VERSIONOffset = default(StringOffset),
+      long GENERATED_AT_MS = 0) {
+    builder.StartTable(4);
+    SCM.AddGENERATED_AT_MS(builder, GENERATED_AT_MS);
+    SCM.AddSTANDARDS_VERSION(builder, STANDARDS_VERSIONOffset);
     SCM.AddRECORDS(builder, RECORDSOffset);
     SCM.Addversion(builder, versionOffset);
     return SCM.EndSCM(builder);
   }
 
-  public static void StartSCM(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartSCM(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void Addversion(FlatBufferBuilder builder, StringOffset versionOffset) { builder.AddOffset(0, versionOffset.Value, 0); }
   public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(1, RECORDSOffset.Value, 0); }
   public static VectorOffset CreateRECORDSVector(FlatBufferBuilder builder, Offset<SCHEMA_STANDARD>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -48,6 +62,8 @@ public struct SCM : IFlatbufferObject
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCHEMA_STANDARD>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCHEMA_STANDARD>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRECORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTANDARDS_VERSION(FlatBufferBuilder builder, StringOffset STANDARDS_VERSIONOffset) { builder.AddOffset(2, STANDARDS_VERSIONOffset.Value, 0); }
+  public static void AddGENERATED_AT_MS(FlatBufferBuilder builder, long GENERATED_AT_MS) { builder.AddLong(3, GENERATED_AT_MS, 0); }
   public static Offset<SCM> EndSCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCM>(o);
@@ -63,6 +79,8 @@ public struct SCM : IFlatbufferObject
     _o.version = this.version;
     _o.RECORDS = new List<SCHEMA_STANDARDT>();
     for (var _j = 0; _j < this.RECORDSLength; ++_j) {_o.RECORDS.Add(this.RECORDS(_j).HasValue ? this.RECORDS(_j).Value.UnPack() : null);}
+    _o.STANDARDS_VERSION = this.STANDARDS_VERSION;
+    _o.GENERATED_AT_MS = this.GENERATED_AT_MS;
   }
   public static Offset<SCM> Pack(FlatBufferBuilder builder, SCMT _o) {
     if (_o == null) return default(Offset<SCM>);
@@ -73,10 +91,13 @@ public struct SCM : IFlatbufferObject
       for (var _j = 0; _j < __RECORDS.Length; ++_j) { __RECORDS[_j] = SCHEMA_STANDARD.Pack(builder, _o.RECORDS[_j]); }
       _RECORDS = CreateRECORDSVector(builder, __RECORDS);
     }
+    var _STANDARDS_VERSION = _o.STANDARDS_VERSION == null ? default(StringOffset) : builder.CreateString(_o.STANDARDS_VERSION);
     return CreateSCM(
       builder,
       _version,
-      _RECORDS);
+      _RECORDS,
+      _STANDARDS_VERSION,
+      _o.GENERATED_AT_MS);
   }
 }
 
@@ -84,10 +105,14 @@ public class SCMT
 {
   public string version { get; set; }
   public List<SCHEMA_STANDARDT> RECORDS { get; set; }
+  public string STANDARDS_VERSION { get; set; }
+  public long GENERATED_AT_MS { get; set; }
 
   public SCMT() {
     this.version = null;
     this.RECORDS = null;
+    this.STANDARDS_VERSION = null;
+    this.GENERATED_AT_MS = 0;
   }
   public static SCMT DeserializeFromBinary(byte[] fbBuffer) {
     return SCM.GetRootAsSCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -107,6 +132,8 @@ static public class SCMVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*version*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 6 /*RECORDS*/, SCHEMA_STANDARDVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 8 /*STANDARDS_VERSION*/, false)
+      && verifier.VerifyField(tablePos, 10 /*GENERATED_AT_MS*/, 8 /*long*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

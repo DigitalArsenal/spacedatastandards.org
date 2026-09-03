@@ -284,24 +284,64 @@ public struct LCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   private struct VT {
     static let OWNER: VOffset = 4
+    static let NAME: VOffset = 6
+    static let DESCRIPTION: VOffset = 8
+    static let ACTIVE: VOffset = 10
+    static let SOURCE_URL: VOffset = 12
+    static let RETRIEVED_AT: VOffset = 14
   }
 
   public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
-  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  ///  Display name of the owner or source the code stands for.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Longer description of the owner or source.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  True while the code is in current use by the publishing catalogue.
+  public var ACTIVE: Bool { let o = _accessor.offset(VT.ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  URL of the reference table the row was retrieved from.
+  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
+  ///  ISO 8601 UTC time the reference table was retrieved.
+  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
+  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VT.OWNER) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE, def: false,
+   at: VT.ACTIVE) }
+  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
+  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
   public static func endLCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createLCC(
     _ fbb: inout FlatBufferBuilder,
-    OWNER: legacyCountryCode = .ab
+    OWNER: legacyCountryCode = .ab,
+    NAMEOffset NAME: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    ACTIVE: Bool = false,
+    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
   ) -> Offset {
     let __start = LCC.startLCC(&fbb)
     LCC.add(OWNER: OWNER, &fbb)
+    LCC.add(NAME: NAME, &fbb)
+    LCC.add(DESCRIPTION: DESCRIPTION, &fbb)
+    LCC.add(ACTIVE: ACTIVE, &fbb)
+    LCC.add(SOURCE_URL: SOURCE_URL, &fbb)
+    LCC.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
     return LCC.endLCC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: legacyCountryCode.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACTIVE, fieldName: "ACTIVE", required: false, type: Bool.self)
+    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

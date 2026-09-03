@@ -279,8 +279,157 @@ class DSS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Standard code of the lane, e.g. "OMM".
+    # DSS
+    def SCHEMA_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # DSS
+    def PROVIDER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # DSS
+    def SOURCE_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Stable dataset identifier within the origin.
+    # DSS
+    def DATASET_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ingest connector that produces the lane, when known.
+    # DSS
+    def CONNECTOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Channel identifier the lane is announced on.
+    # DSS
+    def CHANNEL_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Publish/subscribe topic of the lane.
+    # DSS
+    def TOPIC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True when this node subscribes to the lane.
+    # DSS
+    def SUBSCRIBED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # DSS
+    def PIN_POLICY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Visibility of the lane, e.g. "public", "private".
+    # DSS
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Encryption state of the lane's publications, e.g. "plain", "encrypted".
+    # DSS
+    def ENCRYPTION_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+    # DSS
+    def GRANT_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Feed head this node has materialised up to.
+    # DSS
+    def FEED_HEAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the newest publication manifest known.
+    # DSS
+    def LAST_PUBLICATION_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Content identifier of the newest publish notification known.
+    # DSS
+    def LAST_PNM_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rows materialised since the previous SYNCED state.
+    # DSS
+    def DELTA_ROWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix milliseconds the current or last sync pass started; 0 = never.
+    # DSS
+    def LAST_SYNC_STARTED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Action a client requests when sending this record to a node.
+    # DSS
+    def REQUESTED_ACTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Upstream publisher of the lane's records.
+    # DSS
+    def ORIGIN_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def DSSStart(builder):
-    builder.StartObject(34)
+    builder.StartObject(53)
 
 def Start(builder):
     DSSStart(builder)
@@ -501,6 +650,120 @@ def DSSAddERROR(builder, ERROR):
 def AddERROR(builder, ERROR):
     DSSAddERROR(builder, ERROR)
 
+def DSSAddSCHEMA_NAME(builder, SCHEMA_NAME):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_NAME), 0)
+
+def AddSCHEMA_NAME(builder, SCHEMA_NAME):
+    DSSAddSCHEMA_NAME(builder, SCHEMA_NAME)
+
+def DSSAddPROVIDER_ID(builder, PROVIDER_ID):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_ID), 0)
+
+def AddPROVIDER_ID(builder, PROVIDER_ID):
+    DSSAddPROVIDER_ID(builder, PROVIDER_ID)
+
+def DSSAddSOURCE_NAME(builder, SOURCE_NAME):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_NAME), 0)
+
+def AddSOURCE_NAME(builder, SOURCE_NAME):
+    DSSAddSOURCE_NAME(builder, SOURCE_NAME)
+
+def DSSAddDATASET_ID(builder, DATASET_ID):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DATASET_ID), 0)
+
+def AddDATASET_ID(builder, DATASET_ID):
+    DSSAddDATASET_ID(builder, DATASET_ID)
+
+def DSSAddCONNECTOR_ID(builder, CONNECTOR_ID):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(CONNECTOR_ID), 0)
+
+def AddCONNECTOR_ID(builder, CONNECTOR_ID):
+    DSSAddCONNECTOR_ID(builder, CONNECTOR_ID)
+
+def DSSAddCHANNEL_ID(builder, CHANNEL_ID):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(CHANNEL_ID), 0)
+
+def AddCHANNEL_ID(builder, CHANNEL_ID):
+    DSSAddCHANNEL_ID(builder, CHANNEL_ID)
+
+def DSSAddTOPIC(builder, TOPIC):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(TOPIC), 0)
+
+def AddTOPIC(builder, TOPIC):
+    DSSAddTOPIC(builder, TOPIC)
+
+def DSSAddSUBSCRIBED(builder, SUBSCRIBED):
+    builder.PrependBoolSlot(41, SUBSCRIBED, 0)
+
+def AddSUBSCRIBED(builder, SUBSCRIBED):
+    DSSAddSUBSCRIBED(builder, SUBSCRIBED)
+
+def DSSAddPIN_POLICY(builder, PIN_POLICY):
+    builder.PrependInt8Slot(42, PIN_POLICY, 0)
+
+def AddPIN_POLICY(builder, PIN_POLICY):
+    DSSAddPIN_POLICY(builder, PIN_POLICY)
+
+def DSSAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(VISIBILITY), 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    DSSAddVISIBILITY(builder, VISIBILITY)
+
+def DSSAddENCRYPTION_STATE(builder, ENCRYPTION_STATE):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_STATE), 0)
+
+def AddENCRYPTION_STATE(builder, ENCRYPTION_STATE):
+    DSSAddENCRYPTION_STATE(builder, ENCRYPTION_STATE)
+
+def DSSAddGRANT_STATE(builder, GRANT_STATE):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_STATE), 0)
+
+def AddGRANT_STATE(builder, GRANT_STATE):
+    DSSAddGRANT_STATE(builder, GRANT_STATE)
+
+def DSSAddFEED_HEAD(builder, FEED_HEAD):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(FEED_HEAD), 0)
+
+def AddFEED_HEAD(builder, FEED_HEAD):
+    DSSAddFEED_HEAD(builder, FEED_HEAD)
+
+def DSSAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_PUBLICATION_CID), 0)
+
+def AddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID):
+    DSSAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+
+def DSSAddLAST_PNM_CID(builder, LAST_PNM_CID):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_PNM_CID), 0)
+
+def AddLAST_PNM_CID(builder, LAST_PNM_CID):
+    DSSAddLAST_PNM_CID(builder, LAST_PNM_CID)
+
+def DSSAddDELTA_ROWS(builder, DELTA_ROWS):
+    builder.PrependUint64Slot(49, DELTA_ROWS, 0)
+
+def AddDELTA_ROWS(builder, DELTA_ROWS):
+    DSSAddDELTA_ROWS(builder, DELTA_ROWS)
+
+def DSSAddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT):
+    builder.PrependUint64Slot(50, LAST_SYNC_STARTED_AT, 0)
+
+def AddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT):
+    DSSAddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT)
+
+def DSSAddREQUESTED_ACTION(builder, REQUESTED_ACTION):
+    builder.PrependInt8Slot(51, REQUESTED_ACTION, 0)
+
+def AddREQUESTED_ACTION(builder, REQUESTED_ACTION):
+    DSSAddREQUESTED_ACTION(builder, REQUESTED_ACTION)
+
+def DSSAddORIGIN_ID(builder, ORIGIN_ID):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN_ID), 0)
+
+def AddORIGIN_ID(builder, ORIGIN_ID):
+    DSSAddORIGIN_ID(builder, ORIGIN_ID)
+
 def DSSEnd(builder):
     return builder.EndObject()
 
@@ -551,6 +814,25 @@ class DSST(object):
         VERIFIED_CHUNKS = None,
         LAST_SYNCED_AT = None,
         ERROR = None,
+        SCHEMA_NAME = None,
+        PROVIDER_ID = None,
+        SOURCE_NAME = None,
+        DATASET_ID = None,
+        CONNECTOR_ID = None,
+        CHANNEL_ID = None,
+        TOPIC = None,
+        SUBSCRIBED = False,
+        PIN_POLICY = 0,
+        VISIBILITY = None,
+        ENCRYPTION_STATE = None,
+        GRANT_STATE = None,
+        FEED_HEAD = None,
+        LAST_PUBLICATION_CID = None,
+        LAST_PNM_CID = None,
+        DELTA_ROWS = 0,
+        LAST_SYNC_STARTED_AT = 0,
+        REQUESTED_ACTION = 0,
+        ORIGIN_ID = None,
     ):
         self.STATUS = STATUS  # type: int
         self.SYNCED_ROWS = SYNCED_ROWS  # type: int
@@ -586,6 +868,25 @@ class DSST(object):
         self.VERIFIED_CHUNKS = VERIFIED_CHUNKS  # type: Optional[List[Optional[str]]]
         self.LAST_SYNCED_AT = LAST_SYNCED_AT  # type: Optional[str]
         self.ERROR = ERROR  # type: Optional[str]
+        self.SCHEMA_NAME = SCHEMA_NAME  # type: Optional[str]
+        self.PROVIDER_ID = PROVIDER_ID  # type: Optional[str]
+        self.SOURCE_NAME = SOURCE_NAME  # type: Optional[str]
+        self.DATASET_ID = DATASET_ID  # type: Optional[str]
+        self.CONNECTOR_ID = CONNECTOR_ID  # type: Optional[str]
+        self.CHANNEL_ID = CHANNEL_ID  # type: Optional[str]
+        self.TOPIC = TOPIC  # type: Optional[str]
+        self.SUBSCRIBED = SUBSCRIBED  # type: bool
+        self.PIN_POLICY = PIN_POLICY  # type: int
+        self.VISIBILITY = VISIBILITY  # type: Optional[str]
+        self.ENCRYPTION_STATE = ENCRYPTION_STATE  # type: Optional[str]
+        self.GRANT_STATE = GRANT_STATE  # type: Optional[str]
+        self.FEED_HEAD = FEED_HEAD  # type: Optional[str]
+        self.LAST_PUBLICATION_CID = LAST_PUBLICATION_CID  # type: Optional[str]
+        self.LAST_PNM_CID = LAST_PNM_CID  # type: Optional[str]
+        self.DELTA_ROWS = DELTA_ROWS  # type: int
+        self.LAST_SYNC_STARTED_AT = LAST_SYNC_STARTED_AT  # type: int
+        self.REQUESTED_ACTION = REQUESTED_ACTION  # type: int
+        self.ORIGIN_ID = ORIGIN_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -645,6 +946,25 @@ class DSST(object):
                 self.VERIFIED_CHUNKS.append(DSS.VERIFIED_CHUNKS(i))
         self.LAST_SYNCED_AT = DSS.LAST_SYNCED_AT()
         self.ERROR = DSS.ERROR()
+        self.SCHEMA_NAME = DSS.SCHEMA_NAME()
+        self.PROVIDER_ID = DSS.PROVIDER_ID()
+        self.SOURCE_NAME = DSS.SOURCE_NAME()
+        self.DATASET_ID = DSS.DATASET_ID()
+        self.CONNECTOR_ID = DSS.CONNECTOR_ID()
+        self.CHANNEL_ID = DSS.CHANNEL_ID()
+        self.TOPIC = DSS.TOPIC()
+        self.SUBSCRIBED = DSS.SUBSCRIBED()
+        self.PIN_POLICY = DSS.PIN_POLICY()
+        self.VISIBILITY = DSS.VISIBILITY()
+        self.ENCRYPTION_STATE = DSS.ENCRYPTION_STATE()
+        self.GRANT_STATE = DSS.GRANT_STATE()
+        self.FEED_HEAD = DSS.FEED_HEAD()
+        self.LAST_PUBLICATION_CID = DSS.LAST_PUBLICATION_CID()
+        self.LAST_PNM_CID = DSS.LAST_PNM_CID()
+        self.DELTA_ROWS = DSS.DELTA_ROWS()
+        self.LAST_SYNC_STARTED_AT = DSS.LAST_SYNC_STARTED_AT()
+        self.REQUESTED_ACTION = DSS.REQUESTED_ACTION()
+        self.ORIGIN_ID = DSS.ORIGIN_ID()
 
     # DSST
     def Pack(self, builder):
@@ -682,6 +1002,34 @@ class DSST(object):
             LAST_SYNCED_AT = builder.CreateString(self.LAST_SYNCED_AT)
         if self.ERROR is not None:
             ERROR = builder.CreateString(self.ERROR)
+        if self.SCHEMA_NAME is not None:
+            SCHEMA_NAME = builder.CreateString(self.SCHEMA_NAME)
+        if self.PROVIDER_ID is not None:
+            PROVIDER_ID = builder.CreateString(self.PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            SOURCE_NAME = builder.CreateString(self.SOURCE_NAME)
+        if self.DATASET_ID is not None:
+            DATASET_ID = builder.CreateString(self.DATASET_ID)
+        if self.CONNECTOR_ID is not None:
+            CONNECTOR_ID = builder.CreateString(self.CONNECTOR_ID)
+        if self.CHANNEL_ID is not None:
+            CHANNEL_ID = builder.CreateString(self.CHANNEL_ID)
+        if self.TOPIC is not None:
+            TOPIC = builder.CreateString(self.TOPIC)
+        if self.VISIBILITY is not None:
+            VISIBILITY = builder.CreateString(self.VISIBILITY)
+        if self.ENCRYPTION_STATE is not None:
+            ENCRYPTION_STATE = builder.CreateString(self.ENCRYPTION_STATE)
+        if self.GRANT_STATE is not None:
+            GRANT_STATE = builder.CreateString(self.GRANT_STATE)
+        if self.FEED_HEAD is not None:
+            FEED_HEAD = builder.CreateString(self.FEED_HEAD)
+        if self.LAST_PUBLICATION_CID is not None:
+            LAST_PUBLICATION_CID = builder.CreateString(self.LAST_PUBLICATION_CID)
+        if self.LAST_PNM_CID is not None:
+            LAST_PNM_CID = builder.CreateString(self.LAST_PNM_CID)
+        if self.ORIGIN_ID is not None:
+            ORIGIN_ID = builder.CreateString(self.ORIGIN_ID)
         DSSStart(builder)
         DSSAddSTATUS(builder, self.STATUS)
         DSSAddSYNCED_ROWS(builder, self.SYNCED_ROWS)
@@ -731,5 +1079,38 @@ class DSST(object):
             DSSAddLAST_SYNCED_AT(builder, LAST_SYNCED_AT)
         if self.ERROR is not None:
             DSSAddERROR(builder, ERROR)
+        if self.SCHEMA_NAME is not None:
+            DSSAddSCHEMA_NAME(builder, SCHEMA_NAME)
+        if self.PROVIDER_ID is not None:
+            DSSAddPROVIDER_ID(builder, PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            DSSAddSOURCE_NAME(builder, SOURCE_NAME)
+        if self.DATASET_ID is not None:
+            DSSAddDATASET_ID(builder, DATASET_ID)
+        if self.CONNECTOR_ID is not None:
+            DSSAddCONNECTOR_ID(builder, CONNECTOR_ID)
+        if self.CHANNEL_ID is not None:
+            DSSAddCHANNEL_ID(builder, CHANNEL_ID)
+        if self.TOPIC is not None:
+            DSSAddTOPIC(builder, TOPIC)
+        DSSAddSUBSCRIBED(builder, self.SUBSCRIBED)
+        DSSAddPIN_POLICY(builder, self.PIN_POLICY)
+        if self.VISIBILITY is not None:
+            DSSAddVISIBILITY(builder, VISIBILITY)
+        if self.ENCRYPTION_STATE is not None:
+            DSSAddENCRYPTION_STATE(builder, ENCRYPTION_STATE)
+        if self.GRANT_STATE is not None:
+            DSSAddGRANT_STATE(builder, GRANT_STATE)
+        if self.FEED_HEAD is not None:
+            DSSAddFEED_HEAD(builder, FEED_HEAD)
+        if self.LAST_PUBLICATION_CID is not None:
+            DSSAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+        if self.LAST_PNM_CID is not None:
+            DSSAddLAST_PNM_CID(builder, LAST_PNM_CID)
+        DSSAddDELTA_ROWS(builder, self.DELTA_ROWS)
+        DSSAddLAST_SYNC_STARTED_AT(builder, self.LAST_SYNC_STARTED_AT)
+        DSSAddREQUESTED_ACTION(builder, self.REQUESTED_ACTION)
+        if self.ORIGIN_ID is not None:
+            DSSAddORIGIN_ID(builder, ORIGIN_ID)
         DSS = DSSEnd(builder)
         return DSS

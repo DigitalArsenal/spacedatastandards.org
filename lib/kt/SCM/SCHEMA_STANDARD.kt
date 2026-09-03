@@ -72,6 +72,78 @@ class SCHEMA_STANDARD : Table() {
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Human-readable name of the standard.
+     */
+    val name : String?
+        get() {
+            val o = __offset(10)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * One-paragraph description of the standard.
+     */
+    val description : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Four-character file identifier, e.g. "$OMM".
+     */
+    val fileIdentifier : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val fileIdentifierAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun fileIdentifierInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Hash of the standard's schema text.
+     */
+    val schemaHash : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val schemaHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun schemaHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * True when the reporting node routes the standard through its store.
+     */
+    val routed : Boolean
+        get() {
+            val o = __offset(18)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Position of the standard in the record union; append-only forever.
+     */
+    val recordTypeOrdinal : UShort
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCHEMA_STANDARD(_bb: ByteBuffer): SCHEMA_STANDARD = getRootAsSCHEMA_STANDARD(_bb, SCHEMA_STANDARD())
@@ -79,14 +151,20 @@ class SCHEMA_STANDARD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCHEMA_STANDARD(builder: FlatBufferBuilder, keyOffset: Int, idlOffset: Int, filesOffset: Int) : Int {
-            builder.startTable(3)
+        fun createSCHEMA_STANDARD(builder: FlatBufferBuilder, keyOffset: Int, idlOffset: Int, filesOffset: Int, nameOffset: Int, descriptionOffset: Int, fileIdentifierOffset: Int, schemaHashOffset: Int, routed: Boolean, recordTypeOrdinal: UShort) : Int {
+            builder.startTable(9)
+            addSCHEMAHASH(builder, schemaHashOffset)
+            addFILEIDENTIFIER(builder, fileIdentifierOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
             addFiles(builder, filesOffset)
             addIdl(builder, idlOffset)
             addKey(builder, keyOffset)
+            addRECORDTYPEORDINAL(builder, recordTypeOrdinal)
+            addROUTED(builder, routed)
             return endSCHEMA_STANDARD(builder)
         }
-        fun startSCHEMA_STANDARD(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startSCHEMA_STANDARD(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addKey(builder: FlatBufferBuilder, key: Int) = builder.addOffset(0, key, 0)
         fun addIdl(builder: FlatBufferBuilder, idl: Int) = builder.addOffset(1, idl, 0)
         fun addFiles(builder: FlatBufferBuilder, files: Int) = builder.addOffset(2, files, 0)
@@ -98,6 +176,12 @@ class SCHEMA_STANDARD : Table() {
             return builder.endVector()
         }
         fun startFilesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(3, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(4, description, 0)
+        fun addFILEIDENTIFIER(builder: FlatBufferBuilder, fileIdentifier: Int) = builder.addOffset(5, fileIdentifier, 0)
+        fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(6, schemaHash, 0)
+        fun addROUTED(builder: FlatBufferBuilder, routed: Boolean) = builder.addBoolean(7, routed, false)
+        fun addRECORDTYPEORDINAL(builder: FlatBufferBuilder, recordTypeOrdinal: UShort) = builder.addShort(8, recordTypeOrdinal.toShort(), 0)
         fun endSCHEMA_STANDARD(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

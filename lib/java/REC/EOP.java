@@ -153,6 +153,25 @@ public final class EOP extends com.google.flatbuffers.Table {
   public String DATA_SET_CID() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DATA_SET_CIDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
   public ByteBuffer DATA_SET_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Nutation correction in longitude (dPsi) against the IAU 1980 model,
+   * radians, as published beside the CIP offsets by combined rapid-service
+   * series.
+   */
+  public double NUTATION_DPSI_RADIANS() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Nutation correction in obliquity (dEps) against the IAU 1980 model,
+   * radians.
+   */
+  public double NUTATION_DEPS_RADIANS() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+   */
+  public double NUTATION_DPSI_UNCERTAINTY_RADIANS() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+   */
+  public double NUTATION_DEPS_UNCERTAINTY_RADIANS() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createEOP(FlatBufferBuilder builder,
       int DATEOffset,
@@ -180,8 +199,16 @@ public final class EOP extends com.google.flatbuffers.Table {
       double UT1_MINUS_UTC_SECONDS_HP,
       double LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
       int DATA_SET_EPOCHOffset,
-      int DATA_SET_CIDOffset) {
-    builder.startTable(26);
+      int DATA_SET_CIDOffset,
+      double NUTATION_DPSI_RADIANS,
+      double NUTATION_DEPS_RADIANS,
+      double NUTATION_DPSI_UNCERTAINTY_RADIANS,
+      double NUTATION_DEPS_UNCERTAINTY_RADIANS) {
+    builder.startTable(30);
+    EOP.addNutationDepsUncertaintyRadians(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS);
+    EOP.addNutationDpsiUncertaintyRadians(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    EOP.addNutationDepsRadians(builder, NUTATION_DEPS_RADIANS);
+    EOP.addNutationDpsiRadians(builder, NUTATION_DPSI_RADIANS);
     EOP.addLengthOfDayCorrectionSecondsHp(builder, LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
     EOP.addUt1MinusUtcSecondsHp(builder, UT1_MINUS_UTC_SECONDS_HP);
     EOP.addYCelestialPoleOffsetRadiansHp(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
@@ -211,7 +238,7 @@ public final class EOP extends com.google.flatbuffers.Table {
     return EOP.endEOP(builder);
   }
 
-  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(26); }
+  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(30); }
   public static void addDate(FlatBufferBuilder builder, int DATEOffset) { builder.addOffset(0, DATEOffset, 0); }
   public static void addMjd(FlatBufferBuilder builder, long MJD) { builder.addInt(1, (int) MJD, (int) 0L); }
   public static void addXPoleWanderRadians(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.addFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -238,6 +265,10 @@ public final class EOP extends com.google.flatbuffers.Table {
   public static void addLengthOfDayCorrectionSecondsHp(FlatBufferBuilder builder, double LENGTH_OF_DAY_CORRECTION_SECONDS_HP) { builder.addDouble(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP, 0.0); }
   public static void addDataSetEpoch(FlatBufferBuilder builder, int DATA_SET_EPOCHOffset) { builder.addOffset(24, DATA_SET_EPOCHOffset, 0); }
   public static void addDataSetCid(FlatBufferBuilder builder, int DATA_SET_CIDOffset) { builder.addOffset(25, DATA_SET_CIDOffset, 0); }
+  public static void addNutationDpsiRadians(FlatBufferBuilder builder, double NUTATION_DPSI_RADIANS) { builder.addDouble(26, NUTATION_DPSI_RADIANS, 0.0); }
+  public static void addNutationDepsRadians(FlatBufferBuilder builder, double NUTATION_DEPS_RADIANS) { builder.addDouble(27, NUTATION_DEPS_RADIANS, 0.0); }
+  public static void addNutationDpsiUncertaintyRadians(FlatBufferBuilder builder, double NUTATION_DPSI_UNCERTAINTY_RADIANS) { builder.addDouble(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0); }
+  public static void addNutationDepsUncertaintyRadians(FlatBufferBuilder builder, double NUTATION_DEPS_UNCERTAINTY_RADIANS) { builder.addDouble(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0); }
   public static int endEOP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

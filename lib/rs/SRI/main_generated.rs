@@ -29,6 +29,14 @@ impl<'a> SRI<'a> {
   pub const VT_PAYLOAD_KIND: ::flatbuffers::VOffsetT = 12;
   pub const VT_UPDATED_AT_MS: ::flatbuffers::VOffsetT = 14;
   pub const VT_RESERVED: ::flatbuffers::VOffsetT = 16;
+  pub const VT_CID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_BYTE_OFFSET: ::flatbuffers::VOffsetT = 20;
+  pub const VT_BYTE_LENGTH: ::flatbuffers::VOffsetT = 22;
+  pub const VT_EPOCH_MS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_ENTITY_KEY: ::flatbuffers::VOffsetT = 26;
+  pub const VT_PROVIDER_ID: ::flatbuffers::VOffsetT = 28;
+  pub const VT_SOURCE_NAME: ::flatbuffers::VOffsetT = 30;
+  pub const VT_BATCH_ID: ::flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -40,7 +48,15 @@ impl<'a> SRI<'a> {
     args: &'args SRIArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SRI<'bldr>> {
     let mut builder = SRIBuilder::new(_fbb);
+    builder.add_EPOCH_MS(args.EPOCH_MS);
+    builder.add_BYTE_OFFSET(args.BYTE_OFFSET);
     builder.add_UPDATED_AT_MS(args.UPDATED_AT_MS);
+    if let Some(x) = args.BATCH_ID { builder.add_BATCH_ID(x); }
+    if let Some(x) = args.SOURCE_NAME { builder.add_SOURCE_NAME(x); }
+    if let Some(x) = args.PROVIDER_ID { builder.add_PROVIDER_ID(x); }
+    if let Some(x) = args.ENTITY_KEY { builder.add_ENTITY_KEY(x); }
+    builder.add_BYTE_LENGTH(args.BYTE_LENGTH);
+    if let Some(x) = args.CID { builder.add_CID(x); }
     if let Some(x) = args.RESERVED { builder.add_RESERVED(x); }
     if let Some(x) = args.PAYLOAD_KIND { builder.add_PAYLOAD_KIND(x); }
     if let Some(x) = args.ATTACHED_VIA { builder.add_ATTACHED_VIA(x); }
@@ -70,6 +86,24 @@ impl<'a> SRI<'a> {
     let RESERVED = self.RESERVED().map(|x| {
       x.into_iter().collect()
     });
+    let CID = self.CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let BYTE_OFFSET = self.BYTE_OFFSET();
+    let BYTE_LENGTH = self.BYTE_LENGTH();
+    let EPOCH_MS = self.EPOCH_MS();
+    let ENTITY_KEY = self.ENTITY_KEY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let BATCH_ID = self.BATCH_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     SRIT {
       RECORD_KEY,
       SCHEMA_NAME,
@@ -78,6 +112,14 @@ impl<'a> SRI<'a> {
       PAYLOAD_KIND,
       UPDATED_AT_MS,
       RESERVED,
+      CID,
+      BYTE_OFFSET,
+      BYTE_LENGTH,
+      EPOCH_MS,
+      ENTITY_KEY,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      BATCH_ID,
     }
   }
 
@@ -137,6 +179,67 @@ impl<'a> SRI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(SRI::VT_RESERVED, None)}
   }
+  /// Content identifier of the record bytes.
+  #[inline]
+  pub fn CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SRI::VT_CID, None)}
+  }
+  /// Byte offset of the record frame within its export or archive stream.
+  #[inline]
+  pub fn BYTE_OFFSET(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(SRI::VT_BYTE_OFFSET, Some(0)).unwrap()}
+  }
+  /// Byte length of the record frame.
+  #[inline]
+  pub fn BYTE_LENGTH(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SRI::VT_BYTE_LENGTH, Some(0)).unwrap()}
+  }
+  /// Epoch of the record, Unix milliseconds; 0 = none.
+  #[inline]
+  pub fn EPOCH_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(SRI::VT_EPOCH_MS, Some(0)).unwrap()}
+  }
+  /// Entity key of the record within its standard, e.g. a catalogue number.
+  #[inline]
+  pub fn ENTITY_KEY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SRI::VT_ENTITY_KEY, None)}
+  }
+  #[inline]
+  pub fn PROVIDER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SRI::VT_PROVIDER_ID, None)}
+  }
+  #[inline]
+  pub fn SOURCE_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SRI::VT_SOURCE_NAME, None)}
+  }
+  #[inline]
+  pub fn BATCH_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SRI::VT_BATCH_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SRI<'_> {
@@ -152,6 +255,14 @@ impl ::flatbuffers::Verifiable for SRI<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYLOAD_KIND", Self::VT_PAYLOAD_KIND, false)?
      .visit_field::<f64>("UPDATED_AT_MS", Self::VT_UPDATED_AT_MS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RESERVED", Self::VT_RESERVED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
+     .visit_field::<u64>("BYTE_OFFSET", Self::VT_BYTE_OFFSET, false)?
+     .visit_field::<u32>("BYTE_LENGTH", Self::VT_BYTE_LENGTH, false)?
+     .visit_field::<u64>("EPOCH_MS", Self::VT_EPOCH_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENTITY_KEY", Self::VT_ENTITY_KEY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_ID", Self::VT_PROVIDER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_NAME", Self::VT_SOURCE_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BATCH_ID", Self::VT_BATCH_ID, false)?
      .finish();
     Ok(())
   }
@@ -164,6 +275,14 @@ pub struct SRIArgs<'a> {
     pub PAYLOAD_KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATED_AT_MS: f64,
     pub RESERVED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BYTE_OFFSET: u64,
+    pub BYTE_LENGTH: u32,
+    pub EPOCH_MS: u64,
+    pub ENTITY_KEY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BATCH_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for SRIArgs<'a> {
   #[inline]
@@ -176,6 +295,14 @@ impl<'a> Default for SRIArgs<'a> {
       PAYLOAD_KIND: None,
       UPDATED_AT_MS: 0.0,
       RESERVED: None,
+      CID: None,
+      BYTE_OFFSET: 0,
+      BYTE_LENGTH: 0,
+      EPOCH_MS: 0,
+      ENTITY_KEY: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      BATCH_ID: None,
     }
   }
 }
@@ -214,6 +341,38 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SRIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_RESERVED, RESERVED);
   }
   #[inline]
+  pub fn add_CID(&mut self, CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_CID, CID);
+  }
+  #[inline]
+  pub fn add_BYTE_OFFSET(&mut self, BYTE_OFFSET: u64) {
+    self.fbb_.push_slot::<u64>(SRI::VT_BYTE_OFFSET, BYTE_OFFSET, 0);
+  }
+  #[inline]
+  pub fn add_BYTE_LENGTH(&mut self, BYTE_LENGTH: u32) {
+    self.fbb_.push_slot::<u32>(SRI::VT_BYTE_LENGTH, BYTE_LENGTH, 0);
+  }
+  #[inline]
+  pub fn add_EPOCH_MS(&mut self, EPOCH_MS: u64) {
+    self.fbb_.push_slot::<u64>(SRI::VT_EPOCH_MS, EPOCH_MS, 0);
+  }
+  #[inline]
+  pub fn add_ENTITY_KEY(&mut self, ENTITY_KEY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_ENTITY_KEY, ENTITY_KEY);
+  }
+  #[inline]
+  pub fn add_PROVIDER_ID(&mut self, PROVIDER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_PROVIDER_ID, PROVIDER_ID);
+  }
+  #[inline]
+  pub fn add_SOURCE_NAME(&mut self, SOURCE_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_SOURCE_NAME, SOURCE_NAME);
+  }
+  #[inline]
+  pub fn add_BATCH_ID(&mut self, BATCH_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SRI::VT_BATCH_ID, BATCH_ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SRIBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SRIBuilder {
@@ -238,6 +397,14 @@ impl ::core::fmt::Debug for SRI<'_> {
       ds.field("PAYLOAD_KIND", &self.PAYLOAD_KIND());
       ds.field("UPDATED_AT_MS", &self.UPDATED_AT_MS());
       ds.field("RESERVED", &self.RESERVED());
+      ds.field("CID", &self.CID());
+      ds.field("BYTE_OFFSET", &self.BYTE_OFFSET());
+      ds.field("BYTE_LENGTH", &self.BYTE_LENGTH());
+      ds.field("EPOCH_MS", &self.EPOCH_MS());
+      ds.field("ENTITY_KEY", &self.ENTITY_KEY());
+      ds.field("PROVIDER_ID", &self.PROVIDER_ID());
+      ds.field("SOURCE_NAME", &self.SOURCE_NAME());
+      ds.field("BATCH_ID", &self.BATCH_ID());
       ds.finish()
   }
 }
@@ -251,6 +418,14 @@ pub struct SRIT {
   pub PAYLOAD_KIND: Option<alloc::string::String>,
   pub UPDATED_AT_MS: f64,
   pub RESERVED: Option<alloc::vec::Vec<u8>>,
+  pub CID: Option<alloc::string::String>,
+  pub BYTE_OFFSET: u64,
+  pub BYTE_LENGTH: u32,
+  pub EPOCH_MS: u64,
+  pub ENTITY_KEY: Option<alloc::string::String>,
+  pub PROVIDER_ID: Option<alloc::string::String>,
+  pub SOURCE_NAME: Option<alloc::string::String>,
+  pub BATCH_ID: Option<alloc::string::String>,
 }
 impl Default for SRIT {
   fn default() -> Self {
@@ -262,6 +437,14 @@ impl Default for SRIT {
       PAYLOAD_KIND: None,
       UPDATED_AT_MS: 0.0,
       RESERVED: None,
+      CID: None,
+      BYTE_OFFSET: 0,
+      BYTE_LENGTH: 0,
+      EPOCH_MS: 0,
+      ENTITY_KEY: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      BATCH_ID: None,
     }
   }
 }
@@ -289,6 +472,24 @@ impl SRIT {
     let RESERVED = self.RESERVED.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let CID = self.CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BYTE_OFFSET = self.BYTE_OFFSET;
+    let BYTE_LENGTH = self.BYTE_LENGTH;
+    let EPOCH_MS = self.EPOCH_MS;
+    let ENTITY_KEY = self.ENTITY_KEY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BATCH_ID = self.BATCH_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     SRI::create(_fbb, &SRIArgs{
       RECORD_KEY,
       SCHEMA_NAME,
@@ -297,6 +498,14 @@ impl SRIT {
       PAYLOAD_KIND,
       UPDATED_AT_MS,
       RESERVED,
+      CID,
+      BYTE_OFFSET,
+      BYTE_LENGTH,
+      EPOCH_MS,
+      ENTITY_KEY,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      BATCH_ID,
     })
   }
 }

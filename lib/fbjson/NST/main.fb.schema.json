@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "NSTNode": {
+      "type": "object",
+      "description": "Node Status Record (NST)\nDescription\nPresence and identity of the peers a node knows about, as a node reports\nthem to operator dashboards: who the peer is (its identity record fields),\nhow it can be reached, whether it is online, where it is, which software\nand standards versions it runs, and how the row reached the board. The\nSOURCE field is the provenance of the row itself so an operator can always\nanswer \"how did this peer get here?\": declared in configuration, pinned by\nan operator, or seen on a live connection. A set carries every row the\nemitting node currently admits and the emitting node's own row.\nOne known peer as reported by the emitting node.",
+      "properties": {
+        "PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier (multihash, base58).",
+          "x-flatbuffer-type": "string"
+        },
+        "DN": {
+          "type": "string",
+          "description": "Distinguished name from the peer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORGANIZATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUST_LEVEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AGENT_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Multiformat addresses the peer is known by.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LAST_SEEN": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds of last observation; 0 = never.",
+          "x-flatbuffer-type": "int64"
+        },
+        "IS_ONLINE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "LATENCY_MS": {
+          "type": "number",
+          "description": "Round-trip latency to the peer, milliseconds; 0 = unknown.",
+          "x-flatbuffer-type": "float"
+        },
+        "VCARD": {
+          "type": "string",
+          "description": "Full vCard 4.0 text derived from the peer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAT": {
+          "type": "number",
+          "description": "Resolved coordinates; 0,0 = unresolved.",
+          "x-flatbuffer-type": "float"
+        },
+        "LON": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "GEO_COUNTRY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEO_CITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_SELF": {
+          "type": "boolean",
+          "description": "True on the node emitting this set.",
+          "x-flatbuffer-type": "bool"
+        },
+        "UPTIME_S": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Seconds since the emitting process started (self only).",
+          "x-flatbuffer-type": "int64"
+        },
+        "SUITE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STANDARDS_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "How this row reached the board: exactly one of \"config\" (declared in the\nnode's configuration), \"pinned\" (pinned by an operator) or \"connected\"\n(seen right now on a live connection).",
+          "x-flatbuffer-type": "string"
+        },
+        "PINNED": {
+          "type": "boolean",
+          "description": "True for configuration and operator pins; a pinned peer keeps its row\nwhile unreachable.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PIN_NOTE": {
+          "type": "string",
+          "description": "For SOURCE \"config\" the configuration key an operator can edit; for\nSOURCE \"pinned\" the operator's own note. Never a manufactured label.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONNECTED_PEER_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Peers this peer is currently connected to, for the connection graph.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Signing public key from the peer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTION_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Encryption public key from the peer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPM_CID": {
+          "type": "string",
+          "description": "Content identifier of the peer's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "STORAGE_DAEMON_VERSION": {
+          "type": "string",
+          "description": "Version of the content-addressed storage daemon the peer runs.",
+          "x-flatbuffer-type": "string"
+        },
+        "ONION_ADDRESS": {
+          "type": "string",
+          "description": "Onion-service address when the peer is reachable over an anonymity\nnetwork.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NST": {
+      "type": "object",
+      "description": "Node Status Record - the set of peers a node reports.",
+      "properties": {
+        "NODES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NSTNode"
+          },
+          "x-flatbuffer-type": "[NSTNode]"
+        },
+        "GENERATED_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when this set was generated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SOURCE_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the emitting node.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/NST",
+  "x-flatbuffer-root-type": "NST",
+  "x-flatbuffer-file-identifier": "$NST"
+}

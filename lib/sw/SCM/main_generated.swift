@@ -24,6 +24,12 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
     static let key: VOffset = 4
     static let idl: VOffset = 6
     static let files: VOffset = 8
+    static let NAME: VOffset = 10
+    static let DESCRIPTION: VOffset = 12
+    static let FILE_IDENTIFIER: VOffset = 14
+    static let SCHEMA_HASH: VOffset = 16
+    static let ROUTED: VOffset = 18
+    static let RECORD_TYPE_ORDINAL: VOffset = 20
   }
 
   ///  Unique identifier for the standard
@@ -34,21 +40,56 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var idlSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.idl) }
   ///  List Of File Paths
   public var files: FlatbufferVector<String?> { return _accessor.vector(at: VT.files, byteSize: 4) }
-  public static func startSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Human-readable name of the standard.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  One-paragraph description of the standard.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Four-character file identifier, e.g. "$OMM".
+  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
+  ///  Hash of the standard's schema text.
+  public var SCHEMA_HASH: String? { let o = _accessor.offset(VT.SCHEMA_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_HASH) }
+  ///  True when the reporting node routes the standard through its store.
+  public var ROUTED: Bool { let o = _accessor.offset(VT.ROUTED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Position of the standard in the record union; append-only forever.
+  public var RECORD_TYPE_ORDINAL: UInt16 { let o = _accessor.offset(VT.RECORD_TYPE_ORDINAL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(key: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: key, at: VT.key) }
   public static func add(idl: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: idl, at: VT.idl) }
   public static func addVectorOf(files: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: files, at: VT.files) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
+  public static func add(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
+  public static func add(ROUTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROUTED, def: false,
+   at: VT.ROUTED) }
+  public static func add(RECORD_TYPE_ORDINAL: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_TYPE_ORDINAL, def: 0, at: VT.RECORD_TYPE_ORDINAL) }
   public static func endSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCHEMA_STANDARD(
     _ fbb: inout FlatBufferBuilder,
     keyOffset key: Offset = Offset(),
     idlOffset idl: Offset = Offset(),
-    filesVectorOffset files: Offset = Offset()
+    filesVectorOffset files: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
+    SCHEMA_HASHOffset SCHEMA_HASH: Offset = Offset(),
+    ROUTED: Bool = false,
+    RECORD_TYPE_ORDINAL: UInt16 = 0
   ) -> Offset {
     let __start = SCHEMA_STANDARD.startSCHEMA_STANDARD(&fbb)
     SCHEMA_STANDARD.add(key: key, &fbb)
     SCHEMA_STANDARD.add(idl: idl, &fbb)
     SCHEMA_STANDARD.addVectorOf(files: files, &fbb)
+    SCHEMA_STANDARD.add(NAME: NAME, &fbb)
+    SCHEMA_STANDARD.add(DESCRIPTION: DESCRIPTION, &fbb)
+    SCHEMA_STANDARD.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
+    SCHEMA_STANDARD.add(SCHEMA_HASH: SCHEMA_HASH, &fbb)
+    SCHEMA_STANDARD.add(ROUTED: ROUTED, &fbb)
+    SCHEMA_STANDARD.add(RECORD_TYPE_ORDINAL: RECORD_TYPE_ORDINAL, &fbb)
     return SCHEMA_STANDARD.endSCHEMA_STANDARD(&fbb, start: __start)
   }
 
@@ -57,6 +98,12 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
     try _v.visit(field: VT.key, fieldName: "key", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.idl, fieldName: "idl", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.files, fieldName: "files", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROUTED, fieldName: "ROUTED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RECORD_TYPE_ORDINAL, fieldName: "RECORD_TYPE_ORDINAL", required: false, type: UInt16.self)
     _v.finish()
   }
 }
@@ -76,6 +123,8 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private struct VT {
     static let version: VOffset = 4
     static let RECORDS: VOffset = 6
+    static let STANDARDS_VERSION: VOffset = 8
+    static let GENERATED_AT_MS: VOffset = 10
   }
 
   ///  Version of Space Data Standards
@@ -83,18 +132,29 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.version) }
   ///  Standards Dictionary
   public var RECORDS: FlatbufferVector<SCHEMA_STANDARD> { return _accessor.vector(at: VT.RECORDS, byteSize: 4) }
-  public static func startSCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  ///  Version of the standards package the reporting node runs.
+  public var STANDARDS_VERSION: String? { let o = _accessor.offset(VT.STANDARDS_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STANDARDS_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STANDARDS_VERSION) }
+  ///  Unix milliseconds when this registry frame was generated.
+  public var GENERATED_AT_MS: Int64 { let o = _accessor.offset(VT.GENERATED_AT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public static func startSCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(version: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: version, at: VT.version) }
   public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VT.RECORDS) }
+  public static func add(STANDARDS_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STANDARDS_VERSION, at: VT.STANDARDS_VERSION) }
+  public static func add(GENERATED_AT_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENERATED_AT_MS, def: 0, at: VT.GENERATED_AT_MS) }
   public static func endSCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCM(
     _ fbb: inout FlatBufferBuilder,
     versionOffset version: Offset = Offset(),
-    RECORDSVectorOffset RECORDS: Offset = Offset()
+    RECORDSVectorOffset RECORDS: Offset = Offset(),
+    STANDARDS_VERSIONOffset STANDARDS_VERSION: Offset = Offset(),
+    GENERATED_AT_MS: Int64 = 0
   ) -> Offset {
     let __start = SCM.startSCM(&fbb)
     SCM.add(version: version, &fbb)
     SCM.addVectorOf(RECORDS: RECORDS, &fbb)
+    SCM.add(STANDARDS_VERSION: STANDARDS_VERSION, &fbb)
+    SCM.add(GENERATED_AT_MS: GENERATED_AT_MS, &fbb)
     return SCM.endSCM(&fbb, start: __start)
   }
 
@@ -102,6 +162,8 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.version, fieldName: "version", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCHEMA_STANDARD>, SCHEMA_STANDARD>>.self)
+    try _v.visit(field: VT.STANDARDS_VERSION, fieldName: "STANDARDS_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GENERATED_AT_MS, fieldName: "GENERATED_AT_MS", required: false, type: Int64.self)
     _v.finish()
   }
 }

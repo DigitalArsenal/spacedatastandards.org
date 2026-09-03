@@ -40,10 +40,30 @@ class SRI {
   double get updatedAtMs => UPDATED_AT_MS;
   ///  Reserved for forward-compatible growth.
   List<int>? get RESERVED => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Content identifier of the record bytes.
+  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Byte offset of the record frame within its export or archive stream.
+  int get BYTE_OFFSET => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get byteOffset => BYTE_OFFSET;
+  ///  Byte length of the record frame.
+  int get BYTE_LENGTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get byteLength => BYTE_LENGTH;
+  ///  Epoch of the record, Unix milliseconds; 0 = none.
+  int get EPOCH_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get epochMs => EPOCH_MS;
+  ///  Entity key of the record within its standard, e.g. a catalogue number.
+  String? get ENTITY_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get entityKey => ENTITY_KEY;
+  String? get PROVIDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get providerId => PROVIDER_ID;
+  String? get SOURCE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get sourceName => SOURCE_NAME;
+  String? get BATCH_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get batchId => BATCH_ID;
 
   @override
   String toString() {
-    return 'SRI{recordKey: ${recordKey}, schemaName: ${schemaName}, ROLE: ${ROLE}, attachedVia: ${attachedVia}, payloadKind: ${payloadKind}, updatedAtMs: ${updatedAtMs}, RESERVED: ${RESERVED}}';
+    return 'SRI{recordKey: ${recordKey}, schemaName: ${schemaName}, ROLE: ${ROLE}, attachedVia: ${attachedVia}, payloadKind: ${payloadKind}, updatedAtMs: ${updatedAtMs}, RESERVED: ${RESERVED}, CID: ${CID}, byteOffset: ${byteOffset}, byteLength: ${byteLength}, epochMs: ${epochMs}, entityKey: ${entityKey}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}}';
   }
 }
 
@@ -61,7 +81,7 @@ class SRIBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(15);
   }
 
   int addRecordKeyOffset(int? offset) {
@@ -92,6 +112,38 @@ class SRIBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addCidOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addByteOffset(int? BYTE_OFFSET) {
+    fbBuilder.addUint64(8, BYTE_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint32(9, BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addEpochMs(int? EPOCH_MS) {
+    fbBuilder.addUint64(10, EPOCH_MS);
+    return fbBuilder.offset;
+  }
+  int addEntityKeyOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceNameOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addBatchIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -106,6 +158,14 @@ class SRIObjectBuilder extends fb.ObjectBuilder {
   final String? _PAYLOAD_KIND;
   final double? _UPDATED_AT_MS;
   final List<int>? _RESERVED;
+  final String? _CID;
+  final int? _BYTE_OFFSET;
+  final int? _BYTE_LENGTH;
+  final int? _EPOCH_MS;
+  final String? _ENTITY_KEY;
+  final String? _PROVIDER_ID;
+  final String? _SOURCE_NAME;
+  final String? _BATCH_ID;
 
   SRIObjectBuilder({
     String? RECORD_KEY,
@@ -120,6 +180,21 @@ class SRIObjectBuilder extends fb.ObjectBuilder {
     double? UPDATED_AT_MS,
     double? updatedAtMs,
     List<int>? RESERVED,
+    String? CID,
+    int? BYTE_OFFSET,
+    int? byteOffset,
+    int? BYTE_LENGTH,
+    int? byteLength,
+    int? EPOCH_MS,
+    int? epochMs,
+    String? ENTITY_KEY,
+    String? entityKey,
+    String? PROVIDER_ID,
+    String? providerId,
+    String? SOURCE_NAME,
+    String? sourceName,
+    String? BATCH_ID,
+    String? batchId,
   })
       : _RECORD_KEY = recordKey ?? RECORD_KEY,
         _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
@@ -127,7 +202,15 @@ class SRIObjectBuilder extends fb.ObjectBuilder {
         _ATTACHED_VIA = attachedVia ?? ATTACHED_VIA,
         _PAYLOAD_KIND = payloadKind ?? PAYLOAD_KIND,
         _UPDATED_AT_MS = updatedAtMs ?? UPDATED_AT_MS,
-        _RESERVED = RESERVED;
+        _RESERVED = RESERVED,
+        _CID = CID,
+        _BYTE_OFFSET = byteOffset ?? BYTE_OFFSET,
+        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
+        _EPOCH_MS = epochMs ?? EPOCH_MS,
+        _ENTITY_KEY = entityKey ?? ENTITY_KEY,
+        _PROVIDER_ID = providerId ?? PROVIDER_ID,
+        _SOURCE_NAME = sourceName ?? SOURCE_NAME,
+        _BATCH_ID = batchId ?? BATCH_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -144,7 +227,17 @@ class SRIObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PAYLOAD_KIND!);
     final int? RESERVEDOffset = _RESERVED == null ? null
         : fbBuilder.writeListUint8(_RESERVED!);
-    fbBuilder.startTable(7);
+    final int? CIDOffset = _CID == null ? null
+        : fbBuilder.writeString(_CID!);
+    final int? ENTITY_KEYOffset = _ENTITY_KEY == null ? null
+        : fbBuilder.writeString(_ENTITY_KEY!);
+    final int? PROVIDER_IDOffset = _PROVIDER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_ID!);
+    final int? SOURCE_NAMEOffset = _SOURCE_NAME == null ? null
+        : fbBuilder.writeString(_SOURCE_NAME!);
+    final int? BATCH_IDOffset = _BATCH_ID == null ? null
+        : fbBuilder.writeString(_BATCH_ID!);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, RECORD_KEYOffset);
     fbBuilder.addOffset(1, SCHEMA_NAMEOffset);
     fbBuilder.addOffset(2, ROLEOffset);
@@ -152,6 +245,14 @@ class SRIObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, PAYLOAD_KINDOffset);
     fbBuilder.addFloat64(5, _UPDATED_AT_MS);
     fbBuilder.addOffset(6, RESERVEDOffset);
+    fbBuilder.addOffset(7, CIDOffset);
+    fbBuilder.addUint64(8, _BYTE_OFFSET);
+    fbBuilder.addUint32(9, _BYTE_LENGTH);
+    fbBuilder.addUint64(10, _EPOCH_MS);
+    fbBuilder.addOffset(11, ENTITY_KEYOffset);
+    fbBuilder.addOffset(12, PROVIDER_IDOffset);
+    fbBuilder.addOffset(13, SOURCE_NAMEOffset);
+    fbBuilder.addOffset(14, BATCH_IDOffset);
     return fbBuilder.endTable();
   }
 

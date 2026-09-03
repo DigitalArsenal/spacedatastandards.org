@@ -68,24 +68,43 @@ class SCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Version of the standards package the reporting node runs.
+    public function getSTANDARDS_VERSION()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix milliseconds when this registry frame was generated.
+    /**
+     * @return long
+     */
+    public function getGENERATED_AT_MS()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(2);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCM
      */
-    public static function createSCM(FlatBufferBuilder $builder, $version, $RECORDS)
+    public static function createSCM(FlatBufferBuilder $builder, $version, $RECORDS, $STANDARDS_VERSION, $GENERATED_AT_MS)
     {
-        $builder->startObject(2);
+        $builder->startObject(4);
         self::addversion($builder, $version);
         self::addRECORDS($builder, $RECORDS);
+        self::addSTANDARDS_VERSION($builder, $STANDARDS_VERSION);
+        self::addGENERATED_AT_MS($builder, $GENERATED_AT_MS);
         $o = $builder->endObject();
         return $o;
     }
@@ -132,6 +151,26 @@ class SCM extends Table
     public static function startRECORDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTANDARDS_VERSION(FlatBufferBuilder $builder, $STANDARDS_VERSION)
+    {
+        $builder->addOffsetX(2, $STANDARDS_VERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addGENERATED_AT_MS(FlatBufferBuilder $builder, $GENERATED_AT_MS)
+    {
+        $builder->addLongX(3, $GENERATED_AT_MS, 0);
     }
 
     /**

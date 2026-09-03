@@ -5,6 +5,14 @@
       "type" : "string",
       "enum": ["IDLE", "SYNCING", "SYNCED", "CAPPED", "ERROR"]
     },
+    "dssPinPolicy" : {
+      "type" : "string",
+      "enum": ["None", "Cache", "Pin", "Archive"]
+    },
+    "dssAction" : {
+      "type" : "string",
+      "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate"]
+    },
     "DSS" : {
       "type" : "object",
       "properties" : {
@@ -109,6 +117,79 @@
               },
         "ERROR" : {
                 "type" : "string"
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Standard code of the lane, e.g. \"OMM\"."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier within the origin."
+              },
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Ingest connector that produces the lane, when known."
+              },
+        "CHANNEL_ID" : {
+                "type" : "string",
+                "description" : "Channel identifier the lane is announced on."
+              },
+        "TOPIC" : {
+                "type" : "string",
+                "description" : "Publish/subscribe topic of the lane."
+              },
+        "SUBSCRIBED" : {
+                "type" : "boolean",
+                "description" : "True when this node subscribes to the lane."
+              },
+        "PIN_POLICY" : {
+                "$ref" : "#/definitions/dssPinPolicy"
+              },
+        "VISIBILITY" : {
+                "type" : "string",
+                "description" : "Visibility of the lane, e.g. \"public\", \"private\"."
+              },
+        "ENCRYPTION_STATE" : {
+                "type" : "string",
+                "description" : "Encryption state of the lane's publications, e.g. \"plain\", \"encrypted\"."
+              },
+        "GRANT_STATE" : {
+                "type" : "string",
+                "description" : "Grant state for an encrypted lane, e.g. \"granted\", \"pending\", \"none\"."
+              },
+        "FEED_HEAD" : {
+                "type" : "string",
+                "description" : "Feed head this node has materialised up to."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the newest publication manifest known."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the newest publish notification known."
+              },
+        "DELTA_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Rows materialised since the previous SYNCED state."
+              },
+        "LAST_SYNC_STARTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds the current or last sync pass started; 0 = never."
+              },
+        "REQUESTED_ACTION" : {
+                "$ref" : "#/definitions/dssAction",
+                "description" : "Action a client requests when sending this record to a node."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher of the lane's records."
               }
       },
       "additionalProperties" : false

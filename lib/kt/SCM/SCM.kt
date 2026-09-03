@@ -59,6 +59,28 @@ class SCM : Table() {
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Version of the standards package the reporting node runs.
+     */
+    val standardsVersion : String?
+        get() {
+            val o = __offset(8)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val standardsVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun standardsVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Unix milliseconds when this registry frame was generated.
+     */
+    val generatedAtMs : Long
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCM(_bb: ByteBuffer): SCM = getRootAsSCM(_bb, SCM())
@@ -67,13 +89,15 @@ class SCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCM")
-        fun createSCM(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int) : Int {
-            builder.startTable(2)
+        fun createSCM(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int, standardsVersionOffset: Int, generatedAtMs: Long) : Int {
+            builder.startTable(4)
+            addGENERATEDATMS(builder, generatedAtMs)
+            addSTANDARDSVERSION(builder, standardsVersionOffset)
             addRECORDS(builder, recordsOffset)
             addVersion(builder, versionOffset)
             return endSCM(builder)
         }
-        fun startSCM(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startSCM(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addVersion(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
         fun addRECORDS(builder: FlatBufferBuilder, records: Int) = builder.addOffset(1, records, 0)
         fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -84,6 +108,8 @@ class SCM : Table() {
             return builder.endVector()
         }
         fun startRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSTANDARDSVERSION(builder: FlatBufferBuilder, standardsVersion: Int) = builder.addOffset(2, standardsVersion, 0)
+        fun addGENERATEDATMS(builder: FlatBufferBuilder, generatedAtMs: Long) = builder.addLong(3, generatedAtMs, 0L)
         fun endSCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

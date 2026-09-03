@@ -302,10 +302,22 @@ class LCC {
   final int _bcOffset;
 
   legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Display name of the owner or source the code stands for.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Longer description of the owner or source.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  True while the code is in current use by the publishing catalogue.
+  bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  URL of the reference table the row was retrieved from.
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get sourceUrl => SOURCE_URL;
+  ///  ISO 8601 UTC time the reference table was retrieved.
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get retrievedAt => RETRIEVED_AT;
 
   @override
   String toString() {
-    return 'LCC{OWNER: ${OWNER}}';
+    return 'LCC{OWNER: ${OWNER}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ACTIVE: ${ACTIVE}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}}';
   }
 }
 
@@ -323,11 +335,31 @@ class LCCBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(6);
   }
 
   int addOwner(legacyCountryCode? OWNER) {
     fbBuilder.addInt8(0, OWNER?.value);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addActive(bool? ACTIVE) {
+    fbBuilder.addBool(3, ACTIVE);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -338,17 +370,47 @@ class LCCBuilder {
 
 class LCCObjectBuilder extends fb.ObjectBuilder {
   final legacyCountryCode? _OWNER;
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final bool? _ACTIVE;
+  final String? _SOURCE_URL;
+  final String? _RETRIEVED_AT;
 
   LCCObjectBuilder({
     legacyCountryCode? OWNER,
+    String? NAME,
+    String? DESCRIPTION,
+    bool? ACTIVE,
+    String? SOURCE_URL,
+    String? sourceUrl,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
   })
-      : _OWNER = OWNER;
+      : _OWNER = OWNER,
+        _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _ACTIVE = ACTIVE,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    fbBuilder.startTable(6);
     fbBuilder.addInt8(0, _OWNER?.value);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, DESCRIPTIONOffset);
+    fbBuilder.addBool(3, _ACTIVE);
+    fbBuilder.addOffset(4, SOURCE_URLOffset);
+    fbBuilder.addOffset(5, RETRIEVED_ATOffset);
     return fbBuilder.endTable();
   }
 

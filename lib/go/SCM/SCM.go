@@ -101,8 +101,44 @@ func (rcv *SCM) RecordsLength() int {
 }
 
 /// Standards Dictionary
+/// Version of the standards package the reporting node runs.
+func (rcv *SCM) STANDARDS_VERSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCM) StandardsVersion() []byte {
+	return rcv.STANDARDS_VERSION()
+}
+
+/// Version of the standards package the reporting node runs.
+/// Unix milliseconds when this registry frame was generated.
+func (rcv *SCM) GENERATED_AT_MS() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SCM) GeneratedAtMs() int64 {
+	return rcv.GENERATED_AT_MS()
+}
+
+/// Unix milliseconds when this registry frame was generated.
+func (rcv *SCM) MutateGENERATED_AT_MS(n int64) bool {
+	return rcv._tab.MutateInt64Slot(10, n)
+}
+
+func (rcv *SCM) MutateGeneratedAtMs(n int64) bool {
+	return rcv.MutateGENERATED_AT_MS(n)
+}
+
 func SCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(4)
 }
 func SCMAddversion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(version), 0)
@@ -121,6 +157,18 @@ func SCMStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffe
 }
 func SCMStartRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCMStartRECORDSVector(builder, numElems)
+}
+func SCMAddSTANDARDS_VERSION(builder *flatbuffers.Builder, STANDARDS_VERSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STANDARDS_VERSION), 0)
+}
+func SCMAddStandardsVersion(builder *flatbuffers.Builder, STANDARDS_VERSION flatbuffers.UOffsetT) {
+	SCMAddSTANDARDS_VERSION(builder, STANDARDS_VERSION)
+}
+func SCMAddGENERATED_AT_MS(builder *flatbuffers.Builder, GENERATED_AT_MS int64) {
+	builder.PrependInt64Slot(3, GENERATED_AT_MS, 0)
+}
+func SCMAddGeneratedAtMs(builder *flatbuffers.Builder, GENERATED_AT_MS int64) {
+	SCMAddGENERATED_AT_MS(builder, GENERATED_AT_MS)
 }
 func SCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

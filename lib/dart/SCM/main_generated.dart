@@ -25,10 +25,25 @@ class SCHEMA_STANDARD {
   String? get idl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  List Of File Paths
   List<String>? get files => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Human-readable name of the standard.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  One-paragraph description of the standard.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Four-character file identifier, e.g. "$OMM".
+  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get fileIdentifier => FILE_IDENTIFIER;
+  ///  Hash of the standard's schema text.
+  String? get SCHEMA_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get schemaHash => SCHEMA_HASH;
+  ///  True when the reporting node routes the standard through its store.
+  bool get ROUTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  Position of the standard in the record union; append-only forever.
+  int get RECORD_TYPE_ORDINAL => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get recordTypeOrdinal => RECORD_TYPE_ORDINAL;
 
   @override
   String toString() {
-    return 'SCHEMA_STANDARD{key: ${key}, idl: ${idl}, files: ${files}}';
+    return 'SCHEMA_STANDARD{key: ${key}, idl: ${idl}, files: ${files}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, fileIdentifier: ${fileIdentifier}, schemaHash: ${schemaHash}, ROUTED: ${ROUTED}, recordTypeOrdinal: ${recordTypeOrdinal}}';
   }
 }
 
@@ -46,7 +61,7 @@ class SCHEMA_STANDARDBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(9);
   }
 
   int addKeyOffset(int? offset) {
@@ -61,6 +76,30 @@ class SCHEMA_STANDARDBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addFileIdentifierOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSchemaHashOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addRouted(bool? ROUTED) {
+    fbBuilder.addBool(7, ROUTED);
+    return fbBuilder.offset;
+  }
+  int addRecordTypeOrdinal(int? RECORD_TYPE_ORDINAL) {
+    fbBuilder.addUint16(8, RECORD_TYPE_ORDINAL);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -71,15 +110,36 @@ class SCHEMA_STANDARDObjectBuilder extends fb.ObjectBuilder {
   final String? _key;
   final String? _idl;
   final List<String>? _files;
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final String? _FILE_IDENTIFIER;
+  final String? _SCHEMA_HASH;
+  final bool? _ROUTED;
+  final int? _RECORD_TYPE_ORDINAL;
 
   SCHEMA_STANDARDObjectBuilder({
     String? key,
     String? idl,
     List<String>? files,
+    String? NAME,
+    String? DESCRIPTION,
+    String? FILE_IDENTIFIER,
+    String? fileIdentifier,
+    String? SCHEMA_HASH,
+    String? schemaHash,
+    bool? ROUTED,
+    int? RECORD_TYPE_ORDINAL,
+    int? recordTypeOrdinal,
   })
       : _key = key,
         _idl = idl,
-        _files = files;
+        _files = files,
+        _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
+        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
+        _ROUTED = ROUTED,
+        _RECORD_TYPE_ORDINAL = recordTypeOrdinal ?? RECORD_TYPE_ORDINAL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -90,10 +150,24 @@ class SCHEMA_STANDARDObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_idl!);
     final int? filesOffset = _files == null ? null
         : fbBuilder.writeList(_files!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(3);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
+        : fbBuilder.writeString(_FILE_IDENTIFIER!);
+    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
+        : fbBuilder.writeString(_SCHEMA_HASH!);
+    fbBuilder.startTable(9);
     fbBuilder.addOffset(0, keyOffset);
     fbBuilder.addOffset(1, idlOffset);
     fbBuilder.addOffset(2, filesOffset);
+    fbBuilder.addOffset(3, NAMEOffset);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    fbBuilder.addOffset(5, FILE_IDENTIFIEROffset);
+    fbBuilder.addOffset(6, SCHEMA_HASHOffset);
+    fbBuilder.addBool(7, _ROUTED);
+    fbBuilder.addUint16(8, _RECORD_TYPE_ORDINAL);
     return fbBuilder.endTable();
   }
 
@@ -126,10 +200,16 @@ class SCM {
   String? get version => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Standards Dictionary
   List<SCHEMA_STANDARD>? get RECORDS => const fb.ListReader<SCHEMA_STANDARD>(SCHEMA_STANDARD.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Version of the standards package the reporting node runs.
+  String? get STANDARDS_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get standardsVersion => STANDARDS_VERSION;
+  ///  Unix milliseconds when this registry frame was generated.
+  int get GENERATED_AT_MS => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get generatedAtMs => GENERATED_AT_MS;
 
   @override
   String toString() {
-    return 'SCM{version: ${version}, RECORDS: ${RECORDS}}';
+    return 'SCM{version: ${version}, RECORDS: ${RECORDS}, standardsVersion: ${standardsVersion}, generatedAtMs: ${generatedAtMs}}';
   }
 }
 
@@ -147,7 +227,7 @@ class SCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
   }
 
   int addVersionOffset(int? offset) {
@@ -156,6 +236,14 @@ class SCMBuilder {
   }
   int addRecordsOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addStandardsVersionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addGeneratedAtMs(int? GENERATED_AT_MS) {
+    fbBuilder.addInt64(3, GENERATED_AT_MS);
     return fbBuilder.offset;
   }
 
@@ -167,13 +255,21 @@ class SCMBuilder {
 class SCMObjectBuilder extends fb.ObjectBuilder {
   final String? _version;
   final List<SCHEMA_STANDARDObjectBuilder>? _RECORDS;
+  final String? _STANDARDS_VERSION;
+  final int? _GENERATED_AT_MS;
 
   SCMObjectBuilder({
     String? version,
     List<SCHEMA_STANDARDObjectBuilder>? RECORDS,
+    String? STANDARDS_VERSION,
+    String? standardsVersion,
+    int? GENERATED_AT_MS,
+    int? generatedAtMs,
   })
       : _version = version,
-        _RECORDS = RECORDS;
+        _RECORDS = RECORDS,
+        _STANDARDS_VERSION = standardsVersion ?? STANDARDS_VERSION,
+        _GENERATED_AT_MS = generatedAtMs ?? GENERATED_AT_MS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -182,9 +278,13 @@ class SCMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_version!);
     final int? RECORDSOffset = _RECORDS == null ? null
         : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(2);
+    final int? STANDARDS_VERSIONOffset = _STANDARDS_VERSION == null ? null
+        : fbBuilder.writeString(_STANDARDS_VERSION!);
+    fbBuilder.startTable(4);
     fbBuilder.addOffset(0, versionOffset);
     fbBuilder.addOffset(1, RECORDSOffset);
+    fbBuilder.addOffset(2, STANDARDS_VERSIONOffset);
+    fbBuilder.addInt64(3, _GENERATED_AT_MS);
     return fbBuilder.endTable();
   }
 

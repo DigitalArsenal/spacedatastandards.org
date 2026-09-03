@@ -34,6 +34,70 @@ class LCC : Table() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Display name of the owner or source the code stands for.
+     */
+    val name : String?
+        get() {
+            val o = __offset(6)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Longer description of the owner or source.
+     */
+    val description : String?
+        get() {
+            val o = __offset(8)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * True while the code is in current use by the publishing catalogue.
+     */
+    val active : Boolean
+        get() {
+            val o = __offset(10)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * URL of the reference table the row was retrieved from.
+     */
+    val sourceUrl : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun sourceUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * ISO 8601 UTC time the reference table was retrieved.
+     */
+    val retrievedAt : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val retrievedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun retrievedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLCC(_bb: ByteBuffer): LCC = getRootAsLCC(_bb, LCC())
@@ -42,13 +106,23 @@ class LCC : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCC")
-        fun createLCC(builder: FlatBufferBuilder, owner: Byte) : Int {
-            builder.startTable(1)
+        fun createLCC(builder: FlatBufferBuilder, owner: Byte, nameOffset: Int, descriptionOffset: Int, active: Boolean, sourceUrlOffset: Int, retrievedAtOffset: Int) : Int {
+            builder.startTable(6)
+            addRETRIEVEDAT(builder, retrievedAtOffset)
+            addSOURCEURL(builder, sourceUrlOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addACTIVE(builder, active)
             addOWNER(builder, owner)
             return endLCC(builder)
         }
-        fun startLCC(builder: FlatBufferBuilder) = builder.startTable(1)
+        fun startLCC(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addOWNER(builder: FlatBufferBuilder, owner: Byte) = builder.addByte(0, owner, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
+        fun addACTIVE(builder: FlatBufferBuilder, active: Boolean) = builder.addBoolean(3, active, false)
+        fun addSOURCEURL(builder: FlatBufferBuilder, sourceUrl: Int) = builder.addOffset(4, sourceUrl, 0)
+        fun addRETRIEVEDAT(builder: FlatBufferBuilder, retrievedAt: Int) = builder.addOffset(5, retrievedAt, 0)
         fun endLCC(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

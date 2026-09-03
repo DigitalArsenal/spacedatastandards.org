@@ -32,6 +32,35 @@
         "RESERVED" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Reserved for forward-compatible growth."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the record bytes."
+              },
+        "BYTE_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte offset of the record frame within its export or archive stream."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length of the record frame."
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Epoch of the record, Unix milliseconds; 0 = none."
+              },
+        "ENTITY_KEY" : {
+                "type" : "string",
+                "description" : "Entity key of the record within its standard, e.g. a catalogue number."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "BATCH_ID" : {
+                "type" : "string"
               }
       },
       "additionalProperties" : false

@@ -18,13 +18,31 @@ class SCHEMA_STANDARD : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 4)
     def files_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Human-readable name of the standard.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// One-paragraph description of the standard.
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Four-character file identifier, e.g. "$OMM".
+    def FILE_IDENTIFIER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Hash of the standard's schema text.
+    def SCHEMA_HASH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// True when the reporting node routes the standard through its store.
+    def ROUTED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// Position of the standard in the record union; append-only forever.
+    def RECORD_TYPE_ORDINAL() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 20, 0)
 
 def GetRootAsSCHEMA_STANDARD(buf:string): return SCHEMA_STANDARD { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCHEMA_STANDARDBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(9)
         return this
     def add_key(key:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, key)
@@ -34,6 +52,24 @@ struct SCHEMA_STANDARDBuilder:
         return this
     def add_files(files:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, files)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, NAME)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, DESCRIPTION)
+        return this
+    def add_FILE_IDENTIFIER(FILE_IDENTIFIER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, FILE_IDENTIFIER)
+        return this
+    def add_SCHEMA_HASH(SCHEMA_HASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, SCHEMA_HASH)
+        return this
+    def add_ROUTED(ROUTED:bool):
+        b_.PrependBoolSlot(7, ROUTED, 0)
+        return this
+    def add_RECORD_TYPE_ORDINAL(RECORD_TYPE_ORDINAL:int):
+        b_.PrependUint16Slot(8, RECORD_TYPE_ORDINAL, 0)
         return this
     def end():
         return b_.EndObject()
@@ -55,19 +91,31 @@ class SCM : flatbuffers.handle
         return SCHEMA_STANDARD { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def RECORDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Version of the standards package the reporting node runs.
+    def STANDARDS_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Unix milliseconds when this registry frame was generated.
+    def GENERATED_AT_MS() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 10, 0)
 
 def GetRootAsSCM(buf:string): return SCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(2)
+        b_.StartObject(4)
         return this
     def add_version(version:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, version)
         return this
     def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, RECORDS)
+        return this
+    def add_STANDARDS_VERSION(STANDARDS_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, STANDARDS_VERSION)
+        return this
+    def add_GENERATED_AT_MS(GENERATED_AT_MS:int):
+        b_.PrependInt64Slot(3, GENERATED_AT_MS, 0)
         return this
     def end():
         return b_.EndObject()

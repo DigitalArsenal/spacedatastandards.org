@@ -178,6 +178,127 @@ public final class ICN extends com.google.flatbuffers.Table {
   public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
   public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Upstream publisher the connector retrieves records from, as a host name
+   * or stable identifier.
+   */
+  public String ORIGIN_ID() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGIN_IDAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer ORIGIN_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Display name of the upstream publisher.
+   */
+  public String ORIGIN_NAME() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGIN_NAMEAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer ORIGIN_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+   */
+  public String DATASET_ID() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATASET_IDAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer DATASET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * Provider identifier the lane's records are stored under.
+   */
+  public String PROVIDER_ID() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_IDAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer PROVIDER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Source name the lane's records are stored under.
+   */
+  public String SOURCE_NAME() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer SOURCE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * Licence under which the upstream publisher offers the records.
+   */
+  public String LICENSE() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  public String LICENSE_URL() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSE_URLAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer LICENSE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * Citation the upstream publisher asks for.
+   */
+  public String CITATION() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * Minimum interval between fetches of the same dataset, milliseconds.
+   */
+  public long MIN_FETCH_INTERVAL_MS() { int o = __offset(78); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix milliseconds when the next fetch is eligible.
+   */
+  public long NEXT_ELIGIBLE_AT() { int o = __offset(80); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * HTTP status of the last fetch.
+   */
+  public int LAST_HTTP_STATUS() { int o = __offset(82); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Entity tag returned by the last fetch.
+   */
+  public String LAST_SOURCE_ETAG() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_SOURCE_ETAGAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
+  public ByteBuffer LAST_SOURCE_ETAGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
+  /**
+   * Last-Modified value returned by the last fetch.
+   */
+  public String LAST_SOURCE_LAST_MODIFIED() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_SOURCE_LAST_MODIFIEDAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer LAST_SOURCE_LAST_MODIFIEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * Batch identifier of the last ingest.
+   */
+  public String LAST_BATCH_ID() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_BATCH_IDAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer LAST_BATCH_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * Records parsed by the last ingest.
+   */
+  public long LAST_RECORD_COUNT() { int o = __offset(90); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Records newly inserted by the last ingest.
+   */
+  public long LAST_INSERTED_COUNT() { int o = __offset(92); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Duration of the last fetch and ingest, milliseconds.
+   */
+  public long LAST_DURATION_MS() { int o = __offset(94); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Fetches attempted over the connector's lifetime.
+   */
+  public long FETCH_COUNT() { int o = __offset(96); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Ingests completed over the connector's lifetime.
+   */
+  public long INGEST_COUNT() { int o = __offset(98); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Content identifier of the last publication manifest emitted.
+   */
+  public String LAST_PUBLICATION_CID() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_PUBLICATION_CIDAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
+  public ByteBuffer LAST_PUBLICATION_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  /**
+   * Content identifier of the last publish notification emitted.
+   */
+  public String LAST_PNM_CID() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_PNM_CIDAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
+  public ByteBuffer LAST_PNM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * Feed head the connector last advanced to.
+   */
+  public String FEED_HEAD() { int o = __offset(104); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FEED_HEADAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
+  public ByteBuffer FEED_HEADInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
+  /**
+   * Standard codes the connector emits, e.g. ["OMM", "MPE"].
+   */
+  public String EMITS_SCHEMAS(int j) { int o = __offset(106); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int EMITS_SCHEMASLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector emitsSchemasVector() { return emitsSchemasVector(new StringVector()); }
+  public StringVector emitsSchemasVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createICN(FlatBufferBuilder builder,
       int CONNECTOR_IDOffset,
@@ -208,13 +329,58 @@ public final class ICN extends com.google.flatbuffers.Table {
       long CREATED_AT,
       long UPDATED_AT,
       int PROVIDER_PEER_IDOffset,
-      int PROVIDER_SIGNATUREOffset) {
-    builder.startTable(29);
+      int PROVIDER_SIGNATUREOffset,
+      int ORIGIN_IDOffset,
+      int ORIGIN_NAMEOffset,
+      int DATASET_IDOffset,
+      int PROVIDER_IDOffset,
+      int SOURCE_NAMEOffset,
+      int LICENSEOffset,
+      int LICENSE_URLOffset,
+      int CITATIONOffset,
+      long MIN_FETCH_INTERVAL_MS,
+      long NEXT_ELIGIBLE_AT,
+      int LAST_HTTP_STATUS,
+      int LAST_SOURCE_ETAGOffset,
+      int LAST_SOURCE_LAST_MODIFIEDOffset,
+      int LAST_BATCH_IDOffset,
+      long LAST_RECORD_COUNT,
+      long LAST_INSERTED_COUNT,
+      long LAST_DURATION_MS,
+      long FETCH_COUNT,
+      long INGEST_COUNT,
+      int LAST_PUBLICATION_CIDOffset,
+      int LAST_PNM_CIDOffset,
+      int FEED_HEADOffset,
+      int EMITS_SCHEMASOffset) {
+    builder.startTable(52);
+    ICN.addIngestCount(builder, INGEST_COUNT);
+    ICN.addFetchCount(builder, FETCH_COUNT);
+    ICN.addLastDurationMs(builder, LAST_DURATION_MS);
+    ICN.addLastInsertedCount(builder, LAST_INSERTED_COUNT);
+    ICN.addLastRecordCount(builder, LAST_RECORD_COUNT);
+    ICN.addNextEligibleAt(builder, NEXT_ELIGIBLE_AT);
+    ICN.addMinFetchIntervalMs(builder, MIN_FETCH_INTERVAL_MS);
     ICN.addUpdatedAt(builder, UPDATED_AT);
     ICN.addCreatedAt(builder, CREATED_AT);
     ICN.addLastErrorAt(builder, LAST_ERROR_AT);
     ICN.addLastIngestAt(builder, LAST_INGEST_AT);
     ICN.addUploadTotalBytes(builder, UPLOAD_TOTAL_BYTES);
+    ICN.addEmitsSchemas(builder, EMITS_SCHEMASOffset);
+    ICN.addFeedHead(builder, FEED_HEADOffset);
+    ICN.addLastPnmCid(builder, LAST_PNM_CIDOffset);
+    ICN.addLastPublicationCid(builder, LAST_PUBLICATION_CIDOffset);
+    ICN.addLastBatchId(builder, LAST_BATCH_IDOffset);
+    ICN.addLastSourceLastModified(builder, LAST_SOURCE_LAST_MODIFIEDOffset);
+    ICN.addLastSourceEtag(builder, LAST_SOURCE_ETAGOffset);
+    ICN.addCitation(builder, CITATIONOffset);
+    ICN.addLicenseUrl(builder, LICENSE_URLOffset);
+    ICN.addLicense(builder, LICENSEOffset);
+    ICN.addSourceName(builder, SOURCE_NAMEOffset);
+    ICN.addProviderId(builder, PROVIDER_IDOffset);
+    ICN.addDatasetId(builder, DATASET_IDOffset);
+    ICN.addOriginName(builder, ORIGIN_NAMEOffset);
+    ICN.addOriginId(builder, ORIGIN_IDOffset);
     ICN.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
     ICN.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
     ICN.addLastError(builder, LAST_ERROROffset);
@@ -235,6 +401,7 @@ public final class ICN extends com.google.flatbuffers.Table {
     ICN.addStatusMessage(builder, STATUS_MESSAGEOffset);
     ICN.addTargetSchema(builder, TARGET_SCHEMAOffset);
     ICN.addConnectorId(builder, CONNECTOR_IDOffset);
+    ICN.addLastHttpStatus(builder, LAST_HTTP_STATUS);
     ICN.addPostIngestAction(builder, POST_INGEST_ACTION);
     ICN.addAuthKind(builder, AUTH_KIND);
     ICN.addStatus(builder, STATUS);
@@ -242,7 +409,7 @@ public final class ICN extends com.google.flatbuffers.Table {
     return ICN.endICN(builder);
   }
 
-  public static void startICN(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startICN(FlatBufferBuilder builder) { builder.startTable(52); }
   public static void addConnectorId(FlatBufferBuilder builder, int CONNECTOR_IDOffset) { builder.addOffset(0, CONNECTOR_IDOffset, 0); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(1, KIND, 0); }
   public static void addTargetSchema(FlatBufferBuilder builder, int TARGET_SCHEMAOffset) { builder.addOffset(2, TARGET_SCHEMAOffset, 0); }
@@ -275,6 +442,31 @@ public final class ICN extends com.google.flatbuffers.Table {
   public static int createProviderSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startProviderSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addOriginId(FlatBufferBuilder builder, int ORIGIN_IDOffset) { builder.addOffset(29, ORIGIN_IDOffset, 0); }
+  public static void addOriginName(FlatBufferBuilder builder, int ORIGIN_NAMEOffset) { builder.addOffset(30, ORIGIN_NAMEOffset, 0); }
+  public static void addDatasetId(FlatBufferBuilder builder, int DATASET_IDOffset) { builder.addOffset(31, DATASET_IDOffset, 0); }
+  public static void addProviderId(FlatBufferBuilder builder, int PROVIDER_IDOffset) { builder.addOffset(32, PROVIDER_IDOffset, 0); }
+  public static void addSourceName(FlatBufferBuilder builder, int SOURCE_NAMEOffset) { builder.addOffset(33, SOURCE_NAMEOffset, 0); }
+  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(34, LICENSEOffset, 0); }
+  public static void addLicenseUrl(FlatBufferBuilder builder, int LICENSE_URLOffset) { builder.addOffset(35, LICENSE_URLOffset, 0); }
+  public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(36, CITATIONOffset, 0); }
+  public static void addMinFetchIntervalMs(FlatBufferBuilder builder, long MIN_FETCH_INTERVAL_MS) { builder.addLong(37, MIN_FETCH_INTERVAL_MS, 0L); }
+  public static void addNextEligibleAt(FlatBufferBuilder builder, long NEXT_ELIGIBLE_AT) { builder.addLong(38, NEXT_ELIGIBLE_AT, 0L); }
+  public static void addLastHttpStatus(FlatBufferBuilder builder, int LAST_HTTP_STATUS) { builder.addShort(39, (short) LAST_HTTP_STATUS, (short) 0); }
+  public static void addLastSourceEtag(FlatBufferBuilder builder, int LAST_SOURCE_ETAGOffset) { builder.addOffset(40, LAST_SOURCE_ETAGOffset, 0); }
+  public static void addLastSourceLastModified(FlatBufferBuilder builder, int LAST_SOURCE_LAST_MODIFIEDOffset) { builder.addOffset(41, LAST_SOURCE_LAST_MODIFIEDOffset, 0); }
+  public static void addLastBatchId(FlatBufferBuilder builder, int LAST_BATCH_IDOffset) { builder.addOffset(42, LAST_BATCH_IDOffset, 0); }
+  public static void addLastRecordCount(FlatBufferBuilder builder, long LAST_RECORD_COUNT) { builder.addLong(43, LAST_RECORD_COUNT, 0L); }
+  public static void addLastInsertedCount(FlatBufferBuilder builder, long LAST_INSERTED_COUNT) { builder.addLong(44, LAST_INSERTED_COUNT, 0L); }
+  public static void addLastDurationMs(FlatBufferBuilder builder, long LAST_DURATION_MS) { builder.addLong(45, LAST_DURATION_MS, 0L); }
+  public static void addFetchCount(FlatBufferBuilder builder, long FETCH_COUNT) { builder.addLong(46, FETCH_COUNT, 0L); }
+  public static void addIngestCount(FlatBufferBuilder builder, long INGEST_COUNT) { builder.addLong(47, INGEST_COUNT, 0L); }
+  public static void addLastPublicationCid(FlatBufferBuilder builder, int LAST_PUBLICATION_CIDOffset) { builder.addOffset(48, LAST_PUBLICATION_CIDOffset, 0); }
+  public static void addLastPnmCid(FlatBufferBuilder builder, int LAST_PNM_CIDOffset) { builder.addOffset(49, LAST_PNM_CIDOffset, 0); }
+  public static void addFeedHead(FlatBufferBuilder builder, int FEED_HEADOffset) { builder.addOffset(50, FEED_HEADOffset, 0); }
+  public static void addEmitsSchemas(FlatBufferBuilder builder, int EMITS_SCHEMASOffset) { builder.addOffset(51, EMITS_SCHEMASOffset, 0); }
+  public static int createEmitsSchemasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEmitsSchemasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endICN(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // CONNECTOR_ID

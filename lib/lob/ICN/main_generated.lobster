@@ -146,13 +146,84 @@ class ICN : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 1)
     def PROVIDER_SIGNATURE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 60)
+    /// Upstream publisher the connector retrieves records from, as a host name
+    /// or stable identifier.
+    def ORIGIN_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// Display name of the upstream publisher.
+    def ORIGIN_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 64)
+    /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+    def DATASET_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 66)
+    /// Provider identifier the lane's records are stored under.
+    def PROVIDER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 68)
+    /// Source name the lane's records are stored under.
+    def SOURCE_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 70)
+    /// Licence under which the upstream publisher offers the records.
+    def LICENSE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 72)
+    def LICENSE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
+    /// Citation the upstream publisher asks for.
+    def CITATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 76)
+    /// Minimum interval between fetches of the same dataset, milliseconds.
+    def MIN_FETCH_INTERVAL_MS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 78, 0)
+    /// Unix milliseconds when the next fetch is eligible.
+    def NEXT_ELIGIBLE_AT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 80, 0)
+    /// HTTP status of the last fetch.
+    def LAST_HTTP_STATUS() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 82, 0)
+    /// Entity tag returned by the last fetch.
+    def LAST_SOURCE_ETAG() -> string:
+        return flatbuffers.field_string(buf_, pos_, 84)
+    /// Last-Modified value returned by the last fetch.
+    def LAST_SOURCE_LAST_MODIFIED() -> string:
+        return flatbuffers.field_string(buf_, pos_, 86)
+    /// Batch identifier of the last ingest.
+    def LAST_BATCH_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 88)
+    /// Records parsed by the last ingest.
+    def LAST_RECORD_COUNT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 90, 0)
+    /// Records newly inserted by the last ingest.
+    def LAST_INSERTED_COUNT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 92, 0)
+    /// Duration of the last fetch and ingest, milliseconds.
+    def LAST_DURATION_MS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 94, 0)
+    /// Fetches attempted over the connector's lifetime.
+    def FETCH_COUNT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 96, 0)
+    /// Ingests completed over the connector's lifetime.
+    def INGEST_COUNT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 98, 0)
+    /// Content identifier of the last publication manifest emitted.
+    def LAST_PUBLICATION_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 100)
+    /// Content identifier of the last publish notification emitted.
+    def LAST_PNM_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 102)
+    /// Feed head the connector last advanced to.
+    def FEED_HEAD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 104)
+    /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+    def EMITS_SCHEMAS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 106) + i * 4)
+    def EMITS_SCHEMAS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 106)
 
 def GetRootAsICN(buf:string): return ICN { buf, flatbuffers.indirect(buf, 0) }
 
 struct ICNBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(29)
+        b_.StartObject(52)
         return this
     def add_CONNECTOR_ID(CONNECTOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CONNECTOR_ID)
@@ -241,6 +312,75 @@ struct ICNBuilder:
     def add_PROVIDER_SIGNATURE(PROVIDER_SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(28, PROVIDER_SIGNATURE)
         return this
+    def add_ORIGIN_ID(ORIGIN_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, ORIGIN_ID)
+        return this
+    def add_ORIGIN_NAME(ORIGIN_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, ORIGIN_NAME)
+        return this
+    def add_DATASET_ID(DATASET_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, DATASET_ID)
+        return this
+    def add_PROVIDER_ID(PROVIDER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, PROVIDER_ID)
+        return this
+    def add_SOURCE_NAME(SOURCE_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, SOURCE_NAME)
+        return this
+    def add_LICENSE(LICENSE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, LICENSE)
+        return this
+    def add_LICENSE_URL(LICENSE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, LICENSE_URL)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, CITATION)
+        return this
+    def add_MIN_FETCH_INTERVAL_MS(MIN_FETCH_INTERVAL_MS:int):
+        b_.PrependUint64Slot(37, MIN_FETCH_INTERVAL_MS, 0)
+        return this
+    def add_NEXT_ELIGIBLE_AT(NEXT_ELIGIBLE_AT:int):
+        b_.PrependUint64Slot(38, NEXT_ELIGIBLE_AT, 0)
+        return this
+    def add_LAST_HTTP_STATUS(LAST_HTTP_STATUS:int):
+        b_.PrependUint16Slot(39, LAST_HTTP_STATUS, 0)
+        return this
+    def add_LAST_SOURCE_ETAG(LAST_SOURCE_ETAG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(40, LAST_SOURCE_ETAG)
+        return this
+    def add_LAST_SOURCE_LAST_MODIFIED(LAST_SOURCE_LAST_MODIFIED:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, LAST_SOURCE_LAST_MODIFIED)
+        return this
+    def add_LAST_BATCH_ID(LAST_BATCH_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, LAST_BATCH_ID)
+        return this
+    def add_LAST_RECORD_COUNT(LAST_RECORD_COUNT:int):
+        b_.PrependUint64Slot(43, LAST_RECORD_COUNT, 0)
+        return this
+    def add_LAST_INSERTED_COUNT(LAST_INSERTED_COUNT:int):
+        b_.PrependUint64Slot(44, LAST_INSERTED_COUNT, 0)
+        return this
+    def add_LAST_DURATION_MS(LAST_DURATION_MS:int):
+        b_.PrependUint64Slot(45, LAST_DURATION_MS, 0)
+        return this
+    def add_FETCH_COUNT(FETCH_COUNT:int):
+        b_.PrependUint64Slot(46, FETCH_COUNT, 0)
+        return this
+    def add_INGEST_COUNT(INGEST_COUNT:int):
+        b_.PrependUint64Slot(47, INGEST_COUNT, 0)
+        return this
+    def add_LAST_PUBLICATION_CID(LAST_PUBLICATION_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(48, LAST_PUBLICATION_CID)
+        return this
+    def add_LAST_PNM_CID(LAST_PNM_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(49, LAST_PNM_CID)
+        return this
+    def add_FEED_HEAD(FEED_HEAD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(50, FEED_HEAD)
+        return this
+    def add_EMITS_SCHEMAS(EMITS_SCHEMAS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(51, EMITS_SCHEMAS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -249,4 +389,11 @@ def ICNStartPROVIDERSIGNATUREVector(b_:flatbuffers.builder, n_:int):
 def ICNCreatePROVIDERSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def ICNStartEMITSSCHEMASVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ICNCreateEMITSSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -66,8 +66,56 @@ class SCHEMA_STANDARD(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
+    # Human-readable name of the standard.
+    # SCHEMA_STANDARD
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # One-paragraph description of the standard.
+    # SCHEMA_STANDARD
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Four-character file identifier, e.g. "$OMM".
+    # SCHEMA_STANDARD
+    def FILE_IDENTIFIER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Hash of the standard's schema text.
+    # SCHEMA_STANDARD
+    def SCHEMA_HASH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True when the reporting node routes the standard through its store.
+    # SCHEMA_STANDARD
+    def ROUTED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Position of the standard in the record union; append-only forever.
+    # SCHEMA_STANDARD
+    def RECORD_TYPE_ORDINAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
 def SCHEMA_STANDARDStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(9)
 
 def Start(builder):
     SCHEMA_STANDARDStart(builder)
@@ -102,6 +150,42 @@ def SCHEMA_STANDARDCreatefilesVector(builder, data):
 def CreatefilesVector(builder, data):
     SCHEMA_STANDARDCreatefilesVector(builder, data)
 
+def SCHEMA_STANDARDAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    SCHEMA_STANDARDAddNAME(builder, NAME)
+
+def SCHEMA_STANDARDAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    SCHEMA_STANDARDAddDESCRIPTION(builder, DESCRIPTION)
+
+def SCHEMA_STANDARDAddFILE_IDENTIFIER(builder, FILE_IDENTIFIER):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_IDENTIFIER), 0)
+
+def AddFILE_IDENTIFIER(builder, FILE_IDENTIFIER):
+    SCHEMA_STANDARDAddFILE_IDENTIFIER(builder, FILE_IDENTIFIER)
+
+def SCHEMA_STANDARDAddSCHEMA_HASH(builder, SCHEMA_HASH):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_HASH), 0)
+
+def AddSCHEMA_HASH(builder, SCHEMA_HASH):
+    SCHEMA_STANDARDAddSCHEMA_HASH(builder, SCHEMA_HASH)
+
+def SCHEMA_STANDARDAddROUTED(builder, ROUTED):
+    builder.PrependBoolSlot(7, ROUTED, 0)
+
+def AddROUTED(builder, ROUTED):
+    SCHEMA_STANDARDAddROUTED(builder, ROUTED)
+
+def SCHEMA_STANDARDAddRECORD_TYPE_ORDINAL(builder, RECORD_TYPE_ORDINAL):
+    builder.PrependUint16Slot(8, RECORD_TYPE_ORDINAL, 0)
+
+def AddRECORD_TYPE_ORDINAL(builder, RECORD_TYPE_ORDINAL):
+    SCHEMA_STANDARDAddRECORD_TYPE_ORDINAL(builder, RECORD_TYPE_ORDINAL)
+
 def SCHEMA_STANDARDEnd(builder):
     return builder.EndObject()
 
@@ -121,10 +205,22 @@ class SCHEMA_STANDARDT(object):
         key = None,
         idl = None,
         files = None,
+        NAME = None,
+        DESCRIPTION = None,
+        FILE_IDENTIFIER = None,
+        SCHEMA_HASH = None,
+        ROUTED = False,
+        RECORD_TYPE_ORDINAL = 0,
     ):
         self.key = key  # type: Optional[str]
         self.idl = idl  # type: Optional[str]
         self.files = files  # type: Optional[List[Optional[str]]]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.FILE_IDENTIFIER = FILE_IDENTIFIER  # type: Optional[str]
+        self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[str]
+        self.ROUTED = ROUTED  # type: bool
+        self.RECORD_TYPE_ORDINAL = RECORD_TYPE_ORDINAL  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -153,6 +249,12 @@ class SCHEMA_STANDARDT(object):
             self.files = []
             for i in range(SCHEMA_STANDARD.filesLength()):
                 self.files.append(SCHEMA_STANDARD.files(i))
+        self.NAME = SCHEMA_STANDARD.NAME()
+        self.DESCRIPTION = SCHEMA_STANDARD.DESCRIPTION()
+        self.FILE_IDENTIFIER = SCHEMA_STANDARD.FILE_IDENTIFIER()
+        self.SCHEMA_HASH = SCHEMA_STANDARD.SCHEMA_HASH()
+        self.ROUTED = SCHEMA_STANDARD.ROUTED()
+        self.RECORD_TYPE_ORDINAL = SCHEMA_STANDARD.RECORD_TYPE_ORDINAL()
 
     # SCHEMA_STANDARDT
     def Pack(self, builder):
@@ -168,6 +270,14 @@ class SCHEMA_STANDARDT(object):
             for i in reversed(range(len(self.files))):
                 builder.PrependUOffsetTRelative(fileslist[i])
             files = builder.EndVector()
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.FILE_IDENTIFIER is not None:
+            FILE_IDENTIFIER = builder.CreateString(self.FILE_IDENTIFIER)
+        if self.SCHEMA_HASH is not None:
+            SCHEMA_HASH = builder.CreateString(self.SCHEMA_HASH)
         SCHEMA_STANDARDStart(builder)
         if self.key is not None:
             SCHEMA_STANDARDAddkey(builder, key)
@@ -175,5 +285,15 @@ class SCHEMA_STANDARDT(object):
             SCHEMA_STANDARDAddidl(builder, idl)
         if self.files is not None:
             SCHEMA_STANDARDAddfiles(builder, files)
+        if self.NAME is not None:
+            SCHEMA_STANDARDAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            SCHEMA_STANDARDAddDESCRIPTION(builder, DESCRIPTION)
+        if self.FILE_IDENTIFIER is not None:
+            SCHEMA_STANDARDAddFILE_IDENTIFIER(builder, FILE_IDENTIFIER)
+        if self.SCHEMA_HASH is not None:
+            SCHEMA_STANDARDAddSCHEMA_HASH(builder, SCHEMA_HASH)
+        SCHEMA_STANDARDAddROUTED(builder, self.ROUTED)
+        SCHEMA_STANDARDAddRECORD_TYPE_ORDINAL(builder, self.RECORD_TYPE_ORDINAL)
         SCHEMA_STANDARD = SCHEMA_STANDARDEnd(builder)
         return SCHEMA_STANDARD

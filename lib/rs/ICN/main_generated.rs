@@ -441,6 +441,29 @@ impl<'a> ICN<'a> {
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 56;
   pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 58;
   pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_ORIGIN_ID: ::flatbuffers::VOffsetT = 62;
+  pub const VT_ORIGIN_NAME: ::flatbuffers::VOffsetT = 64;
+  pub const VT_DATASET_ID: ::flatbuffers::VOffsetT = 66;
+  pub const VT_PROVIDER_ID: ::flatbuffers::VOffsetT = 68;
+  pub const VT_SOURCE_NAME: ::flatbuffers::VOffsetT = 70;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 72;
+  pub const VT_LICENSE_URL: ::flatbuffers::VOffsetT = 74;
+  pub const VT_CITATION: ::flatbuffers::VOffsetT = 76;
+  pub const VT_MIN_FETCH_INTERVAL_MS: ::flatbuffers::VOffsetT = 78;
+  pub const VT_NEXT_ELIGIBLE_AT: ::flatbuffers::VOffsetT = 80;
+  pub const VT_LAST_HTTP_STATUS: ::flatbuffers::VOffsetT = 82;
+  pub const VT_LAST_SOURCE_ETAG: ::flatbuffers::VOffsetT = 84;
+  pub const VT_LAST_SOURCE_LAST_MODIFIED: ::flatbuffers::VOffsetT = 86;
+  pub const VT_LAST_BATCH_ID: ::flatbuffers::VOffsetT = 88;
+  pub const VT_LAST_RECORD_COUNT: ::flatbuffers::VOffsetT = 90;
+  pub const VT_LAST_INSERTED_COUNT: ::flatbuffers::VOffsetT = 92;
+  pub const VT_LAST_DURATION_MS: ::flatbuffers::VOffsetT = 94;
+  pub const VT_FETCH_COUNT: ::flatbuffers::VOffsetT = 96;
+  pub const VT_INGEST_COUNT: ::flatbuffers::VOffsetT = 98;
+  pub const VT_LAST_PUBLICATION_CID: ::flatbuffers::VOffsetT = 100;
+  pub const VT_LAST_PNM_CID: ::flatbuffers::VOffsetT = 102;
+  pub const VT_FEED_HEAD: ::flatbuffers::VOffsetT = 104;
+  pub const VT_EMITS_SCHEMAS: ::flatbuffers::VOffsetT = 106;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -452,11 +475,33 @@ impl<'a> ICN<'a> {
     args: &'args ICNArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ICN<'bldr>> {
     let mut builder = ICNBuilder::new(_fbb);
+    builder.add_INGEST_COUNT(args.INGEST_COUNT);
+    builder.add_FETCH_COUNT(args.FETCH_COUNT);
+    builder.add_LAST_DURATION_MS(args.LAST_DURATION_MS);
+    builder.add_LAST_INSERTED_COUNT(args.LAST_INSERTED_COUNT);
+    builder.add_LAST_RECORD_COUNT(args.LAST_RECORD_COUNT);
+    builder.add_NEXT_ELIGIBLE_AT(args.NEXT_ELIGIBLE_AT);
+    builder.add_MIN_FETCH_INTERVAL_MS(args.MIN_FETCH_INTERVAL_MS);
     builder.add_UPDATED_AT(args.UPDATED_AT);
     builder.add_CREATED_AT(args.CREATED_AT);
     builder.add_LAST_ERROR_AT(args.LAST_ERROR_AT);
     builder.add_LAST_INGEST_AT(args.LAST_INGEST_AT);
     builder.add_UPLOAD_TOTAL_BYTES(args.UPLOAD_TOTAL_BYTES);
+    if let Some(x) = args.EMITS_SCHEMAS { builder.add_EMITS_SCHEMAS(x); }
+    if let Some(x) = args.FEED_HEAD { builder.add_FEED_HEAD(x); }
+    if let Some(x) = args.LAST_PNM_CID { builder.add_LAST_PNM_CID(x); }
+    if let Some(x) = args.LAST_PUBLICATION_CID { builder.add_LAST_PUBLICATION_CID(x); }
+    if let Some(x) = args.LAST_BATCH_ID { builder.add_LAST_BATCH_ID(x); }
+    if let Some(x) = args.LAST_SOURCE_LAST_MODIFIED { builder.add_LAST_SOURCE_LAST_MODIFIED(x); }
+    if let Some(x) = args.LAST_SOURCE_ETAG { builder.add_LAST_SOURCE_ETAG(x); }
+    if let Some(x) = args.CITATION { builder.add_CITATION(x); }
+    if let Some(x) = args.LICENSE_URL { builder.add_LICENSE_URL(x); }
+    if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
+    if let Some(x) = args.SOURCE_NAME { builder.add_SOURCE_NAME(x); }
+    if let Some(x) = args.PROVIDER_ID { builder.add_PROVIDER_ID(x); }
+    if let Some(x) = args.DATASET_ID { builder.add_DATASET_ID(x); }
+    if let Some(x) = args.ORIGIN_NAME { builder.add_ORIGIN_NAME(x); }
+    if let Some(x) = args.ORIGIN_ID { builder.add_ORIGIN_ID(x); }
     if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
     if let Some(x) = args.LAST_ERROR { builder.add_LAST_ERROR(x); }
@@ -477,6 +522,7 @@ impl<'a> ICN<'a> {
     if let Some(x) = args.STATUS_MESSAGE { builder.add_STATUS_MESSAGE(x); }
     if let Some(x) = args.TARGET_SCHEMA { builder.add_TARGET_SCHEMA(x); }
     if let Some(x) = args.CONNECTOR_ID { builder.add_CONNECTOR_ID(x); }
+    builder.add_LAST_HTTP_STATUS(args.LAST_HTTP_STATUS);
     builder.add_POST_INGEST_ACTION(args.POST_INGEST_ACTION);
     builder.add_AUTH_KIND(args.AUTH_KIND);
     builder.add_STATUS(args.STATUS);
@@ -545,6 +591,59 @@ impl<'a> ICN<'a> {
     let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let ORIGIN_ID = self.ORIGIN_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGIN_NAME = self.ORIGIN_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATASET_ID = self.DATASET_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE = self.LICENSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE_URL = self.LICENSE_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CITATION = self.CITATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MIN_FETCH_INTERVAL_MS = self.MIN_FETCH_INTERVAL_MS();
+    let NEXT_ELIGIBLE_AT = self.NEXT_ELIGIBLE_AT();
+    let LAST_HTTP_STATUS = self.LAST_HTTP_STATUS();
+    let LAST_SOURCE_ETAG = self.LAST_SOURCE_ETAG().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_SOURCE_LAST_MODIFIED = self.LAST_SOURCE_LAST_MODIFIED().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_BATCH_ID = self.LAST_BATCH_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_RECORD_COUNT = self.LAST_RECORD_COUNT();
+    let LAST_INSERTED_COUNT = self.LAST_INSERTED_COUNT();
+    let LAST_DURATION_MS = self.LAST_DURATION_MS();
+    let FETCH_COUNT = self.FETCH_COUNT();
+    let INGEST_COUNT = self.INGEST_COUNT();
+    let LAST_PUBLICATION_CID = self.LAST_PUBLICATION_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_PNM_CID = self.LAST_PNM_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FEED_HEAD = self.FEED_HEAD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EMITS_SCHEMAS = self.EMITS_SCHEMAS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
     ICNT {
       CONNECTOR_ID,
       KIND,
@@ -575,6 +674,29 @@ impl<'a> ICN<'a> {
       UPDATED_AT,
       PROVIDER_PEER_ID,
       PROVIDER_SIGNATURE,
+      ORIGIN_ID,
+      ORIGIN_NAME,
+      DATASET_ID,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      LICENSE,
+      LICENSE_URL,
+      CITATION,
+      MIN_FETCH_INTERVAL_MS,
+      NEXT_ELIGIBLE_AT,
+      LAST_HTTP_STATUS,
+      LAST_SOURCE_ETAG,
+      LAST_SOURCE_LAST_MODIFIED,
+      LAST_BATCH_ID,
+      LAST_RECORD_COUNT,
+      LAST_INSERTED_COUNT,
+      LAST_DURATION_MS,
+      FETCH_COUNT,
+      INGEST_COUNT,
+      LAST_PUBLICATION_CID,
+      LAST_PNM_CID,
+      FEED_HEAD,
+      EMITS_SCHEMAS,
     }
   }
 
@@ -811,6 +933,190 @@ impl<'a> ICN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ICN::VT_PROVIDER_SIGNATURE, None)}
   }
+  /// Upstream publisher the connector retrieves records from, as a host name
+  /// or stable identifier.
+  #[inline]
+  pub fn ORIGIN_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_ORIGIN_ID, None)}
+  }
+  /// Display name of the upstream publisher.
+  #[inline]
+  pub fn ORIGIN_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_ORIGIN_NAME, None)}
+  }
+  /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  #[inline]
+  pub fn DATASET_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_DATASET_ID, None)}
+  }
+  /// Provider identifier the lane's records are stored under.
+  #[inline]
+  pub fn PROVIDER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_PROVIDER_ID, None)}
+  }
+  /// Source name the lane's records are stored under.
+  #[inline]
+  pub fn SOURCE_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_SOURCE_NAME, None)}
+  }
+  /// Licence under which the upstream publisher offers the records.
+  #[inline]
+  pub fn LICENSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LICENSE, None)}
+  }
+  #[inline]
+  pub fn LICENSE_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LICENSE_URL, None)}
+  }
+  /// Citation the upstream publisher asks for.
+  #[inline]
+  pub fn CITATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_CITATION, None)}
+  }
+  /// Minimum interval between fetches of the same dataset, milliseconds.
+  #[inline]
+  pub fn MIN_FETCH_INTERVAL_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_MIN_FETCH_INTERVAL_MS, Some(0)).unwrap()}
+  }
+  /// Unix milliseconds when the next fetch is eligible.
+  #[inline]
+  pub fn NEXT_ELIGIBLE_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_NEXT_ELIGIBLE_AT, Some(0)).unwrap()}
+  }
+  /// HTTP status of the last fetch.
+  #[inline]
+  pub fn LAST_HTTP_STATUS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(ICN::VT_LAST_HTTP_STATUS, Some(0)).unwrap()}
+  }
+  /// Entity tag returned by the last fetch.
+  #[inline]
+  pub fn LAST_SOURCE_ETAG(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LAST_SOURCE_ETAG, None)}
+  }
+  /// Last-Modified value returned by the last fetch.
+  #[inline]
+  pub fn LAST_SOURCE_LAST_MODIFIED(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LAST_SOURCE_LAST_MODIFIED, None)}
+  }
+  /// Batch identifier of the last ingest.
+  #[inline]
+  pub fn LAST_BATCH_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LAST_BATCH_ID, None)}
+  }
+  /// Records parsed by the last ingest.
+  #[inline]
+  pub fn LAST_RECORD_COUNT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_LAST_RECORD_COUNT, Some(0)).unwrap()}
+  }
+  /// Records newly inserted by the last ingest.
+  #[inline]
+  pub fn LAST_INSERTED_COUNT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_LAST_INSERTED_COUNT, Some(0)).unwrap()}
+  }
+  /// Duration of the last fetch and ingest, milliseconds.
+  #[inline]
+  pub fn LAST_DURATION_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_LAST_DURATION_MS, Some(0)).unwrap()}
+  }
+  /// Fetches attempted over the connector's lifetime.
+  #[inline]
+  pub fn FETCH_COUNT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_FETCH_COUNT, Some(0)).unwrap()}
+  }
+  /// Ingests completed over the connector's lifetime.
+  #[inline]
+  pub fn INGEST_COUNT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ICN::VT_INGEST_COUNT, Some(0)).unwrap()}
+  }
+  /// Content identifier of the last publication manifest emitted.
+  #[inline]
+  pub fn LAST_PUBLICATION_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LAST_PUBLICATION_CID, None)}
+  }
+  /// Content identifier of the last publish notification emitted.
+  #[inline]
+  pub fn LAST_PNM_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_LAST_PNM_CID, None)}
+  }
+  /// Feed head the connector last advanced to.
+  #[inline]
+  pub fn FEED_HEAD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ICN::VT_FEED_HEAD, None)}
+  }
+  /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  #[inline]
+  pub fn EMITS_SCHEMAS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(ICN::VT_EMITS_SCHEMAS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ICN<'_> {
@@ -848,6 +1154,29 @@ impl ::flatbuffers::Verifiable for ICN<'_> {
      .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN_ID", Self::VT_ORIGIN_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN_NAME", Self::VT_ORIGIN_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATASET_ID", Self::VT_DATASET_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_ID", Self::VT_PROVIDER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_NAME", Self::VT_SOURCE_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_URL", Self::VT_LICENSE_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
+     .visit_field::<u64>("MIN_FETCH_INTERVAL_MS", Self::VT_MIN_FETCH_INTERVAL_MS, false)?
+     .visit_field::<u64>("NEXT_ELIGIBLE_AT", Self::VT_NEXT_ELIGIBLE_AT, false)?
+     .visit_field::<u16>("LAST_HTTP_STATUS", Self::VT_LAST_HTTP_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_SOURCE_ETAG", Self::VT_LAST_SOURCE_ETAG, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_SOURCE_LAST_MODIFIED", Self::VT_LAST_SOURCE_LAST_MODIFIED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_BATCH_ID", Self::VT_LAST_BATCH_ID, false)?
+     .visit_field::<u64>("LAST_RECORD_COUNT", Self::VT_LAST_RECORD_COUNT, false)?
+     .visit_field::<u64>("LAST_INSERTED_COUNT", Self::VT_LAST_INSERTED_COUNT, false)?
+     .visit_field::<u64>("LAST_DURATION_MS", Self::VT_LAST_DURATION_MS, false)?
+     .visit_field::<u64>("FETCH_COUNT", Self::VT_FETCH_COUNT, false)?
+     .visit_field::<u64>("INGEST_COUNT", Self::VT_INGEST_COUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_PUBLICATION_CID", Self::VT_LAST_PUBLICATION_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_PNM_CID", Self::VT_LAST_PNM_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FEED_HEAD", Self::VT_FEED_HEAD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("EMITS_SCHEMAS", Self::VT_EMITS_SCHEMAS, false)?
      .finish();
     Ok(())
   }
@@ -882,6 +1211,29 @@ pub struct ICNArgs<'a> {
     pub UPDATED_AT: u64,
     pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ORIGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGIN_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATASET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MIN_FETCH_INTERVAL_MS: u64,
+    pub NEXT_ELIGIBLE_AT: u64,
+    pub LAST_HTTP_STATUS: u16,
+    pub LAST_SOURCE_ETAG: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_SOURCE_LAST_MODIFIED: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_BATCH_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_RECORD_COUNT: u64,
+    pub LAST_INSERTED_COUNT: u64,
+    pub LAST_DURATION_MS: u64,
+    pub FETCH_COUNT: u64,
+    pub INGEST_COUNT: u64,
+    pub LAST_PUBLICATION_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_PNM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FEED_HEAD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EMITS_SCHEMAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for ICNArgs<'a> {
   #[inline]
@@ -916,6 +1268,29 @@ impl<'a> Default for ICNArgs<'a> {
       UPDATED_AT: 0,
       PROVIDER_PEER_ID: None,
       PROVIDER_SIGNATURE: None,
+      ORIGIN_ID: None,
+      ORIGIN_NAME: None,
+      DATASET_ID: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      LICENSE: None,
+      LICENSE_URL: None,
+      CITATION: None,
+      MIN_FETCH_INTERVAL_MS: 0,
+      NEXT_ELIGIBLE_AT: 0,
+      LAST_HTTP_STATUS: 0,
+      LAST_SOURCE_ETAG: None,
+      LAST_SOURCE_LAST_MODIFIED: None,
+      LAST_BATCH_ID: None,
+      LAST_RECORD_COUNT: 0,
+      LAST_INSERTED_COUNT: 0,
+      LAST_DURATION_MS: 0,
+      FETCH_COUNT: 0,
+      INGEST_COUNT: 0,
+      LAST_PUBLICATION_CID: None,
+      LAST_PNM_CID: None,
+      FEED_HEAD: None,
+      EMITS_SCHEMAS: None,
     }
   }
 }
@@ -1042,6 +1417,98 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ICNBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
   }
   #[inline]
+  pub fn add_ORIGIN_ID(&mut self, ORIGIN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_ORIGIN_ID, ORIGIN_ID);
+  }
+  #[inline]
+  pub fn add_ORIGIN_NAME(&mut self, ORIGIN_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_ORIGIN_NAME, ORIGIN_NAME);
+  }
+  #[inline]
+  pub fn add_DATASET_ID(&mut self, DATASET_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_DATASET_ID, DATASET_ID);
+  }
+  #[inline]
+  pub fn add_PROVIDER_ID(&mut self, PROVIDER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_PROVIDER_ID, PROVIDER_ID);
+  }
+  #[inline]
+  pub fn add_SOURCE_NAME(&mut self, SOURCE_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_SOURCE_NAME, SOURCE_NAME);
+  }
+  #[inline]
+  pub fn add_LICENSE(&mut self, LICENSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LICENSE, LICENSE);
+  }
+  #[inline]
+  pub fn add_LICENSE_URL(&mut self, LICENSE_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LICENSE_URL, LICENSE_URL);
+  }
+  #[inline]
+  pub fn add_CITATION(&mut self, CITATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_CITATION, CITATION);
+  }
+  #[inline]
+  pub fn add_MIN_FETCH_INTERVAL_MS(&mut self, MIN_FETCH_INTERVAL_MS: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_MIN_FETCH_INTERVAL_MS, MIN_FETCH_INTERVAL_MS, 0);
+  }
+  #[inline]
+  pub fn add_NEXT_ELIGIBLE_AT(&mut self, NEXT_ELIGIBLE_AT: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_NEXT_ELIGIBLE_AT, NEXT_ELIGIBLE_AT, 0);
+  }
+  #[inline]
+  pub fn add_LAST_HTTP_STATUS(&mut self, LAST_HTTP_STATUS: u16) {
+    self.fbb_.push_slot::<u16>(ICN::VT_LAST_HTTP_STATUS, LAST_HTTP_STATUS, 0);
+  }
+  #[inline]
+  pub fn add_LAST_SOURCE_ETAG(&mut self, LAST_SOURCE_ETAG: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LAST_SOURCE_ETAG, LAST_SOURCE_ETAG);
+  }
+  #[inline]
+  pub fn add_LAST_SOURCE_LAST_MODIFIED(&mut self, LAST_SOURCE_LAST_MODIFIED: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LAST_SOURCE_LAST_MODIFIED, LAST_SOURCE_LAST_MODIFIED);
+  }
+  #[inline]
+  pub fn add_LAST_BATCH_ID(&mut self, LAST_BATCH_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LAST_BATCH_ID, LAST_BATCH_ID);
+  }
+  #[inline]
+  pub fn add_LAST_RECORD_COUNT(&mut self, LAST_RECORD_COUNT: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_LAST_RECORD_COUNT, LAST_RECORD_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_LAST_INSERTED_COUNT(&mut self, LAST_INSERTED_COUNT: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_LAST_INSERTED_COUNT, LAST_INSERTED_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_LAST_DURATION_MS(&mut self, LAST_DURATION_MS: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_LAST_DURATION_MS, LAST_DURATION_MS, 0);
+  }
+  #[inline]
+  pub fn add_FETCH_COUNT(&mut self, FETCH_COUNT: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_FETCH_COUNT, FETCH_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_INGEST_COUNT(&mut self, INGEST_COUNT: u64) {
+    self.fbb_.push_slot::<u64>(ICN::VT_INGEST_COUNT, INGEST_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_LAST_PUBLICATION_CID(&mut self, LAST_PUBLICATION_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LAST_PUBLICATION_CID, LAST_PUBLICATION_CID);
+  }
+  #[inline]
+  pub fn add_LAST_PNM_CID(&mut self, LAST_PNM_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_LAST_PNM_CID, LAST_PNM_CID);
+  }
+  #[inline]
+  pub fn add_FEED_HEAD(&mut self, FEED_HEAD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_FEED_HEAD, FEED_HEAD);
+  }
+  #[inline]
+  pub fn add_EMITS_SCHEMAS(&mut self, EMITS_SCHEMAS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ICN::VT_EMITS_SCHEMAS, EMITS_SCHEMAS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ICNBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ICNBuilder {
@@ -1089,6 +1556,29 @@ impl ::core::fmt::Debug for ICN<'_> {
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
       ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
+      ds.field("ORIGIN_ID", &self.ORIGIN_ID());
+      ds.field("ORIGIN_NAME", &self.ORIGIN_NAME());
+      ds.field("DATASET_ID", &self.DATASET_ID());
+      ds.field("PROVIDER_ID", &self.PROVIDER_ID());
+      ds.field("SOURCE_NAME", &self.SOURCE_NAME());
+      ds.field("LICENSE", &self.LICENSE());
+      ds.field("LICENSE_URL", &self.LICENSE_URL());
+      ds.field("CITATION", &self.CITATION());
+      ds.field("MIN_FETCH_INTERVAL_MS", &self.MIN_FETCH_INTERVAL_MS());
+      ds.field("NEXT_ELIGIBLE_AT", &self.NEXT_ELIGIBLE_AT());
+      ds.field("LAST_HTTP_STATUS", &self.LAST_HTTP_STATUS());
+      ds.field("LAST_SOURCE_ETAG", &self.LAST_SOURCE_ETAG());
+      ds.field("LAST_SOURCE_LAST_MODIFIED", &self.LAST_SOURCE_LAST_MODIFIED());
+      ds.field("LAST_BATCH_ID", &self.LAST_BATCH_ID());
+      ds.field("LAST_RECORD_COUNT", &self.LAST_RECORD_COUNT());
+      ds.field("LAST_INSERTED_COUNT", &self.LAST_INSERTED_COUNT());
+      ds.field("LAST_DURATION_MS", &self.LAST_DURATION_MS());
+      ds.field("FETCH_COUNT", &self.FETCH_COUNT());
+      ds.field("INGEST_COUNT", &self.INGEST_COUNT());
+      ds.field("LAST_PUBLICATION_CID", &self.LAST_PUBLICATION_CID());
+      ds.field("LAST_PNM_CID", &self.LAST_PNM_CID());
+      ds.field("FEED_HEAD", &self.FEED_HEAD());
+      ds.field("EMITS_SCHEMAS", &self.EMITS_SCHEMAS());
       ds.finish()
   }
 }
@@ -1124,6 +1614,29 @@ pub struct ICNT {
   pub UPDATED_AT: u64,
   pub PROVIDER_PEER_ID: Option<alloc::string::String>,
   pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub ORIGIN_ID: Option<alloc::string::String>,
+  pub ORIGIN_NAME: Option<alloc::string::String>,
+  pub DATASET_ID: Option<alloc::string::String>,
+  pub PROVIDER_ID: Option<alloc::string::String>,
+  pub SOURCE_NAME: Option<alloc::string::String>,
+  pub LICENSE: Option<alloc::string::String>,
+  pub LICENSE_URL: Option<alloc::string::String>,
+  pub CITATION: Option<alloc::string::String>,
+  pub MIN_FETCH_INTERVAL_MS: u64,
+  pub NEXT_ELIGIBLE_AT: u64,
+  pub LAST_HTTP_STATUS: u16,
+  pub LAST_SOURCE_ETAG: Option<alloc::string::String>,
+  pub LAST_SOURCE_LAST_MODIFIED: Option<alloc::string::String>,
+  pub LAST_BATCH_ID: Option<alloc::string::String>,
+  pub LAST_RECORD_COUNT: u64,
+  pub LAST_INSERTED_COUNT: u64,
+  pub LAST_DURATION_MS: u64,
+  pub FETCH_COUNT: u64,
+  pub INGEST_COUNT: u64,
+  pub LAST_PUBLICATION_CID: Option<alloc::string::String>,
+  pub LAST_PNM_CID: Option<alloc::string::String>,
+  pub FEED_HEAD: Option<alloc::string::String>,
+  pub EMITS_SCHEMAS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 impl Default for ICNT {
   fn default() -> Self {
@@ -1157,6 +1670,29 @@ impl Default for ICNT {
       UPDATED_AT: 0,
       PROVIDER_PEER_ID: None,
       PROVIDER_SIGNATURE: None,
+      ORIGIN_ID: None,
+      ORIGIN_NAME: None,
+      DATASET_ID: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      LICENSE: None,
+      LICENSE_URL: None,
+      CITATION: None,
+      MIN_FETCH_INTERVAL_MS: 0,
+      NEXT_ELIGIBLE_AT: 0,
+      LAST_HTTP_STATUS: 0,
+      LAST_SOURCE_ETAG: None,
+      LAST_SOURCE_LAST_MODIFIED: None,
+      LAST_BATCH_ID: None,
+      LAST_RECORD_COUNT: 0,
+      LAST_INSERTED_COUNT: 0,
+      LAST_DURATION_MS: 0,
+      FETCH_COUNT: 0,
+      INGEST_COUNT: 0,
+      LAST_PUBLICATION_CID: None,
+      LAST_PNM_CID: None,
+      FEED_HEAD: None,
+      EMITS_SCHEMAS: None,
     }
   }
 }
@@ -1225,6 +1761,59 @@ impl ICNT {
     let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let ORIGIN_ID = self.ORIGIN_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGIN_NAME = self.ORIGIN_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATASET_ID = self.DATASET_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE = self.LICENSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE_URL = self.LICENSE_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CITATION = self.CITATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MIN_FETCH_INTERVAL_MS = self.MIN_FETCH_INTERVAL_MS;
+    let NEXT_ELIGIBLE_AT = self.NEXT_ELIGIBLE_AT;
+    let LAST_HTTP_STATUS = self.LAST_HTTP_STATUS;
+    let LAST_SOURCE_ETAG = self.LAST_SOURCE_ETAG.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_SOURCE_LAST_MODIFIED = self.LAST_SOURCE_LAST_MODIFIED.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_BATCH_ID = self.LAST_BATCH_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_RECORD_COUNT = self.LAST_RECORD_COUNT;
+    let LAST_INSERTED_COUNT = self.LAST_INSERTED_COUNT;
+    let LAST_DURATION_MS = self.LAST_DURATION_MS;
+    let FETCH_COUNT = self.FETCH_COUNT;
+    let INGEST_COUNT = self.INGEST_COUNT;
+    let LAST_PUBLICATION_CID = self.LAST_PUBLICATION_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_PNM_CID = self.LAST_PNM_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FEED_HEAD = self.FEED_HEAD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EMITS_SCHEMAS = self.EMITS_SCHEMAS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
     ICN::create(_fbb, &ICNArgs{
       CONNECTOR_ID,
       KIND,
@@ -1255,6 +1844,29 @@ impl ICNT {
       UPDATED_AT,
       PROVIDER_PEER_ID,
       PROVIDER_SIGNATURE,
+      ORIGIN_ID,
+      ORIGIN_NAME,
+      DATASET_ID,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      LICENSE,
+      LICENSE_URL,
+      CITATION,
+      MIN_FETCH_INTERVAL_MS,
+      NEXT_ELIGIBLE_AT,
+      LAST_HTTP_STATUS,
+      LAST_SOURCE_ETAG,
+      LAST_SOURCE_LAST_MODIFIED,
+      LAST_BATCH_ID,
+      LAST_RECORD_COUNT,
+      LAST_INSERTED_COUNT,
+      LAST_DURATION_MS,
+      FETCH_COUNT,
+      INGEST_COUNT,
+      LAST_PUBLICATION_CID,
+      LAST_PNM_CID,
+      FEED_HEAD,
+      EMITS_SCHEMAS,
     })
   }
 }

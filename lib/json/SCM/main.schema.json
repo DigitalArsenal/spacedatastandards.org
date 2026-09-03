@@ -16,6 +16,30 @@
         "files" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "List Of File Paths"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name of the standard."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "One-paragraph description of the standard."
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string",
+                "description" : "Four-character file identifier, e.g. \"$OMM\"."
+              },
+        "SCHEMA_HASH" : {
+                "type" : "string",
+                "description" : "Hash of the standard's schema text."
+              },
+        "ROUTED" : {
+                "type" : "boolean",
+                "description" : "True when the reporting node routes the standard through its store."
+              },
+        "RECORD_TYPE_ORDINAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Position of the standard in the record union; append-only forever."
               }
       },
       "additionalProperties" : false
@@ -31,6 +55,14 @@
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCHEMA_STANDARD"},
                 "description" : "Standards Dictionary"
+              },
+        "STANDARDS_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the standards package the reporting node runs."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this registry frame was generated."
               }
       },
       "additionalProperties" : false

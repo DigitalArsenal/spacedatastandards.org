@@ -252,8 +252,43 @@ class EOP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Nutation correction in longitude (dPsi) against the IAU 1980 model,
+    # radians, as published beside the CIP offsets by combined rapid-service
+    # series.
+    # EOP
+    def NUTATION_DPSI_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nutation correction in obliquity (dEps) against the IAU 1980 model,
+    # radians.
+    # EOP
+    def NUTATION_DEPS_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+    # EOP
+    def NUTATION_DPSI_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+    # EOP
+    def NUTATION_DEPS_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def EOPStart(builder):
-    builder.StartObject(26)
+    builder.StartObject(30)
 
 def Start(builder):
     EOPStart(builder)
@@ -414,6 +449,30 @@ def EOPAddDATA_SET_CID(builder, DATA_SET_CID):
 def AddDATA_SET_CID(builder, DATA_SET_CID):
     EOPAddDATA_SET_CID(builder, DATA_SET_CID)
 
+def EOPAddNUTATION_DPSI_RADIANS(builder, NUTATION_DPSI_RADIANS):
+    builder.PrependFloat64Slot(26, NUTATION_DPSI_RADIANS, 0.0)
+
+def AddNUTATION_DPSI_RADIANS(builder, NUTATION_DPSI_RADIANS):
+    EOPAddNUTATION_DPSI_RADIANS(builder, NUTATION_DPSI_RADIANS)
+
+def EOPAddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS):
+    builder.PrependFloat64Slot(27, NUTATION_DEPS_RADIANS, 0.0)
+
+def AddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS):
+    EOPAddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS)
+
+def EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS):
+    builder.PrependFloat64Slot(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0)
+
+def AddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS):
+    EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS)
+
+def EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS):
+    builder.PrependFloat64Slot(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0)
+
+def AddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS):
+    EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS)
+
 def EOPEnd(builder):
     return builder.EndObject()
 
@@ -452,6 +511,10 @@ class EOPT(object):
         LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
         DATA_SET_EPOCH = None,
         DATA_SET_CID = None,
+        NUTATION_DPSI_RADIANS = 0.0,
+        NUTATION_DEPS_RADIANS = 0.0,
+        NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
+        NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0,
     ):
         self.DATE = DATE  # type: Optional[str]
         self.MJD = MJD  # type: int
@@ -479,6 +542,10 @@ class EOPT(object):
         self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = LENGTH_OF_DAY_CORRECTION_SECONDS_HP  # type: float
         self.DATA_SET_EPOCH = DATA_SET_EPOCH  # type: Optional[str]
         self.DATA_SET_CID = DATA_SET_CID  # type: Optional[str]
+        self.NUTATION_DPSI_RADIANS = NUTATION_DPSI_RADIANS  # type: float
+        self.NUTATION_DEPS_RADIANS = NUTATION_DEPS_RADIANS  # type: float
+        self.NUTATION_DPSI_UNCERTAINTY_RADIANS = NUTATION_DPSI_UNCERTAINTY_RADIANS  # type: float
+        self.NUTATION_DEPS_UNCERTAINTY_RADIANS = NUTATION_DEPS_UNCERTAINTY_RADIANS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -527,6 +594,10 @@ class EOPT(object):
         self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP = EOP.LENGTH_OF_DAY_CORRECTION_SECONDS_HP()
         self.DATA_SET_EPOCH = EOP.DATA_SET_EPOCH()
         self.DATA_SET_CID = EOP.DATA_SET_CID()
+        self.NUTATION_DPSI_RADIANS = EOP.NUTATION_DPSI_RADIANS()
+        self.NUTATION_DEPS_RADIANS = EOP.NUTATION_DEPS_RADIANS()
+        self.NUTATION_DPSI_UNCERTAINTY_RADIANS = EOP.NUTATION_DPSI_UNCERTAINTY_RADIANS()
+        self.NUTATION_DEPS_UNCERTAINTY_RADIANS = EOP.NUTATION_DEPS_UNCERTAINTY_RADIANS()
 
     # EOPT
     def Pack(self, builder):
@@ -566,5 +637,9 @@ class EOPT(object):
             EOPAddDATA_SET_EPOCH(builder, DATA_SET_EPOCH)
         if self.DATA_SET_CID is not None:
             EOPAddDATA_SET_CID(builder, DATA_SET_CID)
+        EOPAddNUTATION_DPSI_RADIANS(builder, self.NUTATION_DPSI_RADIANS)
+        EOPAddNUTATION_DEPS_RADIANS(builder, self.NUTATION_DEPS_RADIANS)
+        EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, self.NUTATION_DPSI_UNCERTAINTY_RADIANS)
+        EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, self.NUTATION_DEPS_UNCERTAINTY_RADIANS)
         EOP = EOPEnd(builder)
         return EOP

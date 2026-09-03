@@ -88,6 +88,101 @@ public final class DSS extends com.google.flatbuffers.Table {
   public String ERROR() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ERRORAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
   public ByteBuffer ERRORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * Standard code of the lane, e.g. "OMM".
+   */
+  public String SCHEMA_NAME() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SCHEMA_NAMEAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer SCHEMA_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  public String PROVIDER_ID() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_IDAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer PROVIDER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  public String SOURCE_NAME() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer SOURCE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * Stable dataset identifier within the origin.
+   */
+  public String DATASET_ID() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATASET_IDAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer DATASET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * Ingest connector that produces the lane, when known.
+   */
+  public String CONNECTOR_ID() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONNECTOR_IDAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer CONNECTOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
+  /**
+   * Channel identifier the lane is announced on.
+   */
+  public String CHANNEL_ID() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CHANNEL_IDAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer CHANNEL_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * Publish/subscribe topic of the lane.
+   */
+  public String TOPIC() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TOPICAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
+  public ByteBuffer TOPICInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
+  /**
+   * True when this node subscribes to the lane.
+   */
+  public boolean SUBSCRIBED() { int o = __offset(86); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public byte PIN_POLICY() { int o = __offset(88); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Visibility of the lane, e.g. "public", "private".
+   */
+  public String VISIBILITY() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VISIBILITYAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer VISIBILITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * Encryption state of the lane's publications, e.g. "plain", "encrypted".
+   */
+  public String ENCRYPTION_STATE() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENCRYPTION_STATEAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
+  public ByteBuffer ENCRYPTION_STATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+   */
+  public String GRANT_STATE() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRANT_STATEAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer GRANT_STATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * Feed head this node has materialised up to.
+   */
+  public String FEED_HEAD() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FEED_HEADAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
+  public ByteBuffer FEED_HEADInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
+  /**
+   * Content identifier of the newest publication manifest known.
+   */
+  public String LAST_PUBLICATION_CID() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_PUBLICATION_CIDAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
+  public ByteBuffer LAST_PUBLICATION_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  /**
+   * Content identifier of the newest publish notification known.
+   */
+  public String LAST_PNM_CID() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_PNM_CIDAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
+  public ByteBuffer LAST_PNM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  /**
+   * Rows materialised since the previous SYNCED state.
+   */
+  public long DELTA_ROWS() { int o = __offset(102); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix milliseconds the current or last sync pass started; 0 = never.
+   */
+  public long LAST_SYNC_STARTED_AT() { int o = __offset(104); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Action a client requests when sending this record to a node.
+   */
+  public byte REQUESTED_ACTION() { int o = __offset(106); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Upstream publisher of the lane's records.
+   */
+  public String ORIGIN_ID() { int o = __offset(108); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGIN_IDAsByteBuffer() { return __vector_as_bytebuffer(108, 1); }
+  public ByteBuffer ORIGIN_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 1); }
 
   public static int createDSS(FlatBufferBuilder builder,
       byte STATUS,
@@ -123,8 +218,29 @@ public final class DSS extends com.google.flatbuffers.Table {
       int SYNC_FILTEROffset,
       int VERIFIED_CHUNKSOffset,
       int LAST_SYNCED_ATOffset,
-      int ERROROffset) {
-    builder.startTable(34);
+      int ERROROffset,
+      int SCHEMA_NAMEOffset,
+      int PROVIDER_IDOffset,
+      int SOURCE_NAMEOffset,
+      int DATASET_IDOffset,
+      int CONNECTOR_IDOffset,
+      int CHANNEL_IDOffset,
+      int TOPICOffset,
+      boolean SUBSCRIBED,
+      byte PIN_POLICY,
+      int VISIBILITYOffset,
+      int ENCRYPTION_STATEOffset,
+      int GRANT_STATEOffset,
+      int FEED_HEADOffset,
+      int LAST_PUBLICATION_CIDOffset,
+      int LAST_PNM_CIDOffset,
+      long DELTA_ROWS,
+      long LAST_SYNC_STARTED_AT,
+      byte REQUESTED_ACTION,
+      int ORIGIN_IDOffset) {
+    builder.startTable(53);
+    DSS.addLastSyncStartedAt(builder, LAST_SYNC_STARTED_AT);
+    DSS.addDeltaRows(builder, DELTA_ROWS);
     DSS.addFlatsqlMaterializationMs(builder, FLATSQL_MATERIALIZATION_MS);
     DSS.addVerificationMs(builder, VERIFICATION_MS);
     DSS.addNetworkTransferMs(builder, NETWORK_TRANSFER_MS);
@@ -141,6 +257,20 @@ public final class DSS extends com.google.flatbuffers.Table {
     DSS.addLocalRows(builder, LOCAL_ROWS);
     DSS.addTotalRows(builder, TOTAL_ROWS);
     DSS.addSyncedRows(builder, SYNCED_ROWS);
+    DSS.addOriginId(builder, ORIGIN_IDOffset);
+    DSS.addLastPnmCid(builder, LAST_PNM_CIDOffset);
+    DSS.addLastPublicationCid(builder, LAST_PUBLICATION_CIDOffset);
+    DSS.addFeedHead(builder, FEED_HEADOffset);
+    DSS.addGrantState(builder, GRANT_STATEOffset);
+    DSS.addEncryptionState(builder, ENCRYPTION_STATEOffset);
+    DSS.addVisibility(builder, VISIBILITYOffset);
+    DSS.addTopic(builder, TOPICOffset);
+    DSS.addChannelId(builder, CHANNEL_IDOffset);
+    DSS.addConnectorId(builder, CONNECTOR_IDOffset);
+    DSS.addDatasetId(builder, DATASET_IDOffset);
+    DSS.addSourceName(builder, SOURCE_NAMEOffset);
+    DSS.addProviderId(builder, PROVIDER_IDOffset);
+    DSS.addSchemaName(builder, SCHEMA_NAMEOffset);
     DSS.addError(builder, ERROROffset);
     DSS.addLastSyncedAt(builder, LAST_SYNCED_ATOffset);
     DSS.addVerifiedChunks(builder, VERIFIED_CHUNKSOffset);
@@ -155,6 +285,9 @@ public final class DSS extends com.google.flatbuffers.Table {
     DSS.addSnapshotId(builder, SNAPSHOT_IDOffset);
     DSS.addProviderPublicKey(builder, PROVIDER_PUBLIC_KEYOffset);
     DSS.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+    DSS.addRequestedAction(builder, REQUESTED_ACTION);
+    DSS.addPinPolicy(builder, PIN_POLICY);
+    DSS.addSubscribed(builder, SUBSCRIBED);
     DSS.addWireSpeedTargetMet(builder, WIRE_SPEED_TARGET_MET);
     DSS.addHasWireSpeedTargetMet(builder, HAS_WIRE_SPEED_TARGET_MET);
     DSS.addHasWireSpeedUtilization(builder, HAS_WIRE_SPEED_UTILIZATION);
@@ -162,7 +295,7 @@ public final class DSS extends com.google.flatbuffers.Table {
     return DSS.endDSS(builder);
   }
 
-  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(34); }
+  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(53); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addSyncedRows(FlatBufferBuilder builder, long SYNCED_ROWS) { builder.addLong(1, SYNCED_ROWS, 0L); }
   public static void addTotalRows(FlatBufferBuilder builder, long TOTAL_ROWS) { builder.addLong(2, TOTAL_ROWS, 0L); }
@@ -199,6 +332,25 @@ public final class DSS extends com.google.flatbuffers.Table {
   public static void startVerifiedChunksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addLastSyncedAt(FlatBufferBuilder builder, int LAST_SYNCED_ATOffset) { builder.addOffset(32, LAST_SYNCED_ATOffset, 0); }
   public static void addError(FlatBufferBuilder builder, int ERROROffset) { builder.addOffset(33, ERROROffset, 0); }
+  public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(34, SCHEMA_NAMEOffset, 0); }
+  public static void addProviderId(FlatBufferBuilder builder, int PROVIDER_IDOffset) { builder.addOffset(35, PROVIDER_IDOffset, 0); }
+  public static void addSourceName(FlatBufferBuilder builder, int SOURCE_NAMEOffset) { builder.addOffset(36, SOURCE_NAMEOffset, 0); }
+  public static void addDatasetId(FlatBufferBuilder builder, int DATASET_IDOffset) { builder.addOffset(37, DATASET_IDOffset, 0); }
+  public static void addConnectorId(FlatBufferBuilder builder, int CONNECTOR_IDOffset) { builder.addOffset(38, CONNECTOR_IDOffset, 0); }
+  public static void addChannelId(FlatBufferBuilder builder, int CHANNEL_IDOffset) { builder.addOffset(39, CHANNEL_IDOffset, 0); }
+  public static void addTopic(FlatBufferBuilder builder, int TOPICOffset) { builder.addOffset(40, TOPICOffset, 0); }
+  public static void addSubscribed(FlatBufferBuilder builder, boolean SUBSCRIBED) { builder.addBoolean(41, SUBSCRIBED, false); }
+  public static void addPinPolicy(FlatBufferBuilder builder, byte PIN_POLICY) { builder.addByte(42, PIN_POLICY, 0); }
+  public static void addVisibility(FlatBufferBuilder builder, int VISIBILITYOffset) { builder.addOffset(43, VISIBILITYOffset, 0); }
+  public static void addEncryptionState(FlatBufferBuilder builder, int ENCRYPTION_STATEOffset) { builder.addOffset(44, ENCRYPTION_STATEOffset, 0); }
+  public static void addGrantState(FlatBufferBuilder builder, int GRANT_STATEOffset) { builder.addOffset(45, GRANT_STATEOffset, 0); }
+  public static void addFeedHead(FlatBufferBuilder builder, int FEED_HEADOffset) { builder.addOffset(46, FEED_HEADOffset, 0); }
+  public static void addLastPublicationCid(FlatBufferBuilder builder, int LAST_PUBLICATION_CIDOffset) { builder.addOffset(47, LAST_PUBLICATION_CIDOffset, 0); }
+  public static void addLastPnmCid(FlatBufferBuilder builder, int LAST_PNM_CIDOffset) { builder.addOffset(48, LAST_PNM_CIDOffset, 0); }
+  public static void addDeltaRows(FlatBufferBuilder builder, long DELTA_ROWS) { builder.addLong(49, DELTA_ROWS, 0L); }
+  public static void addLastSyncStartedAt(FlatBufferBuilder builder, long LAST_SYNC_STARTED_AT) { builder.addLong(50, LAST_SYNC_STARTED_AT, 0L); }
+  public static void addRequestedAction(FlatBufferBuilder builder, byte REQUESTED_ACTION) { builder.addByte(51, REQUESTED_ACTION, 0); }
+  public static void addOriginId(FlatBufferBuilder builder, int ORIGIN_IDOffset) { builder.addOffset(52, ORIGIN_IDOffset, 0); }
   public static int endDSS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -268,10 +268,77 @@ class ICN {
   ///  Provider signature over the connector record.
   List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 60);
   List<int>? get providerSignature => PROVIDER_SIGNATURE;
+  ///  Upstream publisher the connector retrieves records from, as a host name
+  ///  or stable identifier.
+  String? get ORIGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get originId => ORIGIN_ID;
+  ///  Display name of the upstream publisher.
+  String? get ORIGIN_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  String? get originName => ORIGIN_NAME;
+  ///  Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get datasetId => DATASET_ID;
+  ///  Provider identifier the lane's records are stored under.
+  String? get PROVIDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get providerId => PROVIDER_ID;
+  ///  Source name the lane's records are stored under.
+  String? get SOURCE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get sourceName => SOURCE_NAME;
+  ///  Licence under which the upstream publisher offers the records.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get licenseUrl => LICENSE_URL;
+  ///  Citation the upstream publisher asks for.
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Minimum interval between fetches of the same dataset, milliseconds.
+  int get MIN_FETCH_INTERVAL_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 78, 0);
+  int get minFetchIntervalMs => MIN_FETCH_INTERVAL_MS;
+  ///  Unix milliseconds when the next fetch is eligible.
+  int get NEXT_ELIGIBLE_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 80, 0);
+  int get nextEligibleAt => NEXT_ELIGIBLE_AT;
+  ///  HTTP status of the last fetch.
+  int get LAST_HTTP_STATUS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 82, 0);
+  int get lastHttpStatus => LAST_HTTP_STATUS;
+  ///  Entity tag returned by the last fetch.
+  String? get LAST_SOURCE_ETAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  String? get lastSourceEtag => LAST_SOURCE_ETAG;
+  ///  Last-Modified value returned by the last fetch.
+  String? get LAST_SOURCE_LAST_MODIFIED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get lastSourceLastModified => LAST_SOURCE_LAST_MODIFIED;
+  ///  Batch identifier of the last ingest.
+  String? get LAST_BATCH_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get lastBatchId => LAST_BATCH_ID;
+  ///  Records parsed by the last ingest.
+  int get LAST_RECORD_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 90, 0);
+  int get lastRecordCount => LAST_RECORD_COUNT;
+  ///  Records newly inserted by the last ingest.
+  int get LAST_INSERTED_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  int get lastInsertedCount => LAST_INSERTED_COUNT;
+  ///  Duration of the last fetch and ingest, milliseconds.
+  int get LAST_DURATION_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 94, 0);
+  int get lastDurationMs => LAST_DURATION_MS;
+  ///  Fetches attempted over the connector's lifetime.
+  int get FETCH_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  int get fetchCount => FETCH_COUNT;
+  ///  Ingests completed over the connector's lifetime.
+  int get INGEST_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 98, 0);
+  int get ingestCount => INGEST_COUNT;
+  ///  Content identifier of the last publication manifest emitted.
+  String? get LAST_PUBLICATION_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get lastPublicationCid => LAST_PUBLICATION_CID;
+  ///  Content identifier of the last publish notification emitted.
+  String? get LAST_PNM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  String? get lastPnmCid => LAST_PNM_CID;
+  ///  Feed head the connector last advanced to.
+  String? get FEED_HEAD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
+  String? get feedHead => FEED_HEAD;
+  ///  Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  List<String>? get EMITS_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 106);
+  List<String>? get emitsSchemas => EMITS_SCHEMAS;
 
   @override
   String toString() {
-    return 'ICN{connectorId: ${connectorId}, KIND: ${KIND}, targetSchema: ${targetSchema}, STATUS: ${STATUS}, statusMessage: ${statusMessage}, endpointUrl: ${endpointUrl}, httpMethod: ${httpMethod}, authKind: ${authKind}, authHeaderName: ${authHeaderName}, credentialReference: ${credentialReference}, pollIntervalMs: ${pollIntervalMs}, directoryPath: ${directoryPath}, filePattern: ${filePattern}, scanIntervalMs: ${scanIntervalMs}, settleDelayMs: ${settleDelayMs}, postIngestAction: ${postIngestAction}, uploadSessionId: ${uploadSessionId}, uploadFileCount: ${uploadFileCount}, uploadTotalBytes: ${uploadTotalBytes}, uploadContentHash: ${uploadContentHash}, detectedFormat: ${detectedFormat}, sampleRecordCount: ${sampleRecordCount}, lastIngestAt: ${lastIngestAt}, lastErrorAt: ${lastErrorAt}, lastError: ${lastError}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, providerPeerId: ${providerPeerId}, providerSignature: ${providerSignature}}';
+    return 'ICN{connectorId: ${connectorId}, KIND: ${KIND}, targetSchema: ${targetSchema}, STATUS: ${STATUS}, statusMessage: ${statusMessage}, endpointUrl: ${endpointUrl}, httpMethod: ${httpMethod}, authKind: ${authKind}, authHeaderName: ${authHeaderName}, credentialReference: ${credentialReference}, pollIntervalMs: ${pollIntervalMs}, directoryPath: ${directoryPath}, filePattern: ${filePattern}, scanIntervalMs: ${scanIntervalMs}, settleDelayMs: ${settleDelayMs}, postIngestAction: ${postIngestAction}, uploadSessionId: ${uploadSessionId}, uploadFileCount: ${uploadFileCount}, uploadTotalBytes: ${uploadTotalBytes}, uploadContentHash: ${uploadContentHash}, detectedFormat: ${detectedFormat}, sampleRecordCount: ${sampleRecordCount}, lastIngestAt: ${lastIngestAt}, lastErrorAt: ${lastErrorAt}, lastError: ${lastError}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, providerPeerId: ${providerPeerId}, providerSignature: ${providerSignature}, originId: ${originId}, originName: ${originName}, datasetId: ${datasetId}, providerId: ${providerId}, sourceName: ${sourceName}, LICENSE: ${LICENSE}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, minFetchIntervalMs: ${minFetchIntervalMs}, nextEligibleAt: ${nextEligibleAt}, lastHttpStatus: ${lastHttpStatus}, lastSourceEtag: ${lastSourceEtag}, lastSourceLastModified: ${lastSourceLastModified}, lastBatchId: ${lastBatchId}, lastRecordCount: ${lastRecordCount}, lastInsertedCount: ${lastInsertedCount}, lastDurationMs: ${lastDurationMs}, fetchCount: ${fetchCount}, ingestCount: ${ingestCount}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, feedHead: ${feedHead}, emitsSchemas: ${emitsSchemas}}';
   }
 }
 
@@ -289,7 +356,7 @@ class ICNBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(29);
+    fbBuilder.startTable(52);
   }
 
   int addConnectorIdOffset(int? offset) {
@@ -408,6 +475,98 @@ class ICNBuilder {
     fbBuilder.addOffset(28, offset);
     return fbBuilder.offset;
   }
+  int addOriginIdOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginNameOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetIdOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderIdOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceNameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseUrlOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addMinFetchIntervalMs(int? MIN_FETCH_INTERVAL_MS) {
+    fbBuilder.addUint64(37, MIN_FETCH_INTERVAL_MS);
+    return fbBuilder.offset;
+  }
+  int addNextEligibleAt(int? NEXT_ELIGIBLE_AT) {
+    fbBuilder.addUint64(38, NEXT_ELIGIBLE_AT);
+    return fbBuilder.offset;
+  }
+  int addLastHttpStatus(int? LAST_HTTP_STATUS) {
+    fbBuilder.addUint16(39, LAST_HTTP_STATUS);
+    return fbBuilder.offset;
+  }
+  int addLastSourceEtagOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addLastSourceLastModifiedOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addLastBatchIdOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addLastRecordCount(int? LAST_RECORD_COUNT) {
+    fbBuilder.addUint64(43, LAST_RECORD_COUNT);
+    return fbBuilder.offset;
+  }
+  int addLastInsertedCount(int? LAST_INSERTED_COUNT) {
+    fbBuilder.addUint64(44, LAST_INSERTED_COUNT);
+    return fbBuilder.offset;
+  }
+  int addLastDurationMs(int? LAST_DURATION_MS) {
+    fbBuilder.addUint64(45, LAST_DURATION_MS);
+    return fbBuilder.offset;
+  }
+  int addFetchCount(int? FETCH_COUNT) {
+    fbBuilder.addUint64(46, FETCH_COUNT);
+    return fbBuilder.offset;
+  }
+  int addIngestCount(int? INGEST_COUNT) {
+    fbBuilder.addUint64(47, INGEST_COUNT);
+    return fbBuilder.offset;
+  }
+  int addLastPublicationCidOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addLastPnmCidOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addFeedHeadOffset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addEmitsSchemasOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -444,6 +603,29 @@ class ICNObjectBuilder extends fb.ObjectBuilder {
   final int? _UPDATED_AT;
   final String? _PROVIDER_PEER_ID;
   final List<int>? _PROVIDER_SIGNATURE;
+  final String? _ORIGIN_ID;
+  final String? _ORIGIN_NAME;
+  final String? _DATASET_ID;
+  final String? _PROVIDER_ID;
+  final String? _SOURCE_NAME;
+  final String? _LICENSE;
+  final String? _LICENSE_URL;
+  final String? _CITATION;
+  final int? _MIN_FETCH_INTERVAL_MS;
+  final int? _NEXT_ELIGIBLE_AT;
+  final int? _LAST_HTTP_STATUS;
+  final String? _LAST_SOURCE_ETAG;
+  final String? _LAST_SOURCE_LAST_MODIFIED;
+  final String? _LAST_BATCH_ID;
+  final int? _LAST_RECORD_COUNT;
+  final int? _LAST_INSERTED_COUNT;
+  final int? _LAST_DURATION_MS;
+  final int? _FETCH_COUNT;
+  final int? _INGEST_COUNT;
+  final String? _LAST_PUBLICATION_CID;
+  final String? _LAST_PNM_CID;
+  final String? _FEED_HEAD;
+  final List<String>? _EMITS_SCHEMAS;
 
   ICNObjectBuilder({
     String? CONNECTOR_ID,
@@ -502,6 +684,50 @@ class ICNObjectBuilder extends fb.ObjectBuilder {
     String? providerPeerId,
     List<int>? PROVIDER_SIGNATURE,
     List<int>? providerSignature,
+    String? ORIGIN_ID,
+    String? originId,
+    String? ORIGIN_NAME,
+    String? originName,
+    String? DATASET_ID,
+    String? datasetId,
+    String? PROVIDER_ID,
+    String? providerId,
+    String? SOURCE_NAME,
+    String? sourceName,
+    String? LICENSE,
+    String? LICENSE_URL,
+    String? licenseUrl,
+    String? CITATION,
+    int? MIN_FETCH_INTERVAL_MS,
+    int? minFetchIntervalMs,
+    int? NEXT_ELIGIBLE_AT,
+    int? nextEligibleAt,
+    int? LAST_HTTP_STATUS,
+    int? lastHttpStatus,
+    String? LAST_SOURCE_ETAG,
+    String? lastSourceEtag,
+    String? LAST_SOURCE_LAST_MODIFIED,
+    String? lastSourceLastModified,
+    String? LAST_BATCH_ID,
+    String? lastBatchId,
+    int? LAST_RECORD_COUNT,
+    int? lastRecordCount,
+    int? LAST_INSERTED_COUNT,
+    int? lastInsertedCount,
+    int? LAST_DURATION_MS,
+    int? lastDurationMs,
+    int? FETCH_COUNT,
+    int? fetchCount,
+    int? INGEST_COUNT,
+    int? ingestCount,
+    String? LAST_PUBLICATION_CID,
+    String? lastPublicationCid,
+    String? LAST_PNM_CID,
+    String? lastPnmCid,
+    String? FEED_HEAD,
+    String? feedHead,
+    List<String>? EMITS_SCHEMAS,
+    List<String>? emitsSchemas,
   })
       : _CONNECTOR_ID = connectorId ?? CONNECTOR_ID,
         _KIND = KIND,
@@ -531,7 +757,30 @@ class ICNObjectBuilder extends fb.ObjectBuilder {
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
-        _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE;
+        _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE,
+        _ORIGIN_ID = originId ?? ORIGIN_ID,
+        _ORIGIN_NAME = originName ?? ORIGIN_NAME,
+        _DATASET_ID = datasetId ?? DATASET_ID,
+        _PROVIDER_ID = providerId ?? PROVIDER_ID,
+        _SOURCE_NAME = sourceName ?? SOURCE_NAME,
+        _LICENSE = LICENSE,
+        _LICENSE_URL = licenseUrl ?? LICENSE_URL,
+        _CITATION = CITATION,
+        _MIN_FETCH_INTERVAL_MS = minFetchIntervalMs ?? MIN_FETCH_INTERVAL_MS,
+        _NEXT_ELIGIBLE_AT = nextEligibleAt ?? NEXT_ELIGIBLE_AT,
+        _LAST_HTTP_STATUS = lastHttpStatus ?? LAST_HTTP_STATUS,
+        _LAST_SOURCE_ETAG = lastSourceEtag ?? LAST_SOURCE_ETAG,
+        _LAST_SOURCE_LAST_MODIFIED = lastSourceLastModified ?? LAST_SOURCE_LAST_MODIFIED,
+        _LAST_BATCH_ID = lastBatchId ?? LAST_BATCH_ID,
+        _LAST_RECORD_COUNT = lastRecordCount ?? LAST_RECORD_COUNT,
+        _LAST_INSERTED_COUNT = lastInsertedCount ?? LAST_INSERTED_COUNT,
+        _LAST_DURATION_MS = lastDurationMs ?? LAST_DURATION_MS,
+        _FETCH_COUNT = fetchCount ?? FETCH_COUNT,
+        _INGEST_COUNT = ingestCount ?? INGEST_COUNT,
+        _LAST_PUBLICATION_CID = lastPublicationCid ?? LAST_PUBLICATION_CID,
+        _LAST_PNM_CID = lastPnmCid ?? LAST_PNM_CID,
+        _FEED_HEAD = feedHead ?? FEED_HEAD,
+        _EMITS_SCHEMAS = emitsSchemas ?? EMITS_SCHEMAS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -566,7 +815,37 @@ class ICNObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PROVIDER_PEER_ID!);
     final int? PROVIDER_SIGNATUREOffset = _PROVIDER_SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_PROVIDER_SIGNATURE!);
-    fbBuilder.startTable(29);
+    final int? ORIGIN_IDOffset = _ORIGIN_ID == null ? null
+        : fbBuilder.writeString(_ORIGIN_ID!);
+    final int? ORIGIN_NAMEOffset = _ORIGIN_NAME == null ? null
+        : fbBuilder.writeString(_ORIGIN_NAME!);
+    final int? DATASET_IDOffset = _DATASET_ID == null ? null
+        : fbBuilder.writeString(_DATASET_ID!);
+    final int? PROVIDER_IDOffset = _PROVIDER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_ID!);
+    final int? SOURCE_NAMEOffset = _SOURCE_NAME == null ? null
+        : fbBuilder.writeString(_SOURCE_NAME!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? LICENSE_URLOffset = _LICENSE_URL == null ? null
+        : fbBuilder.writeString(_LICENSE_URL!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    final int? LAST_SOURCE_ETAGOffset = _LAST_SOURCE_ETAG == null ? null
+        : fbBuilder.writeString(_LAST_SOURCE_ETAG!);
+    final int? LAST_SOURCE_LAST_MODIFIEDOffset = _LAST_SOURCE_LAST_MODIFIED == null ? null
+        : fbBuilder.writeString(_LAST_SOURCE_LAST_MODIFIED!);
+    final int? LAST_BATCH_IDOffset = _LAST_BATCH_ID == null ? null
+        : fbBuilder.writeString(_LAST_BATCH_ID!);
+    final int? LAST_PUBLICATION_CIDOffset = _LAST_PUBLICATION_CID == null ? null
+        : fbBuilder.writeString(_LAST_PUBLICATION_CID!);
+    final int? LAST_PNM_CIDOffset = _LAST_PNM_CID == null ? null
+        : fbBuilder.writeString(_LAST_PNM_CID!);
+    final int? FEED_HEADOffset = _FEED_HEAD == null ? null
+        : fbBuilder.writeString(_FEED_HEAD!);
+    final int? EMITS_SCHEMASOffset = _EMITS_SCHEMAS == null ? null
+        : fbBuilder.writeList(_EMITS_SCHEMAS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(52);
     fbBuilder.addOffset(0, CONNECTOR_IDOffset);
     fbBuilder.addInt8(1, _KIND?.value);
     fbBuilder.addOffset(2, TARGET_SCHEMAOffset);
@@ -596,6 +875,29 @@ class ICNObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(26, _UPDATED_AT);
     fbBuilder.addOffset(27, PROVIDER_PEER_IDOffset);
     fbBuilder.addOffset(28, PROVIDER_SIGNATUREOffset);
+    fbBuilder.addOffset(29, ORIGIN_IDOffset);
+    fbBuilder.addOffset(30, ORIGIN_NAMEOffset);
+    fbBuilder.addOffset(31, DATASET_IDOffset);
+    fbBuilder.addOffset(32, PROVIDER_IDOffset);
+    fbBuilder.addOffset(33, SOURCE_NAMEOffset);
+    fbBuilder.addOffset(34, LICENSEOffset);
+    fbBuilder.addOffset(35, LICENSE_URLOffset);
+    fbBuilder.addOffset(36, CITATIONOffset);
+    fbBuilder.addUint64(37, _MIN_FETCH_INTERVAL_MS);
+    fbBuilder.addUint64(38, _NEXT_ELIGIBLE_AT);
+    fbBuilder.addUint16(39, _LAST_HTTP_STATUS);
+    fbBuilder.addOffset(40, LAST_SOURCE_ETAGOffset);
+    fbBuilder.addOffset(41, LAST_SOURCE_LAST_MODIFIEDOffset);
+    fbBuilder.addOffset(42, LAST_BATCH_IDOffset);
+    fbBuilder.addUint64(43, _LAST_RECORD_COUNT);
+    fbBuilder.addUint64(44, _LAST_INSERTED_COUNT);
+    fbBuilder.addUint64(45, _LAST_DURATION_MS);
+    fbBuilder.addUint64(46, _FETCH_COUNT);
+    fbBuilder.addUint64(47, _INGEST_COUNT);
+    fbBuilder.addOffset(48, LAST_PUBLICATION_CIDOffset);
+    fbBuilder.addOffset(49, LAST_PNM_CIDOffset);
+    fbBuilder.addOffset(50, FEED_HEADOffset);
+    fbBuilder.addOffset(51, EMITS_SCHEMASOffset);
     return fbBuilder.endTable();
   }
 

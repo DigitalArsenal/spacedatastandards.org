@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "peerRegistryTrustCategory": {
+      "type": "string",
+      "enum": [
+        "Untrusted",
+        "Limited",
+        "Standard",
+        "Trusted",
+        "Admin"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Untrusted": {
+          "value": 0
+        },
+        "Limited": {
+          "value": 1
+        },
+        "Standard": {
+          "value": 2
+        },
+        "Trusted": {
+          "value": 3
+        },
+        "Admin": {
+          "value": 4
+        }
+      }
+    },
+    "actKind": {
+      "type": "string",
+      "enum": [
+        "Operator",
+        "Session",
+        "Challenge",
+        "ExternalLink"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Operator": {
+          "value": 0
+        },
+        "Session": {
+          "value": 1
+        },
+        "Challenge": {
+          "value": 2
+        },
+        "ExternalLink": {
+          "value": 3
+        }
+      }
+    },
+    "PRRMetadataEntry": {
+      "type": "object",
+      "description": "String metadata key/value attached to a peer registry entry.",
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Metadata key.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Metadata value.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRR": {
+      "type": "object",
+      "properties": {
+        "PEER_ID": {
+          "type": "string",
+          "description": "libp2p peer ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Known libp2p/IPFS multiaddresses for this peer.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "TRUST_LEVEL": {
+          "$ref": "#/definitions/peerRegistryTrustCategory",
+          "description": "Trust level assigned to this peer by the local registry.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Untrusted": {
+              "value": 0
+            },
+            "Limited": {
+              "value": 1
+            },
+            "Standard": {
+              "value": 2
+            },
+            "Trusted": {
+              "value": 3
+            },
+            "Admin": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Standard"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Optional display name.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORGANIZATION": {
+          "type": "string",
+          "description": "Optional organization name.",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Peer group names this peer belongs to.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Operator notes for this peer.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this peer was added.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_SEEN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this peer was last observed.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_CONNECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this peer last connected.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CONNECTION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of successful connections observed by this node.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MESSAGES_RECEIVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of messages received from this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MESSAGES_SENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of messages sent to this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTES_RECEIVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of bytes received from this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTES_SENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of bytes sent to this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EPM_DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Optional EPM.fbs bytes for the peer identity profile.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "VCARD_DATA": {
+          "type": "string",
+          "description": "Optional vCard projection for compatibility views.",
+          "x-flatbuffer-type": "string"
+        },
+        "METADATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRRMetadataEntry"
+          },
+          "description": "Additional peer metadata as string key/value entries.",
+          "x-flatbuffer-type": "[PRRMetadataEntry]"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this registry record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the peer from the current registry.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this registry record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the peer registry record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "PEER_ID"
+      ],
+      "additionalProperties": false
+    },
+    "ACTKeySlot": {
+      "type": "object",
+      "description": "One purpose-key slot of an operator.",
+      "properties": {
+        "SLOT": {
+          "type": "string",
+          "description": "Slot name, e.g. \"signing\", \"encryption\", \"publication\".",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_PATH": {
+          "type": "string",
+          "description": "Derivation path currently in use.",
+          "x-flatbuffer-type": "string"
+        },
+        "NEXT_PATH": {
+          "type": "string",
+          "description": "Derivation path the next rotation will use.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROTATABLE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Key algorithm, e.g. \"secp256k1\", \"ed25519\", \"x25519\".",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACT": {
+      "type": "object",
+      "description": "Account Record - operator, session, challenge or external link.",
+      "properties": {
+        "ACCOUNT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/actKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Operator": {
+              "value": 0
+            },
+            "Session": {
+              "value": 1
+            },
+            "Challenge": {
+              "value": 2
+            },
+            "ExternalLink": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "Operator"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Extended public key the operator proves control of.",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB_FINGERPRINT": {
+          "type": "string",
+          "description": "Fingerprint of XPUB.",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUST_LEVEL": {
+          "$ref": "#/definitions/peerRegistryTrustCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Untrusted": {
+              "value": 0
+            },
+            "Limited": {
+              "value": 1
+            },
+            "Standard": {
+              "value": 2
+            },
+            "Trusted": {
+              "value": 3
+            },
+            "Admin": {
+              "value": 4
+            }
+          }
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPM_CID": {
+          "type": "string",
+          "description": "Content identifier of the operator's identity record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier the account is bound to.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds.",
+          "x-flatbuffer-type": "int64"
+        },
+        "LAST_SEEN": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds; 0 = never.",
+          "x-flatbuffer-type": "int64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds a session or challenge expires; 0 = none.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CHALLENGE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHALLENGE": {
+          "type": "string",
+          "description": "Challenge text the operator signs.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Signature over CHALLENGE.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "description": "Signature scheme identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_CHAIN": {
+          "type": "string",
+          "description": "External chain identifier of a linked wallet (CAIP-2 form).",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_ADDRESS": {
+          "type": "string",
+          "description": "External address of a linked wallet.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKED": {
+          "type": "boolean",
+          "description": "True when the external link has been verified.",
+          "x-flatbuffer-type": "bool"
+        },
+        "KEY_SLOTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACTKeySlot"
+          },
+          "x-flatbuffer-type": "[ACTKeySlot]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ACT",
+  "x-flatbuffer-root-type": "ACT",
+  "x-flatbuffer-file-identifier": "$ACT"
+}

@@ -258,6 +258,11 @@ public struct Record : IFlatbufferObject
   public ICN valueAsICN() { return value<ICN>().Value; }
   public TRP valueAsTRP() { return value<TRP>().Value; }
   public TRV valueAsTRV() { return value<TRV>().Value; }
+  public ACT valueAsACT() { return value<ACT>().Value; }
+  public AGR valueAsAGR() { return value<AGR>().Value; }
+  public NDS valueAsNDS() { return value<NDS>().Value; }
+  public NST valueAsNST() { return value<NST>().Value; }
+  public QRP valueAsQRP() { return value<QRP>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -1009,6 +1014,21 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.TRV:
         _o.value.Value = this.value<TRV>().HasValue ? this.value<TRV>().Value.UnPack() : null;
+        break;
+      case RecordType.ACT:
+        _o.value.Value = this.value<ACT>().HasValue ? this.value<ACT>().Value.UnPack() : null;
+        break;
+      case RecordType.AGR:
+        _o.value.Value = this.value<AGR>().HasValue ? this.value<AGR>().Value.UnPack() : null;
+        break;
+      case RecordType.NDS:
+        _o.value.Value = this.value<NDS>().HasValue ? this.value<NDS>().Value.UnPack() : null;
+        break;
+      case RecordType.NST:
+        _o.value.Value = this.value<NST>().HasValue ? this.value<NST>().Value.UnPack() : null;
+        break;
+      case RecordType.QRP:
+        _o.value.Value = this.value<QRP>().HasValue ? this.value<QRP>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

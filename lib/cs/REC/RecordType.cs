@@ -257,6 +257,11 @@ public enum RecordType : byte
   ICN = 236,
   TRP = 237,
   TRV = 238,
+  ACT = 239,
+  AGR = 240,
+  NDS = 241,
+  NST = 242,
+  QRP = 243,
 };
 
 public class RecordTypeUnion {
@@ -745,6 +750,16 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTRP(TRPT _trp) { return new RecordTypeUnion{ Type = RecordType.TRP, Value = _trp }; }
   public TRVT AsTRV() { return this.As<TRVT>(); }
   public static RecordTypeUnion FromTRV(TRVT _trv) { return new RecordTypeUnion{ Type = RecordType.TRV, Value = _trv }; }
+  public ACTT AsACT() { return this.As<ACTT>(); }
+  public static RecordTypeUnion FromACT(ACTT _act) { return new RecordTypeUnion{ Type = RecordType.ACT, Value = _act }; }
+  public AGRT AsAGR() { return this.As<AGRT>(); }
+  public static RecordTypeUnion FromAGR(AGRT _agr) { return new RecordTypeUnion{ Type = RecordType.AGR, Value = _agr }; }
+  public NDST AsNDS() { return this.As<NDST>(); }
+  public static RecordTypeUnion FromNDS(NDST _nds) { return new RecordTypeUnion{ Type = RecordType.NDS, Value = _nds }; }
+  public NSTT AsNST() { return this.As<NSTT>(); }
+  public static RecordTypeUnion FromNST(NSTT _nst) { return new RecordTypeUnion{ Type = RecordType.NST, Value = _nst }; }
+  public QRPT AsQRP() { return this.As<QRPT>(); }
+  public static RecordTypeUnion FromQRP(QRPT _qrp) { return new RecordTypeUnion{ Type = RecordType.QRP, Value = _qrp }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -987,6 +1002,11 @@ public class RecordTypeUnion {
       case RecordType.ICN: return ICN.Pack(builder, _o.AsICN()).Value;
       case RecordType.TRP: return TRP.Pack(builder, _o.AsTRP()).Value;
       case RecordType.TRV: return TRV.Pack(builder, _o.AsTRV()).Value;
+      case RecordType.ACT: return ACT.Pack(builder, _o.AsACT()).Value;
+      case RecordType.AGR: return AGR.Pack(builder, _o.AsAGR()).Value;
+      case RecordType.NDS: return NDS.Pack(builder, _o.AsNDS()).Value;
+      case RecordType.NST: return NST.Pack(builder, _o.AsNST()).Value;
+      case RecordType.QRP: return QRP.Pack(builder, _o.AsQRP()).Value;
     }
   }
 }
@@ -1713,6 +1733,21 @@ static public class RecordTypeVerify
         break;
       case RecordType.TRV:
         result = TRVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ACT:
+        result = ACTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AGR:
+        result = AGRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.NDS:
+        result = NDSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.NST:
+        result = NSTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.QRP:
+        result = QRPVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

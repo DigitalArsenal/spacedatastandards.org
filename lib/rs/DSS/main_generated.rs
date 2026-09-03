@@ -104,6 +104,211 @@ impl<'a> ::flatbuffers::Verifiable for dssSyncState {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for dssSyncState {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DSS_PIN_POLICY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DSS_PIN_POLICY: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DSS_PIN_POLICY: [dssPinPolicy; 4] = [
+  dssPinPolicy::None,
+  dssPinPolicy::Cache,
+  dssPinPolicy::Pin,
+  dssPinPolicy::Archive,
+];
+
+/// Retention policy for a lane on this node. Append new values only; never
+/// reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct dssPinPolicy(pub i8);
+#[allow(non_upper_case_globals)]
+impl dssPinPolicy {
+  pub const None: Self = Self(0);
+  /// Keep a bounded local cache.
+  pub const Cache: Self = Self(1);
+  /// Pin every publication.
+  pub const Pin: Self = Self(2);
+  /// Pin and archive every publication.
+  pub const Archive: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::None,
+    Self::Cache,
+    Self::Pin,
+    Self::Archive,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::None => Some("None"),
+      Self::Cache => Some("Cache"),
+      Self::Pin => Some("Pin"),
+      Self::Archive => Some("Archive"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for dssPinPolicy {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for dssPinPolicy {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for dssPinPolicy {
+    type Output = dssPinPolicy;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for dssPinPolicy {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for dssPinPolicy {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for dssPinPolicy {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DSS_ACTION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DSS_ACTION: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DSS_ACTION: [dssAction; 7] = [
+  dssAction::None,
+  dssAction::Sync,
+  dssAction::Subscribe,
+  dssAction::Unsubscribe,
+  dssAction::Pin,
+  dssAction::Unpin,
+  dssAction::Hydrate,
+];
+
+/// Action a client requests on a lane. Append new values only; never reorder
+/// or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct dssAction(pub i8);
+#[allow(non_upper_case_globals)]
+impl dssAction {
+  pub const None: Self = Self(0);
+  /// Run one bounded catch-up pass now.
+  pub const Sync: Self = Self(1);
+  pub const Subscribe: Self = Self(2);
+  pub const Unsubscribe: Self = Self(3);
+  pub const Pin: Self = Self(4);
+  pub const Unpin: Self = Self(5);
+  /// Rebuild the local materialisation from pinned publications.
+  pub const Hydrate: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::None,
+    Self::Sync,
+    Self::Subscribe,
+    Self::Unsubscribe,
+    Self::Pin,
+    Self::Unpin,
+    Self::Hydrate,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::None => Some("None"),
+      Self::Sync => Some("Sync"),
+      Self::Subscribe => Some("Subscribe"),
+      Self::Unsubscribe => Some("Unsubscribe"),
+      Self::Pin => Some("Pin"),
+      Self::Unpin => Some("Unpin"),
+      Self::Hydrate => Some("Hydrate"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for dssAction {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for dssAction {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for dssAction {
+    type Output = dssAction;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for dssAction {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for dssAction {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for dssAction {}
 pub enum DSSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -154,6 +359,25 @@ impl<'a> DSS<'a> {
   pub const VT_VERIFIED_CHUNKS: ::flatbuffers::VOffsetT = 66;
   pub const VT_LAST_SYNCED_AT: ::flatbuffers::VOffsetT = 68;
   pub const VT_ERROR: ::flatbuffers::VOffsetT = 70;
+  pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 72;
+  pub const VT_PROVIDER_ID: ::flatbuffers::VOffsetT = 74;
+  pub const VT_SOURCE_NAME: ::flatbuffers::VOffsetT = 76;
+  pub const VT_DATASET_ID: ::flatbuffers::VOffsetT = 78;
+  pub const VT_CONNECTOR_ID: ::flatbuffers::VOffsetT = 80;
+  pub const VT_CHANNEL_ID: ::flatbuffers::VOffsetT = 82;
+  pub const VT_TOPIC: ::flatbuffers::VOffsetT = 84;
+  pub const VT_SUBSCRIBED: ::flatbuffers::VOffsetT = 86;
+  pub const VT_PIN_POLICY: ::flatbuffers::VOffsetT = 88;
+  pub const VT_VISIBILITY: ::flatbuffers::VOffsetT = 90;
+  pub const VT_ENCRYPTION_STATE: ::flatbuffers::VOffsetT = 92;
+  pub const VT_GRANT_STATE: ::flatbuffers::VOffsetT = 94;
+  pub const VT_FEED_HEAD: ::flatbuffers::VOffsetT = 96;
+  pub const VT_LAST_PUBLICATION_CID: ::flatbuffers::VOffsetT = 98;
+  pub const VT_LAST_PNM_CID: ::flatbuffers::VOffsetT = 100;
+  pub const VT_DELTA_ROWS: ::flatbuffers::VOffsetT = 102;
+  pub const VT_LAST_SYNC_STARTED_AT: ::flatbuffers::VOffsetT = 104;
+  pub const VT_REQUESTED_ACTION: ::flatbuffers::VOffsetT = 106;
+  pub const VT_ORIGIN_ID: ::flatbuffers::VOffsetT = 108;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -165,6 +389,8 @@ impl<'a> DSS<'a> {
     args: &'args DSSArgs<'args>
   ) -> ::flatbuffers::WIPOffset<DSS<'bldr>> {
     let mut builder = DSSBuilder::new(_fbb);
+    builder.add_LAST_SYNC_STARTED_AT(args.LAST_SYNC_STARTED_AT);
+    builder.add_DELTA_ROWS(args.DELTA_ROWS);
     builder.add_FLATSQL_MATERIALIZATION_MS(args.FLATSQL_MATERIALIZATION_MS);
     builder.add_VERIFICATION_MS(args.VERIFICATION_MS);
     builder.add_NETWORK_TRANSFER_MS(args.NETWORK_TRANSFER_MS);
@@ -181,6 +407,20 @@ impl<'a> DSS<'a> {
     builder.add_LOCAL_ROWS(args.LOCAL_ROWS);
     builder.add_TOTAL_ROWS(args.TOTAL_ROWS);
     builder.add_SYNCED_ROWS(args.SYNCED_ROWS);
+    if let Some(x) = args.ORIGIN_ID { builder.add_ORIGIN_ID(x); }
+    if let Some(x) = args.LAST_PNM_CID { builder.add_LAST_PNM_CID(x); }
+    if let Some(x) = args.LAST_PUBLICATION_CID { builder.add_LAST_PUBLICATION_CID(x); }
+    if let Some(x) = args.FEED_HEAD { builder.add_FEED_HEAD(x); }
+    if let Some(x) = args.GRANT_STATE { builder.add_GRANT_STATE(x); }
+    if let Some(x) = args.ENCRYPTION_STATE { builder.add_ENCRYPTION_STATE(x); }
+    if let Some(x) = args.VISIBILITY { builder.add_VISIBILITY(x); }
+    if let Some(x) = args.TOPIC { builder.add_TOPIC(x); }
+    if let Some(x) = args.CHANNEL_ID { builder.add_CHANNEL_ID(x); }
+    if let Some(x) = args.CONNECTOR_ID { builder.add_CONNECTOR_ID(x); }
+    if let Some(x) = args.DATASET_ID { builder.add_DATASET_ID(x); }
+    if let Some(x) = args.SOURCE_NAME { builder.add_SOURCE_NAME(x); }
+    if let Some(x) = args.PROVIDER_ID { builder.add_PROVIDER_ID(x); }
+    if let Some(x) = args.SCHEMA_NAME { builder.add_SCHEMA_NAME(x); }
     if let Some(x) = args.ERROR { builder.add_ERROR(x); }
     if let Some(x) = args.LAST_SYNCED_AT { builder.add_LAST_SYNCED_AT(x); }
     if let Some(x) = args.VERIFIED_CHUNKS { builder.add_VERIFIED_CHUNKS(x); }
@@ -195,6 +435,9 @@ impl<'a> DSS<'a> {
     if let Some(x) = args.SNAPSHOT_ID { builder.add_SNAPSHOT_ID(x); }
     if let Some(x) = args.PROVIDER_PUBLIC_KEY { builder.add_PROVIDER_PUBLIC_KEY(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    builder.add_REQUESTED_ACTION(args.REQUESTED_ACTION);
+    builder.add_PIN_POLICY(args.PIN_POLICY);
+    builder.add_SUBSCRIBED(args.SUBSCRIBED);
     builder.add_WIRE_SPEED_TARGET_MET(args.WIRE_SPEED_TARGET_MET);
     builder.add_HAS_WIRE_SPEED_TARGET_MET(args.HAS_WIRE_SPEED_TARGET_MET);
     builder.add_HAS_WIRE_SPEED_UTILIZATION(args.HAS_WIRE_SPEED_UTILIZATION);
@@ -265,6 +508,53 @@ impl<'a> DSS<'a> {
     let ERROR = self.ERROR().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let SCHEMA_NAME = self.SCHEMA_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATASET_ID = self.DATASET_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONNECTOR_ID = self.CONNECTOR_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CHANNEL_ID = self.CHANNEL_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TOPIC = self.TOPIC().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SUBSCRIBED = self.SUBSCRIBED();
+    let PIN_POLICY = self.PIN_POLICY();
+    let VISIBILITY = self.VISIBILITY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENCRYPTION_STATE = self.ENCRYPTION_STATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRANT_STATE = self.GRANT_STATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FEED_HEAD = self.FEED_HEAD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_PUBLICATION_CID = self.LAST_PUBLICATION_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAST_PNM_CID = self.LAST_PNM_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DELTA_ROWS = self.DELTA_ROWS();
+    let LAST_SYNC_STARTED_AT = self.LAST_SYNC_STARTED_AT();
+    let REQUESTED_ACTION = self.REQUESTED_ACTION();
+    let ORIGIN_ID = self.ORIGIN_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     DSST {
       STATUS,
       SYNCED_ROWS,
@@ -300,6 +590,25 @@ impl<'a> DSS<'a> {
       VERIFIED_CHUNKS,
       LAST_SYNCED_AT,
       ERROR,
+      SCHEMA_NAME,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      DATASET_ID,
+      CONNECTOR_ID,
+      CHANNEL_ID,
+      TOPIC,
+      SUBSCRIBED,
+      PIN_POLICY,
+      VISIBILITY,
+      ENCRYPTION_STATE,
+      GRANT_STATE,
+      FEED_HEAD,
+      LAST_PUBLICATION_CID,
+      LAST_PNM_CID,
+      DELTA_ROWS,
+      LAST_SYNC_STARTED_AT,
+      REQUESTED_ACTION,
+      ORIGIN_ID,
     }
   }
 
@@ -541,6 +850,155 @@ impl<'a> DSS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_ERROR, None)}
   }
+  /// Standard code of the lane, e.g. "OMM".
+  #[inline]
+  pub fn SCHEMA_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_SCHEMA_NAME, None)}
+  }
+  #[inline]
+  pub fn PROVIDER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_PROVIDER_ID, None)}
+  }
+  #[inline]
+  pub fn SOURCE_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_SOURCE_NAME, None)}
+  }
+  /// Stable dataset identifier within the origin.
+  #[inline]
+  pub fn DATASET_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_DATASET_ID, None)}
+  }
+  /// Ingest connector that produces the lane, when known.
+  #[inline]
+  pub fn CONNECTOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_CONNECTOR_ID, None)}
+  }
+  /// Channel identifier the lane is announced on.
+  #[inline]
+  pub fn CHANNEL_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_CHANNEL_ID, None)}
+  }
+  /// Publish/subscribe topic of the lane.
+  #[inline]
+  pub fn TOPIC(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_TOPIC, None)}
+  }
+  /// True when this node subscribes to the lane.
+  #[inline]
+  pub fn SUBSCRIBED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(DSS::VT_SUBSCRIBED, Some(false)).unwrap()}
+  }
+  #[inline]
+  pub fn PIN_POLICY(&self) -> dssPinPolicy {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<dssPinPolicy>(DSS::VT_PIN_POLICY, Some(dssPinPolicy::None)).unwrap()}
+  }
+  /// Visibility of the lane, e.g. "public", "private".
+  #[inline]
+  pub fn VISIBILITY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_VISIBILITY, None)}
+  }
+  /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  #[inline]
+  pub fn ENCRYPTION_STATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_ENCRYPTION_STATE, None)}
+  }
+  /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  #[inline]
+  pub fn GRANT_STATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_GRANT_STATE, None)}
+  }
+  /// Feed head this node has materialised up to.
+  #[inline]
+  pub fn FEED_HEAD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_FEED_HEAD, None)}
+  }
+  /// Content identifier of the newest publication manifest known.
+  #[inline]
+  pub fn LAST_PUBLICATION_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_LAST_PUBLICATION_CID, None)}
+  }
+  /// Content identifier of the newest publish notification known.
+  #[inline]
+  pub fn LAST_PNM_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_LAST_PNM_CID, None)}
+  }
+  /// Rows materialised since the previous SYNCED state.
+  #[inline]
+  pub fn DELTA_ROWS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(DSS::VT_DELTA_ROWS, Some(0)).unwrap()}
+  }
+  /// Unix milliseconds the current or last sync pass started; 0 = never.
+  #[inline]
+  pub fn LAST_SYNC_STARTED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(DSS::VT_LAST_SYNC_STARTED_AT, Some(0)).unwrap()}
+  }
+  /// Action a client requests when sending this record to a node.
+  #[inline]
+  pub fn REQUESTED_ACTION(&self) -> dssAction {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<dssAction>(DSS::VT_REQUESTED_ACTION, Some(dssAction::None)).unwrap()}
+  }
+  /// Upstream publisher of the lane's records.
+  #[inline]
+  pub fn ORIGIN_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_ORIGIN_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for DSS<'_> {
@@ -583,6 +1041,25 @@ impl ::flatbuffers::Verifiable for DSS<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("VERIFIED_CHUNKS", Self::VT_VERIFIED_CHUNKS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_SYNCED_AT", Self::VT_LAST_SYNCED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR", Self::VT_ERROR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_NAME", Self::VT_SCHEMA_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_ID", Self::VT_PROVIDER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_NAME", Self::VT_SOURCE_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATASET_ID", Self::VT_DATASET_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONNECTOR_ID", Self::VT_CONNECTOR_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHANNEL_ID", Self::VT_CHANNEL_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TOPIC", Self::VT_TOPIC, false)?
+     .visit_field::<bool>("SUBSCRIBED", Self::VT_SUBSCRIBED, false)?
+     .visit_field::<dssPinPolicy>("PIN_POLICY", Self::VT_PIN_POLICY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENCRYPTION_STATE", Self::VT_ENCRYPTION_STATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_STATE", Self::VT_GRANT_STATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FEED_HEAD", Self::VT_FEED_HEAD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_PUBLICATION_CID", Self::VT_LAST_PUBLICATION_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_PNM_CID", Self::VT_LAST_PNM_CID, false)?
+     .visit_field::<u64>("DELTA_ROWS", Self::VT_DELTA_ROWS, false)?
+     .visit_field::<u64>("LAST_SYNC_STARTED_AT", Self::VT_LAST_SYNC_STARTED_AT, false)?
+     .visit_field::<dssAction>("REQUESTED_ACTION", Self::VT_REQUESTED_ACTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN_ID", Self::VT_ORIGIN_ID, false)?
      .finish();
     Ok(())
   }
@@ -622,6 +1099,25 @@ pub struct DSSArgs<'a> {
     pub VERIFIED_CHUNKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub LAST_SYNCED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ERROR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCHEMA_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATASET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONNECTOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CHANNEL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TOPIC: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SUBSCRIBED: bool,
+    pub PIN_POLICY: dssPinPolicy,
+    pub VISIBILITY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCRYPTION_STATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANT_STATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FEED_HEAD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_PUBLICATION_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAST_PNM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DELTA_ROWS: u64,
+    pub LAST_SYNC_STARTED_AT: u64,
+    pub REQUESTED_ACTION: dssAction,
+    pub ORIGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for DSSArgs<'a> {
   #[inline]
@@ -661,6 +1157,25 @@ impl<'a> Default for DSSArgs<'a> {
       VERIFIED_CHUNKS: None,
       LAST_SYNCED_AT: None,
       ERROR: None,
+      SCHEMA_NAME: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      DATASET_ID: None,
+      CONNECTOR_ID: None,
+      CHANNEL_ID: None,
+      TOPIC: None,
+      SUBSCRIBED: false,
+      PIN_POLICY: dssPinPolicy::None,
+      VISIBILITY: None,
+      ENCRYPTION_STATE: None,
+      GRANT_STATE: None,
+      FEED_HEAD: None,
+      LAST_PUBLICATION_CID: None,
+      LAST_PNM_CID: None,
+      DELTA_ROWS: 0,
+      LAST_SYNC_STARTED_AT: 0,
+      REQUESTED_ACTION: dssAction::None,
+      ORIGIN_ID: None,
     }
   }
 }
@@ -807,6 +1322,82 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DSSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_ERROR, ERROR);
   }
   #[inline]
+  pub fn add_SCHEMA_NAME(&mut self, SCHEMA_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_SCHEMA_NAME, SCHEMA_NAME);
+  }
+  #[inline]
+  pub fn add_PROVIDER_ID(&mut self, PROVIDER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_PROVIDER_ID, PROVIDER_ID);
+  }
+  #[inline]
+  pub fn add_SOURCE_NAME(&mut self, SOURCE_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_SOURCE_NAME, SOURCE_NAME);
+  }
+  #[inline]
+  pub fn add_DATASET_ID(&mut self, DATASET_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_DATASET_ID, DATASET_ID);
+  }
+  #[inline]
+  pub fn add_CONNECTOR_ID(&mut self, CONNECTOR_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_CONNECTOR_ID, CONNECTOR_ID);
+  }
+  #[inline]
+  pub fn add_CHANNEL_ID(&mut self, CHANNEL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_CHANNEL_ID, CHANNEL_ID);
+  }
+  #[inline]
+  pub fn add_TOPIC(&mut self, TOPIC: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_TOPIC, TOPIC);
+  }
+  #[inline]
+  pub fn add_SUBSCRIBED(&mut self, SUBSCRIBED: bool) {
+    self.fbb_.push_slot::<bool>(DSS::VT_SUBSCRIBED, SUBSCRIBED, false);
+  }
+  #[inline]
+  pub fn add_PIN_POLICY(&mut self, PIN_POLICY: dssPinPolicy) {
+    self.fbb_.push_slot::<dssPinPolicy>(DSS::VT_PIN_POLICY, PIN_POLICY, dssPinPolicy::None);
+  }
+  #[inline]
+  pub fn add_VISIBILITY(&mut self, VISIBILITY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_VISIBILITY, VISIBILITY);
+  }
+  #[inline]
+  pub fn add_ENCRYPTION_STATE(&mut self, ENCRYPTION_STATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_ENCRYPTION_STATE, ENCRYPTION_STATE);
+  }
+  #[inline]
+  pub fn add_GRANT_STATE(&mut self, GRANT_STATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_GRANT_STATE, GRANT_STATE);
+  }
+  #[inline]
+  pub fn add_FEED_HEAD(&mut self, FEED_HEAD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_FEED_HEAD, FEED_HEAD);
+  }
+  #[inline]
+  pub fn add_LAST_PUBLICATION_CID(&mut self, LAST_PUBLICATION_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_LAST_PUBLICATION_CID, LAST_PUBLICATION_CID);
+  }
+  #[inline]
+  pub fn add_LAST_PNM_CID(&mut self, LAST_PNM_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_LAST_PNM_CID, LAST_PNM_CID);
+  }
+  #[inline]
+  pub fn add_DELTA_ROWS(&mut self, DELTA_ROWS: u64) {
+    self.fbb_.push_slot::<u64>(DSS::VT_DELTA_ROWS, DELTA_ROWS, 0);
+  }
+  #[inline]
+  pub fn add_LAST_SYNC_STARTED_AT(&mut self, LAST_SYNC_STARTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(DSS::VT_LAST_SYNC_STARTED_AT, LAST_SYNC_STARTED_AT, 0);
+  }
+  #[inline]
+  pub fn add_REQUESTED_ACTION(&mut self, REQUESTED_ACTION: dssAction) {
+    self.fbb_.push_slot::<dssAction>(DSS::VT_REQUESTED_ACTION, REQUESTED_ACTION, dssAction::None);
+  }
+  #[inline]
+  pub fn add_ORIGIN_ID(&mut self, ORIGIN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_ORIGIN_ID, ORIGIN_ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DSSBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     DSSBuilder {
@@ -858,6 +1449,25 @@ impl ::core::fmt::Debug for DSS<'_> {
       ds.field("VERIFIED_CHUNKS", &self.VERIFIED_CHUNKS());
       ds.field("LAST_SYNCED_AT", &self.LAST_SYNCED_AT());
       ds.field("ERROR", &self.ERROR());
+      ds.field("SCHEMA_NAME", &self.SCHEMA_NAME());
+      ds.field("PROVIDER_ID", &self.PROVIDER_ID());
+      ds.field("SOURCE_NAME", &self.SOURCE_NAME());
+      ds.field("DATASET_ID", &self.DATASET_ID());
+      ds.field("CONNECTOR_ID", &self.CONNECTOR_ID());
+      ds.field("CHANNEL_ID", &self.CHANNEL_ID());
+      ds.field("TOPIC", &self.TOPIC());
+      ds.field("SUBSCRIBED", &self.SUBSCRIBED());
+      ds.field("PIN_POLICY", &self.PIN_POLICY());
+      ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("ENCRYPTION_STATE", &self.ENCRYPTION_STATE());
+      ds.field("GRANT_STATE", &self.GRANT_STATE());
+      ds.field("FEED_HEAD", &self.FEED_HEAD());
+      ds.field("LAST_PUBLICATION_CID", &self.LAST_PUBLICATION_CID());
+      ds.field("LAST_PNM_CID", &self.LAST_PNM_CID());
+      ds.field("DELTA_ROWS", &self.DELTA_ROWS());
+      ds.field("LAST_SYNC_STARTED_AT", &self.LAST_SYNC_STARTED_AT());
+      ds.field("REQUESTED_ACTION", &self.REQUESTED_ACTION());
+      ds.field("ORIGIN_ID", &self.ORIGIN_ID());
       ds.finish()
   }
 }
@@ -898,6 +1508,25 @@ pub struct DSST {
   pub VERIFIED_CHUNKS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub LAST_SYNCED_AT: Option<alloc::string::String>,
   pub ERROR: Option<alloc::string::String>,
+  pub SCHEMA_NAME: Option<alloc::string::String>,
+  pub PROVIDER_ID: Option<alloc::string::String>,
+  pub SOURCE_NAME: Option<alloc::string::String>,
+  pub DATASET_ID: Option<alloc::string::String>,
+  pub CONNECTOR_ID: Option<alloc::string::String>,
+  pub CHANNEL_ID: Option<alloc::string::String>,
+  pub TOPIC: Option<alloc::string::String>,
+  pub SUBSCRIBED: bool,
+  pub PIN_POLICY: dssPinPolicy,
+  pub VISIBILITY: Option<alloc::string::String>,
+  pub ENCRYPTION_STATE: Option<alloc::string::String>,
+  pub GRANT_STATE: Option<alloc::string::String>,
+  pub FEED_HEAD: Option<alloc::string::String>,
+  pub LAST_PUBLICATION_CID: Option<alloc::string::String>,
+  pub LAST_PNM_CID: Option<alloc::string::String>,
+  pub DELTA_ROWS: u64,
+  pub LAST_SYNC_STARTED_AT: u64,
+  pub REQUESTED_ACTION: dssAction,
+  pub ORIGIN_ID: Option<alloc::string::String>,
 }
 impl Default for DSST {
   fn default() -> Self {
@@ -936,6 +1565,25 @@ impl Default for DSST {
       VERIFIED_CHUNKS: None,
       LAST_SYNCED_AT: None,
       ERROR: None,
+      SCHEMA_NAME: None,
+      PROVIDER_ID: None,
+      SOURCE_NAME: None,
+      DATASET_ID: None,
+      CONNECTOR_ID: None,
+      CHANNEL_ID: None,
+      TOPIC: None,
+      SUBSCRIBED: false,
+      PIN_POLICY: dssPinPolicy::None,
+      VISIBILITY: None,
+      ENCRYPTION_STATE: None,
+      GRANT_STATE: None,
+      FEED_HEAD: None,
+      LAST_PUBLICATION_CID: None,
+      LAST_PNM_CID: None,
+      DELTA_ROWS: 0,
+      LAST_SYNC_STARTED_AT: 0,
+      REQUESTED_ACTION: dssAction::None,
+      ORIGIN_ID: None,
     }
   }
 }
@@ -1006,6 +1654,53 @@ impl DSST {
     let ERROR = self.ERROR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SCHEMA_NAME = self.SCHEMA_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_ID = self.PROVIDER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_NAME = self.SOURCE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATASET_ID = self.DATASET_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONNECTOR_ID = self.CONNECTOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CHANNEL_ID = self.CHANNEL_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TOPIC = self.TOPIC.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SUBSCRIBED = self.SUBSCRIBED;
+    let PIN_POLICY = self.PIN_POLICY;
+    let VISIBILITY = self.VISIBILITY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCRYPTION_STATE = self.ENCRYPTION_STATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANT_STATE = self.GRANT_STATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FEED_HEAD = self.FEED_HEAD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_PUBLICATION_CID = self.LAST_PUBLICATION_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAST_PNM_CID = self.LAST_PNM_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DELTA_ROWS = self.DELTA_ROWS;
+    let LAST_SYNC_STARTED_AT = self.LAST_SYNC_STARTED_AT;
+    let REQUESTED_ACTION = self.REQUESTED_ACTION;
+    let ORIGIN_ID = self.ORIGIN_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     DSS::create(_fbb, &DSSArgs{
       STATUS,
       SYNCED_ROWS,
@@ -1041,6 +1736,25 @@ impl DSST {
       VERIFIED_CHUNKS,
       LAST_SYNCED_AT,
       ERROR,
+      SCHEMA_NAME,
+      PROVIDER_ID,
+      SOURCE_NAME,
+      DATASET_ID,
+      CONNECTOR_ID,
+      CHANNEL_ID,
+      TOPIC,
+      SUBSCRIBED,
+      PIN_POLICY,
+      VISIBILITY,
+      ENCRYPTION_STATE,
+      GRANT_STATE,
+      FEED_HEAD,
+      LAST_PUBLICATION_CID,
+      LAST_PNM_CID,
+      DELTA_ROWS,
+      LAST_SYNC_STARTED_AT,
+      REQUESTED_ACTION,
+      ORIGIN_ID,
     })
   }
 }

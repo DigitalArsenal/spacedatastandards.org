@@ -279,6 +279,26 @@
           "type": "string",
           "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed.",
           "x-flatbuffer-type": "string"
+        },
+        "NUTATION_DPSI_RADIANS": {
+          "type": "number",
+          "description": "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DEPS_RADIANS": {
+          "type": "number",
+          "description": "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DPSI_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false

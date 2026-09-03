@@ -1,5 +1,5 @@
-// Hash: 43f0735df8f25c2eb18d514bc7cecab1a65b3437572668675664d326eb9095ba
-// Version: 0.0.2
+// Hash: 747f1334191abf2a73f53681ba14e08cec88e6859ba087dd4fc2c5c365aef6af
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Standards Record Index — local wrapper for a standards payload's identity
 /// and mutation metadata, participating in shared FlatSQL query and cascade
@@ -19,6 +19,20 @@ table SRI {
   UPDATED_AT_MS:double;
   /// Reserved for forward-compatible growth.
   RESERVED:[uint8];
+
+  /// Content identifier of the record bytes.
+  CID: string;
+  /// Byte offset of the record frame within its export or archive stream.
+  BYTE_OFFSET: uint64;
+  /// Byte length of the record frame.
+  BYTE_LENGTH: uint32;
+  /// Epoch of the record, Unix milliseconds; 0 = none.
+  EPOCH_MS: uint64;
+  /// Entity key of the record within its standard, e.g. a catalogue number.
+  ENTITY_KEY: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  BATCH_ID: string;
 }
 
 root_type SRI;

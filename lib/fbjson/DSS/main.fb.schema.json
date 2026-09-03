@@ -30,6 +30,73 @@
         }
       }
     },
+    "dssPinPolicy": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Cache",
+        "Pin",
+        "Archive"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0
+        },
+        "Cache": {
+          "value": 1,
+          "description": "Keep a bounded local cache."
+        },
+        "Pin": {
+          "value": 2,
+          "description": "Pin every publication."
+        },
+        "Archive": {
+          "value": 3,
+          "description": "Pin and archive every publication."
+        }
+      }
+    },
+    "dssAction": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Sync",
+        "Subscribe",
+        "Unsubscribe",
+        "Pin",
+        "Unpin",
+        "Hydrate"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0
+        },
+        "Sync": {
+          "value": 1,
+          "description": "Run one bounded catch-up pass now."
+        },
+        "Subscribe": {
+          "value": 2
+        },
+        "Unsubscribe": {
+          "value": 3
+        },
+        "Pin": {
+          "value": 4
+        },
+        "Unpin": {
+          "value": 5
+        },
+        "Hydrate": {
+          "value": 6,
+          "description": "Rebuild the local materialisation from pinned publications."
+        }
+      }
+    },
     "DSS": {
       "type": "object",
       "properties": {
@@ -217,6 +284,148 @@
         },
         "ERROR": {
           "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Standard code of the lane, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Stable dataset identifier within the origin.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONNECTOR_ID": {
+          "type": "string",
+          "description": "Ingest connector that produces the lane, when known.",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANNEL_ID": {
+          "type": "string",
+          "description": "Channel identifier the lane is announced on.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOPIC": {
+          "type": "string",
+          "description": "Publish/subscribe topic of the lane.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBSCRIBED": {
+          "type": "boolean",
+          "description": "True when this node subscribes to the lane.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PIN_POLICY": {
+          "$ref": "#/definitions/dssPinPolicy",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0
+            },
+            "Cache": {
+              "value": 1,
+              "description": "Keep a bounded local cache."
+            },
+            "Pin": {
+              "value": 2,
+              "description": "Pin every publication."
+            },
+            "Archive": {
+              "value": 3,
+              "description": "Pin and archive every publication."
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "VISIBILITY": {
+          "type": "string",
+          "description": "Visibility of the lane, e.g. \"public\", \"private\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTION_STATE": {
+          "type": "string",
+          "description": "Encryption state of the lane's publications, e.g. \"plain\", \"encrypted\".",
+          "x-flatbuffer-type": "string"
+        },
+        "GRANT_STATE": {
+          "type": "string",
+          "description": "Grant state for an encrypted lane, e.g. \"granted\", \"pending\", \"none\".",
+          "x-flatbuffer-type": "string"
+        },
+        "FEED_HEAD": {
+          "type": "string",
+          "description": "Feed head this node has materialised up to.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_PUBLICATION_CID": {
+          "type": "string",
+          "description": "Content identifier of the newest publication manifest known.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_PNM_CID": {
+          "type": "string",
+          "description": "Content identifier of the newest publish notification known.",
+          "x-flatbuffer-type": "string"
+        },
+        "DELTA_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Rows materialised since the previous SYNCED state.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_SYNC_STARTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix milliseconds the current or last sync pass started; 0 = never.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "REQUESTED_ACTION": {
+          "$ref": "#/definitions/dssAction",
+          "description": "Action a client requests when sending this record to a node.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0
+            },
+            "Sync": {
+              "value": 1,
+              "description": "Run one bounded catch-up pass now."
+            },
+            "Subscribe": {
+              "value": 2
+            },
+            "Unsubscribe": {
+              "value": 3
+            },
+            "Pin": {
+              "value": 4
+            },
+            "Unpin": {
+              "value": 5
+            },
+            "Hydrate": {
+              "value": 6,
+              "description": "Rebuild the local materialisation from pinned publications."
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Upstream publisher of the lane's records.",
           "x-flatbuffer-type": "string"
         }
       },

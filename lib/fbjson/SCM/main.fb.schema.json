@@ -22,6 +22,38 @@
           },
           "description": "List Of File Paths",
           "x-flatbuffer-type": "[string]"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable name of the standard.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "One-paragraph description of the standard.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_IDENTIFIER": {
+          "type": "string",
+          "description": "Four-character file identifier, e.g. \"$OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_HASH": {
+          "type": "string",
+          "description": "Hash of the standard's schema text.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROUTED": {
+          "type": "boolean",
+          "description": "True when the reporting node routes the standard through its store.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RECORD_TYPE_ORDINAL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Position of the standard in the record union; append-only forever.",
+          "x-flatbuffer-type": "uint16"
         }
       },
       "additionalProperties": false
@@ -42,6 +74,18 @@
           },
           "description": "Standards Dictionary",
           "x-flatbuffer-type": "[SCHEMA_STANDARD]"
+        },
+        "STANDARDS_VERSION": {
+          "type": "string",
+          "description": "Version of the standards package the reporting node runs.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when this registry frame was generated.",
+          "x-flatbuffer-type": "int64"
         }
       },
       "additionalProperties": false

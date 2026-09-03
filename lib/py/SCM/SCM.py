@@ -63,8 +63,24 @@ class SCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
+    # Version of the standards package the reporting node runs.
+    # SCM
+    def STANDARDS_VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix milliseconds when this registry frame was generated.
+    # SCM
+    def GENERATED_AT_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
 def SCMStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(4)
 
 def Start(builder):
     SCMStart(builder)
@@ -93,6 +109,18 @@ def SCMCreateRECORDSVector(builder, data):
 def CreateRECORDSVector(builder, data):
     SCMCreateRECORDSVector(builder, data)
 
+def SCMAddSTANDARDS_VERSION(builder, STANDARDS_VERSION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STANDARDS_VERSION), 0)
+
+def AddSTANDARDS_VERSION(builder, STANDARDS_VERSION):
+    SCMAddSTANDARDS_VERSION(builder, STANDARDS_VERSION)
+
+def SCMAddGENERATED_AT_MS(builder, GENERATED_AT_MS):
+    builder.PrependInt64Slot(3, GENERATED_AT_MS, 0)
+
+def AddGENERATED_AT_MS(builder, GENERATED_AT_MS):
+    SCMAddGENERATED_AT_MS(builder, GENERATED_AT_MS)
+
 def SCMEnd(builder):
     return builder.EndObject()
 
@@ -112,9 +140,13 @@ class SCMT(object):
         self,
         version = None,
         RECORDS = None,
+        STANDARDS_VERSION = None,
+        GENERATED_AT_MS = 0,
     ):
         self.version = version  # type: Optional[str]
         self.RECORDS = RECORDS  # type: Optional[List[SCHEMA_STANDARD.SCHEMA_STANDARDT]]
+        self.STANDARDS_VERSION = STANDARDS_VERSION  # type: Optional[str]
+        self.GENERATED_AT_MS = GENERATED_AT_MS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -146,6 +178,8 @@ class SCMT(object):
                 else:
                     sCHEMA_STANDARD_ = SCHEMA_STANDARD.SCHEMA_STANDARDT.InitFromObj(SCM.RECORDS(i))
                     self.RECORDS.append(sCHEMA_STANDARD_)
+        self.STANDARDS_VERSION = SCM.STANDARDS_VERSION()
+        self.GENERATED_AT_MS = SCM.GENERATED_AT_MS()
 
     # SCMT
     def Pack(self, builder):
@@ -159,10 +193,15 @@ class SCMT(object):
             for i in reversed(range(len(self.RECORDS))):
                 builder.PrependUOffsetTRelative(RECORDSlist[i])
             RECORDS = builder.EndVector()
+        if self.STANDARDS_VERSION is not None:
+            STANDARDS_VERSION = builder.CreateString(self.STANDARDS_VERSION)
         SCMStart(builder)
         if self.version is not None:
             SCMAddversion(builder, version)
         if self.RECORDS is not None:
             SCMAddRECORDS(builder, RECORDS)
+        if self.STANDARDS_VERSION is not None:
+            SCMAddSTANDARDS_VERSION(builder, STANDARDS_VERSION)
+        SCMAddGENERATED_AT_MS(builder, self.GENERATED_AT_MS)
         SCM = SCMEnd(builder)
         return SCM

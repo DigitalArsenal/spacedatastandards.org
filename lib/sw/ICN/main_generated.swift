@@ -133,6 +133,29 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let UPDATED_AT: VOffset = 56
     static let PROVIDER_PEER_ID: VOffset = 58
     static let PROVIDER_SIGNATURE: VOffset = 60
+    static let ORIGIN_ID: VOffset = 62
+    static let ORIGIN_NAME: VOffset = 64
+    static let DATASET_ID: VOffset = 66
+    static let PROVIDER_ID: VOffset = 68
+    static let SOURCE_NAME: VOffset = 70
+    static let LICENSE: VOffset = 72
+    static let LICENSE_URL: VOffset = 74
+    static let CITATION: VOffset = 76
+    static let MIN_FETCH_INTERVAL_MS: VOffset = 78
+    static let NEXT_ELIGIBLE_AT: VOffset = 80
+    static let LAST_HTTP_STATUS: VOffset = 82
+    static let LAST_SOURCE_ETAG: VOffset = 84
+    static let LAST_SOURCE_LAST_MODIFIED: VOffset = 86
+    static let LAST_BATCH_ID: VOffset = 88
+    static let LAST_RECORD_COUNT: VOffset = 90
+    static let LAST_INSERTED_COUNT: VOffset = 92
+    static let LAST_DURATION_MS: VOffset = 94
+    static let FETCH_COUNT: VOffset = 96
+    static let INGEST_COUNT: VOffset = 98
+    static let LAST_PUBLICATION_CID: VOffset = 100
+    static let LAST_PNM_CID: VOffset = 102
+    static let FEED_HEAD: VOffset = 104
+    static let EMITS_SCHEMAS: VOffset = 106
   }
 
   ///  Stable connector identifier.
@@ -209,7 +232,67 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Provider signature over the connector record.
   public var PROVIDER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PROVIDER_SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToProviderSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PROVIDER_SIGNATURE, body: body) }
-  public static func startICN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
+  ///  Upstream publisher the connector retrieves records from, as a host name
+  ///  or stable identifier.
+  public var ORIGIN_ID: String? { let o = _accessor.offset(VT.ORIGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_ID) }
+  ///  Display name of the upstream publisher.
+  public var ORIGIN_NAME: String? { let o = _accessor.offset(VT.ORIGIN_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGIN_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_NAME) }
+  ///  Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  public var DATASET_ID: String? { let o = _accessor.offset(VT.DATASET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATASET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_ID) }
+  ///  Provider identifier the lane's records are stored under.
+  public var PROVIDER_ID: String? { let o = _accessor.offset(VT.PROVIDER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_ID) }
+  ///  Source name the lane's records are stored under.
+  public var SOURCE_NAME: String? { let o = _accessor.offset(VT.SOURCE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_NAME) }
+  ///  Licence under which the upstream publisher offers the records.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
+  ///  Citation the upstream publisher asks for.
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  ///  Minimum interval between fetches of the same dataset, milliseconds.
+  public var MIN_FETCH_INTERVAL_MS: UInt64 { let o = _accessor.offset(VT.MIN_FETCH_INTERVAL_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix milliseconds when the next fetch is eligible.
+  public var NEXT_ELIGIBLE_AT: UInt64 { let o = _accessor.offset(VT.NEXT_ELIGIBLE_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  HTTP status of the last fetch.
+  public var LAST_HTTP_STATUS: UInt16 { let o = _accessor.offset(VT.LAST_HTTP_STATUS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Entity tag returned by the last fetch.
+  public var LAST_SOURCE_ETAG: String? { let o = _accessor.offset(VT.LAST_SOURCE_ETAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_SOURCE_ETAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_SOURCE_ETAG) }
+  ///  Last-Modified value returned by the last fetch.
+  public var LAST_SOURCE_LAST_MODIFIED: String? { let o = _accessor.offset(VT.LAST_SOURCE_LAST_MODIFIED); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_SOURCE_LAST_MODIFIEDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_SOURCE_LAST_MODIFIED) }
+  ///  Batch identifier of the last ingest.
+  public var LAST_BATCH_ID: String? { let o = _accessor.offset(VT.LAST_BATCH_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_BATCH_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_BATCH_ID) }
+  ///  Records parsed by the last ingest.
+  public var LAST_RECORD_COUNT: UInt64 { let o = _accessor.offset(VT.LAST_RECORD_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Records newly inserted by the last ingest.
+  public var LAST_INSERTED_COUNT: UInt64 { let o = _accessor.offset(VT.LAST_INSERTED_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Duration of the last fetch and ingest, milliseconds.
+  public var LAST_DURATION_MS: UInt64 { let o = _accessor.offset(VT.LAST_DURATION_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Fetches attempted over the connector's lifetime.
+  public var FETCH_COUNT: UInt64 { let o = _accessor.offset(VT.FETCH_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Ingests completed over the connector's lifetime.
+  public var INGEST_COUNT: UInt64 { let o = _accessor.offset(VT.INGEST_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Content identifier of the last publication manifest emitted.
+  public var LAST_PUBLICATION_CID: String? { let o = _accessor.offset(VT.LAST_PUBLICATION_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_PUBLICATION_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_PUBLICATION_CID) }
+  ///  Content identifier of the last publish notification emitted.
+  public var LAST_PNM_CID: String? { let o = _accessor.offset(VT.LAST_PNM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_PNM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_PNM_CID) }
+  ///  Feed head the connector last advanced to.
+  public var FEED_HEAD: String? { let o = _accessor.offset(VT.FEED_HEAD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FEED_HEADSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FEED_HEAD) }
+  ///  Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  public var EMITS_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VT.EMITS_SCHEMAS, byteSize: 4) }
+  public static func startICN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 52) }
   public static func add(CONNECTOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONNECTOR_ID, at: VT.CONNECTOR_ID) }
   public static func add(KIND: icnConnectorKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(TARGET_SCHEMA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_SCHEMA, at: VT.TARGET_SCHEMA) }
@@ -239,6 +322,29 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
   public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
   public static func addVectorOf(PROVIDER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNATURE, at: VT.PROVIDER_SIGNATURE) }
+  public static func add(ORIGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_ID, at: VT.ORIGIN_ID) }
+  public static func add(ORIGIN_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_NAME, at: VT.ORIGIN_NAME) }
+  public static func add(DATASET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_ID, at: VT.DATASET_ID) }
+  public static func add(PROVIDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_ID, at: VT.PROVIDER_ID) }
+  public static func add(SOURCE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAME, at: VT.SOURCE_NAME) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func add(MIN_FETCH_INTERVAL_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_FETCH_INTERVAL_MS, def: 0, at: VT.MIN_FETCH_INTERVAL_MS) }
+  public static func add(NEXT_ELIGIBLE_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEXT_ELIGIBLE_AT, def: 0, at: VT.NEXT_ELIGIBLE_AT) }
+  public static func add(LAST_HTTP_STATUS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_HTTP_STATUS, def: 0, at: VT.LAST_HTTP_STATUS) }
+  public static func add(LAST_SOURCE_ETAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_SOURCE_ETAG, at: VT.LAST_SOURCE_ETAG) }
+  public static func add(LAST_SOURCE_LAST_MODIFIED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_SOURCE_LAST_MODIFIED, at: VT.LAST_SOURCE_LAST_MODIFIED) }
+  public static func add(LAST_BATCH_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_BATCH_ID, at: VT.LAST_BATCH_ID) }
+  public static func add(LAST_RECORD_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_RECORD_COUNT, def: 0, at: VT.LAST_RECORD_COUNT) }
+  public static func add(LAST_INSERTED_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_INSERTED_COUNT, def: 0, at: VT.LAST_INSERTED_COUNT) }
+  public static func add(LAST_DURATION_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_DURATION_MS, def: 0, at: VT.LAST_DURATION_MS) }
+  public static func add(FETCH_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FETCH_COUNT, def: 0, at: VT.FETCH_COUNT) }
+  public static func add(INGEST_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INGEST_COUNT, def: 0, at: VT.INGEST_COUNT) }
+  public static func add(LAST_PUBLICATION_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_PUBLICATION_CID, at: VT.LAST_PUBLICATION_CID) }
+  public static func add(LAST_PNM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_PNM_CID, at: VT.LAST_PNM_CID) }
+  public static func add(FEED_HEAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEED_HEAD, at: VT.FEED_HEAD) }
+  public static func addVectorOf(EMITS_SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMITS_SCHEMAS, at: VT.EMITS_SCHEMAS) }
   public static func endICN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createICN(
     _ fbb: inout FlatBufferBuilder,
@@ -270,7 +376,30 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CREATED_AT: UInt64 = 0,
     UPDATED_AT: UInt64 = 0,
     PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
-    PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset()
+    PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset(),
+    ORIGIN_IDOffset ORIGIN_ID: Offset = Offset(),
+    ORIGIN_NAMEOffset ORIGIN_NAME: Offset = Offset(),
+    DATASET_IDOffset DATASET_ID: Offset = Offset(),
+    PROVIDER_IDOffset PROVIDER_ID: Offset = Offset(),
+    SOURCE_NAMEOffset SOURCE_NAME: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset(),
+    MIN_FETCH_INTERVAL_MS: UInt64 = 0,
+    NEXT_ELIGIBLE_AT: UInt64 = 0,
+    LAST_HTTP_STATUS: UInt16 = 0,
+    LAST_SOURCE_ETAGOffset LAST_SOURCE_ETAG: Offset = Offset(),
+    LAST_SOURCE_LAST_MODIFIEDOffset LAST_SOURCE_LAST_MODIFIED: Offset = Offset(),
+    LAST_BATCH_IDOffset LAST_BATCH_ID: Offset = Offset(),
+    LAST_RECORD_COUNT: UInt64 = 0,
+    LAST_INSERTED_COUNT: UInt64 = 0,
+    LAST_DURATION_MS: UInt64 = 0,
+    FETCH_COUNT: UInt64 = 0,
+    INGEST_COUNT: UInt64 = 0,
+    LAST_PUBLICATION_CIDOffset LAST_PUBLICATION_CID: Offset = Offset(),
+    LAST_PNM_CIDOffset LAST_PNM_CID: Offset = Offset(),
+    FEED_HEADOffset FEED_HEAD: Offset = Offset(),
+    EMITS_SCHEMASVectorOffset EMITS_SCHEMAS: Offset = Offset()
   ) -> Offset {
     let __start = ICN.startICN(&fbb)
     ICN.add(CONNECTOR_ID: CONNECTOR_ID, &fbb)
@@ -302,6 +431,29 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     ICN.add(UPDATED_AT: UPDATED_AT, &fbb)
     ICN.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
     ICN.addVectorOf(PROVIDER_SIGNATURE: PROVIDER_SIGNATURE, &fbb)
+    ICN.add(ORIGIN_ID: ORIGIN_ID, &fbb)
+    ICN.add(ORIGIN_NAME: ORIGIN_NAME, &fbb)
+    ICN.add(DATASET_ID: DATASET_ID, &fbb)
+    ICN.add(PROVIDER_ID: PROVIDER_ID, &fbb)
+    ICN.add(SOURCE_NAME: SOURCE_NAME, &fbb)
+    ICN.add(LICENSE: LICENSE, &fbb)
+    ICN.add(LICENSE_URL: LICENSE_URL, &fbb)
+    ICN.add(CITATION: CITATION, &fbb)
+    ICN.add(MIN_FETCH_INTERVAL_MS: MIN_FETCH_INTERVAL_MS, &fbb)
+    ICN.add(NEXT_ELIGIBLE_AT: NEXT_ELIGIBLE_AT, &fbb)
+    ICN.add(LAST_HTTP_STATUS: LAST_HTTP_STATUS, &fbb)
+    ICN.add(LAST_SOURCE_ETAG: LAST_SOURCE_ETAG, &fbb)
+    ICN.add(LAST_SOURCE_LAST_MODIFIED: LAST_SOURCE_LAST_MODIFIED, &fbb)
+    ICN.add(LAST_BATCH_ID: LAST_BATCH_ID, &fbb)
+    ICN.add(LAST_RECORD_COUNT: LAST_RECORD_COUNT, &fbb)
+    ICN.add(LAST_INSERTED_COUNT: LAST_INSERTED_COUNT, &fbb)
+    ICN.add(LAST_DURATION_MS: LAST_DURATION_MS, &fbb)
+    ICN.add(FETCH_COUNT: FETCH_COUNT, &fbb)
+    ICN.add(INGEST_COUNT: INGEST_COUNT, &fbb)
+    ICN.add(LAST_PUBLICATION_CID: LAST_PUBLICATION_CID, &fbb)
+    ICN.add(LAST_PNM_CID: LAST_PNM_CID, &fbb)
+    ICN.add(FEED_HEAD: FEED_HEAD, &fbb)
+    ICN.addVectorOf(EMITS_SCHEMAS: EMITS_SCHEMAS, &fbb)
     return ICN.endICN(&fbb, start: __start)
   }
 
@@ -336,6 +488,29 @@ public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PROVIDER_SIGNATURE, fieldName: "PROVIDER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ORIGIN_ID, fieldName: "ORIGIN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGIN_NAME, fieldName: "ORIGIN_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_ID, fieldName: "DATASET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_ID, fieldName: "PROVIDER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_NAME, fieldName: "SOURCE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MIN_FETCH_INTERVAL_MS, fieldName: "MIN_FETCH_INTERVAL_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.NEXT_ELIGIBLE_AT, fieldName: "NEXT_ELIGIBLE_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LAST_HTTP_STATUS, fieldName: "LAST_HTTP_STATUS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.LAST_SOURCE_ETAG, fieldName: "LAST_SOURCE_ETAG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_SOURCE_LAST_MODIFIED, fieldName: "LAST_SOURCE_LAST_MODIFIED", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_BATCH_ID, fieldName: "LAST_BATCH_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_RECORD_COUNT, fieldName: "LAST_RECORD_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LAST_INSERTED_COUNT, fieldName: "LAST_INSERTED_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LAST_DURATION_MS, fieldName: "LAST_DURATION_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FETCH_COUNT, fieldName: "FETCH_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.INGEST_COUNT, fieldName: "INGEST_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LAST_PUBLICATION_CID, fieldName: "LAST_PUBLICATION_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_PNM_CID, fieldName: "LAST_PNM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FEED_HEAD, fieldName: "FEED_HEAD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EMITS_SCHEMAS, fieldName: "EMITS_SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

@@ -46,6 +46,34 @@ export declare class SRI implements flatbuffers.IUnpackableObject<SRIT> {
     RESERVED(index: number): number | null;
     reservedLength(): number;
     reservedArray(): Uint8Array | null;
+    /**
+     * Content identifier of the record bytes.
+     */
+    CID(): string | null;
+    CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Byte offset of the record frame within its export or archive stream.
+     */
+    BYTE_OFFSET(): bigint;
+    /**
+     * Byte length of the record frame.
+     */
+    BYTE_LENGTH(): number;
+    /**
+     * Epoch of the record, Unix milliseconds; 0 = none.
+     */
+    EPOCH_MS(): bigint;
+    /**
+     * Entity key of the record within its standard, e.g. a catalogue number.
+     */
+    ENTITY_KEY(): string | null;
+    ENTITY_KEY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PROVIDER_ID(): string | null;
+    PROVIDER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    SOURCE_NAME(): string | null;
+    SOURCE_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    BATCH_ID(): string | null;
+    BATCH_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSRI(builder: flatbuffers.Builder): void;
     static addRecordKey(builder: flatbuffers.Builder, RECORD_KEYOffset: flatbuffers.Offset): void;
     static addSchemaName(builder: flatbuffers.Builder, SCHEMA_NAMEOffset: flatbuffers.Offset): void;
@@ -56,10 +84,18 @@ export declare class SRI implements flatbuffers.IUnpackableObject<SRIT> {
     static addReserved(builder: flatbuffers.Builder, RESERVEDOffset: flatbuffers.Offset): void;
     static createReservedVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startReservedVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCid(builder: flatbuffers.Builder, CIDOffset: flatbuffers.Offset): void;
+    static addByteOffset(builder: flatbuffers.Builder, BYTE_OFFSET: bigint): void;
+    static addByteLength(builder: flatbuffers.Builder, BYTE_LENGTH: number): void;
+    static addEpochMs(builder: flatbuffers.Builder, EPOCH_MS: bigint): void;
+    static addEntityKey(builder: flatbuffers.Builder, ENTITY_KEYOffset: flatbuffers.Offset): void;
+    static addProviderId(builder: flatbuffers.Builder, PROVIDER_IDOffset: flatbuffers.Offset): void;
+    static addSourceName(builder: flatbuffers.Builder, SOURCE_NAMEOffset: flatbuffers.Offset): void;
+    static addBatchId(builder: flatbuffers.Builder, BATCH_IDOffset: flatbuffers.Offset): void;
     static endSRI(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSRIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSRIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSRI(builder: flatbuffers.Builder, RECORD_KEYOffset: flatbuffers.Offset, SCHEMA_NAMEOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, ATTACHED_VIAOffset: flatbuffers.Offset, PAYLOAD_KINDOffset: flatbuffers.Offset, UPDATED_AT_MS: number, RESERVEDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSRI(builder: flatbuffers.Builder, RECORD_KEYOffset: flatbuffers.Offset, SCHEMA_NAMEOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, ATTACHED_VIAOffset: flatbuffers.Offset, PAYLOAD_KINDOffset: flatbuffers.Offset, UPDATED_AT_MS: number, RESERVEDOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, BYTE_OFFSET: bigint, BYTE_LENGTH: number, EPOCH_MS: bigint, ENTITY_KEYOffset: flatbuffers.Offset, PROVIDER_IDOffset: flatbuffers.Offset, SOURCE_NAMEOffset: flatbuffers.Offset, BATCH_IDOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SRIT;
     unpackTo(_o: SRIT): void;
 }
@@ -71,7 +107,15 @@ export declare class SRIT implements flatbuffers.IGeneratedObject {
     PAYLOAD_KIND: string | Uint8Array | null;
     UPDATED_AT_MS: number;
     RESERVED: (number)[];
-    constructor(RECORD_KEY?: string | Uint8Array | null, SCHEMA_NAME?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, ATTACHED_VIA?: string | Uint8Array | null, PAYLOAD_KIND?: string | Uint8Array | null, UPDATED_AT_MS?: number, RESERVED?: (number)[]);
+    CID: string | Uint8Array | null;
+    BYTE_OFFSET: bigint;
+    BYTE_LENGTH: number;
+    EPOCH_MS: bigint;
+    ENTITY_KEY: string | Uint8Array | null;
+    PROVIDER_ID: string | Uint8Array | null;
+    SOURCE_NAME: string | Uint8Array | null;
+    BATCH_ID: string | Uint8Array | null;
+    constructor(RECORD_KEY?: string | Uint8Array | null, SCHEMA_NAME?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, ATTACHED_VIA?: string | Uint8Array | null, PAYLOAD_KIND?: string | Uint8Array | null, UPDATED_AT_MS?: number, RESERVED?: (number)[], CID?: string | Uint8Array | null, BYTE_OFFSET?: bigint, BYTE_LENGTH?: number, EPOCH_MS?: bigint, ENTITY_KEY?: string | Uint8Array | null, PROVIDER_ID?: string | Uint8Array | null, SOURCE_NAME?: string | Uint8Array | null, BATCH_ID?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SRI.d.ts.map

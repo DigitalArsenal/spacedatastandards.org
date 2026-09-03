@@ -30,13 +30,34 @@ class SRI : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
     def RESERVED_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// Content identifier of the record bytes.
+    def CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Byte offset of the record frame within its export or archive stream.
+    def BYTE_OFFSET() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 20, 0)
+    /// Byte length of the record frame.
+    def BYTE_LENGTH() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 22, 0)
+    /// Epoch of the record, Unix milliseconds; 0 = none.
+    def EPOCH_MS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 24, 0)
+    /// Entity key of the record within its standard, e.g. a catalogue number.
+    def ENTITY_KEY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    def PROVIDER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+    def SOURCE_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    def BATCH_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
 
 def GetRootAsSRI(buf:string): return SRI { buf, flatbuffers.indirect(buf, 0) }
 
 struct SRIBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(15)
         return this
     def add_RECORD_KEY(RECORD_KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORD_KEY)
@@ -58,6 +79,30 @@ struct SRIBuilder:
         return this
     def add_RESERVED(RESERVED:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, RESERVED)
+        return this
+    def add_CID(CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, CID)
+        return this
+    def add_BYTE_OFFSET(BYTE_OFFSET:int):
+        b_.PrependUint64Slot(8, BYTE_OFFSET, 0)
+        return this
+    def add_BYTE_LENGTH(BYTE_LENGTH:int):
+        b_.PrependUint32Slot(9, BYTE_LENGTH, 0)
+        return this
+    def add_EPOCH_MS(EPOCH_MS:int):
+        b_.PrependUint64Slot(10, EPOCH_MS, 0)
+        return this
+    def add_ENTITY_KEY(ENTITY_KEY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, ENTITY_KEY)
+        return this
+    def add_PROVIDER_ID(PROVIDER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, PROVIDER_ID)
+        return this
+    def add_SOURCE_NAME(SOURCE_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, SOURCE_NAME)
+        return this
+    def add_BATCH_ID(BATCH_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, BATCH_ID)
         return this
     def end():
         return b_.EndObject()

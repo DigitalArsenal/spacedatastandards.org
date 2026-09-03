@@ -36,19 +36,67 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
   /// List Of File Paths
   public string files(int j) { int o = __p.__offset(8); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int filesLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Human-readable name of the standard.
+  public string NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// One-paragraph description of the standard.
+  public string DESCRIPTION { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(12); }
+  /// Four-character file identifier, e.g. "$OMM".
+  public string FILE_IDENTIFIER { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFILE_IDENTIFIERBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetFILE_IDENTIFIERBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetFILE_IDENTIFIERArray() { return __p.__vector_as_array<byte>(14); }
+  /// Hash of the standard's schema text.
+  public string SCHEMA_HASH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSCHEMA_HASHBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetSCHEMA_HASHBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetSCHEMA_HASHArray() { return __p.__vector_as_array<byte>(16); }
+  /// True when the reporting node routes the standard through its store.
+  public bool ROUTED { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Position of the standard in the record union; append-only forever.
+  public ushort RECORD_TYPE_ORDINAL { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<SCHEMA_STANDARD> CreateSCHEMA_STANDARD(FlatBufferBuilder builder,
       StringOffset keyOffset = default(StringOffset),
       StringOffset idlOffset = default(StringOffset),
-      VectorOffset filesOffset = default(VectorOffset)) {
-    builder.StartTable(3);
+      VectorOffset filesOffset = default(VectorOffset),
+      StringOffset NAMEOffset = default(StringOffset),
+      StringOffset DESCRIPTIONOffset = default(StringOffset),
+      StringOffset FILE_IDENTIFIEROffset = default(StringOffset),
+      StringOffset SCHEMA_HASHOffset = default(StringOffset),
+      bool ROUTED = false,
+      ushort RECORD_TYPE_ORDINAL = 0) {
+    builder.StartTable(9);
+    SCHEMA_STANDARD.AddSCHEMA_HASH(builder, SCHEMA_HASHOffset);
+    SCHEMA_STANDARD.AddFILE_IDENTIFIER(builder, FILE_IDENTIFIEROffset);
+    SCHEMA_STANDARD.AddDESCRIPTION(builder, DESCRIPTIONOffset);
+    SCHEMA_STANDARD.AddNAME(builder, NAMEOffset);
     SCHEMA_STANDARD.Addfiles(builder, filesOffset);
     SCHEMA_STANDARD.Addidl(builder, idlOffset);
     SCHEMA_STANDARD.Addkey(builder, keyOffset);
+    SCHEMA_STANDARD.AddRECORD_TYPE_ORDINAL(builder, RECORD_TYPE_ORDINAL);
+    SCHEMA_STANDARD.AddROUTED(builder, ROUTED);
     return SCHEMA_STANDARD.EndSCHEMA_STANDARD(builder);
   }
 
-  public static void StartSCHEMA_STANDARD(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartSCHEMA_STANDARD(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void Addkey(FlatBufferBuilder builder, StringOffset keyOffset) { builder.AddOffset(0, keyOffset.Value, 0); }
   public static void Addidl(FlatBufferBuilder builder, StringOffset idlOffset) { builder.AddOffset(1, idlOffset.Value, 0); }
   public static void Addfiles(FlatBufferBuilder builder, VectorOffset filesOffset) { builder.AddOffset(2, filesOffset.Value, 0); }
@@ -57,6 +105,12 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
   public static VectorOffset CreatefilesVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatefilesVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartfilesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(3, NAMEOffset.Value, 0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(4, DESCRIPTIONOffset.Value, 0); }
+  public static void AddFILE_IDENTIFIER(FlatBufferBuilder builder, StringOffset FILE_IDENTIFIEROffset) { builder.AddOffset(5, FILE_IDENTIFIEROffset.Value, 0); }
+  public static void AddSCHEMA_HASH(FlatBufferBuilder builder, StringOffset SCHEMA_HASHOffset) { builder.AddOffset(6, SCHEMA_HASHOffset.Value, 0); }
+  public static void AddROUTED(FlatBufferBuilder builder, bool ROUTED) { builder.AddBool(7, ROUTED, false); }
+  public static void AddRECORD_TYPE_ORDINAL(FlatBufferBuilder builder, ushort RECORD_TYPE_ORDINAL) { builder.AddUshort(8, RECORD_TYPE_ORDINAL, 0); }
   public static Offset<SCHEMA_STANDARD> EndSCHEMA_STANDARD(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCHEMA_STANDARD>(o);
@@ -71,6 +125,12 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
     _o.idl = this.idl;
     _o.files = new List<string>();
     for (var _j = 0; _j < this.filesLength; ++_j) {_o.files.Add(this.files(_j));}
+    _o.NAME = this.NAME;
+    _o.DESCRIPTION = this.DESCRIPTION;
+    _o.FILE_IDENTIFIER = this.FILE_IDENTIFIER;
+    _o.SCHEMA_HASH = this.SCHEMA_HASH;
+    _o.ROUTED = this.ROUTED;
+    _o.RECORD_TYPE_ORDINAL = this.RECORD_TYPE_ORDINAL;
   }
   public static Offset<SCHEMA_STANDARD> Pack(FlatBufferBuilder builder, SCHEMA_STANDARDT _o) {
     if (_o == null) return default(Offset<SCHEMA_STANDARD>);
@@ -82,11 +142,21 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
       for (var _j = 0; _j < __files.Length; ++_j) { __files[_j] = builder.CreateString(_o.files[_j]); }
       _files = CreatefilesVector(builder, __files);
     }
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
+    var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
+    var _FILE_IDENTIFIER = _o.FILE_IDENTIFIER == null ? default(StringOffset) : builder.CreateString(_o.FILE_IDENTIFIER);
+    var _SCHEMA_HASH = _o.SCHEMA_HASH == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_HASH);
     return CreateSCHEMA_STANDARD(
       builder,
       _key,
       _idl,
-      _files);
+      _files,
+      _NAME,
+      _DESCRIPTION,
+      _FILE_IDENTIFIER,
+      _SCHEMA_HASH,
+      _o.ROUTED,
+      _o.RECORD_TYPE_ORDINAL);
   }
 }
 
@@ -95,11 +165,23 @@ public class SCHEMA_STANDARDT
   public string key { get; set; }
   public string idl { get; set; }
   public List<string> files { get; set; }
+  public string NAME { get; set; }
+  public string DESCRIPTION { get; set; }
+  public string FILE_IDENTIFIER { get; set; }
+  public string SCHEMA_HASH { get; set; }
+  public bool ROUTED { get; set; }
+  public ushort RECORD_TYPE_ORDINAL { get; set; }
 
   public SCHEMA_STANDARDT() {
     this.key = null;
     this.idl = null;
     this.files = null;
+    this.NAME = null;
+    this.DESCRIPTION = null;
+    this.FILE_IDENTIFIER = null;
+    this.SCHEMA_HASH = null;
+    this.ROUTED = false;
+    this.RECORD_TYPE_ORDINAL = 0;
   }
 }
 
@@ -112,6 +194,12 @@ static public class SCHEMA_STANDARDVerify
       && verifier.VerifyString(tablePos, 4 /*key*/, false)
       && verifier.VerifyString(tablePos, 6 /*idl*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 8 /*files*/, false)
+      && verifier.VerifyString(tablePos, 10 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 12 /*DESCRIPTION*/, false)
+      && verifier.VerifyString(tablePos, 14 /*FILE_IDENTIFIER*/, false)
+      && verifier.VerifyString(tablePos, 16 /*SCHEMA_HASH*/, false)
+      && verifier.VerifyField(tablePos, 18 /*ROUTED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*RECORD_TYPE_ORDINAL*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

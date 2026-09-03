@@ -1,5 +1,5 @@
-// Hash: 7c96d1db32ebb5d11a1c8ed712ba6ff0fd54745cccc66e284555646973ab2536
-// Version: 1.206.0
+// Hash: 7c4a9fa2d60d9807512aa0a1e76a30bb5522439c8c904b54ba10fc1d772faa59
+// Version: 1.206.1
 // -----------------------------------END_HEADER
 /// Ingest Connector.
 ///
@@ -118,6 +118,53 @@ table ICN {
   PROVIDER_PEER_ID: string;
   /// Provider signature over the connector record.
   PROVIDER_SIGNATURE: [ubyte];
+
+  /// Upstream publisher the connector retrieves records from, as a host name
+  /// or stable identifier.
+  ORIGIN_ID: string;
+  /// Display name of the upstream publisher.
+  ORIGIN_NAME: string;
+  /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+  DATASET_ID: string;
+  /// Provider identifier the lane's records are stored under.
+  PROVIDER_ID: string;
+  /// Source name the lane's records are stored under.
+  SOURCE_NAME: string;
+  /// Licence under which the upstream publisher offers the records.
+  LICENSE: string;
+  LICENSE_URL: string;
+  /// Citation the upstream publisher asks for.
+  CITATION: string;
+  /// Minimum interval between fetches of the same dataset, milliseconds.
+  MIN_FETCH_INTERVAL_MS: uint64;
+  /// Unix milliseconds when the next fetch is eligible.
+  NEXT_ELIGIBLE_AT: uint64;
+  /// HTTP status of the last fetch.
+  LAST_HTTP_STATUS: uint16;
+  /// Entity tag returned by the last fetch.
+  LAST_SOURCE_ETAG: string;
+  /// Last-Modified value returned by the last fetch.
+  LAST_SOURCE_LAST_MODIFIED: string;
+  /// Batch identifier of the last ingest.
+  LAST_BATCH_ID: string;
+  /// Records parsed by the last ingest.
+  LAST_RECORD_COUNT: uint64;
+  /// Records newly inserted by the last ingest.
+  LAST_INSERTED_COUNT: uint64;
+  /// Duration of the last fetch and ingest, milliseconds.
+  LAST_DURATION_MS: uint64;
+  /// Fetches attempted over the connector's lifetime.
+  FETCH_COUNT: uint64;
+  /// Ingests completed over the connector's lifetime.
+  INGEST_COUNT: uint64;
+  /// Content identifier of the last publication manifest emitted.
+  LAST_PUBLICATION_CID: string;
+  /// Content identifier of the last publish notification emitted.
+  LAST_PNM_CID: string;
+  /// Feed head the connector last advanced to.
+  FEED_HEAD: string;
+  /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+  EMITS_SCHEMAS: [string];
 }
 
 root_type ICN;

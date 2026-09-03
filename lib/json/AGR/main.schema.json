@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "agrKind" : {
+      "type" : "string",
+      "enum": ["Histogram", "Category", "Series", "Scatter", "Pivot"]
+    },
+    "AGRBin" : {
+      "type" : "object",
+      "description" : "One histogram bin over [LOW, HIGH).",
+      "properties" : {
+        "LOW" : {
+                "type" : "number"
+              },
+        "HIGH" : {
+                "type" : "number"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              },
+        "MIN" : {
+                "type" : "number"
+              },
+        "MAX" : {
+                "type" : "number"
+              },
+        "MEAN" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRCategory" : {
+      "type" : "object",
+      "description" : "One category tally.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRSeries" : {
+      "type" : "object",
+      "description" : "One named series with parallel X and Y vectors.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "Y" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRPivotCell" : {
+      "type" : "object",
+      "description" : "One pivot cell.",
+      "properties" : {
+        "ROW_KEY" : {
+                "type" : "string"
+              },
+        "COL_KEY" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGR" : {
+      "type" : "object",
+      "description" : "Aggregation Result - one summary over one standard's records.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/agrKind"
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Standard code of the records aggregated, e.g. \"OMM\"."
+              },
+        "SQL" : {
+                "type" : "string",
+                "description" : "SQL selection the aggregate was computed over, when any."
+              },
+        "X_FIELD" : {
+                "type" : "string",
+                "description" : "Field on the X axis; may be a derived field the serving node computes."
+              },
+        "Y_FIELDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Fields on the Y axis, one series each."
+              },
+        "X_IS_TIME" : {
+                "type" : "boolean",
+                "description" : "True when X values are Unix milliseconds."
+              },
+        "X_UNIT" : {
+                "type" : "string",
+                "description" : "Unit of X when the standard declares one."
+              },
+        "BINS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRBin"}
+              },
+        "CATEGORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRCategory"}
+              },
+        "SERIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRSeries"}
+              },
+        "PIVOT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRPivotCell"}
+              },
+        "ROW_KEYS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Row keys of a pivot in display order."
+              },
+        "COL_KEYS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Column keys of a pivot in display order."
+              },
+        "SCANNED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records scanned to compute the aggregate."
+              },
+        "MATCHED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records that matched the selection."
+              },
+        "STORED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records the serving node holds for the standard."
+              },
+        "PARTIAL" : {
+                "type" : "boolean",
+                "description" : "True when a bounded scan returned before covering every stored record."
+              },
+        "TRUNCATED" : {
+                "type" : "boolean",
+                "description" : "True when a category or pivot was cut to its top entries."
+              },
+        "ELAPSED_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Milliseconds the serving node spent computing the aggregate."
+              },
+        "AS_OF_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the serving numbers were last true."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AGR"
+}

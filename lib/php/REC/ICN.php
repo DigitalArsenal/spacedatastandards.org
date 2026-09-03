@@ -308,22 +308,220 @@ class ICN extends Table
         return $this->__vector_as_bytes(60);
     }
 
+    /// Upstream publisher the connector retrieves records from, as a host name
+    /// or stable identifier.
+    public function getORIGIN_ID()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Display name of the upstream publisher.
+    public function getORIGIN_NAME()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+    public function getDATASET_ID()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider identifier the lane's records are stored under.
+    public function getPROVIDER_ID()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Source name the lane's records are stored under.
+    public function getSOURCE_NAME()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Licence under which the upstream publisher offers the records.
+    public function getLICENSE()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getLICENSE_URL()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Citation the upstream publisher asks for.
+    public function getCITATION()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Minimum interval between fetches of the same dataset, milliseconds.
+    /**
+     * @return ulong
+     */
+    public function getMIN_FETCH_INTERVAL_MS()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix milliseconds when the next fetch is eligible.
+    /**
+     * @return ulong
+     */
+    public function getNEXT_ELIGIBLE_AT()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// HTTP status of the last fetch.
+    /**
+     * @return ushort
+     */
+    public function getLAST_HTTP_STATUS()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Entity tag returned by the last fetch.
+    public function getLAST_SOURCE_ETAG()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Last-Modified value returned by the last fetch.
+    public function getLAST_SOURCE_LAST_MODIFIED()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Batch identifier of the last ingest.
+    public function getLAST_BATCH_ID()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Records parsed by the last ingest.
+    /**
+     * @return ulong
+     */
+    public function getLAST_RECORD_COUNT()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Records newly inserted by the last ingest.
+    /**
+     * @return ulong
+     */
+    public function getLAST_INSERTED_COUNT()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Duration of the last fetch and ingest, milliseconds.
+    /**
+     * @return ulong
+     */
+    public function getLAST_DURATION_MS()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Fetches attempted over the connector's lifetime.
+    /**
+     * @return ulong
+     */
+    public function getFETCH_COUNT()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Ingests completed over the connector's lifetime.
+    /**
+     * @return ulong
+     */
+    public function getINGEST_COUNT()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Content identifier of the last publication manifest emitted.
+    public function getLAST_PUBLICATION_CID()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content identifier of the last publish notification emitted.
+    public function getLAST_PNM_CID()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Feed head the connector last advanced to.
+    public function getFEED_HEAD()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getEMITS_SCHEMAS($j)
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEMITS_SCHEMASLength()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startICN(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(29);
+        $builder->StartObject(52);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ICN
      */
-    public static function createICN(FlatBufferBuilder $builder, $CONNECTOR_ID, $KIND, $TARGET_SCHEMA, $STATUS, $STATUS_MESSAGE, $ENDPOINT_URL, $HTTP_METHOD, $AUTH_KIND, $AUTH_HEADER_NAME, $CREDENTIAL_REFERENCE, $POLL_INTERVAL_MS, $DIRECTORY_PATH, $FILE_PATTERN, $SCAN_INTERVAL_MS, $SETTLE_DELAY_MS, $POST_INGEST_ACTION, $UPLOAD_SESSION_ID, $UPLOAD_FILE_COUNT, $UPLOAD_TOTAL_BYTES, $UPLOAD_CONTENT_HASH, $DETECTED_FORMAT, $SAMPLE_RECORD_COUNT, $LAST_INGEST_AT, $LAST_ERROR_AT, $LAST_ERROR, $CREATED_AT, $UPDATED_AT, $PROVIDER_PEER_ID, $PROVIDER_SIGNATURE)
+    public static function createICN(FlatBufferBuilder $builder, $CONNECTOR_ID, $KIND, $TARGET_SCHEMA, $STATUS, $STATUS_MESSAGE, $ENDPOINT_URL, $HTTP_METHOD, $AUTH_KIND, $AUTH_HEADER_NAME, $CREDENTIAL_REFERENCE, $POLL_INTERVAL_MS, $DIRECTORY_PATH, $FILE_PATTERN, $SCAN_INTERVAL_MS, $SETTLE_DELAY_MS, $POST_INGEST_ACTION, $UPLOAD_SESSION_ID, $UPLOAD_FILE_COUNT, $UPLOAD_TOTAL_BYTES, $UPLOAD_CONTENT_HASH, $DETECTED_FORMAT, $SAMPLE_RECORD_COUNT, $LAST_INGEST_AT, $LAST_ERROR_AT, $LAST_ERROR, $CREATED_AT, $UPDATED_AT, $PROVIDER_PEER_ID, $PROVIDER_SIGNATURE, $ORIGIN_ID, $ORIGIN_NAME, $DATASET_ID, $PROVIDER_ID, $SOURCE_NAME, $LICENSE, $LICENSE_URL, $CITATION, $MIN_FETCH_INTERVAL_MS, $NEXT_ELIGIBLE_AT, $LAST_HTTP_STATUS, $LAST_SOURCE_ETAG, $LAST_SOURCE_LAST_MODIFIED, $LAST_BATCH_ID, $LAST_RECORD_COUNT, $LAST_INSERTED_COUNT, $LAST_DURATION_MS, $FETCH_COUNT, $INGEST_COUNT, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $FEED_HEAD, $EMITS_SCHEMAS)
     {
-        $builder->startObject(29);
+        $builder->startObject(52);
         self::addCONNECTOR_ID($builder, $CONNECTOR_ID);
         self::addKIND($builder, $KIND);
         self::addTARGET_SCHEMA($builder, $TARGET_SCHEMA);
@@ -353,6 +551,29 @@ class ICN extends Table
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_SIGNATURE($builder, $PROVIDER_SIGNATURE);
+        self::addORIGIN_ID($builder, $ORIGIN_ID);
+        self::addORIGIN_NAME($builder, $ORIGIN_NAME);
+        self::addDATASET_ID($builder, $DATASET_ID);
+        self::addPROVIDER_ID($builder, $PROVIDER_ID);
+        self::addSOURCE_NAME($builder, $SOURCE_NAME);
+        self::addLICENSE($builder, $LICENSE);
+        self::addLICENSE_URL($builder, $LICENSE_URL);
+        self::addCITATION($builder, $CITATION);
+        self::addMIN_FETCH_INTERVAL_MS($builder, $MIN_FETCH_INTERVAL_MS);
+        self::addNEXT_ELIGIBLE_AT($builder, $NEXT_ELIGIBLE_AT);
+        self::addLAST_HTTP_STATUS($builder, $LAST_HTTP_STATUS);
+        self::addLAST_SOURCE_ETAG($builder, $LAST_SOURCE_ETAG);
+        self::addLAST_SOURCE_LAST_MODIFIED($builder, $LAST_SOURCE_LAST_MODIFIED);
+        self::addLAST_BATCH_ID($builder, $LAST_BATCH_ID);
+        self::addLAST_RECORD_COUNT($builder, $LAST_RECORD_COUNT);
+        self::addLAST_INSERTED_COUNT($builder, $LAST_INSERTED_COUNT);
+        self::addLAST_DURATION_MS($builder, $LAST_DURATION_MS);
+        self::addFETCH_COUNT($builder, $FETCH_COUNT);
+        self::addINGEST_COUNT($builder, $INGEST_COUNT);
+        self::addLAST_PUBLICATION_CID($builder, $LAST_PUBLICATION_CID);
+        self::addLAST_PNM_CID($builder, $LAST_PNM_CID);
+        self::addFEED_HEAD($builder, $FEED_HEAD);
+        self::addEMITS_SCHEMAS($builder, $EMITS_SCHEMAS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // CONNECTOR_ID
         return $o;
@@ -670,6 +891,260 @@ class ICN extends Table
     public static function startPROVIDER_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGIN_ID(FlatBufferBuilder $builder, $ORIGIN_ID)
+    {
+        $builder->addOffsetX(29, $ORIGIN_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGIN_NAME(FlatBufferBuilder $builder, $ORIGIN_NAME)
+    {
+        $builder->addOffsetX(30, $ORIGIN_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDATASET_ID(FlatBufferBuilder $builder, $DATASET_ID)
+    {
+        $builder->addOffsetX(31, $DATASET_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_ID(FlatBufferBuilder $builder, $PROVIDER_ID)
+    {
+        $builder->addOffsetX(32, $PROVIDER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_NAME(FlatBufferBuilder $builder, $SOURCE_NAME)
+    {
+        $builder->addOffsetX(33, $SOURCE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLICENSE(FlatBufferBuilder $builder, $LICENSE)
+    {
+        $builder->addOffsetX(34, $LICENSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLICENSE_URL(FlatBufferBuilder $builder, $LICENSE_URL)
+    {
+        $builder->addOffsetX(35, $LICENSE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCITATION(FlatBufferBuilder $builder, $CITATION)
+    {
+        $builder->addOffsetX(36, $CITATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addMIN_FETCH_INTERVAL_MS(FlatBufferBuilder $builder, $MIN_FETCH_INTERVAL_MS)
+    {
+        $builder->addUlongX(37, $MIN_FETCH_INTERVAL_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addNEXT_ELIGIBLE_AT(FlatBufferBuilder $builder, $NEXT_ELIGIBLE_AT)
+    {
+        $builder->addUlongX(38, $NEXT_ELIGIBLE_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addLAST_HTTP_STATUS(FlatBufferBuilder $builder, $LAST_HTTP_STATUS)
+    {
+        $builder->addUshortX(39, $LAST_HTTP_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_SOURCE_ETAG(FlatBufferBuilder $builder, $LAST_SOURCE_ETAG)
+    {
+        $builder->addOffsetX(40, $LAST_SOURCE_ETAG, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_SOURCE_LAST_MODIFIED(FlatBufferBuilder $builder, $LAST_SOURCE_LAST_MODIFIED)
+    {
+        $builder->addOffsetX(41, $LAST_SOURCE_LAST_MODIFIED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_BATCH_ID(FlatBufferBuilder $builder, $LAST_BATCH_ID)
+    {
+        $builder->addOffsetX(42, $LAST_BATCH_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addLAST_RECORD_COUNT(FlatBufferBuilder $builder, $LAST_RECORD_COUNT)
+    {
+        $builder->addUlongX(43, $LAST_RECORD_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addLAST_INSERTED_COUNT(FlatBufferBuilder $builder, $LAST_INSERTED_COUNT)
+    {
+        $builder->addUlongX(44, $LAST_INSERTED_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addLAST_DURATION_MS(FlatBufferBuilder $builder, $LAST_DURATION_MS)
+    {
+        $builder->addUlongX(45, $LAST_DURATION_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addFETCH_COUNT(FlatBufferBuilder $builder, $FETCH_COUNT)
+    {
+        $builder->addUlongX(46, $FETCH_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addINGEST_COUNT(FlatBufferBuilder $builder, $INGEST_COUNT)
+    {
+        $builder->addUlongX(47, $INGEST_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_PUBLICATION_CID(FlatBufferBuilder $builder, $LAST_PUBLICATION_CID)
+    {
+        $builder->addOffsetX(48, $LAST_PUBLICATION_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_PNM_CID(FlatBufferBuilder $builder, $LAST_PNM_CID)
+    {
+        $builder->addOffsetX(49, $LAST_PNM_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFEED_HEAD(FlatBufferBuilder $builder, $FEED_HEAD)
+    {
+        $builder->addOffsetX(50, $FEED_HEAD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEMITS_SCHEMAS(FlatBufferBuilder $builder, $EMITS_SCHEMAS)
+    {
+        $builder->addOffsetX(51, $EMITS_SCHEMAS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEMITS_SCHEMASVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEMITS_SCHEMASVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

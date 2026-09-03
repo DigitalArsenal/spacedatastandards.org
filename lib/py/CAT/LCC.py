@@ -36,8 +36,48 @@ class LCC(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Display name of the owner or source the code stands for.
+    # LCC
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Longer description of the owner or source.
+    # LCC
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True while the code is in current use by the publishing catalogue.
+    # LCC
+    def ACTIVE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # URL of the reference table the row was retrieved from.
+    # LCC
+    def SOURCE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ISO 8601 UTC time the reference table was retrieved.
+    # LCC
+    def RETRIEVED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def LCCStart(builder):
-    builder.StartObject(1)
+    builder.StartObject(6)
 
 def Start(builder):
     LCCStart(builder)
@@ -47,6 +87,36 @@ def LCCAddOWNER(builder, OWNER):
 
 def AddOWNER(builder, OWNER):
     LCCAddOWNER(builder, OWNER)
+
+def LCCAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    LCCAddNAME(builder, NAME)
+
+def LCCAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    LCCAddDESCRIPTION(builder, DESCRIPTION)
+
+def LCCAddACTIVE(builder, ACTIVE):
+    builder.PrependBoolSlot(3, ACTIVE, 0)
+
+def AddACTIVE(builder, ACTIVE):
+    LCCAddACTIVE(builder, ACTIVE)
+
+def LCCAddSOURCE_URL(builder, SOURCE_URL):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_URL), 0)
+
+def AddSOURCE_URL(builder, SOURCE_URL):
+    LCCAddSOURCE_URL(builder, SOURCE_URL)
+
+def LCCAddRETRIEVED_AT(builder, RETRIEVED_AT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(RETRIEVED_AT), 0)
+
+def AddRETRIEVED_AT(builder, RETRIEVED_AT):
+    LCCAddRETRIEVED_AT(builder, RETRIEVED_AT)
 
 def LCCEnd(builder):
     return builder.EndObject()
@@ -61,8 +131,18 @@ class LCCT(object):
     def __init__(
         self,
         OWNER = 0,
+        NAME = None,
+        DESCRIPTION = None,
+        ACTIVE = False,
+        SOURCE_URL = None,
+        RETRIEVED_AT = None,
     ):
         self.OWNER = OWNER  # type: int
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.ACTIVE = ACTIVE  # type: bool
+        self.SOURCE_URL = SOURCE_URL  # type: Optional[str]
+        self.RETRIEVED_AT = RETRIEVED_AT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -86,10 +166,32 @@ class LCCT(object):
         if LCC is None:
             return
         self.OWNER = LCC.OWNER()
+        self.NAME = LCC.NAME()
+        self.DESCRIPTION = LCC.DESCRIPTION()
+        self.ACTIVE = LCC.ACTIVE()
+        self.SOURCE_URL = LCC.SOURCE_URL()
+        self.RETRIEVED_AT = LCC.RETRIEVED_AT()
 
     # LCCT
     def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.SOURCE_URL is not None:
+            SOURCE_URL = builder.CreateString(self.SOURCE_URL)
+        if self.RETRIEVED_AT is not None:
+            RETRIEVED_AT = builder.CreateString(self.RETRIEVED_AT)
         LCCStart(builder)
         LCCAddOWNER(builder, self.OWNER)
+        if self.NAME is not None:
+            LCCAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            LCCAddDESCRIPTION(builder, DESCRIPTION)
+        LCCAddACTIVE(builder, self.ACTIVE)
+        if self.SOURCE_URL is not None:
+            LCCAddSOURCE_URL(builder, SOURCE_URL)
+        if self.RETRIEVED_AT is not None:
+            LCCAddRETRIEVED_AT(builder, RETRIEVED_AT)
         LCC = LCCEnd(builder)
         return LCC

@@ -337,6 +337,10 @@ impl<'a> EOP<'a> {
   pub const VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP: ::flatbuffers::VOffsetT = 50;
   pub const VT_DATA_SET_EPOCH: ::flatbuffers::VOffsetT = 52;
   pub const VT_DATA_SET_CID: ::flatbuffers::VOffsetT = 54;
+  pub const VT_NUTATION_DPSI_RADIANS: ::flatbuffers::VOffsetT = 56;
+  pub const VT_NUTATION_DEPS_RADIANS: ::flatbuffers::VOffsetT = 58;
+  pub const VT_NUTATION_DPSI_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 60;
+  pub const VT_NUTATION_DEPS_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 62;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -348,6 +352,10 @@ impl<'a> EOP<'a> {
     args: &'args EOPArgs<'args>
   ) -> ::flatbuffers::WIPOffset<EOP<'bldr>> {
     let mut builder = EOPBuilder::new(_fbb);
+    builder.add_NUTATION_DEPS_UNCERTAINTY_RADIANS(args.NUTATION_DEPS_UNCERTAINTY_RADIANS);
+    builder.add_NUTATION_DPSI_UNCERTAINTY_RADIANS(args.NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    builder.add_NUTATION_DEPS_RADIANS(args.NUTATION_DEPS_RADIANS);
+    builder.add_NUTATION_DPSI_RADIANS(args.NUTATION_DPSI_RADIANS);
     builder.add_LENGTH_OF_DAY_CORRECTION_SECONDS_HP(args.LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
     builder.add_UT1_MINUS_UTC_SECONDS_HP(args.UT1_MINUS_UTC_SECONDS_HP);
     builder.add_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(args.Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
@@ -410,6 +418,10 @@ impl<'a> EOP<'a> {
     let DATA_SET_CID = self.DATA_SET_CID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let NUTATION_DPSI_RADIANS = self.NUTATION_DPSI_RADIANS();
+    let NUTATION_DEPS_RADIANS = self.NUTATION_DEPS_RADIANS();
+    let NUTATION_DPSI_UNCERTAINTY_RADIANS = self.NUTATION_DPSI_UNCERTAINTY_RADIANS();
+    let NUTATION_DEPS_UNCERTAINTY_RADIANS = self.NUTATION_DEPS_UNCERTAINTY_RADIANS();
     EOPT {
       DATE,
       MJD,
@@ -437,6 +449,10 @@ impl<'a> EOP<'a> {
       LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
       DATA_SET_EPOCH,
       DATA_SET_CID,
+      NUTATION_DPSI_RADIANS,
+      NUTATION_DEPS_RADIANS,
+      NUTATION_DPSI_UNCERTAINTY_RADIANS,
+      NUTATION_DEPS_UNCERTAINTY_RADIANS,
     }
   }
 
@@ -663,6 +679,41 @@ impl<'a> EOP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOP::VT_DATA_SET_CID, None)}
   }
+  /// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  /// radians, as published beside the CIP offsets by combined rapid-service
+  /// series.
+  #[inline]
+  pub fn NUTATION_DPSI_RADIANS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_NUTATION_DPSI_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  /// radians.
+  #[inline]
+  pub fn NUTATION_DEPS_RADIANS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_NUTATION_DEPS_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  #[inline]
+  pub fn NUTATION_DPSI_UNCERTAINTY_RADIANS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  #[inline]
+  pub fn NUTATION_DEPS_UNCERTAINTY_RADIANS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(EOP::VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EOP<'_> {
@@ -697,6 +748,10 @@ impl ::flatbuffers::Verifiable for EOP<'_> {
      .visit_field::<f64>("LENGTH_OF_DAY_CORRECTION_SECONDS_HP", Self::VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_SET_EPOCH", Self::VT_DATA_SET_EPOCH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_SET_CID", Self::VT_DATA_SET_CID, false)?
+     .visit_field::<f64>("NUTATION_DPSI_RADIANS", Self::VT_NUTATION_DPSI_RADIANS, false)?
+     .visit_field::<f64>("NUTATION_DEPS_RADIANS", Self::VT_NUTATION_DEPS_RADIANS, false)?
+     .visit_field::<f64>("NUTATION_DPSI_UNCERTAINTY_RADIANS", Self::VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, false)?
+     .visit_field::<f64>("NUTATION_DEPS_UNCERTAINTY_RADIANS", Self::VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, false)?
      .finish();
     Ok(())
   }
@@ -728,6 +783,10 @@ pub struct EOPArgs<'a> {
     pub LENGTH_OF_DAY_CORRECTION_SECONDS_HP: f64,
     pub DATA_SET_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DATA_SET_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NUTATION_DPSI_RADIANS: f64,
+    pub NUTATION_DEPS_RADIANS: f64,
+    pub NUTATION_DPSI_UNCERTAINTY_RADIANS: f64,
+    pub NUTATION_DEPS_UNCERTAINTY_RADIANS: f64,
 }
 impl<'a> Default for EOPArgs<'a> {
   #[inline]
@@ -759,6 +818,10 @@ impl<'a> Default for EOPArgs<'a> {
       LENGTH_OF_DAY_CORRECTION_SECONDS_HP: 0.0,
       DATA_SET_EPOCH: None,
       DATA_SET_CID: None,
+      NUTATION_DPSI_RADIANS: 0.0,
+      NUTATION_DEPS_RADIANS: 0.0,
+      NUTATION_DPSI_UNCERTAINTY_RADIANS: 0.0,
+      NUTATION_DEPS_UNCERTAINTY_RADIANS: 0.0,
     }
   }
 }
@@ -873,6 +936,22 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EOPBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOP::VT_DATA_SET_CID, DATA_SET_CID);
   }
   #[inline]
+  pub fn add_NUTATION_DPSI_RADIANS(&mut self, NUTATION_DPSI_RADIANS: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_NUTATION_DPSI_RADIANS, NUTATION_DPSI_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_DEPS_RADIANS(&mut self, NUTATION_DEPS_RADIANS: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_NUTATION_DEPS_RADIANS, NUTATION_DEPS_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_DPSI_UNCERTAINTY_RADIANS(&mut self, NUTATION_DPSI_UNCERTAINTY_RADIANS: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_DEPS_UNCERTAINTY_RADIANS(&mut self, NUTATION_DEPS_UNCERTAINTY_RADIANS: f64) {
+    self.fbb_.push_slot::<f64>(EOP::VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EOPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOPBuilder {
@@ -916,6 +995,10 @@ impl ::core::fmt::Debug for EOP<'_> {
       ds.field("LENGTH_OF_DAY_CORRECTION_SECONDS_HP", &self.LENGTH_OF_DAY_CORRECTION_SECONDS_HP());
       ds.field("DATA_SET_EPOCH", &self.DATA_SET_EPOCH());
       ds.field("DATA_SET_CID", &self.DATA_SET_CID());
+      ds.field("NUTATION_DPSI_RADIANS", &self.NUTATION_DPSI_RADIANS());
+      ds.field("NUTATION_DEPS_RADIANS", &self.NUTATION_DEPS_RADIANS());
+      ds.field("NUTATION_DPSI_UNCERTAINTY_RADIANS", &self.NUTATION_DPSI_UNCERTAINTY_RADIANS());
+      ds.field("NUTATION_DEPS_UNCERTAINTY_RADIANS", &self.NUTATION_DEPS_UNCERTAINTY_RADIANS());
       ds.finish()
   }
 }
@@ -948,6 +1031,10 @@ pub struct EOPT {
   pub LENGTH_OF_DAY_CORRECTION_SECONDS_HP: f64,
   pub DATA_SET_EPOCH: Option<alloc::string::String>,
   pub DATA_SET_CID: Option<alloc::string::String>,
+  pub NUTATION_DPSI_RADIANS: f64,
+  pub NUTATION_DEPS_RADIANS: f64,
+  pub NUTATION_DPSI_UNCERTAINTY_RADIANS: f64,
+  pub NUTATION_DEPS_UNCERTAINTY_RADIANS: f64,
 }
 impl Default for EOPT {
   fn default() -> Self {
@@ -978,6 +1065,10 @@ impl Default for EOPT {
       LENGTH_OF_DAY_CORRECTION_SECONDS_HP: 0.0,
       DATA_SET_EPOCH: None,
       DATA_SET_CID: None,
+      NUTATION_DPSI_RADIANS: 0.0,
+      NUTATION_DEPS_RADIANS: 0.0,
+      NUTATION_DPSI_UNCERTAINTY_RADIANS: 0.0,
+      NUTATION_DEPS_UNCERTAINTY_RADIANS: 0.0,
     }
   }
 }
@@ -1018,6 +1109,10 @@ impl EOPT {
     let DATA_SET_CID = self.DATA_SET_CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let NUTATION_DPSI_RADIANS = self.NUTATION_DPSI_RADIANS;
+    let NUTATION_DEPS_RADIANS = self.NUTATION_DEPS_RADIANS;
+    let NUTATION_DPSI_UNCERTAINTY_RADIANS = self.NUTATION_DPSI_UNCERTAINTY_RADIANS;
+    let NUTATION_DEPS_UNCERTAINTY_RADIANS = self.NUTATION_DEPS_UNCERTAINTY_RADIANS;
     EOP::create(_fbb, &EOPArgs{
       DATE,
       MJD,
@@ -1045,6 +1140,10 @@ impl EOPT {
       LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
       DATA_SET_EPOCH,
       DATA_SET_CID,
+      NUTATION_DPSI_RADIANS,
+      NUTATION_DEPS_RADIANS,
+      NUTATION_DPSI_UNCERTAINTY_RADIANS,
+      NUTATION_DEPS_UNCERTAINTY_RADIANS,
     })
   }
 }

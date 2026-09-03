@@ -125,6 +125,14 @@
       "type" : "string",
       "enum": ["UP", "TRANSIT_DOWN", "DOWN", "TRANSIT_UP", "DAMAGED"]
     },
+    "peerRegistryTrustCategory" : {
+      "type" : "string",
+      "enum": ["Untrusted", "Limited", "Standard", "Trusted", "Admin"]
+    },
+    "actKind" : {
+      "type" : "string",
+      "enum": ["Operator", "Session", "Challenge", "ExternalLink"]
+    },
     "acwOperationCode" : {
       "type" : "string",
       "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS"]
@@ -136,6 +144,10 @@
     "acwRefractionModelKind" : {
       "type" : "string",
       "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE"]
+    },
+    "agrKind" : {
+      "type" : "string",
+      "enum": ["Histogram", "Category", "Series", "Scatter", "Pivot"]
     },
     "analyticProfile" : {
       "type" : "string",
@@ -644,6 +656,14 @@
     "dssSyncState" : {
       "type" : "string",
       "enum": ["IDLE", "SYNCING", "SYNCED", "CAPPED", "ERROR"]
+    },
+    "dssPinPolicy" : {
+      "type" : "string",
+      "enum": ["None", "Cache", "Pin", "Archive"]
+    },
+    "dssAction" : {
+      "type" : "string",
+      "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate"]
     },
     "dttTilingScheme" : {
       "type" : "string",
@@ -1313,6 +1333,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "PROVIDER_DEFINED"]
     },
+    "ndsPublisherRung" : {
+      "type" : "string",
+      "enum": ["SourceTag", "Signed", "Bonded"]
+    },
+    "ndsIngestEventKind" : {
+      "type" : "string",
+      "enum": ["Stall", "Reject", "Recover"]
+    },
     "numOperationCode" : {
       "type" : "string",
       "enum": ["UNKNOWN", "NEWTON_RAPHSON", "LINEAR_INTERPOLATION", "BILINEAR_INTERPOLATION", "GAUSS_MARKOV_SEQUENCE"]
@@ -1465,10 +1493,6 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "BODY_FIXED", "SUN_TRACKING", "BODY_TRACKING", "VELOCITY_TRACKING", "OTHER"]
     },
-    "peerRegistryTrustCategory" : {
-      "type" : "string",
-      "enum": ["Untrusted", "Limited", "Standard", "Trusted", "Admin"]
-    },
     "propagatorStateFlags" : {
       "type" : "string",
       "enum": ["VALID", "IN_ECLIPSE", "DECAYED", "EXTRAPOLATED", "RESERVED_4", "RESERVED_5", "RESERVED_6", "RESERVED_7"]
@@ -1488,6 +1512,18 @@
     "purchaseLifecycleStatus" : {
       "type" : "string",
       "enum": ["Pending", "PaymentDetected", "PaymentConfirmed", "Completed", "Failed", "Cancelled", "RefundRequested", "Refunded", "Expired"]
+    },
+    "qrpKind" : {
+      "type" : "string",
+      "enum": ["Request", "Page", "Error"]
+    },
+    "qrpStatus" : {
+      "type" : "string",
+      "enum": ["Ok", "Partial", "Busy", "Cold", "Error"]
+    },
+    "qrpFilterOp" : {
+      "type" : "string",
+      "enum": ["Eq", "Ne", "Lt", "Lte", "Gt", "Gte", "Contains", "In"]
     },
     "rafPduType" : {
       "type" : "string",
@@ -2171,7 +2207,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS", "ICN", "TRP", "TRV"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS", "ICN", "TRP", "TRV", "ACT", "AGR", "NDS", "NST", "QRP"]
     },
     "LKS" : {
       "type" : "object",
@@ -4582,6 +4618,222 @@
       },
       "additionalProperties" : false
     },
+    "PRRMetadataEntry" : {
+      "type" : "object",
+      "description" : "String metadata key/value attached to a peer registry entry.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "Metadata key."
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Metadata value."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PRR" : {
+      "type" : "object",
+      "properties" : {
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "libp2p peer ID."
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Known libp2p/IPFS multiaddresses for this peer."
+              },
+        "TRUST_LEVEL" : {
+                "$ref" : "#/definitions/peerRegistryTrustCategory",
+                "description" : "Trust level assigned to this peer by the local registry."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Optional display name."
+              },
+        "ORGANIZATION" : {
+                "type" : "string",
+                "description" : "Optional organization name."
+              },
+        "GROUPS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Peer group names this peer belongs to."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Operator notes for this peer."
+              },
+        "ADDED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer was added."
+              },
+        "LAST_SEEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer was last observed."
+              },
+        "LAST_CONNECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer last connected."
+              },
+        "CONNECTION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of successful connections observed by this node."
+              },
+        "MESSAGES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of messages received from this peer."
+              },
+        "MESSAGES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of messages sent to this peer."
+              },
+        "BYTES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of bytes received from this peer."
+              },
+        "BYTES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of bytes sent to this peer."
+              },
+        "EPM_DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional EPM.fbs bytes for the peer identity profile."
+              },
+        "VCARD_DATA" : {
+                "type" : "string",
+                "description" : "Optional vCard projection for compatibility views."
+              },
+        "METADATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRRMetadataEntry"},
+                "description" : "Additional peer metadata as string key/value entries."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this registry record was last updated."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True when this record tombstones the peer from the current registry."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the node/provider that issued this registry record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the peer registry record."
+              }
+      },
+      "required" : ["PEER_ID"],
+      "additionalProperties" : false
+    },
+    "ACTKeySlot" : {
+      "type" : "object",
+      "description" : "One purpose-key slot of an operator.",
+      "properties" : {
+        "SLOT" : {
+                "type" : "string",
+                "description" : "Slot name, e.g. \"signing\", \"encryption\", \"publication\"."
+              },
+        "KEY_PATH" : {
+                "type" : "string",
+                "description" : "Derivation path currently in use."
+              },
+        "NEXT_PATH" : {
+                "type" : "string",
+                "description" : "Derivation path the next rotation will use."
+              },
+        "ROTATABLE" : {
+                "type" : "boolean"
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Key algorithm, e.g. \"secp256k1\", \"ed25519\", \"x25519\"."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACT" : {
+      "type" : "object",
+      "description" : "Account Record - operator, session, challenge or external link.",
+      "properties" : {
+        "ACCOUNT_ID" : {
+                "type" : "string"
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/actKind"
+              },
+        "XPUB" : {
+                "type" : "string",
+                "description" : "Extended public key the operator proves control of."
+              },
+        "XPUB_FINGERPRINT" : {
+                "type" : "string",
+                "description" : "Fingerprint of XPUB."
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TRUST_LEVEL" : {
+                "$ref" : "#/definitions/peerRegistryTrustCategory"
+              },
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "EPM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the operator's identity record."
+              },
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier the account is bound to."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds."
+              },
+        "LAST_SEEN" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds; 0 = never."
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds a session or challenge expires; 0 = none."
+              },
+        "CHALLENGE_ID" : {
+                "type" : "string"
+              },
+        "CHALLENGE" : {
+                "type" : "string",
+                "description" : "Challenge text the operator signs."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Signature over CHALLENGE."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string",
+                "description" : "Signature scheme identifier."
+              },
+        "EXTERNAL_CHAIN" : {
+                "type" : "string",
+                "description" : "External chain identifier of a linked wallet (CAIP-2 form)."
+              },
+        "EXTERNAL_ADDRESS" : {
+                "type" : "string",
+                "description" : "External address of a linked wallet."
+              },
+        "LINKED" : {
+                "type" : "boolean",
+                "description" : "True when the external link has been verified."
+              },
+        "KEY_SLOTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACTKeySlot"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "ACWStateSample" : {
       "type" : "object",
       "description" : "Target Cartesian state sample in an Earth-fixed frame.",
@@ -5018,6 +5270,173 @@
         "CLASSIFICATION" : {
                 "type" : "string",
                 "description" : "Message classification/caveats in portion-marked format."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRBin" : {
+      "type" : "object",
+      "description" : "One histogram bin over [LOW, HIGH).",
+      "properties" : {
+        "LOW" : {
+                "type" : "number"
+              },
+        "HIGH" : {
+                "type" : "number"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              },
+        "MIN" : {
+                "type" : "number"
+              },
+        "MAX" : {
+                "type" : "number"
+              },
+        "MEAN" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRCategory" : {
+      "type" : "object",
+      "description" : "One category tally.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRSeries" : {
+      "type" : "object",
+      "description" : "One named series with parallel X and Y vectors.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "Y" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGRPivotCell" : {
+      "type" : "object",
+      "description" : "One pivot cell.",
+      "properties" : {
+        "ROW_KEY" : {
+                "type" : "string"
+              },
+        "COL_KEY" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUM" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AGR" : {
+      "type" : "object",
+      "description" : "Aggregation Result - one summary over one standard's records.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/agrKind"
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Standard code of the records aggregated, e.g. \"OMM\"."
+              },
+        "SQL" : {
+                "type" : "string",
+                "description" : "SQL selection the aggregate was computed over, when any."
+              },
+        "X_FIELD" : {
+                "type" : "string",
+                "description" : "Field on the X axis; may be a derived field the serving node computes."
+              },
+        "Y_FIELDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Fields on the Y axis, one series each."
+              },
+        "X_IS_TIME" : {
+                "type" : "boolean",
+                "description" : "True when X values are Unix milliseconds."
+              },
+        "X_UNIT" : {
+                "type" : "string",
+                "description" : "Unit of X when the standard declares one."
+              },
+        "BINS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRBin"}
+              },
+        "CATEGORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRCategory"}
+              },
+        "SERIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRSeries"}
+              },
+        "PIVOT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AGRPivotCell"}
+              },
+        "ROW_KEYS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Row keys of a pivot in display order."
+              },
+        "COL_KEYS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Column keys of a pivot in display order."
+              },
+        "SCANNED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records scanned to compute the aggregate."
+              },
+        "MATCHED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records that matched the selection."
+              },
+        "STORED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records the serving node holds for the standard."
+              },
+        "PARTIAL" : {
+                "type" : "boolean",
+                "description" : "True when a bounded scan returned before covering every stored record."
+              },
+        "TRUNCATED" : {
+                "type" : "boolean",
+                "description" : "True when a category or pivot was cut to its top entries."
+              },
+        "ELAPSED_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Milliseconds the serving node spent computing the aggregate."
+              },
+        "AS_OF_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the serving numbers were last true."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
               }
       },
       "additionalProperties" : false
@@ -7870,6 +8289,26 @@
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name of the owner or source the code stands for."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Longer description of the owner or source."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "True while the code is in current use by the publishing catalogue."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "URL of the reference table the row was retrieved from."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the reference table was retrieved."
               }
       },
       "additionalProperties" : false
@@ -13429,6 +13868,79 @@
               },
         "ERROR" : {
                 "type" : "string"
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Standard code of the lane, e.g. \"OMM\"."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier within the origin."
+              },
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Ingest connector that produces the lane, when known."
+              },
+        "CHANNEL_ID" : {
+                "type" : "string",
+                "description" : "Channel identifier the lane is announced on."
+              },
+        "TOPIC" : {
+                "type" : "string",
+                "description" : "Publish/subscribe topic of the lane."
+              },
+        "SUBSCRIBED" : {
+                "type" : "boolean",
+                "description" : "True when this node subscribes to the lane."
+              },
+        "PIN_POLICY" : {
+                "$ref" : "#/definitions/dssPinPolicy"
+              },
+        "VISIBILITY" : {
+                "type" : "string",
+                "description" : "Visibility of the lane, e.g. \"public\", \"private\"."
+              },
+        "ENCRYPTION_STATE" : {
+                "type" : "string",
+                "description" : "Encryption state of the lane's publications, e.g. \"plain\", \"encrypted\"."
+              },
+        "GRANT_STATE" : {
+                "type" : "string",
+                "description" : "Grant state for an encrypted lane, e.g. \"granted\", \"pending\", \"none\"."
+              },
+        "FEED_HEAD" : {
+                "type" : "string",
+                "description" : "Feed head this node has materialised up to."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the newest publication manifest known."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the newest publish notification known."
+              },
+        "DELTA_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Rows materialised since the previous SYNCED state."
+              },
+        "LAST_SYNC_STARTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds the current or last sync pass started; 0 = never."
+              },
+        "REQUESTED_ACTION" : {
+                "$ref" : "#/definitions/dssAction",
+                "description" : "Action a client requests when sending this record to a node."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher of the lane's records."
               }
       },
       "additionalProperties" : false
@@ -15277,6 +15789,22 @@
         "DATA_SET_CID" : {
                 "type" : "string",
                 "description" : "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed."
+              },
+        "NUTATION_DPSI_RADIANS" : {
+                "type" : "number",
+                "description" : "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries."
+              },
+        "NUTATION_DEPS_RADIANS" : {
+                "type" : "number",
+                "description" : "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians."
+              },
+        "NUTATION_DPSI_UNCERTAINTY_RADIANS" : {
+                "type" : "number",
+                "description" : "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians."
+              },
+        "NUTATION_DEPS_UNCERTAINTY_RADIANS" : {
+                "type" : "number",
+                "description" : "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
               }
       },
       "additionalProperties" : false
@@ -20228,6 +20756,97 @@
         "PROVIDER_SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Provider signature over the connector record."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher the connector retrieves records from, as a host name\nor stable identifier."
+              },
+        "ORIGIN_NAME" : {
+                "type" : "string",
+                "description" : "Display name of the upstream publisher."
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier within the origin, e.g. \"gp-full-catalog\"."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Provider identifier the lane's records are stored under."
+              },
+        "SOURCE_NAME" : {
+                "type" : "string",
+                "description" : "Source name the lane's records are stored under."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence under which the upstream publisher offers the records."
+              },
+        "LICENSE_URL" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Citation the upstream publisher asks for."
+              },
+        "MIN_FETCH_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Minimum interval between fetches of the same dataset, milliseconds."
+              },
+        "NEXT_ELIGIBLE_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds when the next fetch is eligible."
+              },
+        "LAST_HTTP_STATUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "HTTP status of the last fetch."
+              },
+        "LAST_SOURCE_ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag returned by the last fetch."
+              },
+        "LAST_SOURCE_LAST_MODIFIED" : {
+                "type" : "string",
+                "description" : "Last-Modified value returned by the last fetch."
+              },
+        "LAST_BATCH_ID" : {
+                "type" : "string",
+                "description" : "Batch identifier of the last ingest."
+              },
+        "LAST_RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records parsed by the last ingest."
+              },
+        "LAST_INSERTED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records newly inserted by the last ingest."
+              },
+        "LAST_DURATION_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Duration of the last fetch and ingest, milliseconds."
+              },
+        "FETCH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Fetches attempted over the connector's lifetime."
+              },
+        "INGEST_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Ingests completed over the connector's lifetime."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the last publication manifest emitted."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the last publish notification emitted."
+              },
+        "FEED_HEAD" : {
+                "type" : "string",
+                "description" : "Feed head the connector last advanced to."
+              },
+        "EMITS_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Standard codes the connector emits, e.g. [\"OMM\", \"MPE\"]."
               }
       },
       "required" : ["CONNECTOR_ID"],
@@ -26388,6 +27007,389 @@
       },
       "additionalProperties" : false
     },
+    "NDSSchemaStat" : {
+      "type" : "object",
+      "description" : "One standard's record footprint in the node store.",
+      "properties" : {
+        "SCHEMA" : {
+                "type" : "string",
+                "description" : "Standard code, e.g. \"OMM\"."
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "NEWEST_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Newest record epoch held, Unix milliseconds; 0 = unknown."
+              },
+        "OLDEST_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Oldest record epoch held, Unix milliseconds; 0 = unknown."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSSourceStat" : {
+      "type" : "object",
+      "description" : "One (standard, provider, source, batch) ingest lane's live progress and\nprovenance.",
+      "properties" : {
+        "SCHEMA" : {
+                "type" : "string"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "BATCH_ID" : {
+                "type" : "string"
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "FIRST_INGEST_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "LAST_INGEST_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "WINDOW_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Records observed in the current rolling window."
+              },
+        "PRIOR_WINDOW_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Records observed in the immediately preceding rolling window."
+              },
+        "WINDOW_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Rolling-window width in milliseconds."
+              },
+        "PRODUCER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the producer whose signed identity covers this lane's\npublications."
+              },
+        "PRODUCER_EPM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the producer's identity record."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher the producer retrieved the records from, as a host\nname or stable identifier."
+              },
+        "ORIGIN_NAME" : {
+                "type" : "string",
+                "description" : "Display name of the upstream publisher."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Upstream URL the records were retrieved from."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence under which the upstream publisher offers the records."
+              },
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Ingest connector that produced this lane (`$ICN` CONNECTOR_ID)."
+              },
+        "PUBLISHER_RUNG" : {
+                "$ref" : "#/definitions/ndsPublisherRung",
+                "description" : "Verification rung of the producer claim."
+              },
+        "EVIDENCE" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Evidence references supporting PUBLISHER_RUNG (record CIDs, proof ids)."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the lane's newest publication manifest."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the lane's newest publish notification."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSIngestEvent" : {
+      "type" : "object",
+      "description" : "One source-ingest transition surfaced to the dashboard.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/ndsIngestEventKind"
+              },
+        "SCHEMA" : {
+                "type" : "string"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "MESSAGE" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds when the transition occurred."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSTopicStat" : {
+      "type" : "object",
+      "description" : "Live traffic for one publish/subscribe topic.",
+      "properties" : {
+        "TOPIC" : {
+                "type" : "string"
+              },
+        "RATE_PER_MIN" : {
+                "type" : "number"
+              },
+        "LAST_SEEN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = not observed."
+              },
+        "SUBSCRIBED" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSModuleStat" : {
+      "type" : "object",
+      "description" : "Runtime counters for one installed module or flow.",
+      "properties" : {
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Runtime state, e.g. \"running\", \"installed\", \"error\"."
+              },
+        "RUN_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "ERROR_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "LAST_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = never."
+              },
+        "NEXT_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = not scheduled."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSTrustEngineStat" : {
+      "type" : "object",
+      "description" : "Counters for the node's trust rule evaluation engine.",
+      "properties" : {
+        "MIN_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Minimum interval between evaluation passes, milliseconds."
+              },
+        "RUNS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "LAST_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = never."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDS" : {
+      "type" : "object",
+      "description" : "Node Data Statistics - one node's data-plane snapshot.",
+      "properties" : {
+        "GENERATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds when this snapshot was assembled."
+              },
+        "SCHEMAS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSSchemaStat"}
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSSourceStat"}
+              },
+        "TOTAL_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "STALE" : {
+                "type" : "boolean",
+                "description" : "True when the assembling read hit its store budget and this snapshot\ncarries the last-known-good numbers."
+              },
+        "AS_OF" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds the store numbers were last true; 0 = never read."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSIngestEvent"}
+              },
+        "TOPICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSTopicStat"}
+              },
+        "MODULES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSModuleStat"}
+              },
+        "TRUST_ENGINE" : {
+                "$ref" : "#/definitions/NDSTrustEngineStat"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NSTNode" : {
+      "type" : "object",
+      "description" : "Node Status Record (NST)\nDescription\nPresence and identity of the peers a node knows about, as a node reports\nthem to operator dashboards: who the peer is (its identity record fields),\nhow it can be reached, whether it is online, where it is, which software\nand standards versions it runs, and how the row reached the board. The\nSOURCE field is the provenance of the row itself so an operator can always\nanswer \"how did this peer get here?\": declared in configuration, pinned by\nan operator, or seen on a live connection. A set carries every row the\nemitting node currently admits and the emitting node's own row.\nOne known peer as reported by the emitting node.",
+      "properties" : {
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier (multihash, base58)."
+              },
+        "DN" : {
+                "type" : "string",
+                "description" : "Distinguished name from the peer's identity record."
+              },
+        "ORGANIZATION" : {
+                "type" : "string"
+              },
+        "TRUST_LEVEL" : {
+                "type" : "string"
+              },
+        "ROLE" : {
+                "type" : "string"
+              },
+        "AGENT_VERSION" : {
+                "type" : "string"
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Multiformat addresses the peer is known by."
+              },
+        "LAST_SEEN" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds of last observation; 0 = never."
+              },
+        "IS_ONLINE" : {
+                "type" : "boolean"
+              },
+        "LATENCY_MS" : {
+                "type" : "number",
+                "description" : "Round-trip latency to the peer, milliseconds; 0 = unknown."
+              },
+        "VCARD" : {
+                "type" : "string",
+                "description" : "Full vCard 4.0 text derived from the peer's identity record."
+              },
+        "LAT" : {
+                "type" : "number",
+                "description" : "Resolved coordinates; 0,0 = unresolved."
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "GEO_COUNTRY" : {
+                "type" : "string"
+              },
+        "GEO_CITY" : {
+                "type" : "string"
+              },
+        "IS_SELF" : {
+                "type" : "boolean",
+                "description" : "True on the node emitting this set."
+              },
+        "UPTIME_S" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Seconds since the emitting process started (self only)."
+              },
+        "SUITE_VERSION" : {
+                "type" : "string"
+              },
+        "STANDARDS_VERSION" : {
+                "type" : "string"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "How this row reached the board: exactly one of \"config\" (declared in the\nnode's configuration), \"pinned\" (pinned by an operator) or \"connected\"\n(seen right now on a live connection)."
+              },
+        "PINNED" : {
+                "type" : "boolean",
+                "description" : "True for configuration and operator pins; a pinned peer keeps its row\nwhile unreachable."
+              },
+        "PIN_NOTE" : {
+                "type" : "string",
+                "description" : "For SOURCE \"config\" the configuration key an operator can edit; for\nSOURCE \"pinned\" the operator's own note. Never a manufactured label."
+              },
+        "CONNECTED_PEER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Peers this peer is currently connected to, for the connection graph."
+              },
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Signing public key from the peer's identity record."
+              },
+        "ENCRYPTION_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Encryption public key from the peer's identity record."
+              },
+        "EPM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the peer's identity record."
+              },
+        "STORAGE_DAEMON_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the content-addressed storage daemon the peer runs."
+              },
+        "ONION_ADDRESS" : {
+                "type" : "string",
+                "description" : "Onion-service address when the peer is reachable over an anonymity\nnetwork."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NST" : {
+      "type" : "object",
+      "description" : "Node Status Record - the set of peers a node reports.",
+      "properties" : {
+        "NODES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NSTNode"}
+              },
+        "GENERATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this set was generated."
+              },
+        "SOURCE_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the emitting node."
+              }
+      },
+      "additionalProperties" : false
+    },
     "NUMRootSolveRequest" : {
       "type" : "object",
       "description" : "Request for one scalar numerical root-solving operation.",
@@ -29809,116 +30811,6 @@
       },
       "additionalProperties" : false
     },
-    "PRRMetadataEntry" : {
-      "type" : "object",
-      "description" : "String metadata key/value attached to a peer registry entry.",
-      "properties" : {
-        "KEY" : {
-                "type" : "string",
-                "description" : "Metadata key."
-              },
-        "VALUE" : {
-                "type" : "string",
-                "description" : "Metadata value."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "PRR" : {
-      "type" : "object",
-      "properties" : {
-        "PEER_ID" : {
-                "type" : "string",
-                "description" : "libp2p peer ID."
-              },
-        "MULTIFORMAT_ADDRESS" : {
-                "type" : "array", "items" : {"type" : "string"},
-                "description" : "Known libp2p/IPFS multiaddresses for this peer."
-              },
-        "TRUST_LEVEL" : {
-                "$ref" : "#/definitions/peerRegistryTrustCategory",
-                "description" : "Trust level assigned to this peer by the local registry."
-              },
-        "NAME" : {
-                "type" : "string",
-                "description" : "Optional display name."
-              },
-        "ORGANIZATION" : {
-                "type" : "string",
-                "description" : "Optional organization name."
-              },
-        "GROUPS" : {
-                "type" : "array", "items" : {"type" : "string"},
-                "description" : "Peer group names this peer belongs to."
-              },
-        "NOTES" : {
-                "type" : "string",
-                "description" : "Operator notes for this peer."
-              },
-        "ADDED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp in milliseconds when this peer was added."
-              },
-        "LAST_SEEN" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp in milliseconds when this peer was last observed."
-              },
-        "LAST_CONNECTED" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp in milliseconds when this peer last connected."
-              },
-        "CONNECTION_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Number of successful connections observed by this node."
-              },
-        "MESSAGES_RECEIVED" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Number of messages received from this peer."
-              },
-        "MESSAGES_SENT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Number of messages sent to this peer."
-              },
-        "BYTES_RECEIVED" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Number of bytes received from this peer."
-              },
-        "BYTES_SENT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Number of bytes sent to this peer."
-              },
-        "EPM_DATA" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Optional EPM.fbs bytes for the peer identity profile."
-              },
-        "VCARD_DATA" : {
-                "type" : "string",
-                "description" : "Optional vCard projection for compatibility views."
-              },
-        "METADATA" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PRRMetadataEntry"},
-                "description" : "Additional peer metadata as string key/value entries."
-              },
-        "UPDATED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp in milliseconds when this registry record was last updated."
-              },
-        "DELETED" : {
-                "type" : "boolean",
-                "description" : "True when this record tombstones the peer from the current registry."
-              },
-        "PROVIDER_PEER_ID" : {
-                "type" : "string",
-                "description" : "Peer ID of the node/provider that issued this registry record."
-              },
-        "PROVIDER_SIGNATURE" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Provider signature over the peer registry record."
-              }
-      },
-      "required" : ["PEER_ID"],
-      "additionalProperties" : false
-    },
     "PRWInit" : {
       "type" : "object",
       "description" : "Propagator initialization request — assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
@@ -30464,6 +31356,194 @@
         "TOKENS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/QEMTokenVector"},
                 "description" : "One row per pruned vocabulary token."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRPFilter" : {
+      "type" : "object",
+      "description" : "One field filter of a request.",
+      "properties" : {
+        "FIELD" : {
+                "type" : "string"
+              },
+        "OP" : {
+                "$ref" : "#/definitions/qrpFilterOp"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Value as text; for In, values separated by commas."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRPColumn" : {
+      "type" : "object",
+      "description" : "One column descriptor of a page, in record field order.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Scalar type of the field as declared in the standard, e.g. \"string\",\n\"double\", \"int64\", \"bool\", \"enum\"."
+              },
+        "UNIT" : {
+                "type" : "string",
+                "description" : "Unit of the field when the standard declares one, else empty."
+              },
+        "SORTABLE" : {
+                "type" : "boolean",
+                "description" : "True when the serving node can order the page by this column."
+              },
+        "INDEXED" : {
+                "type" : "boolean",
+                "description" : "True when the serving node holds an index on this column."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRP" : {
+      "type" : "object",
+      "description" : "Query Page - request, page header or error frame.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/qrpKind"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/qrpStatus"
+              },
+        "ERROR_CODE" : {
+                "type" : "string",
+                "description" : "Stable error code when STATUS is Error, Busy or Cold."
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable detail for an error, warning or partial page."
+              },
+        "RETRY_AFTER_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Milliseconds a client should wait before retrying; 0 = no advice."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Standard code of the records selected, e.g. \"OMM\"."
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string",
+                "description" : "File identifier of the record frames that follow a page header."
+              },
+        "SQL" : {
+                "type" : "string",
+                "description" : "SQL selection over the standard's table, when the lane accepts SQL."
+              },
+        "SEARCH" : {
+                "type" : "string",
+                "description" : "Free-text search over the standard's indexed text fields."
+              },
+        "FILTERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPFilter"}
+              },
+        "SORT_FIELD" : {
+                "type" : "string"
+              },
+        "SORT_DESC" : {
+                "type" : "boolean"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "BATCH_ID" : {
+                "type" : "string"
+              },
+        "PRODUCER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Restrict to records whose producer is this peer."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Restrict to records retrieved from this upstream origin."
+              },
+        "FROM_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch window, Unix milliseconds; 0 = unbounded."
+              },
+        "TO_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "PAGE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "1-based page number requested or served."
+              },
+        "LIMIT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Page size requested or served."
+              },
+        "CURSOR" : {
+                "type" : "string",
+                "description" : "Opaque cursor of this page."
+              },
+        "NEXT_CURSOR" : {
+                "type" : "string",
+                "description" : "Opaque cursor of the next page; empty when this is the last page."
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Record frames that follow this page header."
+              },
+        "TOTAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records matching the selection when known; 0 = unknown."
+              },
+        "SCANNED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records the serving node scanned to build this page."
+              },
+        "STORED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records the serving node holds for the standard."
+              },
+        "PARTIAL" : {
+                "type" : "boolean",
+                "description" : "True when a bounded scan returned before covering every stored record."
+              },
+        "TRUNCATED" : {
+                "type" : "boolean",
+                "description" : "True when the page was cut at a byte or row budget."
+              },
+        "AS_OF_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the serving numbers were last true."
+              },
+        "STALE" : {
+                "type" : "boolean",
+                "description" : "True when the page was served from a stale snapshot."
+              },
+        "ELAPSED_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Milliseconds the serving node spent producing the page."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the page was generated."
+              },
+        "ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag of the page for conditional requests."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "Content identifier named by a request or a reply (record, manifest,\narchive)."
+              },
+        "ARCHIVE_ID" : {
+                "type" : "string",
+                "description" : "Archive identifier named by a request or a reply."
+              },
+        "COLUMNS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPColumn"}
               }
       },
       "additionalProperties" : false
@@ -33503,6 +34583,30 @@
         "files" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "List Of File Paths"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name of the standard."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "One-paragraph description of the standard."
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string",
+                "description" : "Four-character file identifier, e.g. \"$OMM\"."
+              },
+        "SCHEMA_HASH" : {
+                "type" : "string",
+                "description" : "Hash of the standard's schema text."
+              },
+        "ROUTED" : {
+                "type" : "boolean",
+                "description" : "True when the reporting node routes the standard through its store."
+              },
+        "RECORD_TYPE_ORDINAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Position of the standard in the record union; append-only forever."
               }
       },
       "additionalProperties" : false
@@ -33518,6 +34622,14 @@
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCHEMA_STANDARD"},
                 "description" : "Standards Dictionary"
+              },
+        "STANDARDS_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the standards package the reporting node runs."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this registry frame was generated."
               }
       },
       "additionalProperties" : false
@@ -36533,6 +37645,35 @@
         "RESERVED" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Reserved for forward-compatible growth."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the record bytes."
+              },
+        "BYTE_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte offset of the record frame within its export or archive stream."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length of the record frame."
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Epoch of the record, Unix milliseconds; 0 = none."
+              },
+        "ENTITY_KEY" : {
+                "type" : "string",
+                "description" : "Entity key of the record within its standard, e.g. a catalogue number."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "BATCH_ID" : {
+                "type" : "string"
               }
       },
       "additionalProperties" : false
@@ -43646,7 +44787,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" },{ "$ref" : "#/definitions/ICN" },{ "$ref" : "#/definitions/TRP" },{ "$ref" : "#/definitions/TRV" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" },{ "$ref" : "#/definitions/ICN" },{ "$ref" : "#/definitions/TRP" },{ "$ref" : "#/definitions/TRV" },{ "$ref" : "#/definitions/ACT" },{ "$ref" : "#/definitions/AGR" },{ "$ref" : "#/definitions/NDS" },{ "$ref" : "#/definitions/NST" },{ "$ref" : "#/definitions/QRP" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

@@ -30,6 +30,14 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let PAYLOAD_KIND: VOffset = 12
     static let UPDATED_AT_MS: VOffset = 14
     static let RESERVED: VOffset = 16
+    static let CID: VOffset = 18
+    static let BYTE_OFFSET: VOffset = 20
+    static let BYTE_LENGTH: VOffset = 22
+    static let EPOCH_MS: VOffset = 24
+    static let ENTITY_KEY: VOffset = 26
+    static let PROVIDER_ID: VOffset = 28
+    static let SOURCE_NAME: VOffset = 30
+    static let BATCH_ID: VOffset = 32
   }
 
   ///  Stable host-local record key for one standards payload.
@@ -52,7 +60,25 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Reserved for forward-compatible growth.
   public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
   public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
-  public static func startSRI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  Content identifier of the record bytes.
+  public var CID: String? { let o = _accessor.offset(VT.CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CID) }
+  ///  Byte offset of the record frame within its export or archive stream.
+  public var BYTE_OFFSET: UInt64 { let o = _accessor.offset(VT.BYTE_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Byte length of the record frame.
+  public var BYTE_LENGTH: UInt32 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Epoch of the record, Unix milliseconds; 0 = none.
+  public var EPOCH_MS: UInt64 { let o = _accessor.offset(VT.EPOCH_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Entity key of the record within its standard, e.g. a catalogue number.
+  public var ENTITY_KEY: String? { let o = _accessor.offset(VT.ENTITY_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_KEY) }
+  public var PROVIDER_ID: String? { let o = _accessor.offset(VT.PROVIDER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_ID) }
+  public var SOURCE_NAME: String? { let o = _accessor.offset(VT.SOURCE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_NAME) }
+  public var BATCH_ID: String? { let o = _accessor.offset(VT.BATCH_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BATCH_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BATCH_ID) }
+  public static func startSRI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_KEY, at: VT.RECORD_KEY) }
   public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
   public static func add(ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLE, at: VT.ROLE) }
@@ -60,6 +86,14 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(PAYLOAD_KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_KIND, at: VT.PAYLOAD_KIND) }
   public static func add(UPDATED_AT_MS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT_MS, def: 0.0, at: VT.UPDATED_AT_MS) }
   public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
+  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
+  public static func add(BYTE_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_OFFSET, def: 0, at: VT.BYTE_OFFSET) }
+  public static func add(BYTE_LENGTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
+  public static func add(EPOCH_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MS, def: 0, at: VT.EPOCH_MS) }
+  public static func add(ENTITY_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_KEY, at: VT.ENTITY_KEY) }
+  public static func add(PROVIDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_ID, at: VT.PROVIDER_ID) }
+  public static func add(SOURCE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAME, at: VT.SOURCE_NAME) }
+  public static func add(BATCH_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_ID, at: VT.BATCH_ID) }
   public static func endSRI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSRI(
     _ fbb: inout FlatBufferBuilder,
@@ -69,7 +103,15 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     ATTACHED_VIAOffset ATTACHED_VIA: Offset = Offset(),
     PAYLOAD_KINDOffset PAYLOAD_KIND: Offset = Offset(),
     UPDATED_AT_MS: Double = 0.0,
-    RESERVEDVectorOffset RESERVED: Offset = Offset()
+    RESERVEDVectorOffset RESERVED: Offset = Offset(),
+    CIDOffset CID: Offset = Offset(),
+    BYTE_OFFSET: UInt64 = 0,
+    BYTE_LENGTH: UInt32 = 0,
+    EPOCH_MS: UInt64 = 0,
+    ENTITY_KEYOffset ENTITY_KEY: Offset = Offset(),
+    PROVIDER_IDOffset PROVIDER_ID: Offset = Offset(),
+    SOURCE_NAMEOffset SOURCE_NAME: Offset = Offset(),
+    BATCH_IDOffset BATCH_ID: Offset = Offset()
   ) -> Offset {
     let __start = SRI.startSRI(&fbb)
     SRI.add(RECORD_KEY: RECORD_KEY, &fbb)
@@ -79,6 +121,14 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SRI.add(PAYLOAD_KIND: PAYLOAD_KIND, &fbb)
     SRI.add(UPDATED_AT_MS: UPDATED_AT_MS, &fbb)
     SRI.addVectorOf(RESERVED: RESERVED, &fbb)
+    SRI.add(CID: CID, &fbb)
+    SRI.add(BYTE_OFFSET: BYTE_OFFSET, &fbb)
+    SRI.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
+    SRI.add(EPOCH_MS: EPOCH_MS, &fbb)
+    SRI.add(ENTITY_KEY: ENTITY_KEY, &fbb)
+    SRI.add(PROVIDER_ID: PROVIDER_ID, &fbb)
+    SRI.add(SOURCE_NAME: SOURCE_NAME, &fbb)
+    SRI.add(BATCH_ID: BATCH_ID, &fbb)
     return SRI.endSRI(&fbb, start: __start)
   }
 
@@ -91,6 +141,14 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.PAYLOAD_KIND, fieldName: "PAYLOAD_KIND", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.UPDATED_AT_MS, fieldName: "UPDATED_AT_MS", required: false, type: Double.self)
     try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CID, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTE_OFFSET, fieldName: "BYTE_OFFSET", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EPOCH_MS, fieldName: "EPOCH_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.ENTITY_KEY, fieldName: "ENTITY_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_ID, fieldName: "PROVIDER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_NAME, fieldName: "SOURCE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BATCH_ID, fieldName: "BATCH_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

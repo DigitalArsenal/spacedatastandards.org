@@ -97,8 +97,108 @@ func (rcv *SCHEMA_STANDARD) FilesLength() int {
 }
 
 /// List Of File Paths
+/// Human-readable name of the standard.
+func (rcv *SCHEMA_STANDARD) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCHEMA_STANDARD) Name() []byte {
+	return rcv.NAME()
+}
+
+/// Human-readable name of the standard.
+/// One-paragraph description of the standard.
+func (rcv *SCHEMA_STANDARD) DESCRIPTION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCHEMA_STANDARD) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
+/// One-paragraph description of the standard.
+/// Four-character file identifier, e.g. "$OMM".
+func (rcv *SCHEMA_STANDARD) FILE_IDENTIFIER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCHEMA_STANDARD) FileIdentifier() []byte {
+	return rcv.FILE_IDENTIFIER()
+}
+
+/// Four-character file identifier, e.g. "$OMM".
+/// Hash of the standard's schema text.
+func (rcv *SCHEMA_STANDARD) SCHEMA_HASH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCHEMA_STANDARD) SchemaHash() []byte {
+	return rcv.SCHEMA_HASH()
+}
+
+/// Hash of the standard's schema text.
+/// True when the reporting node routes the standard through its store.
+func (rcv *SCHEMA_STANDARD) ROUTED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *SCHEMA_STANDARD) Routed() bool {
+	return rcv.ROUTED()
+}
+
+/// True when the reporting node routes the standard through its store.
+func (rcv *SCHEMA_STANDARD) MutateROUTED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *SCHEMA_STANDARD) MutateRouted(n bool) bool {
+	return rcv.MutateROUTED(n)
+}
+
+/// Position of the standard in the record union; append-only forever.
+func (rcv *SCHEMA_STANDARD) RECORD_TYPE_ORDINAL() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SCHEMA_STANDARD) RecordTypeOrdinal() uint16 {
+	return rcv.RECORD_TYPE_ORDINAL()
+}
+
+/// Position of the standard in the record union; append-only forever.
+func (rcv *SCHEMA_STANDARD) MutateRECORD_TYPE_ORDINAL(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(20, n)
+}
+
+func (rcv *SCHEMA_STANDARD) MutateRecordTypeOrdinal(n uint16) bool {
+	return rcv.MutateRECORD_TYPE_ORDINAL(n)
+}
+
 func SCHEMA_STANDARDStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(9)
 }
 func SCHEMA_STANDARDAddkey(builder *flatbuffers.Builder, key flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(key), 0)
@@ -123,6 +223,42 @@ func SCHEMA_STANDARDStartfilesVector(builder *flatbuffers.Builder, numElems int)
 }
 func SCHEMA_STANDARDStartFilesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCHEMA_STANDARDStartfilesVector(builder, numElems)
+}
+func SCHEMA_STANDARDAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
+}
+func SCHEMA_STANDARDAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddNAME(builder, NAME)
+}
+func SCHEMA_STANDARDAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func SCHEMA_STANDARDAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddDESCRIPTION(builder, DESCRIPTION)
+}
+func SCHEMA_STANDARDAddFILE_IDENTIFIER(builder *flatbuffers.Builder, FILE_IDENTIFIER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FILE_IDENTIFIER), 0)
+}
+func SCHEMA_STANDARDAddFileIdentifier(builder *flatbuffers.Builder, FILE_IDENTIFIER flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddFILE_IDENTIFIER(builder, FILE_IDENTIFIER)
+}
+func SCHEMA_STANDARDAddSCHEMA_HASH(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SCHEMA_HASH), 0)
+}
+func SCHEMA_STANDARDAddSchemaHash(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddSCHEMA_HASH(builder, SCHEMA_HASH)
+}
+func SCHEMA_STANDARDAddROUTED(builder *flatbuffers.Builder, ROUTED bool) {
+	builder.PrependBoolSlot(7, ROUTED, false)
+}
+func SCHEMA_STANDARDAddRouted(builder *flatbuffers.Builder, ROUTED bool) {
+	SCHEMA_STANDARDAddROUTED(builder, ROUTED)
+}
+func SCHEMA_STANDARDAddRECORD_TYPE_ORDINAL(builder *flatbuffers.Builder, RECORD_TYPE_ORDINAL uint16) {
+	builder.PrependUint16Slot(8, RECORD_TYPE_ORDINAL, 0)
+}
+func SCHEMA_STANDARDAddRecordTypeOrdinal(builder *flatbuffers.Builder, RECORD_TYPE_ORDINAL uint16) {
+	SCHEMA_STANDARDAddRECORD_TYPE_ORDINAL(builder, RECORD_TYPE_ORDINAL)
 }
 func SCHEMA_STANDARDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

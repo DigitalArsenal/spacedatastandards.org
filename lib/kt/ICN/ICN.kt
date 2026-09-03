@@ -355,6 +355,279 @@ class ICN : Table() {
         }
     val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
     fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Upstream publisher the connector retrieves records from, as a host name
+     * or stable identifier.
+     */
+    val originId : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val originIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun originIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Display name of the upstream publisher.
+     */
+    val originName : String?
+        get() {
+            val o = __offset(64)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val originNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun originNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+     */
+    val datasetId : String?
+        get() {
+            val o = __offset(66)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val datasetIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun datasetIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
+    /**
+     * Provider identifier the lane's records are stored under.
+     */
+    val providerId : String?
+        get() {
+            val o = __offset(68)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun providerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Source name the lane's records are stored under.
+     */
+    val sourceName : String?
+        get() {
+            val o = __offset(70)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun sourceNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Licence under which the upstream publisher offers the records.
+     */
+    val license : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun licenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
+    val licenseUrl : String?
+        get() {
+            val o = __offset(74)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun licenseUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * Citation the upstream publisher asks for.
+     */
+    val citation : String?
+        get() {
+            val o = __offset(76)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * Minimum interval between fetches of the same dataset, milliseconds.
+     */
+    val minFetchIntervalMs : ULong
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix milliseconds when the next fetch is eligible.
+     */
+    val nextEligibleAt : ULong
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * HTTP status of the last fetch.
+     */
+    val lastHttpStatus : UShort
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Entity tag returned by the last fetch.
+     */
+    val lastSourceEtag : String?
+        get() {
+            val o = __offset(84)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastSourceEtagAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 1)
+    fun lastSourceEtagInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * Last-Modified value returned by the last fetch.
+     */
+    val lastSourceLastModified : String?
+        get() {
+            val o = __offset(86)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastSourceLastModifiedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 1)
+    fun lastSourceLastModifiedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * Batch identifier of the last ingest.
+     */
+    val lastBatchId : String?
+        get() {
+            val o = __offset(88)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastBatchIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun lastBatchIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * Records parsed by the last ingest.
+     */
+    val lastRecordCount : ULong
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Records newly inserted by the last ingest.
+     */
+    val lastInsertedCount : ULong
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Duration of the last fetch and ingest, milliseconds.
+     */
+    val lastDurationMs : ULong
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Fetches attempted over the connector's lifetime.
+     */
+    val fetchCount : ULong
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Ingests completed over the connector's lifetime.
+     */
+    val ingestCount : ULong
+        get() {
+            val o = __offset(98)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Content identifier of the last publication manifest emitted.
+     */
+    val lastPublicationCid : String?
+        get() {
+            val o = __offset(100)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastPublicationCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
+    fun lastPublicationCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
+    /**
+     * Content identifier of the last publish notification emitted.
+     */
+    val lastPnmCid : String?
+        get() {
+            val o = __offset(102)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastPnmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
+    fun lastPnmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
+    /**
+     * Feed head the connector last advanced to.
+     */
+    val feedHead : String?
+        get() {
+            val o = __offset(104)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val feedHeadAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(104, 1)
+    fun feedHeadInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 104, 1)
+    /**
+     * Standard codes the connector emits, e.g. ["OMM", "MPE"].
+     */
+    fun emitsSchemas(j: Int) : String? {
+        val o = __offset(106)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val emitsSchemasLength : Int
+        get() {
+            val o = __offset(106); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsICN(_bb: ByteBuffer): ICN = getRootAsICN(_bb, ICN())
@@ -363,13 +636,35 @@ class ICN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ICNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ICN")
-        fun createICN(builder: FlatBufferBuilder, connectorIdOffset: Int, kind: Byte, targetSchemaOffset: Int, status: Byte, statusMessageOffset: Int, endpointUrlOffset: Int, httpMethodOffset: Int, authKind: Byte, authHeaderNameOffset: Int, credentialReferenceOffset: Int, pollIntervalMs: UInt, directoryPathOffset: Int, filePatternOffset: Int, scanIntervalMs: UInt, settleDelayMs: UInt, postIngestAction: Byte, uploadSessionIdOffset: Int, uploadFileCount: UInt, uploadTotalBytes: ULong, uploadContentHashOffset: Int, detectedFormatOffset: Int, sampleRecordCount: UInt, lastIngestAt: ULong, lastErrorAt: ULong, lastErrorOffset: Int, createdAt: ULong, updatedAt: ULong, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
-            builder.startTable(29)
+        fun createICN(builder: FlatBufferBuilder, connectorIdOffset: Int, kind: Byte, targetSchemaOffset: Int, status: Byte, statusMessageOffset: Int, endpointUrlOffset: Int, httpMethodOffset: Int, authKind: Byte, authHeaderNameOffset: Int, credentialReferenceOffset: Int, pollIntervalMs: UInt, directoryPathOffset: Int, filePatternOffset: Int, scanIntervalMs: UInt, settleDelayMs: UInt, postIngestAction: Byte, uploadSessionIdOffset: Int, uploadFileCount: UInt, uploadTotalBytes: ULong, uploadContentHashOffset: Int, detectedFormatOffset: Int, sampleRecordCount: UInt, lastIngestAt: ULong, lastErrorAt: ULong, lastErrorOffset: Int, createdAt: ULong, updatedAt: ULong, providerPeerIdOffset: Int, providerSignatureOffset: Int, originIdOffset: Int, originNameOffset: Int, datasetIdOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, licenseOffset: Int, licenseUrlOffset: Int, citationOffset: Int, minFetchIntervalMs: ULong, nextEligibleAt: ULong, lastHttpStatus: UShort, lastSourceEtagOffset: Int, lastSourceLastModifiedOffset: Int, lastBatchIdOffset: Int, lastRecordCount: ULong, lastInsertedCount: ULong, lastDurationMs: ULong, fetchCount: ULong, ingestCount: ULong, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, feedHeadOffset: Int, emitsSchemasOffset: Int) : Int {
+            builder.startTable(52)
+            addINGESTCOUNT(builder, ingestCount)
+            addFETCHCOUNT(builder, fetchCount)
+            addLASTDURATIONMS(builder, lastDurationMs)
+            addLASTINSERTEDCOUNT(builder, lastInsertedCount)
+            addLASTRECORDCOUNT(builder, lastRecordCount)
+            addNEXTELIGIBLEAT(builder, nextEligibleAt)
+            addMINFETCHINTERVALMS(builder, minFetchIntervalMs)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addLASTERRORAT(builder, lastErrorAt)
             addLASTINGESTAT(builder, lastIngestAt)
             addUPLOADTOTALBYTES(builder, uploadTotalBytes)
+            addEMITSSCHEMAS(builder, emitsSchemasOffset)
+            addFEEDHEAD(builder, feedHeadOffset)
+            addLASTPNMCID(builder, lastPnmCidOffset)
+            addLASTPUBLICATIONCID(builder, lastPublicationCidOffset)
+            addLASTBATCHID(builder, lastBatchIdOffset)
+            addLASTSOURCELASTMODIFIED(builder, lastSourceLastModifiedOffset)
+            addLASTSOURCEETAG(builder, lastSourceEtagOffset)
+            addCITATION(builder, citationOffset)
+            addLICENSEURL(builder, licenseUrlOffset)
+            addLICENSE(builder, licenseOffset)
+            addSOURCENAME(builder, sourceNameOffset)
+            addPROVIDERID(builder, providerIdOffset)
+            addDATASETID(builder, datasetIdOffset)
+            addORIGINNAME(builder, originNameOffset)
+            addORIGINID(builder, originIdOffset)
             addPROVIDERSIGNATURE(builder, providerSignatureOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
             addLASTERROR(builder, lastErrorOffset)
@@ -390,13 +685,14 @@ class ICN : Table() {
             addSTATUSMESSAGE(builder, statusMessageOffset)
             addTARGETSCHEMA(builder, targetSchemaOffset)
             addCONNECTORID(builder, connectorIdOffset)
+            addLASTHTTPSTATUS(builder, lastHttpStatus)
             addPOSTINGESTACTION(builder, postIngestAction)
             addAUTHKIND(builder, authKind)
             addSTATUS(builder, status)
             addKIND(builder, kind)
             return endICN(builder)
         }
-        fun startICN(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startICN(builder: FlatBufferBuilder) = builder.startTable(52)
         fun addCONNECTORID(builder: FlatBufferBuilder, connectorId: Int) = builder.addOffset(0, connectorId, 0)
         fun addKIND(builder: FlatBufferBuilder, kind: Byte) = builder.addByte(1, kind, 0)
         fun addTARGETSCHEMA(builder: FlatBufferBuilder, targetSchema: Int) = builder.addOffset(2, targetSchema, 0)
@@ -435,6 +731,37 @@ class ICN : Table() {
             return builder.endVector()
         }
         fun startProviderSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addORIGINID(builder: FlatBufferBuilder, originId: Int) = builder.addOffset(29, originId, 0)
+        fun addORIGINNAME(builder: FlatBufferBuilder, originName: Int) = builder.addOffset(30, originName, 0)
+        fun addDATASETID(builder: FlatBufferBuilder, datasetId: Int) = builder.addOffset(31, datasetId, 0)
+        fun addPROVIDERID(builder: FlatBufferBuilder, providerId: Int) = builder.addOffset(32, providerId, 0)
+        fun addSOURCENAME(builder: FlatBufferBuilder, sourceName: Int) = builder.addOffset(33, sourceName, 0)
+        fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(34, license, 0)
+        fun addLICENSEURL(builder: FlatBufferBuilder, licenseUrl: Int) = builder.addOffset(35, licenseUrl, 0)
+        fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(36, citation, 0)
+        fun addMINFETCHINTERVALMS(builder: FlatBufferBuilder, minFetchIntervalMs: ULong) = builder.addLong(37, minFetchIntervalMs.toLong(), 0)
+        fun addNEXTELIGIBLEAT(builder: FlatBufferBuilder, nextEligibleAt: ULong) = builder.addLong(38, nextEligibleAt.toLong(), 0)
+        fun addLASTHTTPSTATUS(builder: FlatBufferBuilder, lastHttpStatus: UShort) = builder.addShort(39, lastHttpStatus.toShort(), 0)
+        fun addLASTSOURCEETAG(builder: FlatBufferBuilder, lastSourceEtag: Int) = builder.addOffset(40, lastSourceEtag, 0)
+        fun addLASTSOURCELASTMODIFIED(builder: FlatBufferBuilder, lastSourceLastModified: Int) = builder.addOffset(41, lastSourceLastModified, 0)
+        fun addLASTBATCHID(builder: FlatBufferBuilder, lastBatchId: Int) = builder.addOffset(42, lastBatchId, 0)
+        fun addLASTRECORDCOUNT(builder: FlatBufferBuilder, lastRecordCount: ULong) = builder.addLong(43, lastRecordCount.toLong(), 0)
+        fun addLASTINSERTEDCOUNT(builder: FlatBufferBuilder, lastInsertedCount: ULong) = builder.addLong(44, lastInsertedCount.toLong(), 0)
+        fun addLASTDURATIONMS(builder: FlatBufferBuilder, lastDurationMs: ULong) = builder.addLong(45, lastDurationMs.toLong(), 0)
+        fun addFETCHCOUNT(builder: FlatBufferBuilder, fetchCount: ULong) = builder.addLong(46, fetchCount.toLong(), 0)
+        fun addINGESTCOUNT(builder: FlatBufferBuilder, ingestCount: ULong) = builder.addLong(47, ingestCount.toLong(), 0)
+        fun addLASTPUBLICATIONCID(builder: FlatBufferBuilder, lastPublicationCid: Int) = builder.addOffset(48, lastPublicationCid, 0)
+        fun addLASTPNMCID(builder: FlatBufferBuilder, lastPnmCid: Int) = builder.addOffset(49, lastPnmCid, 0)
+        fun addFEEDHEAD(builder: FlatBufferBuilder, feedHead: Int) = builder.addOffset(50, feedHead, 0)
+        fun addEMITSSCHEMAS(builder: FlatBufferBuilder, emitsSchemas: Int) = builder.addOffset(51, emitsSchemas, 0)
+        fun createEmitsSchemasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEmitsSchemasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endICN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

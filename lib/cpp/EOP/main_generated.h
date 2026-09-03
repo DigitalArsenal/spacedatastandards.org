@@ -167,7 +167,11 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_UT1_MINUS_UTC_SECONDS_HP = 48,
     VT_LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 50,
     VT_DATA_SET_EPOCH = 52,
-    VT_DATA_SET_CID = 54
+    VT_DATA_SET_CID = 54,
+    VT_NUTATION_DPSI_RADIANS = 56,
+    VT_NUTATION_DEPS_RADIANS = 58,
+    VT_NUTATION_DPSI_UNCERTAINTY_RADIANS = 60,
+    VT_NUTATION_DEPS_UNCERTAINTY_RADIANS = 62
   };
   ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
   const ::flatbuffers::String *DATE() const {
@@ -288,6 +292,25 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DATA_SET_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DATA_SET_CID);
   }
+  /// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  /// radians, as published beside the CIP offsets by combined rapid-service
+  /// series.
+  double NUTATION_DPSI_RADIANS() const {
+    return GetField<double>(VT_NUTATION_DPSI_RADIANS, 0.0);
+  }
+  /// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  /// radians.
+  double NUTATION_DEPS_RADIANS() const {
+    return GetField<double>(VT_NUTATION_DEPS_RADIANS, 0.0);
+  }
+  /// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  double NUTATION_DPSI_UNCERTAINTY_RADIANS() const {
+    return GetField<double>(VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0);
+  }
+  /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  double NUTATION_DEPS_UNCERTAINTY_RADIANS() const {
+    return GetField<double>(VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -320,6 +343,10 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DATA_SET_EPOCH()) &&
            VerifyOffset(verifier, VT_DATA_SET_CID) &&
            verifier.VerifyString(DATA_SET_CID()) &&
+           VerifyField<double>(verifier, VT_NUTATION_DPSI_RADIANS, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_DEPS_RADIANS, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, 8) &&
            verifier.EndTable();
   }
 };
@@ -406,6 +433,18 @@ struct EOPBuilder {
   void add_DATA_SET_CID(::flatbuffers::Offset<::flatbuffers::String> DATA_SET_CID) {
     fbb_.AddOffset(EOP::VT_DATA_SET_CID, DATA_SET_CID);
   }
+  void add_NUTATION_DPSI_RADIANS(double NUTATION_DPSI_RADIANS) {
+    fbb_.AddElement<double>(EOP::VT_NUTATION_DPSI_RADIANS, NUTATION_DPSI_RADIANS, 0.0);
+  }
+  void add_NUTATION_DEPS_RADIANS(double NUTATION_DEPS_RADIANS) {
+    fbb_.AddElement<double>(EOP::VT_NUTATION_DEPS_RADIANS, NUTATION_DEPS_RADIANS, 0.0);
+  }
+  void add_NUTATION_DPSI_UNCERTAINTY_RADIANS(double NUTATION_DPSI_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<double>(EOP::VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0);
+  }
+  void add_NUTATION_DEPS_UNCERTAINTY_RADIANS(double NUTATION_DEPS_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<double>(EOP::VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
+  }
   explicit EOPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -444,8 +483,16 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
     double UT1_MINUS_UTC_SECONDS_HP = 0.0,
     double LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> DATA_SET_EPOCH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_SET_CID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_SET_CID = 0,
+    double NUTATION_DPSI_RADIANS = 0.0,
+    double NUTATION_DEPS_RADIANS = 0.0,
+    double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
+    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
   EOPBuilder builder_(_fbb);
+  builder_.add_NUTATION_DEPS_UNCERTAINTY_RADIANS(NUTATION_DEPS_UNCERTAINTY_RADIANS);
+  builder_.add_NUTATION_DPSI_UNCERTAINTY_RADIANS(NUTATION_DPSI_UNCERTAINTY_RADIANS);
+  builder_.add_NUTATION_DEPS_RADIANS(NUTATION_DEPS_RADIANS);
+  builder_.add_NUTATION_DPSI_RADIANS(NUTATION_DPSI_RADIANS);
   builder_.add_LENGTH_OF_DAY_CORRECTION_SECONDS_HP(LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
   builder_.add_UT1_MINUS_UTC_SECONDS_HP(UT1_MINUS_UTC_SECONDS_HP);
   builder_.add_Y_CELESTIAL_POLE_OFFSET_RADIANS_HP(Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
@@ -502,7 +549,11 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
     double UT1_MINUS_UTC_SECONDS_HP = 0.0,
     double LENGTH_OF_DAY_CORRECTION_SECONDS_HP = 0.0,
     const char *DATA_SET_EPOCH = nullptr,
-    const char *DATA_SET_CID = nullptr) {
+    const char *DATA_SET_CID = nullptr,
+    double NUTATION_DPSI_RADIANS = 0.0,
+    double NUTATION_DEPS_RADIANS = 0.0,
+    double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
+    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
   auto DATE__ = DATE ? _fbb.CreateString(DATE) : 0;
   auto DATA_SET_EPOCH__ = DATA_SET_EPOCH ? _fbb.CreateString(DATA_SET_EPOCH) : 0;
   auto DATA_SET_CID__ = DATA_SET_CID ? _fbb.CreateString(DATA_SET_CID) : 0;
@@ -533,7 +584,11 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
       UT1_MINUS_UTC_SECONDS_HP,
       LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
       DATA_SET_EPOCH__,
-      DATA_SET_CID__);
+      DATA_SET_CID__,
+      NUTATION_DPSI_RADIANS,
+      NUTATION_DEPS_RADIANS,
+      NUTATION_DPSI_UNCERTAINTY_RADIANS,
+      NUTATION_DEPS_UNCERTAINTY_RADIANS);
 }
 
 inline const EOP *GetEOP(const void *buf) {

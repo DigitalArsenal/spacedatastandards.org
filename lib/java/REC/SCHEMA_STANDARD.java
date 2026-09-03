@@ -46,24 +46,74 @@ public final class SCHEMA_STANDARD extends com.google.flatbuffers.Table {
   public int filesLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public StringVector filesVector() { return filesVector(new StringVector()); }
   public StringVector filesVector(StringVector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Human-readable name of the standard.
+   */
+  public String NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * One-paragraph description of the standard.
+   */
+  public String DESCRIPTION() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Four-character file identifier, e.g. "$OMM".
+   */
+  public String FILE_IDENTIFIER() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_IDENTIFIERAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer FILE_IDENTIFIERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Hash of the standard's schema text.
+   */
+  public String SCHEMA_HASH() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SCHEMA_HASHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer SCHEMA_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * True when the reporting node routes the standard through its store.
+   */
+  public boolean ROUTED() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Position of the standard in the record union; append-only forever.
+   */
+  public int RECORD_TYPE_ORDINAL() { int o = __offset(20); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createSCHEMA_STANDARD(FlatBufferBuilder builder,
       int keyOffset,
       int idlOffset,
-      int filesOffset) {
-    builder.startTable(3);
+      int filesOffset,
+      int NAMEOffset,
+      int DESCRIPTIONOffset,
+      int FILE_IDENTIFIEROffset,
+      int SCHEMA_HASHOffset,
+      boolean ROUTED,
+      int RECORD_TYPE_ORDINAL) {
+    builder.startTable(9);
+    SCHEMA_STANDARD.addSchemaHash(builder, SCHEMA_HASHOffset);
+    SCHEMA_STANDARD.addFileIdentifier(builder, FILE_IDENTIFIEROffset);
+    SCHEMA_STANDARD.addDescription(builder, DESCRIPTIONOffset);
+    SCHEMA_STANDARD.addName(builder, NAMEOffset);
     SCHEMA_STANDARD.addFiles(builder, filesOffset);
     SCHEMA_STANDARD.addIdl(builder, idlOffset);
     SCHEMA_STANDARD.addKey(builder, keyOffset);
+    SCHEMA_STANDARD.addRecordTypeOrdinal(builder, RECORD_TYPE_ORDINAL);
+    SCHEMA_STANDARD.addRouted(builder, ROUTED);
     return SCHEMA_STANDARD.endSCHEMA_STANDARD(builder);
   }
 
-  public static void startSCHEMA_STANDARD(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startSCHEMA_STANDARD(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addKey(FlatBufferBuilder builder, int keyOffset) { builder.addOffset(0, keyOffset, 0); }
   public static void addIdl(FlatBufferBuilder builder, int idlOffset) { builder.addOffset(1, idlOffset, 0); }
   public static void addFiles(FlatBufferBuilder builder, int filesOffset) { builder.addOffset(2, filesOffset, 0); }
   public static int createFilesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFilesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(3, NAMEOffset, 0); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(4, DESCRIPTIONOffset, 0); }
+  public static void addFileIdentifier(FlatBufferBuilder builder, int FILE_IDENTIFIEROffset) { builder.addOffset(5, FILE_IDENTIFIEROffset, 0); }
+  public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(6, SCHEMA_HASHOffset, 0); }
+  public static void addRouted(FlatBufferBuilder builder, boolean ROUTED) { builder.addBoolean(7, ROUTED, false); }
+  public static void addRecordTypeOrdinal(FlatBufferBuilder builder, int RECORD_TYPE_ORDINAL) { builder.addShort(8, (short) RECORD_TYPE_ORDINAL, (short) 0); }
   public static int endSCHEMA_STANDARD(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

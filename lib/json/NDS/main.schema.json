@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ndsPublisherRung" : {
+      "type" : "string",
+      "enum": ["SourceTag", "Signed", "Bonded"]
+    },
+    "ndsIngestEventKind" : {
+      "type" : "string",
+      "enum": ["Stall", "Reject", "Recover"]
+    },
+    "NDSSchemaStat" : {
+      "type" : "object",
+      "description" : "One standard's record footprint in the node store.",
+      "properties" : {
+        "SCHEMA" : {
+                "type" : "string",
+                "description" : "Standard code, e.g. \"OMM\"."
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "NEWEST_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Newest record epoch held, Unix milliseconds; 0 = unknown."
+              },
+        "OLDEST_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Oldest record epoch held, Unix milliseconds; 0 = unknown."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSSourceStat" : {
+      "type" : "object",
+      "description" : "One (standard, provider, source, batch) ingest lane's live progress and\nprovenance.",
+      "properties" : {
+        "SCHEMA" : {
+                "type" : "string"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "BATCH_ID" : {
+                "type" : "string"
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "FIRST_INGEST_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "LAST_INGEST_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = unknown."
+              },
+        "WINDOW_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Records observed in the current rolling window."
+              },
+        "PRIOR_WINDOW_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Records observed in the immediately preceding rolling window."
+              },
+        "WINDOW_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Rolling-window width in milliseconds."
+              },
+        "PRODUCER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the producer whose signed identity covers this lane's\npublications."
+              },
+        "PRODUCER_EPM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the producer's identity record."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher the producer retrieved the records from, as a host\nname or stable identifier."
+              },
+        "ORIGIN_NAME" : {
+                "type" : "string",
+                "description" : "Display name of the upstream publisher."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Upstream URL the records were retrieved from."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Licence under which the upstream publisher offers the records."
+              },
+        "CONNECTOR_ID" : {
+                "type" : "string",
+                "description" : "Ingest connector that produced this lane (`$ICN` CONNECTOR_ID)."
+              },
+        "PUBLISHER_RUNG" : {
+                "$ref" : "#/definitions/ndsPublisherRung",
+                "description" : "Verification rung of the producer claim."
+              },
+        "EVIDENCE" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Evidence references supporting PUBLISHER_RUNG (record CIDs, proof ids)."
+              },
+        "LAST_PUBLICATION_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the lane's newest publication manifest."
+              },
+        "LAST_PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the lane's newest publish notification."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSIngestEvent" : {
+      "type" : "object",
+      "description" : "One source-ingest transition surfaced to the dashboard.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/ndsIngestEventKind"
+              },
+        "SCHEMA" : {
+                "type" : "string"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "MESSAGE" : {
+                "type" : "string"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds when the transition occurred."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSTopicStat" : {
+      "type" : "object",
+      "description" : "Live traffic for one publish/subscribe topic.",
+      "properties" : {
+        "TOPIC" : {
+                "type" : "string"
+              },
+        "RATE_PER_MIN" : {
+                "type" : "number"
+              },
+        "LAST_SEEN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = not observed."
+              },
+        "SUBSCRIBED" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSModuleStat" : {
+      "type" : "object",
+      "description" : "Runtime counters for one installed module or flow.",
+      "properties" : {
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Runtime state, e.g. \"running\", \"installed\", \"error\"."
+              },
+        "RUN_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "ERROR_COUNT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "LAST_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = never."
+              },
+        "NEXT_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = not scheduled."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDSTrustEngineStat" : {
+      "type" : "object",
+      "description" : "Counters for the node's trust rule evaluation engine.",
+      "properties" : {
+        "MIN_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Minimum interval between evaluation passes, milliseconds."
+              },
+        "RUNS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "LAST_RUN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds; 0 = never."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NDS" : {
+      "type" : "object",
+      "description" : "Node Data Statistics - one node's data-plane snapshot.",
+      "properties" : {
+        "GENERATED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds when this snapshot was assembled."
+              },
+        "SCHEMAS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSSchemaStat"}
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSSourceStat"}
+              },
+        "TOTAL_RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "STALE" : {
+                "type" : "boolean",
+                "description" : "True when the assembling read hit its store budget and this snapshot\ncarries the last-known-good numbers."
+              },
+        "AS_OF" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds the store numbers were last true; 0 = never read."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSIngestEvent"}
+              },
+        "TOPICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSTopicStat"}
+              },
+        "MODULES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NDSModuleStat"}
+              },
+        "TRUST_ENGINE" : {
+                "$ref" : "#/definitions/NDSTrustEngineStat"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NDS"
+}

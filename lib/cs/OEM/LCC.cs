@@ -20,16 +20,65 @@ public struct LCC : IFlatbufferObject
   public LCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public legacyCountryCode OWNER { get { int o = __p.__offset(4); return o != 0 ? (legacyCountryCode)__p.bb.GetSbyte(o + __p.bb_pos) : legacyCountryCode.AB; } }
+  /// Display name of the owner or source the code stands for.
+  public string NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Longer description of the owner or source.
+  public string DESCRIPTION { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(8); }
+  /// True while the code is in current use by the publishing catalogue.
+  public bool ACTIVE { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// URL of the reference table the row was retrieved from.
+  public string SOURCE_URL { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_URLBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_URLBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetSOURCE_URLArray() { return __p.__vector_as_array<byte>(12); }
+  /// ISO 8601 UTC time the reference table was retrieved.
+  public string RETRIEVED_AT { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRETRIEVED_ATBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetRETRIEVED_ATBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetRETRIEVED_ATArray() { return __p.__vector_as_array<byte>(14); }
 
   public static Offset<LCC> CreateLCC(FlatBufferBuilder builder,
-      legacyCountryCode OWNER = legacyCountryCode.AB) {
-    builder.StartTable(1);
+      legacyCountryCode OWNER = legacyCountryCode.AB,
+      StringOffset NAMEOffset = default(StringOffset),
+      StringOffset DESCRIPTIONOffset = default(StringOffset),
+      bool ACTIVE = false,
+      StringOffset SOURCE_URLOffset = default(StringOffset),
+      StringOffset RETRIEVED_ATOffset = default(StringOffset)) {
+    builder.StartTable(6);
+    LCC.AddRETRIEVED_AT(builder, RETRIEVED_ATOffset);
+    LCC.AddSOURCE_URL(builder, SOURCE_URLOffset);
+    LCC.AddDESCRIPTION(builder, DESCRIPTIONOffset);
+    LCC.AddNAME(builder, NAMEOffset);
+    LCC.AddACTIVE(builder, ACTIVE);
     LCC.AddOWNER(builder, OWNER);
     return LCC.EndLCC(builder);
   }
 
-  public static void StartLCC(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void StartLCC(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddSbyte(0, (sbyte)OWNER, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(2, DESCRIPTIONOffset.Value, 0); }
+  public static void AddACTIVE(FlatBufferBuilder builder, bool ACTIVE) { builder.AddBool(3, ACTIVE, false); }
+  public static void AddSOURCE_URL(FlatBufferBuilder builder, StringOffset SOURCE_URLOffset) { builder.AddOffset(4, SOURCE_URLOffset.Value, 0); }
+  public static void AddRETRIEVED_AT(FlatBufferBuilder builder, StringOffset RETRIEVED_ATOffset) { builder.AddOffset(5, RETRIEVED_ATOffset.Value, 0); }
   public static Offset<LCC> EndLCC(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<LCC>(o);
@@ -43,21 +92,45 @@ public struct LCC : IFlatbufferObject
   }
   public void UnPackTo(LCCT _o) {
     _o.OWNER = this.OWNER;
+    _o.NAME = this.NAME;
+    _o.DESCRIPTION = this.DESCRIPTION;
+    _o.ACTIVE = this.ACTIVE;
+    _o.SOURCE_URL = this.SOURCE_URL;
+    _o.RETRIEVED_AT = this.RETRIEVED_AT;
   }
   public static Offset<LCC> Pack(FlatBufferBuilder builder, LCCT _o) {
     if (_o == null) return default(Offset<LCC>);
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
+    var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
+    var _SOURCE_URL = _o.SOURCE_URL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_URL);
+    var _RETRIEVED_AT = _o.RETRIEVED_AT == null ? default(StringOffset) : builder.CreateString(_o.RETRIEVED_AT);
     return CreateLCC(
       builder,
-      _o.OWNER);
+      _o.OWNER,
+      _NAME,
+      _DESCRIPTION,
+      _o.ACTIVE,
+      _SOURCE_URL,
+      _RETRIEVED_AT);
   }
 }
 
 public class LCCT
 {
   public legacyCountryCode OWNER { get; set; }
+  public string NAME { get; set; }
+  public string DESCRIPTION { get; set; }
+  public bool ACTIVE { get; set; }
+  public string SOURCE_URL { get; set; }
+  public string RETRIEVED_AT { get; set; }
 
   public LCCT() {
     this.OWNER = legacyCountryCode.AB;
+    this.NAME = null;
+    this.DESCRIPTION = null;
+    this.ACTIVE = false;
+    this.SOURCE_URL = null;
+    this.RETRIEVED_AT = null;
   }
   public static LCCT DeserializeFromBinary(byte[] fbBuffer) {
     return LCC.GetRootAsLCC(new ByteBuffer(fbBuffer)).UnPack();
@@ -76,6 +149,11 @@ static public class LCCVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*OWNER*/, 1 /*legacyCountryCode*/, 1, false)
+      && verifier.VerifyString(tablePos, 6 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 8 /*DESCRIPTION*/, false)
+      && verifier.VerifyField(tablePos, 10 /*ACTIVE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 12 /*SOURCE_URL*/, false)
+      && verifier.VerifyString(tablePos, 14 /*RETRIEVED_AT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

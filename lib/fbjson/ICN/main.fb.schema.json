@@ -358,6 +358,139 @@
           },
           "description": "Provider signature over the connector record.",
           "x-flatbuffer-type": "[ubyte]"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Upstream publisher the connector retrieves records from, as a host name\nor stable identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_NAME": {
+          "type": "string",
+          "description": "Display name of the upstream publisher.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Stable dataset identifier within the origin, e.g. \"gp-full-catalog\".",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Provider identifier the lane's records are stored under.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "description": "Source name the lane's records are stored under.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Licence under which the upstream publisher offers the records.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Citation the upstream publisher asks for.",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_FETCH_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Minimum interval between fetches of the same dataset, milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "NEXT_ELIGIBLE_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix milliseconds when the next fetch is eligible.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_HTTP_STATUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "HTTP status of the last fetch.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "LAST_SOURCE_ETAG": {
+          "type": "string",
+          "description": "Entity tag returned by the last fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_SOURCE_LAST_MODIFIED": {
+          "type": "string",
+          "description": "Last-Modified value returned by the last fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_BATCH_ID": {
+          "type": "string",
+          "description": "Batch identifier of the last ingest.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records parsed by the last ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_INSERTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records newly inserted by the last ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_DURATION_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Duration of the last fetch and ingest, milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "FETCH_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Fetches attempted over the connector's lifetime.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "INGEST_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Ingests completed over the connector's lifetime.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_PUBLICATION_CID": {
+          "type": "string",
+          "description": "Content identifier of the last publication manifest emitted.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_PNM_CID": {
+          "type": "string",
+          "description": "Content identifier of the last publish notification emitted.",
+          "x-flatbuffer-type": "string"
+        },
+        "FEED_HEAD": {
+          "type": "string",
+          "description": "Feed head the connector last advanced to.",
+          "x-flatbuffer-type": "string"
+        },
+        "EMITS_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standard codes the connector emits, e.g. [\"OMM\", \"MPE\"].",
+          "x-flatbuffer-type": "[string]"
         }
       },
       "required": [

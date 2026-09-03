@@ -261,16 +261,46 @@ class LCC
 class LCC : flatbuffers.handle
     def OWNER() -> legacyCountryCode:
         return legacyCountryCode(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Display name of the owner or source the code stands for.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Longer description of the owner or source.
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// True while the code is in current use by the publishing catalogue.
+    def ACTIVE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// URL of the reference table the row was retrieved from.
+    def SOURCE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// ISO 8601 UTC time the reference table was retrieved.
+    def RETRIEVED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
 
 def GetRootAsLCC(buf:string): return LCC { buf, flatbuffers.indirect(buf, 0) }
 
 struct LCCBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(1)
+        b_.StartObject(6)
         return this
     def add_OWNER(OWNER:legacyCountryCode):
         b_.PrependInt8Slot(0, OWNER, 0)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, NAME)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, DESCRIPTION)
+        return this
+    def add_ACTIVE(ACTIVE:bool):
+        b_.PrependBoolSlot(3, ACTIVE, 0)
+        return this
+    def add_SOURCE_URL(SOURCE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SOURCE_URL)
+        return this
+    def add_RETRIEVED_AT(RETRIEVED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, RETRIEVED_AT)
         return this
     def end():
         return b_.EndObject()

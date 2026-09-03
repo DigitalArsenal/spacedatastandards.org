@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { dssAction } from './dssAction.js';
+import { dssPinPolicy } from './dssPinPolicy.js';
 import { dssSyncState } from './dssSyncState.js';
 
 
@@ -232,8 +234,179 @@ ERROR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Standard code of the lane, e.g. "OMM".
+ */
+SCHEMA_NAME():string|null
+SCHEMA_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SCHEMA_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+PROVIDER_ID():string|null
+PROVIDER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+SOURCE_NAME():string|null
+SOURCE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Stable dataset identifier within the origin.
+ */
+DATASET_ID():string|null
+DATASET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATASET_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ingest connector that produces the lane, when known.
+ */
+CONNECTOR_ID():string|null
+CONNECTOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONNECTOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Channel identifier the lane is announced on.
+ */
+CHANNEL_ID():string|null
+CHANNEL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CHANNEL_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Publish/subscribe topic of the lane.
+ */
+TOPIC():string|null
+TOPIC(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TOPIC(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True when this node subscribes to the lane.
+ */
+SUBSCRIBED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+PIN_POLICY():dssPinPolicy {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : dssPinPolicy.None;
+}
+
+/**
+ * Visibility of the lane, e.g. "public", "private".
+ */
+VISIBILITY():string|null
+VISIBILITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VISIBILITY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Encryption state of the lane's publications, e.g. "plain", "encrypted".
+ */
+ENCRYPTION_STATE():string|null
+ENCRYPTION_STATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ENCRYPTION_STATE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+ */
+GRANT_STATE():string|null
+GRANT_STATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GRANT_STATE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Feed head this node has materialised up to.
+ */
+FEED_HEAD():string|null
+FEED_HEAD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FEED_HEAD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the newest publication manifest known.
+ */
+LAST_PUBLICATION_CID():string|null
+LAST_PUBLICATION_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_PUBLICATION_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the newest publish notification known.
+ */
+LAST_PNM_CID():string|null
+LAST_PNM_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_PNM_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Rows materialised since the previous SYNCED state.
+ */
+DELTA_ROWS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix milliseconds the current or last sync pass started; 0 = never.
+ */
+LAST_SYNC_STARTED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Action a client requests when sending this record to a node.
+ */
+REQUESTED_ACTION():dssAction {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : dssAction.None;
+}
+
+/**
+ * Upstream publisher of the lane's records.
+ */
+ORIGIN_ID():string|null
+ORIGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIGIN_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startDSS(builder:flatbuffers.Builder) {
-  builder.startObject(34);
+  builder.startObject(53);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:dssSyncState) {
@@ -384,6 +557,82 @@ static addError(builder:flatbuffers.Builder, ERROROffset:flatbuffers.Offset) {
   builder.addFieldOffset(33, ERROROffset, 0);
 }
 
+static addSchemaName(builder:flatbuffers.Builder, SCHEMA_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, SCHEMA_NAMEOffset, 0);
+}
+
+static addProviderId(builder:flatbuffers.Builder, PROVIDER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, PROVIDER_IDOffset, 0);
+}
+
+static addSourceName(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, SOURCE_NAMEOffset, 0);
+}
+
+static addDatasetId(builder:flatbuffers.Builder, DATASET_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, DATASET_IDOffset, 0);
+}
+
+static addConnectorId(builder:flatbuffers.Builder, CONNECTOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, CONNECTOR_IDOffset, 0);
+}
+
+static addChannelId(builder:flatbuffers.Builder, CHANNEL_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, CHANNEL_IDOffset, 0);
+}
+
+static addTopic(builder:flatbuffers.Builder, TOPICOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, TOPICOffset, 0);
+}
+
+static addSubscribed(builder:flatbuffers.Builder, SUBSCRIBED:boolean) {
+  builder.addFieldInt8(41, +SUBSCRIBED, +false);
+}
+
+static addPinPolicy(builder:flatbuffers.Builder, PIN_POLICY:dssPinPolicy) {
+  builder.addFieldInt8(42, PIN_POLICY, dssPinPolicy.None);
+}
+
+static addVisibility(builder:flatbuffers.Builder, VISIBILITYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, VISIBILITYOffset, 0);
+}
+
+static addEncryptionState(builder:flatbuffers.Builder, ENCRYPTION_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, ENCRYPTION_STATEOffset, 0);
+}
+
+static addGrantState(builder:flatbuffers.Builder, GRANT_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, GRANT_STATEOffset, 0);
+}
+
+static addFeedHead(builder:flatbuffers.Builder, FEED_HEADOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(46, FEED_HEADOffset, 0);
+}
+
+static addLastPublicationCid(builder:flatbuffers.Builder, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, LAST_PUBLICATION_CIDOffset, 0);
+}
+
+static addLastPnmCid(builder:flatbuffers.Builder, LAST_PNM_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, LAST_PNM_CIDOffset, 0);
+}
+
+static addDeltaRows(builder:flatbuffers.Builder, DELTA_ROWS:bigint) {
+  builder.addFieldInt64(49, DELTA_ROWS, BigInt('0'));
+}
+
+static addLastSyncStartedAt(builder:flatbuffers.Builder, LAST_SYNC_STARTED_AT:bigint) {
+  builder.addFieldInt64(50, LAST_SYNC_STARTED_AT, BigInt('0'));
+}
+
+static addRequestedAction(builder:flatbuffers.Builder, REQUESTED_ACTION:dssAction) {
+  builder.addFieldInt8(51, REQUESTED_ACTION, dssAction.None);
+}
+
+static addOriginId(builder:flatbuffers.Builder, ORIGIN_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, ORIGIN_IDOffset, 0);
+}
+
 static endDSS(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -397,7 +646,7 @@ static finishSizePrefixedDSSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$DSS', true);
 }
 
-static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:bigint, TOTAL_ROWS:bigint, LOCAL_ROWS:bigint, PINNED_ROWS:bigint, MISSING_ROWS:bigint, CACHED_BYTES:bigint, PINNED_BYTES:bigint, DOWNLOADED_BYTES:bigint, DOWNLOAD_SPEED_BYTES_PER_SECOND:bigint, MEASURED_WIRE_SPEED_BYTES_PER_SECOND:bigint, HAS_WIRE_SPEED_UTILIZATION:boolean, WIRE_SPEED_UTILIZATION:number, WIRE_SPEED_TARGET:number, HAS_WIRE_SPEED_TARGET_MET:boolean, WIRE_SPEED_TARGET_MET:boolean, MANIFEST_DISCOVERY_MS:bigint, NETWORK_TRANSFER_MS:bigint, VERIFICATION_MS:bigint, FLATSQL_MATERIALIZATION_MS:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_PUBLIC_KEYOffset:flatbuffers.Offset, SNAPSHOT_IDOffset:flatbuffers.Offset, HEADOffset:flatbuffers.Offset, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, HIGH_WATER_MARKOffset:flatbuffers.Offset, QUERY_PROFILEOffset:flatbuffers.Offset, CHUNK_HASHOffset:flatbuffers.Offset, SYNC_PROTOCOLOffset:flatbuffers.Offset, SYNC_FILTEROffset:flatbuffers.Offset, VERIFIED_CHUNKSOffset:flatbuffers.Offset, LAST_SYNCED_ATOffset:flatbuffers.Offset, ERROROffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:bigint, TOTAL_ROWS:bigint, LOCAL_ROWS:bigint, PINNED_ROWS:bigint, MISSING_ROWS:bigint, CACHED_BYTES:bigint, PINNED_BYTES:bigint, DOWNLOADED_BYTES:bigint, DOWNLOAD_SPEED_BYTES_PER_SECOND:bigint, MEASURED_WIRE_SPEED_BYTES_PER_SECOND:bigint, HAS_WIRE_SPEED_UTILIZATION:boolean, WIRE_SPEED_UTILIZATION:number, WIRE_SPEED_TARGET:number, HAS_WIRE_SPEED_TARGET_MET:boolean, WIRE_SPEED_TARGET_MET:boolean, MANIFEST_DISCOVERY_MS:bigint, NETWORK_TRANSFER_MS:bigint, VERIFICATION_MS:bigint, FLATSQL_MATERIALIZATION_MS:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_PUBLIC_KEYOffset:flatbuffers.Offset, SNAPSHOT_IDOffset:flatbuffers.Offset, HEADOffset:flatbuffers.Offset, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, HIGH_WATER_MARKOffset:flatbuffers.Offset, QUERY_PROFILEOffset:flatbuffers.Offset, CHUNK_HASHOffset:flatbuffers.Offset, SYNC_PROTOCOLOffset:flatbuffers.Offset, SYNC_FILTEROffset:flatbuffers.Offset, VERIFIED_CHUNKSOffset:flatbuffers.Offset, LAST_SYNCED_ATOffset:flatbuffers.Offset, ERROROffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, DATASET_IDOffset:flatbuffers.Offset, CONNECTOR_IDOffset:flatbuffers.Offset, CHANNEL_IDOffset:flatbuffers.Offset, TOPICOffset:flatbuffers.Offset, SUBSCRIBED:boolean, PIN_POLICY:dssPinPolicy, VISIBILITYOffset:flatbuffers.Offset, ENCRYPTION_STATEOffset:flatbuffers.Offset, GRANT_STATEOffset:flatbuffers.Offset, FEED_HEADOffset:flatbuffers.Offset, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset, LAST_PNM_CIDOffset:flatbuffers.Offset, DELTA_ROWS:bigint, LAST_SYNC_STARTED_AT:bigint, REQUESTED_ACTION:dssAction, ORIGIN_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   DSS.startDSS(builder);
   DSS.addStatus(builder, STATUS);
   DSS.addSyncedRows(builder, SYNCED_ROWS);
@@ -433,6 +682,25 @@ static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:b
   DSS.addVerifiedChunks(builder, VERIFIED_CHUNKSOffset);
   DSS.addLastSyncedAt(builder, LAST_SYNCED_ATOffset);
   DSS.addError(builder, ERROROffset);
+  DSS.addSchemaName(builder, SCHEMA_NAMEOffset);
+  DSS.addProviderId(builder, PROVIDER_IDOffset);
+  DSS.addSourceName(builder, SOURCE_NAMEOffset);
+  DSS.addDatasetId(builder, DATASET_IDOffset);
+  DSS.addConnectorId(builder, CONNECTOR_IDOffset);
+  DSS.addChannelId(builder, CHANNEL_IDOffset);
+  DSS.addTopic(builder, TOPICOffset);
+  DSS.addSubscribed(builder, SUBSCRIBED);
+  DSS.addPinPolicy(builder, PIN_POLICY);
+  DSS.addVisibility(builder, VISIBILITYOffset);
+  DSS.addEncryptionState(builder, ENCRYPTION_STATEOffset);
+  DSS.addGrantState(builder, GRANT_STATEOffset);
+  DSS.addFeedHead(builder, FEED_HEADOffset);
+  DSS.addLastPublicationCid(builder, LAST_PUBLICATION_CIDOffset);
+  DSS.addLastPnmCid(builder, LAST_PNM_CIDOffset);
+  DSS.addDeltaRows(builder, DELTA_ROWS);
+  DSS.addLastSyncStartedAt(builder, LAST_SYNC_STARTED_AT);
+  DSS.addRequestedAction(builder, REQUESTED_ACTION);
+  DSS.addOriginId(builder, ORIGIN_IDOffset);
   return DSS.endDSS(builder);
 }
 
@@ -471,7 +739,26 @@ unpack(): DSST {
     this.SYNC_FILTER(),
     this.bb!.createScalarList<string>(this.VERIFIED_CHUNKS.bind(this), this.verifiedChunksLength()),
     this.LAST_SYNCED_AT(),
-    this.ERROR()
+    this.ERROR(),
+    this.SCHEMA_NAME(),
+    this.PROVIDER_ID(),
+    this.SOURCE_NAME(),
+    this.DATASET_ID(),
+    this.CONNECTOR_ID(),
+    this.CHANNEL_ID(),
+    this.TOPIC(),
+    this.SUBSCRIBED(),
+    this.PIN_POLICY(),
+    this.VISIBILITY(),
+    this.ENCRYPTION_STATE(),
+    this.GRANT_STATE(),
+    this.FEED_HEAD(),
+    this.LAST_PUBLICATION_CID(),
+    this.LAST_PNM_CID(),
+    this.DELTA_ROWS(),
+    this.LAST_SYNC_STARTED_AT(),
+    this.REQUESTED_ACTION(),
+    this.ORIGIN_ID()
   );
 }
 
@@ -511,6 +798,25 @@ unpackTo(_o: DSST): void {
   _o.VERIFIED_CHUNKS = this.bb!.createScalarList<string>(this.VERIFIED_CHUNKS.bind(this), this.verifiedChunksLength());
   _o.LAST_SYNCED_AT = this.LAST_SYNCED_AT();
   _o.ERROR = this.ERROR();
+  _o.SCHEMA_NAME = this.SCHEMA_NAME();
+  _o.PROVIDER_ID = this.PROVIDER_ID();
+  _o.SOURCE_NAME = this.SOURCE_NAME();
+  _o.DATASET_ID = this.DATASET_ID();
+  _o.CONNECTOR_ID = this.CONNECTOR_ID();
+  _o.CHANNEL_ID = this.CHANNEL_ID();
+  _o.TOPIC = this.TOPIC();
+  _o.SUBSCRIBED = this.SUBSCRIBED();
+  _o.PIN_POLICY = this.PIN_POLICY();
+  _o.VISIBILITY = this.VISIBILITY();
+  _o.ENCRYPTION_STATE = this.ENCRYPTION_STATE();
+  _o.GRANT_STATE = this.GRANT_STATE();
+  _o.FEED_HEAD = this.FEED_HEAD();
+  _o.LAST_PUBLICATION_CID = this.LAST_PUBLICATION_CID();
+  _o.LAST_PNM_CID = this.LAST_PNM_CID();
+  _o.DELTA_ROWS = this.DELTA_ROWS();
+  _o.LAST_SYNC_STARTED_AT = this.LAST_SYNC_STARTED_AT();
+  _o.REQUESTED_ACTION = this.REQUESTED_ACTION();
+  _o.ORIGIN_ID = this.ORIGIN_ID();
 }
 }
 
@@ -549,7 +855,26 @@ constructor(
   public SYNC_FILTER: string|Uint8Array|null = null,
   public VERIFIED_CHUNKS: (string)[] = [],
   public LAST_SYNCED_AT: string|Uint8Array|null = null,
-  public ERROR: string|Uint8Array|null = null
+  public ERROR: string|Uint8Array|null = null,
+  public SCHEMA_NAME: string|Uint8Array|null = null,
+  public PROVIDER_ID: string|Uint8Array|null = null,
+  public SOURCE_NAME: string|Uint8Array|null = null,
+  public DATASET_ID: string|Uint8Array|null = null,
+  public CONNECTOR_ID: string|Uint8Array|null = null,
+  public CHANNEL_ID: string|Uint8Array|null = null,
+  public TOPIC: string|Uint8Array|null = null,
+  public SUBSCRIBED: boolean = false,
+  public PIN_POLICY: dssPinPolicy = dssPinPolicy.None,
+  public VISIBILITY: string|Uint8Array|null = null,
+  public ENCRYPTION_STATE: string|Uint8Array|null = null,
+  public GRANT_STATE: string|Uint8Array|null = null,
+  public FEED_HEAD: string|Uint8Array|null = null,
+  public LAST_PUBLICATION_CID: string|Uint8Array|null = null,
+  public LAST_PNM_CID: string|Uint8Array|null = null,
+  public DELTA_ROWS: bigint = BigInt('0'),
+  public LAST_SYNC_STARTED_AT: bigint = BigInt('0'),
+  public REQUESTED_ACTION: dssAction = dssAction.None,
+  public ORIGIN_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -568,6 +893,20 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const VERIFIED_CHUNKS = DSS.createVerifiedChunksVector(builder, builder.createObjectOffsetList(this.VERIFIED_CHUNKS));
   const LAST_SYNCED_AT = (this.LAST_SYNCED_AT !== null ? builder.createString(this.LAST_SYNCED_AT!) : 0);
   const ERROR = (this.ERROR !== null ? builder.createString(this.ERROR!) : 0);
+  const SCHEMA_NAME = (this.SCHEMA_NAME !== null ? builder.createString(this.SCHEMA_NAME!) : 0);
+  const PROVIDER_ID = (this.PROVIDER_ID !== null ? builder.createString(this.PROVIDER_ID!) : 0);
+  const SOURCE_NAME = (this.SOURCE_NAME !== null ? builder.createString(this.SOURCE_NAME!) : 0);
+  const DATASET_ID = (this.DATASET_ID !== null ? builder.createString(this.DATASET_ID!) : 0);
+  const CONNECTOR_ID = (this.CONNECTOR_ID !== null ? builder.createString(this.CONNECTOR_ID!) : 0);
+  const CHANNEL_ID = (this.CHANNEL_ID !== null ? builder.createString(this.CHANNEL_ID!) : 0);
+  const TOPIC = (this.TOPIC !== null ? builder.createString(this.TOPIC!) : 0);
+  const VISIBILITY = (this.VISIBILITY !== null ? builder.createString(this.VISIBILITY!) : 0);
+  const ENCRYPTION_STATE = (this.ENCRYPTION_STATE !== null ? builder.createString(this.ENCRYPTION_STATE!) : 0);
+  const GRANT_STATE = (this.GRANT_STATE !== null ? builder.createString(this.GRANT_STATE!) : 0);
+  const FEED_HEAD = (this.FEED_HEAD !== null ? builder.createString(this.FEED_HEAD!) : 0);
+  const LAST_PUBLICATION_CID = (this.LAST_PUBLICATION_CID !== null ? builder.createString(this.LAST_PUBLICATION_CID!) : 0);
+  const LAST_PNM_CID = (this.LAST_PNM_CID !== null ? builder.createString(this.LAST_PNM_CID!) : 0);
+  const ORIGIN_ID = (this.ORIGIN_ID !== null ? builder.createString(this.ORIGIN_ID!) : 0);
 
   return DSS.createDSS(builder,
     this.STATUS,
@@ -603,7 +942,26 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SYNC_FILTER,
     VERIFIED_CHUNKS,
     LAST_SYNCED_AT,
-    ERROR
+    ERROR,
+    SCHEMA_NAME,
+    PROVIDER_ID,
+    SOURCE_NAME,
+    DATASET_ID,
+    CONNECTOR_ID,
+    CHANNEL_ID,
+    TOPIC,
+    this.SUBSCRIBED,
+    this.PIN_POLICY,
+    VISIBILITY,
+    ENCRYPTION_STATE,
+    GRANT_STATE,
+    FEED_HEAD,
+    LAST_PUBLICATION_CID,
+    LAST_PNM_CID,
+    this.DELTA_ROWS,
+    this.LAST_SYNC_STARTED_AT,
+    this.REQUESTED_ACTION,
+    ORIGIN_ID
   );
 }
 }

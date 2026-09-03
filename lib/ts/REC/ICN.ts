@@ -306,8 +306,225 @@ providerSignatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Upstream publisher the connector retrieves records from, as a host name
+ * or stable identifier.
+ */
+ORIGIN_ID():string|null
+ORIGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIGIN_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Display name of the upstream publisher.
+ */
+ORIGIN_NAME():string|null
+ORIGIN_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIGIN_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+ */
+DATASET_ID():string|null
+DATASET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATASET_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Provider identifier the lane's records are stored under.
+ */
+PROVIDER_ID():string|null
+PROVIDER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Source name the lane's records are stored under.
+ */
+SOURCE_NAME():string|null
+SOURCE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Licence under which the upstream publisher offers the records.
+ */
+LICENSE():string|null
+LICENSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LICENSE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+LICENSE_URL():string|null
+LICENSE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LICENSE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Citation the upstream publisher asks for.
+ */
+CITATION():string|null
+CITATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CITATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Minimum interval between fetches of the same dataset, milliseconds.
+ */
+MIN_FETCH_INTERVAL_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix milliseconds when the next fetch is eligible.
+ */
+NEXT_ELIGIBLE_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * HTTP status of the last fetch.
+ */
+LAST_HTTP_STATUS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Entity tag returned by the last fetch.
+ */
+LAST_SOURCE_ETAG():string|null
+LAST_SOURCE_ETAG(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_SOURCE_ETAG(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Last-Modified value returned by the last fetch.
+ */
+LAST_SOURCE_LAST_MODIFIED():string|null
+LAST_SOURCE_LAST_MODIFIED(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_SOURCE_LAST_MODIFIED(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Batch identifier of the last ingest.
+ */
+LAST_BATCH_ID():string|null
+LAST_BATCH_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_BATCH_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Records parsed by the last ingest.
+ */
+LAST_RECORD_COUNT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Records newly inserted by the last ingest.
+ */
+LAST_INSERTED_COUNT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Duration of the last fetch and ingest, milliseconds.
+ */
+LAST_DURATION_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Fetches attempted over the connector's lifetime.
+ */
+FETCH_COUNT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Ingests completed over the connector's lifetime.
+ */
+INGEST_COUNT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Content identifier of the last publication manifest emitted.
+ */
+LAST_PUBLICATION_CID():string|null
+LAST_PUBLICATION_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_PUBLICATION_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Content identifier of the last publish notification emitted.
+ */
+LAST_PNM_CID():string|null
+LAST_PNM_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_PNM_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Feed head the connector last advanced to.
+ */
+FEED_HEAD():string|null
+FEED_HEAD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FEED_HEAD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Standard codes the connector emits, e.g. ["OMM", "MPE"].
+ */
+EMITS_SCHEMAS(index: number):string
+EMITS_SCHEMAS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+EMITS_SCHEMAS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+emitsSchemasLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startICN(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(52);
 }
 
 static addConnectorId(builder:flatbuffers.Builder, CONNECTOR_IDOffset:flatbuffers.Offset) {
@@ -438,6 +655,110 @@ static startProviderSignatureVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(1, numElems, 1);
 }
 
+static addOriginId(builder:flatbuffers.Builder, ORIGIN_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, ORIGIN_IDOffset, 0);
+}
+
+static addOriginName(builder:flatbuffers.Builder, ORIGIN_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, ORIGIN_NAMEOffset, 0);
+}
+
+static addDatasetId(builder:flatbuffers.Builder, DATASET_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, DATASET_IDOffset, 0);
+}
+
+static addProviderId(builder:flatbuffers.Builder, PROVIDER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, PROVIDER_IDOffset, 0);
+}
+
+static addSourceName(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, SOURCE_NAMEOffset, 0);
+}
+
+static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, LICENSEOffset, 0);
+}
+
+static addLicenseUrl(builder:flatbuffers.Builder, LICENSE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, LICENSE_URLOffset, 0);
+}
+
+static addCitation(builder:flatbuffers.Builder, CITATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, CITATIONOffset, 0);
+}
+
+static addMinFetchIntervalMs(builder:flatbuffers.Builder, MIN_FETCH_INTERVAL_MS:bigint) {
+  builder.addFieldInt64(37, MIN_FETCH_INTERVAL_MS, BigInt('0'));
+}
+
+static addNextEligibleAt(builder:flatbuffers.Builder, NEXT_ELIGIBLE_AT:bigint) {
+  builder.addFieldInt64(38, NEXT_ELIGIBLE_AT, BigInt('0'));
+}
+
+static addLastHttpStatus(builder:flatbuffers.Builder, LAST_HTTP_STATUS:number) {
+  builder.addFieldInt16(39, LAST_HTTP_STATUS, 0);
+}
+
+static addLastSourceEtag(builder:flatbuffers.Builder, LAST_SOURCE_ETAGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, LAST_SOURCE_ETAGOffset, 0);
+}
+
+static addLastSourceLastModified(builder:flatbuffers.Builder, LAST_SOURCE_LAST_MODIFIEDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, LAST_SOURCE_LAST_MODIFIEDOffset, 0);
+}
+
+static addLastBatchId(builder:flatbuffers.Builder, LAST_BATCH_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, LAST_BATCH_IDOffset, 0);
+}
+
+static addLastRecordCount(builder:flatbuffers.Builder, LAST_RECORD_COUNT:bigint) {
+  builder.addFieldInt64(43, LAST_RECORD_COUNT, BigInt('0'));
+}
+
+static addLastInsertedCount(builder:flatbuffers.Builder, LAST_INSERTED_COUNT:bigint) {
+  builder.addFieldInt64(44, LAST_INSERTED_COUNT, BigInt('0'));
+}
+
+static addLastDurationMs(builder:flatbuffers.Builder, LAST_DURATION_MS:bigint) {
+  builder.addFieldInt64(45, LAST_DURATION_MS, BigInt('0'));
+}
+
+static addFetchCount(builder:flatbuffers.Builder, FETCH_COUNT:bigint) {
+  builder.addFieldInt64(46, FETCH_COUNT, BigInt('0'));
+}
+
+static addIngestCount(builder:flatbuffers.Builder, INGEST_COUNT:bigint) {
+  builder.addFieldInt64(47, INGEST_COUNT, BigInt('0'));
+}
+
+static addLastPublicationCid(builder:flatbuffers.Builder, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, LAST_PUBLICATION_CIDOffset, 0);
+}
+
+static addLastPnmCid(builder:flatbuffers.Builder, LAST_PNM_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(49, LAST_PNM_CIDOffset, 0);
+}
+
+static addFeedHead(builder:flatbuffers.Builder, FEED_HEADOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, FEED_HEADOffset, 0);
+}
+
+static addEmitsSchemas(builder:flatbuffers.Builder, EMITS_SCHEMASOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, EMITS_SCHEMASOffset, 0);
+}
+
+static createEmitsSchemasVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEmitsSchemasVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endICN(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // CONNECTOR_ID
@@ -452,7 +773,7 @@ static finishSizePrefixedICNBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ICN', true);
 }
 
-static createICN(builder:flatbuffers.Builder, CONNECTOR_IDOffset:flatbuffers.Offset, KIND:icnConnectorKind, TARGET_SCHEMAOffset:flatbuffers.Offset, STATUS:icnConnectorStatus, STATUS_MESSAGEOffset:flatbuffers.Offset, ENDPOINT_URLOffset:flatbuffers.Offset, HTTP_METHODOffset:flatbuffers.Offset, AUTH_KIND:icnAuthKind, AUTH_HEADER_NAMEOffset:flatbuffers.Offset, CREDENTIAL_REFERENCEOffset:flatbuffers.Offset, POLL_INTERVAL_MS:number, DIRECTORY_PATHOffset:flatbuffers.Offset, FILE_PATTERNOffset:flatbuffers.Offset, SCAN_INTERVAL_MS:number, SETTLE_DELAY_MS:number, POST_INGEST_ACTION:icnPostIngestAction, UPLOAD_SESSION_IDOffset:flatbuffers.Offset, UPLOAD_FILE_COUNT:number, UPLOAD_TOTAL_BYTES:bigint, UPLOAD_CONTENT_HASHOffset:flatbuffers.Offset, DETECTED_FORMATOffset:flatbuffers.Offset, SAMPLE_RECORD_COUNT:number, LAST_INGEST_AT:bigint, LAST_ERROR_AT:bigint, LAST_ERROROffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createICN(builder:flatbuffers.Builder, CONNECTOR_IDOffset:flatbuffers.Offset, KIND:icnConnectorKind, TARGET_SCHEMAOffset:flatbuffers.Offset, STATUS:icnConnectorStatus, STATUS_MESSAGEOffset:flatbuffers.Offset, ENDPOINT_URLOffset:flatbuffers.Offset, HTTP_METHODOffset:flatbuffers.Offset, AUTH_KIND:icnAuthKind, AUTH_HEADER_NAMEOffset:flatbuffers.Offset, CREDENTIAL_REFERENCEOffset:flatbuffers.Offset, POLL_INTERVAL_MS:number, DIRECTORY_PATHOffset:flatbuffers.Offset, FILE_PATTERNOffset:flatbuffers.Offset, SCAN_INTERVAL_MS:number, SETTLE_DELAY_MS:number, POST_INGEST_ACTION:icnPostIngestAction, UPLOAD_SESSION_IDOffset:flatbuffers.Offset, UPLOAD_FILE_COUNT:number, UPLOAD_TOTAL_BYTES:bigint, UPLOAD_CONTENT_HASHOffset:flatbuffers.Offset, DETECTED_FORMATOffset:flatbuffers.Offset, SAMPLE_RECORD_COUNT:number, LAST_INGEST_AT:bigint, LAST_ERROR_AT:bigint, LAST_ERROROffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_SIGNATUREOffset:flatbuffers.Offset, ORIGIN_IDOffset:flatbuffers.Offset, ORIGIN_NAMEOffset:flatbuffers.Offset, DATASET_IDOffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, LICENSE_URLOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset, MIN_FETCH_INTERVAL_MS:bigint, NEXT_ELIGIBLE_AT:bigint, LAST_HTTP_STATUS:number, LAST_SOURCE_ETAGOffset:flatbuffers.Offset, LAST_SOURCE_LAST_MODIFIEDOffset:flatbuffers.Offset, LAST_BATCH_IDOffset:flatbuffers.Offset, LAST_RECORD_COUNT:bigint, LAST_INSERTED_COUNT:bigint, LAST_DURATION_MS:bigint, FETCH_COUNT:bigint, INGEST_COUNT:bigint, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset, LAST_PNM_CIDOffset:flatbuffers.Offset, FEED_HEADOffset:flatbuffers.Offset, EMITS_SCHEMASOffset:flatbuffers.Offset):flatbuffers.Offset {
   ICN.startICN(builder);
   ICN.addConnectorId(builder, CONNECTOR_IDOffset);
   ICN.addKind(builder, KIND);
@@ -483,6 +804,29 @@ static createICN(builder:flatbuffers.Builder, CONNECTOR_IDOffset:flatbuffers.Off
   ICN.addUpdatedAt(builder, UPDATED_AT);
   ICN.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
   ICN.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
+  ICN.addOriginId(builder, ORIGIN_IDOffset);
+  ICN.addOriginName(builder, ORIGIN_NAMEOffset);
+  ICN.addDatasetId(builder, DATASET_IDOffset);
+  ICN.addProviderId(builder, PROVIDER_IDOffset);
+  ICN.addSourceName(builder, SOURCE_NAMEOffset);
+  ICN.addLicense(builder, LICENSEOffset);
+  ICN.addLicenseUrl(builder, LICENSE_URLOffset);
+  ICN.addCitation(builder, CITATIONOffset);
+  ICN.addMinFetchIntervalMs(builder, MIN_FETCH_INTERVAL_MS);
+  ICN.addNextEligibleAt(builder, NEXT_ELIGIBLE_AT);
+  ICN.addLastHttpStatus(builder, LAST_HTTP_STATUS);
+  ICN.addLastSourceEtag(builder, LAST_SOURCE_ETAGOffset);
+  ICN.addLastSourceLastModified(builder, LAST_SOURCE_LAST_MODIFIEDOffset);
+  ICN.addLastBatchId(builder, LAST_BATCH_IDOffset);
+  ICN.addLastRecordCount(builder, LAST_RECORD_COUNT);
+  ICN.addLastInsertedCount(builder, LAST_INSERTED_COUNT);
+  ICN.addLastDurationMs(builder, LAST_DURATION_MS);
+  ICN.addFetchCount(builder, FETCH_COUNT);
+  ICN.addIngestCount(builder, INGEST_COUNT);
+  ICN.addLastPublicationCid(builder, LAST_PUBLICATION_CIDOffset);
+  ICN.addLastPnmCid(builder, LAST_PNM_CIDOffset);
+  ICN.addFeedHead(builder, FEED_HEADOffset);
+  ICN.addEmitsSchemas(builder, EMITS_SCHEMASOffset);
   return ICN.endICN(builder);
 }
 
@@ -516,7 +860,30 @@ unpack(): ICNT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.PROVIDER_PEER_ID(),
-    this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength())
+    this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength()),
+    this.ORIGIN_ID(),
+    this.ORIGIN_NAME(),
+    this.DATASET_ID(),
+    this.PROVIDER_ID(),
+    this.SOURCE_NAME(),
+    this.LICENSE(),
+    this.LICENSE_URL(),
+    this.CITATION(),
+    this.MIN_FETCH_INTERVAL_MS(),
+    this.NEXT_ELIGIBLE_AT(),
+    this.LAST_HTTP_STATUS(),
+    this.LAST_SOURCE_ETAG(),
+    this.LAST_SOURCE_LAST_MODIFIED(),
+    this.LAST_BATCH_ID(),
+    this.LAST_RECORD_COUNT(),
+    this.LAST_INSERTED_COUNT(),
+    this.LAST_DURATION_MS(),
+    this.FETCH_COUNT(),
+    this.INGEST_COUNT(),
+    this.LAST_PUBLICATION_CID(),
+    this.LAST_PNM_CID(),
+    this.FEED_HEAD(),
+    this.bb!.createScalarList<string>(this.EMITS_SCHEMAS.bind(this), this.emitsSchemasLength())
   );
 }
 
@@ -551,6 +918,29 @@ unpackTo(_o: ICNT): void {
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID();
   _o.PROVIDER_SIGNATURE = this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength());
+  _o.ORIGIN_ID = this.ORIGIN_ID();
+  _o.ORIGIN_NAME = this.ORIGIN_NAME();
+  _o.DATASET_ID = this.DATASET_ID();
+  _o.PROVIDER_ID = this.PROVIDER_ID();
+  _o.SOURCE_NAME = this.SOURCE_NAME();
+  _o.LICENSE = this.LICENSE();
+  _o.LICENSE_URL = this.LICENSE_URL();
+  _o.CITATION = this.CITATION();
+  _o.MIN_FETCH_INTERVAL_MS = this.MIN_FETCH_INTERVAL_MS();
+  _o.NEXT_ELIGIBLE_AT = this.NEXT_ELIGIBLE_AT();
+  _o.LAST_HTTP_STATUS = this.LAST_HTTP_STATUS();
+  _o.LAST_SOURCE_ETAG = this.LAST_SOURCE_ETAG();
+  _o.LAST_SOURCE_LAST_MODIFIED = this.LAST_SOURCE_LAST_MODIFIED();
+  _o.LAST_BATCH_ID = this.LAST_BATCH_ID();
+  _o.LAST_RECORD_COUNT = this.LAST_RECORD_COUNT();
+  _o.LAST_INSERTED_COUNT = this.LAST_INSERTED_COUNT();
+  _o.LAST_DURATION_MS = this.LAST_DURATION_MS();
+  _o.FETCH_COUNT = this.FETCH_COUNT();
+  _o.INGEST_COUNT = this.INGEST_COUNT();
+  _o.LAST_PUBLICATION_CID = this.LAST_PUBLICATION_CID();
+  _o.LAST_PNM_CID = this.LAST_PNM_CID();
+  _o.FEED_HEAD = this.FEED_HEAD();
+  _o.EMITS_SCHEMAS = this.bb!.createScalarList<string>(this.EMITS_SCHEMAS.bind(this), this.emitsSchemasLength());
 }
 }
 
@@ -584,7 +974,30 @@ constructor(
   public CREATED_AT: bigint = BigInt('0'),
   public UPDATED_AT: bigint = BigInt('0'),
   public PROVIDER_PEER_ID: string|Uint8Array|null = null,
-  public PROVIDER_SIGNATURE: (number)[] = []
+  public PROVIDER_SIGNATURE: (number)[] = [],
+  public ORIGIN_ID: string|Uint8Array|null = null,
+  public ORIGIN_NAME: string|Uint8Array|null = null,
+  public DATASET_ID: string|Uint8Array|null = null,
+  public PROVIDER_ID: string|Uint8Array|null = null,
+  public SOURCE_NAME: string|Uint8Array|null = null,
+  public LICENSE: string|Uint8Array|null = null,
+  public LICENSE_URL: string|Uint8Array|null = null,
+  public CITATION: string|Uint8Array|null = null,
+  public MIN_FETCH_INTERVAL_MS: bigint = BigInt('0'),
+  public NEXT_ELIGIBLE_AT: bigint = BigInt('0'),
+  public LAST_HTTP_STATUS: number = 0,
+  public LAST_SOURCE_ETAG: string|Uint8Array|null = null,
+  public LAST_SOURCE_LAST_MODIFIED: string|Uint8Array|null = null,
+  public LAST_BATCH_ID: string|Uint8Array|null = null,
+  public LAST_RECORD_COUNT: bigint = BigInt('0'),
+  public LAST_INSERTED_COUNT: bigint = BigInt('0'),
+  public LAST_DURATION_MS: bigint = BigInt('0'),
+  public FETCH_COUNT: bigint = BigInt('0'),
+  public INGEST_COUNT: bigint = BigInt('0'),
+  public LAST_PUBLICATION_CID: string|Uint8Array|null = null,
+  public LAST_PNM_CID: string|Uint8Array|null = null,
+  public FEED_HEAD: string|Uint8Array|null = null,
+  public EMITS_SCHEMAS: (string)[] = []
 ){}
 
 
@@ -604,6 +1017,21 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LAST_ERROR = (this.LAST_ERROR !== null ? builder.createString(this.LAST_ERROR!) : 0);
   const PROVIDER_PEER_ID = (this.PROVIDER_PEER_ID !== null ? builder.createString(this.PROVIDER_PEER_ID!) : 0);
   const PROVIDER_SIGNATURE = ICN.createProviderSignatureVector(builder, this.PROVIDER_SIGNATURE);
+  const ORIGIN_ID = (this.ORIGIN_ID !== null ? builder.createString(this.ORIGIN_ID!) : 0);
+  const ORIGIN_NAME = (this.ORIGIN_NAME !== null ? builder.createString(this.ORIGIN_NAME!) : 0);
+  const DATASET_ID = (this.DATASET_ID !== null ? builder.createString(this.DATASET_ID!) : 0);
+  const PROVIDER_ID = (this.PROVIDER_ID !== null ? builder.createString(this.PROVIDER_ID!) : 0);
+  const SOURCE_NAME = (this.SOURCE_NAME !== null ? builder.createString(this.SOURCE_NAME!) : 0);
+  const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
+  const LICENSE_URL = (this.LICENSE_URL !== null ? builder.createString(this.LICENSE_URL!) : 0);
+  const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
+  const LAST_SOURCE_ETAG = (this.LAST_SOURCE_ETAG !== null ? builder.createString(this.LAST_SOURCE_ETAG!) : 0);
+  const LAST_SOURCE_LAST_MODIFIED = (this.LAST_SOURCE_LAST_MODIFIED !== null ? builder.createString(this.LAST_SOURCE_LAST_MODIFIED!) : 0);
+  const LAST_BATCH_ID = (this.LAST_BATCH_ID !== null ? builder.createString(this.LAST_BATCH_ID!) : 0);
+  const LAST_PUBLICATION_CID = (this.LAST_PUBLICATION_CID !== null ? builder.createString(this.LAST_PUBLICATION_CID!) : 0);
+  const LAST_PNM_CID = (this.LAST_PNM_CID !== null ? builder.createString(this.LAST_PNM_CID!) : 0);
+  const FEED_HEAD = (this.FEED_HEAD !== null ? builder.createString(this.FEED_HEAD!) : 0);
+  const EMITS_SCHEMAS = ICN.createEmitsSchemasVector(builder, builder.createObjectOffsetList(this.EMITS_SCHEMAS));
 
   return ICN.createICN(builder,
     CONNECTOR_ID,
@@ -634,7 +1062,30 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.CREATED_AT,
     this.UPDATED_AT,
     PROVIDER_PEER_ID,
-    PROVIDER_SIGNATURE
+    PROVIDER_SIGNATURE,
+    ORIGIN_ID,
+    ORIGIN_NAME,
+    DATASET_ID,
+    PROVIDER_ID,
+    SOURCE_NAME,
+    LICENSE,
+    LICENSE_URL,
+    CITATION,
+    this.MIN_FETCH_INTERVAL_MS,
+    this.NEXT_ELIGIBLE_AT,
+    this.LAST_HTTP_STATUS,
+    LAST_SOURCE_ETAG,
+    LAST_SOURCE_LAST_MODIFIED,
+    LAST_BATCH_ID,
+    this.LAST_RECORD_COUNT,
+    this.LAST_INSERTED_COUNT,
+    this.LAST_DURATION_MS,
+    this.FETCH_COUNT,
+    this.INGEST_COUNT,
+    LAST_PUBLICATION_CID,
+    LAST_PNM_CID,
+    FEED_HEAD,
+    EMITS_SCHEMAS
   );
 }
 }

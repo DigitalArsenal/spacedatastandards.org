@@ -1,5 +1,5 @@
-// Hash: 2f9fc90dd4401a2235a71af63b002e83dc5797977e5e8c96938adfdf0905c096
-// Version: 1.0.1
+// Hash: 8f6dde75005cdcf78bf3784467ab65df1867067fe3ac2fce26abe31247944040
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 /// Schema Standard Definition
 table SCHEMA_STANDARD {
@@ -11,6 +11,19 @@ table SCHEMA_STANDARD {
 
   /// List Of File Paths
   files: [string];
+
+  /// Human-readable name of the standard.
+  NAME: string;
+  /// One-paragraph description of the standard.
+  DESCRIPTION: string;
+  /// Four-character file identifier, e.g. "$OMM".
+  FILE_IDENTIFIER: string;
+  /// Hash of the standard's schema text.
+  SCHEMA_HASH: string;
+  /// True when the reporting node routes the standard through its store.
+  ROUTED: bool;
+  /// Position of the standard in the record union; append-only forever.
+  RECORD_TYPE_ORDINAL: uint16;
 }
 
 /// Schema Manifest
@@ -20,6 +33,11 @@ table SCM {
 
   /// Standards Dictionary
   RECORDS: [SCHEMA_STANDARD];
+
+  /// Version of the standards package the reporting node runs.
+  STANDARDS_VERSION: string;
+  /// Unix milliseconds when this registry frame was generated.
+  GENERATED_AT_MS: int64;
 }
 
 /// Declaring the root type

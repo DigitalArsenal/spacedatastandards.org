@@ -29,16 +29,59 @@ public final class LCC extends com.google.flatbuffers.Table {
   public LCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte OWNER() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Display name of the owner or source the code stands for.
+   */
+  public String NAME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Longer description of the owner or source.
+   */
+  public String DESCRIPTION() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * True while the code is in current use by the publishing catalogue.
+   */
+  public boolean ACTIVE() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * URL of the reference table the row was retrieved from.
+   */
+  public String SOURCE_URL() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_URLAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer SOURCE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * ISO 8601 UTC time the reference table was retrieved.
+   */
+  public String RETRIEVED_AT() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RETRIEVED_ATAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer RETRIEVED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
 
   public static int createLCC(FlatBufferBuilder builder,
-      byte OWNER) {
-    builder.startTable(1);
+      byte OWNER,
+      int NAMEOffset,
+      int DESCRIPTIONOffset,
+      boolean ACTIVE,
+      int SOURCE_URLOffset,
+      int RETRIEVED_ATOffset) {
+    builder.startTable(6);
+    LCC.addRetrievedAt(builder, RETRIEVED_ATOffset);
+    LCC.addSourceUrl(builder, SOURCE_URLOffset);
+    LCC.addDescription(builder, DESCRIPTIONOffset);
+    LCC.addName(builder, NAMEOffset);
+    LCC.addActive(builder, ACTIVE);
     LCC.addOwner(builder, OWNER);
     return LCC.endLCC(builder);
   }
 
-  public static void startLCC(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startLCC(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addOwner(FlatBufferBuilder builder, byte OWNER) { builder.addByte(0, OWNER, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(2, DESCRIPTIONOffset, 0); }
+  public static void addActive(FlatBufferBuilder builder, boolean ACTIVE) { builder.addBoolean(3, ACTIVE, false); }
+  public static void addSourceUrl(FlatBufferBuilder builder, int SOURCE_URLOffset) { builder.addOffset(4, SOURCE_URLOffset, 0); }
+  public static void addRetrievedAt(FlatBufferBuilder builder, int RETRIEVED_ATOffset) { builder.addOffset(5, RETRIEVED_ATOffset, 0); }
   public static int endLCC(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

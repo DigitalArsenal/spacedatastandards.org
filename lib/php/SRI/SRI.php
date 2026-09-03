@@ -116,22 +116,84 @@ class SRI extends Table
         return $this->__vector_as_bytes(16);
     }
 
+    /// Content identifier of the record bytes.
+    public function getCID()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Byte offset of the record frame within its export or archive stream.
+    /**
+     * @return ulong
+     */
+    public function getBYTE_OFFSET()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Byte length of the record frame.
+    /**
+     * @return uint
+     */
+    public function getBYTE_LENGTH()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Epoch of the record, Unix milliseconds; 0 = none.
+    /**
+     * @return ulong
+     */
+    public function getEPOCH_MS()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Entity key of the record within its standard, e.g. a catalogue number.
+    public function getENTITY_KEY()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getPROVIDER_ID()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getSOURCE_NAME()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getBATCH_ID()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSRI(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SRI
      */
-    public static function createSRI(FlatBufferBuilder $builder, $RECORD_KEY, $SCHEMA_NAME, $ROLE, $ATTACHED_VIA, $PAYLOAD_KIND, $UPDATED_AT_MS, $RESERVED)
+    public static function createSRI(FlatBufferBuilder $builder, $RECORD_KEY, $SCHEMA_NAME, $ROLE, $ATTACHED_VIA, $PAYLOAD_KIND, $UPDATED_AT_MS, $RESERVED, $CID, $BYTE_OFFSET, $BYTE_LENGTH, $EPOCH_MS, $ENTITY_KEY, $PROVIDER_ID, $SOURCE_NAME, $BATCH_ID)
     {
-        $builder->startObject(7);
+        $builder->startObject(15);
         self::addRECORD_KEY($builder, $RECORD_KEY);
         self::addSCHEMA_NAME($builder, $SCHEMA_NAME);
         self::addROLE($builder, $ROLE);
@@ -139,6 +201,14 @@ class SRI extends Table
         self::addPAYLOAD_KIND($builder, $PAYLOAD_KIND);
         self::addUPDATED_AT_MS($builder, $UPDATED_AT_MS);
         self::addRESERVED($builder, $RESERVED);
+        self::addCID($builder, $CID);
+        self::addBYTE_OFFSET($builder, $BYTE_OFFSET);
+        self::addBYTE_LENGTH($builder, $BYTE_LENGTH);
+        self::addEPOCH_MS($builder, $EPOCH_MS);
+        self::addENTITY_KEY($builder, $ENTITY_KEY);
+        self::addPROVIDER_ID($builder, $PROVIDER_ID);
+        self::addSOURCE_NAME($builder, $SOURCE_NAME);
+        self::addBATCH_ID($builder, $BATCH_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -235,6 +305,86 @@ class SRI extends Table
     public static function startRESERVEDVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCID(FlatBufferBuilder $builder, $CID)
+    {
+        $builder->addOffsetX(7, $CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addBYTE_OFFSET(FlatBufferBuilder $builder, $BYTE_OFFSET)
+    {
+        $builder->addUlongX(8, $BYTE_OFFSET, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addBYTE_LENGTH(FlatBufferBuilder $builder, $BYTE_LENGTH)
+    {
+        $builder->addUintX(9, $BYTE_LENGTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addEPOCH_MS(FlatBufferBuilder $builder, $EPOCH_MS)
+    {
+        $builder->addUlongX(10, $EPOCH_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addENTITY_KEY(FlatBufferBuilder $builder, $ENTITY_KEY)
+    {
+        $builder->addOffsetX(11, $ENTITY_KEY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_ID(FlatBufferBuilder $builder, $PROVIDER_ID)
+    {
+        $builder->addOffsetX(12, $PROVIDER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_NAME(FlatBufferBuilder $builder, $SOURCE_NAME)
+    {
+        $builder->addOffsetX(13, $SOURCE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBATCH_ID(FlatBufferBuilder $builder, $BATCH_ID)
+    {
+        $builder->addOffsetX(14, $BATCH_ID, 0);
     }
 
     /**

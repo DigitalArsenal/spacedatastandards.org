@@ -23,6 +23,12 @@ impl<'a> SCHEMA_STANDARD<'a> {
   pub const VT_KEY: ::flatbuffers::VOffsetT = 4;
   pub const VT_IDL: ::flatbuffers::VOffsetT = 6;
   pub const VT_FILES: ::flatbuffers::VOffsetT = 8;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 12;
+  pub const VT_FILE_IDENTIFIER: ::flatbuffers::VOffsetT = 14;
+  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ROUTED: ::flatbuffers::VOffsetT = 18;
+  pub const VT_RECORD_TYPE_ORDINAL: ::flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -34,9 +40,15 @@ impl<'a> SCHEMA_STANDARD<'a> {
     args: &'args SCHEMA_STANDARDArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCHEMA_STANDARD<'bldr>> {
     let mut builder = SCHEMA_STANDARDBuilder::new(_fbb);
+    if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
+    if let Some(x) = args.FILE_IDENTIFIER { builder.add_FILE_IDENTIFIER(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.files { builder.add_files(x); }
     if let Some(x) = args.idl { builder.add_idl(x); }
     if let Some(x) = args.key { builder.add_key(x); }
+    builder.add_RECORD_TYPE_ORDINAL(args.RECORD_TYPE_ORDINAL);
+    builder.add_ROUTED(args.ROUTED);
     builder.finish()
   }
 
@@ -50,10 +62,30 @@ impl<'a> SCHEMA_STANDARD<'a> {
     let files = self.files().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FILE_IDENTIFIER = self.FILE_IDENTIFIER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SCHEMA_HASH = self.SCHEMA_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ROUTED = self.ROUTED();
+    let RECORD_TYPE_ORDINAL = self.RECORD_TYPE_ORDINAL();
     SCHEMA_STANDARDT {
       key,
       idl,
       files,
+      NAME,
+      DESCRIPTION,
+      FILE_IDENTIFIER,
+      SCHEMA_HASH,
+      ROUTED,
+      RECORD_TYPE_ORDINAL,
     }
   }
 
@@ -81,6 +113,54 @@ impl<'a> SCHEMA_STANDARD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCHEMA_STANDARD::VT_FILES, None)}
   }
+  /// Human-readable name of the standard.
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCHEMA_STANDARD::VT_NAME, None)}
+  }
+  /// One-paragraph description of the standard.
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCHEMA_STANDARD::VT_DESCRIPTION, None)}
+  }
+  /// Four-character file identifier, e.g. "$OMM".
+  #[inline]
+  pub fn FILE_IDENTIFIER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCHEMA_STANDARD::VT_FILE_IDENTIFIER, None)}
+  }
+  /// Hash of the standard's schema text.
+  #[inline]
+  pub fn SCHEMA_HASH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCHEMA_STANDARD::VT_SCHEMA_HASH, None)}
+  }
+  /// True when the reporting node routes the standard through its store.
+  #[inline]
+  pub fn ROUTED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(SCHEMA_STANDARD::VT_ROUTED, Some(false)).unwrap()}
+  }
+  /// Position of the standard in the record union; append-only forever.
+  #[inline]
+  pub fn RECORD_TYPE_ORDINAL(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(SCHEMA_STANDARD::VT_RECORD_TYPE_ORDINAL, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCHEMA_STANDARD<'_> {
@@ -92,6 +172,12 @@ impl ::flatbuffers::Verifiable for SCHEMA_STANDARD<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("key", Self::VT_KEY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("idl", Self::VT_IDL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("files", Self::VT_FILES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_IDENTIFIER", Self::VT_FILE_IDENTIFIER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
+     .visit_field::<bool>("ROUTED", Self::VT_ROUTED, false)?
+     .visit_field::<u16>("RECORD_TYPE_ORDINAL", Self::VT_RECORD_TYPE_ORDINAL, false)?
      .finish();
     Ok(())
   }
@@ -100,6 +186,12 @@ pub struct SCHEMA_STANDARDArgs<'a> {
     pub key: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub idl: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub files: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FILE_IDENTIFIER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ROUTED: bool,
+    pub RECORD_TYPE_ORDINAL: u16,
 }
 impl<'a> Default for SCHEMA_STANDARDArgs<'a> {
   #[inline]
@@ -108,6 +200,12 @@ impl<'a> Default for SCHEMA_STANDARDArgs<'a> {
       key: None,
       idl: None,
       files: None,
+      NAME: None,
+      DESCRIPTION: None,
+      FILE_IDENTIFIER: None,
+      SCHEMA_HASH: None,
+      ROUTED: false,
+      RECORD_TYPE_ORDINAL: 0,
     }
   }
 }
@@ -130,6 +228,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCHEMA_STANDARDBuilder<'a, 'b
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_FILES, files);
   }
   #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_FILE_IDENTIFIER(&mut self, FILE_IDENTIFIER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  }
+  #[inline]
+  pub fn add_SCHEMA_HASH(&mut self, SCHEMA_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_SCHEMA_HASH, SCHEMA_HASH);
+  }
+  #[inline]
+  pub fn add_ROUTED(&mut self, ROUTED: bool) {
+    self.fbb_.push_slot::<bool>(SCHEMA_STANDARD::VT_ROUTED, ROUTED, false);
+  }
+  #[inline]
+  pub fn add_RECORD_TYPE_ORDINAL(&mut self, RECORD_TYPE_ORDINAL: u16) {
+    self.fbb_.push_slot::<u16>(SCHEMA_STANDARD::VT_RECORD_TYPE_ORDINAL, RECORD_TYPE_ORDINAL, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCHEMA_STANDARDBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCHEMA_STANDARDBuilder {
@@ -150,6 +272,12 @@ impl ::core::fmt::Debug for SCHEMA_STANDARD<'_> {
       ds.field("key", &self.key());
       ds.field("idl", &self.idl());
       ds.field("files", &self.files());
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("FILE_IDENTIFIER", &self.FILE_IDENTIFIER());
+      ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
+      ds.field("ROUTED", &self.ROUTED());
+      ds.field("RECORD_TYPE_ORDINAL", &self.RECORD_TYPE_ORDINAL());
       ds.finish()
   }
 }
@@ -159,6 +287,12 @@ pub struct SCHEMA_STANDARDT {
   pub key: Option<alloc::string::String>,
   pub idl: Option<alloc::string::String>,
   pub files: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub NAME: Option<alloc::string::String>,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub FILE_IDENTIFIER: Option<alloc::string::String>,
+  pub SCHEMA_HASH: Option<alloc::string::String>,
+  pub ROUTED: bool,
+  pub RECORD_TYPE_ORDINAL: u16,
 }
 impl Default for SCHEMA_STANDARDT {
   fn default() -> Self {
@@ -166,6 +300,12 @@ impl Default for SCHEMA_STANDARDT {
       key: None,
       idl: None,
       files: None,
+      NAME: None,
+      DESCRIPTION: None,
+      FILE_IDENTIFIER: None,
+      SCHEMA_HASH: None,
+      ROUTED: false,
+      RECORD_TYPE_ORDINAL: 0,
     }
   }
 }
@@ -183,10 +323,30 @@ impl SCHEMA_STANDARDT {
     let files = self.files.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FILE_IDENTIFIER = self.FILE_IDENTIFIER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SCHEMA_HASH = self.SCHEMA_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ROUTED = self.ROUTED;
+    let RECORD_TYPE_ORDINAL = self.RECORD_TYPE_ORDINAL;
     SCHEMA_STANDARD::create(_fbb, &SCHEMA_STANDARDArgs{
       key,
       idl,
       files,
+      NAME,
+      DESCRIPTION,
+      FILE_IDENTIFIER,
+      SCHEMA_HASH,
+      ROUTED,
+      RECORD_TYPE_ORDINAL,
     })
   }
 }
@@ -209,6 +369,8 @@ impl<'a> ::flatbuffers::Follow<'a> for SCM<'a> {
 impl<'a> SCM<'a> {
   pub const VT_VERSION: ::flatbuffers::VOffsetT = 4;
   pub const VT_RECORDS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_STANDARDS_VERSION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_GENERATED_AT_MS: ::flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -220,6 +382,8 @@ impl<'a> SCM<'a> {
     args: &'args SCMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCM<'bldr>> {
     let mut builder = SCMBuilder::new(_fbb);
+    builder.add_GENERATED_AT_MS(args.GENERATED_AT_MS);
+    if let Some(x) = args.STANDARDS_VERSION { builder.add_STANDARDS_VERSION(x); }
     if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
     if let Some(x) = args.version { builder.add_version(x); }
     builder.finish()
@@ -232,9 +396,15 @@ impl<'a> SCM<'a> {
     let RECORDS = self.RECORDS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let STANDARDS_VERSION = self.STANDARDS_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GENERATED_AT_MS = self.GENERATED_AT_MS();
     SCMT {
       version,
       RECORDS,
+      STANDARDS_VERSION,
+      GENERATED_AT_MS,
     }
   }
 
@@ -254,6 +424,22 @@ impl<'a> SCM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCHEMA_STANDARD>>>>(SCM::VT_RECORDS, None)}
   }
+  /// Version of the standards package the reporting node runs.
+  #[inline]
+  pub fn STANDARDS_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCM::VT_STANDARDS_VERSION, None)}
+  }
+  /// Unix milliseconds when this registry frame was generated.
+  #[inline]
+  pub fn GENERATED_AT_MS(&self) -> i64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i64>(SCM::VT_GENERATED_AT_MS, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCM<'_> {
@@ -264,6 +450,8 @@ impl ::flatbuffers::Verifiable for SCM<'_> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("version", Self::VT_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCHEMA_STANDARD>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STANDARDS_VERSION", Self::VT_STANDARDS_VERSION, false)?
+     .visit_field::<i64>("GENERATED_AT_MS", Self::VT_GENERATED_AT_MS, false)?
      .finish();
     Ok(())
   }
@@ -271,6 +459,8 @@ impl ::flatbuffers::Verifiable for SCM<'_> {
 pub struct SCMArgs<'a> {
     pub version: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCHEMA_STANDARD<'a>>>>>,
+    pub STANDARDS_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GENERATED_AT_MS: i64,
 }
 impl<'a> Default for SCMArgs<'a> {
   #[inline]
@@ -278,6 +468,8 @@ impl<'a> Default for SCMArgs<'a> {
     SCMArgs {
       version: None,
       RECORDS: None,
+      STANDARDS_VERSION: None,
+      GENERATED_AT_MS: 0,
     }
   }
 }
@@ -294,6 +486,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCHEMA_STANDARD<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCM::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn add_STANDARDS_VERSION(&mut self, STANDARDS_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCM::VT_STANDARDS_VERSION, STANDARDS_VERSION);
+  }
+  #[inline]
+  pub fn add_GENERATED_AT_MS(&mut self, GENERATED_AT_MS: i64) {
+    self.fbb_.push_slot::<i64>(SCM::VT_GENERATED_AT_MS, GENERATED_AT_MS, 0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCMBuilder<'a, 'b, A> {
@@ -315,6 +515,8 @@ impl ::core::fmt::Debug for SCM<'_> {
     let mut ds = f.debug_struct("SCM");
       ds.field("version", &self.version());
       ds.field("RECORDS", &self.RECORDS());
+      ds.field("STANDARDS_VERSION", &self.STANDARDS_VERSION());
+      ds.field("GENERATED_AT_MS", &self.GENERATED_AT_MS());
       ds.finish()
   }
 }
@@ -323,12 +525,16 @@ impl ::core::fmt::Debug for SCM<'_> {
 pub struct SCMT {
   pub version: Option<alloc::string::String>,
   pub RECORDS: Option<alloc::vec::Vec<SCHEMA_STANDARDT>>,
+  pub STANDARDS_VERSION: Option<alloc::string::String>,
+  pub GENERATED_AT_MS: i64,
 }
 impl Default for SCMT {
   fn default() -> Self {
     Self {
       version: None,
       RECORDS: None,
+      STANDARDS_VERSION: None,
+      GENERATED_AT_MS: 0,
     }
   }
 }
@@ -343,9 +549,15 @@ impl SCMT {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let STANDARDS_VERSION = self.STANDARDS_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GENERATED_AT_MS = self.GENERATED_AT_MS;
     SCM::create(_fbb, &SCMArgs{
       version,
       RECORDS,
+      STANDARDS_VERSION,
+      GENERATED_AT_MS,
     })
   }
 }

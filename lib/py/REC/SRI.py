@@ -107,8 +107,69 @@ class SRI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
+    # Content identifier of the record bytes.
+    # SRI
+    def CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Byte offset of the record frame within its export or archive stream.
+    # SRI
+    def BYTE_OFFSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Byte length of the record frame.
+    # SRI
+    def BYTE_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Epoch of the record, Unix milliseconds; 0 = none.
+    # SRI
+    def EPOCH_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Entity key of the record within its standard, e.g. a catalogue number.
+    # SRI
+    def ENTITY_KEY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SRI
+    def PROVIDER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SRI
+    def SOURCE_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SRI
+    def BATCH_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def SRIStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(15)
 
 def Start(builder):
     SRIStart(builder)
@@ -171,6 +232,54 @@ def SRICreateRESERVEDVector(builder, data):
 def CreateRESERVEDVector(builder, data):
     SRICreateRESERVEDVector(builder, data)
 
+def SRIAddCID(builder, CID):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
+
+def AddCID(builder, CID):
+    SRIAddCID(builder, CID)
+
+def SRIAddBYTE_OFFSET(builder, BYTE_OFFSET):
+    builder.PrependUint64Slot(8, BYTE_OFFSET, 0)
+
+def AddBYTE_OFFSET(builder, BYTE_OFFSET):
+    SRIAddBYTE_OFFSET(builder, BYTE_OFFSET)
+
+def SRIAddBYTE_LENGTH(builder, BYTE_LENGTH):
+    builder.PrependUint32Slot(9, BYTE_LENGTH, 0)
+
+def AddBYTE_LENGTH(builder, BYTE_LENGTH):
+    SRIAddBYTE_LENGTH(builder, BYTE_LENGTH)
+
+def SRIAddEPOCH_MS(builder, EPOCH_MS):
+    builder.PrependUint64Slot(10, EPOCH_MS, 0)
+
+def AddEPOCH_MS(builder, EPOCH_MS):
+    SRIAddEPOCH_MS(builder, EPOCH_MS)
+
+def SRIAddENTITY_KEY(builder, ENTITY_KEY):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_KEY), 0)
+
+def AddENTITY_KEY(builder, ENTITY_KEY):
+    SRIAddENTITY_KEY(builder, ENTITY_KEY)
+
+def SRIAddPROVIDER_ID(builder, PROVIDER_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_ID), 0)
+
+def AddPROVIDER_ID(builder, PROVIDER_ID):
+    SRIAddPROVIDER_ID(builder, PROVIDER_ID)
+
+def SRIAddSOURCE_NAME(builder, SOURCE_NAME):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_NAME), 0)
+
+def AddSOURCE_NAME(builder, SOURCE_NAME):
+    SRIAddSOURCE_NAME(builder, SOURCE_NAME)
+
+def SRIAddBATCH_ID(builder, BATCH_ID):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(BATCH_ID), 0)
+
+def AddBATCH_ID(builder, BATCH_ID):
+    SRIAddBATCH_ID(builder, BATCH_ID)
+
 def SRIEnd(builder):
     return builder.EndObject()
 
@@ -194,6 +303,14 @@ class SRIT(object):
         PAYLOAD_KIND = None,
         UPDATED_AT_MS = 0.0,
         RESERVED = None,
+        CID = None,
+        BYTE_OFFSET = 0,
+        BYTE_LENGTH = 0,
+        EPOCH_MS = 0,
+        ENTITY_KEY = None,
+        PROVIDER_ID = None,
+        SOURCE_NAME = None,
+        BATCH_ID = None,
     ):
         self.RECORD_KEY = RECORD_KEY  # type: Optional[str]
         self.SCHEMA_NAME = SCHEMA_NAME  # type: Optional[str]
@@ -202,6 +319,14 @@ class SRIT(object):
         self.PAYLOAD_KIND = PAYLOAD_KIND  # type: Optional[str]
         self.UPDATED_AT_MS = UPDATED_AT_MS  # type: float
         self.RESERVED = RESERVED  # type: Optional[List[int]]
+        self.CID = CID  # type: Optional[str]
+        self.BYTE_OFFSET = BYTE_OFFSET  # type: int
+        self.BYTE_LENGTH = BYTE_LENGTH  # type: int
+        self.EPOCH_MS = EPOCH_MS  # type: int
+        self.ENTITY_KEY = ENTITY_KEY  # type: Optional[str]
+        self.PROVIDER_ID = PROVIDER_ID  # type: Optional[str]
+        self.SOURCE_NAME = SOURCE_NAME  # type: Optional[str]
+        self.BATCH_ID = BATCH_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -237,6 +362,14 @@ class SRIT(object):
                     self.RESERVED.append(SRI.RESERVED(i))
             else:
                 self.RESERVED = SRI.RESERVEDAsNumpy()
+        self.CID = SRI.CID()
+        self.BYTE_OFFSET = SRI.BYTE_OFFSET()
+        self.BYTE_LENGTH = SRI.BYTE_LENGTH()
+        self.EPOCH_MS = SRI.EPOCH_MS()
+        self.ENTITY_KEY = SRI.ENTITY_KEY()
+        self.PROVIDER_ID = SRI.PROVIDER_ID()
+        self.SOURCE_NAME = SRI.SOURCE_NAME()
+        self.BATCH_ID = SRI.BATCH_ID()
 
     # SRIT
     def Pack(self, builder):
@@ -258,6 +391,16 @@ class SRIT(object):
                 for i in reversed(range(len(self.RESERVED))):
                     builder.PrependUint8(self.RESERVED[i])
                 RESERVED = builder.EndVector()
+        if self.CID is not None:
+            CID = builder.CreateString(self.CID)
+        if self.ENTITY_KEY is not None:
+            ENTITY_KEY = builder.CreateString(self.ENTITY_KEY)
+        if self.PROVIDER_ID is not None:
+            PROVIDER_ID = builder.CreateString(self.PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            SOURCE_NAME = builder.CreateString(self.SOURCE_NAME)
+        if self.BATCH_ID is not None:
+            BATCH_ID = builder.CreateString(self.BATCH_ID)
         SRIStart(builder)
         if self.RECORD_KEY is not None:
             SRIAddRECORD_KEY(builder, RECORD_KEY)
@@ -272,5 +415,18 @@ class SRIT(object):
         SRIAddUPDATED_AT_MS(builder, self.UPDATED_AT_MS)
         if self.RESERVED is not None:
             SRIAddRESERVED(builder, RESERVED)
+        if self.CID is not None:
+            SRIAddCID(builder, CID)
+        SRIAddBYTE_OFFSET(builder, self.BYTE_OFFSET)
+        SRIAddBYTE_LENGTH(builder, self.BYTE_LENGTH)
+        SRIAddEPOCH_MS(builder, self.EPOCH_MS)
+        if self.ENTITY_KEY is not None:
+            SRIAddENTITY_KEY(builder, ENTITY_KEY)
+        if self.PROVIDER_ID is not None:
+            SRIAddPROVIDER_ID(builder, PROVIDER_ID)
+        if self.SOURCE_NAME is not None:
+            SRIAddSOURCE_NAME(builder, SOURCE_NAME)
+        if self.BATCH_ID is not None:
+            SRIAddBATCH_ID(builder, BATCH_ID)
         SRI = SRIEnd(builder)
         return SRI

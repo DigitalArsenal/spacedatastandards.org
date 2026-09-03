@@ -256,6 +256,11 @@ class RecordType(object):
     ICN = 236
     TRP = 237
     TRV = 238
+    ACT = 239
+    AGR = 240
+    NDS = 241
+    NST = 242
+    QRP = 243
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -975,4 +980,19 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.TRV:
         import TRV
         return TRV.TRVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ACT:
+        import ACT
+        return ACT.ACTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.AGR:
+        import AGR
+        return AGR.AGRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.NDS:
+        import NDS
+        return NDS.NDST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.NST:
+        import NST
+        return NST.NSTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.QRP:
+        import QRP
+        return QRP.QRPT.InitFromBuf(table.Bytes, table.Pos)
     return None

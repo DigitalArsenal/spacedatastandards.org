@@ -634,8 +634,308 @@ func (rcv *DSS) Error() []byte {
 	return rcv.ERROR()
 }
 
+/// Standard code of the lane, e.g. "OMM".
+func (rcv *DSS) SCHEMA_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) SchemaName() []byte {
+	return rcv.SCHEMA_NAME()
+}
+
+/// Standard code of the lane, e.g. "OMM".
+func (rcv *DSS) PROVIDER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) ProviderId() []byte {
+	return rcv.PROVIDER_ID()
+}
+
+func (rcv *DSS) SOURCE_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) SourceName() []byte {
+	return rcv.SOURCE_NAME()
+}
+
+/// Stable dataset identifier within the origin.
+func (rcv *DSS) DATASET_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) DatasetId() []byte {
+	return rcv.DATASET_ID()
+}
+
+/// Stable dataset identifier within the origin.
+/// Ingest connector that produces the lane, when known.
+func (rcv *DSS) CONNECTOR_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) ConnectorId() []byte {
+	return rcv.CONNECTOR_ID()
+}
+
+/// Ingest connector that produces the lane, when known.
+/// Channel identifier the lane is announced on.
+func (rcv *DSS) CHANNEL_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) ChannelId() []byte {
+	return rcv.CHANNEL_ID()
+}
+
+/// Channel identifier the lane is announced on.
+/// Publish/subscribe topic of the lane.
+func (rcv *DSS) TOPIC() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) Topic() []byte {
+	return rcv.TOPIC()
+}
+
+/// Publish/subscribe topic of the lane.
+/// True when this node subscribes to the lane.
+func (rcv *DSS) SUBSCRIBED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *DSS) Subscribed() bool {
+	return rcv.SUBSCRIBED()
+}
+
+/// True when this node subscribes to the lane.
+func (rcv *DSS) MutateSUBSCRIBED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(86, n)
+}
+
+func (rcv *DSS) MutateSubscribed(n bool) bool {
+	return rcv.MutateSUBSCRIBED(n)
+}
+
+func (rcv *DSS) PIN_POLICY() dssPinPolicy {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return dssPinPolicy(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *DSS) PinPolicy() dssPinPolicy {
+	return rcv.PIN_POLICY()
+}
+
+func (rcv *DSS) MutatePIN_POLICY(n dssPinPolicy) bool {
+	return rcv._tab.MutateInt8Slot(88, int8(n))
+}
+
+func (rcv *DSS) MutatePinPolicy(n dssPinPolicy) bool {
+	return rcv.MutatePIN_POLICY(n)
+}
+
+/// Visibility of the lane, e.g. "public", "private".
+func (rcv *DSS) VISIBILITY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) Visibility() []byte {
+	return rcv.VISIBILITY()
+}
+
+/// Visibility of the lane, e.g. "public", "private".
+/// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+func (rcv *DSS) ENCRYPTION_STATE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) EncryptionState() []byte {
+	return rcv.ENCRYPTION_STATE()
+}
+
+/// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+/// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+func (rcv *DSS) GRANT_STATE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) GrantState() []byte {
+	return rcv.GRANT_STATE()
+}
+
+/// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+/// Feed head this node has materialised up to.
+func (rcv *DSS) FEED_HEAD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) FeedHead() []byte {
+	return rcv.FEED_HEAD()
+}
+
+/// Feed head this node has materialised up to.
+/// Content identifier of the newest publication manifest known.
+func (rcv *DSS) LAST_PUBLICATION_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) LastPublicationCid() []byte {
+	return rcv.LAST_PUBLICATION_CID()
+}
+
+/// Content identifier of the newest publication manifest known.
+/// Content identifier of the newest publish notification known.
+func (rcv *DSS) LAST_PNM_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) LastPnmCid() []byte {
+	return rcv.LAST_PNM_CID()
+}
+
+/// Content identifier of the newest publish notification known.
+/// Rows materialised since the previous SYNCED state.
+func (rcv *DSS) DELTA_ROWS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DSS) DeltaRows() uint64 {
+	return rcv.DELTA_ROWS()
+}
+
+/// Rows materialised since the previous SYNCED state.
+func (rcv *DSS) MutateDELTA_ROWS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(102, n)
+}
+
+func (rcv *DSS) MutateDeltaRows(n uint64) bool {
+	return rcv.MutateDELTA_ROWS(n)
+}
+
+/// Unix milliseconds the current or last sync pass started; 0 = never.
+func (rcv *DSS) LAST_SYNC_STARTED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DSS) LastSyncStartedAt() uint64 {
+	return rcv.LAST_SYNC_STARTED_AT()
+}
+
+/// Unix milliseconds the current or last sync pass started; 0 = never.
+func (rcv *DSS) MutateLAST_SYNC_STARTED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(104, n)
+}
+
+func (rcv *DSS) MutateLastSyncStartedAt(n uint64) bool {
+	return rcv.MutateLAST_SYNC_STARTED_AT(n)
+}
+
+/// Action a client requests when sending this record to a node.
+func (rcv *DSS) REQUESTED_ACTION() dssAction {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return dssAction(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *DSS) RequestedAction() dssAction {
+	return rcv.REQUESTED_ACTION()
+}
+
+/// Action a client requests when sending this record to a node.
+func (rcv *DSS) MutateREQUESTED_ACTION(n dssAction) bool {
+	return rcv._tab.MutateInt8Slot(106, int8(n))
+}
+
+func (rcv *DSS) MutateRequestedAction(n dssAction) bool {
+	return rcv.MutateREQUESTED_ACTION(n)
+}
+
+/// Upstream publisher of the lane's records.
+func (rcv *DSS) ORIGIN_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DSS) OriginId() []byte {
+	return rcv.ORIGIN_ID()
+}
+
+/// Upstream publisher of the lane's records.
 func DSSStart(builder *flatbuffers.Builder) {
-	builder.StartObject(34)
+	builder.StartObject(53)
 }
 func DSSAddSTATUS(builder *flatbuffers.Builder, STATUS dssSyncState) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -846,6 +1146,120 @@ func DSSAddERROR(builder *flatbuffers.Builder, ERROR flatbuffers.UOffsetT) {
 }
 func DSSAddError(builder *flatbuffers.Builder, ERROR flatbuffers.UOffsetT) {
 	DSSAddERROR(builder, ERROR)
+}
+func DSSAddSCHEMA_NAME(builder *flatbuffers.Builder, SCHEMA_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(SCHEMA_NAME), 0)
+}
+func DSSAddSchemaName(builder *flatbuffers.Builder, SCHEMA_NAME flatbuffers.UOffsetT) {
+	DSSAddSCHEMA_NAME(builder, SCHEMA_NAME)
+}
+func DSSAddPROVIDER_ID(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(PROVIDER_ID), 0)
+}
+func DSSAddProviderId(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	DSSAddPROVIDER_ID(builder, PROVIDER_ID)
+}
+func DSSAddSOURCE_NAME(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(SOURCE_NAME), 0)
+}
+func DSSAddSourceName(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	DSSAddSOURCE_NAME(builder, SOURCE_NAME)
+}
+func DSSAddDATASET_ID(builder *flatbuffers.Builder, DATASET_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(DATASET_ID), 0)
+}
+func DSSAddDatasetId(builder *flatbuffers.Builder, DATASET_ID flatbuffers.UOffsetT) {
+	DSSAddDATASET_ID(builder, DATASET_ID)
+}
+func DSSAddCONNECTOR_ID(builder *flatbuffers.Builder, CONNECTOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(CONNECTOR_ID), 0)
+}
+func DSSAddConnectorId(builder *flatbuffers.Builder, CONNECTOR_ID flatbuffers.UOffsetT) {
+	DSSAddCONNECTOR_ID(builder, CONNECTOR_ID)
+}
+func DSSAddCHANNEL_ID(builder *flatbuffers.Builder, CHANNEL_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(CHANNEL_ID), 0)
+}
+func DSSAddChannelId(builder *flatbuffers.Builder, CHANNEL_ID flatbuffers.UOffsetT) {
+	DSSAddCHANNEL_ID(builder, CHANNEL_ID)
+}
+func DSSAddTOPIC(builder *flatbuffers.Builder, TOPIC flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(TOPIC), 0)
+}
+func DSSAddTopic(builder *flatbuffers.Builder, TOPIC flatbuffers.UOffsetT) {
+	DSSAddTOPIC(builder, TOPIC)
+}
+func DSSAddSUBSCRIBED(builder *flatbuffers.Builder, SUBSCRIBED bool) {
+	builder.PrependBoolSlot(41, SUBSCRIBED, false)
+}
+func DSSAddSubscribed(builder *flatbuffers.Builder, SUBSCRIBED bool) {
+	DSSAddSUBSCRIBED(builder, SUBSCRIBED)
+}
+func DSSAddPIN_POLICY(builder *flatbuffers.Builder, PIN_POLICY dssPinPolicy) {
+	builder.PrependInt8Slot(42, int8(PIN_POLICY), 0)
+}
+func DSSAddPinPolicy(builder *flatbuffers.Builder, PIN_POLICY dssPinPolicy) {
+	DSSAddPIN_POLICY(builder, PIN_POLICY)
+}
+func DSSAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(VISIBILITY), 0)
+}
+func DSSAddVisibility(builder *flatbuffers.Builder, VISIBILITY flatbuffers.UOffsetT) {
+	DSSAddVISIBILITY(builder, VISIBILITY)
+}
+func DSSAddENCRYPTION_STATE(builder *flatbuffers.Builder, ENCRYPTION_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(ENCRYPTION_STATE), 0)
+}
+func DSSAddEncryptionState(builder *flatbuffers.Builder, ENCRYPTION_STATE flatbuffers.UOffsetT) {
+	DSSAddENCRYPTION_STATE(builder, ENCRYPTION_STATE)
+}
+func DSSAddGRANT_STATE(builder *flatbuffers.Builder, GRANT_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(GRANT_STATE), 0)
+}
+func DSSAddGrantState(builder *flatbuffers.Builder, GRANT_STATE flatbuffers.UOffsetT) {
+	DSSAddGRANT_STATE(builder, GRANT_STATE)
+}
+func DSSAddFEED_HEAD(builder *flatbuffers.Builder, FEED_HEAD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(FEED_HEAD), 0)
+}
+func DSSAddFeedHead(builder *flatbuffers.Builder, FEED_HEAD flatbuffers.UOffsetT) {
+	DSSAddFEED_HEAD(builder, FEED_HEAD)
+}
+func DSSAddLAST_PUBLICATION_CID(builder *flatbuffers.Builder, LAST_PUBLICATION_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(LAST_PUBLICATION_CID), 0)
+}
+func DSSAddLastPublicationCid(builder *flatbuffers.Builder, LAST_PUBLICATION_CID flatbuffers.UOffsetT) {
+	DSSAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+}
+func DSSAddLAST_PNM_CID(builder *flatbuffers.Builder, LAST_PNM_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(LAST_PNM_CID), 0)
+}
+func DSSAddLastPnmCid(builder *flatbuffers.Builder, LAST_PNM_CID flatbuffers.UOffsetT) {
+	DSSAddLAST_PNM_CID(builder, LAST_PNM_CID)
+}
+func DSSAddDELTA_ROWS(builder *flatbuffers.Builder, DELTA_ROWS uint64) {
+	builder.PrependUint64Slot(49, DELTA_ROWS, 0)
+}
+func DSSAddDeltaRows(builder *flatbuffers.Builder, DELTA_ROWS uint64) {
+	DSSAddDELTA_ROWS(builder, DELTA_ROWS)
+}
+func DSSAddLAST_SYNC_STARTED_AT(builder *flatbuffers.Builder, LAST_SYNC_STARTED_AT uint64) {
+	builder.PrependUint64Slot(50, LAST_SYNC_STARTED_AT, 0)
+}
+func DSSAddLastSyncStartedAt(builder *flatbuffers.Builder, LAST_SYNC_STARTED_AT uint64) {
+	DSSAddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT)
+}
+func DSSAddREQUESTED_ACTION(builder *flatbuffers.Builder, REQUESTED_ACTION dssAction) {
+	builder.PrependInt8Slot(51, int8(REQUESTED_ACTION), 0)
+}
+func DSSAddRequestedAction(builder *flatbuffers.Builder, REQUESTED_ACTION dssAction) {
+	DSSAddREQUESTED_ACTION(builder, REQUESTED_ACTION)
+}
+func DSSAddORIGIN_ID(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(ORIGIN_ID), 0)
+}
+func DSSAddOriginId(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffsetT) {
+	DSSAddORIGIN_ID(builder, ORIGIN_ID)
 }
 func DSSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

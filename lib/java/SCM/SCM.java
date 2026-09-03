@@ -42,21 +42,37 @@ public final class SCM extends com.google.flatbuffers.Table {
   public int RECORDSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public SCHEMA_STANDARD.Vector recordsVector() { return recordsVector(new SCHEMA_STANDARD.Vector()); }
   public SCHEMA_STANDARD.Vector recordsVector(SCHEMA_STANDARD.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Version of the standards package the reporting node runs.
+   */
+  public String STANDARDS_VERSION() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STANDARDS_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer STANDARDS_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Unix milliseconds when this registry frame was generated.
+   */
+  public long GENERATED_AT_MS() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createSCM(FlatBufferBuilder builder,
       int versionOffset,
-      int RECORDSOffset) {
-    builder.startTable(2);
+      int RECORDSOffset,
+      int STANDARDS_VERSIONOffset,
+      long GENERATED_AT_MS) {
+    builder.startTable(4);
+    SCM.addGeneratedAtMs(builder, GENERATED_AT_MS);
+    SCM.addStandardsVersion(builder, STANDARDS_VERSIONOffset);
     SCM.addRecords(builder, RECORDSOffset);
     SCM.addVersion(builder, versionOffset);
     return SCM.endSCM(builder);
   }
 
-  public static void startSCM(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startSCM(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addVersion(FlatBufferBuilder builder, int versionOffset) { builder.addOffset(0, versionOffset, 0); }
   public static void addRecords(FlatBufferBuilder builder, int RECORDSOffset) { builder.addOffset(1, RECORDSOffset, 0); }
   public static int createRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStandardsVersion(FlatBufferBuilder builder, int STANDARDS_VERSIONOffset) { builder.addOffset(2, STANDARDS_VERSIONOffset, 0); }
+  public static void addGeneratedAtMs(FlatBufferBuilder builder, long GENERATED_AT_MS) { builder.addLong(3, GENERATED_AT_MS, 0L); }
   public static int endSCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

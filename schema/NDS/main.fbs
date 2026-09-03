@@ -1,0 +1,162 @@
+// Hash: 1feffd3a68b818302178dc04c9452182a07f6189fe8b41586f086327083b01bb
+// Version: 1.207.0
+// -----------------------------------END_HEADER
+/// Node Data Statistics (NDS)
+/// Description
+/// Snapshot of one node's data plane for operator dashboards: the record
+/// footprint of every standard held, the ingest progress of every
+/// (standard, provider, source, batch) lane together with the producer and the
+/// upstream origin of that lane, ingest transitions, topic activity, module
+/// runtime counters and trust-engine counters. A node assembles the snapshot
+/// on a background lane and serves it from memory so a dashboard read never
+/// waits on the store. A STALE snapshot is reported as stale with the AS_OF
+/// time of its last true numbers, never as a confident zero.
+///
+/// Provenance of a lane is structural, never a display string: PRODUCER_PEER_ID
+/// is the peer whose signed identity record covers the lane's publications,
+/// ORIGIN_ID names the upstream publisher the producer retrieved the records
+/// from, and PUBLISHER_RUNG states how far that producer claim has been
+/// verified by the reporting node.
+
+/// How far the reporting node has verified the producer of a lane. Append new
+/// values only; never reorder or reuse existing values.
+enum ndsPublisherRung : byte {
+  /// Only a source tag string is known; nothing has been verified.
+  SourceTag,
+  /// The producer's signed identity record verifies in this node's directory.
+  Signed,
+  /// The producer additionally carries a verified domain proof.
+  Bonded
+}
+
+/// Kind of ingest transition surfaced to the dashboard. Append new values
+/// only; never reorder or reuse existing values.
+enum ndsIngestEventKind : byte {
+  Stall,
+  Reject,
+  Recover
+}
+
+/// One standard's record footprint in the node store.
+table NDSSchemaStat {
+  /// Standard code, e.g. "OMM".
+  SCHEMA: string;
+  RECORD_COUNT: int64;
+  TOTAL_BYTES: int64;
+  /// Newest record epoch held, Unix milliseconds; 0 = unknown.
+  NEWEST_EPOCH_MS: int64;
+  /// Oldest record epoch held, Unix milliseconds; 0 = unknown.
+  OLDEST_EPOCH_MS: int64;
+}
+
+/// One (standard, provider, source, batch) ingest lane's live progress and
+/// provenance.
+table NDSSourceStat {
+  SCHEMA: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  BATCH_ID: string;
+  RECORD_COUNT: int64;
+  TOTAL_BYTES: int64;
+  /// Unix seconds; 0 = unknown.
+  FIRST_INGEST_AT: int64;
+  /// Unix seconds; 0 = unknown.
+  LAST_INGEST_AT: int64;
+  /// Unix seconds; 0 = unknown.
+  UPDATED_AT: int64;
+  /// Records observed in the current rolling window.
+  WINDOW_RECORDS: int64;
+  /// Records observed in the immediately preceding rolling window.
+  PRIOR_WINDOW_RECORDS: int64;
+  /// Rolling-window width in milliseconds.
+  WINDOW_MS: int64;
+  /// Peer identifier of the producer whose signed identity covers this lane's
+  /// publications.
+  PRODUCER_PEER_ID: string;
+  /// Content identifier of the producer's identity record.
+  PRODUCER_EPM_CID: string;
+  /// Upstream publisher the producer retrieved the records from, as a host
+  /// name or stable identifier.
+  ORIGIN_ID: string;
+  /// Display name of the upstream publisher.
+  ORIGIN_NAME: string;
+  /// Upstream URL the records were retrieved from.
+  SOURCE_URL: string;
+  /// Licence under which the upstream publisher offers the records.
+  LICENSE: string;
+  /// Ingest connector that produced this lane (`$ICN` CONNECTOR_ID).
+  CONNECTOR_ID: string;
+  /// Verification rung of the producer claim.
+  PUBLISHER_RUNG: ndsPublisherRung = SourceTag;
+  /// Evidence references supporting PUBLISHER_RUNG (record CIDs, proof ids).
+  EVIDENCE: [string];
+  /// Content identifier of the lane's newest publication manifest.
+  LAST_PUBLICATION_CID: string;
+  /// Content identifier of the lane's newest publish notification.
+  LAST_PNM_CID: string;
+}
+
+/// One source-ingest transition surfaced to the dashboard.
+table NDSIngestEvent {
+  KIND: ndsIngestEventKind = Stall;
+  SCHEMA: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  MESSAGE: string;
+  COUNT: int64;
+  /// Unix seconds when the transition occurred.
+  AT: int64;
+}
+
+/// Live traffic for one publish/subscribe topic.
+table NDSTopicStat {
+  TOPIC: string;
+  RATE_PER_MIN: double;
+  /// Unix seconds; 0 = not observed.
+  LAST_SEEN_AT: int64;
+  SUBSCRIBED: bool;
+}
+
+/// Runtime counters for one installed module or flow.
+table NDSModuleStat {
+  MODULE_ID: string;
+  /// Runtime state, e.g. "running", "installed", "error".
+  STATUS: string;
+  RUN_COUNT: int64;
+  ERROR_COUNT: int64;
+  /// Unix seconds; 0 = never.
+  LAST_RUN_AT: int64;
+  /// Unix seconds; 0 = not scheduled.
+  NEXT_RUN_AT: int64;
+}
+
+/// Counters for the node's trust rule evaluation engine.
+table NDSTrustEngineStat {
+  /// Minimum interval between evaluation passes, milliseconds.
+  MIN_INTERVAL_MS: int64;
+  RUNS: int64;
+  /// Unix seconds; 0 = never.
+  LAST_RUN_AT: int64;
+}
+
+/// Node Data Statistics - one node's data-plane snapshot.
+table NDS {
+  /// Unix seconds when this snapshot was assembled.
+  GENERATED_AT: int64;
+  SCHEMAS: [NDSSchemaStat];
+  SOURCES: [NDSSourceStat];
+  TOTAL_RECORDS: int64;
+  TOTAL_BYTES: int64;
+  /// True when the assembling read hit its store budget and this snapshot
+  /// carries the last-known-good numbers.
+  STALE: bool;
+  /// Unix seconds the store numbers were last true; 0 = never read.
+  AS_OF: int64;
+  EVENTS: [NDSIngestEvent];
+  TOPICS: [NDSTopicStat];
+  MODULES: [NDSModuleStat];
+  TRUST_ENGINE: NDSTrustEngineStat;
+}
+
+root_type NDS;
+file_identifier "$NDS";

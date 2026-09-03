@@ -55,8 +55,26 @@ recordsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Version of the standards package the reporting node runs.
+ */
+STANDARDS_VERSION():string|null
+STANDARDS_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STANDARDS_VERSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix milliseconds when this registry frame was generated.
+ */
+GENERATED_AT_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startSCM(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(4);
 }
 
 static addVersion(builder:flatbuffers.Builder, versionOffset:flatbuffers.Offset) {
@@ -79,6 +97,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addStandardsVersion(builder:flatbuffers.Builder, STANDARDS_VERSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, STANDARDS_VERSIONOffset, 0);
+}
+
+static addGeneratedAtMs(builder:flatbuffers.Builder, GENERATED_AT_MS:bigint) {
+  builder.addFieldInt64(3, GENERATED_AT_MS, BigInt('0'));
+}
+
 static endSCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -92,17 +118,21 @@ static finishSizePrefixedSCMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SCM', true);
 }
 
-static createSCM(builder:flatbuffers.Builder, versionOffset:flatbuffers.Offset, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSCM(builder:flatbuffers.Builder, versionOffset:flatbuffers.Offset, RECORDSOffset:flatbuffers.Offset, STANDARDS_VERSIONOffset:flatbuffers.Offset, GENERATED_AT_MS:bigint):flatbuffers.Offset {
   SCM.startSCM(builder);
   SCM.addVersion(builder, versionOffset);
   SCM.addRecords(builder, RECORDSOffset);
+  SCM.addStandardsVersion(builder, STANDARDS_VERSIONOffset);
+  SCM.addGeneratedAtMs(builder, GENERATED_AT_MS);
   return SCM.endSCM(builder);
 }
 
 unpack(): SCMT {
   return new SCMT(
     this.version(),
-    this.bb!.createObjList<SCHEMA_STANDARD, SCHEMA_STANDARDT>(this.RECORDS.bind(this), this.recordsLength())
+    this.bb!.createObjList<SCHEMA_STANDARD, SCHEMA_STANDARDT>(this.RECORDS.bind(this), this.recordsLength()),
+    this.STANDARDS_VERSION(),
+    this.GENERATED_AT_MS()
   );
 }
 
@@ -110,23 +140,30 @@ unpack(): SCMT {
 unpackTo(_o: SCMT): void {
   _o.version = this.version();
   _o.RECORDS = this.bb!.createObjList<SCHEMA_STANDARD, SCHEMA_STANDARDT>(this.RECORDS.bind(this), this.recordsLength());
+  _o.STANDARDS_VERSION = this.STANDARDS_VERSION();
+  _o.GENERATED_AT_MS = this.GENERATED_AT_MS();
 }
 }
 
 export class SCMT implements flatbuffers.IGeneratedObject {
 constructor(
   public version: string|Uint8Array|null = null,
-  public RECORDS: (SCHEMA_STANDARDT)[] = []
+  public RECORDS: (SCHEMA_STANDARDT)[] = [],
+  public STANDARDS_VERSION: string|Uint8Array|null = null,
+  public GENERATED_AT_MS: bigint = BigInt('0')
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const version = (this.version !== null ? builder.createString(this.version!) : 0);
   const RECORDS = SCM.createRecordsVector(builder, builder.createObjectOffsetList(this.RECORDS));
+  const STANDARDS_VERSION = (this.STANDARDS_VERSION !== null ? builder.createString(this.STANDARDS_VERSION!) : 0);
 
   return SCM.createSCM(builder,
     version,
-    RECORDS
+    RECORDS,
+    STANDARDS_VERSION,
+    this.GENERATED_AT_MS
   );
 }
 }

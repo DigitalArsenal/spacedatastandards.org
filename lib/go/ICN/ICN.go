@@ -612,8 +612,407 @@ func (rcv *ICN) MutateProviderSignature(j int, n byte) bool {
 	return rcv.MutatePROVIDER_SIGNATURE(j, n)
 }
 
+/// Upstream publisher the connector retrieves records from, as a host name
+/// or stable identifier.
+func (rcv *ICN) ORIGIN_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) OriginId() []byte {
+	return rcv.ORIGIN_ID()
+}
+
+/// Upstream publisher the connector retrieves records from, as a host name
+/// or stable identifier.
+/// Display name of the upstream publisher.
+func (rcv *ICN) ORIGIN_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) OriginName() []byte {
+	return rcv.ORIGIN_NAME()
+}
+
+/// Display name of the upstream publisher.
+/// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+func (rcv *ICN) DATASET_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) DatasetId() []byte {
+	return rcv.DATASET_ID()
+}
+
+/// Stable dataset identifier within the origin, e.g. "gp-full-catalog".
+/// Provider identifier the lane's records are stored under.
+func (rcv *ICN) PROVIDER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) ProviderId() []byte {
+	return rcv.PROVIDER_ID()
+}
+
+/// Provider identifier the lane's records are stored under.
+/// Source name the lane's records are stored under.
+func (rcv *ICN) SOURCE_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) SourceName() []byte {
+	return rcv.SOURCE_NAME()
+}
+
+/// Source name the lane's records are stored under.
+/// Licence under which the upstream publisher offers the records.
+func (rcv *ICN) LICENSE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) License() []byte {
+	return rcv.LICENSE()
+}
+
+/// Licence under which the upstream publisher offers the records.
+func (rcv *ICN) LICENSE_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LicenseUrl() []byte {
+	return rcv.LICENSE_URL()
+}
+
+/// Citation the upstream publisher asks for.
+func (rcv *ICN) CITATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) Citation() []byte {
+	return rcv.CITATION()
+}
+
+/// Citation the upstream publisher asks for.
+/// Minimum interval between fetches of the same dataset, milliseconds.
+func (rcv *ICN) MIN_FETCH_INTERVAL_MS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) MinFetchIntervalMs() uint64 {
+	return rcv.MIN_FETCH_INTERVAL_MS()
+}
+
+/// Minimum interval between fetches of the same dataset, milliseconds.
+func (rcv *ICN) MutateMIN_FETCH_INTERVAL_MS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(78, n)
+}
+
+func (rcv *ICN) MutateMinFetchIntervalMs(n uint64) bool {
+	return rcv.MutateMIN_FETCH_INTERVAL_MS(n)
+}
+
+/// Unix milliseconds when the next fetch is eligible.
+func (rcv *ICN) NEXT_ELIGIBLE_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) NextEligibleAt() uint64 {
+	return rcv.NEXT_ELIGIBLE_AT()
+}
+
+/// Unix milliseconds when the next fetch is eligible.
+func (rcv *ICN) MutateNEXT_ELIGIBLE_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(80, n)
+}
+
+func (rcv *ICN) MutateNextEligibleAt(n uint64) bool {
+	return rcv.MutateNEXT_ELIGIBLE_AT(n)
+}
+
+/// HTTP status of the last fetch.
+func (rcv *ICN) LAST_HTTP_STATUS() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) LastHttpStatus() uint16 {
+	return rcv.LAST_HTTP_STATUS()
+}
+
+/// HTTP status of the last fetch.
+func (rcv *ICN) MutateLAST_HTTP_STATUS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(82, n)
+}
+
+func (rcv *ICN) MutateLastHttpStatus(n uint16) bool {
+	return rcv.MutateLAST_HTTP_STATUS(n)
+}
+
+/// Entity tag returned by the last fetch.
+func (rcv *ICN) LAST_SOURCE_ETAG() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LastSourceEtag() []byte {
+	return rcv.LAST_SOURCE_ETAG()
+}
+
+/// Entity tag returned by the last fetch.
+/// Last-Modified value returned by the last fetch.
+func (rcv *ICN) LAST_SOURCE_LAST_MODIFIED() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LastSourceLastModified() []byte {
+	return rcv.LAST_SOURCE_LAST_MODIFIED()
+}
+
+/// Last-Modified value returned by the last fetch.
+/// Batch identifier of the last ingest.
+func (rcv *ICN) LAST_BATCH_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LastBatchId() []byte {
+	return rcv.LAST_BATCH_ID()
+}
+
+/// Batch identifier of the last ingest.
+/// Records parsed by the last ingest.
+func (rcv *ICN) LAST_RECORD_COUNT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) LastRecordCount() uint64 {
+	return rcv.LAST_RECORD_COUNT()
+}
+
+/// Records parsed by the last ingest.
+func (rcv *ICN) MutateLAST_RECORD_COUNT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(90, n)
+}
+
+func (rcv *ICN) MutateLastRecordCount(n uint64) bool {
+	return rcv.MutateLAST_RECORD_COUNT(n)
+}
+
+/// Records newly inserted by the last ingest.
+func (rcv *ICN) LAST_INSERTED_COUNT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) LastInsertedCount() uint64 {
+	return rcv.LAST_INSERTED_COUNT()
+}
+
+/// Records newly inserted by the last ingest.
+func (rcv *ICN) MutateLAST_INSERTED_COUNT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(92, n)
+}
+
+func (rcv *ICN) MutateLastInsertedCount(n uint64) bool {
+	return rcv.MutateLAST_INSERTED_COUNT(n)
+}
+
+/// Duration of the last fetch and ingest, milliseconds.
+func (rcv *ICN) LAST_DURATION_MS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) LastDurationMs() uint64 {
+	return rcv.LAST_DURATION_MS()
+}
+
+/// Duration of the last fetch and ingest, milliseconds.
+func (rcv *ICN) MutateLAST_DURATION_MS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(94, n)
+}
+
+func (rcv *ICN) MutateLastDurationMs(n uint64) bool {
+	return rcv.MutateLAST_DURATION_MS(n)
+}
+
+/// Fetches attempted over the connector's lifetime.
+func (rcv *ICN) FETCH_COUNT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) FetchCount() uint64 {
+	return rcv.FETCH_COUNT()
+}
+
+/// Fetches attempted over the connector's lifetime.
+func (rcv *ICN) MutateFETCH_COUNT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(96, n)
+}
+
+func (rcv *ICN) MutateFetchCount(n uint64) bool {
+	return rcv.MutateFETCH_COUNT(n)
+}
+
+/// Ingests completed over the connector's lifetime.
+func (rcv *ICN) INGEST_COUNT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ICN) IngestCount() uint64 {
+	return rcv.INGEST_COUNT()
+}
+
+/// Ingests completed over the connector's lifetime.
+func (rcv *ICN) MutateINGEST_COUNT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(98, n)
+}
+
+func (rcv *ICN) MutateIngestCount(n uint64) bool {
+	return rcv.MutateINGEST_COUNT(n)
+}
+
+/// Content identifier of the last publication manifest emitted.
+func (rcv *ICN) LAST_PUBLICATION_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LastPublicationCid() []byte {
+	return rcv.LAST_PUBLICATION_CID()
+}
+
+/// Content identifier of the last publication manifest emitted.
+/// Content identifier of the last publish notification emitted.
+func (rcv *ICN) LAST_PNM_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) LastPnmCid() []byte {
+	return rcv.LAST_PNM_CID()
+}
+
+/// Content identifier of the last publish notification emitted.
+/// Feed head the connector last advanced to.
+func (rcv *ICN) FEED_HEAD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ICN) FeedHead() []byte {
+	return rcv.FEED_HEAD()
+}
+
+/// Feed head the connector last advanced to.
+/// Standard codes the connector emits, e.g. ["OMM", "MPE"].
+func (rcv *ICN) EMITS_SCHEMAS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *ICN) EmitsSchemas(j int) []byte {
+	return rcv.EMITS_SCHEMAS(j)
+}
+
+func (rcv *ICN) EMITS_SCHEMASLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ICN) EmitsSchemasLength() int {
+	return rcv.EMITS_SCHEMASLength()
+}
+
+/// Standard codes the connector emits, e.g. ["OMM", "MPE"].
 func ICNStart(builder *flatbuffers.Builder) {
-	builder.StartObject(29)
+	builder.StartObject(52)
 }
 func ICNAddCONNECTOR_ID(builder *flatbuffers.Builder, CONNECTOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONNECTOR_ID), 0)
@@ -794,6 +1193,150 @@ func ICNStartPROVIDER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int
 }
 func ICNStartProviderSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ICNStartPROVIDER_SIGNATUREVector(builder, numElems)
+}
+func ICNAddORIGIN_ID(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(ORIGIN_ID), 0)
+}
+func ICNAddOriginId(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffsetT) {
+	ICNAddORIGIN_ID(builder, ORIGIN_ID)
+}
+func ICNAddORIGIN_NAME(builder *flatbuffers.Builder, ORIGIN_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(ORIGIN_NAME), 0)
+}
+func ICNAddOriginName(builder *flatbuffers.Builder, ORIGIN_NAME flatbuffers.UOffsetT) {
+	ICNAddORIGIN_NAME(builder, ORIGIN_NAME)
+}
+func ICNAddDATASET_ID(builder *flatbuffers.Builder, DATASET_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(DATASET_ID), 0)
+}
+func ICNAddDatasetId(builder *flatbuffers.Builder, DATASET_ID flatbuffers.UOffsetT) {
+	ICNAddDATASET_ID(builder, DATASET_ID)
+}
+func ICNAddPROVIDER_ID(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(PROVIDER_ID), 0)
+}
+func ICNAddProviderId(builder *flatbuffers.Builder, PROVIDER_ID flatbuffers.UOffsetT) {
+	ICNAddPROVIDER_ID(builder, PROVIDER_ID)
+}
+func ICNAddSOURCE_NAME(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(SOURCE_NAME), 0)
+}
+func ICNAddSourceName(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
+	ICNAddSOURCE_NAME(builder, SOURCE_NAME)
+}
+func ICNAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(LICENSE), 0)
+}
+func ICNAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	ICNAddLICENSE(builder, LICENSE)
+}
+func ICNAddLICENSE_URL(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(LICENSE_URL), 0)
+}
+func ICNAddLicenseUrl(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOffsetT) {
+	ICNAddLICENSE_URL(builder, LICENSE_URL)
+}
+func ICNAddCITATION(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(CITATION), 0)
+}
+func ICNAddCitation(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	ICNAddCITATION(builder, CITATION)
+}
+func ICNAddMIN_FETCH_INTERVAL_MS(builder *flatbuffers.Builder, MIN_FETCH_INTERVAL_MS uint64) {
+	builder.PrependUint64Slot(37, MIN_FETCH_INTERVAL_MS, 0)
+}
+func ICNAddMinFetchIntervalMs(builder *flatbuffers.Builder, MIN_FETCH_INTERVAL_MS uint64) {
+	ICNAddMIN_FETCH_INTERVAL_MS(builder, MIN_FETCH_INTERVAL_MS)
+}
+func ICNAddNEXT_ELIGIBLE_AT(builder *flatbuffers.Builder, NEXT_ELIGIBLE_AT uint64) {
+	builder.PrependUint64Slot(38, NEXT_ELIGIBLE_AT, 0)
+}
+func ICNAddNextEligibleAt(builder *flatbuffers.Builder, NEXT_ELIGIBLE_AT uint64) {
+	ICNAddNEXT_ELIGIBLE_AT(builder, NEXT_ELIGIBLE_AT)
+}
+func ICNAddLAST_HTTP_STATUS(builder *flatbuffers.Builder, LAST_HTTP_STATUS uint16) {
+	builder.PrependUint16Slot(39, LAST_HTTP_STATUS, 0)
+}
+func ICNAddLastHttpStatus(builder *flatbuffers.Builder, LAST_HTTP_STATUS uint16) {
+	ICNAddLAST_HTTP_STATUS(builder, LAST_HTTP_STATUS)
+}
+func ICNAddLAST_SOURCE_ETAG(builder *flatbuffers.Builder, LAST_SOURCE_ETAG flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(LAST_SOURCE_ETAG), 0)
+}
+func ICNAddLastSourceEtag(builder *flatbuffers.Builder, LAST_SOURCE_ETAG flatbuffers.UOffsetT) {
+	ICNAddLAST_SOURCE_ETAG(builder, LAST_SOURCE_ETAG)
+}
+func ICNAddLAST_SOURCE_LAST_MODIFIED(builder *flatbuffers.Builder, LAST_SOURCE_LAST_MODIFIED flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(LAST_SOURCE_LAST_MODIFIED), 0)
+}
+func ICNAddLastSourceLastModified(builder *flatbuffers.Builder, LAST_SOURCE_LAST_MODIFIED flatbuffers.UOffsetT) {
+	ICNAddLAST_SOURCE_LAST_MODIFIED(builder, LAST_SOURCE_LAST_MODIFIED)
+}
+func ICNAddLAST_BATCH_ID(builder *flatbuffers.Builder, LAST_BATCH_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(LAST_BATCH_ID), 0)
+}
+func ICNAddLastBatchId(builder *flatbuffers.Builder, LAST_BATCH_ID flatbuffers.UOffsetT) {
+	ICNAddLAST_BATCH_ID(builder, LAST_BATCH_ID)
+}
+func ICNAddLAST_RECORD_COUNT(builder *flatbuffers.Builder, LAST_RECORD_COUNT uint64) {
+	builder.PrependUint64Slot(43, LAST_RECORD_COUNT, 0)
+}
+func ICNAddLastRecordCount(builder *flatbuffers.Builder, LAST_RECORD_COUNT uint64) {
+	ICNAddLAST_RECORD_COUNT(builder, LAST_RECORD_COUNT)
+}
+func ICNAddLAST_INSERTED_COUNT(builder *flatbuffers.Builder, LAST_INSERTED_COUNT uint64) {
+	builder.PrependUint64Slot(44, LAST_INSERTED_COUNT, 0)
+}
+func ICNAddLastInsertedCount(builder *flatbuffers.Builder, LAST_INSERTED_COUNT uint64) {
+	ICNAddLAST_INSERTED_COUNT(builder, LAST_INSERTED_COUNT)
+}
+func ICNAddLAST_DURATION_MS(builder *flatbuffers.Builder, LAST_DURATION_MS uint64) {
+	builder.PrependUint64Slot(45, LAST_DURATION_MS, 0)
+}
+func ICNAddLastDurationMs(builder *flatbuffers.Builder, LAST_DURATION_MS uint64) {
+	ICNAddLAST_DURATION_MS(builder, LAST_DURATION_MS)
+}
+func ICNAddFETCH_COUNT(builder *flatbuffers.Builder, FETCH_COUNT uint64) {
+	builder.PrependUint64Slot(46, FETCH_COUNT, 0)
+}
+func ICNAddFetchCount(builder *flatbuffers.Builder, FETCH_COUNT uint64) {
+	ICNAddFETCH_COUNT(builder, FETCH_COUNT)
+}
+func ICNAddINGEST_COUNT(builder *flatbuffers.Builder, INGEST_COUNT uint64) {
+	builder.PrependUint64Slot(47, INGEST_COUNT, 0)
+}
+func ICNAddIngestCount(builder *flatbuffers.Builder, INGEST_COUNT uint64) {
+	ICNAddINGEST_COUNT(builder, INGEST_COUNT)
+}
+func ICNAddLAST_PUBLICATION_CID(builder *flatbuffers.Builder, LAST_PUBLICATION_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(LAST_PUBLICATION_CID), 0)
+}
+func ICNAddLastPublicationCid(builder *flatbuffers.Builder, LAST_PUBLICATION_CID flatbuffers.UOffsetT) {
+	ICNAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID)
+}
+func ICNAddLAST_PNM_CID(builder *flatbuffers.Builder, LAST_PNM_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(LAST_PNM_CID), 0)
+}
+func ICNAddLastPnmCid(builder *flatbuffers.Builder, LAST_PNM_CID flatbuffers.UOffsetT) {
+	ICNAddLAST_PNM_CID(builder, LAST_PNM_CID)
+}
+func ICNAddFEED_HEAD(builder *flatbuffers.Builder, FEED_HEAD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(FEED_HEAD), 0)
+}
+func ICNAddFeedHead(builder *flatbuffers.Builder, FEED_HEAD flatbuffers.UOffsetT) {
+	ICNAddFEED_HEAD(builder, FEED_HEAD)
+}
+func ICNAddEMITS_SCHEMAS(builder *flatbuffers.Builder, EMITS_SCHEMAS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(EMITS_SCHEMAS), 0)
+}
+func ICNAddEmitsSchemas(builder *flatbuffers.Builder, EMITS_SCHEMAS flatbuffers.UOffsetT) {
+	ICNAddEMITS_SCHEMAS(builder, EMITS_SCHEMAS)
+}
+func ICNStartEMITS_SCHEMASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ICNStartEmitsSchemasVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ICNStartEMITS_SCHEMASVector(builder, numElems)
 }
 func ICNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

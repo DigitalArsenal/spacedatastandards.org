@@ -632,8 +632,102 @@ func (rcv *EOP) DataSetCid() []byte {
 /// Content identifier of the complete published data set this row was taken
 /// from. Every frames consumer that must agree bit-for-bit records this so
 /// the source is provable rather than assumed.
+/// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+/// radians, as published beside the CIP offsets by combined rapid-service
+/// series.
+func (rcv *EOP) NUTATION_DPSI_RADIANS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) NutationDpsiRadians() float64 {
+	return rcv.NUTATION_DPSI_RADIANS()
+}
+
+/// Nutation correction in longitude (dPsi) against the IAU 1980 model,
+/// radians, as published beside the CIP offsets by combined rapid-service
+/// series.
+func (rcv *EOP) MutateNUTATION_DPSI_RADIANS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *EOP) MutateNutationDpsiRadians(n float64) bool {
+	return rcv.MutateNUTATION_DPSI_RADIANS(n)
+}
+
+/// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+/// radians.
+func (rcv *EOP) NUTATION_DEPS_RADIANS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) NutationDepsRadians() float64 {
+	return rcv.NUTATION_DEPS_RADIANS()
+}
+
+/// Nutation correction in obliquity (dEps) against the IAU 1980 model,
+/// radians.
+func (rcv *EOP) MutateNUTATION_DEPS_RADIANS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *EOP) MutateNutationDepsRadians(n float64) bool {
+	return rcv.MutateNUTATION_DEPS_RADIANS(n)
+}
+
+/// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+func (rcv *EOP) NUTATION_DPSI_UNCERTAINTY_RADIANS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) NutationDpsiUncertaintyRadians() float64 {
+	return rcv.NUTATION_DPSI_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+func (rcv *EOP) MutateNUTATION_DPSI_UNCERTAINTY_RADIANS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *EOP) MutateNutationDpsiUncertaintyRadians(n float64) bool {
+	return rcv.MutateNUTATION_DPSI_UNCERTAINTY_RADIANS(n)
+}
+
+/// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+func (rcv *EOP) NUTATION_DEPS_UNCERTAINTY_RADIANS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) NutationDepsUncertaintyRadians() float64 {
+	return rcv.NUTATION_DEPS_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+func (rcv *EOP) MutateNUTATION_DEPS_UNCERTAINTY_RADIANS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *EOP) MutateNutationDepsUncertaintyRadians(n float64) bool {
+	return rcv.MutateNUTATION_DEPS_UNCERTAINTY_RADIANS(n)
+}
+
 func EOPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(26)
+	builder.StartObject(30)
 }
 func EOPAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
@@ -790,6 +884,30 @@ func EOPAddDATA_SET_CID(builder *flatbuffers.Builder, DATA_SET_CID flatbuffers.U
 }
 func EOPAddDataSetCid(builder *flatbuffers.Builder, DATA_SET_CID flatbuffers.UOffsetT) {
 	EOPAddDATA_SET_CID(builder, DATA_SET_CID)
+}
+func EOPAddNUTATION_DPSI_RADIANS(builder *flatbuffers.Builder, NUTATION_DPSI_RADIANS float64) {
+	builder.PrependFloat64Slot(26, NUTATION_DPSI_RADIANS, 0.0)
+}
+func EOPAddNutationDpsiRadians(builder *flatbuffers.Builder, NUTATION_DPSI_RADIANS float64) {
+	EOPAddNUTATION_DPSI_RADIANS(builder, NUTATION_DPSI_RADIANS)
+}
+func EOPAddNUTATION_DEPS_RADIANS(builder *flatbuffers.Builder, NUTATION_DEPS_RADIANS float64) {
+	builder.PrependFloat64Slot(27, NUTATION_DEPS_RADIANS, 0.0)
+}
+func EOPAddNutationDepsRadians(builder *flatbuffers.Builder, NUTATION_DEPS_RADIANS float64) {
+	EOPAddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS)
+}
+func EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, NUTATION_DPSI_UNCERTAINTY_RADIANS float64) {
+	builder.PrependFloat64Slot(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddNutationDpsiUncertaintyRadians(builder *flatbuffers.Builder, NUTATION_DPSI_UNCERTAINTY_RADIANS float64) {
+	EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS)
+}
+func EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, NUTATION_DEPS_UNCERTAINTY_RADIANS float64) {
+	builder.PrependFloat64Slot(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddNutationDepsUncertaintyRadians(builder *flatbuffers.Builder, NUTATION_DEPS_UNCERTAINTY_RADIANS float64) {
+	EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS)
 }
 func EOPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

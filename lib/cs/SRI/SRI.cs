@@ -72,6 +72,49 @@ public struct SRI : IFlatbufferObject
   public ArraySegment<byte>? GetRESERVEDBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetRESERVEDArray() { return __p.__vector_as_array<byte>(16); }
+  /// Content identifier of the record bytes.
+  public string CID { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCIDBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetCIDBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetCIDArray() { return __p.__vector_as_array<byte>(18); }
+  /// Byte offset of the record frame within its export or archive stream.
+  public ulong BYTE_OFFSET { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Byte length of the record frame.
+  public uint BYTE_LENGTH { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Epoch of the record, Unix milliseconds; 0 = none.
+  public ulong EPOCH_MS { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Entity key of the record within its standard, e.g. a catalogue number.
+  public string ENTITY_KEY { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENTITY_KEYBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetENTITY_KEYBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetENTITY_KEYArray() { return __p.__vector_as_array<byte>(26); }
+  public string PROVIDER_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_IDBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetPROVIDER_IDArray() { return __p.__vector_as_array<byte>(28); }
+  public string SOURCE_NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_NAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_NAMEBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetSOURCE_NAMEArray() { return __p.__vector_as_array<byte>(30); }
+  public string BATCH_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBATCH_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetBATCH_IDBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetBATCH_IDArray() { return __p.__vector_as_array<byte>(32); }
 
   public static Offset<SRI> CreateSRI(FlatBufferBuilder builder,
       StringOffset RECORD_KEYOffset = default(StringOffset),
@@ -80,9 +123,25 @@ public struct SRI : IFlatbufferObject
       StringOffset ATTACHED_VIAOffset = default(StringOffset),
       StringOffset PAYLOAD_KINDOffset = default(StringOffset),
       double UPDATED_AT_MS = 0.0,
-      VectorOffset RESERVEDOffset = default(VectorOffset)) {
-    builder.StartTable(7);
+      VectorOffset RESERVEDOffset = default(VectorOffset),
+      StringOffset CIDOffset = default(StringOffset),
+      ulong BYTE_OFFSET = 0,
+      uint BYTE_LENGTH = 0,
+      ulong EPOCH_MS = 0,
+      StringOffset ENTITY_KEYOffset = default(StringOffset),
+      StringOffset PROVIDER_IDOffset = default(StringOffset),
+      StringOffset SOURCE_NAMEOffset = default(StringOffset),
+      StringOffset BATCH_IDOffset = default(StringOffset)) {
+    builder.StartTable(15);
+    SRI.AddEPOCH_MS(builder, EPOCH_MS);
+    SRI.AddBYTE_OFFSET(builder, BYTE_OFFSET);
     SRI.AddUPDATED_AT_MS(builder, UPDATED_AT_MS);
+    SRI.AddBATCH_ID(builder, BATCH_IDOffset);
+    SRI.AddSOURCE_NAME(builder, SOURCE_NAMEOffset);
+    SRI.AddPROVIDER_ID(builder, PROVIDER_IDOffset);
+    SRI.AddENTITY_KEY(builder, ENTITY_KEYOffset);
+    SRI.AddBYTE_LENGTH(builder, BYTE_LENGTH);
+    SRI.AddCID(builder, CIDOffset);
     SRI.AddRESERVED(builder, RESERVEDOffset);
     SRI.AddPAYLOAD_KIND(builder, PAYLOAD_KINDOffset);
     SRI.AddATTACHED_VIA(builder, ATTACHED_VIAOffset);
@@ -92,7 +151,7 @@ public struct SRI : IFlatbufferObject
     return SRI.EndSRI(builder);
   }
 
-  public static void StartSRI(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartSRI(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddRECORD_KEY(FlatBufferBuilder builder, StringOffset RECORD_KEYOffset) { builder.AddOffset(0, RECORD_KEYOffset.Value, 0); }
   public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(1, SCHEMA_NAMEOffset.Value, 0); }
   public static void AddROLE(FlatBufferBuilder builder, StringOffset ROLEOffset) { builder.AddOffset(2, ROLEOffset.Value, 0); }
@@ -105,6 +164,14 @@ public struct SRI : IFlatbufferObject
   public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRESERVEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(7, CIDOffset.Value, 0); }
+  public static void AddBYTE_OFFSET(FlatBufferBuilder builder, ulong BYTE_OFFSET) { builder.AddUlong(8, BYTE_OFFSET, 0); }
+  public static void AddBYTE_LENGTH(FlatBufferBuilder builder, uint BYTE_LENGTH) { builder.AddUint(9, BYTE_LENGTH, 0); }
+  public static void AddEPOCH_MS(FlatBufferBuilder builder, ulong EPOCH_MS) { builder.AddUlong(10, EPOCH_MS, 0); }
+  public static void AddENTITY_KEY(FlatBufferBuilder builder, StringOffset ENTITY_KEYOffset) { builder.AddOffset(11, ENTITY_KEYOffset.Value, 0); }
+  public static void AddPROVIDER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_IDOffset) { builder.AddOffset(12, PROVIDER_IDOffset.Value, 0); }
+  public static void AddSOURCE_NAME(FlatBufferBuilder builder, StringOffset SOURCE_NAMEOffset) { builder.AddOffset(13, SOURCE_NAMEOffset.Value, 0); }
+  public static void AddBATCH_ID(FlatBufferBuilder builder, StringOffset BATCH_IDOffset) { builder.AddOffset(14, BATCH_IDOffset.Value, 0); }
   public static Offset<SRI> EndSRI(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SRI>(o);
@@ -125,6 +192,14 @@ public struct SRI : IFlatbufferObject
     _o.UPDATED_AT_MS = this.UPDATED_AT_MS;
     _o.RESERVED = new List<byte>();
     for (var _j = 0; _j < this.RESERVEDLength; ++_j) {_o.RESERVED.Add(this.RESERVED(_j));}
+    _o.CID = this.CID;
+    _o.BYTE_OFFSET = this.BYTE_OFFSET;
+    _o.BYTE_LENGTH = this.BYTE_LENGTH;
+    _o.EPOCH_MS = this.EPOCH_MS;
+    _o.ENTITY_KEY = this.ENTITY_KEY;
+    _o.PROVIDER_ID = this.PROVIDER_ID;
+    _o.SOURCE_NAME = this.SOURCE_NAME;
+    _o.BATCH_ID = this.BATCH_ID;
   }
   public static Offset<SRI> Pack(FlatBufferBuilder builder, SRIT _o) {
     if (_o == null) return default(Offset<SRI>);
@@ -138,6 +213,11 @@ public struct SRI : IFlatbufferObject
       var __RESERVED = _o.RESERVED.ToArray();
       _RESERVED = CreateRESERVEDVector(builder, __RESERVED);
     }
+    var _CID = _o.CID == null ? default(StringOffset) : builder.CreateString(_o.CID);
+    var _ENTITY_KEY = _o.ENTITY_KEY == null ? default(StringOffset) : builder.CreateString(_o.ENTITY_KEY);
+    var _PROVIDER_ID = _o.PROVIDER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_ID);
+    var _SOURCE_NAME = _o.SOURCE_NAME == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_NAME);
+    var _BATCH_ID = _o.BATCH_ID == null ? default(StringOffset) : builder.CreateString(_o.BATCH_ID);
     return CreateSRI(
       builder,
       _RECORD_KEY,
@@ -146,7 +226,15 @@ public struct SRI : IFlatbufferObject
       _ATTACHED_VIA,
       _PAYLOAD_KIND,
       _o.UPDATED_AT_MS,
-      _RESERVED);
+      _RESERVED,
+      _CID,
+      _o.BYTE_OFFSET,
+      _o.BYTE_LENGTH,
+      _o.EPOCH_MS,
+      _ENTITY_KEY,
+      _PROVIDER_ID,
+      _SOURCE_NAME,
+      _BATCH_ID);
   }
 }
 
@@ -159,6 +247,14 @@ public class SRIT
   public string PAYLOAD_KIND { get; set; }
   public double UPDATED_AT_MS { get; set; }
   public List<byte> RESERVED { get; set; }
+  public string CID { get; set; }
+  public ulong BYTE_OFFSET { get; set; }
+  public uint BYTE_LENGTH { get; set; }
+  public ulong EPOCH_MS { get; set; }
+  public string ENTITY_KEY { get; set; }
+  public string PROVIDER_ID { get; set; }
+  public string SOURCE_NAME { get; set; }
+  public string BATCH_ID { get; set; }
 
   public SRIT() {
     this.RECORD_KEY = null;
@@ -168,6 +264,14 @@ public class SRIT
     this.PAYLOAD_KIND = null;
     this.UPDATED_AT_MS = 0.0;
     this.RESERVED = null;
+    this.CID = null;
+    this.BYTE_OFFSET = 0;
+    this.BYTE_LENGTH = 0;
+    this.EPOCH_MS = 0;
+    this.ENTITY_KEY = null;
+    this.PROVIDER_ID = null;
+    this.SOURCE_NAME = null;
+    this.BATCH_ID = null;
   }
   public static SRIT DeserializeFromBinary(byte[] fbBuffer) {
     return SRI.GetRootAsSRI(new ByteBuffer(fbBuffer)).UnPack();
@@ -192,6 +296,14 @@ static public class SRIVerify
       && verifier.VerifyString(tablePos, 12 /*PAYLOAD_KIND*/, false)
       && verifier.VerifyField(tablePos, 14 /*UPDATED_AT_MS*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfData(tablePos, 16 /*RESERVED*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 18 /*CID*/, false)
+      && verifier.VerifyField(tablePos, 20 /*BYTE_OFFSET*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*BYTE_LENGTH*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 24 /*EPOCH_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 26 /*ENTITY_KEY*/, false)
+      && verifier.VerifyString(tablePos, 28 /*PROVIDER_ID*/, false)
+      && verifier.VerifyString(tablePos, 30 /*SOURCE_NAME*/, false)
+      && verifier.VerifyString(tablePos, 32 /*BATCH_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

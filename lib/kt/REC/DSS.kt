@@ -281,6 +281,233 @@ class DSS : Table() {
         }
     val errorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
     fun errorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Standard code of the lane, e.g. "OMM".
+     */
+    val schemaName : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val schemaNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun schemaNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
+    val providerId : String?
+        get() {
+            val o = __offset(74)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun providerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
+    val sourceName : String?
+        get() {
+            val o = __offset(76)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun sourceNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * Stable dataset identifier within the origin.
+     */
+    val datasetId : String?
+        get() {
+            val o = __offset(78)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val datasetIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun datasetIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * Ingest connector that produces the lane, when known.
+     */
+    val connectorId : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val connectorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun connectorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * Channel identifier the lane is announced on.
+     */
+    val channelId : String?
+        get() {
+            val o = __offset(82)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val channelIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun channelIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * Publish/subscribe topic of the lane.
+     */
+    val topic : String?
+        get() {
+            val o = __offset(84)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val topicAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 1)
+    fun topicInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * True when this node subscribes to the lane.
+     */
+    val subscribed : Boolean
+        get() {
+            val o = __offset(86)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val pinPolicy : Byte
+        get() {
+            val o = __offset(88)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Visibility of the lane, e.g. "public", "private".
+     */
+    val visibility : String?
+        get() {
+            val o = __offset(90)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val visibilityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
+    fun visibilityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * Encryption state of the lane's publications, e.g. "plain", "encrypted".
+     */
+    val encryptionState : String?
+        get() {
+            val o = __offset(92)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val encryptionStateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
+    fun encryptionStateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+     */
+    val grantState : String?
+        get() {
+            val o = __offset(94)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val grantStateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun grantStateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
+    /**
+     * Feed head this node has materialised up to.
+     */
+    val feedHead : String?
+        get() {
+            val o = __offset(96)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val feedHeadAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(96, 1)
+    fun feedHeadInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 96, 1)
+    /**
+     * Content identifier of the newest publication manifest known.
+     */
+    val lastPublicationCid : String?
+        get() {
+            val o = __offset(98)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastPublicationCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
+    fun lastPublicationCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
+    /**
+     * Content identifier of the newest publish notification known.
+     */
+    val lastPnmCid : String?
+        get() {
+            val o = __offset(100)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastPnmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
+    fun lastPnmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
+    /**
+     * Rows materialised since the previous SYNCED state.
+     */
+    val deltaRows : ULong
+        get() {
+            val o = __offset(102)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix milliseconds the current or last sync pass started; 0 = never.
+     */
+    val lastSyncStartedAt : ULong
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Action a client requests when sending this record to a node.
+     */
+    val requestedAction : Byte
+        get() {
+            val o = __offset(106)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Upstream publisher of the lane's records.
+     */
+    val originId : String?
+        get() {
+            val o = __offset(108)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val originIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(108, 1)
+    fun originIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 108, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDSS(_bb: ByteBuffer): DSS = getRootAsDSS(_bb, DSS())
@@ -289,8 +516,10 @@ class DSS : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DSS")
-        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int) : Int {
-            builder.startTable(34)
+        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int) : Int {
+            builder.startTable(53)
+            addLASTSYNCSTARTEDAT(builder, lastSyncStartedAt)
+            addDELTAROWS(builder, deltaRows)
             addFLATSQLMATERIALIZATIONMS(builder, flatsqlMaterializationMs)
             addVERIFICATIONMS(builder, verificationMs)
             addNETWORKTRANSFERMS(builder, networkTransferMs)
@@ -307,6 +536,20 @@ class DSS : Table() {
             addLOCALROWS(builder, localRows)
             addTOTALROWS(builder, totalRows)
             addSYNCEDROWS(builder, syncedRows)
+            addORIGINID(builder, originIdOffset)
+            addLASTPNMCID(builder, lastPnmCidOffset)
+            addLASTPUBLICATIONCID(builder, lastPublicationCidOffset)
+            addFEEDHEAD(builder, feedHeadOffset)
+            addGRANTSTATE(builder, grantStateOffset)
+            addENCRYPTIONSTATE(builder, encryptionStateOffset)
+            addVISIBILITY(builder, visibilityOffset)
+            addTOPIC(builder, topicOffset)
+            addCHANNELID(builder, channelIdOffset)
+            addCONNECTORID(builder, connectorIdOffset)
+            addDATASETID(builder, datasetIdOffset)
+            addSOURCENAME(builder, sourceNameOffset)
+            addPROVIDERID(builder, providerIdOffset)
+            addSCHEMANAME(builder, schemaNameOffset)
             addERROR(builder, errorOffset)
             addLASTSYNCEDAT(builder, lastSyncedAtOffset)
             addVERIFIEDCHUNKS(builder, verifiedChunksOffset)
@@ -321,13 +564,16 @@ class DSS : Table() {
             addSNAPSHOTID(builder, snapshotIdOffset)
             addPROVIDERPUBLICKEY(builder, providerPublicKeyOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addREQUESTEDACTION(builder, requestedAction)
+            addPINPOLICY(builder, pinPolicy)
+            addSUBSCRIBED(builder, subscribed)
             addWIRESPEEDTARGETMET(builder, wireSpeedTargetMet)
             addHASWIRESPEEDTARGETMET(builder, hasWireSpeedTargetMet)
             addHASWIRESPEEDUTILIZATION(builder, hasWireSpeedUtilization)
             addSTATUS(builder, status)
             return endDSS(builder)
         }
-        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(34)
+        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(53)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addSYNCEDROWS(builder: FlatBufferBuilder, syncedRows: ULong) = builder.addLong(1, syncedRows.toLong(), 0)
         fun addTOTALROWS(builder: FlatBufferBuilder, totalRows: ULong) = builder.addLong(2, totalRows.toLong(), 0)
@@ -370,6 +616,25 @@ class DSS : Table() {
         fun startVerifiedChunksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addLASTSYNCEDAT(builder: FlatBufferBuilder, lastSyncedAt: Int) = builder.addOffset(32, lastSyncedAt, 0)
         fun addERROR(builder: FlatBufferBuilder, error: Int) = builder.addOffset(33, error, 0)
+        fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(34, schemaName, 0)
+        fun addPROVIDERID(builder: FlatBufferBuilder, providerId: Int) = builder.addOffset(35, providerId, 0)
+        fun addSOURCENAME(builder: FlatBufferBuilder, sourceName: Int) = builder.addOffset(36, sourceName, 0)
+        fun addDATASETID(builder: FlatBufferBuilder, datasetId: Int) = builder.addOffset(37, datasetId, 0)
+        fun addCONNECTORID(builder: FlatBufferBuilder, connectorId: Int) = builder.addOffset(38, connectorId, 0)
+        fun addCHANNELID(builder: FlatBufferBuilder, channelId: Int) = builder.addOffset(39, channelId, 0)
+        fun addTOPIC(builder: FlatBufferBuilder, topic: Int) = builder.addOffset(40, topic, 0)
+        fun addSUBSCRIBED(builder: FlatBufferBuilder, subscribed: Boolean) = builder.addBoolean(41, subscribed, false)
+        fun addPINPOLICY(builder: FlatBufferBuilder, pinPolicy: Byte) = builder.addByte(42, pinPolicy, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Int) = builder.addOffset(43, visibility, 0)
+        fun addENCRYPTIONSTATE(builder: FlatBufferBuilder, encryptionState: Int) = builder.addOffset(44, encryptionState, 0)
+        fun addGRANTSTATE(builder: FlatBufferBuilder, grantState: Int) = builder.addOffset(45, grantState, 0)
+        fun addFEEDHEAD(builder: FlatBufferBuilder, feedHead: Int) = builder.addOffset(46, feedHead, 0)
+        fun addLASTPUBLICATIONCID(builder: FlatBufferBuilder, lastPublicationCid: Int) = builder.addOffset(47, lastPublicationCid, 0)
+        fun addLASTPNMCID(builder: FlatBufferBuilder, lastPnmCid: Int) = builder.addOffset(48, lastPnmCid, 0)
+        fun addDELTAROWS(builder: FlatBufferBuilder, deltaRows: ULong) = builder.addLong(49, deltaRows.toLong(), 0)
+        fun addLASTSYNCSTARTEDAT(builder: FlatBufferBuilder, lastSyncStartedAt: ULong) = builder.addLong(50, lastSyncStartedAt.toLong(), 0)
+        fun addREQUESTEDACTION(builder: FlatBufferBuilder, requestedAction: Byte) = builder.addByte(51, requestedAction, 0)
+        fun addORIGINID(builder: FlatBufferBuilder, originId: Int) = builder.addOffset(52, originId, 0)
         fun endDSS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

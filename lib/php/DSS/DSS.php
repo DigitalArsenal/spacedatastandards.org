@@ -317,22 +317,167 @@ class DSS extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Standard code of the lane, e.g. "OMM".
+    public function getSCHEMA_NAME()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getPROVIDER_ID()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getSOURCE_NAME()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Stable dataset identifier within the origin.
+    public function getDATASET_ID()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Ingest connector that produces the lane, when known.
+    public function getCONNECTOR_ID()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Channel identifier the lane is announced on.
+    public function getCHANNEL_ID()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Publish/subscribe topic of the lane.
+    public function getTOPIC()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True when this node subscribes to the lane.
+    /**
+     * @return bool
+     */
+    public function getSUBSCRIBED()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return sbyte
+     */
+    public function getPIN_POLICY()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dssPinPolicy::None;
+    }
+
+    /// Visibility of the lane, e.g. "public", "private".
+    public function getVISIBILITY()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+    public function getENCRYPTION_STATE()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+    public function getGRANT_STATE()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Feed head this node has materialised up to.
+    public function getFEED_HEAD()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content identifier of the newest publication manifest known.
+    public function getLAST_PUBLICATION_CID()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Content identifier of the newest publish notification known.
+    public function getLAST_PNM_CID()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Rows materialised since the previous SYNCED state.
+    /**
+     * @return ulong
+     */
+    public function getDELTA_ROWS()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix milliseconds the current or last sync pass started; 0 = never.
+    /**
+     * @return ulong
+     */
+    public function getLAST_SYNC_STARTED_AT()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Action a client requests when sending this record to a node.
+    /**
+     * @return sbyte
+     */
+    public function getREQUESTED_ACTION()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dssAction::None;
+    }
+
+    /// Upstream publisher of the lane's records.
+    public function getORIGIN_ID()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDSS(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(34);
+        $builder->StartObject(53);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DSS
      */
-    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR)
+    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR, $SCHEMA_NAME, $PROVIDER_ID, $SOURCE_NAME, $DATASET_ID, $CONNECTOR_ID, $CHANNEL_ID, $TOPIC, $SUBSCRIBED, $PIN_POLICY, $VISIBILITY, $ENCRYPTION_STATE, $GRANT_STATE, $FEED_HEAD, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $DELTA_ROWS, $LAST_SYNC_STARTED_AT, $REQUESTED_ACTION, $ORIGIN_ID)
     {
-        $builder->startObject(34);
+        $builder->startObject(53);
         self::addSTATUS($builder, $STATUS);
         self::addSYNCED_ROWS($builder, $SYNCED_ROWS);
         self::addTOTAL_ROWS($builder, $TOTAL_ROWS);
@@ -367,6 +512,25 @@ class DSS extends Table
         self::addVERIFIED_CHUNKS($builder, $VERIFIED_CHUNKS);
         self::addLAST_SYNCED_AT($builder, $LAST_SYNCED_AT);
         self::addERROR($builder, $ERROR);
+        self::addSCHEMA_NAME($builder, $SCHEMA_NAME);
+        self::addPROVIDER_ID($builder, $PROVIDER_ID);
+        self::addSOURCE_NAME($builder, $SOURCE_NAME);
+        self::addDATASET_ID($builder, $DATASET_ID);
+        self::addCONNECTOR_ID($builder, $CONNECTOR_ID);
+        self::addCHANNEL_ID($builder, $CHANNEL_ID);
+        self::addTOPIC($builder, $TOPIC);
+        self::addSUBSCRIBED($builder, $SUBSCRIBED);
+        self::addPIN_POLICY($builder, $PIN_POLICY);
+        self::addVISIBILITY($builder, $VISIBILITY);
+        self::addENCRYPTION_STATE($builder, $ENCRYPTION_STATE);
+        self::addGRANT_STATE($builder, $GRANT_STATE);
+        self::addFEED_HEAD($builder, $FEED_HEAD);
+        self::addLAST_PUBLICATION_CID($builder, $LAST_PUBLICATION_CID);
+        self::addLAST_PNM_CID($builder, $LAST_PNM_CID);
+        self::addDELTA_ROWS($builder, $DELTA_ROWS);
+        self::addLAST_SYNC_STARTED_AT($builder, $LAST_SYNC_STARTED_AT);
+        self::addREQUESTED_ACTION($builder, $REQUESTED_ACTION);
+        self::addORIGIN_ID($builder, $ORIGIN_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -733,6 +897,196 @@ class DSS extends Table
     public static function addERROR(FlatBufferBuilder $builder, $ERROR)
     {
         $builder->addOffsetX(33, $ERROR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSCHEMA_NAME(FlatBufferBuilder $builder, $SCHEMA_NAME)
+    {
+        $builder->addOffsetX(34, $SCHEMA_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_ID(FlatBufferBuilder $builder, $PROVIDER_ID)
+    {
+        $builder->addOffsetX(35, $PROVIDER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_NAME(FlatBufferBuilder $builder, $SOURCE_NAME)
+    {
+        $builder->addOffsetX(36, $SOURCE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDATASET_ID(FlatBufferBuilder $builder, $DATASET_ID)
+    {
+        $builder->addOffsetX(37, $DATASET_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCONNECTOR_ID(FlatBufferBuilder $builder, $CONNECTOR_ID)
+    {
+        $builder->addOffsetX(38, $CONNECTOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCHANNEL_ID(FlatBufferBuilder $builder, $CHANNEL_ID)
+    {
+        $builder->addOffsetX(39, $CHANNEL_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTOPIC(FlatBufferBuilder $builder, $TOPIC)
+    {
+        $builder->addOffsetX(40, $TOPIC, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSUBSCRIBED(FlatBufferBuilder $builder, $SUBSCRIBED)
+    {
+        $builder->addBoolX(41, $SUBSCRIBED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addPIN_POLICY(FlatBufferBuilder $builder, $PIN_POLICY)
+    {
+        $builder->addSbyteX(42, $PIN_POLICY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addVISIBILITY(FlatBufferBuilder $builder, $VISIBILITY)
+    {
+        $builder->addOffsetX(43, $VISIBILITY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addENCRYPTION_STATE(FlatBufferBuilder $builder, $ENCRYPTION_STATE)
+    {
+        $builder->addOffsetX(44, $ENCRYPTION_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGRANT_STATE(FlatBufferBuilder $builder, $GRANT_STATE)
+    {
+        $builder->addOffsetX(45, $GRANT_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFEED_HEAD(FlatBufferBuilder $builder, $FEED_HEAD)
+    {
+        $builder->addOffsetX(46, $FEED_HEAD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_PUBLICATION_CID(FlatBufferBuilder $builder, $LAST_PUBLICATION_CID)
+    {
+        $builder->addOffsetX(47, $LAST_PUBLICATION_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_PNM_CID(FlatBufferBuilder $builder, $LAST_PNM_CID)
+    {
+        $builder->addOffsetX(48, $LAST_PNM_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addDELTA_ROWS(FlatBufferBuilder $builder, $DELTA_ROWS)
+    {
+        $builder->addUlongX(49, $DELTA_ROWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addLAST_SYNC_STARTED_AT(FlatBufferBuilder $builder, $LAST_SYNC_STARTED_AT)
+    {
+        $builder->addUlongX(50, $LAST_SYNC_STARTED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addREQUESTED_ACTION(FlatBufferBuilder $builder, $REQUESTED_ACTION)
+    {
+        $builder->addSbyteX(51, $REQUESTED_ACTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGIN_ID(FlatBufferBuilder $builder, $ORIGIN_ID)
+    {
+        $builder->addOffsetX(52, $ORIGIN_ID, 0);
     }
 
     /**

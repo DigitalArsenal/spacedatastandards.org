@@ -251,6 +251,11 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -512,11 +517,16 @@ enum RecordType : uint8_t {
   RecordType_ICN = 236,
   RecordType_TRP = 237,
   RecordType_TRV = 238,
+  RecordType_ACT = 239,
+  RecordType_AGR = 240,
+  RecordType_NDS = 241,
+  RecordType_NST = 242,
+  RecordType_QRP = 243,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_TRV
+  RecordType_MAX = RecordType_QRP
 };
 
-inline const RecordType (&EnumValuesRecordType())[239] {
+inline const RecordType (&EnumValuesRecordType())[244] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -756,13 +766,18 @@ inline const RecordType (&EnumValuesRecordType())[239] {
     RecordType_PSS,
     RecordType_ICN,
     RecordType_TRP,
-    RecordType_TRV
+    RecordType_TRV,
+    RecordType_ACT,
+    RecordType_AGR,
+    RecordType_NDS,
+    RecordType_NST,
+    RecordType_QRP
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[240] = {
+  static const char * const names[245] = {
     "NONE",
     "ACL",
     "ACM",
@@ -1002,13 +1017,18 @@ inline const char * const *EnumNamesRecordType() {
     "ICN",
     "TRP",
     "TRV",
+    "ACT",
+    "AGR",
+    "NDS",
+    "NST",
+    "QRP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_TRV)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_QRP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1969,6 +1989,26 @@ template<> struct RecordTypeTraits<TRV> {
   static const RecordType enum_value = RecordType_TRV;
 };
 
+template<> struct RecordTypeTraits<ACT> {
+  static const RecordType enum_value = RecordType_ACT;
+};
+
+template<> struct RecordTypeTraits<AGR> {
+  static const RecordType enum_value = RecordType_AGR;
+};
+
+template<> struct RecordTypeTraits<NDS> {
+  static const RecordType enum_value = RecordType_NDS;
+};
+
+template<> struct RecordTypeTraits<NST> {
+  static const RecordType enum_value = RecordType_NST;
+};
+
+template<> struct RecordTypeTraits<QRP> {
+  static const RecordType enum_value = RecordType_QRP;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2703,6 +2743,21 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const TRV *value_as_TRV() const {
     return value_type() == RecordType_TRV ? static_cast<const TRV *>(value()) : nullptr;
+  }
+  const ACT *value_as_ACT() const {
+    return value_type() == RecordType_ACT ? static_cast<const ACT *>(value()) : nullptr;
+  }
+  const AGR *value_as_AGR() const {
+    return value_type() == RecordType_AGR ? static_cast<const AGR *>(value()) : nullptr;
+  }
+  const NDS *value_as_NDS() const {
+    return value_type() == RecordType_NDS ? static_cast<const NDS *>(value()) : nullptr;
+  }
+  const NST *value_as_NST() const {
+    return value_type() == RecordType_NST ? static_cast<const NST *>(value()) : nullptr;
+  }
+  const QRP *value_as_QRP() const {
+    return value_type() == RecordType_QRP ? static_cast<const QRP *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3670,6 +3725,26 @@ template<> inline const TRP *Record::value_as<TRP>() const {
 
 template<> inline const TRV *Record::value_as<TRV>() const {
   return value_as_TRV();
+}
+
+template<> inline const ACT *Record::value_as<ACT>() const {
+  return value_as_ACT();
+}
+
+template<> inline const AGR *Record::value_as<AGR>() const {
+  return value_as_AGR();
+}
+
+template<> inline const NDS *Record::value_as<NDS>() const {
+  return value_as_NDS();
+}
+
+template<> inline const NST *Record::value_as<NST>() const {
+  return value_as_NST();
+}
+
+template<> inline const QRP *Record::value_as<QRP>() const {
+  return value_as_QRP();
 }
 
 struct RecordBuilder {
@@ -4747,6 +4822,26 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_TRV: {
       auto ptr = reinterpret_cast<const TRV *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ACT: {
+      auto ptr = reinterpret_cast<const ACT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_AGR: {
+      auto ptr = reinterpret_cast<const AGR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_NDS: {
+      auto ptr = reinterpret_cast<const NDS *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_NST: {
+      auto ptr = reinterpret_cast<const NST *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_QRP: {
+      auto ptr = reinterpret_cast<const QRP *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

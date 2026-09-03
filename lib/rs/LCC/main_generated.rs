@@ -727,6 +727,11 @@ impl<'a> ::flatbuffers::Follow<'a> for LCC<'a> {
 
 impl<'a> LCC<'a> {
   pub const VT_OWNER: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ACTIVE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SOURCE_URL: ::flatbuffers::VOffsetT = 12;
+  pub const VT_RETRIEVED_AT: ::flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -735,17 +740,40 @@ impl<'a> LCC<'a> {
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args LCCArgs
+    args: &'args LCCArgs<'args>
   ) -> ::flatbuffers::WIPOffset<LCC<'bldr>> {
     let mut builder = LCCBuilder::new(_fbb);
+    if let Some(x) = args.RETRIEVED_AT { builder.add_RETRIEVED_AT(x); }
+    if let Some(x) = args.SOURCE_URL { builder.add_SOURCE_URL(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_ACTIVE(args.ACTIVE);
     builder.add_OWNER(args.OWNER);
     builder.finish()
   }
 
   pub fn unpack(&self) -> LCCT {
     let OWNER = self.OWNER();
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ACTIVE = self.ACTIVE();
+    let SOURCE_URL = self.SOURCE_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RETRIEVED_AT = self.RETRIEVED_AT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     LCCT {
       OWNER,
+      NAME,
+      DESCRIPTION,
+      ACTIVE,
+      SOURCE_URL,
+      RETRIEVED_AT,
     }
   }
 
@@ -756,6 +784,46 @@ impl<'a> LCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<legacyCountryCode>(LCC::VT_OWNER, Some(legacyCountryCode::AB)).unwrap()}
   }
+  /// Display name of the owner or source the code stands for.
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCC::VT_NAME, None)}
+  }
+  /// Longer description of the owner or source.
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCC::VT_DESCRIPTION, None)}
+  }
+  /// True while the code is in current use by the publishing catalogue.
+  #[inline]
+  pub fn ACTIVE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(LCC::VT_ACTIVE, Some(false)).unwrap()}
+  }
+  /// URL of the reference table the row was retrieved from.
+  #[inline]
+  pub fn SOURCE_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCC::VT_SOURCE_URL, None)}
+  }
+  /// ISO 8601 UTC time the reference table was retrieved.
+  #[inline]
+  pub fn RETRIEVED_AT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCC::VT_RETRIEVED_AT, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for LCC<'_> {
@@ -765,18 +833,33 @@ impl ::flatbuffers::Verifiable for LCC<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<legacyCountryCode>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<bool>("ACTIVE", Self::VT_ACTIVE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_URL", Self::VT_SOURCE_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RETRIEVED_AT", Self::VT_RETRIEVED_AT, false)?
      .finish();
     Ok(())
   }
 }
-pub struct LCCArgs {
+pub struct LCCArgs<'a> {
     pub OWNER: legacyCountryCode,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ACTIVE: bool,
+    pub SOURCE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RETRIEVED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for LCCArgs {
+impl<'a> Default for LCCArgs<'a> {
   #[inline]
   fn default() -> Self {
     LCCArgs {
       OWNER: legacyCountryCode::AB,
+      NAME: None,
+      DESCRIPTION: None,
+      ACTIVE: false,
+      SOURCE_URL: None,
+      RETRIEVED_AT: None,
     }
   }
 }
@@ -789,6 +872,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCCBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
     self.fbb_.push_slot::<legacyCountryCode>(LCC::VT_OWNER, OWNER, legacyCountryCode::AB);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCC::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCC::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_ACTIVE(&mut self, ACTIVE: bool) {
+    self.fbb_.push_slot::<bool>(LCC::VT_ACTIVE, ACTIVE, false);
+  }
+  #[inline]
+  pub fn add_SOURCE_URL(&mut self, SOURCE_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCC::VT_SOURCE_URL, SOURCE_URL);
+  }
+  #[inline]
+  pub fn add_RETRIEVED_AT(&mut self, RETRIEVED_AT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCC::VT_RETRIEVED_AT, RETRIEVED_AT);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCCBuilder<'a, 'b, A> {
@@ -809,6 +912,11 @@ impl ::core::fmt::Debug for LCC<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("LCC");
       ds.field("OWNER", &self.OWNER());
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("ACTIVE", &self.ACTIVE());
+      ds.field("SOURCE_URL", &self.SOURCE_URL());
+      ds.field("RETRIEVED_AT", &self.RETRIEVED_AT());
       ds.finish()
   }
 }
@@ -816,11 +924,21 @@ impl ::core::fmt::Debug for LCC<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct LCCT {
   pub OWNER: legacyCountryCode,
+  pub NAME: Option<alloc::string::String>,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub ACTIVE: bool,
+  pub SOURCE_URL: Option<alloc::string::String>,
+  pub RETRIEVED_AT: Option<alloc::string::String>,
 }
 impl Default for LCCT {
   fn default() -> Self {
     Self {
       OWNER: legacyCountryCode::AB,
+      NAME: None,
+      DESCRIPTION: None,
+      ACTIVE: false,
+      SOURCE_URL: None,
+      RETRIEVED_AT: None,
     }
   }
 }
@@ -830,8 +948,26 @@ impl LCCT {
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<LCC<'b>> {
     let OWNER = self.OWNER;
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ACTIVE = self.ACTIVE;
+    let SOURCE_URL = self.SOURCE_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RETRIEVED_AT = self.RETRIEVED_AT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     LCC::create(_fbb, &LCCArgs{
       OWNER,
+      NAME,
+      DESCRIPTION,
+      ACTIVE,
+      SOURCE_URL,
+      RETRIEVED_AT,
     })
   }
 }

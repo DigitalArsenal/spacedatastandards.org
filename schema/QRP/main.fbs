@@ -1,0 +1,143 @@
+// Hash: a280c96b15827928d4ee27fae810065c22510d33111dbfa2908d0cc0db751255
+// Version: 1.207.0
+// -----------------------------------END_HEADER
+/// Query Page (QRP)
+/// Description
+/// The one request, page-header and error frame for every paged, searched or
+/// aggregated read of standards records over a stream of size-prefixed
+/// records. A request names the standard, the selection (SQL, search text or
+/// field filters), the lane (provider, source, batch, producer, origin), an
+/// epoch window and a page. A page header precedes RECORD_COUNT record frames
+/// of the named standard and accounts honestly for what was scanned: PARTIAL is
+/// true when a bounded scan returned before covering every stored record, so a
+/// reader never waits and never mistakes a bounded page for the whole set. An
+/// error is exactly one frame with KIND Error; the HTTP status stays honest
+/// beside it. Cursors are opaque strings issued by the serving node.
+
+/// Role of a frame. Append new values only; never reorder or reuse existing
+/// values.
+enum qrpKind : byte {
+  Request,
+  Page,
+  Error
+}
+
+/// Outcome of a page. Append new values only; never reorder or reuse existing
+/// values.
+enum qrpStatus : byte {
+  Ok,
+  /// A bounded scan returned before covering every stored record.
+  Partial,
+  /// The store is busy; retry after RETRY_AFTER_MS.
+  Busy,
+  /// The serving snapshot is not warm yet; retry after RETRY_AFTER_MS.
+  Cold,
+  Error
+}
+
+/// Comparison operator of a field filter. Append new values only; never
+/// reorder or reuse existing values.
+enum qrpFilterOp : byte {
+  Eq,
+  Ne,
+  Lt,
+  Lte,
+  Gt,
+  Gte,
+  Contains,
+  In
+}
+
+/// One field filter of a request.
+table QRPFilter {
+  FIELD: string;
+  OP: qrpFilterOp = Eq;
+  /// Value as text; for In, values separated by commas.
+  VALUE: string;
+}
+
+/// One column descriptor of a page, in record field order.
+table QRPColumn {
+  NAME: string;
+  /// Scalar type of the field as declared in the standard, e.g. "string",
+  /// "double", "int64", "bool", "enum".
+  TYPE: string;
+  /// Unit of the field when the standard declares one, else empty.
+  UNIT: string;
+  /// True when the serving node can order the page by this column.
+  SORTABLE: bool;
+  /// True when the serving node holds an index on this column.
+  INDEXED: bool;
+}
+
+/// Query Page - request, page header or error frame.
+table QRP {
+  KIND: qrpKind = Request;
+  STATUS: qrpStatus = Ok;
+  /// Stable error code when STATUS is Error, Busy or Cold.
+  ERROR_CODE: string;
+  /// Human-readable detail for an error, warning or partial page.
+  MESSAGE: string;
+  /// Milliseconds a client should wait before retrying; 0 = no advice.
+  RETRY_AFTER_MS: uint32;
+  /// Standard code of the records selected, e.g. "OMM".
+  SCHEMA_NAME: string;
+  /// File identifier of the record frames that follow a page header.
+  FILE_IDENTIFIER: string;
+  /// SQL selection over the standard's table, when the lane accepts SQL.
+  SQL: string;
+  /// Free-text search over the standard's indexed text fields.
+  SEARCH: string;
+  FILTERS: [QRPFilter];
+  SORT_FIELD: string;
+  SORT_DESC: bool;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  BATCH_ID: string;
+  /// Restrict to records whose producer is this peer.
+  PRODUCER_PEER_ID: string;
+  /// Restrict to records retrieved from this upstream origin.
+  ORIGIN_ID: string;
+  /// Epoch window, Unix milliseconds; 0 = unbounded.
+  FROM_EPOCH_MS: int64;
+  TO_EPOCH_MS: int64;
+  /// 1-based page number requested or served.
+  PAGE: uint32;
+  /// Page size requested or served.
+  LIMIT: uint32;
+  /// Opaque cursor of this page.
+  CURSOR: string;
+  /// Opaque cursor of the next page; empty when this is the last page.
+  NEXT_CURSOR: string;
+  /// Record frames that follow this page header.
+  RECORD_COUNT: uint32;
+  /// Records matching the selection when known; 0 = unknown.
+  TOTAL_COUNT: uint64;
+  /// Records the serving node scanned to build this page.
+  SCANNED: uint64;
+  /// Records the serving node holds for the standard.
+  STORED: uint64;
+  /// True when a bounded scan returned before covering every stored record.
+  PARTIAL: bool;
+  /// True when the page was cut at a byte or row budget.
+  TRUNCATED: bool;
+  /// Unix milliseconds the serving numbers were last true.
+  AS_OF_MS: int64;
+  /// True when the page was served from a stale snapshot.
+  STALE: bool;
+  /// Milliseconds the serving node spent producing the page.
+  ELAPSED_MS: uint32;
+  /// Unix milliseconds when the page was generated.
+  GENERATED_AT_MS: int64;
+  /// Entity tag of the page for conditional requests.
+  ETAG: string;
+  /// Content identifier named by a request or a reply (record, manifest,
+  /// archive).
+  CID: string;
+  /// Archive identifier named by a request or a reply.
+  ARCHIVE_ID: string;
+  COLUMNS: [QRPColumn];
+}
+
+root_type QRP;
+file_identifier "$QRP";

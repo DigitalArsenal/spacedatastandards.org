@@ -1154,6 +1154,31 @@
               "description": "Republic of Zimbabwe"
             }
           }
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name of the owner or source the code stands for.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Longer description of the owner or source.",
+          "x-flatbuffer-type": "string"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "True while the code is in current use by the publishing catalogue.",
+          "x-flatbuffer-type": "bool"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "URL of the reference table the row was retrieved from.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC time the reference table was retrieved.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
