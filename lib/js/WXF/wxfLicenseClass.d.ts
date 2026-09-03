@@ -1,0 +1,19 @@
+/**
+ * Licence class of the data at RETRIEVED_AT, following the split a producer
+ * applies between real-time and historical output. Append new values only;
+ * never reorder or reuse existing values.
+ */
+export declare enum wxfLicenseClass {
+    /**
+     * Real-time or future-valid data offered under an experimental real-time
+     * terms-of-use; not an official warning; redistribution limited per
+     * LICENSE_URL.
+     */
+    RealTimeExperimental = 0,
+    /**
+     * Data older than the producer's real-time window, offered under an open
+     * attribution licence named by LICENSE_URL.
+     */
+    Historical = 1
+}
+//# sourceMappingURL=wxfLicenseClass.d.ts.map

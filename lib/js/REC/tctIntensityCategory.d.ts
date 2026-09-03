@@ -1,0 +1,40 @@
+/**
+ * Intensity category on the Saffir-Simpson style scale by maximum sustained
+ * wind. Append new values only; never reorder or reuse existing values.
+ */
+export declare enum tctIntensityCategory {
+    Unspecified = 0,
+    /**
+     * Below 17 m/s (34 kt).
+     */
+    TropicalDepression = 1,
+    /**
+     * 17-32 m/s (34-63 kt).
+     */
+    TropicalStorm = 2,
+    /**
+     * 33-42 m/s (64-82 kt).
+     */
+    Category1 = 3,
+    /**
+     * 43-49 m/s (83-95 kt).
+     */
+    Category2 = 4,
+    /**
+     * 50-58 m/s (96-112 kt).
+     */
+    Category3 = 5,
+    /**
+     * 58-70 m/s (113-136 kt).
+     */
+    Category4 = 6,
+    /**
+     * 70 m/s (137 kt) and above.
+     */
+    Category5 = 7,
+    /**
+     * Extratropical or post-tropical system.
+     */
+    PostTropical = 8
+}
+//# sourceMappingURL=tctIntensityCategory.d.ts.map

@@ -8325,6 +8325,599 @@
             },
             "$ref": "#/definitions/CDM"
         },
+        "TCT": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "wxfModelClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "MachineLearnedGlobalEnsemble",
+                        "NumericalGlobalEnsemble",
+                        "NumericalGlobalDeterministic",
+                        "NumericalRegional",
+                        "Reanalysis",
+                        "Analysis",
+                        "Other"
+                    ]
+                },
+                "wxfMemberKind": {
+                    "type": "string",
+                    "enum": [
+                        "Member",
+                        "Control",
+                        "Deterministic",
+                        "Mean",
+                        "Median",
+                        "StandardDeviation",
+                        "Minimum",
+                        "Maximum",
+                        "Percentile",
+                        "ProbabilityAboveThreshold",
+                        "ProbabilityBelowThreshold"
+                    ]
+                },
+                "wxfVariable": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Temperature2m",
+                        "DewpointTemperature2m",
+                        "WindU10m",
+                        "WindV10m",
+                        "WindSpeed10m",
+                        "WindU100m",
+                        "WindV100m",
+                        "WindSpeed100m",
+                        "MeanSeaLevelPressure",
+                        "SeaSurfaceTemperature",
+                        "TotalCloudCover",
+                        "HighCloudCover",
+                        "MediumCloudCover",
+                        "LowCloudCover",
+                        "SurfaceSolarRadiationDownwards",
+                        "TotalSkyDirectSolarRadiationAtSurface",
+                        "TotalPrecipitation",
+                        "TotalPrecipitationSatelliteBlended",
+                        "TotalPrecipitationExperimental",
+                        "Geopotential",
+                        "Temperature",
+                        "SpecificHumidity",
+                        "WindU",
+                        "WindV",
+                        "VerticalVelocity",
+                        "PrecipitationRate",
+                        "RelativeHumidity",
+                        "TotalColumnWaterVapour",
+                        "SurfacePressure"
+                    ]
+                },
+                "wxfLevelKind": {
+                    "type": "string",
+                    "enum": [
+                        "Surface",
+                        "HeightAboveGround",
+                        "PressureLevel",
+                        "MeanSeaLevel",
+                        "EntireAtmosphere",
+                        "TopOfAtmosphere"
+                    ]
+                },
+                "wxfTemporalKind": {
+                    "type": "string",
+                    "enum": [
+                        "Instantaneous",
+                        "Accumulated",
+                        "Averaged",
+                        "Maximum",
+                        "Minimum"
+                    ]
+                },
+                "wxfGridKind": {
+                    "type": "string",
+                    "enum": [
+                        "RegularLatLon"
+                    ]
+                },
+                "wxfValuesEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "InlineFloat32",
+                        "ContentAddressedChunk"
+                    ]
+                },
+                "wxfLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "RealTimeExperimental",
+                        "Historical"
+                    ]
+                },
+                "tctBasin": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "NorthAtlantic",
+                        "EastPacific",
+                        "CentralPacific",
+                        "WestPacific",
+                        "NorthIndian",
+                        "SouthIndian",
+                        "SouthPacific",
+                        "SouthAtlantic",
+                        "Other"
+                    ]
+                },
+                "tctTrackKind": {
+                    "type": "string",
+                    "enum": [
+                        "Forecast",
+                        "BestTrack",
+                        "Analysis"
+                    ]
+                },
+                "tctTrackOrigin": {
+                    "type": "string",
+                    "enum": [
+                        "ExistingSystem",
+                        "Genesis"
+                    ]
+                },
+                "tctIntensityCategory": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "TropicalDepression",
+                        "TropicalStorm",
+                        "Category1",
+                        "Category2",
+                        "Category3",
+                        "Category4",
+                        "Category5",
+                        "PostTropical"
+                    ]
+                },
+                "WXFGrid": {
+                    "type": "object",
+                    "description": "Regular grid the samples are laid out on. Samples are row-major with\nlatitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON\nsits at VALUES[i * NLON + j] and is centred at\n(LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north\nto south. Longitudes are in [-180, 180) or [0, 360) exactly as the\nproducer publishes them; a consumer normalises.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/wxfGridKind",
+                            "description": "Grid geometry."
+                        },
+                        "LAT0": {
+                            "type": "number",
+                            "description": "Latitude of the first row's cell centre, degrees north."
+                        },
+                        "LON0": {
+                            "type": "number",
+                            "description": "Longitude of the first column's cell centre, degrees east."
+                        },
+                        "DLAT": {
+                            "type": "number",
+                            "description": "Latitude step between rows, degrees (signed)."
+                        },
+                        "DLON": {
+                            "type": "number",
+                            "description": "Longitude step between columns, degrees (signed)."
+                        },
+                        "NLAT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of rows (latitudes)."
+                        },
+                        "NLON": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of columns (longitudes)."
+                        },
+                        "PERIODIC_LON": {
+                            "type": "boolean",
+                            "description": "Whether the last column wraps to the first (global grid)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "WXF": {
+                    "type": "object",
+                    "description": "Weather Forecast Field - One variable, level, member and valid time on a\nregular grid.",
+                    "properties": {
+                        "FIELD_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of the whole field this record belongs to; equal\nacross all tiles of one (producer, init, member, variable, level, lead)."
+                        },
+                        "MODEL_CLASS": {
+                            "$ref": "#/definitions/wxfModelClass",
+                            "description": "Class of the producing model."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Producer-defined model identifier."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Producer-defined model version."
+                        },
+                        "INIT_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC."
+                        },
+                        "LEAD_HOURS": {
+                            "type": "number",
+                            "description": "Forecast lead from INIT_TIME_MS, hours."
+                        },
+                        "VALID_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6)."
+                        },
+                        "HORIZON_HOURS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle)."
+                        },
+                        "MEMBER_KIND": {
+                            "$ref": "#/definitions/wxfMemberKind",
+                            "description": "Ensemble realisation or statistic the field represents."
+                        },
+                        "MEMBER_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Zero-based member index when MEMBER_KIND is Member."
+                        },
+                        "ENSEMBLE_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Number of members in the ensemble the run produced."
+                        },
+                        "PERCENTILE": {
+                            "type": "number",
+                            "description": "Percentile rank in [0, 100] when MEMBER_KIND is Percentile."
+                        },
+                        "THRESHOLD_VALUE": {
+                            "type": "number",
+                            "description": "Threshold in UNITS when MEMBER_KIND is a probability kind."
+                        },
+                        "VARIABLE": {
+                            "$ref": "#/definitions/wxfVariable",
+                            "description": "Variable carried by the field."
+                        },
+                        "VARIABLE_NAME": {
+                            "type": "string",
+                            "description": "Producer's native variable name (always set; authoritative when\nVARIABLE is Unspecified)."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Units of every cell value, UCUM or CF style (e.g. \"K\", \"m s-1\", \"Pa\",\n\"1\")."
+                        },
+                        "LEVEL_KIND": {
+                            "$ref": "#/definitions/wxfLevelKind",
+                            "description": "Vertical coordinate kind."
+                        },
+                        "LEVEL_VALUE": {
+                            "type": "number",
+                            "description": "Vertical coordinate value in the unit fixed by LEVEL_KIND."
+                        },
+                        "TEMPORAL_KIND": {
+                            "$ref": "#/definitions/wxfTemporalKind",
+                            "description": "Temporal character of each cell value."
+                        },
+                        "ACCUMULATION_HOURS": {
+                            "type": "number",
+                            "description": "Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for\nInstantaneous."
+                        },
+                        "GRID": {
+                            "$ref": "#/definitions/WXFGrid",
+                            "description": "Grid geometry of this record's samples (of this tile when tiled)."
+                        },
+                        "TILE_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zero-based tile index within FIELD_ID; 0 for an untiled field."
+                        },
+                        "TILE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of tiles FIELD_ID was split into; 1 for an untiled field."
+                        },
+                        "VALUES_ENCODING": {
+                            "$ref": "#/definitions/wxfValuesEncoding",
+                            "description": "Where the samples live."
+                        },
+                        "VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;\nNaN marks a missing cell. Present only when VALUES_ENCODING is\nInlineFloat32 and the cell count is at most 1,048,576."
+                        },
+                        "CHUNK_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the sample chunk when VALUES_ENCODING is\nContentAddressedChunk."
+                        },
+                        "CHUNK_DTYPE": {
+                            "type": "string",
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                        },
+                        "CHUNK_CODECS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                        },
+                        "CHUNK_BYTE_LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Encoded chunk length in bytes."
+                        },
+                        "VALUE_MIN": {
+                            "type": "number",
+                            "description": "Minimum sample over the field (after decoding); statistics for display\nscaling without touching the chunk."
+                        },
+                        "VALUE_MAX": {
+                            "type": "number",
+                            "description": "Maximum sample over the field (after decoding)."
+                        },
+                        "MISSING_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of cells with a missing value."
+                        },
+                        "ORIGIN_ID": {
+                            "type": "string",
+                            "description": "Upstream publisher the field was retrieved from, as a host name or\nstable identifier."
+                        },
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Stable dataset identifier within the origin (e.g. a bucket, collection\nor table name)."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Upstream URL or object path the field was retrieved from."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix milliseconds UTC when the field was retrieved from the origin."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/wxfLicenseClass",
+                            "description": "Licence class applicable at RETRIEVED_AT."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms the field is offered under."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publisher asks for."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that ingested and published this record."
+                        }
+                    },
+                    "required": [
+                        "FIELD_ID",
+                        "GRID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TCTRadii": {
+                    "type": "object",
+                    "description": "Wind radii by quadrant at one wind-speed threshold. Radii are kilometres\n(1 nmi = 1.852 km exactly) from the centre to the outermost point at which\nthe threshold is reached; 0 means the threshold is not reached in that\nquadrant; a negative value means not reported.",
+                    "properties": {
+                        "THRESHOLD_WIND_MS": {
+                            "type": "number",
+                            "description": "Wind-speed threshold, m/s, converted exactly from knots\n(1 kt = 1852/3600 m/s: 34 kt = 17.49, 50 kt = 25.72, 64 kt = 32.92)."
+                        },
+                        "NE_KM": {
+                            "type": "number",
+                            "description": "North-east quadrant radius, km."
+                        },
+                        "SE_KM": {
+                            "type": "number",
+                            "description": "South-east quadrant radius, km."
+                        },
+                        "SW_KM": {
+                            "type": "number",
+                            "description": "South-west quadrant radius, km."
+                        },
+                        "NW_KM": {
+                            "type": "number",
+                            "description": "North-west quadrant radius, km."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TCTPoint": {
+                    "type": "object",
+                    "description": "One point along a track.",
+                    "properties": {
+                        "VALID_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Time the point is valid at, Unix milliseconds UTC."
+                        },
+                        "LEAD_HOURS": {
+                            "type": "number",
+                            "description": "Lead from INIT_TIME_MS, hours; 0 for observed tracks."
+                        },
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Centre latitude, degrees north."
+                        },
+                        "LONGITUDE": {
+                            "type": "number",
+                            "description": "Centre longitude, degrees east in [-180, 180)."
+                        },
+                        "MAX_SUSTAINED_WIND_MS": {
+                            "type": "number",
+                            "description": "Maximum sustained wind over WIND_AVERAGING_PERIOD_S, m/s\n(1 kt = 1852/3600 m/s)."
+                        },
+                        "MIN_CENTRAL_PRESSURE_PA": {
+                            "type": "number",
+                            "description": "Minimum central pressure, pascal (1 hPa = 100 Pa)."
+                        },
+                        "RADIUS_MAX_WIND_KM": {
+                            "type": "number",
+                            "description": "Radius of maximum wind, km; negative when not reported."
+                        },
+                        "RADII": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TCTRadii"
+                            },
+                            "description": "Wind radii at each reported threshold."
+                        },
+                        "CATEGORY": {
+                            "$ref": "#/definitions/tctIntensityCategory",
+                            "description": "Intensity category at this point."
+                        },
+                        "EXISTENCE_PROBABILITY": {
+                            "type": "number",
+                            "description": "Probability in [0, 1] that the system exists at this point; 1 for\nobserved tracks and unconditional forecasts."
+                        },
+                        "MOTION_DIRECTION_DEG": {
+                            "type": "number",
+                            "description": "Direction of motion, degrees clockwise from north; negative when not\nreported."
+                        },
+                        "MOTION_SPEED_MS": {
+                            "type": "number",
+                            "description": "Speed of motion, m/s; negative when not reported."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TCT": {
+                    "type": "object",
+                    "description": "Tropical Cyclone Track - One realisation of one storm's track.",
+                    "properties": {
+                        "STORM_ID": {
+                            "type": "string",
+                            "description": "Stable storm identifier as issued by the origin (e.g. a best-track\nserial identifier); equal across every member of the same storm."
+                        },
+                        "STORM_NAME": {
+                            "type": "string",
+                            "description": "Storm name if assigned; empty for invests and unnamed genesis events."
+                        },
+                        "BASIN": {
+                            "$ref": "#/definitions/tctBasin",
+                            "description": "Basin the system is tracked in."
+                        },
+                        "TRACK_KIND": {
+                            "$ref": "#/definitions/tctTrackKind",
+                            "description": "Provenance kind of the track."
+                        },
+                        "TRACK_ORIGIN": {
+                            "$ref": "#/definitions/tctTrackOrigin",
+                            "description": "Whether the system existed at initialisation."
+                        },
+                        "MODEL_CLASS": {
+                            "$ref": "#/definitions/wxfModelClass",
+                            "description": "Class of the producing model; Unspecified for observed tracks."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Producer-defined model identifier."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Producer-defined model version."
+                        },
+                        "INIT_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Initialisation time of the run, Unix milliseconds UTC; for observed\ntracks the issue time of the track."
+                        },
+                        "MEMBER_KIND": {
+                            "$ref": "#/definitions/wxfMemberKind",
+                            "description": "Ensemble realisation or statistic the track represents."
+                        },
+                        "MEMBER_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Zero-based member index when MEMBER_KIND is Member."
+                        },
+                        "ENSEMBLE_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Number of members in the ensemble the run produced."
+                        },
+                        "WIND_AVERAGING_PERIOD_S": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Averaging period of MAX_SUSTAINED_WIND_MS, seconds (60 or 600)."
+                        },
+                        "POINTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TCTPoint"
+                            },
+                            "description": "Track points in ascending VALID_TIME_MS order."
+                        },
+                        "ORIGIN_ID": {
+                            "type": "string",
+                            "description": "Upstream publisher the track was retrieved from, as a host name or\nstable identifier."
+                        },
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Stable dataset identifier within the origin."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Upstream URL or object path the track was retrieved from."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix milliseconds UTC when the track was retrieved from the origin."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/wxfLicenseClass",
+                            "description": "Licence class applicable at RETRIEVED_AT."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms the track is offered under."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publisher asks for."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that ingested and published this record."
+                        }
+                    },
+                    "required": [
+                        "STORM_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TCT"
+        },
         "IDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -47672,6 +48265,357 @@
             },
             "$ref": "#/definitions/RDM"
         },
+        "WXF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "wxfModelClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "MachineLearnedGlobalEnsemble",
+                        "NumericalGlobalEnsemble",
+                        "NumericalGlobalDeterministic",
+                        "NumericalRegional",
+                        "Reanalysis",
+                        "Analysis",
+                        "Other"
+                    ]
+                },
+                "wxfMemberKind": {
+                    "type": "string",
+                    "enum": [
+                        "Member",
+                        "Control",
+                        "Deterministic",
+                        "Mean",
+                        "Median",
+                        "StandardDeviation",
+                        "Minimum",
+                        "Maximum",
+                        "Percentile",
+                        "ProbabilityAboveThreshold",
+                        "ProbabilityBelowThreshold"
+                    ]
+                },
+                "wxfVariable": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Temperature2m",
+                        "DewpointTemperature2m",
+                        "WindU10m",
+                        "WindV10m",
+                        "WindSpeed10m",
+                        "WindU100m",
+                        "WindV100m",
+                        "WindSpeed100m",
+                        "MeanSeaLevelPressure",
+                        "SeaSurfaceTemperature",
+                        "TotalCloudCover",
+                        "HighCloudCover",
+                        "MediumCloudCover",
+                        "LowCloudCover",
+                        "SurfaceSolarRadiationDownwards",
+                        "TotalSkyDirectSolarRadiationAtSurface",
+                        "TotalPrecipitation",
+                        "TotalPrecipitationSatelliteBlended",
+                        "TotalPrecipitationExperimental",
+                        "Geopotential",
+                        "Temperature",
+                        "SpecificHumidity",
+                        "WindU",
+                        "WindV",
+                        "VerticalVelocity",
+                        "PrecipitationRate",
+                        "RelativeHumidity",
+                        "TotalColumnWaterVapour",
+                        "SurfacePressure"
+                    ]
+                },
+                "wxfLevelKind": {
+                    "type": "string",
+                    "enum": [
+                        "Surface",
+                        "HeightAboveGround",
+                        "PressureLevel",
+                        "MeanSeaLevel",
+                        "EntireAtmosphere",
+                        "TopOfAtmosphere"
+                    ]
+                },
+                "wxfTemporalKind": {
+                    "type": "string",
+                    "enum": [
+                        "Instantaneous",
+                        "Accumulated",
+                        "Averaged",
+                        "Maximum",
+                        "Minimum"
+                    ]
+                },
+                "wxfGridKind": {
+                    "type": "string",
+                    "enum": [
+                        "RegularLatLon"
+                    ]
+                },
+                "wxfValuesEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "InlineFloat32",
+                        "ContentAddressedChunk"
+                    ]
+                },
+                "wxfLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "RealTimeExperimental",
+                        "Historical"
+                    ]
+                },
+                "WXFGrid": {
+                    "type": "object",
+                    "description": "Regular grid the samples are laid out on. Samples are row-major with\nlatitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON\nsits at VALUES[i * NLON + j] and is centred at\n(LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north\nto south. Longitudes are in [-180, 180) or [0, 360) exactly as the\nproducer publishes them; a consumer normalises.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/wxfGridKind",
+                            "description": "Grid geometry."
+                        },
+                        "LAT0": {
+                            "type": "number",
+                            "description": "Latitude of the first row's cell centre, degrees north."
+                        },
+                        "LON0": {
+                            "type": "number",
+                            "description": "Longitude of the first column's cell centre, degrees east."
+                        },
+                        "DLAT": {
+                            "type": "number",
+                            "description": "Latitude step between rows, degrees (signed)."
+                        },
+                        "DLON": {
+                            "type": "number",
+                            "description": "Longitude step between columns, degrees (signed)."
+                        },
+                        "NLAT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of rows (latitudes)."
+                        },
+                        "NLON": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of columns (longitudes)."
+                        },
+                        "PERIODIC_LON": {
+                            "type": "boolean",
+                            "description": "Whether the last column wraps to the first (global grid)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "WXF": {
+                    "type": "object",
+                    "description": "Weather Forecast Field - One variable, level, member and valid time on a\nregular grid.",
+                    "properties": {
+                        "FIELD_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of the whole field this record belongs to; equal\nacross all tiles of one (producer, init, member, variable, level, lead)."
+                        },
+                        "MODEL_CLASS": {
+                            "$ref": "#/definitions/wxfModelClass",
+                            "description": "Class of the producing model."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Producer-defined model identifier."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Producer-defined model version."
+                        },
+                        "INIT_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC."
+                        },
+                        "LEAD_HOURS": {
+                            "type": "number",
+                            "description": "Forecast lead from INIT_TIME_MS, hours."
+                        },
+                        "VALID_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6)."
+                        },
+                        "HORIZON_HOURS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle)."
+                        },
+                        "MEMBER_KIND": {
+                            "$ref": "#/definitions/wxfMemberKind",
+                            "description": "Ensemble realisation or statistic the field represents."
+                        },
+                        "MEMBER_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Zero-based member index when MEMBER_KIND is Member."
+                        },
+                        "ENSEMBLE_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Number of members in the ensemble the run produced."
+                        },
+                        "PERCENTILE": {
+                            "type": "number",
+                            "description": "Percentile rank in [0, 100] when MEMBER_KIND is Percentile."
+                        },
+                        "THRESHOLD_VALUE": {
+                            "type": "number",
+                            "description": "Threshold in UNITS when MEMBER_KIND is a probability kind."
+                        },
+                        "VARIABLE": {
+                            "$ref": "#/definitions/wxfVariable",
+                            "description": "Variable carried by the field."
+                        },
+                        "VARIABLE_NAME": {
+                            "type": "string",
+                            "description": "Producer's native variable name (always set; authoritative when\nVARIABLE is Unspecified)."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Units of every cell value, UCUM or CF style (e.g. \"K\", \"m s-1\", \"Pa\",\n\"1\")."
+                        },
+                        "LEVEL_KIND": {
+                            "$ref": "#/definitions/wxfLevelKind",
+                            "description": "Vertical coordinate kind."
+                        },
+                        "LEVEL_VALUE": {
+                            "type": "number",
+                            "description": "Vertical coordinate value in the unit fixed by LEVEL_KIND."
+                        },
+                        "TEMPORAL_KIND": {
+                            "$ref": "#/definitions/wxfTemporalKind",
+                            "description": "Temporal character of each cell value."
+                        },
+                        "ACCUMULATION_HOURS": {
+                            "type": "number",
+                            "description": "Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for\nInstantaneous."
+                        },
+                        "GRID": {
+                            "$ref": "#/definitions/WXFGrid",
+                            "description": "Grid geometry of this record's samples (of this tile when tiled)."
+                        },
+                        "TILE_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zero-based tile index within FIELD_ID; 0 for an untiled field."
+                        },
+                        "TILE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of tiles FIELD_ID was split into; 1 for an untiled field."
+                        },
+                        "VALUES_ENCODING": {
+                            "$ref": "#/definitions/wxfValuesEncoding",
+                            "description": "Where the samples live."
+                        },
+                        "VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;\nNaN marks a missing cell. Present only when VALUES_ENCODING is\nInlineFloat32 and the cell count is at most 1,048,576."
+                        },
+                        "CHUNK_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the sample chunk when VALUES_ENCODING is\nContentAddressedChunk."
+                        },
+                        "CHUNK_DTYPE": {
+                            "type": "string",
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                        },
+                        "CHUNK_CODECS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                        },
+                        "CHUNK_BYTE_LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Encoded chunk length in bytes."
+                        },
+                        "VALUE_MIN": {
+                            "type": "number",
+                            "description": "Minimum sample over the field (after decoding); statistics for display\nscaling without touching the chunk."
+                        },
+                        "VALUE_MAX": {
+                            "type": "number",
+                            "description": "Maximum sample over the field (after decoding)."
+                        },
+                        "MISSING_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of cells with a missing value."
+                        },
+                        "ORIGIN_ID": {
+                            "type": "string",
+                            "description": "Upstream publisher the field was retrieved from, as a host name or\nstable identifier."
+                        },
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Stable dataset identifier within the origin (e.g. a bucket, collection\nor table name)."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Upstream URL or object path the field was retrieved from."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix milliseconds UTC when the field was retrieved from the origin."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/wxfLicenseClass",
+                            "description": "Licence class applicable at RETRIEVED_AT."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms the field is offered under."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publisher asks for."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that ingested and published this record."
+                        }
+                    },
+                    "required": [
+                        "FIELD_ID",
+                        "GRID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/WXF"
+        },
         "SRI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -65815,6 +66759,155 @@
                         "UNSPECIFIED"
                     ]
                 },
+                "wxfModelClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "MachineLearnedGlobalEnsemble",
+                        "NumericalGlobalEnsemble",
+                        "NumericalGlobalDeterministic",
+                        "NumericalRegional",
+                        "Reanalysis",
+                        "Analysis",
+                        "Other"
+                    ]
+                },
+                "wxfMemberKind": {
+                    "type": "string",
+                    "enum": [
+                        "Member",
+                        "Control",
+                        "Deterministic",
+                        "Mean",
+                        "Median",
+                        "StandardDeviation",
+                        "Minimum",
+                        "Maximum",
+                        "Percentile",
+                        "ProbabilityAboveThreshold",
+                        "ProbabilityBelowThreshold"
+                    ]
+                },
+                "wxfVariable": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Temperature2m",
+                        "DewpointTemperature2m",
+                        "WindU10m",
+                        "WindV10m",
+                        "WindSpeed10m",
+                        "WindU100m",
+                        "WindV100m",
+                        "WindSpeed100m",
+                        "MeanSeaLevelPressure",
+                        "SeaSurfaceTemperature",
+                        "TotalCloudCover",
+                        "HighCloudCover",
+                        "MediumCloudCover",
+                        "LowCloudCover",
+                        "SurfaceSolarRadiationDownwards",
+                        "TotalSkyDirectSolarRadiationAtSurface",
+                        "TotalPrecipitation",
+                        "TotalPrecipitationSatelliteBlended",
+                        "TotalPrecipitationExperimental",
+                        "Geopotential",
+                        "Temperature",
+                        "SpecificHumidity",
+                        "WindU",
+                        "WindV",
+                        "VerticalVelocity",
+                        "PrecipitationRate",
+                        "RelativeHumidity",
+                        "TotalColumnWaterVapour",
+                        "SurfacePressure"
+                    ]
+                },
+                "wxfLevelKind": {
+                    "type": "string",
+                    "enum": [
+                        "Surface",
+                        "HeightAboveGround",
+                        "PressureLevel",
+                        "MeanSeaLevel",
+                        "EntireAtmosphere",
+                        "TopOfAtmosphere"
+                    ]
+                },
+                "wxfTemporalKind": {
+                    "type": "string",
+                    "enum": [
+                        "Instantaneous",
+                        "Accumulated",
+                        "Averaged",
+                        "Maximum",
+                        "Minimum"
+                    ]
+                },
+                "wxfGridKind": {
+                    "type": "string",
+                    "enum": [
+                        "RegularLatLon"
+                    ]
+                },
+                "wxfValuesEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "InlineFloat32",
+                        "ContentAddressedChunk"
+                    ]
+                },
+                "wxfLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "RealTimeExperimental",
+                        "Historical"
+                    ]
+                },
+                "tctBasin": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "NorthAtlantic",
+                        "EastPacific",
+                        "CentralPacific",
+                        "WestPacific",
+                        "NorthIndian",
+                        "SouthIndian",
+                        "SouthPacific",
+                        "SouthAtlantic",
+                        "Other"
+                    ]
+                },
+                "tctTrackKind": {
+                    "type": "string",
+                    "enum": [
+                        "Forecast",
+                        "BestTrack",
+                        "Analysis"
+                    ]
+                },
+                "tctTrackOrigin": {
+                    "type": "string",
+                    "enum": [
+                        "ExistingSystem",
+                        "Genesis"
+                    ]
+                },
+                "tctIntensityCategory": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "TropicalDepression",
+                        "TropicalStorm",
+                        "Category1",
+                        "Category2",
+                        "Category3",
+                        "Category4",
+                        "Category5",
+                        "PostTropical"
+                    ]
+                },
                 "tfnFacilityType": {
                     "type": "string",
                     "enum": [
@@ -66797,7 +67890,9 @@
                         "AGR",
                         "NDS",
                         "NST",
-                        "QRP"
+                        "QRP",
+                        "TCT",
+                        "WXF"
                     ]
                 },
                 "LKS": {
@@ -109004,6 +110099,444 @@
                     },
                     "additionalProperties": false
                 },
+                "WXFGrid": {
+                    "type": "object",
+                    "description": "Regular grid the samples are laid out on. Samples are row-major with\nlatitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON\nsits at VALUES[i * NLON + j] and is centred at\n(LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north\nto south. Longitudes are in [-180, 180) or [0, 360) exactly as the\nproducer publishes them; a consumer normalises.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/wxfGridKind",
+                            "description": "Grid geometry."
+                        },
+                        "LAT0": {
+                            "type": "number",
+                            "description": "Latitude of the first row's cell centre, degrees north."
+                        },
+                        "LON0": {
+                            "type": "number",
+                            "description": "Longitude of the first column's cell centre, degrees east."
+                        },
+                        "DLAT": {
+                            "type": "number",
+                            "description": "Latitude step between rows, degrees (signed)."
+                        },
+                        "DLON": {
+                            "type": "number",
+                            "description": "Longitude step between columns, degrees (signed)."
+                        },
+                        "NLAT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of rows (latitudes)."
+                        },
+                        "NLON": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of columns (longitudes)."
+                        },
+                        "PERIODIC_LON": {
+                            "type": "boolean",
+                            "description": "Whether the last column wraps to the first (global grid)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "WXF": {
+                    "type": "object",
+                    "description": "Weather Forecast Field - One variable, level, member and valid time on a\nregular grid.",
+                    "properties": {
+                        "FIELD_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of the whole field this record belongs to; equal\nacross all tiles of one (producer, init, member, variable, level, lead)."
+                        },
+                        "MODEL_CLASS": {
+                            "$ref": "#/definitions/wxfModelClass",
+                            "description": "Class of the producing model."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Producer-defined model identifier."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Producer-defined model version."
+                        },
+                        "INIT_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC."
+                        },
+                        "LEAD_HOURS": {
+                            "type": "number",
+                            "description": "Forecast lead from INIT_TIME_MS, hours."
+                        },
+                        "VALID_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6)."
+                        },
+                        "HORIZON_HOURS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle)."
+                        },
+                        "MEMBER_KIND": {
+                            "$ref": "#/definitions/wxfMemberKind",
+                            "description": "Ensemble realisation or statistic the field represents."
+                        },
+                        "MEMBER_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Zero-based member index when MEMBER_KIND is Member."
+                        },
+                        "ENSEMBLE_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Number of members in the ensemble the run produced."
+                        },
+                        "PERCENTILE": {
+                            "type": "number",
+                            "description": "Percentile rank in [0, 100] when MEMBER_KIND is Percentile."
+                        },
+                        "THRESHOLD_VALUE": {
+                            "type": "number",
+                            "description": "Threshold in UNITS when MEMBER_KIND is a probability kind."
+                        },
+                        "VARIABLE": {
+                            "$ref": "#/definitions/wxfVariable",
+                            "description": "Variable carried by the field."
+                        },
+                        "VARIABLE_NAME": {
+                            "type": "string",
+                            "description": "Producer's native variable name (always set; authoritative when\nVARIABLE is Unspecified)."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Units of every cell value, UCUM or CF style (e.g. \"K\", \"m s-1\", \"Pa\",\n\"1\")."
+                        },
+                        "LEVEL_KIND": {
+                            "$ref": "#/definitions/wxfLevelKind",
+                            "description": "Vertical coordinate kind."
+                        },
+                        "LEVEL_VALUE": {
+                            "type": "number",
+                            "description": "Vertical coordinate value in the unit fixed by LEVEL_KIND."
+                        },
+                        "TEMPORAL_KIND": {
+                            "$ref": "#/definitions/wxfTemporalKind",
+                            "description": "Temporal character of each cell value."
+                        },
+                        "ACCUMULATION_HOURS": {
+                            "type": "number",
+                            "description": "Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for\nInstantaneous."
+                        },
+                        "GRID": {
+                            "$ref": "#/definitions/WXFGrid",
+                            "description": "Grid geometry of this record's samples (of this tile when tiled)."
+                        },
+                        "TILE_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zero-based tile index within FIELD_ID; 0 for an untiled field."
+                        },
+                        "TILE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of tiles FIELD_ID was split into; 1 for an untiled field."
+                        },
+                        "VALUES_ENCODING": {
+                            "$ref": "#/definitions/wxfValuesEncoding",
+                            "description": "Where the samples live."
+                        },
+                        "VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;\nNaN marks a missing cell. Present only when VALUES_ENCODING is\nInlineFloat32 and the cell count is at most 1,048,576."
+                        },
+                        "CHUNK_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the sample chunk when VALUES_ENCODING is\nContentAddressedChunk."
+                        },
+                        "CHUNK_DTYPE": {
+                            "type": "string",
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                        },
+                        "CHUNK_CODECS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                        },
+                        "CHUNK_BYTE_LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Encoded chunk length in bytes."
+                        },
+                        "VALUE_MIN": {
+                            "type": "number",
+                            "description": "Minimum sample over the field (after decoding); statistics for display\nscaling without touching the chunk."
+                        },
+                        "VALUE_MAX": {
+                            "type": "number",
+                            "description": "Maximum sample over the field (after decoding)."
+                        },
+                        "MISSING_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of cells with a missing value."
+                        },
+                        "ORIGIN_ID": {
+                            "type": "string",
+                            "description": "Upstream publisher the field was retrieved from, as a host name or\nstable identifier."
+                        },
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Stable dataset identifier within the origin (e.g. a bucket, collection\nor table name)."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Upstream URL or object path the field was retrieved from."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix milliseconds UTC when the field was retrieved from the origin."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/wxfLicenseClass",
+                            "description": "Licence class applicable at RETRIEVED_AT."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms the field is offered under."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publisher asks for."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that ingested and published this record."
+                        }
+                    },
+                    "required": [
+                        "FIELD_ID",
+                        "GRID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TCTRadii": {
+                    "type": "object",
+                    "description": "Wind radii by quadrant at one wind-speed threshold. Radii are kilometres\n(1 nmi = 1.852 km exactly) from the centre to the outermost point at which\nthe threshold is reached; 0 means the threshold is not reached in that\nquadrant; a negative value means not reported.",
+                    "properties": {
+                        "THRESHOLD_WIND_MS": {
+                            "type": "number",
+                            "description": "Wind-speed threshold, m/s, converted exactly from knots\n(1 kt = 1852/3600 m/s: 34 kt = 17.49, 50 kt = 25.72, 64 kt = 32.92)."
+                        },
+                        "NE_KM": {
+                            "type": "number",
+                            "description": "North-east quadrant radius, km."
+                        },
+                        "SE_KM": {
+                            "type": "number",
+                            "description": "South-east quadrant radius, km."
+                        },
+                        "SW_KM": {
+                            "type": "number",
+                            "description": "South-west quadrant radius, km."
+                        },
+                        "NW_KM": {
+                            "type": "number",
+                            "description": "North-west quadrant radius, km."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TCTPoint": {
+                    "type": "object",
+                    "description": "One point along a track.",
+                    "properties": {
+                        "VALID_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Time the point is valid at, Unix milliseconds UTC."
+                        },
+                        "LEAD_HOURS": {
+                            "type": "number",
+                            "description": "Lead from INIT_TIME_MS, hours; 0 for observed tracks."
+                        },
+                        "LATITUDE": {
+                            "type": "number",
+                            "description": "Centre latitude, degrees north."
+                        },
+                        "LONGITUDE": {
+                            "type": "number",
+                            "description": "Centre longitude, degrees east in [-180, 180)."
+                        },
+                        "MAX_SUSTAINED_WIND_MS": {
+                            "type": "number",
+                            "description": "Maximum sustained wind over WIND_AVERAGING_PERIOD_S, m/s\n(1 kt = 1852/3600 m/s)."
+                        },
+                        "MIN_CENTRAL_PRESSURE_PA": {
+                            "type": "number",
+                            "description": "Minimum central pressure, pascal (1 hPa = 100 Pa)."
+                        },
+                        "RADIUS_MAX_WIND_KM": {
+                            "type": "number",
+                            "description": "Radius of maximum wind, km; negative when not reported."
+                        },
+                        "RADII": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TCTRadii"
+                            },
+                            "description": "Wind radii at each reported threshold."
+                        },
+                        "CATEGORY": {
+                            "$ref": "#/definitions/tctIntensityCategory",
+                            "description": "Intensity category at this point."
+                        },
+                        "EXISTENCE_PROBABILITY": {
+                            "type": "number",
+                            "description": "Probability in [0, 1] that the system exists at this point; 1 for\nobserved tracks and unconditional forecasts."
+                        },
+                        "MOTION_DIRECTION_DEG": {
+                            "type": "number",
+                            "description": "Direction of motion, degrees clockwise from north; negative when not\nreported."
+                        },
+                        "MOTION_SPEED_MS": {
+                            "type": "number",
+                            "description": "Speed of motion, m/s; negative when not reported."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TCT": {
+                    "type": "object",
+                    "description": "Tropical Cyclone Track - One realisation of one storm's track.",
+                    "properties": {
+                        "STORM_ID": {
+                            "type": "string",
+                            "description": "Stable storm identifier as issued by the origin (e.g. a best-track\nserial identifier); equal across every member of the same storm."
+                        },
+                        "STORM_NAME": {
+                            "type": "string",
+                            "description": "Storm name if assigned; empty for invests and unnamed genesis events."
+                        },
+                        "BASIN": {
+                            "$ref": "#/definitions/tctBasin",
+                            "description": "Basin the system is tracked in."
+                        },
+                        "TRACK_KIND": {
+                            "$ref": "#/definitions/tctTrackKind",
+                            "description": "Provenance kind of the track."
+                        },
+                        "TRACK_ORIGIN": {
+                            "$ref": "#/definitions/tctTrackOrigin",
+                            "description": "Whether the system existed at initialisation."
+                        },
+                        "MODEL_CLASS": {
+                            "$ref": "#/definitions/wxfModelClass",
+                            "description": "Class of the producing model; Unspecified for observed tracks."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Producer-defined model identifier."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Producer-defined model version."
+                        },
+                        "INIT_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Initialisation time of the run, Unix milliseconds UTC; for observed\ntracks the issue time of the track."
+                        },
+                        "MEMBER_KIND": {
+                            "$ref": "#/definitions/wxfMemberKind",
+                            "description": "Ensemble realisation or statistic the track represents."
+                        },
+                        "MEMBER_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Zero-based member index when MEMBER_KIND is Member."
+                        },
+                        "ENSEMBLE_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Number of members in the ensemble the run produced."
+                        },
+                        "WIND_AVERAGING_PERIOD_S": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Averaging period of MAX_SUSTAINED_WIND_MS, seconds (60 or 600)."
+                        },
+                        "POINTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TCTPoint"
+                            },
+                            "description": "Track points in ascending VALID_TIME_MS order."
+                        },
+                        "ORIGIN_ID": {
+                            "type": "string",
+                            "description": "Upstream publisher the track was retrieved from, as a host name or\nstable identifier."
+                        },
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Stable dataset identifier within the origin."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Upstream URL or object path the track was retrieved from."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix milliseconds UTC when the track was retrieved from the origin."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/wxfLicenseClass",
+                            "description": "Licence class applicable at RETRIEVED_AT."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms the track is offered under."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publisher asks for."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that ingested and published this record."
+                        }
+                    },
+                    "required": [
+                        "STORM_ID"
+                    ],
+                    "additionalProperties": false
+                },
                 "TDMTransmitRamp": {
                     "type": "object",
                     "description": "One uplink transmitter frequency ramp applying over a closed time interval.\n\nSDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single\nTRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space\nradiometric archives carry an explicit ramp table and the Doppler observables\nare NOT reconstructible without it. Ramps are optional; a record that omits\nTRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.\n\nFrequency over the interval is the linear polynomial\nf(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)\nwhich is the common form of the two archive representations: DSN ODF\n(TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp\nstart/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a\nramp reference time with constant and linear transmission-frequency terms,\nso REFERENCE_TIME is that reference time and may precede START_TIME.\nProducers MUST set REFERENCE_TIME explicitly rather than letting a consumer\nassume which convention was used.",
@@ -116742,6 +118275,12 @@
                                 },
                                 {
                                     "$ref": "#/definitions/QRP"
+                                },
+                                {
+                                    "$ref": "#/definitions/TCT"
+                                },
+                                {
+                                    "$ref": "#/definitions/WXF"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)"

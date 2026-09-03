@@ -1,0 +1,986 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "wxfModelClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "MachineLearnedGlobalEnsemble",
+        "NumericalGlobalEnsemble",
+        "NumericalGlobalDeterministic",
+        "NumericalRegional",
+        "Reanalysis",
+        "Analysis",
+        "Other"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "MachineLearnedGlobalEnsemble": {
+          "value": 1,
+          "description": "Machine-learned global ensemble forecast model."
+        },
+        "NumericalGlobalEnsemble": {
+          "value": 2,
+          "description": "Physics-based numerical global ensemble forecast model."
+        },
+        "NumericalGlobalDeterministic": {
+          "value": 3,
+          "description": "Physics-based numerical global deterministic forecast model."
+        },
+        "NumericalRegional": {
+          "value": 4,
+          "description": "Limited-area numerical forecast model."
+        },
+        "Reanalysis": {
+          "value": 5,
+          "description": "Retrospective analysis produced by assimilating observations."
+        },
+        "Analysis": {
+          "value": 6,
+          "description": "Objective analysis at the initialisation time (lead 0)."
+        },
+        "Other": {
+          "value": 7,
+          "description": "A class not covered above; MODEL_ID identifies the producer's model."
+        }
+      }
+    },
+    "wxfMemberKind": {
+      "type": "string",
+      "enum": [
+        "Member",
+        "Control",
+        "Deterministic",
+        "Mean",
+        "Median",
+        "StandardDeviation",
+        "Minimum",
+        "Maximum",
+        "Percentile",
+        "ProbabilityAboveThreshold",
+        "ProbabilityBelowThreshold"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Member": {
+          "value": 0,
+          "description": "One perturbed ensemble member; MEMBER_INDEX selects it."
+        },
+        "Control": {
+          "value": 1,
+          "description": "The unperturbed control member."
+        },
+        "Deterministic": {
+          "value": 2,
+          "description": "A single deterministic run (no ensemble)."
+        },
+        "Mean": {
+          "value": 3,
+          "description": "Ensemble arithmetic mean."
+        },
+        "Median": {
+          "value": 4,
+          "description": "Ensemble median."
+        },
+        "StandardDeviation": {
+          "value": 5,
+          "description": "Ensemble standard deviation."
+        },
+        "Minimum": {
+          "value": 6,
+          "description": "Ensemble minimum."
+        },
+        "Maximum": {
+          "value": 7,
+          "description": "Ensemble maximum."
+        },
+        "Percentile": {
+          "value": 8,
+          "description": "Ensemble percentile; PERCENTILE holds the rank in [0, 100]."
+        },
+        "ProbabilityAboveThreshold": {
+          "value": 9,
+          "description": "Probability that the variable exceeds THRESHOLD_VALUE, in [0, 1]."
+        },
+        "ProbabilityBelowThreshold": {
+          "value": 10,
+          "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+        }
+      }
+    },
+    "wxfVariable": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Temperature2m",
+        "DewpointTemperature2m",
+        "WindU10m",
+        "WindV10m",
+        "WindSpeed10m",
+        "WindU100m",
+        "WindV100m",
+        "WindSpeed100m",
+        "MeanSeaLevelPressure",
+        "SeaSurfaceTemperature",
+        "TotalCloudCover",
+        "HighCloudCover",
+        "MediumCloudCover",
+        "LowCloudCover",
+        "SurfaceSolarRadiationDownwards",
+        "TotalSkyDirectSolarRadiationAtSurface",
+        "TotalPrecipitation",
+        "TotalPrecipitationSatelliteBlended",
+        "TotalPrecipitationExperimental",
+        "Geopotential",
+        "Temperature",
+        "SpecificHumidity",
+        "WindU",
+        "WindV",
+        "VerticalVelocity",
+        "PrecipitationRate",
+        "RelativeHumidity",
+        "TotalColumnWaterVapour",
+        "SurfacePressure"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "VARIABLE_NAME carries the producer's own variable name."
+        },
+        "Temperature2m": {
+          "value": 1,
+          "description": "Air temperature at 2 m above ground, kelvin."
+        },
+        "DewpointTemperature2m": {
+          "value": 2,
+          "description": "Dew-point temperature at 2 m above ground, kelvin."
+        },
+        "WindU10m": {
+          "value": 3,
+          "description": "Eastward wind component at 10 m above ground, m/s."
+        },
+        "WindV10m": {
+          "value": 4,
+          "description": "Northward wind component at 10 m above ground, m/s."
+        },
+        "WindSpeed10m": {
+          "value": 5,
+          "description": "Wind speed at 10 m above ground, m/s."
+        },
+        "WindU100m": {
+          "value": 6,
+          "description": "Eastward wind component at 100 m above ground, m/s."
+        },
+        "WindV100m": {
+          "value": 7,
+          "description": "Northward wind component at 100 m above ground, m/s."
+        },
+        "WindSpeed100m": {
+          "value": 8,
+          "description": "Wind speed at 100 m above ground, m/s."
+        },
+        "MeanSeaLevelPressure": {
+          "value": 9,
+          "description": "Mean sea-level pressure, pascal."
+        },
+        "SeaSurfaceTemperature": {
+          "value": 10,
+          "description": "Sea-surface temperature, kelvin."
+        },
+        "TotalCloudCover": {
+          "value": 11,
+          "description": "Total cloud cover fraction, [0, 1]."
+        },
+        "HighCloudCover": {
+          "value": 12,
+          "description": "High-cloud cover fraction, [0, 1]."
+        },
+        "MediumCloudCover": {
+          "value": 13,
+          "description": "Medium-cloud cover fraction, [0, 1]."
+        },
+        "LowCloudCover": {
+          "value": 14,
+          "description": "Low-cloud cover fraction, [0, 1]."
+        },
+        "SurfaceSolarRadiationDownwards": {
+          "value": 15,
+          "description": "Surface downward shortwave radiation accumulated over ACCUMULATION_HOURS, J/m^2."
+        },
+        "TotalSkyDirectSolarRadiationAtSurface": {
+          "value": 16,
+          "description": "Total-sky direct shortwave radiation at the surface accumulated over ACCUMULATION_HOURS, J/m^2."
+        },
+        "TotalPrecipitation": {
+          "value": 17,
+          "description": "Total precipitation accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+        },
+        "TotalPrecipitationSatelliteBlended": {
+          "value": 18,
+          "description": "Total precipitation trained against a satellite-blended precipitation analysis, accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+        },
+        "TotalPrecipitationExperimental": {
+          "value": 19,
+          "description": "Experimental total precipitation product, accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+        },
+        "Geopotential": {
+          "value": 20,
+          "description": "Geopotential on a pressure level, m^2/s^2."
+        },
+        "Temperature": {
+          "value": 21,
+          "description": "Air temperature on a pressure level, kelvin."
+        },
+        "SpecificHumidity": {
+          "value": 22,
+          "description": "Specific humidity on a pressure level, kg/kg."
+        },
+        "WindU": {
+          "value": 23,
+          "description": "Eastward wind component on a pressure level, m/s."
+        },
+        "WindV": {
+          "value": 24,
+          "description": "Northward wind component on a pressure level, m/s."
+        },
+        "VerticalVelocity": {
+          "value": 25,
+          "description": "Vertical velocity on a pressure level, Pa/s."
+        },
+        "PrecipitationRate": {
+          "value": 26,
+          "description": "Precipitation rate, kg/(m^2 s)."
+        },
+        "RelativeHumidity": {
+          "value": 27,
+          "description": "Relative humidity, [0, 1]."
+        },
+        "TotalColumnWaterVapour": {
+          "value": 28,
+          "description": "Total column water vapour, kg/m^2."
+        },
+        "SurfacePressure": {
+          "value": 29,
+          "description": "Surface pressure, pascal."
+        }
+      }
+    },
+    "wxfLevelKind": {
+      "type": "string",
+      "enum": [
+        "Surface",
+        "HeightAboveGround",
+        "PressureLevel",
+        "MeanSeaLevel",
+        "EntireAtmosphere",
+        "TopOfAtmosphere"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Surface": {
+          "value": 0,
+          "description": "Earth's surface; LEVEL_VALUE is unused."
+        },
+        "HeightAboveGround": {
+          "value": 1,
+          "description": "Fixed height above ground; LEVEL_VALUE in metres."
+        },
+        "PressureLevel": {
+          "value": 2,
+          "description": "Isobaric level; LEVEL_VALUE in pascal."
+        },
+        "MeanSeaLevel": {
+          "value": 3,
+          "description": "Mean sea level; LEVEL_VALUE is unused."
+        },
+        "EntireAtmosphere": {
+          "value": 4,
+          "description": "Whole atmospheric column; LEVEL_VALUE is unused."
+        },
+        "TopOfAtmosphere": {
+          "value": 5,
+          "description": "Top of atmosphere; LEVEL_VALUE is unused."
+        }
+      }
+    },
+    "wxfTemporalKind": {
+      "type": "string",
+      "enum": [
+        "Instantaneous",
+        "Accumulated",
+        "Averaged",
+        "Maximum",
+        "Minimum"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Instantaneous": {
+          "value": 0,
+          "description": "Value at VALID_TIME_MS."
+        },
+        "Accumulated": {
+          "value": 1,
+          "description": "Sum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+        },
+        "Averaged": {
+          "value": 2,
+          "description": "Mean over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+        },
+        "Maximum": {
+          "value": 3,
+          "description": "Maximum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+        },
+        "Minimum": {
+          "value": 4,
+          "description": "Minimum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+        }
+      }
+    },
+    "wxfGridKind": {
+      "type": "string",
+      "enum": [
+        "RegularLatLon"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RegularLatLon": {
+          "value": 0,
+          "description": "Regular latitude-longitude grid with constant DLAT / DLON."
+        }
+      }
+    },
+    "wxfValuesEncoding": {
+      "type": "string",
+      "enum": [
+        "InlineFloat32",
+        "ContentAddressedChunk"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "InlineFloat32": {
+          "value": 0,
+          "description": "Samples are inline in VALUES (NLAT * NLON <= 1,048,576 cells)."
+        },
+        "ContentAddressedChunk": {
+          "value": 1,
+          "description": "Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE / CHUNK_CODECS describe its layout. Used above 1,048,576 cells."
+        }
+      }
+    },
+    "wxfLicenseClass": {
+      "type": "string",
+      "enum": [
+        "RealTimeExperimental",
+        "Historical"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RealTimeExperimental": {
+          "value": 0,
+          "description": "Real-time or future-valid data offered under an experimental real-time terms-of-use; not an official warning; redistribution limited per LICENSE_URL."
+        },
+        "Historical": {
+          "value": 1,
+          "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+        }
+      }
+    },
+    "WXFGrid": {
+      "type": "object",
+      "description": "Regular grid the samples are laid out on. Samples are row-major with\nlatitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON\nsits at VALUES[i * NLON + j] and is centred at\n(LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north\nto south. Longitudes are in [-180, 180) or [0, 360) exactly as the\nproducer publishes them; a consumer normalises.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/wxfGridKind",
+          "description": "Grid geometry.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "RegularLatLon": {
+              "value": 0,
+              "description": "Regular latitude-longitude grid with constant DLAT / DLON."
+            }
+          },
+          "x-flatbuffer-default": "RegularLatLon"
+        },
+        "LAT0": {
+          "type": "number",
+          "description": "Latitude of the first row's cell centre, degrees north.",
+          "x-flatbuffer-type": "double"
+        },
+        "LON0": {
+          "type": "number",
+          "description": "Longitude of the first column's cell centre, degrees east.",
+          "x-flatbuffer-type": "double"
+        },
+        "DLAT": {
+          "type": "number",
+          "description": "Latitude step between rows, degrees (signed).",
+          "x-flatbuffer-type": "double"
+        },
+        "DLON": {
+          "type": "number",
+          "description": "Longitude step between columns, degrees (signed).",
+          "x-flatbuffer-type": "double"
+        },
+        "NLAT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of rows (latitudes).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NLON": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of columns (longitudes).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "PERIODIC_LON": {
+          "type": "boolean",
+          "description": "Whether the last column wraps to the first (global grid).",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WXF": {
+      "type": "object",
+      "description": "Weather Forecast Field - One variable, level, member and valid time on a\nregular grid.",
+      "properties": {
+        "FIELD_ID": {
+          "type": "string",
+          "description": "Stable identifier of the whole field this record belongs to; equal\nacross all tiles of one (producer, init, member, variable, level, lead).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MODEL_CLASS": {
+          "$ref": "#/definitions/wxfModelClass",
+          "description": "Class of the producing model.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "MachineLearnedGlobalEnsemble": {
+              "value": 1,
+              "description": "Machine-learned global ensemble forecast model."
+            },
+            "NumericalGlobalEnsemble": {
+              "value": 2,
+              "description": "Physics-based numerical global ensemble forecast model."
+            },
+            "NumericalGlobalDeterministic": {
+              "value": 3,
+              "description": "Physics-based numerical global deterministic forecast model."
+            },
+            "NumericalRegional": {
+              "value": 4,
+              "description": "Limited-area numerical forecast model."
+            },
+            "Reanalysis": {
+              "value": 5,
+              "description": "Retrospective analysis produced by assimilating observations."
+            },
+            "Analysis": {
+              "value": 6,
+              "description": "Objective analysis at the initialisation time (lead 0)."
+            },
+            "Other": {
+              "value": 7,
+              "description": "A class not covered above; MODEL_ID identifies the producer's model."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Producer-defined model identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "description": "Producer-defined model version.",
+          "x-flatbuffer-type": "string"
+        },
+        "INIT_TIME_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LEAD_HOURS": {
+          "type": "number",
+          "description": "Forecast lead from INIT_TIME_MS, hours.",
+          "x-flatbuffer-type": "float"
+        },
+        "VALID_TIME_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6).",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HORIZON_HOURS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "MEMBER_KIND": {
+          "$ref": "#/definitions/wxfMemberKind",
+          "description": "Ensemble realisation or statistic the field represents.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Member": {
+              "value": 0,
+              "description": "One perturbed ensemble member; MEMBER_INDEX selects it."
+            },
+            "Control": {
+              "value": 1,
+              "description": "The unperturbed control member."
+            },
+            "Deterministic": {
+              "value": 2,
+              "description": "A single deterministic run (no ensemble)."
+            },
+            "Mean": {
+              "value": 3,
+              "description": "Ensemble arithmetic mean."
+            },
+            "Median": {
+              "value": 4,
+              "description": "Ensemble median."
+            },
+            "StandardDeviation": {
+              "value": 5,
+              "description": "Ensemble standard deviation."
+            },
+            "Minimum": {
+              "value": 6,
+              "description": "Ensemble minimum."
+            },
+            "Maximum": {
+              "value": 7,
+              "description": "Ensemble maximum."
+            },
+            "Percentile": {
+              "value": 8,
+              "description": "Ensemble percentile; PERCENTILE holds the rank in [0, 100]."
+            },
+            "ProbabilityAboveThreshold": {
+              "value": 9,
+              "description": "Probability that the variable exceeds THRESHOLD_VALUE, in [0, 1]."
+            },
+            "ProbabilityBelowThreshold": {
+              "value": 10,
+              "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+            }
+          },
+          "x-flatbuffer-default": "Member"
+        },
+        "MEMBER_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Zero-based member index when MEMBER_KIND is Member.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "ENSEMBLE_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of members in the ensemble the run produced.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "PERCENTILE": {
+          "type": "number",
+          "description": "Percentile rank in [0, 100] when MEMBER_KIND is Percentile.",
+          "x-flatbuffer-type": "float"
+        },
+        "THRESHOLD_VALUE": {
+          "type": "number",
+          "description": "Threshold in UNITS when MEMBER_KIND is a probability kind.",
+          "x-flatbuffer-type": "float"
+        },
+        "VARIABLE": {
+          "$ref": "#/definitions/wxfVariable",
+          "description": "Variable carried by the field.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "VARIABLE_NAME carries the producer's own variable name."
+            },
+            "Temperature2m": {
+              "value": 1,
+              "description": "Air temperature at 2 m above ground, kelvin."
+            },
+            "DewpointTemperature2m": {
+              "value": 2,
+              "description": "Dew-point temperature at 2 m above ground, kelvin."
+            },
+            "WindU10m": {
+              "value": 3,
+              "description": "Eastward wind component at 10 m above ground, m/s."
+            },
+            "WindV10m": {
+              "value": 4,
+              "description": "Northward wind component at 10 m above ground, m/s."
+            },
+            "WindSpeed10m": {
+              "value": 5,
+              "description": "Wind speed at 10 m above ground, m/s."
+            },
+            "WindU100m": {
+              "value": 6,
+              "description": "Eastward wind component at 100 m above ground, m/s."
+            },
+            "WindV100m": {
+              "value": 7,
+              "description": "Northward wind component at 100 m above ground, m/s."
+            },
+            "WindSpeed100m": {
+              "value": 8,
+              "description": "Wind speed at 100 m above ground, m/s."
+            },
+            "MeanSeaLevelPressure": {
+              "value": 9,
+              "description": "Mean sea-level pressure, pascal."
+            },
+            "SeaSurfaceTemperature": {
+              "value": 10,
+              "description": "Sea-surface temperature, kelvin."
+            },
+            "TotalCloudCover": {
+              "value": 11,
+              "description": "Total cloud cover fraction, [0, 1]."
+            },
+            "HighCloudCover": {
+              "value": 12,
+              "description": "High-cloud cover fraction, [0, 1]."
+            },
+            "MediumCloudCover": {
+              "value": 13,
+              "description": "Medium-cloud cover fraction, [0, 1]."
+            },
+            "LowCloudCover": {
+              "value": 14,
+              "description": "Low-cloud cover fraction, [0, 1]."
+            },
+            "SurfaceSolarRadiationDownwards": {
+              "value": 15,
+              "description": "Surface downward shortwave radiation accumulated over ACCUMULATION_HOURS, J/m^2."
+            },
+            "TotalSkyDirectSolarRadiationAtSurface": {
+              "value": 16,
+              "description": "Total-sky direct shortwave radiation at the surface accumulated over ACCUMULATION_HOURS, J/m^2."
+            },
+            "TotalPrecipitation": {
+              "value": 17,
+              "description": "Total precipitation accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+            },
+            "TotalPrecipitationSatelliteBlended": {
+              "value": 18,
+              "description": "Total precipitation trained against a satellite-blended precipitation analysis, accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+            },
+            "TotalPrecipitationExperimental": {
+              "value": 19,
+              "description": "Experimental total precipitation product, accumulated over ACCUMULATION_HOURS, metres of water equivalent."
+            },
+            "Geopotential": {
+              "value": 20,
+              "description": "Geopotential on a pressure level, m^2/s^2."
+            },
+            "Temperature": {
+              "value": 21,
+              "description": "Air temperature on a pressure level, kelvin."
+            },
+            "SpecificHumidity": {
+              "value": 22,
+              "description": "Specific humidity on a pressure level, kg/kg."
+            },
+            "WindU": {
+              "value": 23,
+              "description": "Eastward wind component on a pressure level, m/s."
+            },
+            "WindV": {
+              "value": 24,
+              "description": "Northward wind component on a pressure level, m/s."
+            },
+            "VerticalVelocity": {
+              "value": 25,
+              "description": "Vertical velocity on a pressure level, Pa/s."
+            },
+            "PrecipitationRate": {
+              "value": 26,
+              "description": "Precipitation rate, kg/(m^2 s)."
+            },
+            "RelativeHumidity": {
+              "value": 27,
+              "description": "Relative humidity, [0, 1]."
+            },
+            "TotalColumnWaterVapour": {
+              "value": 28,
+              "description": "Total column water vapour, kg/m^2."
+            },
+            "SurfacePressure": {
+              "value": 29,
+              "description": "Surface pressure, pascal."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "VARIABLE_NAME": {
+          "type": "string",
+          "description": "Producer's native variable name (always set; authoritative when\nVARIABLE is Unspecified).",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units of every cell value, UCUM or CF style (e.g. \"K\", \"m s-1\", \"Pa\",\n\"1\").",
+          "x-flatbuffer-type": "string"
+        },
+        "LEVEL_KIND": {
+          "$ref": "#/definitions/wxfLevelKind",
+          "description": "Vertical coordinate kind.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Surface": {
+              "value": 0,
+              "description": "Earth's surface; LEVEL_VALUE is unused."
+            },
+            "HeightAboveGround": {
+              "value": 1,
+              "description": "Fixed height above ground; LEVEL_VALUE in metres."
+            },
+            "PressureLevel": {
+              "value": 2,
+              "description": "Isobaric level; LEVEL_VALUE in pascal."
+            },
+            "MeanSeaLevel": {
+              "value": 3,
+              "description": "Mean sea level; LEVEL_VALUE is unused."
+            },
+            "EntireAtmosphere": {
+              "value": 4,
+              "description": "Whole atmospheric column; LEVEL_VALUE is unused."
+            },
+            "TopOfAtmosphere": {
+              "value": 5,
+              "description": "Top of atmosphere; LEVEL_VALUE is unused."
+            }
+          },
+          "x-flatbuffer-default": "Surface"
+        },
+        "LEVEL_VALUE": {
+          "type": "number",
+          "description": "Vertical coordinate value in the unit fixed by LEVEL_KIND.",
+          "x-flatbuffer-type": "float"
+        },
+        "TEMPORAL_KIND": {
+          "$ref": "#/definitions/wxfTemporalKind",
+          "description": "Temporal character of each cell value.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Instantaneous": {
+              "value": 0,
+              "description": "Value at VALID_TIME_MS."
+            },
+            "Accumulated": {
+              "value": 1,
+              "description": "Sum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+            },
+            "Averaged": {
+              "value": 2,
+              "description": "Mean over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+            },
+            "Maximum": {
+              "value": 3,
+              "description": "Maximum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+            },
+            "Minimum": {
+              "value": 4,
+              "description": "Minimum over the ACCUMULATION_HOURS ending at VALID_TIME_MS."
+            }
+          },
+          "x-flatbuffer-default": "Instantaneous"
+        },
+        "ACCUMULATION_HOURS": {
+          "type": "number",
+          "description": "Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for\nInstantaneous.",
+          "x-flatbuffer-type": "float"
+        },
+        "GRID": {
+          "$ref": "#/definitions/WXFGrid",
+          "description": "Grid geometry of this record's samples (of this tile when tiled).",
+          "x-flatbuffer-type": "WXFGrid",
+          "x-flatbuffer-required": true
+        },
+        "TILE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based tile index within FIELD_ID; 0 for an untiled field.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TILE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of tiles FIELD_ID was split into; 1 for an untiled field.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "VALUES_ENCODING": {
+          "$ref": "#/definitions/wxfValuesEncoding",
+          "description": "Where the samples live.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "InlineFloat32": {
+              "value": 0,
+              "description": "Samples are inline in VALUES (NLAT * NLON <= 1,048,576 cells)."
+            },
+            "ContentAddressedChunk": {
+              "value": 1,
+              "description": "Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE / CHUNK_CODECS describe its layout. Used above 1,048,576 cells."
+            }
+          },
+          "x-flatbuffer-default": "InlineFloat32"
+        },
+        "VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;\nNaN marks a missing cell. Present only when VALUES_ENCODING is\nInlineFloat32 and the cell count is at most 1,048,576.",
+          "x-flatbuffer-type": "[float]"
+        },
+        "CHUNK_CID": {
+          "type": "string",
+          "description": "Content identifier of the sample chunk when VALUES_ENCODING is\nContentAddressedChunk.",
+          "x-flatbuffer-type": "string"
+        },
+        "CHUNK_DTYPE": {
+          "type": "string",
+          "description": "Element type of the chunk (e.g. \"float32\", \"float16\").",
+          "x-flatbuffer-type": "string"
+        },
+        "CHUNK_CODECS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\").",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CHUNK_BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Encoded chunk length in bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "VALUE_MIN": {
+          "type": "number",
+          "description": "Minimum sample over the field (after decoding); statistics for display\nscaling without touching the chunk.",
+          "x-flatbuffer-type": "float"
+        },
+        "VALUE_MAX": {
+          "type": "number",
+          "description": "Maximum sample over the field (after decoding).",
+          "x-flatbuffer-type": "float"
+        },
+        "MISSING_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of cells with a missing value.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Upstream publisher the field was retrieved from, as a host name or\nstable identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Stable dataset identifier within the origin (e.g. a bucket, collection\nor table name).",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Upstream URL or object path the field was retrieved from.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix milliseconds UTC when the field was retrieved from the origin.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/wxfLicenseClass",
+          "description": "Licence class applicable at RETRIEVED_AT.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "RealTimeExperimental": {
+              "value": 0,
+              "description": "Real-time or future-valid data offered under an experimental real-time terms-of-use; not an official warning; redistribution limited per LICENSE_URL."
+            },
+            "Historical": {
+              "value": 1,
+              "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+            }
+          },
+          "x-flatbuffer-default": "RealTimeExperimental"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the licence or terms the field is offered under.",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Citation the upstream publisher asks for.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the node that ingested and published this record.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "FIELD_ID",
+        "GRID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/WXF",
+  "x-flatbuffer-root-type": "WXF",
+  "x-flatbuffer-file-identifier": "$WXF"
+}

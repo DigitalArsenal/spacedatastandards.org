@@ -263,5 +263,7 @@ class RecordType private constructor() {
         const val NDS: UByte = 241u
         const val NST: UByte = 242u
         const val QRP: UByte = 243u
+        const val TCT: UByte = 244u
+        const val WXF: UByte = 245u
     }
 }

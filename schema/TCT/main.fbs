@@ -1,0 +1,178 @@
+// Hash: 91730b9b20ec4bde8e5abf9f1c8d5ee42bf42cc756afcf7d67229e6ded45bc12
+// Version: 1.208.0
+// -----------------------------------END_HEADER
+include "../WXF/main.fbs";
+
+/// Tropical Cyclone Track (TCT)
+/// Description
+/// One track of one tropical cyclone as produced by a single realisation of
+/// a forecast model (a member, control, deterministic run or ensemble
+/// statistic) from one initialisation, or as observed (best track / analysis).
+/// Each point carries valid time, centre position, maximum sustained wind,
+/// minimum central pressure, wind radii by quadrant at the standard
+/// thresholds and the intensity category. An ensemble of N members yields N
+/// TCT records sharing STORM_ID and INIT_TIME_MS; a consumer draws the spread
+/// from them. Every epoch is Unix milliseconds UTC. A forecast track is a
+/// model output, never an official advisory.
+
+/// Ocean basin the system is tracked in, following the common best-track
+/// basin partition. Append new values only; never reorder or reuse existing
+/// values.
+enum tctBasin : byte {
+  Unspecified,
+  NorthAtlantic,
+  EastPacific,
+  CentralPacific,
+  WestPacific,
+  NorthIndian,
+  SouthIndian,
+  SouthPacific,
+  SouthAtlantic,
+  /// A basin not covered above.
+  Other
+}
+
+/// Provenance kind of the track. Append new values only; never reorder or
+/// reuse existing values.
+enum tctTrackKind : byte {
+  /// Forecast track from a model run initialised at INIT_TIME_MS.
+  Forecast,
+  /// Post-season quality-controlled observed track.
+  BestTrack,
+  /// Real-time operational analysis or advisory track.
+  Analysis
+}
+
+/// Whether the system existed at initialisation. Append new values only;
+/// never reorder or reuse existing values.
+enum tctTrackOrigin : byte {
+  /// The system was present in the initial state.
+  ExistingSystem,
+  /// The model forecast the system's genesis after initialisation.
+  Genesis
+}
+
+/// Intensity category on the Saffir-Simpson style scale by maximum sustained
+/// wind. Append new values only; never reorder or reuse existing values.
+enum tctIntensityCategory : byte {
+  Unspecified,
+  /// Below 17 m/s (34 kt).
+  TropicalDepression,
+  /// 17-32 m/s (34-63 kt).
+  TropicalStorm,
+  /// 33-42 m/s (64-82 kt).
+  Category1,
+  /// 43-49 m/s (83-95 kt).
+  Category2,
+  /// 50-58 m/s (96-112 kt).
+  Category3,
+  /// 58-70 m/s (113-136 kt).
+  Category4,
+  /// 70 m/s (137 kt) and above.
+  Category5,
+  /// Extratropical or post-tropical system.
+  PostTropical
+}
+
+/// Wind radii by quadrant at one wind-speed threshold. Radii are kilometres
+/// (1 nmi = 1.852 km exactly) from the centre to the outermost point at which
+/// the threshold is reached; 0 means the threshold is not reached in that
+/// quadrant; a negative value means not reported.
+table TCTRadii {
+  /// Wind-speed threshold, m/s, converted exactly from knots
+  /// (1 kt = 1852/3600 m/s: 34 kt = 17.49, 50 kt = 25.72, 64 kt = 32.92).
+  THRESHOLD_WIND_MS: float;
+  /// North-east quadrant radius, km.
+  NE_KM: float;
+  /// South-east quadrant radius, km.
+  SE_KM: float;
+  /// South-west quadrant radius, km.
+  SW_KM: float;
+  /// North-west quadrant radius, km.
+  NW_KM: float;
+}
+
+/// One point along a track.
+table TCTPoint {
+  /// Time the point is valid at, Unix milliseconds UTC.
+  VALID_TIME_MS: uint64;
+  /// Lead from INIT_TIME_MS, hours; 0 for observed tracks.
+  LEAD_HOURS: float;
+  /// Centre latitude, degrees north.
+  LATITUDE: double;
+  /// Centre longitude, degrees east in [-180, 180).
+  LONGITUDE: double;
+  /// Maximum sustained wind over WIND_AVERAGING_PERIOD_S, m/s
+  /// (1 kt = 1852/3600 m/s).
+  MAX_SUSTAINED_WIND_MS: float;
+  /// Minimum central pressure, pascal (1 hPa = 100 Pa).
+  MIN_CENTRAL_PRESSURE_PA: float;
+  /// Radius of maximum wind, km; negative when not reported.
+  RADIUS_MAX_WIND_KM: float;
+  /// Wind radii at each reported threshold.
+  RADII: [TCTRadii];
+  /// Intensity category at this point.
+  CATEGORY: tctIntensityCategory = Unspecified;
+  /// Probability in [0, 1] that the system exists at this point; 1 for
+  /// observed tracks and unconditional forecasts.
+  EXISTENCE_PROBABILITY: float = 1;
+  /// Direction of motion, degrees clockwise from north; negative when not
+  /// reported.
+  MOTION_DIRECTION_DEG: float;
+  /// Speed of motion, m/s; negative when not reported.
+  MOTION_SPEED_MS: float;
+}
+
+/// Tropical Cyclone Track - One realisation of one storm's track.
+table TCT {
+  /// Stable storm identifier as issued by the origin (e.g. a best-track
+  /// serial identifier); equal across every member of the same storm.
+  STORM_ID: string (required);
+  /// Storm name if assigned; empty for invests and unnamed genesis events.
+  STORM_NAME: string;
+  /// Basin the system is tracked in.
+  BASIN: tctBasin = Unspecified;
+  /// Provenance kind of the track.
+  TRACK_KIND: tctTrackKind = Forecast;
+  /// Whether the system existed at initialisation.
+  TRACK_ORIGIN: tctTrackOrigin = ExistingSystem;
+  /// Class of the producing model; Unspecified for observed tracks.
+  MODEL_CLASS: wxfModelClass = Unspecified;
+  /// Producer-defined model identifier.
+  MODEL_ID: string;
+  /// Producer-defined model version.
+  MODEL_VERSION: string;
+  /// Initialisation time of the run, Unix milliseconds UTC; for observed
+  /// tracks the issue time of the track.
+  INIT_TIME_MS: uint64;
+  /// Ensemble realisation or statistic the track represents.
+  MEMBER_KIND: wxfMemberKind = Member;
+  /// Zero-based member index when MEMBER_KIND is Member.
+  MEMBER_INDEX: uint16;
+  /// Number of members in the ensemble the run produced.
+  ENSEMBLE_SIZE: uint16;
+  /// Averaging period of MAX_SUSTAINED_WIND_MS, seconds (60 or 600).
+  WIND_AVERAGING_PERIOD_S: uint16;
+  /// Track points in ascending VALID_TIME_MS order.
+  POINTS: [TCTPoint];
+  /// Upstream publisher the track was retrieved from, as a host name or
+  /// stable identifier.
+  ORIGIN_ID: string;
+  /// Stable dataset identifier within the origin.
+  DATASET_ID: string;
+  /// Upstream URL or object path the track was retrieved from.
+  SOURCE_URL: string;
+  /// Unix milliseconds UTC when the track was retrieved from the origin.
+  RETRIEVED_AT: uint64;
+  /// Licence class applicable at RETRIEVED_AT.
+  LICENSE_CLASS: wxfLicenseClass = RealTimeExperimental;
+  /// URL of the licence or terms the track is offered under.
+  LICENSE_URL: string;
+  /// Citation the upstream publisher asks for.
+  CITATION: string;
+  /// Peer identifier of the node that ingested and published this record.
+  PRODUCER_PEER_ID: string;
+}
+
+root_type TCT;
+file_identifier "$TCT";

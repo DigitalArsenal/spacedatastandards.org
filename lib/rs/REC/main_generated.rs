@@ -244,6 +244,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -378,10 +380,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 243;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 245;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 244] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 246] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -626,6 +628,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 244] = [
   RecordType::NDS,
   RecordType::NST,
   RecordType::QRP,
+  RecordType::TCT,
+  RecordType::WXF,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -891,9 +895,11 @@ impl RecordType {
   pub const NDS: Self = Self(241);
   pub const NST: Self = Self(242);
   pub const QRP: Self = Self(243);
+  pub const TCT: Self = Self(244);
+  pub const WXF: Self = Self(245);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 243;
+  pub const ENUM_MAX: u8 = 245;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1139,6 +1145,8 @@ impl RecordType {
     Self::NDS,
     Self::NST,
     Self::QRP,
+    Self::TCT,
+    Self::WXF,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1387,6 +1395,8 @@ impl RecordType {
       Self::NDS => Some("NDS"),
       Self::NST => Some("NST"),
       Self::QRP => Some("QRP"),
+      Self::TCT => Some("TCT"),
+      Self::WXF => Some("WXF"),
       _ => None,
     }
   }
@@ -1691,6 +1701,8 @@ pub enum RecordTypeT {
   NDS(alloc::boxed::Box<NDST>),
   NST(alloc::boxed::Box<NSTT>),
   QRP(alloc::boxed::Box<QRPT>),
+  TCT(alloc::boxed::Box<TCTT>),
+  WXF(alloc::boxed::Box<WXFT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1944,6 +1956,8 @@ impl RecordTypeT {
       Self::NDS(_) => RecordType::NDS,
       Self::NST(_) => RecordType::NST,
       Self::QRP(_) => RecordType::QRP,
+      Self::TCT(_) => RecordType::TCT,
+      Self::WXF(_) => RecordType::WXF,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2192,6 +2206,8 @@ impl RecordTypeT {
       Self::NDS(v) => Some(v.pack(fbb).as_union_value()),
       Self::NST(v) => Some(v.pack(fbb).as_union_value()),
       Self::QRP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TCT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::WXF(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7297,6 +7313,48 @@ impl RecordTypeT {
   pub fn as_qrp_mut(&mut self) -> Option<&mut QRPT> {
     if let Self::QRP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned TCTT, setting the union to NONE.
+  pub fn take_tct(&mut self) -> Option<alloc::boxed::Box<TCTT>> {
+    if let Self::TCT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TCT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TCTT.
+  pub fn as_tct(&self) -> Option<&TCTT> {
+    if let Self::TCT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TCTT.
+  pub fn as_tct_mut(&mut self) -> Option<&mut TCTT> {
+    if let Self::TCT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned WXFT, setting the union to NONE.
+  pub fn take_wxf(&mut self) -> Option<alloc::boxed::Box<WXFT>> {
+    if let Self::WXF(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::WXF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the WXFT.
+  pub fn as_wxf(&self) -> Option<&WXFT> {
+    if let Self::WXF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the WXFT.
+  pub fn as_wxf_mut(&mut self) -> Option<&mut WXFT> {
+    if let Self::WXF(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8551,6 +8609,16 @@ impl<'a> Record<'a> {
       RecordType::QRP => RecordTypeT::QRP(alloc::boxed::Box::new(
         self.value_as_qrp()
             .expect("Invalid union table, expected `RecordType::QRP`.")
+            .unpack()
+      )),
+      RecordType::TCT => RecordTypeT::TCT(alloc::boxed::Box::new(
+        self.value_as_tct()
+            .expect("Invalid union table, expected `RecordType::TCT`.")
+            .unpack()
+      )),
+      RecordType::WXF => RecordTypeT::WXF(alloc::boxed::Box::new(
+        self.value_as_wxf()
+            .expect("Invalid union table, expected `RecordType::WXF`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -12232,6 +12300,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_tct(&self) -> Option<TCT<'a>> {
+    if self.value_type() == RecordType::TCT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TCT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_wxf(&self) -> Option<WXF<'a>> {
+    if self.value_type() == RecordType::WXF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { WXF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12485,6 +12583,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::NDS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<NDS>>("RecordType::NDS", pos),
           RecordType::NST => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<NST>>("RecordType::NST", pos),
           RecordType::QRP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<QRP>>("RecordType::QRP", pos),
+          RecordType::TCT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TCT>>("RecordType::TCT", pos),
+          RecordType::WXF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<WXF>>("RecordType::WXF", pos),
           _ => Ok(()),
         }
      })?
@@ -14242,6 +14342,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::QRP => {
           if let Some(x) = self.value_as_qrp() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TCT => {
+          if let Some(x) = self.value_as_tct() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::WXF => {
+          if let Some(x) = self.value_as_wxf() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

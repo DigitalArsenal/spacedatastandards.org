@@ -1,0 +1,19 @@
+/**
+ * Provenance kind of the track. Append new values only; never reorder or
+ * reuse existing values.
+ */
+export declare enum tctTrackKind {
+    /**
+     * Forecast track from a model run initialised at INIT_TIME_MS.
+     */
+    Forecast = 0,
+    /**
+     * Post-season quality-controlled observed track.
+     */
+    BestTrack = 1,
+    /**
+     * Real-time operational analysis or advisory track.
+     */
+    Analysis = 2
+}
+//# sourceMappingURL=tctTrackKind.d.ts.map

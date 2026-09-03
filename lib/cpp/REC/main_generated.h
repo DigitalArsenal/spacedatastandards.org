@@ -256,6 +256,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -522,11 +524,13 @@ enum RecordType : uint8_t {
   RecordType_NDS = 241,
   RecordType_NST = 242,
   RecordType_QRP = 243,
+  RecordType_TCT = 244,
+  RecordType_WXF = 245,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_QRP
+  RecordType_MAX = RecordType_WXF
 };
 
-inline const RecordType (&EnumValuesRecordType())[244] {
+inline const RecordType (&EnumValuesRecordType())[246] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -771,13 +775,15 @@ inline const RecordType (&EnumValuesRecordType())[244] {
     RecordType_AGR,
     RecordType_NDS,
     RecordType_NST,
-    RecordType_QRP
+    RecordType_QRP,
+    RecordType_TCT,
+    RecordType_WXF
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[245] = {
+  static const char * const names[247] = {
     "NONE",
     "ACL",
     "ACM",
@@ -1022,13 +1028,15 @@ inline const char * const *EnumNamesRecordType() {
     "NDS",
     "NST",
     "QRP",
+    "TCT",
+    "WXF",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_QRP)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_WXF)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -2009,6 +2017,14 @@ template<> struct RecordTypeTraits<QRP> {
   static const RecordType enum_value = RecordType_QRP;
 };
 
+template<> struct RecordTypeTraits<TCT> {
+  static const RecordType enum_value = RecordType_TCT;
+};
+
+template<> struct RecordTypeTraits<WXF> {
+  static const RecordType enum_value = RecordType_WXF;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2758,6 +2774,12 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const QRP *value_as_QRP() const {
     return value_type() == RecordType_QRP ? static_cast<const QRP *>(value()) : nullptr;
+  }
+  const TCT *value_as_TCT() const {
+    return value_type() == RecordType_TCT ? static_cast<const TCT *>(value()) : nullptr;
+  }
+  const WXF *value_as_WXF() const {
+    return value_type() == RecordType_WXF ? static_cast<const WXF *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3745,6 +3767,14 @@ template<> inline const NST *Record::value_as<NST>() const {
 
 template<> inline const QRP *Record::value_as<QRP>() const {
   return value_as_QRP();
+}
+
+template<> inline const TCT *Record::value_as<TCT>() const {
+  return value_as_TCT();
+}
+
+template<> inline const WXF *Record::value_as<WXF>() const {
+  return value_as_WXF();
 }
 
 struct RecordBuilder {
@@ -4842,6 +4872,14 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_QRP: {
       auto ptr = reinterpret_cast<const QRP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TCT: {
+      auto ptr = reinterpret_cast<const TCT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_WXF: {
+      auto ptr = reinterpret_cast<const WXF *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

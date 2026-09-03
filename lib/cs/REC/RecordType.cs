@@ -262,6 +262,8 @@ public enum RecordType : byte
   NDS = 241,
   NST = 242,
   QRP = 243,
+  TCT = 244,
+  WXF = 245,
 };
 
 public class RecordTypeUnion {
@@ -760,6 +762,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromNST(NSTT _nst) { return new RecordTypeUnion{ Type = RecordType.NST, Value = _nst }; }
   public QRPT AsQRP() { return this.As<QRPT>(); }
   public static RecordTypeUnion FromQRP(QRPT _qrp) { return new RecordTypeUnion{ Type = RecordType.QRP, Value = _qrp }; }
+  public TCTT AsTCT() { return this.As<TCTT>(); }
+  public static RecordTypeUnion FromTCT(TCTT _tct) { return new RecordTypeUnion{ Type = RecordType.TCT, Value = _tct }; }
+  public WXFT AsWXF() { return this.As<WXFT>(); }
+  public static RecordTypeUnion FromWXF(WXFT _wxf) { return new RecordTypeUnion{ Type = RecordType.WXF, Value = _wxf }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1007,6 +1013,8 @@ public class RecordTypeUnion {
       case RecordType.NDS: return NDS.Pack(builder, _o.AsNDS()).Value;
       case RecordType.NST: return NST.Pack(builder, _o.AsNST()).Value;
       case RecordType.QRP: return QRP.Pack(builder, _o.AsQRP()).Value;
+      case RecordType.TCT: return TCT.Pack(builder, _o.AsTCT()).Value;
+      case RecordType.WXF: return WXF.Pack(builder, _o.AsWXF()).Value;
     }
   }
 }
@@ -1748,6 +1756,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.QRP:
         result = QRPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TCT:
+        result = TCTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.WXF:
+        result = WXFVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

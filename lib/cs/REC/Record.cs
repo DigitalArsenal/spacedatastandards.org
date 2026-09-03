@@ -263,6 +263,8 @@ public struct Record : IFlatbufferObject
   public NDS valueAsNDS() { return value<NDS>().Value; }
   public NST valueAsNST() { return value<NST>().Value; }
   public QRP valueAsQRP() { return value<QRP>().Value; }
+  public TCT valueAsTCT() { return value<TCT>().Value; }
+  public WXF valueAsWXF() { return value<WXF>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -1029,6 +1031,12 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.QRP:
         _o.value.Value = this.value<QRP>().HasValue ? this.value<QRP>().Value.UnPack() : null;
+        break;
+      case RecordType.TCT:
+        _o.value.Value = this.value<TCT>().HasValue ? this.value<TCT>().Value.UnPack() : null;
+        break;
+      case RecordType.WXF:
+        _o.value.Value = this.value<WXF>().HasValue ? this.value<WXF>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

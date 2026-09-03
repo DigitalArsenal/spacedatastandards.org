@@ -1,0 +1,27 @@
+/**
+ * Temporal character of the value in each cell. Append new values only;
+ * never reorder or reuse existing values.
+ */
+export declare enum wxfTemporalKind {
+    /**
+     * Value at VALID_TIME_MS.
+     */
+    Instantaneous = 0,
+    /**
+     * Sum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+     */
+    Accumulated = 1,
+    /**
+     * Mean over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+     */
+    Averaged = 2,
+    /**
+     * Maximum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+     */
+    Maximum = 3,
+    /**
+     * Minimum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+     */
+    Minimum = 4
+}
+//# sourceMappingURL=wxfTemporalKind.d.ts.map

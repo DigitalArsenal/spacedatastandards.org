@@ -1,0 +1,323 @@
+// Hash: da0bbb6bcee88620244e7e2b38512b2db132dab916f8dd8bc39c2ea077d7aab6
+// Version: 1.208.0
+// -----------------------------------END_HEADER
+/// Weather Forecast Field (WXF)
+/// Description
+/// One two-dimensional slice of a weather forecast: a single variable, at a
+/// single vertical level, for a single ensemble member (or a statistic over
+/// the ensemble), valid at a single time, on a regular latitude-longitude
+/// grid. A producer such as a global ensemble forecast model initialised on a
+/// fixed cadence emits one WXF per (variable, level, member, lead) at each
+/// initialisation; a consumer selects by INIT_TIME_MS / LEAD_HOURS / VARIABLE /
+/// LEVEL_KIND / MEMBER_KIND and reads the cells. Fields of up to 1,048,576
+/// cells carry their samples inline in VALUES; larger fields are split into
+/// tiles (TILE_INDEX / TILE_COUNT, each with its own GRID) or reference a
+/// content-addressed chunk through CHUNK_CID. Every epoch is Unix
+/// milliseconds UTC. A forecast is a model output, never an official warning.
+
+/// Class of model that produced the field. Names a capability class, never a
+/// producer. Append new values only; never reorder or reuse existing values.
+enum wxfModelClass : byte {
+  Unspecified,
+  /// Machine-learned global ensemble forecast model.
+  MachineLearnedGlobalEnsemble,
+  /// Physics-based numerical global ensemble forecast model.
+  NumericalGlobalEnsemble,
+  /// Physics-based numerical global deterministic forecast model.
+  NumericalGlobalDeterministic,
+  /// Limited-area numerical forecast model.
+  NumericalRegional,
+  /// Retrospective analysis produced by assimilating observations.
+  Reanalysis,
+  /// Objective analysis at the initialisation time (lead 0).
+  Analysis,
+  /// A class not covered above; MODEL_ID identifies the producer's model.
+  Other
+}
+
+/// Which realisation of an ensemble the field represents. Append new values
+/// only; never reorder or reuse existing values.
+enum wxfMemberKind : byte {
+  /// One perturbed ensemble member; MEMBER_INDEX selects it.
+  Member,
+  /// The unperturbed control member.
+  Control,
+  /// A single deterministic run (no ensemble).
+  Deterministic,
+  /// Ensemble arithmetic mean.
+  Mean,
+  /// Ensemble median.
+  Median,
+  /// Ensemble standard deviation.
+  StandardDeviation,
+  /// Ensemble minimum.
+  Minimum,
+  /// Ensemble maximum.
+  Maximum,
+  /// Ensemble percentile; PERCENTILE holds the rank in [0, 100].
+  Percentile,
+  /// Probability that the variable exceeds THRESHOLD_VALUE, in [0, 1].
+  ProbabilityAboveThreshold,
+  /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
+  ProbabilityBelowThreshold
+}
+
+/// Meteorological variable carried by the field. Append new values only;
+/// never reorder or reuse existing values. Units are fixed per value and
+/// repeated in UNITS.
+enum wxfVariable : byte {
+  /// VARIABLE_NAME carries the producer's own variable name.
+  Unspecified,
+  /// Air temperature at 2 m above ground, kelvin.
+  Temperature2m,
+  /// Dew-point temperature at 2 m above ground, kelvin.
+  DewpointTemperature2m,
+  /// Eastward wind component at 10 m above ground, m/s.
+  WindU10m,
+  /// Northward wind component at 10 m above ground, m/s.
+  WindV10m,
+  /// Wind speed at 10 m above ground, m/s.
+  WindSpeed10m,
+  /// Eastward wind component at 100 m above ground, m/s.
+  WindU100m,
+  /// Northward wind component at 100 m above ground, m/s.
+  WindV100m,
+  /// Wind speed at 100 m above ground, m/s.
+  WindSpeed100m,
+  /// Mean sea-level pressure, pascal.
+  MeanSeaLevelPressure,
+  /// Sea-surface temperature, kelvin.
+  SeaSurfaceTemperature,
+  /// Total cloud cover fraction, [0, 1].
+  TotalCloudCover,
+  /// High-cloud cover fraction, [0, 1].
+  HighCloudCover,
+  /// Medium-cloud cover fraction, [0, 1].
+  MediumCloudCover,
+  /// Low-cloud cover fraction, [0, 1].
+  LowCloudCover,
+  /// Surface downward shortwave radiation accumulated over
+  /// ACCUMULATION_HOURS, J/m^2.
+  SurfaceSolarRadiationDownwards,
+  /// Total-sky direct shortwave radiation at the surface accumulated over
+  /// ACCUMULATION_HOURS, J/m^2.
+  TotalSkyDirectSolarRadiationAtSurface,
+  /// Total precipitation accumulated over ACCUMULATION_HOURS, metres of
+  /// water equivalent.
+  TotalPrecipitation,
+  /// Total precipitation trained against a satellite-blended precipitation
+  /// analysis, accumulated over ACCUMULATION_HOURS, metres of water
+  /// equivalent.
+  TotalPrecipitationSatelliteBlended,
+  /// Experimental total precipitation product, accumulated over
+  /// ACCUMULATION_HOURS, metres of water equivalent.
+  TotalPrecipitationExperimental,
+  /// Geopotential on a pressure level, m^2/s^2.
+  Geopotential,
+  /// Air temperature on a pressure level, kelvin.
+  Temperature,
+  /// Specific humidity on a pressure level, kg/kg.
+  SpecificHumidity,
+  /// Eastward wind component on a pressure level, m/s.
+  WindU,
+  /// Northward wind component on a pressure level, m/s.
+  WindV,
+  /// Vertical velocity on a pressure level, Pa/s.
+  VerticalVelocity,
+  /// Precipitation rate, kg/(m^2 s).
+  PrecipitationRate,
+  /// Relative humidity, [0, 1].
+  RelativeHumidity,
+  /// Total column water vapour, kg/m^2.
+  TotalColumnWaterVapour,
+  /// Surface pressure, pascal.
+  SurfacePressure
+}
+
+/// Vertical coordinate of the field. Append new values only; never reorder or
+/// reuse existing values.
+enum wxfLevelKind : byte {
+  /// Earth's surface; LEVEL_VALUE is unused.
+  Surface,
+  /// Fixed height above ground; LEVEL_VALUE in metres.
+  HeightAboveGround,
+  /// Isobaric level; LEVEL_VALUE in pascal.
+  PressureLevel,
+  /// Mean sea level; LEVEL_VALUE is unused.
+  MeanSeaLevel,
+  /// Whole atmospheric column; LEVEL_VALUE is unused.
+  EntireAtmosphere,
+  /// Top of atmosphere; LEVEL_VALUE is unused.
+  TopOfAtmosphere
+}
+
+/// Temporal character of the value in each cell. Append new values only;
+/// never reorder or reuse existing values.
+enum wxfTemporalKind : byte {
+  /// Value at VALID_TIME_MS.
+  Instantaneous,
+  /// Sum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+  Accumulated,
+  /// Mean over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+  Averaged,
+  /// Maximum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+  Maximum,
+  /// Minimum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
+  Minimum
+}
+
+/// Horizontal grid geometry. Append new values only; never reorder or reuse
+/// existing values.
+enum wxfGridKind : byte {
+  /// Regular latitude-longitude grid with constant DLAT / DLON.
+  RegularLatLon
+}
+
+/// Where the cell samples live. Append new values only; never reorder or
+/// reuse existing values.
+enum wxfValuesEncoding : byte {
+  /// Samples are inline in VALUES (NLAT * NLON <= 1,048,576 cells).
+  InlineFloat32,
+  /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
+  /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
+  ContentAddressedChunk
+}
+
+/// Licence class of the data at RETRIEVED_AT, following the split a producer
+/// applies between real-time and historical output. Append new values only;
+/// never reorder or reuse existing values.
+enum wxfLicenseClass : byte {
+  /// Real-time or future-valid data offered under an experimental real-time
+  /// terms-of-use; not an official warning; redistribution limited per
+  /// LICENSE_URL.
+  RealTimeExperimental,
+  /// Data older than the producer's real-time window, offered under an open
+  /// attribution licence named by LICENSE_URL.
+  Historical
+}
+
+/// Regular grid the samples are laid out on. Samples are row-major with
+/// latitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON
+/// sits at VALUES[i * NLON + j] and is centred at
+/// (LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north
+/// to south. Longitudes are in [-180, 180) or [0, 360) exactly as the
+/// producer publishes them; a consumer normalises.
+table WXFGrid {
+  /// Grid geometry.
+  KIND: wxfGridKind = RegularLatLon;
+  /// Latitude of the first row's cell centre, degrees north.
+  LAT0: double;
+  /// Longitude of the first column's cell centre, degrees east.
+  LON0: double;
+  /// Latitude step between rows, degrees (signed).
+  DLAT: double;
+  /// Longitude step between columns, degrees (signed).
+  DLON: double;
+  /// Number of rows (latitudes).
+  NLAT: uint32;
+  /// Number of columns (longitudes).
+  NLON: uint32;
+  /// Whether the last column wraps to the first (global grid).
+  PERIODIC_LON: bool;
+}
+
+/// Weather Forecast Field - One variable, level, member and valid time on a
+/// regular grid.
+table WXF {
+  /// Stable identifier of the whole field this record belongs to; equal
+  /// across all tiles of one (producer, init, member, variable, level, lead).
+  FIELD_ID: string (required);
+  /// Class of the producing model.
+  MODEL_CLASS: wxfModelClass = Unspecified;
+  /// Producer-defined model identifier.
+  MODEL_ID: string;
+  /// Producer-defined model version.
+  MODEL_VERSION: string;
+  /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  INIT_TIME_MS: uint64;
+  /// Forecast lead from INIT_TIME_MS, hours.
+  LEAD_HOURS: float;
+  /// Time the field is valid at, Unix milliseconds UTC
+  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  VALID_TIME_MS: uint64;
+  /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
+  /// cycle, 48 for an interim cycle).
+  HORIZON_HOURS: uint16;
+  /// Ensemble realisation or statistic the field represents.
+  MEMBER_KIND: wxfMemberKind = Member;
+  /// Zero-based member index when MEMBER_KIND is Member.
+  MEMBER_INDEX: uint16;
+  /// Number of members in the ensemble the run produced.
+  ENSEMBLE_SIZE: uint16;
+  /// Percentile rank in [0, 100] when MEMBER_KIND is Percentile.
+  PERCENTILE: float;
+  /// Threshold in UNITS when MEMBER_KIND is a probability kind.
+  THRESHOLD_VALUE: float;
+  /// Variable carried by the field.
+  VARIABLE: wxfVariable = Unspecified;
+  /// Producer's native variable name (always set; authoritative when
+  /// VARIABLE is Unspecified).
+  VARIABLE_NAME: string;
+  /// Units of every cell value, UCUM or CF style (e.g. "K", "m s-1", "Pa",
+  /// "1").
+  UNITS: string;
+  /// Vertical coordinate kind.
+  LEVEL_KIND: wxfLevelKind = Surface;
+  /// Vertical coordinate value in the unit fixed by LEVEL_KIND.
+  LEVEL_VALUE: float;
+  /// Temporal character of each cell value.
+  TEMPORAL_KIND: wxfTemporalKind = Instantaneous;
+  /// Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for
+  /// Instantaneous.
+  ACCUMULATION_HOURS: float;
+  /// Grid geometry of this record's samples (of this tile when tiled).
+  GRID: WXFGrid (required);
+  /// Zero-based tile index within FIELD_ID; 0 for an untiled field.
+  TILE_INDEX: uint32;
+  /// Number of tiles FIELD_ID was split into; 1 for an untiled field.
+  TILE_COUNT: uint32 = 1;
+  /// Where the samples live.
+  VALUES_ENCODING: wxfValuesEncoding = InlineFloat32;
+  /// Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;
+  /// NaN marks a missing cell. Present only when VALUES_ENCODING is
+  /// InlineFloat32 and the cell count is at most 1,048,576.
+  VALUES: [float];
+  /// Content identifier of the sample chunk when VALUES_ENCODING is
+  /// ContentAddressedChunk.
+  CHUNK_CID: string;
+  /// Element type of the chunk (e.g. "float32", "float16").
+  CHUNK_DTYPE: string;
+  /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
+  /// "zstd").
+  CHUNK_CODECS: [string];
+  /// Encoded chunk length in bytes.
+  CHUNK_BYTE_LENGTH: uint64;
+  /// Minimum sample over the field (after decoding); statistics for display
+  /// scaling without touching the chunk.
+  VALUE_MIN: float;
+  /// Maximum sample over the field (after decoding).
+  VALUE_MAX: float;
+  /// Number of cells with a missing value.
+  MISSING_COUNT: uint32;
+  /// Upstream publisher the field was retrieved from, as a host name or
+  /// stable identifier.
+  ORIGIN_ID: string;
+  /// Stable dataset identifier within the origin (e.g. a bucket, collection
+  /// or table name).
+  DATASET_ID: string;
+  /// Upstream URL or object path the field was retrieved from.
+  SOURCE_URL: string;
+  /// Unix milliseconds UTC when the field was retrieved from the origin.
+  RETRIEVED_AT: uint64;
+  /// Licence class applicable at RETRIEVED_AT.
+  LICENSE_CLASS: wxfLicenseClass = RealTimeExperimental;
+  /// URL of the licence or terms the field is offered under.
+  LICENSE_URL: string;
+  /// Citation the upstream publisher asks for.
+  CITATION: string;
+  /// Peer identifier of the node that ingested and published this record.
+  PRODUCER_PEER_ID: string;
+}
+
+root_type WXF;
+file_identifier "$WXF";
