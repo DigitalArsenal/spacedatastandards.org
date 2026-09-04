@@ -252,10 +252,15 @@ jobs:
               sys.exit(0)
 
           higher = []
-          for v in data.get("releases", {}):
+          for v, files in data.get("releases", {}).items():
               try:
                   parsed = Version(v)
               except InvalidVersion:
+                  continue
+              # A yanked release no longer competes for `latest` (pip skips it
+              # unless pinned), so a legacy version the owner has yanked does
+              # not block the next real release.
+              if files and all(f.get("yanked") for f in files):
                   continue
               if parsed > new:
                   higher.append(v)
@@ -268,7 +273,7 @@ jobs:
                   f"'latest' and would repeat the v23.3.3-0.3.x pointer-poisoning incident "
                   f"(sds-registry-latest-pointer-poisoned). If {higher[0]} etc. are legacy "
                   f"mis-published versions, yank them on PyPI first (owner action, needs PyPI "
-                  f"credentials), then re-run this workflow."
+                  f"credentials; a yanked release is ignored here), then re-run this workflow."
               )
               sys.exit(1)
 
