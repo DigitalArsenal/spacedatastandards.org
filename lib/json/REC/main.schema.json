@@ -93,6 +93,10 @@
       "type" : "string",
       "enum": ["DataStream", "WasmModule", "Service"]
     },
+    "stfRetentionPolicy" : {
+      "type" : "string",
+      "enum": ["ReplaceCurrent", "ArchiveAll"]
+    },
     "grantLifecycleStatus" : {
       "type" : "string",
       "enum": ["Active", "Revoked", "Expired", "Suspended", "Pending"]
@@ -664,6 +668,10 @@
     "dssAction" : {
       "type" : "string",
       "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate"]
+    },
+    "dssRetention" : {
+      "type" : "string",
+      "enum": ["ReplaceCurrent", "ArchiveAll"]
     },
     "dttTilingScheme" : {
       "type" : "string",
@@ -4045,7 +4053,6 @@
     },
     "STF" : {
       "type" : "object",
-      "description" : "Storefront Listing - Data marketplace listing",
       "properties" : {
         "LISTING_ID" : {
                 "type" : "string",
@@ -4162,6 +4169,10 @@
         "CATEGORIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/capabilityClass"},
                 "description" : "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+              },
+        "RECOMMENDED_RETENTION" : {
+                "$ref" : "#/definitions/stfRetentionPolicy",
+                "description" : "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
               }
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
@@ -13989,6 +14000,10 @@
         "ORIGIN_ID" : {
                 "type" : "string",
                 "description" : "Upstream publisher of the lane's records."
+              },
+        "RETENTION" : {
+                "$ref" : "#/definitions/dssRetention",
+                "description" : "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
               }
       },
       "additionalProperties" : false

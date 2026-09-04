@@ -428,8 +428,19 @@ class DSS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # How this node keeps a lane's publications. ReplaceCurrent supersedes the
+    # previous batch of the lane with each new publication so the lane holds
+    # one current set; ArchiveAll keeps and pins every publication so history
+    # stays retrievable by content identifier.
+    # DSS
+    def RETENTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def DSSStart(builder):
-    builder.StartObject(53)
+    builder.StartObject(54)
 
 def Start(builder):
     DSSStart(builder)
@@ -764,6 +775,12 @@ def DSSAddORIGIN_ID(builder, ORIGIN_ID):
 def AddORIGIN_ID(builder, ORIGIN_ID):
     DSSAddORIGIN_ID(builder, ORIGIN_ID)
 
+def DSSAddRETENTION(builder, RETENTION):
+    builder.PrependInt8Slot(53, RETENTION, 0)
+
+def AddRETENTION(builder, RETENTION):
+    DSSAddRETENTION(builder, RETENTION)
+
 def DSSEnd(builder):
     return builder.EndObject()
 
@@ -833,6 +850,7 @@ class DSST(object):
         LAST_SYNC_STARTED_AT = 0,
         REQUESTED_ACTION = 0,
         ORIGIN_ID = None,
+        RETENTION = 0,
     ):
         self.STATUS = STATUS  # type: int
         self.SYNCED_ROWS = SYNCED_ROWS  # type: int
@@ -887,6 +905,7 @@ class DSST(object):
         self.LAST_SYNC_STARTED_AT = LAST_SYNC_STARTED_AT  # type: int
         self.REQUESTED_ACTION = REQUESTED_ACTION  # type: int
         self.ORIGIN_ID = ORIGIN_ID  # type: Optional[str]
+        self.RETENTION = RETENTION  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -965,6 +984,7 @@ class DSST(object):
         self.LAST_SYNC_STARTED_AT = DSS.LAST_SYNC_STARTED_AT()
         self.REQUESTED_ACTION = DSS.REQUESTED_ACTION()
         self.ORIGIN_ID = DSS.ORIGIN_ID()
+        self.RETENTION = DSS.RETENTION()
 
     # DSST
     def Pack(self, builder):
@@ -1112,5 +1132,6 @@ class DSST(object):
         DSSAddREQUESTED_ACTION(builder, self.REQUESTED_ACTION)
         if self.ORIGIN_ID is not None:
             DSSAddORIGIN_ID(builder, ORIGIN_ID)
+        DSSAddRETENTION(builder, self.RETENTION)
         DSS = DSSEnd(builder)
         return DSS

@@ -1,5 +1,5 @@
-// Hash: 16f6cbfd9328aac34201b55ed9b77675183631e17f388158811b39b92385d110
-// Version: 1.0.5
+// Hash: 9b515bc170b2268b793fb0a9a17f076c2e0f01ff0c13facee52972e5f5bb6140
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../CCT/main.fbs";
 
@@ -147,6 +147,13 @@ table PricingTier {
 }
 
 /// Storefront Listing - Data marketplace listing
+/// Retention rule a publisher recommends for a dataset listing. Append new
+/// values only; never reorder or reuse existing values.
+enum stfRetentionPolicy : byte {
+  ReplaceCurrent,
+  ArchiveAll
+}
+
 table STF {
   /// Unique identifier for the listing
   LISTING_ID: string (required);
@@ -226,6 +233,11 @@ table STF {
   /// filter and per-category counting. A listing MAY carry several. If
   /// nonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.
   CATEGORIES: [capabilityClass];
+
+  /// Retention rule the publisher recommends to subscribers of a dataset
+  /// listing: ReplaceCurrent when each publication is a complete current set,
+  /// ArchiveAll when publications accumulate history.
+  RECOMMENDED_RETENTION: stfRetentionPolicy = ReplaceCurrent;
 }
 
 root_type STF;

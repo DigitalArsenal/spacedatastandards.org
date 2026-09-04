@@ -16,9 +16,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
-/**
- * Storefront Listing - Data marketplace listing
- */
 @Suppress("unused")
 class STF : Table() {
 
@@ -397,6 +394,16 @@ class STF : Table() {
         }
     val categoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
     fun categoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Retention rule the publisher recommends to subscribers of a dataset
+     * listing: ReplaceCurrent when each publication is a complete current set,
+     * ArchiveAll when publications accumulate history.
+     */
+    val recommendedRetention : Byte
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTF(_bb: ByteBuffer): STF = getRootAsSTF(_bb, STF())
@@ -405,8 +412,8 @@ class STF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STF")
-        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int, primaryCategory: UByte, categoriesOffset: Int) : Int {
-            builder.startTable(29)
+        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int, primaryCategory: UByte, categoriesOffset: Int, recommendedRetention: Byte) : Int {
+            builder.startTable(30)
             addEXPIRESAT(builder, expiresAt)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
@@ -431,6 +438,7 @@ class STF : Table() {
             addPROVIDEREPMCID(builder, providerEpmCidOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
             addLISTINGID(builder, listingIdOffset)
+            addRECOMMENDEDRETENTION(builder, recommendedRetention)
             addPRIMARYCATEGORY(builder, primaryCategory)
             addLISTINGKIND(builder, listingKind)
             addACTIVE(builder, active)
@@ -438,7 +446,7 @@ class STF : Table() {
             addACCESSTYPE(builder, accessType)
             return endSTF(builder)
         }
-        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(30)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(0, listingId, 0)
         fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(1, providerPeerId, 0)
         fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(2, providerEpmCid, 0)
@@ -526,6 +534,7 @@ class STF : Table() {
             return builder.endVector()
         }
         fun startCategoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addRECOMMENDEDRETENTION(builder: FlatBufferBuilder, recommendedRetention: Byte) = builder.addByte(29, recommendedRetention, 0)
         fun endSTF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

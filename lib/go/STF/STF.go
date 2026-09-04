@@ -6,7 +6,6 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Storefront Listing - Data marketplace listing
 type STF struct {
 	_tab flatbuffers.Table
 }
@@ -743,8 +742,34 @@ func (rcv *STF) MutateCategories(j int, n capabilityClass) bool {
 	return rcv.MutateCATEGORIES(j, n)
 }
 
+/// Retention rule the publisher recommends to subscribers of a dataset
+/// listing: ReplaceCurrent when each publication is a complete current set,
+/// ArchiveAll when publications accumulate history.
+func (rcv *STF) RECOMMENDED_RETENTION() stfRetentionPolicy {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return stfRetentionPolicy(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *STF) RecommendedRetention() stfRetentionPolicy {
+	return rcv.RECOMMENDED_RETENTION()
+}
+
+/// Retention rule the publisher recommends to subscribers of a dataset
+/// listing: ReplaceCurrent when each publication is a complete current set,
+/// ArchiveAll when publications accumulate history.
+func (rcv *STF) MutateRECOMMENDED_RETENTION(n stfRetentionPolicy) bool {
+	return rcv._tab.MutateInt8Slot(62, int8(n))
+}
+
+func (rcv *STF) MutateRecommendedRetention(n stfRetentionPolicy) bool {
+	return rcv.MutateRECOMMENDED_RETENTION(n)
+}
+
 func STFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(29)
+	builder.StartObject(30)
 }
 func STFAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LISTING_ID), 0)
@@ -961,6 +986,12 @@ func STFStartCATEGORIESVector(builder *flatbuffers.Builder, numElems int) flatbu
 }
 func STFStartCategoriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return STFStartCATEGORIESVector(builder, numElems)
+}
+func STFAddRECOMMENDED_RETENTION(builder *flatbuffers.Builder, RECOMMENDED_RETENTION stfRetentionPolicy) {
+	builder.PrependInt8Slot(29, int8(RECOMMENDED_RETENTION), 0)
+}
+func STFAddRecommendedRetention(builder *flatbuffers.Builder, RECOMMENDED_RETENTION stfRetentionPolicy) {
+	STFAddRECOMMENDED_RETENTION(builder, RECOMMENDED_RETENTION)
 }
 func STFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

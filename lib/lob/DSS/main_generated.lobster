@@ -37,6 +37,15 @@ enum dssAction:
     /// Rebuild the local materialisation from pinned publications.
     dssAction_Hydrate = 6
 
+/// Retention rule for a lane's publications on the subscribing node. Append
+/// new values only; never reorder or reuse existing values.
+enum dssRetention:
+    /// Each new publication replaces the previous batch; the lane holds one
+    /// current set.
+    dssRetention_ReplaceCurrent = 0
+    /// Every publication is kept and pinned; history stays retrievable.
+    dssRetention_ArchiveAll = 1
+
 class DSS
 
 class DSS : flatbuffers.handle
@@ -164,13 +173,19 @@ class DSS : flatbuffers.handle
     /// Upstream publisher of the lane's records.
     def ORIGIN_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 108)
+    /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+    /// previous batch of the lane with each new publication so the lane holds
+    /// one current set; ArchiveAll keeps and pins every publication so history
+    /// stays retrievable by content identifier.
+    def RETENTION() -> dssRetention:
+        return dssRetention(flatbuffers.field_int8(buf_, pos_, 110, 0))
 
 def GetRootAsDSS(buf:string): return DSS { buf, flatbuffers.indirect(buf, 0) }
 
 struct DSSBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(53)
+        b_.StartObject(54)
         return this
     def add_STATUS(STATUS:dssSyncState):
         b_.PrependInt8Slot(0, STATUS, 0)
@@ -330,6 +345,9 @@ struct DSSBuilder:
         return this
     def add_ORIGIN_ID(ORIGIN_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(52, ORIGIN_ID)
+        return this
+    def add_RETENTION(RETENTION:dssRetention):
+        b_.PrependInt8Slot(53, RETENTION, 0)
         return this
     def end():
         return b_.EndObject()

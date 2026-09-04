@@ -68,6 +68,23 @@ public enum dssAction: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
+///  Retention rule for a lane's publications on the subscribing node. Append
+///  new values only; never reorder or reuse existing values.
+public enum dssRetention: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Each new publication replaces the previous batch; the lane holds one
+  ///  current set.
+  case replacecurrent = 0
+  ///  Every publication is kept and pinned; history stays retrievable.
+  case archiveall = 1
+
+  public static var max: dssRetention { return .archiveall }
+  public static var min: dssRetention { return .replacecurrent }
+}
+
+
 public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -133,6 +150,7 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let LAST_SYNC_STARTED_AT: VOffset = 104
     static let REQUESTED_ACTION: VOffset = 106
     static let ORIGIN_ID: VOffset = 108
+    static let RETENTION: VOffset = 110
   }
 
   public var STATUS: dssSyncState { let o = _accessor.offset(VT.STATUS); return o == 0 ? .idle : dssSyncState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .idle }
@@ -231,7 +249,12 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Upstream publisher of the lane's records.
   public var ORIGIN_ID: String? { let o = _accessor.offset(VT.ORIGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_ID) }
-  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
+  ///  How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  ///  previous batch of the lane with each new publication so the lane holds
+  ///  one current set; ArchiveAll keeps and pins every publication so history
+  ///  stays retrievable by content identifier.
+  public var RETENTION: dssRetention { let o = _accessor.offset(VT.RETENTION); return o == 0 ? .replacecurrent : dssRetention(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .replacecurrent }
+  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 54) }
   public static func add(STATUS: dssSyncState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(SYNCED_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYNCED_ROWS, def: 0, at: VT.SYNCED_ROWS) }
   public static func add(TOTAL_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_ROWS, def: 0, at: VT.TOTAL_ROWS) }
@@ -289,6 +312,7 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(LAST_SYNC_STARTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_SYNC_STARTED_AT, def: 0, at: VT.LAST_SYNC_STARTED_AT) }
   public static func add(REQUESTED_ACTION: dssAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_ACTION.rawValue, def: 0, at: VT.REQUESTED_ACTION) }
   public static func add(ORIGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_ID, at: VT.ORIGIN_ID) }
+  public static func add(RETENTION: dssRetention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETENTION.rawValue, def: 0, at: VT.RETENTION) }
   public static func endDSS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDSS(
     _ fbb: inout FlatBufferBuilder,
@@ -344,7 +368,8 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DELTA_ROWS: UInt64 = 0,
     LAST_SYNC_STARTED_AT: UInt64 = 0,
     REQUESTED_ACTION: dssAction = .none_,
-    ORIGIN_IDOffset ORIGIN_ID: Offset = Offset()
+    ORIGIN_IDOffset ORIGIN_ID: Offset = Offset(),
+    RETENTION: dssRetention = .replacecurrent
   ) -> Offset {
     let __start = DSS.startDSS(&fbb)
     DSS.add(STATUS: STATUS, &fbb)
@@ -400,6 +425,7 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DSS.add(LAST_SYNC_STARTED_AT: LAST_SYNC_STARTED_AT, &fbb)
     DSS.add(REQUESTED_ACTION: REQUESTED_ACTION, &fbb)
     DSS.add(ORIGIN_ID: ORIGIN_ID, &fbb)
+    DSS.add(RETENTION: RETENTION, &fbb)
     return DSS.endDSS(&fbb, start: __start)
   }
 
@@ -458,6 +484,7 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.LAST_SYNC_STARTED_AT, fieldName: "LAST_SYNC_STARTED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VT.REQUESTED_ACTION, fieldName: "REQUESTED_ACTION", required: false, type: dssAction.self)
     try _v.visit(field: VT.ORIGIN_ID, fieldName: "ORIGIN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RETENTION, fieldName: "RETENTION", required: false, type: dssRetention.self)
     _v.finish()
   }
 }

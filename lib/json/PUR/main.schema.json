@@ -17,6 +17,10 @@
       "type" : "string",
       "enum": ["DataStream", "WasmModule", "Service"]
     },
+    "stfRetentionPolicy" : {
+      "type" : "string",
+      "enum": ["ReplaceCurrent", "ArchiveAll"]
+    },
     "purchaseLifecycleStatus" : {
       "type" : "string",
       "enum": ["Pending", "PaymentDetected", "PaymentConfirmed", "Completed", "Failed", "Cancelled", "RefundRequested", "Refunded", "Expired"]
@@ -341,7 +345,6 @@
     },
     "STF" : {
       "type" : "object",
-      "description" : "Storefront Listing - Data marketplace listing",
       "properties" : {
         "LISTING_ID" : {
                 "type" : "string",
@@ -458,6 +461,10 @@
         "CATEGORIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/capabilityClass"},
                 "description" : "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+              },
+        "RECOMMENDED_RETENTION" : {
+                "$ref" : "#/definitions/stfRetentionPolicy",
+                "description" : "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
               }
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],

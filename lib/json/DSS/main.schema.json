@@ -13,6 +13,10 @@
       "type" : "string",
       "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate"]
     },
+    "dssRetention" : {
+      "type" : "string",
+      "enum": ["ReplaceCurrent", "ArchiveAll"]
+    },
     "DSS" : {
       "type" : "object",
       "properties" : {
@@ -190,6 +194,10 @@
         "ORIGIN_ID" : {
                 "type" : "string",
                 "description" : "Upstream publisher of the lane's records."
+              },
+        "RETENTION" : {
+                "$ref" : "#/definitions/dssRetention",
+                "description" : "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
               }
       },
       "additionalProperties" : false

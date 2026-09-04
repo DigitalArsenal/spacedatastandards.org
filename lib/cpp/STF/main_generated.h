@@ -178,6 +178,39 @@ inline const char *EnumNamelistingCategory(listingCategory e) {
   return EnumNameslistingCategory()[index];
 }
 
+/// Storefront Listing - Data marketplace listing
+/// Retention rule a publisher recommends for a dataset listing. Append new
+/// values only; never reorder or reuse existing values.
+enum stfRetentionPolicy : int8_t {
+  stfRetentionPolicy_ReplaceCurrent = 0,
+  stfRetentionPolicy_ArchiveAll = 1,
+  stfRetentionPolicy_MIN = stfRetentionPolicy_ReplaceCurrent,
+  stfRetentionPolicy_MAX = stfRetentionPolicy_ArchiveAll
+};
+
+inline const stfRetentionPolicy (&EnumValuesstfRetentionPolicy())[2] {
+  static const stfRetentionPolicy values[] = {
+    stfRetentionPolicy_ReplaceCurrent,
+    stfRetentionPolicy_ArchiveAll
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesstfRetentionPolicy() {
+  static const char * const names[3] = {
+    "ReplaceCurrent",
+    "ArchiveAll",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamestfRetentionPolicy(stfRetentionPolicy e) {
+  if (::flatbuffers::IsOutRange(e, stfRetentionPolicy_ReplaceCurrent, stfRetentionPolicy_ArchiveAll)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesstfRetentionPolicy()[index];
+}
+
 /// Field-level stream policy bound into protected delivery and grants.
 struct GrantFieldStreamPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GrantFieldStreamPolicyBuilder Builder;
@@ -1086,7 +1119,6 @@ inline ::flatbuffers::Offset<PricingTier> CreatePricingTierDirect(
       DESCRIPTION__);
 }
 
-/// Storefront Listing - Data marketplace listing
 struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef STFBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1118,7 +1150,8 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LICENSE = 54,
     VT_SOURCE_PEER_ID = 56,
     VT_PRIMARY_CATEGORY = 58,
-    VT_CATEGORIES = 60
+    VT_CATEGORIES = 60,
+    VT_RECOMMENDED_RETENTION = 62
   };
   /// Unique identifier for the listing
   const ::flatbuffers::String *LISTING_ID() const {
@@ -1250,6 +1283,12 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *CATEGORIES() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CATEGORIES);
   }
+  /// Retention rule the publisher recommends to subscribers of a dataset
+  /// listing: ReplaceCurrent when each publication is a complete current set,
+  /// ArchiveAll when publications accumulate history.
+  stfRetentionPolicy RECOMMENDED_RETENTION() const {
+    return static_cast<stfRetentionPolicy>(GetField<int8_t>(VT_RECOMMENDED_RETENTION, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1305,6 +1344,7 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_PRIMARY_CATEGORY, 1) &&
            VerifyOffset(verifier, VT_CATEGORIES) &&
            verifier.VerifyVector(CATEGORIES()) &&
+           VerifyField<int8_t>(verifier, VT_RECOMMENDED_RETENTION, 1) &&
            verifier.EndTable();
   }
 };
@@ -1400,6 +1440,9 @@ struct STFBuilder {
   void add_CATEGORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES) {
     fbb_.AddOffset(STF::VT_CATEGORIES, CATEGORIES);
   }
+  void add_RECOMMENDED_RETENTION(stfRetentionPolicy RECOMMENDED_RETENTION) {
+    fbb_.AddElement<int8_t>(STF::VT_RECOMMENDED_RETENTION, static_cast<int8_t>(RECOMMENDED_RETENTION), 0);
+  }
   explicit STFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1444,7 +1487,8 @@ inline ::flatbuffers::Offset<STF> CreateSTF(
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_PEER_ID = 0,
     capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CATEGORIES = 0,
+    stfRetentionPolicy RECOMMENDED_RETENTION = stfRetentionPolicy_ReplaceCurrent) {
   STFBuilder builder_(_fbb);
   builder_.add_EXPIRES_AT(EXPIRES_AT);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -1470,6 +1514,7 @@ inline ::flatbuffers::Offset<STF> CreateSTF(
   builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
   builder_.add_LISTING_ID(LISTING_ID);
+  builder_.add_RECOMMENDED_RETENTION(RECOMMENDED_RETENTION);
   builder_.add_PRIMARY_CATEGORY(PRIMARY_CATEGORY);
   builder_.add_LISTING_KIND(LISTING_KIND);
   builder_.add_ACTIVE(ACTIVE);
@@ -1508,7 +1553,8 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
     const char *LICENSE = nullptr,
     const char *SOURCE_PEER_ID = nullptr,
     capabilityClass PRIMARY_CATEGORY = capabilityClass_UNSPECIFIED,
-    const std::vector<uint8_t> *CATEGORIES = nullptr) {
+    const std::vector<uint8_t> *CATEGORIES = nullptr,
+    stfRetentionPolicy RECOMMENDED_RETENTION = stfRetentionPolicy_ReplaceCurrent) {
   auto LISTING_ID__ = LISTING_ID ? _fbb.CreateString(LISTING_ID) : 0;
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
@@ -1555,7 +1601,8 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
       LICENSE__,
       SOURCE_PEER_ID__,
       PRIMARY_CATEGORY,
-      CATEGORIES__);
+      CATEGORIES__,
+      RECOMMENDED_RETENTION);
 }
 
 inline const STF *GetSTF(const void *buf) {

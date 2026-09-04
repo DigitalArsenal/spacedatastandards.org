@@ -183,6 +183,13 @@ public final class DSS extends com.google.flatbuffers.Table {
   public String ORIGIN_ID() { int o = __offset(108); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGIN_IDAsByteBuffer() { return __vector_as_bytebuffer(108, 1); }
   public ByteBuffer ORIGIN_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 1); }
+  /**
+   * How this node keeps a lane's publications. ReplaceCurrent supersedes the
+   * previous batch of the lane with each new publication so the lane holds
+   * one current set; ArchiveAll keeps and pins every publication so history
+   * stays retrievable by content identifier.
+   */
+  public byte RETENTION() { int o = __offset(110); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createDSS(FlatBufferBuilder builder,
       byte STATUS,
@@ -237,8 +244,9 @@ public final class DSS extends com.google.flatbuffers.Table {
       long DELTA_ROWS,
       long LAST_SYNC_STARTED_AT,
       byte REQUESTED_ACTION,
-      int ORIGIN_IDOffset) {
-    builder.startTable(53);
+      int ORIGIN_IDOffset,
+      byte RETENTION) {
+    builder.startTable(54);
     DSS.addLastSyncStartedAt(builder, LAST_SYNC_STARTED_AT);
     DSS.addDeltaRows(builder, DELTA_ROWS);
     DSS.addFlatsqlMaterializationMs(builder, FLATSQL_MATERIALIZATION_MS);
@@ -285,6 +293,7 @@ public final class DSS extends com.google.flatbuffers.Table {
     DSS.addSnapshotId(builder, SNAPSHOT_IDOffset);
     DSS.addProviderPublicKey(builder, PROVIDER_PUBLIC_KEYOffset);
     DSS.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+    DSS.addRetention(builder, RETENTION);
     DSS.addRequestedAction(builder, REQUESTED_ACTION);
     DSS.addPinPolicy(builder, PIN_POLICY);
     DSS.addSubscribed(builder, SUBSCRIBED);
@@ -295,7 +304,7 @@ public final class DSS extends com.google.flatbuffers.Table {
     return DSS.endDSS(builder);
   }
 
-  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(53); }
+  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(54); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addSyncedRows(FlatBufferBuilder builder, long SYNCED_ROWS) { builder.addLong(1, SYNCED_ROWS, 0L); }
   public static void addTotalRows(FlatBufferBuilder builder, long TOTAL_ROWS) { builder.addLong(2, TOTAL_ROWS, 0L); }
@@ -351,6 +360,7 @@ public final class DSS extends com.google.flatbuffers.Table {
   public static void addLastSyncStartedAt(FlatBufferBuilder builder, long LAST_SYNC_STARTED_AT) { builder.addLong(50, LAST_SYNC_STARTED_AT, 0L); }
   public static void addRequestedAction(FlatBufferBuilder builder, byte REQUESTED_ACTION) { builder.addByte(51, REQUESTED_ACTION, 0); }
   public static void addOriginId(FlatBufferBuilder builder, int ORIGIN_IDOffset) { builder.addOffset(52, ORIGIN_IDOffset, 0); }
+  public static void addRetention(FlatBufferBuilder builder, byte RETENTION) { builder.addByte(53, RETENTION, 0); }
   public static int endDSS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

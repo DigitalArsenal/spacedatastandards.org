@@ -34388,6 +34388,13 @@
                         "Service"
                     ]
                 },
+                "stfRetentionPolicy": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "purchaseLifecycleStatus": {
                     "type": "string",
                     "enum": [
@@ -34806,7 +34813,6 @@
                 },
                 "STF": {
                     "type": "object",
-                    "description": "Storefront Listing - Data marketplace listing",
                     "properties": {
                         "LISTING_ID": {
                             "type": "string",
@@ -34956,6 +34962,10 @@
                                 "$ref": "#/definitions/capabilityClass"
                             },
                             "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+                        },
+                        "RECOMMENDED_RETENTION": {
+                            "$ref": "#/definitions/stfRetentionPolicy",
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
                         }
                     },
                     "required": [
@@ -47213,6 +47223,13 @@
                         "Hydrate"
                     ]
                 },
+                "dssRetention": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "DSS": {
                     "type": "object",
                     "properties": {
@@ -47425,6 +47442,10 @@
                         "ORIGIN_ID": {
                             "type": "string",
                             "description": "Upstream publisher of the lane's records."
+                        },
+                        "RETENTION": {
+                            "$ref": "#/definitions/dssRetention",
+                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
                         }
                     },
                     "additionalProperties": false
@@ -60950,6 +60971,13 @@
                         "Service"
                     ]
                 },
+                "stfRetentionPolicy": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "grantLifecycleStatus": {
                     "type": "string",
                     "enum": [
@@ -62805,6 +62833,13 @@
                         "Pin",
                         "Unpin",
                         "Hydrate"
+                    ]
+                },
+                "dssRetention": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
                     ]
                 },
                 "dttTilingScheme": {
@@ -70041,7 +70076,6 @@
                 },
                 "STF": {
                     "type": "object",
-                    "description": "Storefront Listing - Data marketplace listing",
                     "properties": {
                         "LISTING_ID": {
                             "type": "string",
@@ -70191,6 +70225,10 @@
                                 "$ref": "#/definitions/capabilityClass"
                             },
                             "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+                        },
+                        "RECOMMENDED_RETENTION": {
+                            "$ref": "#/definitions/stfRetentionPolicy",
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
                         }
                     },
                     "required": [
@@ -81413,6 +81451,10 @@
                         "ORIGIN_ID": {
                             "type": "string",
                             "description": "Upstream publisher of the lane's records."
+                        },
+                        "RETENTION": {
+                            "$ref": "#/definitions/dssRetention",
+                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
                         }
                     },
                     "additionalProperties": false
@@ -141301,6 +141343,13 @@
                         "Service"
                     ]
                 },
+                "stfRetentionPolicy": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "grantLifecycleStatus": {
                     "type": "string",
                     "enum": [
@@ -143626,7 +143675,6 @@
                 },
                 "STF": {
                     "type": "object",
-                    "description": "Storefront Listing - Data marketplace listing",
                     "properties": {
                         "LISTING_ID": {
                             "type": "string",
@@ -143776,6 +143824,10 @@
                                 "$ref": "#/definitions/capabilityClass"
                             },
                             "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+                        },
+                        "RECOMMENDED_RETENTION": {
+                            "$ref": "#/definitions/stfRetentionPolicy",
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
                         }
                     },
                     "required": [
@@ -170940,6 +170992,13 @@
                         "Service"
                     ]
                 },
+                "stfRetentionPolicy": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "grantLifecycleStatus": {
                     "type": "string",
                     "enum": [
@@ -171354,7 +171413,6 @@
                 },
                 "STF": {
                     "type": "object",
-                    "description": "Storefront Listing - Data marketplace listing",
                     "properties": {
                         "LISTING_ID": {
                             "type": "string",
@@ -171504,6 +171562,10 @@
                                 "$ref": "#/definitions/capabilityClass"
                             },
                             "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+                        },
+                        "RECOMMENDED_RETENTION": {
+                            "$ref": "#/definitions/stfRetentionPolicy",
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
                         }
                     },
                     "required": [
@@ -173287,6 +173349,13 @@
                         "Service"
                     ]
                 },
+                "stfRetentionPolicy": {
+                    "type": "string",
+                    "enum": [
+                        "ReplaceCurrent",
+                        "ArchiveAll"
+                    ]
+                },
                 "CCTCategory": {
                     "type": "object",
                     "description": "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
@@ -173691,7 +173760,6 @@
                 },
                 "STF": {
                     "type": "object",
-                    "description": "Storefront Listing - Data marketplace listing",
                     "properties": {
                         "LISTING_ID": {
                             "type": "string",
@@ -173841,6 +173909,10 @@
                                 "$ref": "#/definitions/capabilityClass"
                             },
                             "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat."
+                        },
+                        "RECOMMENDED_RETENTION": {
+                            "$ref": "#/definitions/stfRetentionPolicy",
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
                         }
                     },
                     "required": [

@@ -1,5 +1,5 @@
-// Hash: 6df79e6beb28f3a4bc1ac7e980665216b770e4da238cd827f6750f496901efdc
-// Version: 1.99.1
+// Hash: a48759e83811bb6c232f30ac197b483e2d6e92031f0814499473f29af4edbb75
+// Version: 1.99.2
 // -----------------------------------END_HEADER
 /// Data Sync Status
 ///
@@ -38,6 +38,16 @@ enum dssAction : byte {
   Unpin,
   /// Rebuild the local materialisation from pinned publications.
   Hydrate
+}
+
+/// Retention rule for a lane's publications on the subscribing node. Append
+/// new values only; never reorder or reuse existing values.
+enum dssRetention : byte {
+  /// Each new publication replaces the previous batch; the lane holds one
+  /// current set.
+  ReplaceCurrent,
+  /// Every publication is kept and pinned; history stays retrievable.
+  ArchiveAll
 }
 
 table DSS {
@@ -111,6 +121,12 @@ table DSS {
   REQUESTED_ACTION: dssAction = None;
   /// Upstream publisher of the lane's records.
   ORIGIN_ID: string;
+
+  /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  /// previous batch of the lane with each new publication so the lane holds
+  /// one current set; ArchiveAll keeps and pins every publication so history
+  /// stays retrievable by content identifier.
+  RETENTION: dssRetention = ReplaceCurrent;
 }
 
 root_type DSS;

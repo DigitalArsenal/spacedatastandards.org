@@ -1287,6 +1287,23 @@
         }
       }
     },
+    "stfRetentionPolicy": {
+      "type": "string",
+      "enum": [
+        "ReplaceCurrent",
+        "ArchiveAll"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ReplaceCurrent": {
+          "value": 0
+        },
+        "ArchiveAll": {
+          "value": 1
+        }
+      }
+    },
     "grantLifecycleStatus": {
       "type": "string",
       "enum": [
@@ -7643,6 +7660,25 @@
         "Hydrate": {
           "value": 6,
           "description": "Rebuild the local materialisation from pinned publications."
+        }
+      }
+    },
+    "dssRetention": {
+      "type": "string",
+      "enum": [
+        "ReplaceCurrent",
+        "ArchiveAll"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ReplaceCurrent": {
+          "value": 0,
+          "description": "Each new publication replaces the previous batch; the lane holds one current set."
+        },
+        "ArchiveAll": {
+          "value": 1,
+          "description": "Every publication is kept and pinned; history stays retrievable."
         }
       }
     },
@@ -28049,7 +28085,6 @@
     },
     "STF": {
       "type": "object",
-      "description": "Storefront Listing - Data marketplace listing",
       "properties": {
         "LISTING_ID": {
           "type": "string",
@@ -28367,6 +28402,21 @@
           },
           "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
           "x-flatbuffer-type": "[capabilityClass]"
+        },
+        "RECOMMENDED_RETENTION": {
+          "$ref": "#/definitions/stfRetentionPolicy",
+          "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ReplaceCurrent": {
+              "value": 0
+            },
+            "ArchiveAll": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "ReplaceCurrent"
         }
       },
       "required": [
@@ -46762,6 +46812,23 @@
           "type": "string",
           "description": "Upstream publisher of the lane's records.",
           "x-flatbuffer-type": "string"
+        },
+        "RETENTION": {
+          "$ref": "#/definitions/dssRetention",
+          "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ReplaceCurrent": {
+              "value": 0,
+              "description": "Each new publication replaces the previous batch; the lane holds one current set."
+            },
+            "ArchiveAll": {
+              "value": 1,
+              "description": "Every publication is kept and pinned; history stays retrievable."
+            }
+          },
+          "x-flatbuffer-default": "ReplaceCurrent"
         }
       },
       "additionalProperties": false

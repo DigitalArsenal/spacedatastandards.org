@@ -12,11 +12,9 @@ import { accessCategory } from './accessCategory.js';
 import { capabilityClass } from './capabilityClass.js';
 import { listingCategory } from './listingCategory.js';
 import { paymentMethod } from './paymentMethod.js';
+import { stfRetentionPolicy } from './stfRetentionPolicy.js';
 
 
-/**
- * Storefront Listing - Data marketplace listing
- */
 export class STF implements flatbuffers.IUnpackableObject<STFT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -359,8 +357,18 @@ categoriesArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Retention rule the publisher recommends to subscribers of a dataset
+ * listing: ReplaceCurrent when each publication is a complete current set,
+ * ArchiveAll when publications accumulate history.
+ */
+RECOMMENDED_RETENTION():stfRetentionPolicy {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : stfRetentionPolicy.ReplaceCurrent;
+}
+
 static startSTF(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(30);
 }
 
 static addListingId(builder:flatbuffers.Builder, LISTING_IDOffset:flatbuffers.Offset) {
@@ -563,6 +571,10 @@ static startCategoriesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addRecommendedRetention(builder:flatbuffers.Builder, RECOMMENDED_RETENTION:stfRetentionPolicy) {
+  builder.addFieldInt8(29, RECOMMENDED_RETENTION, stfRetentionPolicy.ReplaceCurrent);
+}
+
 static endSTF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LISTING_ID
@@ -610,7 +622,8 @@ unpack(): STFT {
     this.LICENSE(),
     this.SOURCE_PEER_ID(),
     this.PRIMARY_CATEGORY(),
-    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength())
+    this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength()),
+    this.RECOMMENDED_RETENTION()
   );
 }
 
@@ -645,6 +658,7 @@ unpackTo(_o: STFT): void {
   _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID();
   _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY();
   _o.CATEGORIES = this.bb!.createScalarList<capabilityClass>(this.CATEGORIES.bind(this), this.categoriesLength());
+  _o.RECOMMENDED_RETENTION = this.RECOMMENDED_RETENTION();
 }
 }
 
@@ -678,7 +692,8 @@ constructor(
   public LICENSE: string|Uint8Array|null = null,
   public SOURCE_PEER_ID: string|Uint8Array|null = null,
   public PRIMARY_CATEGORY: capabilityClass = capabilityClass.UNSPECIFIED,
-  public CATEGORIES: (capabilityClass)[] = []
+  public CATEGORIES: (capabilityClass)[] = [],
+  public RECOMMENDED_RETENTION: stfRetentionPolicy = stfRetentionPolicy.ReplaceCurrent
 ){}
 
 
@@ -733,6 +748,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   STF.addSourcePeerId(builder, SOURCE_PEER_ID);
   STF.addPrimaryCategory(builder, this.PRIMARY_CATEGORY);
   STF.addCategories(builder, CATEGORIES);
+  STF.addRecommendedRetention(builder, this.RECOMMENDED_RETENTION);
 
   return STF.endSTF(builder);
 }

@@ -934,8 +934,36 @@ func (rcv *DSS) OriginId() []byte {
 }
 
 /// Upstream publisher of the lane's records.
+/// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+/// previous batch of the lane with each new publication so the lane holds
+/// one current set; ArchiveAll keeps and pins every publication so history
+/// stays retrievable by content identifier.
+func (rcv *DSS) RETENTION() dssRetention {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return dssRetention(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *DSS) Retention() dssRetention {
+	return rcv.RETENTION()
+}
+
+/// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+/// previous batch of the lane with each new publication so the lane holds
+/// one current set; ArchiveAll keeps and pins every publication so history
+/// stays retrievable by content identifier.
+func (rcv *DSS) MutateRETENTION(n dssRetention) bool {
+	return rcv._tab.MutateInt8Slot(110, int8(n))
+}
+
+func (rcv *DSS) MutateRetention(n dssRetention) bool {
+	return rcv.MutateRETENTION(n)
+}
+
 func DSSStart(builder *flatbuffers.Builder) {
-	builder.StartObject(53)
+	builder.StartObject(54)
 }
 func DSSAddSTATUS(builder *flatbuffers.Builder, STATUS dssSyncState) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -1260,6 +1288,12 @@ func DSSAddORIGIN_ID(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffset
 }
 func DSSAddOriginId(builder *flatbuffers.Builder, ORIGIN_ID flatbuffers.UOffsetT) {
 	DSSAddORIGIN_ID(builder, ORIGIN_ID)
+}
+func DSSAddRETENTION(builder *flatbuffers.Builder, RETENTION dssRetention) {
+	builder.PrependInt8Slot(53, int8(RETENTION), 0)
+}
+func DSSAddRetention(builder *flatbuffers.Builder, RETENTION dssRetention) {
+	DSSAddRETENTION(builder, RETENTION)
 }
 func DSSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

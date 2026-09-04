@@ -150,6 +150,41 @@ inline const char *EnumNamedssAction(dssAction e) {
   return EnumNamesdssAction()[index];
 }
 
+/// Retention rule for a lane's publications on the subscribing node. Append
+/// new values only; never reorder or reuse existing values.
+enum dssRetention : int8_t {
+  /// Each new publication replaces the previous batch; the lane holds one
+  /// current set.
+  dssRetention_ReplaceCurrent = 0,
+  /// Every publication is kept and pinned; history stays retrievable.
+  dssRetention_ArchiveAll = 1,
+  dssRetention_MIN = dssRetention_ReplaceCurrent,
+  dssRetention_MAX = dssRetention_ArchiveAll
+};
+
+inline const dssRetention (&EnumValuesdssRetention())[2] {
+  static const dssRetention values[] = {
+    dssRetention_ReplaceCurrent,
+    dssRetention_ArchiveAll
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesdssRetention() {
+  static const char * const names[3] = {
+    "ReplaceCurrent",
+    "ArchiveAll",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamedssRetention(dssRetention e) {
+  if (::flatbuffers::IsOutRange(e, dssRetention_ReplaceCurrent, dssRetention_ArchiveAll)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesdssRetention()[index];
+}
+
 struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DSSBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -205,7 +240,8 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DELTA_ROWS = 102,
     VT_LAST_SYNC_STARTED_AT = 104,
     VT_REQUESTED_ACTION = 106,
-    VT_ORIGIN_ID = 108
+    VT_ORIGIN_ID = 108,
+    VT_RETENTION = 110
   };
   dssSyncState STATUS() const {
     return static_cast<dssSyncState>(GetField<int8_t>(VT_STATUS, 0));
@@ -382,6 +418,13 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ORIGIN_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN_ID);
   }
+  /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  /// previous batch of the lane with each new publication so the lane holds
+  /// one current set; ArchiveAll keeps and pins every publication so history
+  /// stays retrievable by content identifier.
+  dssRetention RETENTION() const {
+    return static_cast<dssRetention>(GetField<int8_t>(VT_RETENTION, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -467,6 +510,7 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_REQUESTED_ACTION, 1) &&
            VerifyOffset(verifier, VT_ORIGIN_ID) &&
            verifier.VerifyString(ORIGIN_ID()) &&
+           VerifyField<int8_t>(verifier, VT_RETENTION, 1) &&
            verifier.EndTable();
   }
 };
@@ -634,6 +678,9 @@ struct DSSBuilder {
   void add_ORIGIN_ID(::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID) {
     fbb_.AddOffset(DSS::VT_ORIGIN_ID, ORIGIN_ID);
   }
+  void add_RETENTION(dssRetention RETENTION) {
+    fbb_.AddElement<int8_t>(DSS::VT_RETENTION, static_cast<int8_t>(RETENTION), 0);
+  }
   explicit DSSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -699,7 +746,8 @@ inline ::flatbuffers::Offset<DSS> CreateDSS(
     uint64_t DELTA_ROWS = 0,
     uint64_t LAST_SYNC_STARTED_AT = 0,
     dssAction REQUESTED_ACTION = dssAction_None,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID = 0,
+    dssRetention RETENTION = dssRetention_ReplaceCurrent) {
   DSSBuilder builder_(_fbb);
   builder_.add_LAST_SYNC_STARTED_AT(LAST_SYNC_STARTED_AT);
   builder_.add_DELTA_ROWS(DELTA_ROWS);
@@ -747,6 +795,7 @@ inline ::flatbuffers::Offset<DSS> CreateDSS(
   builder_.add_SNAPSHOT_ID(SNAPSHOT_ID);
   builder_.add_PROVIDER_PUBLIC_KEY(PROVIDER_PUBLIC_KEY);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
+  builder_.add_RETENTION(RETENTION);
   builder_.add_REQUESTED_ACTION(REQUESTED_ACTION);
   builder_.add_PIN_POLICY(PIN_POLICY);
   builder_.add_SUBSCRIBED(SUBSCRIBED);
@@ -811,7 +860,8 @@ inline ::flatbuffers::Offset<DSS> CreateDSSDirect(
     uint64_t DELTA_ROWS = 0,
     uint64_t LAST_SYNC_STARTED_AT = 0,
     dssAction REQUESTED_ACTION = dssAction_None,
-    const char *ORIGIN_ID = nullptr) {
+    const char *ORIGIN_ID = nullptr,
+    dssRetention RETENTION = dssRetention_ReplaceCurrent) {
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_PUBLIC_KEY__ = PROVIDER_PUBLIC_KEY ? _fbb.CreateString(PROVIDER_PUBLIC_KEY) : 0;
   auto SNAPSHOT_ID__ = SNAPSHOT_ID ? _fbb.CreateString(SNAPSHOT_ID) : 0;
@@ -894,7 +944,8 @@ inline ::flatbuffers::Offset<DSS> CreateDSSDirect(
       DELTA_ROWS,
       LAST_SYNC_STARTED_AT,
       REQUESTED_ACTION,
-      ORIGIN_ID__);
+      ORIGIN_ID__,
+      RETENTION);
 }
 
 inline const DSS *GetDSS(const void *buf) {

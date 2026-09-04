@@ -250,6 +250,11 @@ public struct DSS : IFlatbufferObject
   public ArraySegment<byte>? GetORIGIN_IDBytes() { return __p.__vector_as_arraysegment(108); }
 #endif
   public byte[] GetORIGIN_IDArray() { return __p.__vector_as_array<byte>(108); }
+  /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  /// previous batch of the lane with each new publication so the lane holds
+  /// one current set; ArchiveAll keeps and pins every publication so history
+  /// stays retrievable by content identifier.
+  public dssRetention RETENTION { get { int o = __p.__offset(110); return o != 0 ? (dssRetention)__p.bb.GetSbyte(o + __p.bb_pos) : dssRetention.ReplaceCurrent; } }
 
   public static Offset<DSS> CreateDSS(FlatBufferBuilder builder,
       dssSyncState STATUS = dssSyncState.IDLE,
@@ -304,8 +309,9 @@ public struct DSS : IFlatbufferObject
       ulong DELTA_ROWS = 0,
       ulong LAST_SYNC_STARTED_AT = 0,
       dssAction REQUESTED_ACTION = dssAction.None,
-      StringOffset ORIGIN_IDOffset = default(StringOffset)) {
-    builder.StartTable(53);
+      StringOffset ORIGIN_IDOffset = default(StringOffset),
+      dssRetention RETENTION = dssRetention.ReplaceCurrent) {
+    builder.StartTable(54);
     DSS.AddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT);
     DSS.AddDELTA_ROWS(builder, DELTA_ROWS);
     DSS.AddFLATSQL_MATERIALIZATION_MS(builder, FLATSQL_MATERIALIZATION_MS);
@@ -352,6 +358,7 @@ public struct DSS : IFlatbufferObject
     DSS.AddSNAPSHOT_ID(builder, SNAPSHOT_IDOffset);
     DSS.AddPROVIDER_PUBLIC_KEY(builder, PROVIDER_PUBLIC_KEYOffset);
     DSS.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
+    DSS.AddRETENTION(builder, RETENTION);
     DSS.AddREQUESTED_ACTION(builder, REQUESTED_ACTION);
     DSS.AddPIN_POLICY(builder, PIN_POLICY);
     DSS.AddSUBSCRIBED(builder, SUBSCRIBED);
@@ -362,7 +369,7 @@ public struct DSS : IFlatbufferObject
     return DSS.EndDSS(builder);
   }
 
-  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(53); }
+  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(54); }
   public static void AddSTATUS(FlatBufferBuilder builder, dssSyncState STATUS) { builder.AddSbyte(0, (sbyte)STATUS, 0); }
   public static void AddSYNCED_ROWS(FlatBufferBuilder builder, ulong SYNCED_ROWS) { builder.AddUlong(1, SYNCED_ROWS, 0); }
   public static void AddTOTAL_ROWS(FlatBufferBuilder builder, ulong TOTAL_ROWS) { builder.AddUlong(2, TOTAL_ROWS, 0); }
@@ -421,6 +428,7 @@ public struct DSS : IFlatbufferObject
   public static void AddLAST_SYNC_STARTED_AT(FlatBufferBuilder builder, ulong LAST_SYNC_STARTED_AT) { builder.AddUlong(50, LAST_SYNC_STARTED_AT, 0); }
   public static void AddREQUESTED_ACTION(FlatBufferBuilder builder, dssAction REQUESTED_ACTION) { builder.AddSbyte(51, (sbyte)REQUESTED_ACTION, 0); }
   public static void AddORIGIN_ID(FlatBufferBuilder builder, StringOffset ORIGIN_IDOffset) { builder.AddOffset(52, ORIGIN_IDOffset.Value, 0); }
+  public static void AddRETENTION(FlatBufferBuilder builder, dssRetention RETENTION) { builder.AddSbyte(53, (sbyte)RETENTION, 0); }
   public static Offset<DSS> EndDSS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DSS>(o);
@@ -487,6 +495,7 @@ public struct DSS : IFlatbufferObject
     _o.LAST_SYNC_STARTED_AT = this.LAST_SYNC_STARTED_AT;
     _o.REQUESTED_ACTION = this.REQUESTED_ACTION;
     _o.ORIGIN_ID = this.ORIGIN_ID;
+    _o.RETENTION = this.RETENTION;
   }
   public static Offset<DSS> Pack(FlatBufferBuilder builder, DSST _o) {
     if (_o == null) return default(Offset<DSS>);
@@ -577,7 +586,8 @@ public struct DSS : IFlatbufferObject
       _o.DELTA_ROWS,
       _o.LAST_SYNC_STARTED_AT,
       _o.REQUESTED_ACTION,
-      _ORIGIN_ID);
+      _ORIGIN_ID,
+      _o.RETENTION);
   }
 }
 
@@ -636,6 +646,7 @@ public class DSST
   public ulong LAST_SYNC_STARTED_AT { get; set; }
   public dssAction REQUESTED_ACTION { get; set; }
   public string ORIGIN_ID { get; set; }
+  public dssRetention RETENTION { get; set; }
 
   public DSST() {
     this.STATUS = dssSyncState.IDLE;
@@ -691,6 +702,7 @@ public class DSST
     this.LAST_SYNC_STARTED_AT = 0;
     this.REQUESTED_ACTION = dssAction.None;
     this.ORIGIN_ID = null;
+    this.RETENTION = dssRetention.ReplaceCurrent;
   }
   public static DSST DeserializeFromBinary(byte[] fbBuffer) {
     return DSS.GetRootAsDSS(new ByteBuffer(fbBuffer)).UnPack();
@@ -761,6 +773,7 @@ static public class DSSVerify
       && verifier.VerifyField(tablePos, 104 /*LAST_SYNC_STARTED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 106 /*REQUESTED_ACTION*/, 1 /*dssAction*/, 1, false)
       && verifier.VerifyString(tablePos, 108 /*ORIGIN_ID*/, false)
+      && verifier.VerifyField(tablePos, 110 /*RETENTION*/, 1 /*dssRetention*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

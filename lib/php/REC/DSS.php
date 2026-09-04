@@ -462,22 +462,35 @@ class DSS extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+    /// previous batch of the lane with each new publication so the lane holds
+    /// one current set; ArchiveAll keeps and pins every publication so history
+    /// stays retrievable by content identifier.
+    /**
+     * @return sbyte
+     */
+    public function getRETENTION()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dssRetention::ReplaceCurrent;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDSS(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(53);
+        $builder->StartObject(54);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DSS
      */
-    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR, $SCHEMA_NAME, $PROVIDER_ID, $SOURCE_NAME, $DATASET_ID, $CONNECTOR_ID, $CHANNEL_ID, $TOPIC, $SUBSCRIBED, $PIN_POLICY, $VISIBILITY, $ENCRYPTION_STATE, $GRANT_STATE, $FEED_HEAD, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $DELTA_ROWS, $LAST_SYNC_STARTED_AT, $REQUESTED_ACTION, $ORIGIN_ID)
+    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR, $SCHEMA_NAME, $PROVIDER_ID, $SOURCE_NAME, $DATASET_ID, $CONNECTOR_ID, $CHANNEL_ID, $TOPIC, $SUBSCRIBED, $PIN_POLICY, $VISIBILITY, $ENCRYPTION_STATE, $GRANT_STATE, $FEED_HEAD, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $DELTA_ROWS, $LAST_SYNC_STARTED_AT, $REQUESTED_ACTION, $ORIGIN_ID, $RETENTION)
     {
-        $builder->startObject(53);
+        $builder->startObject(54);
         self::addSTATUS($builder, $STATUS);
         self::addSYNCED_ROWS($builder, $SYNCED_ROWS);
         self::addTOTAL_ROWS($builder, $TOTAL_ROWS);
@@ -531,6 +544,7 @@ class DSS extends Table
         self::addLAST_SYNC_STARTED_AT($builder, $LAST_SYNC_STARTED_AT);
         self::addREQUESTED_ACTION($builder, $REQUESTED_ACTION);
         self::addORIGIN_ID($builder, $ORIGIN_ID);
+        self::addRETENTION($builder, $RETENTION);
         $o = $builder->endObject();
         return $o;
     }
@@ -1087,6 +1101,16 @@ class DSS extends Table
     public static function addORIGIN_ID(FlatBufferBuilder $builder, $ORIGIN_ID)
     {
         $builder->addOffsetX(52, $ORIGIN_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addRETENTION(FlatBufferBuilder $builder, $RETENTION)
+    {
+        $builder->addSbyteX(53, $RETENTION, 0);
     }
 
     /**

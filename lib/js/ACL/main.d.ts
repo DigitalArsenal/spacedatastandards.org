@@ -14,5 +14,6 @@ export * from './ProtectedDeliveryBinding.js';
 export * from './ProviderReputation.js';
 export * from './SpatialCoverage.js';
 export * from './STF.js';
+export * from './stfRetentionPolicy.js';
 export * from './TemporalCoverage.js';
 //# sourceMappingURL=main.d.ts.map

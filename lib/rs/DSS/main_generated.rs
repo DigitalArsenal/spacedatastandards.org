@@ -309,6 +309,95 @@ impl<'a> ::flatbuffers::Verifiable for dssAction {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for dssAction {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DSS_RETENTION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DSS_RETENTION: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DSS_RETENTION: [dssRetention; 2] = [
+  dssRetention::ReplaceCurrent,
+  dssRetention::ArchiveAll,
+];
+
+/// Retention rule for a lane's publications on the subscribing node. Append
+/// new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct dssRetention(pub i8);
+#[allow(non_upper_case_globals)]
+impl dssRetention {
+  /// Each new publication replaces the previous batch; the lane holds one
+  /// current set.
+  pub const ReplaceCurrent: Self = Self(0);
+  /// Every publication is kept and pinned; history stays retrievable.
+  pub const ArchiveAll: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ReplaceCurrent,
+    Self::ArchiveAll,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ReplaceCurrent => Some("ReplaceCurrent"),
+      Self::ArchiveAll => Some("ArchiveAll"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for dssRetention {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for dssRetention {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for dssRetention {
+    type Output = dssRetention;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for dssRetention {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for dssRetention {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for dssRetention {}
 pub enum DSSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -378,6 +467,7 @@ impl<'a> DSS<'a> {
   pub const VT_LAST_SYNC_STARTED_AT: ::flatbuffers::VOffsetT = 104;
   pub const VT_REQUESTED_ACTION: ::flatbuffers::VOffsetT = 106;
   pub const VT_ORIGIN_ID: ::flatbuffers::VOffsetT = 108;
+  pub const VT_RETENTION: ::flatbuffers::VOffsetT = 110;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -435,6 +525,7 @@ impl<'a> DSS<'a> {
     if let Some(x) = args.SNAPSHOT_ID { builder.add_SNAPSHOT_ID(x); }
     if let Some(x) = args.PROVIDER_PUBLIC_KEY { builder.add_PROVIDER_PUBLIC_KEY(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    builder.add_RETENTION(args.RETENTION);
     builder.add_REQUESTED_ACTION(args.REQUESTED_ACTION);
     builder.add_PIN_POLICY(args.PIN_POLICY);
     builder.add_SUBSCRIBED(args.SUBSCRIBED);
@@ -555,6 +646,7 @@ impl<'a> DSS<'a> {
     let ORIGIN_ID = self.ORIGIN_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let RETENTION = self.RETENTION();
     DSST {
       STATUS,
       SYNCED_ROWS,
@@ -609,6 +701,7 @@ impl<'a> DSS<'a> {
       LAST_SYNC_STARTED_AT,
       REQUESTED_ACTION,
       ORIGIN_ID,
+      RETENTION,
     }
   }
 
@@ -999,6 +1092,17 @@ impl<'a> DSS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DSS::VT_ORIGIN_ID, None)}
   }
+  /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  /// previous batch of the lane with each new publication so the lane holds
+  /// one current set; ArchiveAll keeps and pins every publication so history
+  /// stays retrievable by content identifier.
+  #[inline]
+  pub fn RETENTION(&self) -> dssRetention {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<dssRetention>(DSS::VT_RETENTION, Some(dssRetention::ReplaceCurrent)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for DSS<'_> {
@@ -1060,6 +1164,7 @@ impl ::flatbuffers::Verifiable for DSS<'_> {
      .visit_field::<u64>("LAST_SYNC_STARTED_AT", Self::VT_LAST_SYNC_STARTED_AT, false)?
      .visit_field::<dssAction>("REQUESTED_ACTION", Self::VT_REQUESTED_ACTION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN_ID", Self::VT_ORIGIN_ID, false)?
+     .visit_field::<dssRetention>("RETENTION", Self::VT_RETENTION, false)?
      .finish();
     Ok(())
   }
@@ -1118,6 +1223,7 @@ pub struct DSSArgs<'a> {
     pub LAST_SYNC_STARTED_AT: u64,
     pub REQUESTED_ACTION: dssAction,
     pub ORIGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RETENTION: dssRetention,
 }
 impl<'a> Default for DSSArgs<'a> {
   #[inline]
@@ -1176,6 +1282,7 @@ impl<'a> Default for DSSArgs<'a> {
       LAST_SYNC_STARTED_AT: 0,
       REQUESTED_ACTION: dssAction::None,
       ORIGIN_ID: None,
+      RETENTION: dssRetention::ReplaceCurrent,
     }
   }
 }
@@ -1398,6 +1505,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DSSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DSS::VT_ORIGIN_ID, ORIGIN_ID);
   }
   #[inline]
+  pub fn add_RETENTION(&mut self, RETENTION: dssRetention) {
+    self.fbb_.push_slot::<dssRetention>(DSS::VT_RETENTION, RETENTION, dssRetention::ReplaceCurrent);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DSSBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     DSSBuilder {
@@ -1468,6 +1579,7 @@ impl ::core::fmt::Debug for DSS<'_> {
       ds.field("LAST_SYNC_STARTED_AT", &self.LAST_SYNC_STARTED_AT());
       ds.field("REQUESTED_ACTION", &self.REQUESTED_ACTION());
       ds.field("ORIGIN_ID", &self.ORIGIN_ID());
+      ds.field("RETENTION", &self.RETENTION());
       ds.finish()
   }
 }
@@ -1527,6 +1639,7 @@ pub struct DSST {
   pub LAST_SYNC_STARTED_AT: u64,
   pub REQUESTED_ACTION: dssAction,
   pub ORIGIN_ID: Option<alloc::string::String>,
+  pub RETENTION: dssRetention,
 }
 impl Default for DSST {
   fn default() -> Self {
@@ -1584,6 +1697,7 @@ impl Default for DSST {
       LAST_SYNC_STARTED_AT: 0,
       REQUESTED_ACTION: dssAction::None,
       ORIGIN_ID: None,
+      RETENTION: dssRetention::ReplaceCurrent,
     }
   }
 }
@@ -1701,6 +1815,7 @@ impl DSST {
     let ORIGIN_ID = self.ORIGIN_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let RETENTION = self.RETENTION;
     DSS::create(_fbb, &DSSArgs{
       STATUS,
       SYNCED_ROWS,
@@ -1755,6 +1870,7 @@ impl DSST {
       LAST_SYNC_STARTED_AT,
       REQUESTED_ACTION,
       ORIGIN_ID,
+      RETENTION,
     })
   }
 }

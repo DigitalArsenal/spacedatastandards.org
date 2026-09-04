@@ -6,7 +6,6 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Storefront Listing - Data marketplace listing
 public struct STF : IFlatbufferObject
 {
   private Table __p;
@@ -170,6 +169,10 @@ public struct STF : IFlatbufferObject
   public ArraySegment<byte>? GetCATEGORIESBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
   public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(60); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
+  /// Retention rule the publisher recommends to subscribers of a dataset
+  /// listing: ReplaceCurrent when each publication is a complete current set,
+  /// ArchiveAll when publications accumulate history.
+  public stfRetentionPolicy RECOMMENDED_RETENTION { get { int o = __p.__offset(62); return o != 0 ? (stfRetentionPolicy)__p.bb.GetSbyte(o + __p.bb_pos) : stfRetentionPolicy.ReplaceCurrent; } }
 
   public static Offset<STF> CreateSTF(FlatBufferBuilder builder,
       StringOffset LISTING_IDOffset = default(StringOffset),
@@ -200,8 +203,9 @@ public struct STF : IFlatbufferObject
       StringOffset LICENSEOffset = default(StringOffset),
       StringOffset SOURCE_PEER_IDOffset = default(StringOffset),
       capabilityClass PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED,
-      VectorOffset CATEGORIESOffset = default(VectorOffset)) {
-    builder.StartTable(29);
+      VectorOffset CATEGORIESOffset = default(VectorOffset),
+      stfRetentionPolicy RECOMMENDED_RETENTION = stfRetentionPolicy.ReplaceCurrent) {
+    builder.StartTable(30);
     STF.AddEXPIRES_AT(builder, EXPIRES_AT);
     STF.AddUPDATED_AT(builder, UPDATED_AT);
     STF.AddCREATED_AT(builder, CREATED_AT);
@@ -226,6 +230,7 @@ public struct STF : IFlatbufferObject
     STF.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
     STF.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
     STF.AddLISTING_ID(builder, LISTING_IDOffset);
+    STF.AddRECOMMENDED_RETENTION(builder, RECOMMENDED_RETENTION);
     STF.AddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY);
     STF.AddLISTING_KIND(builder, LISTING_KIND);
     STF.AddACTIVE(builder, ACTIVE);
@@ -234,7 +239,7 @@ public struct STF : IFlatbufferObject
     return STF.EndSTF(builder);
   }
 
-  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(30); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(0, LISTING_IDOffset.Value, 0); }
   public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(1, PROVIDER_PEER_IDOffset.Value, 0); }
   public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(2, PROVIDER_EPM_CIDOffset.Value, 0); }
@@ -299,6 +304,7 @@ public struct STF : IFlatbufferObject
   public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<capabilityClass> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCATEGORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<capabilityClass>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCATEGORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddRECOMMENDED_RETENTION(FlatBufferBuilder builder, stfRetentionPolicy RECOMMENDED_RETENTION) { builder.AddSbyte(29, (sbyte)RECOMMENDED_RETENTION, 0); }
   public static Offset<STF> EndSTF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LISTING_ID
@@ -350,6 +356,7 @@ public struct STF : IFlatbufferObject
     _o.PRIMARY_CATEGORY = this.PRIMARY_CATEGORY;
     _o.CATEGORIES = new List<capabilityClass>();
     for (var _j = 0; _j < this.CATEGORIESLength; ++_j) {_o.CATEGORIES.Add(this.CATEGORIES(_j));}
+    _o.RECOMMENDED_RETENTION = this.RECOMMENDED_RETENTION;
   }
   public static Offset<STF> Pack(FlatBufferBuilder builder, STFT _o) {
     if (_o == null) return default(Offset<STF>);
@@ -434,7 +441,8 @@ public struct STF : IFlatbufferObject
       _LICENSE,
       _SOURCE_PEER_ID,
       _o.PRIMARY_CATEGORY,
-      _CATEGORIES);
+      _CATEGORIES,
+      _o.RECOMMENDED_RETENTION);
   }
 }
 
@@ -469,6 +477,7 @@ public class STFT
   public string SOURCE_PEER_ID { get; set; }
   public capabilityClass PRIMARY_CATEGORY { get; set; }
   public List<capabilityClass> CATEGORIES { get; set; }
+  public stfRetentionPolicy RECOMMENDED_RETENTION { get; set; }
 
   public STFT() {
     this.LISTING_ID = null;
@@ -500,6 +509,7 @@ public class STFT
     this.SOURCE_PEER_ID = null;
     this.PRIMARY_CATEGORY = capabilityClass.UNSPECIFIED;
     this.CATEGORIES = null;
+    this.RECOMMENDED_RETENTION = stfRetentionPolicy.ReplaceCurrent;
   }
   public static STFT DeserializeFromBinary(byte[] fbBuffer) {
     return STF.GetRootAsSTF(new ByteBuffer(fbBuffer)).UnPack();
@@ -546,6 +556,7 @@ static public class STFVerify
       && verifier.VerifyString(tablePos, 56 /*SOURCE_PEER_ID*/, false)
       && verifier.VerifyField(tablePos, 58 /*PRIMARY_CATEGORY*/, 1 /*capabilityClass*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 60 /*CATEGORIES*/, 1 /*capabilityClass*/, false)
+      && verifier.VerifyField(tablePos, 62 /*RECOMMENDED_RETENTION*/, 1 /*stfRetentionPolicy*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

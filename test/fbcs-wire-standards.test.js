@@ -231,3 +231,16 @@ describe("dashboard wire standards round-trip through the generated JS", () => {
     assert.equal(sriBack.BYTE_LENGTH, 512);
   });
 });
+
+describe("subscription retention (1.210.0)", () => {
+  it("$DSS defaults RETENTION to ReplaceCurrent and round-trips ArchiveAll", () => {
+    const d = new DSS.DSST();
+    d.SCHEMA_NAME = "OMM";
+    d.SUBSCRIBED = true;
+    const dflt = roundTrip(d, DSS.DSS.finishSizePrefixedDSSBuffer, DSS.DSS.getSizePrefixedRootAsDSS, "$DSS");
+    assert.equal(dflt.RETENTION, DSS.dssRetention.ReplaceCurrent);
+    d.RETENTION = DSS.dssRetention.ArchiveAll;
+    const back = roundTrip(d, DSS.DSS.finishSizePrefixedDSSBuffer, DSS.DSS.getSizePrefixedRootAsDSS, "$DSS");
+    assert.equal(back.RETENTION, DSS.dssRetention.ArchiveAll);
+  });
+});

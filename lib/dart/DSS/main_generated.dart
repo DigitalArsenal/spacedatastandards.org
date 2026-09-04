@@ -137,6 +137,42 @@ class _dssActionReader extends fb.Reader<dssAction> {
       dssAction.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Retention rule for a lane's publications on the subscribing node. Append
+///  new values only; never reorder or reuse existing values.
+enum dssRetention {
+  ReplaceCurrent(0),
+  ArchiveAll(1);
+
+  final int value;
+  const dssRetention(this.value);
+
+  factory dssRetention.fromValue(int value) {
+    switch (value) {
+      case 0: return dssRetention.ReplaceCurrent;
+      case 1: return dssRetention.ArchiveAll;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static dssRetention? _createOrNull(int? value) =>
+      value == null ? null : dssRetention.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<dssRetention> reader = _dssRetentionReader();
+}
+
+class _dssRetentionReader extends fb.Reader<dssRetention> {
+  const _dssRetentionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  dssRetention read(fb.BufferContext bc, int offset) =>
+      dssRetention.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 class DSS {
   DSS._(this._bc, this._bcOffset);
   factory DSS(List<int> bytes) {
@@ -264,10 +300,15 @@ class DSS {
   ///  Upstream publisher of the lane's records.
   String? get ORIGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 108);
   String? get originId => ORIGIN_ID;
+  ///  How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  ///  previous batch of the lane with each new publication so the lane holds
+  ///  one current set; ArchiveAll keeps and pins every publication so history
+  ///  stays retrievable by content identifier.
+  dssRetention get RETENTION => dssRetention.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 110, 0));
 
   @override
   String toString() {
-    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}, schemaName: ${schemaName}, providerId: ${providerId}, sourceName: ${sourceName}, datasetId: ${datasetId}, connectorId: ${connectorId}, channelId: ${channelId}, TOPIC: ${TOPIC}, SUBSCRIBED: ${SUBSCRIBED}, pinPolicy: ${pinPolicy}, VISIBILITY: ${VISIBILITY}, encryptionState: ${encryptionState}, grantState: ${grantState}, feedHead: ${feedHead}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, deltaRows: ${deltaRows}, lastSyncStartedAt: ${lastSyncStartedAt}, requestedAction: ${requestedAction}, originId: ${originId}}';
+    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}, schemaName: ${schemaName}, providerId: ${providerId}, sourceName: ${sourceName}, datasetId: ${datasetId}, connectorId: ${connectorId}, channelId: ${channelId}, TOPIC: ${TOPIC}, SUBSCRIBED: ${SUBSCRIBED}, pinPolicy: ${pinPolicy}, VISIBILITY: ${VISIBILITY}, encryptionState: ${encryptionState}, grantState: ${grantState}, feedHead: ${feedHead}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, deltaRows: ${deltaRows}, lastSyncStartedAt: ${lastSyncStartedAt}, requestedAction: ${requestedAction}, originId: ${originId}, RETENTION: ${RETENTION}}';
   }
 }
 
@@ -285,7 +326,7 @@ class DSSBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(53);
+    fbBuilder.startTable(54);
   }
 
   int addStatus(dssSyncState? STATUS) {
@@ -500,6 +541,10 @@ class DSSBuilder {
     fbBuilder.addOffset(52, offset);
     return fbBuilder.offset;
   }
+  int addRetention(dssRetention? RETENTION) {
+    fbBuilder.addInt8(53, RETENTION?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -560,6 +605,7 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
   final int? _LAST_SYNC_STARTED_AT;
   final dssAction? _REQUESTED_ACTION;
   final String? _ORIGIN_ID;
+  final dssRetention? _RETENTION;
 
   DSSObjectBuilder({
     dssSyncState? STATUS,
@@ -661,6 +707,7 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     dssAction? requestedAction,
     String? ORIGIN_ID,
     String? originId,
+    dssRetention? RETENTION,
   })
       : _STATUS = STATUS,
         _SYNCED_ROWS = syncedRows ?? SYNCED_ROWS,
@@ -714,7 +761,8 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         _DELTA_ROWS = deltaRows ?? DELTA_ROWS,
         _LAST_SYNC_STARTED_AT = lastSyncStartedAt ?? LAST_SYNC_STARTED_AT,
         _REQUESTED_ACTION = requestedAction ?? REQUESTED_ACTION,
-        _ORIGIN_ID = originId ?? ORIGIN_ID;
+        _ORIGIN_ID = originId ?? ORIGIN_ID,
+        _RETENTION = RETENTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -775,7 +823,7 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LAST_PNM_CID!);
     final int? ORIGIN_IDOffset = _ORIGIN_ID == null ? null
         : fbBuilder.writeString(_ORIGIN_ID!);
-    fbBuilder.startTable(53);
+    fbBuilder.startTable(54);
     fbBuilder.addInt8(0, _STATUS?.value);
     fbBuilder.addUint64(1, _SYNCED_ROWS);
     fbBuilder.addUint64(2, _TOTAL_ROWS);
@@ -829,6 +877,7 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(50, _LAST_SYNC_STARTED_AT);
     fbBuilder.addInt8(51, _REQUESTED_ACTION?.value);
     fbBuilder.addOffset(52, ORIGIN_IDOffset);
+    fbBuilder.addInt8(53, _RETENTION?.value);
     return fbBuilder.endTable();
   }
 

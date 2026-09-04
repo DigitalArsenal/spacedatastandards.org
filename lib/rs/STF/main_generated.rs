@@ -314,6 +314,93 @@ impl<'a> ::flatbuffers::Verifiable for listingCategory {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for listingCategory {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_STF_RETENTION_POLICY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_STF_RETENTION_POLICY: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_STF_RETENTION_POLICY: [stfRetentionPolicy; 2] = [
+  stfRetentionPolicy::ReplaceCurrent,
+  stfRetentionPolicy::ArchiveAll,
+];
+
+/// Storefront Listing - Data marketplace listing
+/// Retention rule a publisher recommends for a dataset listing. Append new
+/// values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct stfRetentionPolicy(pub i8);
+#[allow(non_upper_case_globals)]
+impl stfRetentionPolicy {
+  pub const ReplaceCurrent: Self = Self(0);
+  pub const ArchiveAll: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ReplaceCurrent,
+    Self::ArchiveAll,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ReplaceCurrent => Some("ReplaceCurrent"),
+      Self::ArchiveAll => Some("ArchiveAll"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for stfRetentionPolicy {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for stfRetentionPolicy {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for stfRetentionPolicy {
+    type Output = stfRetentionPolicy;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for stfRetentionPolicy {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for stfRetentionPolicy {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for stfRetentionPolicy {}
 pub enum GrantFieldStreamPolicyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -2291,7 +2378,6 @@ impl PricingTierT {
 pub enum STFOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Storefront Listing - Data marketplace listing
 pub struct STF<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -2334,6 +2420,7 @@ impl<'a> STF<'a> {
   pub const VT_SOURCE_PEER_ID: ::flatbuffers::VOffsetT = 56;
   pub const VT_PRIMARY_CATEGORY: ::flatbuffers::VOffsetT = 58;
   pub const VT_CATEGORIES: ::flatbuffers::VOffsetT = 60;
+  pub const VT_RECOMMENDED_RETENTION: ::flatbuffers::VOffsetT = 62;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2369,6 +2456,7 @@ impl<'a> STF<'a> {
     if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
+    builder.add_RECOMMENDED_RETENTION(args.RECOMMENDED_RETENTION);
     builder.add_PRIMARY_CATEGORY(args.PRIMARY_CATEGORY);
     builder.add_LISTING_KIND(args.LISTING_KIND);
     builder.add_ACTIVE(args.ACTIVE);
@@ -2448,6 +2536,7 @@ impl<'a> STF<'a> {
     let CATEGORIES = self.CATEGORIES().map(|x| {
       x.into_iter().collect()
     });
+    let RECOMMENDED_RETENTION = self.RECOMMENDED_RETENTION();
     STFT {
       LISTING_ID,
       PROVIDER_PEER_ID,
@@ -2478,6 +2567,7 @@ impl<'a> STF<'a> {
       SOURCE_PEER_ID,
       PRIMARY_CATEGORY,
       CATEGORIES,
+      RECOMMENDED_RETENTION,
     }
   }
 
@@ -2727,6 +2817,16 @@ impl<'a> STF<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, capabilityClass>>>(STF::VT_CATEGORIES, None)}
   }
+  /// Retention rule the publisher recommends to subscribers of a dataset
+  /// listing: ReplaceCurrent when each publication is a complete current set,
+  /// ArchiveAll when publications accumulate history.
+  #[inline]
+  pub fn RECOMMENDED_RETENTION(&self) -> stfRetentionPolicy {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<stfRetentionPolicy>(STF::VT_RECOMMENDED_RETENTION, Some(stfRetentionPolicy::ReplaceCurrent)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for STF<'_> {
@@ -2764,6 +2864,7 @@ impl ::flatbuffers::Verifiable for STF<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_PEER_ID", Self::VT_SOURCE_PEER_ID, false)?
      .visit_field::<capabilityClass>("PRIMARY_CATEGORY", Self::VT_PRIMARY_CATEGORY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, capabilityClass>>>("CATEGORIES", Self::VT_CATEGORIES, false)?
+     .visit_field::<stfRetentionPolicy>("RECOMMENDED_RETENTION", Self::VT_RECOMMENDED_RETENTION, false)?
      .finish();
     Ok(())
   }
@@ -2798,6 +2899,7 @@ pub struct STFArgs<'a> {
     pub SOURCE_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PRIMARY_CATEGORY: capabilityClass,
     pub CATEGORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, capabilityClass>>>,
+    pub RECOMMENDED_RETENTION: stfRetentionPolicy,
 }
 impl<'a> Default for STFArgs<'a> {
   #[inline]
@@ -2832,6 +2934,7 @@ impl<'a> Default for STFArgs<'a> {
       SOURCE_PEER_ID: None,
       PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
       CATEGORIES: None,
+      RECOMMENDED_RETENTION: stfRetentionPolicy::ReplaceCurrent,
     }
   }
 }
@@ -2958,6 +3061,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STFBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_CATEGORIES, CATEGORIES);
   }
   #[inline]
+  pub fn add_RECOMMENDED_RETENTION(&mut self, RECOMMENDED_RETENTION: stfRetentionPolicy) {
+    self.fbb_.push_slot::<stfRetentionPolicy>(STF::VT_RECOMMENDED_RETENTION, RECOMMENDED_RETENTION, stfRetentionPolicy::ReplaceCurrent);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> STFBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     STFBuilder {
@@ -3007,6 +3114,7 @@ impl ::core::fmt::Debug for STF<'_> {
       ds.field("SOURCE_PEER_ID", &self.SOURCE_PEER_ID());
       ds.field("PRIMARY_CATEGORY", &self.PRIMARY_CATEGORY());
       ds.field("CATEGORIES", &self.CATEGORIES());
+      ds.field("RECOMMENDED_RETENTION", &self.RECOMMENDED_RETENTION());
       ds.finish()
   }
 }
@@ -3042,6 +3150,7 @@ pub struct STFT {
   pub SOURCE_PEER_ID: Option<alloc::string::String>,
   pub PRIMARY_CATEGORY: capabilityClass,
   pub CATEGORIES: Option<alloc::vec::Vec<capabilityClass>>,
+  pub RECOMMENDED_RETENTION: stfRetentionPolicy,
 }
 impl Default for STFT {
   fn default() -> Self {
@@ -3075,6 +3184,7 @@ impl Default for STFT {
       SOURCE_PEER_ID: None,
       PRIMARY_CATEGORY: capabilityClass::UNSPECIFIED,
       CATEGORIES: None,
+      RECOMMENDED_RETENTION: stfRetentionPolicy::ReplaceCurrent,
     }
   }
 }
@@ -3153,6 +3263,7 @@ impl STFT {
     let CATEGORIES = self.CATEGORIES.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let RECOMMENDED_RETENTION = self.RECOMMENDED_RETENTION;
     STF::create(_fbb, &STFArgs{
       LISTING_ID,
       PROVIDER_PEER_ID,
@@ -3183,6 +3294,7 @@ impl STFT {
       SOURCE_PEER_ID,
       PRIMARY_CATEGORY,
       CATEGORIES,
+      RECOMMENDED_RETENTION,
     })
   }
 }

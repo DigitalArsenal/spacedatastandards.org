@@ -18,4 +18,5 @@ export * from './PUR.js';
 export * from './purchaseLifecycleStatus.js';
 export * from './SpatialCoverage.js';
 export * from './STF.js';
+export * from './stfRetentionPolicy.js';
 export * from './TemporalCoverage.js';

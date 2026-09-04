@@ -508,6 +508,17 @@ class DSS : Table() {
         }
     val originIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(108, 1)
     fun originIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 108, 1)
+    /**
+     * How this node keeps a lane's publications. ReplaceCurrent supersedes the
+     * previous batch of the lane with each new publication so the lane holds
+     * one current set; ArchiveAll keeps and pins every publication so history
+     * stays retrievable by content identifier.
+     */
+    val retention : Byte
+        get() {
+            val o = __offset(110)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDSS(_bb: ByteBuffer): DSS = getRootAsDSS(_bb, DSS())
@@ -516,8 +527,8 @@ class DSS : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DSS")
-        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int) : Int {
-            builder.startTable(53)
+        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int, retention: Byte) : Int {
+            builder.startTable(54)
             addLASTSYNCSTARTEDAT(builder, lastSyncStartedAt)
             addDELTAROWS(builder, deltaRows)
             addFLATSQLMATERIALIZATIONMS(builder, flatsqlMaterializationMs)
@@ -564,6 +575,7 @@ class DSS : Table() {
             addSNAPSHOTID(builder, snapshotIdOffset)
             addPROVIDERPUBLICKEY(builder, providerPublicKeyOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addRETENTION(builder, retention)
             addREQUESTEDACTION(builder, requestedAction)
             addPINPOLICY(builder, pinPolicy)
             addSUBSCRIBED(builder, subscribed)
@@ -573,7 +585,7 @@ class DSS : Table() {
             addSTATUS(builder, status)
             return endDSS(builder)
         }
-        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(53)
+        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(54)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addSYNCEDROWS(builder: FlatBufferBuilder, syncedRows: ULong) = builder.addLong(1, syncedRows.toLong(), 0)
         fun addTOTALROWS(builder: FlatBufferBuilder, totalRows: ULong) = builder.addLong(2, totalRows.toLong(), 0)
@@ -635,6 +647,7 @@ class DSS : Table() {
         fun addLASTSYNCSTARTEDAT(builder: FlatBufferBuilder, lastSyncStartedAt: ULong) = builder.addLong(50, lastSyncStartedAt.toLong(), 0)
         fun addREQUESTEDACTION(builder: FlatBufferBuilder, requestedAction: Byte) = builder.addByte(51, requestedAction, 0)
         fun addORIGINID(builder: FlatBufferBuilder, originId: Int) = builder.addOffset(52, originId, 0)
+        fun addRETENTION(builder: FlatBufferBuilder, retention: Byte) = builder.addByte(53, retention, 0)
         fun endDSS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

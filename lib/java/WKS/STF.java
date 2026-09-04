@@ -16,9 +16,6 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-/**
- * Storefront Listing - Data marketplace listing
- */
 @SuppressWarnings("unused")
 public final class STF extends com.google.flatbuffers.Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
@@ -207,6 +204,12 @@ public final class STF extends com.google.flatbuffers.Table {
   public ByteVector categoriesVector(ByteVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer CATEGORIESAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
   public ByteBuffer CATEGORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Retention rule the publisher recommends to subscribers of a dataset
+   * listing: ReplaceCurrent when each publication is a complete current set,
+   * ArchiveAll when publications accumulate history.
+   */
+  public byte RECOMMENDED_RETENTION() { int o = __offset(62); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createSTF(FlatBufferBuilder builder,
       int LISTING_IDOffset,
@@ -237,8 +240,9 @@ public final class STF extends com.google.flatbuffers.Table {
       int LICENSEOffset,
       int SOURCE_PEER_IDOffset,
       int PRIMARY_CATEGORY,
-      int CATEGORIESOffset) {
-    builder.startTable(29);
+      int CATEGORIESOffset,
+      byte RECOMMENDED_RETENTION) {
+    builder.startTable(30);
     STF.addExpiresAt(builder, EXPIRES_AT);
     STF.addUpdatedAt(builder, UPDATED_AT);
     STF.addCreatedAt(builder, CREATED_AT);
@@ -263,6 +267,7 @@ public final class STF extends com.google.flatbuffers.Table {
     STF.addProviderEpmCid(builder, PROVIDER_EPM_CIDOffset);
     STF.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
     STF.addListingId(builder, LISTING_IDOffset);
+    STF.addRecommendedRetention(builder, RECOMMENDED_RETENTION);
     STF.addPrimaryCategory(builder, PRIMARY_CATEGORY);
     STF.addListingKind(builder, LISTING_KIND);
     STF.addActive(builder, ACTIVE);
@@ -271,7 +276,7 @@ public final class STF extends com.google.flatbuffers.Table {
     return STF.endSTF(builder);
   }
 
-  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(30); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(0, LISTING_IDOffset, 0); }
   public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(1, PROVIDER_PEER_IDOffset, 0); }
   public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(2, PROVIDER_EPM_CIDOffset, 0); }
@@ -318,6 +323,7 @@ public final class STF extends com.google.flatbuffers.Table {
   public static int createCategoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createCategoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startCategoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addRecommendedRetention(FlatBufferBuilder builder, byte RECOMMENDED_RETENTION) { builder.addByte(29, RECOMMENDED_RETENTION, 0); }
   public static int endSTF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LISTING_ID

@@ -6,7 +6,6 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Storefront Listing - Data marketplace listing
 class STF(object):
     __slots__ = ['_tab']
 
@@ -404,8 +403,18 @@ class STF(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
+    # Retention rule the publisher recommends to subscribers of a dataset
+    # listing: ReplaceCurrent when each publication is a complete current set,
+    # ArchiveAll when publications accumulate history.
+    # STF
+    def RECOMMENDED_RETENTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def STFStart(builder):
-    builder.StartObject(29)
+    builder.StartObject(30)
 
 def Start(builder):
     STFStart(builder)
@@ -680,6 +689,12 @@ def STFCreateCATEGORIESVector(builder, data):
 def CreateCATEGORIESVector(builder, data):
     STFCreateCATEGORIESVector(builder, data)
 
+def STFAddRECOMMENDED_RETENTION(builder, RECOMMENDED_RETENTION):
+    builder.PrependInt8Slot(29, RECOMMENDED_RETENTION, 0)
+
+def AddRECOMMENDED_RETENTION(builder, RECOMMENDED_RETENTION):
+    STFAddRECOMMENDED_RETENTION(builder, RECOMMENDED_RETENTION)
+
 def STFEnd(builder):
     return builder.EndObject()
 
@@ -729,6 +744,7 @@ class STFT(object):
         SOURCE_PEER_ID = None,
         PRIMARY_CATEGORY = 0,
         CATEGORIES = None,
+        RECOMMENDED_RETENTION = 0,
     ):
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
@@ -759,6 +775,7 @@ class STFT(object):
         self.SOURCE_PEER_ID = SOURCE_PEER_ID  # type: Optional[str]
         self.PRIMARY_CATEGORY = PRIMARY_CATEGORY  # type: int
         self.CATEGORIES = CATEGORIES  # type: Optional[List[int]]
+        self.RECOMMENDED_RETENTION = RECOMMENDED_RETENTION  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -847,6 +864,7 @@ class STFT(object):
                     self.CATEGORIES.append(STF.CATEGORIES(i))
             else:
                 self.CATEGORIES = STF.CATEGORIESAsNumpy()
+        self.RECOMMENDED_RETENTION = STF.RECOMMENDED_RETENTION()
 
     # STFT
     def Pack(self, builder):
@@ -979,5 +997,6 @@ class STFT(object):
         STFAddPRIMARY_CATEGORY(builder, self.PRIMARY_CATEGORY)
         if self.CATEGORIES is not None:
             STFAddCATEGORIES(builder, CATEGORIES)
+        STFAddRECOMMENDED_RETENTION(builder, self.RECOMMENDED_RETENTION)
         STF = STFEnd(builder)
         return STF

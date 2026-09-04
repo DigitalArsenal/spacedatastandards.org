@@ -6,7 +6,6 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Storefront Listing - Data marketplace listing
 class STF extends Table
 {
     /**
@@ -398,22 +397,34 @@ class STF extends Table
         return $this->__vector_as_bytes(60);
     }
 
+    /// Retention rule the publisher recommends to subscribers of a dataset
+    /// listing: ReplaceCurrent when each publication is a complete current set,
+    /// ArchiveAll when publications accumulate history.
+    /**
+     * @return sbyte
+     */
+    public function getRECOMMENDED_RETENTION()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \stfRetentionPolicy::ReplaceCurrent;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSTF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(29);
+        $builder->StartObject(30);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return STF
      */
-    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE, $LISTING_KIND, $TAGS, $SAMPLE_RECORD_COUNT, $DELIVERY_METHODS, $PROTECTED_DELIVERY, $REPUTATION, $VERSION, $EXPIRES_AT, $TERMS_CID, $LICENSE, $SOURCE_PEER_ID, $PRIMARY_CATEGORY, $CATEGORIES)
+    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE, $LISTING_KIND, $TAGS, $SAMPLE_RECORD_COUNT, $DELIVERY_METHODS, $PROTECTED_DELIVERY, $REPUTATION, $VERSION, $EXPIRES_AT, $TERMS_CID, $LICENSE, $SOURCE_PEER_ID, $PRIMARY_CATEGORY, $CATEGORIES, $RECOMMENDED_RETENTION)
     {
-        $builder->startObject(29);
+        $builder->startObject(30);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_EPM_CID($builder, $PROVIDER_EPM_CID);
@@ -443,6 +454,7 @@ class STF extends Table
         self::addSOURCE_PEER_ID($builder, $SOURCE_PEER_ID);
         self::addPRIMARY_CATEGORY($builder, $PRIMARY_CATEGORY);
         self::addCATEGORIES($builder, $CATEGORIES);
+        self::addRECOMMENDED_RETENTION($builder, $RECOMMENDED_RETENTION);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LISTING_ID
         $builder->required($o, 6);  // PROVIDER_PEER_ID
@@ -906,6 +918,16 @@ class STF extends Table
     public static function startCATEGORIESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addRECOMMENDED_RETENTION(FlatBufferBuilder $builder, $RECOMMENDED_RETENTION)
+    {
+        $builder->addSbyteX(29, $RECOMMENDED_RETENTION, 0);
     }
 
     /**
