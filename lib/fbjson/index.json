@@ -152767,6 +152767,69 @@
                         }
                     }
                 },
+                "clmObjectKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Satellite",
+                        "Site",
+                        "Sensor",
+                        "Service"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated."
+                        },
+                        "Satellite": {
+                            "value": 1,
+                            "description": "A space object carried in a space object catalog."
+                        },
+                        "Site": {
+                            "value": 2,
+                            "description": "A fixed or mobile ground site."
+                        },
+                        "Sensor": {
+                            "value": 3,
+                            "description": "An observing sensor."
+                        },
+                        "Service": {
+                            "value": 4,
+                            "description": "A service offering published as a listing."
+                        }
+                    }
+                },
+                "clmClaimRole": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Owner",
+                        "Operator",
+                        "Provider"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated."
+                        },
+                        "Owner": {
+                            "value": 1,
+                            "description": "The claimant holds title to the object."
+                        },
+                        "Operator": {
+                            "value": 2,
+                            "description": "The claimant operates or commands the object, with or without title."
+                        },
+                        "Provider": {
+                            "value": 3,
+                            "description": "The claimant provides the service the claim references."
+                        }
+                    }
+                },
                 "cltuPduType": {
                     "type": "string",
                     "enum": [
@@ -170662,7 +170725,8 @@
                         "NST",
                         "QRP",
                         "TCT",
-                        "WXF"
+                        "WXF",
+                        "CLM"
                     ]
                 },
                 "LKS": {
@@ -186458,6 +186522,183 @@
                             "x-flatbuffer-type": "string"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "CLMCountersignature": {
+                    "type": "object",
+                    "description": "One party's attestation to a claim, signed over the same canonical form the\nclaimant signed.",
+                    "properties": {
+                        "PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the countersigning party.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the countersigning party's identity record.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SIGNED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the countersignature was made.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Countersignature over the canonical claim form.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        }
+                    },
+                    "required": [
+                        "PEER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "CLM": {
+                    "type": "object",
+                    "description": "Ownership Claim Record - one claimant's signed statement over one object.",
+                    "properties": {
+                        "CLAIM_ID": {
+                            "type": "string",
+                            "description": "Stable claim identifier, normally\n\"<CLAIMANT_PEER_ID>:<OBJECT_KIND>:<OBJECT_ID>\".",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "CLAIMANT_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the claiming party.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "CLAIMANT_PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the claiming party's identity record.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OBJECT_KIND": {
+                            "$ref": "#/definitions/clmObjectKind",
+                            "description": "Class of object being claimed.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated."
+                                },
+                                "Satellite": {
+                                    "value": 1,
+                                    "description": "A space object carried in a space object catalog."
+                                },
+                                "Site": {
+                                    "value": 2,
+                                    "description": "A fixed or mobile ground site."
+                                },
+                                "Sensor": {
+                                    "value": 3,
+                                    "description": "An observing sensor."
+                                },
+                                "Service": {
+                                    "value": 4,
+                                    "description": "A service offering published as a listing."
+                                }
+                            }
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Identifier of the claimed object, in the form its own standard publishes:\nthe catalog number or international designator for a space object, the\nsite identifier for a site, the sensor identifier for a sensor, the\nlisting content identifier for a service.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Human-readable name of the claimed object at the time of the claim.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/clmClaimRole",
+                            "description": "Relationship asserted over the object.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated."
+                                },
+                                "Owner": {
+                                    "value": 1,
+                                    "description": "The claimant holds title to the object."
+                                },
+                                "Operator": {
+                                    "value": 2,
+                                    "description": "The claimant operates or commands the object, with or without title."
+                                },
+                                "Provider": {
+                                    "value": 3,
+                                    "description": "The claimant provides the service the claim references."
+                                }
+                            }
+                        },
+                        "STATEMENT": {
+                            "type": "string",
+                            "description": "Free-text statement by the claimant, in the claimant's own words.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EVIDENCE_URL": {
+                            "type": "string",
+                            "description": "Locator of publicly checkable evidence supporting the claim.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the claim was first made.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this record was last updated.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the claim from the current set.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Claimant signature over the canonical claim form with SIGNATURE and\nCOUNTERSIGNATURES cleared.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "COUNTERSIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CLMCountersignature"
+                            },
+                            "description": "Attestations to this claim by other parties.",
+                            "x-flatbuffer-type": "[CLMCountersignature]"
+                        }
+                    },
+                    "required": [
+                        "CLAIM_ID",
+                        "CLAIMANT_PEER_ID",
+                        "OBJECT_ID"
+                    ],
                     "additionalProperties": false
                 },
                 "CLT": {
@@ -256324,6 +256565,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/WXF"
+                                },
+                                {
+                                    "$ref": "#/definitions/CLM"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)",
@@ -382448,6 +382692,254 @@
             "$ref": "#/definitions/SWR",
             "x-flatbuffer-root-type": "SWR",
             "x-flatbuffer-file-identifier": "$SWR"
+        },
+        "CLM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "clmObjectKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Satellite",
+                        "Site",
+                        "Sensor",
+                        "Service"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated."
+                        },
+                        "Satellite": {
+                            "value": 1,
+                            "description": "A space object carried in a space object catalog."
+                        },
+                        "Site": {
+                            "value": 2,
+                            "description": "A fixed or mobile ground site."
+                        },
+                        "Sensor": {
+                            "value": 3,
+                            "description": "An observing sensor."
+                        },
+                        "Service": {
+                            "value": 4,
+                            "description": "A service offering published as a listing."
+                        }
+                    }
+                },
+                "clmClaimRole": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Owner",
+                        "Operator",
+                        "Provider"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated."
+                        },
+                        "Owner": {
+                            "value": 1,
+                            "description": "The claimant holds title to the object."
+                        },
+                        "Operator": {
+                            "value": 2,
+                            "description": "The claimant operates or commands the object, with or without title."
+                        },
+                        "Provider": {
+                            "value": 3,
+                            "description": "The claimant provides the service the claim references."
+                        }
+                    }
+                },
+                "CLMCountersignature": {
+                    "type": "object",
+                    "description": "One party's attestation to a claim, signed over the same canonical form the\nclaimant signed.",
+                    "properties": {
+                        "PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the countersigning party.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the countersigning party's identity record.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SIGNED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the countersignature was made.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Countersignature over the canonical claim form.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        }
+                    },
+                    "required": [
+                        "PEER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "CLM": {
+                    "type": "object",
+                    "description": "Ownership Claim Record - one claimant's signed statement over one object.",
+                    "properties": {
+                        "CLAIM_ID": {
+                            "type": "string",
+                            "description": "Stable claim identifier, normally\n\"<CLAIMANT_PEER_ID>:<OBJECT_KIND>:<OBJECT_ID>\".",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "CLAIMANT_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the claiming party.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "CLAIMANT_PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the claiming party's identity record.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OBJECT_KIND": {
+                            "$ref": "#/definitions/clmObjectKind",
+                            "description": "Class of object being claimed.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated."
+                                },
+                                "Satellite": {
+                                    "value": 1,
+                                    "description": "A space object carried in a space object catalog."
+                                },
+                                "Site": {
+                                    "value": 2,
+                                    "description": "A fixed or mobile ground site."
+                                },
+                                "Sensor": {
+                                    "value": 3,
+                                    "description": "An observing sensor."
+                                },
+                                "Service": {
+                                    "value": 4,
+                                    "description": "A service offering published as a listing."
+                                }
+                            }
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Identifier of the claimed object, in the form its own standard publishes:\nthe catalog number or international designator for a space object, the\nsite identifier for a site, the sensor identifier for a sensor, the\nlisting content identifier for a service.",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Human-readable name of the claimed object at the time of the claim.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/clmClaimRole",
+                            "description": "Relationship asserted over the object.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated."
+                                },
+                                "Owner": {
+                                    "value": 1,
+                                    "description": "The claimant holds title to the object."
+                                },
+                                "Operator": {
+                                    "value": 2,
+                                    "description": "The claimant operates or commands the object, with or without title."
+                                },
+                                "Provider": {
+                                    "value": 3,
+                                    "description": "The claimant provides the service the claim references."
+                                }
+                            }
+                        },
+                        "STATEMENT": {
+                            "type": "string",
+                            "description": "Free-text statement by the claimant, in the claimant's own words.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EVIDENCE_URL": {
+                            "type": "string",
+                            "description": "Locator of publicly checkable evidence supporting the claim.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the claim was first made.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this record was last updated.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the claim from the current set.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Claimant signature over the canonical claim form with SIGNATURE and\nCOUNTERSIGNATURES cleared.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "COUNTERSIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CLMCountersignature"
+                            },
+                            "description": "Attestations to this claim by other parties.",
+                            "x-flatbuffer-type": "[CLMCountersignature]"
+                        }
+                    },
+                    "required": [
+                        "CLAIM_ID",
+                        "CLAIMANT_PEER_ID",
+                        "OBJECT_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/CLM",
+            "x-flatbuffer-root-type": "CLM",
+            "x-flatbuffer-file-identifier": "$CLM"
         },
         "GJN": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

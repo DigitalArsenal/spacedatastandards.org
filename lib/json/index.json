@@ -62222,6 +62222,25 @@
                         "UNACKNOWLEDGED"
                     ]
                 },
+                "clmObjectKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Satellite",
+                        "Site",
+                        "Sensor",
+                        "Service"
+                    ]
+                },
+                "clmClaimRole": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Owner",
+                        "Operator",
+                        "Provider"
+                    ]
+                },
                 "cltuPduType": {
                     "type": "string",
                     "enum": [
@@ -67927,7 +67946,8 @@
                         "NST",
                         "QRP",
                         "TCT",
-                        "WXF"
+                        "WXF",
+                        "CLM"
                     ]
                 },
                 "LKS": {
@@ -76368,6 +76388,119 @@
                             "type": "string"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "CLMCountersignature": {
+                    "type": "object",
+                    "description": "One party's attestation to a claim, signed over the same canonical form the\nclaimant signed.",
+                    "properties": {
+                        "PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the countersigning party."
+                        },
+                        "PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the countersigning party's identity record."
+                        },
+                        "SIGNED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the countersignature was made."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Countersignature over the canonical claim form."
+                        }
+                    },
+                    "required": [
+                        "PEER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "CLM": {
+                    "type": "object",
+                    "description": "Ownership Claim Record - one claimant's signed statement over one object.",
+                    "properties": {
+                        "CLAIM_ID": {
+                            "type": "string",
+                            "description": "Stable claim identifier, normally\n\"<CLAIMANT_PEER_ID>:<OBJECT_KIND>:<OBJECT_ID>\"."
+                        },
+                        "CLAIMANT_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the claiming party."
+                        },
+                        "CLAIMANT_PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the claiming party's identity record."
+                        },
+                        "OBJECT_KIND": {
+                            "$ref": "#/definitions/clmObjectKind",
+                            "description": "Class of object being claimed."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Identifier of the claimed object, in the form its own standard publishes:\nthe catalog number or international designator for a space object, the\nsite identifier for a site, the sensor identifier for a sensor, the\nlisting content identifier for a service."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Human-readable name of the claimed object at the time of the claim."
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/clmClaimRole",
+                            "description": "Relationship asserted over the object."
+                        },
+                        "STATEMENT": {
+                            "type": "string",
+                            "description": "Free-text statement by the claimant, in the claimant's own words."
+                        },
+                        "EVIDENCE_URL": {
+                            "type": "string",
+                            "description": "Locator of publicly checkable evidence supporting the claim."
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the claim was first made."
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this record was last updated."
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the claim from the current set."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Claimant signature over the canonical claim form with SIGNATURE and\nCOUNTERSIGNATURES cleared."
+                        },
+                        "COUNTERSIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CLMCountersignature"
+                            },
+                            "description": "Attestations to this claim by other parties."
+                        }
+                    },
+                    "required": [
+                        "CLAIM_ID",
+                        "CLAIMANT_PEER_ID",
+                        "OBJECT_ID"
+                    ],
                     "additionalProperties": false
                 },
                 "CLT": {
@@ -118323,6 +118456,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/WXF"
+                                },
+                                {
+                                    "$ref": "#/definitions/CLM"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)"
@@ -175150,6 +175286,144 @@
                 }
             },
             "$ref": "#/definitions/SWR"
+        },
+        "CLM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "clmObjectKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Satellite",
+                        "Site",
+                        "Sensor",
+                        "Service"
+                    ]
+                },
+                "clmClaimRole": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Owner",
+                        "Operator",
+                        "Provider"
+                    ]
+                },
+                "CLMCountersignature": {
+                    "type": "object",
+                    "description": "One party's attestation to a claim, signed over the same canonical form the\nclaimant signed.",
+                    "properties": {
+                        "PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the countersigning party."
+                        },
+                        "PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the countersigning party's identity record."
+                        },
+                        "SIGNED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the countersignature was made."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Countersignature over the canonical claim form."
+                        }
+                    },
+                    "required": [
+                        "PEER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "CLM": {
+                    "type": "object",
+                    "description": "Ownership Claim Record - one claimant's signed statement over one object.",
+                    "properties": {
+                        "CLAIM_ID": {
+                            "type": "string",
+                            "description": "Stable claim identifier, normally\n\"<CLAIMANT_PEER_ID>:<OBJECT_KIND>:<OBJECT_ID>\"."
+                        },
+                        "CLAIMANT_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the claiming party."
+                        },
+                        "CLAIMANT_PROFILE_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the claiming party's identity record."
+                        },
+                        "OBJECT_KIND": {
+                            "$ref": "#/definitions/clmObjectKind",
+                            "description": "Class of object being claimed."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Identifier of the claimed object, in the form its own standard publishes:\nthe catalog number or international designator for a space object, the\nsite identifier for a site, the sensor identifier for a sensor, the\nlisting content identifier for a service."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Human-readable name of the claimed object at the time of the claim."
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/clmClaimRole",
+                            "description": "Relationship asserted over the object."
+                        },
+                        "STATEMENT": {
+                            "type": "string",
+                            "description": "Free-text statement by the claimant, in the claimant's own words."
+                        },
+                        "EVIDENCE_URL": {
+                            "type": "string",
+                            "description": "Locator of publicly checkable evidence supporting the claim."
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when the claim was first made."
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this record was last updated."
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the claim from the current set."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Claimant signature over the canonical claim form with SIGNATURE and\nCOUNTERSIGNATURES cleared."
+                        },
+                        "COUNTERSIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CLMCountersignature"
+                            },
+                            "description": "Attestations to this claim by other parties."
+                        }
+                    },
+                    "required": [
+                        "CLAIM_ID",
+                        "CLAIMANT_PEER_ID",
+                        "OBJECT_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/CLM"
         },
         "GJN": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

@@ -1,0 +1,47 @@
+/**
+ * Ownership Claim Record (CLM)
+ * Description
+ * One signed statement by a claimant that it owns, operates or provides a
+ * named object in a shared catalog: a space object, a ground site, a sensor,
+ * or a service offering. A CLM asserts the relationship only; it never
+ * restates the object's own record. The object is referenced by the
+ * identifier that object's standard already publishes, so a claim resolves
+ * without a side table.
+ *
+ * The current claim set is a projection over the latest CLM records by
+ * CLAIM_ID, with DELETED records acting as tombstones, in the same way a
+ * trust graph projects over trust edge records.
+ *
+ * A claim is self-asserted and carries no authority by itself. SIGNATURE is
+ * the claimant's signature over the canonical form of the record with
+ * SIGNATURE and COUNTERSIGNATURES cleared, matching the signing convention
+ * used by the trust edge record. Other parties may attest to a claim by
+ * appending a countersignature over the same canonical form; consumers decide
+ * which countersigners they accept and must never present an uncountersigned
+ * claim as a verified fact.
+ * Class of catalog object a claim is made over. Append new values only; never
+ * reorder or reuse existing values.
+ */
+export declare enum clmObjectKind {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * A space object carried in a space object catalog.
+     */
+    Satellite = 1,
+    /**
+     * A fixed or mobile ground site.
+     */
+    Site = 2,
+    /**
+     * An observing sensor.
+     */
+    Sensor = 3,
+    /**
+     * A service offering published as a listing.
+     */
+    Service = 4
+}
+//# sourceMappingURL=clmObjectKind.d.ts.map

@@ -263,6 +263,7 @@ class RecordType(object):
     QRP = 243
     TCT = 244
     WXF = 245
+    CLM = 246
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -1003,4 +1004,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.WXF:
         import WXF
         return WXF.WXFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CLM:
+        import CLM
+        return CLM.CLMT.InitFromBuf(table.Bytes, table.Pos)
     return None

@@ -1,0 +1,23 @@
+/**
+ * Relationship the claimant asserts over the object. Append new values only;
+ * never reorder or reuse existing values.
+ */
+export declare enum clmClaimRole {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * The claimant holds title to the object.
+     */
+    Owner = 1,
+    /**
+     * The claimant operates or commands the object, with or without title.
+     */
+    Operator = 2,
+    /**
+     * The claimant provides the service the claim references.
+     */
+    Provider = 3
+}
+//# sourceMappingURL=clmClaimRole.d.ts.map
