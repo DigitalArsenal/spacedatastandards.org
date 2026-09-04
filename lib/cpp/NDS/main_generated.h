@@ -1010,7 +1010,9 @@ struct NDS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EVENTS = 18,
     VT_TOPICS = 20,
     VT_MODULES = 22,
-    VT_TRUST_ENGINE = 24
+    VT_TRUST_ENGINE = 24,
+    VT_STORAGE_FREE_BYTES = 26,
+    VT_STORAGE_CAPACITY_BYTES = 28
   };
   /// Unix seconds when this snapshot was assembled.
   int64_t GENERATED_AT() const {
@@ -1049,6 +1051,20 @@ struct NDS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const NDSTrustEngineStat *TRUST_ENGINE() const {
     return GetPointer<const NDSTrustEngineStat *>(VT_TRUST_ENGINE);
   }
+  /// Bytes still available for writing on the volume that holds the node's
+  /// data store, as the operating system reports them to the node; 0 =
+  /// unknown. This is free space on the whole volume, not a quota, so it may
+  /// be consumed by anything else sharing that volume.
+  int64_t STORAGE_FREE_BYTES() const {
+    return GetField<int64_t>(VT_STORAGE_FREE_BYTES, 0);
+  }
+  /// Total size of the volume that holds the node's data store, as the
+  /// operating system reports it; 0 = unknown. Used space on that volume is
+  /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  /// TOTAL_BYTES: the latter counts only the records the node holds.
+  int64_t STORAGE_CAPACITY_BYTES() const {
+    return GetField<int64_t>(VT_STORAGE_CAPACITY_BYTES, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1074,6 +1090,8 @@ struct NDS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(MODULES()) &&
            VerifyOffset(verifier, VT_TRUST_ENGINE) &&
            verifier.VerifyTable(TRUST_ENGINE()) &&
+           VerifyField<int64_t>(verifier, VT_STORAGE_FREE_BYTES, 8) &&
+           VerifyField<int64_t>(verifier, VT_STORAGE_CAPACITY_BYTES, 8) &&
            verifier.EndTable();
   }
 };
@@ -1115,6 +1133,12 @@ struct NDSBuilder {
   void add_TRUST_ENGINE(::flatbuffers::Offset<NDSTrustEngineStat> TRUST_ENGINE) {
     fbb_.AddOffset(NDS::VT_TRUST_ENGINE, TRUST_ENGINE);
   }
+  void add_STORAGE_FREE_BYTES(int64_t STORAGE_FREE_BYTES) {
+    fbb_.AddElement<int64_t>(NDS::VT_STORAGE_FREE_BYTES, STORAGE_FREE_BYTES, 0);
+  }
+  void add_STORAGE_CAPACITY_BYTES(int64_t STORAGE_CAPACITY_BYTES) {
+    fbb_.AddElement<int64_t>(NDS::VT_STORAGE_CAPACITY_BYTES, STORAGE_CAPACITY_BYTES, 0);
+  }
   explicit NDSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1138,8 +1162,12 @@ inline ::flatbuffers::Offset<NDS> CreateNDS(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<NDSIngestEvent>>> EVENTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<NDSTopicStat>>> TOPICS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<NDSModuleStat>>> MODULES = 0,
-    ::flatbuffers::Offset<NDSTrustEngineStat> TRUST_ENGINE = 0) {
+    ::flatbuffers::Offset<NDSTrustEngineStat> TRUST_ENGINE = 0,
+    int64_t STORAGE_FREE_BYTES = 0,
+    int64_t STORAGE_CAPACITY_BYTES = 0) {
   NDSBuilder builder_(_fbb);
+  builder_.add_STORAGE_CAPACITY_BYTES(STORAGE_CAPACITY_BYTES);
+  builder_.add_STORAGE_FREE_BYTES(STORAGE_FREE_BYTES);
   builder_.add_AS_OF(AS_OF);
   builder_.add_TOTAL_BYTES(TOTAL_BYTES);
   builder_.add_TOTAL_RECORDS(TOTAL_RECORDS);
@@ -1166,7 +1194,9 @@ inline ::flatbuffers::Offset<NDS> CreateNDSDirect(
     const std::vector<::flatbuffers::Offset<NDSIngestEvent>> *EVENTS = nullptr,
     const std::vector<::flatbuffers::Offset<NDSTopicStat>> *TOPICS = nullptr,
     const std::vector<::flatbuffers::Offset<NDSModuleStat>> *MODULES = nullptr,
-    ::flatbuffers::Offset<NDSTrustEngineStat> TRUST_ENGINE = 0) {
+    ::flatbuffers::Offset<NDSTrustEngineStat> TRUST_ENGINE = 0,
+    int64_t STORAGE_FREE_BYTES = 0,
+    int64_t STORAGE_CAPACITY_BYTES = 0) {
   auto SCHEMAS__ = SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<NDSSchemaStat>>(*SCHEMAS) : 0;
   auto SOURCES__ = SOURCES ? _fbb.CreateVector<::flatbuffers::Offset<NDSSourceStat>>(*SOURCES) : 0;
   auto EVENTS__ = EVENTS ? _fbb.CreateVector<::flatbuffers::Offset<NDSIngestEvent>>(*EVENTS) : 0;
@@ -1184,7 +1214,9 @@ inline ::flatbuffers::Offset<NDS> CreateNDSDirect(
       EVENTS__,
       TOPICS__,
       MODULES__,
-      TRUST_ENGINE);
+      TRUST_ENGINE,
+      STORAGE_FREE_BYTES,
+      STORAGE_CAPACITY_BYTES);
 }
 
 inline const NDS *GetNDS(const void *buf) {

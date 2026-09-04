@@ -261,6 +261,14 @@
               },
         "TRUST_ENGINE" : {
                 "$ref" : "#/definitions/NDSTrustEngineStat"
+              },
+        "STORAGE_FREE_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Bytes still available for writing on the volume that holds the node's\ndata store, as the operating system reports them to the node; 0 =\nunknown. This is free space on the whole volume, not a quota, so it may\nbe consumed by anything else sharing that volume."
+              },
+        "STORAGE_CAPACITY_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Total size of the volume that holds the node's data store, as the\noperating system reports it; 0 = unknown. Used space on that volume is\nSTORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as\nTOTAL_BYTES: the latter counts only the records the node holds."
               }
       },
       "additionalProperties" : false

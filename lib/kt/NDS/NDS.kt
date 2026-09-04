@@ -138,6 +138,28 @@ class NDS : Table() {
             null
         }
     }
+    /**
+     * Bytes still available for writing on the volume that holds the node's
+     * data store, as the operating system reports them to the node; 0 =
+     * unknown. This is free space on the whole volume, not a quota, so it may
+     * be consumed by anything else sharing that volume.
+     */
+    val storageFreeBytes : Long
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
+    /**
+     * Total size of the volume that holds the node's data store, as the
+     * operating system reports it; 0 = unknown. Used space on that volume is
+     * STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+     * TOTAL_BYTES: the latter counts only the records the node holds.
+     */
+    val storageCapacityBytes : Long
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsNDS(_bb: ByteBuffer): NDS = getRootAsNDS(_bb, NDS())
@@ -146,8 +168,10 @@ class NDS : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun NDSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NDS")
-        fun createNDS(builder: FlatBufferBuilder, generatedAt: Long, schemasOffset: Int, sourcesOffset: Int, totalRecords: Long, totalBytes: Long, stale: Boolean, asOf: Long, eventsOffset: Int, topicsOffset: Int, modulesOffset: Int, trustEngineOffset: Int) : Int {
-            builder.startTable(11)
+        fun createNDS(builder: FlatBufferBuilder, generatedAt: Long, schemasOffset: Int, sourcesOffset: Int, totalRecords: Long, totalBytes: Long, stale: Boolean, asOf: Long, eventsOffset: Int, topicsOffset: Int, modulesOffset: Int, trustEngineOffset: Int, storageFreeBytes: Long, storageCapacityBytes: Long) : Int {
+            builder.startTable(13)
+            addSTORAGECAPACITYBYTES(builder, storageCapacityBytes)
+            addSTORAGEFREEBYTES(builder, storageFreeBytes)
             addASOF(builder, asOf)
             addTOTALBYTES(builder, totalBytes)
             addTOTALRECORDS(builder, totalRecords)
@@ -161,7 +185,7 @@ class NDS : Table() {
             addSTALE(builder, stale)
             return endNDS(builder)
         }
-        fun startNDS(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startNDS(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addGENERATEDAT(builder: FlatBufferBuilder, generatedAt: Long) = builder.addLong(0, generatedAt, 0L)
         fun addSCHEMAS(builder: FlatBufferBuilder, schemas: Int) = builder.addOffset(1, schemas, 0)
         fun createSchemasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -213,6 +237,8 @@ class NDS : Table() {
         }
         fun startModulesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addTRUSTENGINE(builder: FlatBufferBuilder, trustEngine: Int) = builder.addOffset(10, trustEngine, 0)
+        fun addSTORAGEFREEBYTES(builder: FlatBufferBuilder, storageFreeBytes: Long) = builder.addLong(11, storageFreeBytes, 0L)
+        fun addSTORAGECAPACITYBYTES(builder: FlatBufferBuilder, storageCapacityBytes: Long) = builder.addLong(12, storageCapacityBytes, 0L)
         fun endNDS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

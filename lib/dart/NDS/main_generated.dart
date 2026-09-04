@@ -1085,10 +1085,22 @@ class NDS {
   List<NDSModuleStat>? get MODULES => const fb.ListReader<NDSModuleStat>(NDSModuleStat.reader).vTableGetNullable(_bc, _bcOffset, 22);
   NDSTrustEngineStat? get TRUST_ENGINE => NDSTrustEngineStat.reader.vTableGetNullable(_bc, _bcOffset, 24);
   NDSTrustEngineStat? get trustEngine => TRUST_ENGINE;
+  ///  Bytes still available for writing on the volume that holds the node's
+  ///  data store, as the operating system reports them to the node; 0 =
+  ///  unknown. This is free space on the whole volume, not a quota, so it may
+  ///  be consumed by anything else sharing that volume.
+  int get STORAGE_FREE_BYTES => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get storageFreeBytes => STORAGE_FREE_BYTES;
+  ///  Total size of the volume that holds the node's data store, as the
+  ///  operating system reports it; 0 = unknown. Used space on that volume is
+  ///  STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  ///  TOTAL_BYTES: the latter counts only the records the node holds.
+  int get STORAGE_CAPACITY_BYTES => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get storageCapacityBytes => STORAGE_CAPACITY_BYTES;
 
   @override
   String toString() {
-    return 'NDS{generatedAt: ${generatedAt}, SCHEMAS: ${SCHEMAS}, SOURCES: ${SOURCES}, totalRecords: ${totalRecords}, totalBytes: ${totalBytes}, STALE: ${STALE}, asOf: ${asOf}, EVENTS: ${EVENTS}, TOPICS: ${TOPICS}, MODULES: ${MODULES}, trustEngine: ${trustEngine}}';
+    return 'NDS{generatedAt: ${generatedAt}, SCHEMAS: ${SCHEMAS}, SOURCES: ${SOURCES}, totalRecords: ${totalRecords}, totalBytes: ${totalBytes}, STALE: ${STALE}, asOf: ${asOf}, EVENTS: ${EVENTS}, TOPICS: ${TOPICS}, MODULES: ${MODULES}, trustEngine: ${trustEngine}, storageFreeBytes: ${storageFreeBytes}, storageCapacityBytes: ${storageCapacityBytes}}';
   }
 }
 
@@ -1106,7 +1118,7 @@ class NDSBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
   }
 
   int addGeneratedAt(int? GENERATED_AT) {
@@ -1153,6 +1165,14 @@ class NDSBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
+  int addStorageFreeBytes(int? STORAGE_FREE_BYTES) {
+    fbBuilder.addInt64(11, STORAGE_FREE_BYTES);
+    return fbBuilder.offset;
+  }
+  int addStorageCapacityBytes(int? STORAGE_CAPACITY_BYTES) {
+    fbBuilder.addInt64(12, STORAGE_CAPACITY_BYTES);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1171,6 +1191,8 @@ class NDSObjectBuilder extends fb.ObjectBuilder {
   final List<NDSTopicStatObjectBuilder>? _TOPICS;
   final List<NDSModuleStatObjectBuilder>? _MODULES;
   final NDSTrustEngineStatObjectBuilder? _TRUST_ENGINE;
+  final int? _STORAGE_FREE_BYTES;
+  final int? _STORAGE_CAPACITY_BYTES;
 
   NDSObjectBuilder({
     int? GENERATED_AT,
@@ -1189,6 +1211,10 @@ class NDSObjectBuilder extends fb.ObjectBuilder {
     List<NDSModuleStatObjectBuilder>? MODULES,
     NDSTrustEngineStatObjectBuilder? TRUST_ENGINE,
     NDSTrustEngineStatObjectBuilder? trustEngine,
+    int? STORAGE_FREE_BYTES,
+    int? storageFreeBytes,
+    int? STORAGE_CAPACITY_BYTES,
+    int? storageCapacityBytes,
   })
       : _GENERATED_AT = generatedAt ?? GENERATED_AT,
         _SCHEMAS = SCHEMAS,
@@ -1200,7 +1226,9 @@ class NDSObjectBuilder extends fb.ObjectBuilder {
         _EVENTS = EVENTS,
         _TOPICS = TOPICS,
         _MODULES = MODULES,
-        _TRUST_ENGINE = trustEngine ?? TRUST_ENGINE;
+        _TRUST_ENGINE = trustEngine ?? TRUST_ENGINE,
+        _STORAGE_FREE_BYTES = storageFreeBytes ?? STORAGE_FREE_BYTES,
+        _STORAGE_CAPACITY_BYTES = storageCapacityBytes ?? STORAGE_CAPACITY_BYTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1216,7 +1244,7 @@ class NDSObjectBuilder extends fb.ObjectBuilder {
     final int? MODULESOffset = _MODULES == null ? null
         : fbBuilder.writeList(_MODULES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? TRUST_ENGINEOffset = _TRUST_ENGINE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
     fbBuilder.addInt64(0, _GENERATED_AT);
     fbBuilder.addOffset(1, SCHEMASOffset);
     fbBuilder.addOffset(2, SOURCESOffset);
@@ -1228,6 +1256,8 @@ class NDSObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, TOPICSOffset);
     fbBuilder.addOffset(9, MODULESOffset);
     fbBuilder.addOffset(10, TRUST_ENGINEOffset);
+    fbBuilder.addInt64(11, _STORAGE_FREE_BYTES);
+    fbBuilder.addInt64(12, _STORAGE_CAPACITY_BYTES);
     return fbBuilder.endTable();
   }
 

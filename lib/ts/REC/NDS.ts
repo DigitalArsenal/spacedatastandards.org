@@ -127,8 +127,30 @@ TRUST_ENGINE(obj?:NDSTrustEngineStat):NDSTrustEngineStat|null {
   return offset ? (obj || new NDSTrustEngineStat()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Bytes still available for writing on the volume that holds the node's
+ * data store, as the operating system reports them to the node; 0 =
+ * unknown. This is free space on the whole volume, not a quota, so it may
+ * be consumed by anything else sharing that volume.
+ */
+STORAGE_FREE_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Total size of the volume that holds the node's data store, as the
+ * operating system reports it; 0 = unknown. Used space on that volume is
+ * STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+ * TOTAL_BYTES: the latter counts only the records the node holds.
+ */
+STORAGE_CAPACITY_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startNDS(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(13);
 }
 
 static addGeneratedAt(builder:flatbuffers.Builder, GENERATED_AT:bigint) {
@@ -235,6 +257,14 @@ static addTrustEngine(builder:flatbuffers.Builder, TRUST_ENGINEOffset:flatbuffer
   builder.addFieldOffset(10, TRUST_ENGINEOffset, 0);
 }
 
+static addStorageFreeBytes(builder:flatbuffers.Builder, STORAGE_FREE_BYTES:bigint) {
+  builder.addFieldInt64(11, STORAGE_FREE_BYTES, BigInt('0'));
+}
+
+static addStorageCapacityBytes(builder:flatbuffers.Builder, STORAGE_CAPACITY_BYTES:bigint) {
+  builder.addFieldInt64(12, STORAGE_CAPACITY_BYTES, BigInt('0'));
+}
+
 static endNDS(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -261,7 +291,9 @@ unpack(): NDST {
     this.bb!.createObjList<NDSIngestEvent, NDSIngestEventT>(this.EVENTS.bind(this), this.eventsLength()),
     this.bb!.createObjList<NDSTopicStat, NDSTopicStatT>(this.TOPICS.bind(this), this.topicsLength()),
     this.bb!.createObjList<NDSModuleStat, NDSModuleStatT>(this.MODULES.bind(this), this.modulesLength()),
-    (this.TRUST_ENGINE() !== null ? this.TRUST_ENGINE()!.unpack() : null)
+    (this.TRUST_ENGINE() !== null ? this.TRUST_ENGINE()!.unpack() : null),
+    this.STORAGE_FREE_BYTES(),
+    this.STORAGE_CAPACITY_BYTES()
   );
 }
 
@@ -278,6 +310,8 @@ unpackTo(_o: NDST): void {
   _o.TOPICS = this.bb!.createObjList<NDSTopicStat, NDSTopicStatT>(this.TOPICS.bind(this), this.topicsLength());
   _o.MODULES = this.bb!.createObjList<NDSModuleStat, NDSModuleStatT>(this.MODULES.bind(this), this.modulesLength());
   _o.TRUST_ENGINE = (this.TRUST_ENGINE() !== null ? this.TRUST_ENGINE()!.unpack() : null);
+  _o.STORAGE_FREE_BYTES = this.STORAGE_FREE_BYTES();
+  _o.STORAGE_CAPACITY_BYTES = this.STORAGE_CAPACITY_BYTES();
 }
 }
 
@@ -293,7 +327,9 @@ constructor(
   public EVENTS: (NDSIngestEventT)[] = [],
   public TOPICS: (NDSTopicStatT)[] = [],
   public MODULES: (NDSModuleStatT)[] = [],
-  public TRUST_ENGINE: NDSTrustEngineStatT|null = null
+  public TRUST_ENGINE: NDSTrustEngineStatT|null = null,
+  public STORAGE_FREE_BYTES: bigint = BigInt('0'),
+  public STORAGE_CAPACITY_BYTES: bigint = BigInt('0')
 ){}
 
 
@@ -317,6 +353,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   NDS.addTopics(builder, TOPICS);
   NDS.addModules(builder, MODULES);
   NDS.addTrustEngine(builder, TRUST_ENGINE);
+  NDS.addStorageFreeBytes(builder, this.STORAGE_FREE_BYTES);
+  NDS.addStorageCapacityBytes(builder, this.STORAGE_CAPACITY_BYTES);
 
   return NDS.endNDS(builder);
 }

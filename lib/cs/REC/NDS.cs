@@ -39,6 +39,16 @@ public struct NDS : IFlatbufferObject
   public NDSModuleStat? MODULES(int j) { int o = __p.__offset(22); return o != 0 ? (NDSModuleStat?)(new NDSModuleStat()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int MODULESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   public NDSTrustEngineStat? TRUST_ENGINE { get { int o = __p.__offset(24); return o != 0 ? (NDSTrustEngineStat?)(new NDSTrustEngineStat()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Bytes still available for writing on the volume that holds the node's
+  /// data store, as the operating system reports them to the node; 0 =
+  /// unknown. This is free space on the whole volume, not a quota, so it may
+  /// be consumed by anything else sharing that volume.
+  public long STORAGE_FREE_BYTES { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// Total size of the volume that holds the node's data store, as the
+  /// operating system reports it; 0 = unknown. Used space on that volume is
+  /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  /// TOTAL_BYTES: the latter counts only the records the node holds.
+  public long STORAGE_CAPACITY_BYTES { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
 
   public static Offset<NDS> CreateNDS(FlatBufferBuilder builder,
       long GENERATED_AT = 0,
@@ -51,8 +61,12 @@ public struct NDS : IFlatbufferObject
       VectorOffset EVENTSOffset = default(VectorOffset),
       VectorOffset TOPICSOffset = default(VectorOffset),
       VectorOffset MODULESOffset = default(VectorOffset),
-      Offset<NDSTrustEngineStat> TRUST_ENGINEOffset = default(Offset<NDSTrustEngineStat>)) {
-    builder.StartTable(11);
+      Offset<NDSTrustEngineStat> TRUST_ENGINEOffset = default(Offset<NDSTrustEngineStat>),
+      long STORAGE_FREE_BYTES = 0,
+      long STORAGE_CAPACITY_BYTES = 0) {
+    builder.StartTable(13);
+    NDS.AddSTORAGE_CAPACITY_BYTES(builder, STORAGE_CAPACITY_BYTES);
+    NDS.AddSTORAGE_FREE_BYTES(builder, STORAGE_FREE_BYTES);
     NDS.AddAS_OF(builder, AS_OF);
     NDS.AddTOTAL_BYTES(builder, TOTAL_BYTES);
     NDS.AddTOTAL_RECORDS(builder, TOTAL_RECORDS);
@@ -67,7 +81,7 @@ public struct NDS : IFlatbufferObject
     return NDS.EndNDS(builder);
   }
 
-  public static void StartNDS(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartNDS(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddGENERATED_AT(FlatBufferBuilder builder, long GENERATED_AT) { builder.AddLong(0, GENERATED_AT, 0); }
   public static void AddSCHEMAS(FlatBufferBuilder builder, VectorOffset SCHEMASOffset) { builder.AddOffset(1, SCHEMASOffset.Value, 0); }
   public static VectorOffset CreateSCHEMASVector(FlatBufferBuilder builder, Offset<NDSSchemaStat>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -104,6 +118,8 @@ public struct NDS : IFlatbufferObject
   public static VectorOffset CreateMODULESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<NDSModuleStat>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMODULESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddTRUST_ENGINE(FlatBufferBuilder builder, Offset<NDSTrustEngineStat> TRUST_ENGINEOffset) { builder.AddOffset(10, TRUST_ENGINEOffset.Value, 0); }
+  public static void AddSTORAGE_FREE_BYTES(FlatBufferBuilder builder, long STORAGE_FREE_BYTES) { builder.AddLong(11, STORAGE_FREE_BYTES, 0); }
+  public static void AddSTORAGE_CAPACITY_BYTES(FlatBufferBuilder builder, long STORAGE_CAPACITY_BYTES) { builder.AddLong(12, STORAGE_CAPACITY_BYTES, 0); }
   public static Offset<NDS> EndNDS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<NDS>(o);
@@ -132,6 +148,8 @@ public struct NDS : IFlatbufferObject
     _o.MODULES = new List<NDSModuleStatT>();
     for (var _j = 0; _j < this.MODULESLength; ++_j) {_o.MODULES.Add(this.MODULES(_j).HasValue ? this.MODULES(_j).Value.UnPack() : null);}
     _o.TRUST_ENGINE = this.TRUST_ENGINE.HasValue ? this.TRUST_ENGINE.Value.UnPack() : null;
+    _o.STORAGE_FREE_BYTES = this.STORAGE_FREE_BYTES;
+    _o.STORAGE_CAPACITY_BYTES = this.STORAGE_CAPACITY_BYTES;
   }
   public static Offset<NDS> Pack(FlatBufferBuilder builder, NDST _o) {
     if (_o == null) return default(Offset<NDS>);
@@ -178,7 +196,9 @@ public struct NDS : IFlatbufferObject
       _EVENTS,
       _TOPICS,
       _MODULES,
-      _TRUST_ENGINE);
+      _TRUST_ENGINE,
+      _o.STORAGE_FREE_BYTES,
+      _o.STORAGE_CAPACITY_BYTES);
   }
 }
 
@@ -195,6 +215,8 @@ public class NDST
   public List<NDSTopicStatT> TOPICS { get; set; }
   public List<NDSModuleStatT> MODULES { get; set; }
   public NDSTrustEngineStatT TRUST_ENGINE { get; set; }
+  public long STORAGE_FREE_BYTES { get; set; }
+  public long STORAGE_CAPACITY_BYTES { get; set; }
 
   public NDST() {
     this.GENERATED_AT = 0;
@@ -208,6 +230,8 @@ public class NDST
     this.TOPICS = null;
     this.MODULES = null;
     this.TRUST_ENGINE = null;
+    this.STORAGE_FREE_BYTES = 0;
+    this.STORAGE_CAPACITY_BYTES = 0;
   }
   public static NDST DeserializeFromBinary(byte[] fbBuffer) {
     return NDS.GetRootAsNDS(new ByteBuffer(fbBuffer)).UnPack();
@@ -236,6 +260,8 @@ static public class NDSVerify
       && verifier.VerifyVectorOfTables(tablePos, 20 /*TOPICS*/, NDSTopicStatVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 22 /*MODULES*/, NDSModuleStatVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 24 /*TRUST_ENGINE*/, NDSTrustEngineStatVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 26 /*STORAGE_FREE_BYTES*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*STORAGE_CAPACITY_BYTES*/, 8 /*long*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

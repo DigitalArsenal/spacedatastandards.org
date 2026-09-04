@@ -334,8 +334,64 @@ func (rcv *NDS) TrustEngine(obj *NDSTrustEngineStat) *NDSTrustEngineStat {
 	return rcv.TRUST_ENGINE(obj)
 }
 
+/// Bytes still available for writing on the volume that holds the node's
+/// data store, as the operating system reports them to the node; 0 =
+/// unknown. This is free space on the whole volume, not a quota, so it may
+/// be consumed by anything else sharing that volume.
+func (rcv *NDS) STORAGE_FREE_BYTES() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *NDS) StorageFreeBytes() int64 {
+	return rcv.STORAGE_FREE_BYTES()
+}
+
+/// Bytes still available for writing on the volume that holds the node's
+/// data store, as the operating system reports them to the node; 0 =
+/// unknown. This is free space on the whole volume, not a quota, so it may
+/// be consumed by anything else sharing that volume.
+func (rcv *NDS) MutateSTORAGE_FREE_BYTES(n int64) bool {
+	return rcv._tab.MutateInt64Slot(26, n)
+}
+
+func (rcv *NDS) MutateStorageFreeBytes(n int64) bool {
+	return rcv.MutateSTORAGE_FREE_BYTES(n)
+}
+
+/// Total size of the volume that holds the node's data store, as the
+/// operating system reports it; 0 = unknown. Used space on that volume is
+/// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+/// TOTAL_BYTES: the latter counts only the records the node holds.
+func (rcv *NDS) STORAGE_CAPACITY_BYTES() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *NDS) StorageCapacityBytes() int64 {
+	return rcv.STORAGE_CAPACITY_BYTES()
+}
+
+/// Total size of the volume that holds the node's data store, as the
+/// operating system reports it; 0 = unknown. Used space on that volume is
+/// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+/// TOTAL_BYTES: the latter counts only the records the node holds.
+func (rcv *NDS) MutateSTORAGE_CAPACITY_BYTES(n int64) bool {
+	return rcv._tab.MutateInt64Slot(28, n)
+}
+
+func (rcv *NDS) MutateStorageCapacityBytes(n int64) bool {
+	return rcv.MutateSTORAGE_CAPACITY_BYTES(n)
+}
+
 func NDSStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(13)
 }
 func NDSAddGENERATED_AT(builder *flatbuffers.Builder, GENERATED_AT int64) {
 	builder.PrependInt64Slot(0, GENERATED_AT, 0)
@@ -432,6 +488,18 @@ func NDSAddTRUST_ENGINE(builder *flatbuffers.Builder, TRUST_ENGINE flatbuffers.U
 }
 func NDSAddTrustEngine(builder *flatbuffers.Builder, TRUST_ENGINE flatbuffers.UOffsetT) {
 	NDSAddTRUST_ENGINE(builder, TRUST_ENGINE)
+}
+func NDSAddSTORAGE_FREE_BYTES(builder *flatbuffers.Builder, STORAGE_FREE_BYTES int64) {
+	builder.PrependInt64Slot(11, STORAGE_FREE_BYTES, 0)
+}
+func NDSAddStorageFreeBytes(builder *flatbuffers.Builder, STORAGE_FREE_BYTES int64) {
+	NDSAddSTORAGE_FREE_BYTES(builder, STORAGE_FREE_BYTES)
+}
+func NDSAddSTORAGE_CAPACITY_BYTES(builder *flatbuffers.Builder, STORAGE_CAPACITY_BYTES int64) {
+	builder.PrependInt64Slot(12, STORAGE_CAPACITY_BYTES, 0)
+}
+func NDSAddStorageCapacityBytes(builder *flatbuffers.Builder, STORAGE_CAPACITY_BYTES int64) {
+	NDSAddSTORAGE_CAPACITY_BYTES(builder, STORAGE_CAPACITY_BYTES)
 }
 func NDSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

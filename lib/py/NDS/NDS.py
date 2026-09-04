@@ -204,8 +204,30 @@ class NDS(object):
             return obj
         return None
 
+    # Bytes still available for writing on the volume that holds the node's
+    # data store, as the operating system reports them to the node; 0 =
+    # unknown. This is free space on the whole volume, not a quota, so it may
+    # be consumed by anything else sharing that volume.
+    # NDS
+    def STORAGE_FREE_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Total size of the volume that holds the node's data store, as the
+    # operating system reports it; 0 = unknown. Used space on that volume is
+    # STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+    # TOTAL_BYTES: the latter counts only the records the node holds.
+    # NDS
+    def STORAGE_CAPACITY_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
 def NDSStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(13)
 
 def Start(builder):
     NDSStart(builder)
@@ -336,6 +358,18 @@ def NDSAddTRUST_ENGINE(builder, TRUST_ENGINE):
 def AddTRUST_ENGINE(builder, TRUST_ENGINE):
     NDSAddTRUST_ENGINE(builder, TRUST_ENGINE)
 
+def NDSAddSTORAGE_FREE_BYTES(builder, STORAGE_FREE_BYTES):
+    builder.PrependInt64Slot(11, STORAGE_FREE_BYTES, 0)
+
+def AddSTORAGE_FREE_BYTES(builder, STORAGE_FREE_BYTES):
+    NDSAddSTORAGE_FREE_BYTES(builder, STORAGE_FREE_BYTES)
+
+def NDSAddSTORAGE_CAPACITY_BYTES(builder, STORAGE_CAPACITY_BYTES):
+    builder.PrependInt64Slot(12, STORAGE_CAPACITY_BYTES, 0)
+
+def AddSTORAGE_CAPACITY_BYTES(builder, STORAGE_CAPACITY_BYTES):
+    NDSAddSTORAGE_CAPACITY_BYTES(builder, STORAGE_CAPACITY_BYTES)
+
 def NDSEnd(builder):
     return builder.EndObject()
 
@@ -369,6 +403,8 @@ class NDST(object):
         TOPICS = None,
         MODULES = None,
         TRUST_ENGINE = None,
+        STORAGE_FREE_BYTES = 0,
+        STORAGE_CAPACITY_BYTES = 0,
     ):
         self.GENERATED_AT = GENERATED_AT  # type: int
         self.SCHEMAS = SCHEMAS  # type: Optional[List[NDSSchemaStat.NDSSchemaStatT]]
@@ -381,6 +417,8 @@ class NDST(object):
         self.TOPICS = TOPICS  # type: Optional[List[NDSTopicStat.NDSTopicStatT]]
         self.MODULES = MODULES  # type: Optional[List[NDSModuleStat.NDSModuleStatT]]
         self.TRUST_ENGINE = TRUST_ENGINE  # type: Optional[NDSTrustEngineStat.NDSTrustEngineStatT]
+        self.STORAGE_FREE_BYTES = STORAGE_FREE_BYTES  # type: int
+        self.STORAGE_CAPACITY_BYTES = STORAGE_CAPACITY_BYTES  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -450,6 +488,8 @@ class NDST(object):
                     self.MODULES.append(nDSModuleStat_)
         if NDS.TRUST_ENGINE() is not None:
             self.TRUST_ENGINE = NDSTrustEngineStat.NDSTrustEngineStatT.InitFromObj(NDS.TRUST_ENGINE())
+        self.STORAGE_FREE_BYTES = NDS.STORAGE_FREE_BYTES()
+        self.STORAGE_CAPACITY_BYTES = NDS.STORAGE_CAPACITY_BYTES()
 
     # NDST
     def Pack(self, builder):
@@ -513,5 +553,7 @@ class NDST(object):
             NDSAddMODULES(builder, MODULES)
         if self.TRUST_ENGINE is not None:
             NDSAddTRUST_ENGINE(builder, TRUST_ENGINE)
+        NDSAddSTORAGE_FREE_BYTES(builder, self.STORAGE_FREE_BYTES)
+        NDSAddSTORAGE_CAPACITY_BYTES(builder, self.STORAGE_CAPACITY_BYTES)
         NDS = NDSEnd(builder)
         return NDS

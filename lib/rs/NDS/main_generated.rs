@@ -2070,6 +2070,8 @@ impl<'a> NDS<'a> {
   pub const VT_TOPICS: ::flatbuffers::VOffsetT = 20;
   pub const VT_MODULES: ::flatbuffers::VOffsetT = 22;
   pub const VT_TRUST_ENGINE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_STORAGE_FREE_BYTES: ::flatbuffers::VOffsetT = 26;
+  pub const VT_STORAGE_CAPACITY_BYTES: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2081,6 +2083,8 @@ impl<'a> NDS<'a> {
     args: &'args NDSArgs<'args>
   ) -> ::flatbuffers::WIPOffset<NDS<'bldr>> {
     let mut builder = NDSBuilder::new(_fbb);
+    builder.add_STORAGE_CAPACITY_BYTES(args.STORAGE_CAPACITY_BYTES);
+    builder.add_STORAGE_FREE_BYTES(args.STORAGE_FREE_BYTES);
     builder.add_AS_OF(args.AS_OF);
     builder.add_TOTAL_BYTES(args.TOTAL_BYTES);
     builder.add_TOTAL_RECORDS(args.TOTAL_RECORDS);
@@ -2119,6 +2123,8 @@ impl<'a> NDS<'a> {
     let TRUST_ENGINE = self.TRUST_ENGINE().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let STORAGE_FREE_BYTES = self.STORAGE_FREE_BYTES();
+    let STORAGE_CAPACITY_BYTES = self.STORAGE_CAPACITY_BYTES();
     NDST {
       GENERATED_AT,
       SCHEMAS,
@@ -2131,6 +2137,8 @@ impl<'a> NDS<'a> {
       TOPICS,
       MODULES,
       TRUST_ENGINE,
+      STORAGE_FREE_BYTES,
+      STORAGE_CAPACITY_BYTES,
     }
   }
 
@@ -2215,6 +2223,28 @@ impl<'a> NDS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<NDSTrustEngineStat>>(NDS::VT_TRUST_ENGINE, None)}
   }
+  /// Bytes still available for writing on the volume that holds the node's
+  /// data store, as the operating system reports them to the node; 0 =
+  /// unknown. This is free space on the whole volume, not a quota, so it may
+  /// be consumed by anything else sharing that volume.
+  #[inline]
+  pub fn STORAGE_FREE_BYTES(&self) -> i64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i64>(NDS::VT_STORAGE_FREE_BYTES, Some(0)).unwrap()}
+  }
+  /// Total size of the volume that holds the node's data store, as the
+  /// operating system reports it; 0 = unknown. Used space on that volume is
+  /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  /// TOTAL_BYTES: the latter counts only the records the node holds.
+  #[inline]
+  pub fn STORAGE_CAPACITY_BYTES(&self) -> i64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i64>(NDS::VT_STORAGE_CAPACITY_BYTES, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for NDS<'_> {
@@ -2234,6 +2264,8 @@ impl ::flatbuffers::Verifiable for NDS<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<NDSTopicStat>>>>("TOPICS", Self::VT_TOPICS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<NDSModuleStat>>>>("MODULES", Self::VT_MODULES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<NDSTrustEngineStat>>("TRUST_ENGINE", Self::VT_TRUST_ENGINE, false)?
+     .visit_field::<i64>("STORAGE_FREE_BYTES", Self::VT_STORAGE_FREE_BYTES, false)?
+     .visit_field::<i64>("STORAGE_CAPACITY_BYTES", Self::VT_STORAGE_CAPACITY_BYTES, false)?
      .finish();
     Ok(())
   }
@@ -2250,6 +2282,8 @@ pub struct NDSArgs<'a> {
     pub TOPICS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<NDSTopicStat<'a>>>>>,
     pub MODULES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<NDSModuleStat<'a>>>>>,
     pub TRUST_ENGINE: Option<::flatbuffers::WIPOffset<NDSTrustEngineStat<'a>>>,
+    pub STORAGE_FREE_BYTES: i64,
+    pub STORAGE_CAPACITY_BYTES: i64,
 }
 impl<'a> Default for NDSArgs<'a> {
   #[inline]
@@ -2266,6 +2300,8 @@ impl<'a> Default for NDSArgs<'a> {
       TOPICS: None,
       MODULES: None,
       TRUST_ENGINE: None,
+      STORAGE_FREE_BYTES: 0,
+      STORAGE_CAPACITY_BYTES: 0,
     }
   }
 }
@@ -2320,6 +2356,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> NDSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<NDSTrustEngineStat>>(NDS::VT_TRUST_ENGINE, TRUST_ENGINE);
   }
   #[inline]
+  pub fn add_STORAGE_FREE_BYTES(&mut self, STORAGE_FREE_BYTES: i64) {
+    self.fbb_.push_slot::<i64>(NDS::VT_STORAGE_FREE_BYTES, STORAGE_FREE_BYTES, 0);
+  }
+  #[inline]
+  pub fn add_STORAGE_CAPACITY_BYTES(&mut self, STORAGE_CAPACITY_BYTES: i64) {
+    self.fbb_.push_slot::<i64>(NDS::VT_STORAGE_CAPACITY_BYTES, STORAGE_CAPACITY_BYTES, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> NDSBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     NDSBuilder {
@@ -2348,6 +2392,8 @@ impl ::core::fmt::Debug for NDS<'_> {
       ds.field("TOPICS", &self.TOPICS());
       ds.field("MODULES", &self.MODULES());
       ds.field("TRUST_ENGINE", &self.TRUST_ENGINE());
+      ds.field("STORAGE_FREE_BYTES", &self.STORAGE_FREE_BYTES());
+      ds.field("STORAGE_CAPACITY_BYTES", &self.STORAGE_CAPACITY_BYTES());
       ds.finish()
   }
 }
@@ -2365,6 +2411,8 @@ pub struct NDST {
   pub TOPICS: Option<alloc::vec::Vec<NDSTopicStatT>>,
   pub MODULES: Option<alloc::vec::Vec<NDSModuleStatT>>,
   pub TRUST_ENGINE: Option<alloc::boxed::Box<NDSTrustEngineStatT>>,
+  pub STORAGE_FREE_BYTES: i64,
+  pub STORAGE_CAPACITY_BYTES: i64,
 }
 impl Default for NDST {
   fn default() -> Self {
@@ -2380,6 +2428,8 @@ impl Default for NDST {
       TOPICS: None,
       MODULES: None,
       TRUST_ENGINE: None,
+      STORAGE_FREE_BYTES: 0,
+      STORAGE_CAPACITY_BYTES: 0,
     }
   }
 }
@@ -2411,6 +2461,8 @@ impl NDST {
     let TRUST_ENGINE = self.TRUST_ENGINE.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let STORAGE_FREE_BYTES = self.STORAGE_FREE_BYTES;
+    let STORAGE_CAPACITY_BYTES = self.STORAGE_CAPACITY_BYTES;
     NDS::create(_fbb, &NDSArgs{
       GENERATED_AT,
       SCHEMAS,
@@ -2423,6 +2475,8 @@ impl NDST {
       TOPICS,
       MODULES,
       TRUST_ENGINE,
+      STORAGE_FREE_BYTES,
+      STORAGE_CAPACITY_BYTES,
     })
   }
 }

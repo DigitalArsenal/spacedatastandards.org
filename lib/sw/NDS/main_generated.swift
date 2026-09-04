@@ -601,6 +601,8 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let TOPICS: VOffset = 20
     static let MODULES: VOffset = 22
     static let TRUST_ENGINE: VOffset = 24
+    static let STORAGE_FREE_BYTES: VOffset = 26
+    static let STORAGE_CAPACITY_BYTES: VOffset = 28
   }
 
   ///  Unix seconds when this snapshot was assembled.
@@ -618,7 +620,17 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var TOPICS: FlatbufferVector<NDSTopicStat> { return _accessor.vector(at: VT.TOPICS, byteSize: 4) }
   public var MODULES: FlatbufferVector<NDSModuleStat> { return _accessor.vector(at: VT.MODULES, byteSize: 4) }
   public var TRUST_ENGINE: NDSTrustEngineStat? { let o = _accessor.offset(VT.TRUST_ENGINE); return o == 0 ? nil : NDSTrustEngineStat(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startNDS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  Bytes still available for writing on the volume that holds the node's
+  ///  data store, as the operating system reports them to the node; 0 =
+  ///  unknown. This is free space on the whole volume, not a quota, so it may
+  ///  be consumed by anything else sharing that volume.
+  public var STORAGE_FREE_BYTES: Int64 { let o = _accessor.offset(VT.STORAGE_FREE_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Total size of the volume that holds the node's data store, as the
+  ///  operating system reports it; 0 = unknown. Used space on that volume is
+  ///  STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  ///  TOTAL_BYTES: the latter counts only the records the node holds.
+  public var STORAGE_CAPACITY_BYTES: Int64 { let o = _accessor.offset(VT.STORAGE_CAPACITY_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public static func startNDS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(GENERATED_AT: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENERATED_AT, def: 0, at: VT.GENERATED_AT) }
   public static func addVectorOf(SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMAS, at: VT.SCHEMAS) }
   public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
@@ -631,6 +643,8 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(TOPICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOPICS, at: VT.TOPICS) }
   public static func addVectorOf(MODULES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULES, at: VT.MODULES) }
   public static func add(TRUST_ENGINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRUST_ENGINE, at: VT.TRUST_ENGINE) }
+  public static func add(STORAGE_FREE_BYTES: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STORAGE_FREE_BYTES, def: 0, at: VT.STORAGE_FREE_BYTES) }
+  public static func add(STORAGE_CAPACITY_BYTES: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STORAGE_CAPACITY_BYTES, def: 0, at: VT.STORAGE_CAPACITY_BYTES) }
   public static func endNDS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createNDS(
     _ fbb: inout FlatBufferBuilder,
@@ -644,7 +658,9 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EVENTSVectorOffset EVENTS: Offset = Offset(),
     TOPICSVectorOffset TOPICS: Offset = Offset(),
     MODULESVectorOffset MODULES: Offset = Offset(),
-    TRUST_ENGINEOffset TRUST_ENGINE: Offset = Offset()
+    TRUST_ENGINEOffset TRUST_ENGINE: Offset = Offset(),
+    STORAGE_FREE_BYTES: Int64 = 0,
+    STORAGE_CAPACITY_BYTES: Int64 = 0
   ) -> Offset {
     let __start = NDS.startNDS(&fbb)
     NDS.add(GENERATED_AT: GENERATED_AT, &fbb)
@@ -658,6 +674,8 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     NDS.addVectorOf(TOPICS: TOPICS, &fbb)
     NDS.addVectorOf(MODULES: MODULES, &fbb)
     NDS.add(TRUST_ENGINE: TRUST_ENGINE, &fbb)
+    NDS.add(STORAGE_FREE_BYTES: STORAGE_FREE_BYTES, &fbb)
+    NDS.add(STORAGE_CAPACITY_BYTES: STORAGE_CAPACITY_BYTES, &fbb)
     return NDS.endNDS(&fbb, start: __start)
   }
 
@@ -674,6 +692,8 @@ public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.TOPICS, fieldName: "TOPICS", required: false, type: ForwardOffset<Vector<ForwardOffset<NDSTopicStat>, NDSTopicStat>>.self)
     try _v.visit(field: VT.MODULES, fieldName: "MODULES", required: false, type: ForwardOffset<Vector<ForwardOffset<NDSModuleStat>, NDSModuleStat>>.self)
     try _v.visit(field: VT.TRUST_ENGINE, fieldName: "TRUST_ENGINE", required: false, type: ForwardOffset<NDSTrustEngineStat>.self)
+    try _v.visit(field: VT.STORAGE_FREE_BYTES, fieldName: "STORAGE_FREE_BYTES", required: false, type: Int64.self)
+    try _v.visit(field: VT.STORAGE_CAPACITY_BYTES, fieldName: "STORAGE_CAPACITY_BYTES", required: false, type: Int64.self)
     _v.finish()
   }
 }

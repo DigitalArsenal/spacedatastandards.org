@@ -1,5 +1,5 @@
-// Hash: 1feffd3a68b818302178dc04c9452182a07f6189fe8b41586f086327083b01bb
-// Version: 1.207.0
+// Hash: eb50967493d6a0f3197217ed8d74d0ad86542785b828ab9cb28926b7c906ff79
+// Version: 1.207.1
 // -----------------------------------END_HEADER
 /// Node Data Statistics (NDS)
 /// Description
@@ -156,6 +156,16 @@ table NDS {
   TOPICS: [NDSTopicStat];
   MODULES: [NDSModuleStat];
   TRUST_ENGINE: NDSTrustEngineStat;
+  /// Bytes still available for writing on the volume that holds the node's
+  /// data store, as the operating system reports them to the node; 0 =
+  /// unknown. This is free space on the whole volume, not a quota, so it may
+  /// be consumed by anything else sharing that volume.
+  STORAGE_FREE_BYTES: int64;
+  /// Total size of the volume that holds the node's data store, as the
+  /// operating system reports it; 0 = unknown. Used space on that volume is
+  /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+  /// TOTAL_BYTES: the latter counts only the records the node holds.
+  STORAGE_CAPACITY_BYTES: int64;
 }
 
 root_type NDS;

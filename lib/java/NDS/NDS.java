@@ -70,6 +70,20 @@ public final class NDS extends com.google.flatbuffers.Table {
   public NDSModuleStat.Vector modulesVector(NDSModuleStat.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public NDSTrustEngineStat TRUST_ENGINE() { return TRUST_ENGINE(new NDSTrustEngineStat()); }
   public NDSTrustEngineStat TRUST_ENGINE(NDSTrustEngineStat obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Bytes still available for writing on the volume that holds the node's
+   * data store, as the operating system reports them to the node; 0 =
+   * unknown. This is free space on the whole volume, not a quota, so it may
+   * be consumed by anything else sharing that volume.
+   */
+  public long STORAGE_FREE_BYTES() { int o = __offset(26); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Total size of the volume that holds the node's data store, as the
+   * operating system reports it; 0 = unknown. Used space on that volume is
+   * STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+   * TOTAL_BYTES: the latter counts only the records the node holds.
+   */
+  public long STORAGE_CAPACITY_BYTES() { int o = __offset(28); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createNDS(FlatBufferBuilder builder,
       long GENERATED_AT,
@@ -82,8 +96,12 @@ public final class NDS extends com.google.flatbuffers.Table {
       int EVENTSOffset,
       int TOPICSOffset,
       int MODULESOffset,
-      int TRUST_ENGINEOffset) {
-    builder.startTable(11);
+      int TRUST_ENGINEOffset,
+      long STORAGE_FREE_BYTES,
+      long STORAGE_CAPACITY_BYTES) {
+    builder.startTable(13);
+    NDS.addStorageCapacityBytes(builder, STORAGE_CAPACITY_BYTES);
+    NDS.addStorageFreeBytes(builder, STORAGE_FREE_BYTES);
     NDS.addAsOf(builder, AS_OF);
     NDS.addTotalBytes(builder, TOTAL_BYTES);
     NDS.addTotalRecords(builder, TOTAL_RECORDS);
@@ -98,7 +116,7 @@ public final class NDS extends com.google.flatbuffers.Table {
     return NDS.endNDS(builder);
   }
 
-  public static void startNDS(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startNDS(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addGeneratedAt(FlatBufferBuilder builder, long GENERATED_AT) { builder.addLong(0, GENERATED_AT, 0L); }
   public static void addSchemas(FlatBufferBuilder builder, int SCHEMASOffset) { builder.addOffset(1, SCHEMASOffset, 0); }
   public static int createSchemasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -120,6 +138,8 @@ public final class NDS extends com.google.flatbuffers.Table {
   public static int createModulesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startModulesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addTrustEngine(FlatBufferBuilder builder, int TRUST_ENGINEOffset) { builder.addOffset(10, TRUST_ENGINEOffset, 0); }
+  public static void addStorageFreeBytes(FlatBufferBuilder builder, long STORAGE_FREE_BYTES) { builder.addLong(11, STORAGE_FREE_BYTES, 0L); }
+  public static void addStorageCapacityBytes(FlatBufferBuilder builder, long STORAGE_CAPACITY_BYTES) { builder.addLong(12, STORAGE_CAPACITY_BYTES, 0L); }
   public static int endNDS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

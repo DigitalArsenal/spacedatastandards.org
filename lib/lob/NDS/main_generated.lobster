@@ -444,13 +444,25 @@ class NDS : flatbuffers.handle
     def TRUST_ENGINE() -> NDSTrustEngineStat?:
         let o = flatbuffers.field_table(buf_, pos_, 24)
         return if o: NDSTrustEngineStat { buf_, o } else: nil
+    /// Bytes still available for writing on the volume that holds the node's
+    /// data store, as the operating system reports them to the node; 0 =
+    /// unknown. This is free space on the whole volume, not a quota, so it may
+    /// be consumed by anything else sharing that volume.
+    def STORAGE_FREE_BYTES() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 26, 0)
+    /// Total size of the volume that holds the node's data store, as the
+    /// operating system reports it; 0 = unknown. Used space on that volume is
+    /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+    /// TOTAL_BYTES: the latter counts only the records the node holds.
+    def STORAGE_CAPACITY_BYTES() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 28, 0)
 
 def GetRootAsNDS(buf:string): return NDS { buf, flatbuffers.indirect(buf, 0) }
 
 struct NDSBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(13)
         return this
     def add_GENERATED_AT(GENERATED_AT:int):
         b_.PrependInt64Slot(0, GENERATED_AT, 0)
@@ -484,6 +496,12 @@ struct NDSBuilder:
         return this
     def add_TRUST_ENGINE(TRUST_ENGINE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, TRUST_ENGINE)
+        return this
+    def add_STORAGE_FREE_BYTES(STORAGE_FREE_BYTES:int):
+        b_.PrependInt64Slot(11, STORAGE_FREE_BYTES, 0)
+        return this
+    def add_STORAGE_CAPACITY_BYTES(STORAGE_CAPACITY_BYTES:int):
+        b_.PrependInt64Slot(12, STORAGE_CAPACITY_BYTES, 0)
         return this
     def end():
         return b_.EndObject()

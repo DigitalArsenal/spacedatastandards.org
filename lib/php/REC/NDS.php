@@ -192,22 +192,48 @@ class NDS extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Bytes still available for writing on the volume that holds the node's
+    /// data store, as the operating system reports them to the node; 0 =
+    /// unknown. This is free space on the whole volume, not a quota, so it may
+    /// be consumed by anything else sharing that volume.
+    /**
+     * @return long
+     */
+    public function getSTORAGE_FREE_BYTES()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
+    /// Total size of the volume that holds the node's data store, as the
+    /// operating system reports it; 0 = unknown. Used space on that volume is
+    /// STORAGE_CAPACITY_BYTES - STORAGE_FREE_BYTES, which is never the same as
+    /// TOTAL_BYTES: the latter counts only the records the node holds.
+    /**
+     * @return long
+     */
+    public function getSTORAGE_CAPACITY_BYTES()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startNDS(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return NDS
      */
-    public static function createNDS(FlatBufferBuilder $builder, $GENERATED_AT, $SCHEMAS, $SOURCES, $TOTAL_RECORDS, $TOTAL_BYTES, $STALE, $AS_OF, $EVENTS, $TOPICS, $MODULES, $TRUST_ENGINE)
+    public static function createNDS(FlatBufferBuilder $builder, $GENERATED_AT, $SCHEMAS, $SOURCES, $TOTAL_RECORDS, $TOTAL_BYTES, $STALE, $AS_OF, $EVENTS, $TOPICS, $MODULES, $TRUST_ENGINE, $STORAGE_FREE_BYTES, $STORAGE_CAPACITY_BYTES)
     {
-        $builder->startObject(11);
+        $builder->startObject(13);
         self::addGENERATED_AT($builder, $GENERATED_AT);
         self::addSCHEMAS($builder, $SCHEMAS);
         self::addSOURCES($builder, $SOURCES);
@@ -219,6 +245,8 @@ class NDS extends Table
         self::addTOPICS($builder, $TOPICS);
         self::addMODULES($builder, $MODULES);
         self::addTRUST_ENGINE($builder, $TRUST_ENGINE);
+        self::addSTORAGE_FREE_BYTES($builder, $STORAGE_FREE_BYTES);
+        self::addSTORAGE_CAPACITY_BYTES($builder, $STORAGE_CAPACITY_BYTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -451,6 +479,26 @@ class NDS extends Table
     public static function addTRUST_ENGINE(FlatBufferBuilder $builder, $TRUST_ENGINE)
     {
         $builder->addOffsetX(10, $TRUST_ENGINE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addSTORAGE_FREE_BYTES(FlatBufferBuilder $builder, $STORAGE_FREE_BYTES)
+    {
+        $builder->addLongX(11, $STORAGE_FREE_BYTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addSTORAGE_CAPACITY_BYTES(FlatBufferBuilder $builder, $STORAGE_CAPACITY_BYTES)
+    {
+        $builder->addLongX(12, $STORAGE_CAPACITY_BYTES, 0);
     }
 
     /**
