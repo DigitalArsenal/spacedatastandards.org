@@ -270,22 +270,46 @@ class CAT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Absolute URI identifying the original catalog's object-ID namespace.
+    /// This is an identifier, not an instruction to fetch a resource. Use with
+    /// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+    /// through replicas and derived catalogs; it does not assert a NORAD or
+    /// COSPAR association. If the authority can reassign an object ID, this URI
+    /// must identify its immutable edition or assignment interval, rather than
+    /// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+    public function getCATALOG_URI()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+    /// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+    /// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+    /// in a different namespace establishes that two records describe the same
+    /// physical object. Publication provenance retains source and edition data.
+    public function getCATALOG_OBJECT_ID()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCAT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(24);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CAT
      */
-    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID)
+    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID)
     {
-        $builder->startObject(24);
+        $builder->startObject(26);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -310,6 +334,8 @@ class CAT extends Table
         self::addMASS_TYPE($builder, $MASS_TYPE);
         self::addPAYLOADS($builder, $PAYLOADS);
         self::addBUS_ID($builder, $BUS_ID);
+        self::addCATALOG_URI($builder, $CATALOG_URI);
+        self::addCATALOG_OBJECT_ID($builder, $CATALOG_OBJECT_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -576,6 +602,26 @@ class CAT extends Table
     public static function addBUS_ID(FlatBufferBuilder $builder, $BUS_ID)
     {
         $builder->addOffsetX(23, $BUS_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCATALOG_URI(FlatBufferBuilder $builder, $CATALOG_URI)
+    {
+        $builder->addOffsetX(24, $CATALOG_URI, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCATALOG_OBJECT_ID(FlatBufferBuilder $builder, $CATALOG_OBJECT_ID)
+    {
+        $builder->addOffsetX(25, $CATALOG_OBJECT_ID, 0);
     }
 
     /**

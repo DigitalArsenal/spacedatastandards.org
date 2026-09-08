@@ -5326,6 +5326,16 @@
           "type": "string",
           "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
           "x-flatbuffer-type": "string"
+        },
+        "CATALOG_URI": {
+          "type": "string",
+          "description": "Absolute URI identifying the original catalog's object-ID namespace.\nThis is an identifier, not an instruction to fetch a resource. Use with\nCATALOG_OBJECT_ID only when both fields are present. Preserve the pair\nthrough replicas and derived catalogs; it does not assert a NORAD or\nCOSPAR association. If the authority can reassign an object ID, this URI\nmust identify its immutable edition or assignment interval, rather than\nthe unversioned catalog. Stable IDs may use a persistent catalog URI.",
+          "x-flatbuffer-type": "string"
+        },
+        "CATALOG_OBJECT_ID": {
+          "type": "string",
+          "description": "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

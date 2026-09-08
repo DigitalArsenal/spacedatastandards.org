@@ -1,5 +1,5 @@
-// Hash: ca31386aeea83a2033af7c01248dcff7251e14618cd0d08147a0a9839f778619
-// Version: 1.0.4
+// Hash: a5f3153c1b78c9583dc74b8671e0c4d1ee85b6dec5daff3d8dc415c6e26e682d
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -118,6 +118,20 @@ table CAT {
   /// and WET_MASS are properties of the bus design and live on BUS — they are
   /// NOT duplicated here. Empty when the bus is unknown.
   BUS_ID: string;
+  /// Absolute URI identifying the original catalog's object-ID namespace.
+  /// This is an identifier, not an instruction to fetch a resource. Use with
+  /// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+  /// through replicas and derived catalogs; it does not assert a NORAD or
+  /// COSPAR association. If the authority can reassign an object ID, this URI
+  /// must identify its immutable edition or assignment interval, rather than
+  /// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+  CATALOG_URI: string;
+  /// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+  /// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+  /// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+  /// in a different namespace establishes that two records describe the same
+  /// physical object. Publication provenance retains source and edition data.
+  CATALOG_OBJECT_ID: string;
 }
 
 root_type CAT;

@@ -242,8 +242,34 @@ class CAT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Absolute URI identifying the original catalog's object-ID namespace.
+    # This is an identifier, not an instruction to fetch a resource. Use with
+    # CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+    # through replicas and derived catalogs; it does not assert a NORAD or
+    # COSPAR association. If the authority can reassign an object ID, this URI
+    # must identify its immutable edition or assignment interval, rather than
+    # the unversioned catalog. Stable IDs may use a persistent catalog URI.
+    # CAT
+    def CATALOG_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Exact, opaque object identifier assigned by CATALOG_URI's authority.
+    # Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+    # are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+    # in a different namespace establishes that two records describe the same
+    # physical object. Publication provenance retains source and edition data.
+    # CAT
+    def CATALOG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CATStart(builder):
-    builder.StartObject(24)
+    builder.StartObject(26)
 
 def Start(builder):
     CATStart(builder)
@@ -404,6 +430,18 @@ def CATAddBUS_ID(builder, BUS_ID):
 def AddBUS_ID(builder, BUS_ID):
     CATAddBUS_ID(builder, BUS_ID)
 
+def CATAddCATALOG_URI(builder, CATALOG_URI):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_URI), 0)
+
+def AddCATALOG_URI(builder, CATALOG_URI):
+    CATAddCATALOG_URI(builder, CATALOG_URI)
+
+def CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_OBJECT_ID), 0)
+
+def AddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID):
+    CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
+
 def CATEnd(builder):
     return builder.EndObject()
 
@@ -445,6 +483,8 @@ class CATT(object):
         MASS_TYPE = 0,
         PAYLOADS = None,
         BUS_ID = None,
+        CATALOG_URI = None,
+        CATALOG_OBJECT_ID = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -470,6 +510,8 @@ class CATT(object):
         self.MASS_TYPE = MASS_TYPE  # type: int
         self.PAYLOADS = PAYLOADS  # type: Optional[List[PLD.PLDT]]
         self.BUS_ID = BUS_ID  # type: Optional[str]
+        self.CATALOG_URI = CATALOG_URI  # type: Optional[str]
+        self.CATALOG_OBJECT_ID = CATALOG_OBJECT_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -523,6 +565,8 @@ class CATT(object):
                     pLD_ = PLD.PLDT.InitFromObj(CAT.PAYLOADS(i))
                     self.PAYLOADS.append(pLD_)
         self.BUS_ID = CAT.BUS_ID()
+        self.CATALOG_URI = CAT.CATALOG_URI()
+        self.CATALOG_OBJECT_ID = CAT.CATALOG_OBJECT_ID()
 
     # CATT
     def Pack(self, builder):
@@ -550,6 +594,10 @@ class CATT(object):
             PAYLOADS = builder.EndVector()
         if self.BUS_ID is not None:
             BUS_ID = builder.CreateString(self.BUS_ID)
+        if self.CATALOG_URI is not None:
+            CATALOG_URI = builder.CreateString(self.CATALOG_URI)
+        if self.CATALOG_OBJECT_ID is not None:
+            CATALOG_OBJECT_ID = builder.CreateString(self.CATALOG_OBJECT_ID)
         CATStart(builder)
         if self.OBJECT_NAME is not None:
             CATAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -584,5 +632,9 @@ class CATT(object):
             CATAddPAYLOADS(builder, PAYLOADS)
         if self.BUS_ID is not None:
             CATAddBUS_ID(builder, BUS_ID)
+        if self.CATALOG_URI is not None:
+            CATAddCATALOG_URI(builder, CATALOG_URI)
+        if self.CATALOG_OBJECT_ID is not None:
+            CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
         CAT = CATEnd(builder)
         return CAT

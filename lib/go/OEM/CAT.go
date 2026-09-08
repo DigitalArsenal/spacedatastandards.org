@@ -535,8 +535,56 @@ func (rcv *CAT) BusId() []byte {
 /// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
 /// and WET_MASS are properties of the bus design and live on BUS — they are
 /// NOT duplicated here. Empty when the bus is unknown.
+/// Absolute URI identifying the original catalog's object-ID namespace.
+/// This is an identifier, not an instruction to fetch a resource. Use with
+/// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+/// through replicas and derived catalogs; it does not assert a NORAD or
+/// COSPAR association. If the authority can reassign an object ID, this URI
+/// must identify its immutable edition or assignment interval, rather than
+/// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+func (rcv *CAT) CATALOG_URI() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) CatalogUri() []byte {
+	return rcv.CATALOG_URI()
+}
+
+/// Absolute URI identifying the original catalog's object-ID namespace.
+/// This is an identifier, not an instruction to fetch a resource. Use with
+/// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+/// through replicas and derived catalogs; it does not assert a NORAD or
+/// COSPAR association. If the authority can reassign an object ID, this URI
+/// must identify its immutable edition or assignment interval, rather than
+/// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+/// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+/// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+/// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+/// in a different namespace establishes that two records describe the same
+/// physical object. Publication provenance retains source and edition data.
+func (rcv *CAT) CATALOG_OBJECT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) CatalogObjectId() []byte {
+	return rcv.CATALOG_OBJECT_ID()
+}
+
+/// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+/// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+/// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+/// in a different namespace establishes that two records describe the same
+/// physical object. Publication provenance retains source and edition data.
 func CATStart(builder *flatbuffers.Builder) {
-	builder.StartObject(24)
+	builder.StartObject(26)
 }
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -687,6 +735,18 @@ func CATAddBUS_ID(builder *flatbuffers.Builder, BUS_ID flatbuffers.UOffsetT) {
 }
 func CATAddBusId(builder *flatbuffers.Builder, BUS_ID flatbuffers.UOffsetT) {
 	CATAddBUS_ID(builder, BUS_ID)
+}
+func CATAddCATALOG_URI(builder *flatbuffers.Builder, CATALOG_URI flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(CATALOG_URI), 0)
+}
+func CATAddCatalogUri(builder *flatbuffers.Builder, CATALOG_URI flatbuffers.UOffsetT) {
+	CATAddCATALOG_URI(builder, CATALOG_URI)
+}
+func CATAddCATALOG_OBJECT_ID(builder *flatbuffers.Builder, CATALOG_OBJECT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(CATALOG_OBJECT_ID), 0)
+}
+func CATAddCatalogObjectId(builder *flatbuffers.Builder, CATALOG_OBJECT_ID flatbuffers.UOffsetT) {
+	CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

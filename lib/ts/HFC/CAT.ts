@@ -254,8 +254,38 @@ BUS_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Absolute URI identifying the original catalog's object-ID namespace.
+ * This is an identifier, not an instruction to fetch a resource. Use with
+ * CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+ * through replicas and derived catalogs; it does not assert a NORAD or
+ * COSPAR association. If the authority can reassign an object ID, this URI
+ * must identify its immutable edition or assignment interval, rather than
+ * the unversioned catalog. Stable IDs may use a persistent catalog URI.
+ */
+CATALOG_URI():string|null
+CATALOG_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CATALOG_URI(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Exact, opaque object identifier assigned by CATALOG_URI's authority.
+ * Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+ * are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+ * in a different namespace establishes that two records describe the same
+ * physical object. Publication provenance retains source and edition data.
+ */
+CATALOG_OBJECT_ID():string|null
+CATALOG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CATALOG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(24);
+  builder.startObject(26);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -366,6 +396,14 @@ static addBusId(builder:flatbuffers.Builder, BUS_IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(23, BUS_IDOffset, 0);
 }
 
+static addCatalogUri(builder:flatbuffers.Builder, CATALOG_URIOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, CATALOG_URIOffset, 0);
+}
+
+static addCatalogObjectId(builder:flatbuffers.Builder, CATALOG_OBJECT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, CATALOG_OBJECT_IDOffset, 0);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -379,7 +417,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -405,6 +443,8 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addMassType(builder, MASS_TYPE);
   CAT.addPayloads(builder, PAYLOADSOffset);
   CAT.addBusId(builder, BUS_IDOffset);
+  CAT.addCatalogUri(builder, CATALOG_URIOffset);
+  CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
   return CAT.endCAT(builder);
 }
 
@@ -433,7 +473,9 @@ unpack(): CATT {
     this.MASS(),
     this.MASS_TYPE(),
     this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength()),
-    this.BUS_ID()
+    this.BUS_ID(),
+    this.CATALOG_URI(),
+    this.CATALOG_OBJECT_ID()
   );
 }
 
@@ -463,6 +505,8 @@ unpackTo(_o: CATT): void {
   _o.MASS_TYPE = this.MASS_TYPE();
   _o.PAYLOADS = this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength());
   _o.BUS_ID = this.BUS_ID();
+  _o.CATALOG_URI = this.CATALOG_URI();
+  _o.CATALOG_OBJECT_ID = this.CATALOG_OBJECT_ID();
 }
 }
 
@@ -491,7 +535,9 @@ constructor(
   public MASS: number = 0.0,
   public MASS_TYPE: massCategory = massCategory.DRY,
   public PAYLOADS: (PLDT)[] = [],
-  public BUS_ID: string|Uint8Array|null = null
+  public BUS_ID: string|Uint8Array|null = null,
+  public CATALOG_URI: string|Uint8Array|null = null,
+  public CATALOG_OBJECT_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -505,6 +551,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DEPLOYMENT_DATE = (this.DEPLOYMENT_DATE !== null ? builder.createString(this.DEPLOYMENT_DATE!) : 0);
   const PAYLOADS = CAT.createPayloadsVector(builder, builder.createObjectOffsetList(this.PAYLOADS));
   const BUS_ID = (this.BUS_ID !== null ? builder.createString(this.BUS_ID!) : 0);
+  const CATALOG_URI = (this.CATALOG_URI !== null ? builder.createString(this.CATALOG_URI!) : 0);
+  const CATALOG_OBJECT_ID = (this.CATALOG_OBJECT_ID !== null ? builder.createString(this.CATALOG_OBJECT_ID!) : 0);
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -530,7 +578,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.MASS,
     this.MASS_TYPE,
     PAYLOADS,
-    BUS_ID
+    BUS_ID,
+    CATALOG_URI,
+    CATALOG_OBJECT_ID
   );
 }
 }

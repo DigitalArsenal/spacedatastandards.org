@@ -119,6 +119,32 @@ public struct CAT : IFlatbufferObject
   public ArraySegment<byte>? GetBUS_IDBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
   public byte[] GetBUS_IDArray() { return __p.__vector_as_array<byte>(50); }
+  /// Absolute URI identifying the original catalog's object-ID namespace.
+  /// This is an identifier, not an instruction to fetch a resource. Use with
+  /// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+  /// through replicas and derived catalogs; it does not assert a NORAD or
+  /// COSPAR association. If the authority can reassign an object ID, this URI
+  /// must identify its immutable edition or assignment interval, rather than
+  /// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+  public string CATALOG_URI { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCATALOG_URIBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetCATALOG_URIBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetCATALOG_URIArray() { return __p.__vector_as_array<byte>(52); }
+  /// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+  /// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+  /// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+  /// in a different namespace establishes that two records describe the same
+  /// physical object. Publication provenance retains source and edition data.
+  public string CATALOG_OBJECT_ID { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCATALOG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetCATALOG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetCATALOG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(54); }
 
   public static Offset<CAT> CreateCAT(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -144,8 +170,10 @@ public struct CAT : IFlatbufferObject
       double MASS = 0.0,
       massCategory MASS_TYPE = massCategory.DRY,
       VectorOffset PAYLOADSOffset = default(VectorOffset),
-      StringOffset BUS_IDOffset = default(StringOffset)) {
-    builder.StartTable(24);
+      StringOffset BUS_IDOffset = default(StringOffset),
+      StringOffset CATALOG_URIOffset = default(StringOffset),
+      StringOffset CATALOG_OBJECT_IDOffset = default(StringOffset)) {
+    builder.StartTable(26);
     CAT.AddMASS(builder, MASS);
     CAT.AddSIZE(builder, SIZE);
     CAT.AddRCS(builder, RCS);
@@ -153,6 +181,8 @@ public struct CAT : IFlatbufferObject
     CAT.AddAPOGEE(builder, APOGEE);
     CAT.AddINCLINATION(builder, INCLINATION);
     CAT.AddPERIOD(builder, PERIOD);
+    CAT.AddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_IDOffset);
+    CAT.AddCATALOG_URI(builder, CATALOG_URIOffset);
     CAT.AddBUS_ID(builder, BUS_IDOffset);
     CAT.AddPAYLOADS(builder, PAYLOADSOffset);
     CAT.AddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATEOffset);
@@ -173,7 +203,7 @@ public struct CAT : IFlatbufferObject
     return CAT.EndCAT(builder);
   }
 
-  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(24); }
+  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
@@ -203,6 +233,8 @@ public struct CAT : IFlatbufferObject
   public static VectorOffset CreatePAYLOADSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLD>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPAYLOADSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddBUS_ID(FlatBufferBuilder builder, StringOffset BUS_IDOffset) { builder.AddOffset(23, BUS_IDOffset.Value, 0); }
+  public static void AddCATALOG_URI(FlatBufferBuilder builder, StringOffset CATALOG_URIOffset) { builder.AddOffset(24, CATALOG_URIOffset.Value, 0); }
+  public static void AddCATALOG_OBJECT_ID(FlatBufferBuilder builder, StringOffset CATALOG_OBJECT_IDOffset) { builder.AddOffset(25, CATALOG_OBJECT_IDOffset.Value, 0); }
   public static Offset<CAT> EndCAT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CAT>(o);
@@ -240,6 +272,8 @@ public struct CAT : IFlatbufferObject
     _o.PAYLOADS = new List<PLDT>();
     for (var _j = 0; _j < this.PAYLOADSLength; ++_j) {_o.PAYLOADS.Add(this.PAYLOADS(_j).HasValue ? this.PAYLOADS(_j).Value.UnPack() : null);}
     _o.BUS_ID = this.BUS_ID;
+    _o.CATALOG_URI = this.CATALOG_URI;
+    _o.CATALOG_OBJECT_ID = this.CATALOG_OBJECT_ID;
   }
   public static Offset<CAT> Pack(FlatBufferBuilder builder, CATT _o) {
     if (_o == null) return default(Offset<CAT>);
@@ -257,6 +291,8 @@ public struct CAT : IFlatbufferObject
       _PAYLOADS = CreatePAYLOADSVector(builder, __PAYLOADS);
     }
     var _BUS_ID = _o.BUS_ID == null ? default(StringOffset) : builder.CreateString(_o.BUS_ID);
+    var _CATALOG_URI = _o.CATALOG_URI == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_URI);
+    var _CATALOG_OBJECT_ID = _o.CATALOG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_OBJECT_ID);
     return CreateCAT(
       builder,
       _OBJECT_NAME,
@@ -282,7 +318,9 @@ public struct CAT : IFlatbufferObject
       _o.MASS,
       _o.MASS_TYPE,
       _PAYLOADS,
-      _BUS_ID);
+      _BUS_ID,
+      _CATALOG_URI,
+      _CATALOG_OBJECT_ID);
   }
 }
 
@@ -312,6 +350,8 @@ public class CATT
   public massCategory MASS_TYPE { get; set; }
   public List<PLDT> PAYLOADS { get; set; }
   public string BUS_ID { get; set; }
+  public string CATALOG_URI { get; set; }
+  public string CATALOG_OBJECT_ID { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
@@ -338,6 +378,8 @@ public class CATT
     this.MASS_TYPE = massCategory.DRY;
     this.PAYLOADS = null;
     this.BUS_ID = null;
+    this.CATALOG_URI = null;
+    this.CATALOG_OBJECT_ID = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
     return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
@@ -379,6 +421,8 @@ static public class CATVerify
       && verifier.VerifyField(tablePos, 46 /*MASS_TYPE*/, 1 /*massCategory*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 48 /*PAYLOADS*/, PLDVerify.Verify, false)
       && verifier.VerifyString(tablePos, 50 /*BUS_ID*/, false)
+      && verifier.VerifyString(tablePos, 52 /*CATALOG_URI*/, false)
+      && verifier.VerifyString(tablePos, 54 /*CATALOG_OBJECT_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

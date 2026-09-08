@@ -124,6 +124,26 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
      */
     BUS_ID(): string | null;
     BUS_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Absolute URI identifying the original catalog's object-ID namespace.
+     * This is an identifier, not an instruction to fetch a resource. Use with
+     * CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+     * through replicas and derived catalogs; it does not assert a NORAD or
+     * COSPAR association. If the authority can reassign an object ID, this URI
+     * must identify its immutable edition or assignment interval, rather than
+     * the unversioned catalog. Stable IDs may use a persistent catalog URI.
+     */
+    CATALOG_URI(): string | null;
+    CATALOG_URI(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Exact, opaque object identifier assigned by CATALOG_URI's authority.
+     * Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+     * are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+     * in a different namespace establishes that two records describe the same
+     * physical object. Publication provenance retains source and edition data.
+     */
+    CATALOG_OBJECT_ID(): string | null;
+    CATALOG_OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startCAT(builder: flatbuffers.Builder): void;
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -151,10 +171,12 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static createPayloadsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startPayloadsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addBusId(builder: flatbuffers.Builder, BUS_IDOffset: flatbuffers.Offset): void;
+    static addCatalogUri(builder: flatbuffers.Builder, CATALOG_URIOffset: flatbuffers.Offset): void;
+    static addCatalogObjectId(builder: flatbuffers.Builder, CATALOG_OBJECT_IDOffset: flatbuffers.Offset): void;
     static endCAT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset, CATALOG_URIOffset: flatbuffers.Offset, CATALOG_OBJECT_IDOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATT;
     unpackTo(_o: CATT): void;
 }
@@ -183,7 +205,9 @@ export declare class CATT implements flatbuffers.IGeneratedObject {
     MASS_TYPE: massCategory;
     PAYLOADS: (PLDT)[];
     BUS_ID: string | Uint8Array | null;
-    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null);
+    CATALOG_URI: string | Uint8Array | null;
+    CATALOG_OBJECT_ID: string | Uint8Array | null;
+    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null, CATALOG_URI?: string | Uint8Array | null, CATALOG_OBJECT_ID?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CAT.d.ts.map

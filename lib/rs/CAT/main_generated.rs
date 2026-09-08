@@ -540,6 +540,8 @@ impl<'a> CAT<'a> {
   pub const VT_MASS_TYPE: ::flatbuffers::VOffsetT = 46;
   pub const VT_PAYLOADS: ::flatbuffers::VOffsetT = 48;
   pub const VT_BUS_ID: ::flatbuffers::VOffsetT = 50;
+  pub const VT_CATALOG_URI: ::flatbuffers::VOffsetT = 52;
+  pub const VT_CATALOG_OBJECT_ID: ::flatbuffers::VOffsetT = 54;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -558,6 +560,8 @@ impl<'a> CAT<'a> {
     builder.add_APOGEE(args.APOGEE);
     builder.add_INCLINATION(args.INCLINATION);
     builder.add_PERIOD(args.PERIOD);
+    if let Some(x) = args.CATALOG_OBJECT_ID { builder.add_CATALOG_OBJECT_ID(x); }
+    if let Some(x) = args.CATALOG_URI { builder.add_CATALOG_URI(x); }
     if let Some(x) = args.BUS_ID { builder.add_BUS_ID(x); }
     if let Some(x) = args.PAYLOADS { builder.add_PAYLOADS(x); }
     if let Some(x) = args.DEPLOYMENT_DATE { builder.add_DEPLOYMENT_DATE(x); }
@@ -621,6 +625,12 @@ impl<'a> CAT<'a> {
     let BUS_ID = self.BUS_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let CATALOG_URI = self.CATALOG_URI().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CATALOG_OBJECT_ID = self.CATALOG_OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     CATT {
       OBJECT_NAME,
       OBJECT_ID,
@@ -646,6 +656,8 @@ impl<'a> CAT<'a> {
       MASS_TYPE,
       PAYLOADS,
       BUS_ID,
+      CATALOG_URI,
+      CATALOG_OBJECT_ID,
     }
   }
 
@@ -844,6 +856,32 @@ impl<'a> CAT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_BUS_ID, None)}
   }
+  /// Absolute URI identifying the original catalog's object-ID namespace.
+  /// This is an identifier, not an instruction to fetch a resource. Use with
+  /// CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+  /// through replicas and derived catalogs; it does not assert a NORAD or
+  /// COSPAR association. If the authority can reassign an object ID, this URI
+  /// must identify its immutable edition or assignment interval, rather than
+  /// the unversioned catalog. Stable IDs may use a persistent catalog URI.
+  #[inline]
+  pub fn CATALOG_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_CATALOG_URI, None)}
+  }
+  /// Exact, opaque object identifier assigned by CATALOG_URI's authority.
+  /// Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+  /// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+  /// in a different namespace establishes that two records describe the same
+  /// physical object. Publication provenance retains source and edition data.
+  #[inline]
+  pub fn CATALOG_OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_CATALOG_OBJECT_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for CAT<'_> {
@@ -876,6 +914,8 @@ impl ::flatbuffers::Verifiable for CAT<'_> {
      .visit_field::<massCategory>("MASS_TYPE", Self::VT_MASS_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLD>>>>("PAYLOADS", Self::VT_PAYLOADS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUS_ID", Self::VT_BUS_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_URI", Self::VT_CATALOG_URI, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_OBJECT_ID", Self::VT_CATALOG_OBJECT_ID, false)?
      .finish();
     Ok(())
   }
@@ -905,6 +945,8 @@ pub struct CATArgs<'a> {
     pub MASS_TYPE: massCategory,
     pub PAYLOADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLD<'a>>>>>,
     pub BUS_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for CATArgs<'a> {
   #[inline]
@@ -934,6 +976,8 @@ impl<'a> Default for CATArgs<'a> {
       MASS_TYPE: massCategory::DRY,
       PAYLOADS: None,
       BUS_ID: None,
+      CATALOG_URI: None,
+      CATALOG_OBJECT_ID: None,
     }
   }
 }
@@ -1040,6 +1084,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_BUS_ID, BUS_ID);
   }
   #[inline]
+  pub fn add_CATALOG_URI(&mut self, CATALOG_URI: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_CATALOG_URI, CATALOG_URI);
+  }
+  #[inline]
+  pub fn add_CATALOG_OBJECT_ID(&mut self, CATALOG_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_CATALOG_OBJECT_ID, CATALOG_OBJECT_ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CATBuilder {
@@ -1081,6 +1133,8 @@ impl ::core::fmt::Debug for CAT<'_> {
       ds.field("MASS_TYPE", &self.MASS_TYPE());
       ds.field("PAYLOADS", &self.PAYLOADS());
       ds.field("BUS_ID", &self.BUS_ID());
+      ds.field("CATALOG_URI", &self.CATALOG_URI());
+      ds.field("CATALOG_OBJECT_ID", &self.CATALOG_OBJECT_ID());
       ds.finish()
   }
 }
@@ -1111,6 +1165,8 @@ pub struct CATT {
   pub MASS_TYPE: massCategory,
   pub PAYLOADS: Option<alloc::vec::Vec<PLDT>>,
   pub BUS_ID: Option<alloc::string::String>,
+  pub CATALOG_URI: Option<alloc::string::String>,
+  pub CATALOG_OBJECT_ID: Option<alloc::string::String>,
 }
 impl Default for CATT {
   fn default() -> Self {
@@ -1139,6 +1195,8 @@ impl Default for CATT {
       MASS_TYPE: massCategory::DRY,
       PAYLOADS: None,
       BUS_ID: None,
+      CATALOG_URI: None,
+      CATALOG_OBJECT_ID: None,
     }
   }
 }
@@ -1189,6 +1247,12 @@ impl CATT {
     let BUS_ID = self.BUS_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let CATALOG_URI = self.CATALOG_URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CATALOG_OBJECT_ID = self.CATALOG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     CAT::create(_fbb, &CATArgs{
       OBJECT_NAME,
       OBJECT_ID,
@@ -1214,6 +1278,8 @@ impl CATT {
       MASS_TYPE,
       PAYLOADS,
       BUS_ID,
+      CATALOG_URI,
+      CATALOG_OBJECT_ID,
     })
   }
 }

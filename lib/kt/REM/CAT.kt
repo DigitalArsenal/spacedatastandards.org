@@ -280,6 +280,44 @@ class CAT : Table() {
         }
     val busIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
     fun busIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * Absolute URI identifying the original catalog's object-ID namespace.
+     * This is an identifier, not an instruction to fetch a resource. Use with
+     * CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+     * through replicas and derived catalogs; it does not assert a NORAD or
+     * COSPAR association. If the authority can reassign an object ID, this URI
+     * must identify its immutable edition or assignment interval, rather than
+     * the unversioned catalog. Stable IDs may use a persistent catalog URI.
+     */
+    val catalogUri : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val catalogUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun catalogUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Exact, opaque object identifier assigned by CATALOG_URI's authority.
+     * Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+     * are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+     * in a different namespace establishes that two records describe the same
+     * physical object. Publication provenance retains source and edition data.
+     */
+    val catalogObjectId : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val catalogObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun catalogObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
@@ -288,8 +326,8 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
-        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int) : Int {
-            builder.startTable(24)
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int) : Int {
+            builder.startTable(26)
             addMASS(builder, mass)
             addSIZE(builder, size)
             addRCS(builder, rcs)
@@ -297,6 +335,8 @@ class CAT : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addCATALOGOBJECTID(builder, catalogObjectIdOffset)
+            addCATALOGURI(builder, catalogUriOffset)
             addBUSID(builder, busIdOffset)
             addPAYLOADS(builder, payloadsOffset)
             addDEPLOYMENTDATE(builder, deploymentDateOffset)
@@ -316,7 +356,7 @@ class CAT : Table() {
             addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
-        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(24)
+        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
@@ -349,6 +389,8 @@ class CAT : Table() {
         }
         fun startPayloadsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addBUSID(builder: FlatBufferBuilder, busId: Int) = builder.addOffset(23, busId, 0)
+        fun addCATALOGURI(builder: FlatBufferBuilder, catalogUri: Int) = builder.addOffset(24, catalogUri, 0)
+        fun addCATALOGOBJECTID(builder: FlatBufferBuilder, catalogObjectId: Int) = builder.addOffset(25, catalogObjectId, 0)
         fun endCAT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

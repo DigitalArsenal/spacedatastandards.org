@@ -147,6 +147,28 @@ public final class CAT extends com.google.flatbuffers.Table {
   public String BUS_ID() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer BUS_IDAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
   public ByteBuffer BUS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * Absolute URI identifying the original catalog's object-ID namespace.
+   * This is an identifier, not an instruction to fetch a resource. Use with
+   * CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+   * through replicas and derived catalogs; it does not assert a NORAD or
+   * COSPAR association. If the authority can reassign an object ID, this URI
+   * must identify its immutable edition or assignment interval, rather than
+   * the unversioned catalog. Stable IDs may use a persistent catalog URI.
+   */
+  public String CATALOG_URI() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CATALOG_URIAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer CATALOG_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Exact, opaque object identifier assigned by CATALOG_URI's authority.
+   * Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+   * are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+   * in a different namespace establishes that two records describe the same
+   * physical object. Publication provenance retains source and edition data.
+   */
+  public String CATALOG_OBJECT_ID() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CATALOG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer CATALOG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
 
   public static int createCAT(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -172,8 +194,10 @@ public final class CAT extends com.google.flatbuffers.Table {
       double MASS,
       byte MASS_TYPE,
       int PAYLOADSOffset,
-      int BUS_IDOffset) {
-    builder.startTable(24);
+      int BUS_IDOffset,
+      int CATALOG_URIOffset,
+      int CATALOG_OBJECT_IDOffset) {
+    builder.startTable(26);
     CAT.addMass(builder, MASS);
     CAT.addSize(builder, SIZE);
     CAT.addRcs(builder, RCS);
@@ -181,6 +205,8 @@ public final class CAT extends com.google.flatbuffers.Table {
     CAT.addApogee(builder, APOGEE);
     CAT.addInclination(builder, INCLINATION);
     CAT.addPeriod(builder, PERIOD);
+    CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
+    CAT.addCatalogUri(builder, CATALOG_URIOffset);
     CAT.addBusId(builder, BUS_IDOffset);
     CAT.addPayloads(builder, PAYLOADSOffset);
     CAT.addDeploymentDate(builder, DEPLOYMENT_DATEOffset);
@@ -201,7 +227,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     return CAT.endCAT(builder);
   }
 
-  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(24); }
+  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
@@ -228,6 +254,8 @@ public final class CAT extends com.google.flatbuffers.Table {
   public static int createPayloadsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPayloadsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addBusId(FlatBufferBuilder builder, int BUS_IDOffset) { builder.addOffset(23, BUS_IDOffset, 0); }
+  public static void addCatalogUri(FlatBufferBuilder builder, int CATALOG_URIOffset) { builder.addOffset(24, CATALOG_URIOffset, 0); }
+  public static void addCatalogObjectId(FlatBufferBuilder builder, int CATALOG_OBJECT_IDOffset) { builder.addOffset(25, CATALOG_OBJECT_IDOffset, 0); }
   public static int endCAT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
