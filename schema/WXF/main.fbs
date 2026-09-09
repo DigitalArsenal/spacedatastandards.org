@@ -1,5 +1,5 @@
-// Hash: da0bbb6bcee88620244e7e2b38512b2db132dab916f8dd8bc39c2ea077d7aab6
-// Version: 1.208.0
+// Hash: c2d6d170c1ae3da153dd06d48efa54c95fb0d727b7a6365111220103cff480b0
+// Version: 1.208.2
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -59,7 +59,10 @@ enum wxfMemberKind : byte {
   /// Probability that the variable exceeds THRESHOLD_VALUE, in [0, 1].
   ProbabilityAboveThreshold,
   /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
-  ProbabilityBelowThreshold
+  ProbabilityBelowThreshold,
+  /// The source does not identify a member or ensemble statistic. A blended
+  /// point-forecast product must not be labelled as one deterministic run.
+  Unspecified
 }
 
 /// Meteorological variable carried by the field. Append new values only;
@@ -193,7 +196,25 @@ enum wxfLicenseClass : byte {
   RealTimeExperimental,
   /// Data older than the producer's real-time window, offered under an open
   /// attribution licence named by LICENSE_URL.
-  Historical
+  Historical,
+  /// Data of any valid time offered under an open attribution licence named
+  /// by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+  /// producer's real-time window. API access terms can be more restrictive
+  /// than the licence on the resulting data and must be checked separately.
+  OpenAttribution
+}
+
+/// Which forecast times the source actually publishes. Append new values
+/// only; never reorder or reuse existing values.
+enum wxfTimeBasis : byte {
+  /// INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
+  /// 3,600,000. This is the existing WXF convention.
+  Initialization,
+  /// Only VALID_TIME_MS is known. The source may blend runs or omit their
+  /// initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
+  /// be omitted; their zero defaults do not mean a run in 1970, zero lead,
+  /// or zero horizon. RETRIEVED_AT is not a substitute for initialization.
+  ValidTimeOnly
 }
 
 /// Regular grid the samples are laid out on. Samples are row-major with
@@ -234,14 +255,16 @@ table WXF {
   /// Producer-defined model version.
   MODEL_VERSION: string;
   /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  /// Present only for TIME_BASIS Initialization.
   INIT_TIME_MS: uint64;
-  /// Forecast lead from INIT_TIME_MS, hours.
+  /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  /// Initialization.
   LEAD_HOURS: float;
   /// Time the field is valid at, Unix milliseconds UTC
-  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   VALID_TIME_MS: uint64;
   /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  /// cycle, 48 for an interim cycle).
+  /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   HORIZON_HOURS: uint16;
   /// Ensemble realisation or statistic the field represents.
   MEMBER_KIND: wxfMemberKind = Member;
@@ -317,6 +340,9 @@ table WXF {
   CITATION: string;
   /// Peer identifier of the node that ingested and published this record.
   PRODUCER_PEER_ID: string;
+  /// Times published by the source; governs whether initialization, lead
+  /// and horizon are meaningful. The default preserves existing records.
+  TIME_BASIS: wxfTimeBasis = Initialization;
 }
 
 root_type WXF;

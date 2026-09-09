@@ -27,6 +27,9 @@ class wxfMemberKind
     const ProbabilityAboveThreshold = 9;
     /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
     const ProbabilityBelowThreshold = 10;
+    /// The source does not identify a member or ensemble statistic. A blended
+    /// point-forecast product must not be labelled as one deterministic run.
+    const Unspecified = 11;
 
     private static $names = array(
         wxfMemberKind::Member=>"Member",
@@ -40,6 +43,7 @@ class wxfMemberKind
         wxfMemberKind::Percentile=>"Percentile",
         wxfMemberKind::ProbabilityAboveThreshold=>"ProbabilityAboveThreshold",
         wxfMemberKind::ProbabilityBelowThreshold=>"ProbabilityBelowThreshold",
+        wxfMemberKind::Unspecified=>"Unspecified",
     );
 
     public static function Name($e)

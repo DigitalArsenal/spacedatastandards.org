@@ -75,6 +75,7 @@ class WXF extends Table
     }
 
     /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+    /// Present only for TIME_BASIS Initialization.
     /**
      * @return ulong
      */
@@ -84,7 +85,8 @@ class WXF extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
-    /// Forecast lead from INIT_TIME_MS, hours.
+    /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+    /// Initialization.
     /**
      * @return float
      */
@@ -95,7 +97,7 @@ class WXF extends Table
     }
 
     /// Time the field is valid at, Unix milliseconds UTC
-    /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+    /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
     /**
      * @return ulong
      */
@@ -106,7 +108,7 @@ class WXF extends Table
     }
 
     /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-    /// cycle, 48 for an interim cycle).
+    /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
     /**
      * @return ushort
      */
@@ -434,22 +436,33 @@ class WXF extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Times published by the source; governs whether initialization, lead
+    /// and horizon are meaningful. The default preserves existing records.
+    /**
+     * @return sbyte
+     */
+    public function getTIME_BASIS()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \wxfTimeBasis::Initialization;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startWXF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(40);
+        $builder->StartObject(41);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return WXF
      */
-    public static function createWXF(FlatBufferBuilder $builder, $FIELD_ID, $MODEL_CLASS, $MODEL_ID, $MODEL_VERSION, $INIT_TIME_MS, $LEAD_HOURS, $VALID_TIME_MS, $HORIZON_HOURS, $MEMBER_KIND, $MEMBER_INDEX, $ENSEMBLE_SIZE, $PERCENTILE, $THRESHOLD_VALUE, $VARIABLE, $VARIABLE_NAME, $UNITS, $LEVEL_KIND, $LEVEL_VALUE, $TEMPORAL_KIND, $ACCUMULATION_HOURS, $GRID, $TILE_INDEX, $TILE_COUNT, $VALUES_ENCODING, $VALUES, $CHUNK_CID, $CHUNK_DTYPE, $CHUNK_CODECS, $CHUNK_BYTE_LENGTH, $VALUE_MIN, $VALUE_MAX, $MISSING_COUNT, $ORIGIN_ID, $DATASET_ID, $SOURCE_URL, $RETRIEVED_AT, $LICENSE_CLASS, $LICENSE_URL, $CITATION, $PRODUCER_PEER_ID)
+    public static function createWXF(FlatBufferBuilder $builder, $FIELD_ID, $MODEL_CLASS, $MODEL_ID, $MODEL_VERSION, $INIT_TIME_MS, $LEAD_HOURS, $VALID_TIME_MS, $HORIZON_HOURS, $MEMBER_KIND, $MEMBER_INDEX, $ENSEMBLE_SIZE, $PERCENTILE, $THRESHOLD_VALUE, $VARIABLE, $VARIABLE_NAME, $UNITS, $LEVEL_KIND, $LEVEL_VALUE, $TEMPORAL_KIND, $ACCUMULATION_HOURS, $GRID, $TILE_INDEX, $TILE_COUNT, $VALUES_ENCODING, $VALUES, $CHUNK_CID, $CHUNK_DTYPE, $CHUNK_CODECS, $CHUNK_BYTE_LENGTH, $VALUE_MIN, $VALUE_MAX, $MISSING_COUNT, $ORIGIN_ID, $DATASET_ID, $SOURCE_URL, $RETRIEVED_AT, $LICENSE_CLASS, $LICENSE_URL, $CITATION, $PRODUCER_PEER_ID, $TIME_BASIS)
     {
-        $builder->startObject(40);
+        $builder->startObject(41);
         self::addFIELD_ID($builder, $FIELD_ID);
         self::addMODEL_CLASS($builder, $MODEL_CLASS);
         self::addMODEL_ID($builder, $MODEL_ID);
@@ -490,6 +503,7 @@ class WXF extends Table
         self::addLICENSE_URL($builder, $LICENSE_URL);
         self::addCITATION($builder, $CITATION);
         self::addPRODUCER_PEER_ID($builder, $PRODUCER_PEER_ID);
+        self::addTIME_BASIS($builder, $TIME_BASIS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // FIELD_ID
         $builder->required($o, 44);  // GRID
@@ -942,6 +956,16 @@ class WXF extends Table
     public static function addPRODUCER_PEER_ID(FlatBufferBuilder $builder, $PRODUCER_PEER_ID)
     {
         $builder->addOffsetX(39, $PRODUCER_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTIME_BASIS(FlatBufferBuilder $builder, $TIME_BASIS)
+    {
+        $builder->addSbyteX(40, $TIME_BASIS, 0);
     }
 
     /**

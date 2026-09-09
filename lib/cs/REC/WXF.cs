@@ -48,14 +48,16 @@ public struct WXF : IFlatbufferObject
 #endif
   public byte[] GetMODEL_VERSIONArray() { return __p.__vector_as_array<byte>(10); }
   /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  /// Present only for TIME_BASIS Initialization.
   public ulong INIT_TIME_MS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
-  /// Forecast lead from INIT_TIME_MS, hours.
+  /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  /// Initialization.
   public float LEAD_HOURS { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Time the field is valid at, Unix milliseconds UTC
-  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   public ulong VALID_TIME_MS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  /// cycle, 48 for an interim cycle).
+  /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   public ushort HORIZON_HOURS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Ensemble realisation or statistic the field represents.
   public wxfMemberKind MEMBER_KIND { get { int o = __p.__offset(20); return o != 0 ? (wxfMemberKind)__p.bb.GetSbyte(o + __p.bb_pos) : wxfMemberKind.Member; } }
@@ -199,6 +201,9 @@ public struct WXF : IFlatbufferObject
   public ArraySegment<byte>? GetPRODUCER_PEER_IDBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
   public byte[] GetPRODUCER_PEER_IDArray() { return __p.__vector_as_array<byte>(82); }
+  /// Times published by the source; governs whether initialization, lead
+  /// and horizon are meaningful. The default preserves existing records.
+  public wxfTimeBasis TIME_BASIS { get { int o = __p.__offset(84); return o != 0 ? (wxfTimeBasis)__p.bb.GetSbyte(o + __p.bb_pos) : wxfTimeBasis.Initialization; } }
 
   public static Offset<WXF> CreateWXF(FlatBufferBuilder builder,
       StringOffset FIELD_IDOffset = default(StringOffset),
@@ -240,8 +245,9 @@ public struct WXF : IFlatbufferObject
       wxfLicenseClass LICENSE_CLASS = wxfLicenseClass.RealTimeExperimental,
       StringOffset LICENSE_URLOffset = default(StringOffset),
       StringOffset CITATIONOffset = default(StringOffset),
-      StringOffset PRODUCER_PEER_IDOffset = default(StringOffset)) {
-    builder.StartTable(40);
+      StringOffset PRODUCER_PEER_IDOffset = default(StringOffset),
+      wxfTimeBasis TIME_BASIS = wxfTimeBasis.Initialization) {
+    builder.StartTable(41);
     WXF.AddRETRIEVED_AT(builder, RETRIEVED_AT);
     WXF.AddCHUNK_BYTE_LENGTH(builder, CHUNK_BYTE_LENGTH);
     WXF.AddVALID_TIME_MS(builder, VALID_TIME_MS);
@@ -275,6 +281,7 @@ public struct WXF : IFlatbufferObject
     WXF.AddENSEMBLE_SIZE(builder, ENSEMBLE_SIZE);
     WXF.AddMEMBER_INDEX(builder, MEMBER_INDEX);
     WXF.AddHORIZON_HOURS(builder, HORIZON_HOURS);
+    WXF.AddTIME_BASIS(builder, TIME_BASIS);
     WXF.AddLICENSE_CLASS(builder, LICENSE_CLASS);
     WXF.AddVALUES_ENCODING(builder, VALUES_ENCODING);
     WXF.AddTEMPORAL_KIND(builder, TEMPORAL_KIND);
@@ -285,7 +292,7 @@ public struct WXF : IFlatbufferObject
     return WXF.EndWXF(builder);
   }
 
-  public static void StartWXF(FlatBufferBuilder builder) { builder.StartTable(40); }
+  public static void StartWXF(FlatBufferBuilder builder) { builder.StartTable(41); }
   public static void AddFIELD_ID(FlatBufferBuilder builder, StringOffset FIELD_IDOffset) { builder.AddOffset(0, FIELD_IDOffset.Value, 0); }
   public static void AddMODEL_CLASS(FlatBufferBuilder builder, wxfModelClass MODEL_CLASS) { builder.AddSbyte(1, (sbyte)MODEL_CLASS, 0); }
   public static void AddMODEL_ID(FlatBufferBuilder builder, StringOffset MODEL_IDOffset) { builder.AddOffset(2, MODEL_IDOffset.Value, 0); }
@@ -336,6 +343,7 @@ public struct WXF : IFlatbufferObject
   public static void AddLICENSE_URL(FlatBufferBuilder builder, StringOffset LICENSE_URLOffset) { builder.AddOffset(37, LICENSE_URLOffset.Value, 0); }
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(38, CITATIONOffset.Value, 0); }
   public static void AddPRODUCER_PEER_ID(FlatBufferBuilder builder, StringOffset PRODUCER_PEER_IDOffset) { builder.AddOffset(39, PRODUCER_PEER_IDOffset.Value, 0); }
+  public static void AddTIME_BASIS(FlatBufferBuilder builder, wxfTimeBasis TIME_BASIS) { builder.AddSbyte(40, (sbyte)TIME_BASIS, 0); }
   public static Offset<WXF> EndWXF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // FIELD_ID
@@ -392,6 +400,7 @@ public struct WXF : IFlatbufferObject
     _o.LICENSE_URL = this.LICENSE_URL;
     _o.CITATION = this.CITATION;
     _o.PRODUCER_PEER_ID = this.PRODUCER_PEER_ID;
+    _o.TIME_BASIS = this.TIME_BASIS;
   }
   public static Offset<WXF> Pack(FlatBufferBuilder builder, WXFT _o) {
     if (_o == null) return default(Offset<WXF>);
@@ -461,7 +470,8 @@ public struct WXF : IFlatbufferObject
       _o.LICENSE_CLASS,
       _LICENSE_URL,
       _CITATION,
-      _PRODUCER_PEER_ID);
+      _PRODUCER_PEER_ID,
+      _o.TIME_BASIS);
   }
 }
 
@@ -507,6 +517,7 @@ public class WXFT
   public string LICENSE_URL { get; set; }
   public string CITATION { get; set; }
   public string PRODUCER_PEER_ID { get; set; }
+  public wxfTimeBasis TIME_BASIS { get; set; }
 
   public WXFT() {
     this.FIELD_ID = null;
@@ -549,6 +560,7 @@ public class WXFT
     this.LICENSE_URL = null;
     this.CITATION = null;
     this.PRODUCER_PEER_ID = null;
+    this.TIME_BASIS = wxfTimeBasis.Initialization;
   }
   public static WXFT DeserializeFromBinary(byte[] fbBuffer) {
     return WXF.GetRootAsWXF(new ByteBuffer(fbBuffer)).UnPack();
@@ -606,6 +618,7 @@ static public class WXFVerify
       && verifier.VerifyString(tablePos, 78 /*LICENSE_URL*/, false)
       && verifier.VerifyString(tablePos, 80 /*CITATION*/, false)
       && verifier.VerifyString(tablePos, 82 /*PRODUCER_PEER_ID*/, false)
+      && verifier.VerifyField(tablePos, 84 /*TIME_BASIS*/, 1 /*wxfTimeBasis*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

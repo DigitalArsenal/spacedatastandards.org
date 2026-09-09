@@ -60,5 +60,11 @@ export enum wxfMemberKind {
   /**
    * Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
    */
-  ProbabilityBelowThreshold = 10
+  ProbabilityBelowThreshold = 10,
+
+  /**
+   * The source does not identify a member or ensemble statistic. A blended
+   * point-forecast product must not be labelled as one deterministic run.
+   */
+  Unspecified = 11
 }

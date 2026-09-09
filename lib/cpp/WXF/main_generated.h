@@ -114,11 +114,14 @@ enum wxfMemberKind : int8_t {
   wxfMemberKind_ProbabilityAboveThreshold = 9,
   /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
   wxfMemberKind_ProbabilityBelowThreshold = 10,
+  /// The source does not identify a member or ensemble statistic. A blended
+  /// point-forecast product must not be labelled as one deterministic run.
+  wxfMemberKind_Unspecified = 11,
   wxfMemberKind_MIN = wxfMemberKind_Member,
-  wxfMemberKind_MAX = wxfMemberKind_ProbabilityBelowThreshold
+  wxfMemberKind_MAX = wxfMemberKind_Unspecified
 };
 
-inline const wxfMemberKind (&EnumValueswxfMemberKind())[11] {
+inline const wxfMemberKind (&EnumValueswxfMemberKind())[12] {
   static const wxfMemberKind values[] = {
     wxfMemberKind_Member,
     wxfMemberKind_Control,
@@ -130,13 +133,14 @@ inline const wxfMemberKind (&EnumValueswxfMemberKind())[11] {
     wxfMemberKind_Maximum,
     wxfMemberKind_Percentile,
     wxfMemberKind_ProbabilityAboveThreshold,
-    wxfMemberKind_ProbabilityBelowThreshold
+    wxfMemberKind_ProbabilityBelowThreshold,
+    wxfMemberKind_Unspecified
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfMemberKind() {
-  static const char * const names[12] = {
+  static const char * const names[13] = {
     "Member",
     "Control",
     "Deterministic",
@@ -148,13 +152,14 @@ inline const char * const *EnumNameswxfMemberKind() {
     "Percentile",
     "ProbabilityAboveThreshold",
     "ProbabilityBelowThreshold",
+    "Unspecified",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfMemberKind(wxfMemberKind e) {
-  if (::flatbuffers::IsOutRange(e, wxfMemberKind_Member, wxfMemberKind_ProbabilityBelowThreshold)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfMemberKind_Member, wxfMemberKind_Unspecified)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfMemberKind()[index];
 }
@@ -484,31 +489,76 @@ enum wxfLicenseClass : int8_t {
   /// Data older than the producer's real-time window, offered under an open
   /// attribution licence named by LICENSE_URL.
   wxfLicenseClass_Historical = 1,
+  /// Data of any valid time offered under an open attribution licence named
+  /// by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+  /// producer's real-time window. API access terms can be more restrictive
+  /// than the licence on the resulting data and must be checked separately.
+  wxfLicenseClass_OpenAttribution = 2,
   wxfLicenseClass_MIN = wxfLicenseClass_RealTimeExperimental,
-  wxfLicenseClass_MAX = wxfLicenseClass_Historical
+  wxfLicenseClass_MAX = wxfLicenseClass_OpenAttribution
 };
 
-inline const wxfLicenseClass (&EnumValueswxfLicenseClass())[2] {
+inline const wxfLicenseClass (&EnumValueswxfLicenseClass())[3] {
   static const wxfLicenseClass values[] = {
     wxfLicenseClass_RealTimeExperimental,
-    wxfLicenseClass_Historical
+    wxfLicenseClass_Historical,
+    wxfLicenseClass_OpenAttribution
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfLicenseClass() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "RealTimeExperimental",
     "Historical",
+    "OpenAttribution",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfLicenseClass(wxfLicenseClass e) {
-  if (::flatbuffers::IsOutRange(e, wxfLicenseClass_RealTimeExperimental, wxfLicenseClass_Historical)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfLicenseClass_RealTimeExperimental, wxfLicenseClass_OpenAttribution)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfLicenseClass()[index];
+}
+
+/// Which forecast times the source actually publishes. Append new values
+/// only; never reorder or reuse existing values.
+enum wxfTimeBasis : int8_t {
+  /// INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
+  /// 3,600,000. This is the existing WXF convention.
+  wxfTimeBasis_Initialization = 0,
+  /// Only VALID_TIME_MS is known. The source may blend runs or omit their
+  /// initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
+  /// be omitted; their zero defaults do not mean a run in 1970, zero lead,
+  /// or zero horizon. RETRIEVED_AT is not a substitute for initialization.
+  wxfTimeBasis_ValidTimeOnly = 1,
+  wxfTimeBasis_MIN = wxfTimeBasis_Initialization,
+  wxfTimeBasis_MAX = wxfTimeBasis_ValidTimeOnly
+};
+
+inline const wxfTimeBasis (&EnumValueswxfTimeBasis())[2] {
+  static const wxfTimeBasis values[] = {
+    wxfTimeBasis_Initialization,
+    wxfTimeBasis_ValidTimeOnly
+  };
+  return values;
+}
+
+inline const char * const *EnumNameswxfTimeBasis() {
+  static const char * const names[3] = {
+    "Initialization",
+    "ValidTimeOnly",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamewxfTimeBasis(wxfTimeBasis e) {
+  if (::flatbuffers::IsOutRange(e, wxfTimeBasis_Initialization, wxfTimeBasis_ValidTimeOnly)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameswxfTimeBasis()[index];
 }
 
 /// Regular grid the samples are laid out on. Samples are row-major with
@@ -681,7 +731,8 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LICENSE_CLASS = 76,
     VT_LICENSE_URL = 78,
     VT_CITATION = 80,
-    VT_PRODUCER_PEER_ID = 82
+    VT_PRODUCER_PEER_ID = 82,
+    VT_TIME_BASIS = 84
   };
   /// Stable identifier of the whole field this record belongs to; equal
   /// across all tiles of one (producer, init, member, variable, level, lead).
@@ -701,20 +752,22 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_MODEL_VERSION);
   }
   /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  /// Present only for TIME_BASIS Initialization.
   uint64_t INIT_TIME_MS() const {
     return GetField<uint64_t>(VT_INIT_TIME_MS, 0);
   }
-  /// Forecast lead from INIT_TIME_MS, hours.
+  /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  /// Initialization.
   float LEAD_HOURS() const {
     return GetField<float>(VT_LEAD_HOURS, 0.0f);
   }
   /// Time the field is valid at, Unix milliseconds UTC
-  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   uint64_t VALID_TIME_MS() const {
     return GetField<uint64_t>(VT_VALID_TIME_MS, 0);
   }
   /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  /// cycle, 48 for an interim cycle).
+  /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   uint16_t HORIZON_HOURS() const {
     return GetField<uint16_t>(VT_HORIZON_HOURS, 0);
   }
@@ -856,6 +909,11 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PRODUCER_PEER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRODUCER_PEER_ID);
   }
+  /// Times published by the source; governs whether initialization, lead
+  /// and horizon are meaningful. The default preserves existing records.
+  wxfTimeBasis TIME_BASIS() const {
+    return static_cast<wxfTimeBasis>(GetField<int8_t>(VT_TIME_BASIS, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -916,6 +974,7 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CITATION()) &&
            VerifyOffset(verifier, VT_PRODUCER_PEER_ID) &&
            verifier.VerifyString(PRODUCER_PEER_ID()) &&
+           VerifyField<int8_t>(verifier, VT_TIME_BASIS, 1) &&
            verifier.EndTable();
   }
 };
@@ -1044,6 +1103,9 @@ struct WXFBuilder {
   void add_PRODUCER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> PRODUCER_PEER_ID) {
     fbb_.AddOffset(WXF::VT_PRODUCER_PEER_ID, PRODUCER_PEER_ID);
   }
+  void add_TIME_BASIS(wxfTimeBasis TIME_BASIS) {
+    fbb_.AddElement<int8_t>(WXF::VT_TIME_BASIS, static_cast<int8_t>(TIME_BASIS), 0);
+  }
   explicit WXFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1098,7 +1160,8 @@ inline ::flatbuffers::Offset<WXF> CreateWXF(
     wxfLicenseClass LICENSE_CLASS = wxfLicenseClass_RealTimeExperimental,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRODUCER_PEER_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> PRODUCER_PEER_ID = 0,
+    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization) {
   WXFBuilder builder_(_fbb);
   builder_.add_RETRIEVED_AT(RETRIEVED_AT);
   builder_.add_CHUNK_BYTE_LENGTH(CHUNK_BYTE_LENGTH);
@@ -1133,6 +1196,7 @@ inline ::flatbuffers::Offset<WXF> CreateWXF(
   builder_.add_ENSEMBLE_SIZE(ENSEMBLE_SIZE);
   builder_.add_MEMBER_INDEX(MEMBER_INDEX);
   builder_.add_HORIZON_HOURS(HORIZON_HOURS);
+  builder_.add_TIME_BASIS(TIME_BASIS);
   builder_.add_LICENSE_CLASS(LICENSE_CLASS);
   builder_.add_VALUES_ENCODING(VALUES_ENCODING);
   builder_.add_TEMPORAL_KIND(TEMPORAL_KIND);
@@ -1184,7 +1248,8 @@ inline ::flatbuffers::Offset<WXF> CreateWXFDirect(
     wxfLicenseClass LICENSE_CLASS = wxfLicenseClass_RealTimeExperimental,
     const char *LICENSE_URL = nullptr,
     const char *CITATION = nullptr,
-    const char *PRODUCER_PEER_ID = nullptr) {
+    const char *PRODUCER_PEER_ID = nullptr,
+    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization) {
   auto FIELD_ID__ = FIELD_ID ? _fbb.CreateString(FIELD_ID) : 0;
   auto MODEL_ID__ = MODEL_ID ? _fbb.CreateString(MODEL_ID) : 0;
   auto MODEL_VERSION__ = MODEL_VERSION ? _fbb.CreateString(MODEL_VERSION) : 0;
@@ -1241,7 +1306,8 @@ inline ::flatbuffers::Offset<WXF> CreateWXFDirect(
       LICENSE_CLASS,
       LICENSE_URL__,
       CITATION__,
-      PRODUCER_PEER_ID__);
+      PRODUCER_PEER_ID__,
+      TIME_BASIS);
 }
 
 inline const WXF *GetWXF(const void *buf) {

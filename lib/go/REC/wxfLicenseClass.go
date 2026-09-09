@@ -17,16 +17,23 @@ const (
 	/// Data older than the producer's real-time window, offered under an open
 	/// attribution licence named by LICENSE_URL.
 	wxfLicenseClassHistorical           wxfLicenseClass = 1
+	/// Data of any valid time offered under an open attribution licence named
+	/// by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+	/// producer's real-time window. API access terms can be more restrictive
+	/// than the licence on the resulting data and must be checked separately.
+	wxfLicenseClassOpenAttribution      wxfLicenseClass = 2
 )
 
 var EnumNameswxfLicenseClass = map[wxfLicenseClass]string{
 	wxfLicenseClassRealTimeExperimental: "RealTimeExperimental",
 	wxfLicenseClassHistorical:           "Historical",
+	wxfLicenseClassOpenAttribution:      "OpenAttribution",
 }
 
 var EnumValueswxfLicenseClass = map[string]wxfLicenseClass{
 	"RealTimeExperimental": wxfLicenseClassRealTimeExperimental,
 	"Historical":           wxfLicenseClassHistorical,
+	"OpenAttribution":      wxfLicenseClassOpenAttribution,
 }
 
 func (v wxfLicenseClass) String() string {

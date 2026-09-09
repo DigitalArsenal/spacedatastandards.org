@@ -51,8 +51,13 @@ public final class wxfMemberKind {
    * Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
    */
   public static final byte ProbabilityBelowThreshold = 10;
+  /**
+   * The source does not identify a member or ensemble statistic. A blended
+   * point-forecast product must not be labelled as one deterministic run.
+   */
+  public static final byte Unspecified = 11;
 
-  public static final String[] names = { "Member", "Control", "Deterministic", "Mean", "Median", "StandardDeviation", "Minimum", "Maximum", "Percentile", "ProbabilityAboveThreshold", "ProbabilityBelowThreshold", };
+  public static final String[] names = { "Member", "Control", "Deterministic", "Mean", "Median", "StandardDeviation", "Minimum", "Maximum", "Percentile", "ProbabilityAboveThreshold", "ProbabilityBelowThreshold", "Unspecified", };
 
   public static String name(int e) { return names[e]; }
 }

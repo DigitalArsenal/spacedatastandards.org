@@ -17,5 +17,6 @@ export * from './wxfLicenseClass.js';
 export * from './wxfMemberKind.js';
 export * from './wxfModelClass.js';
 export * from './wxfTemporalKind.js';
+export * from './wxfTimeBasis.js';
 export * from './wxfValuesEncoding.js';
 export * from './wxfVariable.js';

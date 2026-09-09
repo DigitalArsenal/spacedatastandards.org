@@ -58,6 +58,9 @@ enum wxfMemberKind:
     wxfMemberKind_ProbabilityAboveThreshold = 9
     /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
     wxfMemberKind_ProbabilityBelowThreshold = 10
+    /// The source does not identify a member or ensemble statistic. A blended
+    /// point-forecast product must not be labelled as one deterministic run.
+    wxfMemberKind_Unspecified = 11
 
 /// Meteorological variable carried by the field. Append new values only;
 /// never reorder or reuse existing values. Units are fixed per value and
@@ -186,6 +189,23 @@ enum wxfLicenseClass:
     /// Data older than the producer's real-time window, offered under an open
     /// attribution licence named by LICENSE_URL.
     wxfLicenseClass_Historical = 1
+    /// Data of any valid time offered under an open attribution licence named
+    /// by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+    /// producer's real-time window. API access terms can be more restrictive
+    /// than the licence on the resulting data and must be checked separately.
+    wxfLicenseClass_OpenAttribution = 2
+
+/// Which forecast times the source actually publishes. Append new values
+/// only; never reorder or reuse existing values.
+enum wxfTimeBasis:
+    /// INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
+    /// 3,600,000. This is the existing WXF convention.
+    wxfTimeBasis_Initialization = 0
+    /// Only VALID_TIME_MS is known. The source may blend runs or omit their
+    /// initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
+    /// be omitted; their zero defaults do not mean a run in 1970, zero lead,
+    /// or zero horizon. RETRIEVED_AT is not a substitute for initialization.
+    wxfTimeBasis_ValidTimeOnly = 1
 
 class WXFGrid
 
@@ -274,17 +294,19 @@ class WXF : flatbuffers.handle
     def MODEL_VERSION() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+    /// Present only for TIME_BASIS Initialization.
     def INIT_TIME_MS() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 12, 0)
-    /// Forecast lead from INIT_TIME_MS, hours.
+    /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+    /// Initialization.
     def LEAD_HOURS() -> float:
         return flatbuffers.field_float32(buf_, pos_, 14, 0.0)
     /// Time the field is valid at, Unix milliseconds UTC
-    /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+    /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
     def VALID_TIME_MS() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 16, 0)
     /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-    /// cycle, 48 for an interim cycle).
+    /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
     def HORIZON_HOURS() -> int:
         return flatbuffers.field_uint16(buf_, pos_, 18, 0)
     /// Ensemble realisation or statistic the field represents.
@@ -398,13 +420,17 @@ class WXF : flatbuffers.handle
     /// Peer identifier of the node that ingested and published this record.
     def PRODUCER_PEER_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 82)
+    /// Times published by the source; governs whether initialization, lead
+    /// and horizon are meaningful. The default preserves existing records.
+    def TIME_BASIS() -> wxfTimeBasis:
+        return wxfTimeBasis(flatbuffers.field_int8(buf_, pos_, 84, 0))
 
 def GetRootAsWXF(buf:string): return WXF { buf, flatbuffers.indirect(buf, 0) }
 
 struct WXFBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(40)
+        b_.StartObject(41)
         return this
     def add_FIELD_ID(FIELD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, FIELD_ID)
@@ -525,6 +551,9 @@ struct WXFBuilder:
         return this
     def add_PRODUCER_PEER_ID(PRODUCER_PEER_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(39, PRODUCER_PEER_ID)
+        return this
+    def add_TIME_BASIS(TIME_BASIS:wxfTimeBasis):
+        b_.PrependInt8Slot(40, TIME_BASIS, 0)
         return this
     def end():
         return b_.EndObject()

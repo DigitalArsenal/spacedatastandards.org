@@ -54,20 +54,22 @@ public final class WXF extends com.google.flatbuffers.Table {
   public ByteBuffer MODEL_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Initialisation (analysis) time of the run, Unix milliseconds UTC.
+   * Present only for TIME_BASIS Initialization.
    */
   public long INIT_TIME_MS() { int o = __offset(12); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
-   * Forecast lead from INIT_TIME_MS, hours.
+   * Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+   * Initialization.
    */
   public float LEAD_HOURS() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Time the field is valid at, Unix milliseconds UTC
-   * (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+   * (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
    */
   public long VALID_TIME_MS() { int o = __offset(16); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-   * cycle, 48 for an interim cycle).
+   * cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
    */
   public int HORIZON_HOURS() { int o = __offset(18); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
   /**
@@ -237,6 +239,11 @@ public final class WXF extends com.google.flatbuffers.Table {
   public String PRODUCER_PEER_ID() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PRODUCER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
   public ByteBuffer PRODUCER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * Times published by the source; governs whether initialization, lead
+   * and horizon are meaningful. The default preserves existing records.
+   */
+  public byte TIME_BASIS() { int o = __offset(84); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createWXF(FlatBufferBuilder builder,
       int FIELD_IDOffset,
@@ -278,8 +285,9 @@ public final class WXF extends com.google.flatbuffers.Table {
       byte LICENSE_CLASS,
       int LICENSE_URLOffset,
       int CITATIONOffset,
-      int PRODUCER_PEER_IDOffset) {
-    builder.startTable(40);
+      int PRODUCER_PEER_IDOffset,
+      byte TIME_BASIS) {
+    builder.startTable(41);
     WXF.addRetrievedAt(builder, RETRIEVED_AT);
     WXF.addChunkByteLength(builder, CHUNK_BYTE_LENGTH);
     WXF.addValidTimeMs(builder, VALID_TIME_MS);
@@ -313,6 +321,7 @@ public final class WXF extends com.google.flatbuffers.Table {
     WXF.addEnsembleSize(builder, ENSEMBLE_SIZE);
     WXF.addMemberIndex(builder, MEMBER_INDEX);
     WXF.addHorizonHours(builder, HORIZON_HOURS);
+    WXF.addTimeBasis(builder, TIME_BASIS);
     WXF.addLicenseClass(builder, LICENSE_CLASS);
     WXF.addValuesEncoding(builder, VALUES_ENCODING);
     WXF.addTemporalKind(builder, TEMPORAL_KIND);
@@ -323,7 +332,7 @@ public final class WXF extends com.google.flatbuffers.Table {
     return WXF.endWXF(builder);
   }
 
-  public static void startWXF(FlatBufferBuilder builder) { builder.startTable(40); }
+  public static void startWXF(FlatBufferBuilder builder) { builder.startTable(41); }
   public static void addFieldId(FlatBufferBuilder builder, int FIELD_IDOffset) { builder.addOffset(0, FIELD_IDOffset, 0); }
   public static void addModelClass(FlatBufferBuilder builder, byte MODEL_CLASS) { builder.addByte(1, MODEL_CLASS, 0); }
   public static void addModelId(FlatBufferBuilder builder, int MODEL_IDOffset) { builder.addOffset(2, MODEL_IDOffset, 0); }
@@ -368,6 +377,7 @@ public final class WXF extends com.google.flatbuffers.Table {
   public static void addLicenseUrl(FlatBufferBuilder builder, int LICENSE_URLOffset) { builder.addOffset(37, LICENSE_URLOffset, 0); }
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(38, CITATIONOffset, 0); }
   public static void addProducerPeerId(FlatBufferBuilder builder, int PRODUCER_PEER_IDOffset) { builder.addOffset(39, PRODUCER_PEER_IDOffset, 0); }
+  public static void addTimeBasis(FlatBufferBuilder builder, byte TIME_BASIS) { builder.addByte(40, TIME_BASIS, 0); }
   public static int endWXF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // FIELD_ID

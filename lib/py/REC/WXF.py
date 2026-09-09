@@ -64,6 +64,7 @@ class WXF(object):
         return None
 
     # Initialisation (analysis) time of the run, Unix milliseconds UTC.
+    # Present only for TIME_BASIS Initialization.
     # WXF
     def INIT_TIME_MS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -71,7 +72,8 @@ class WXF(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
-    # Forecast lead from INIT_TIME_MS, hours.
+    # Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+    # Initialization.
     # WXF
     def LEAD_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -80,7 +82,7 @@ class WXF(object):
         return 0.0
 
     # Time the field is valid at, Unix milliseconds UTC
-    # (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+    # (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
     # WXF
     def VALID_TIME_MS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -89,7 +91,7 @@ class WXF(object):
         return 0
 
     # Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-    # cycle, 48 for an interim cycle).
+    # cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
     # WXF
     def HORIZON_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -400,8 +402,17 @@ class WXF(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Times published by the source; governs whether initialization, lead
+    # and horizon are meaningful. The default preserves existing records.
+    # WXF
+    def TIME_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def WXFStart(builder):
-    builder.StartObject(40)
+    builder.StartObject(41)
 
 def Start(builder):
     WXFStart(builder)
@@ -674,6 +685,12 @@ def WXFAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID):
 def AddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID):
     WXFAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID)
 
+def WXFAddTIME_BASIS(builder, TIME_BASIS):
+    builder.PrependInt8Slot(40, TIME_BASIS, 0)
+
+def AddTIME_BASIS(builder, TIME_BASIS):
+    WXFAddTIME_BASIS(builder, TIME_BASIS)
+
 def WXFEnd(builder):
     return builder.EndObject()
 
@@ -731,6 +748,7 @@ class WXFT(object):
         LICENSE_URL = None,
         CITATION = None,
         PRODUCER_PEER_ID = None,
+        TIME_BASIS = 0,
     ):
         self.FIELD_ID = FIELD_ID  # type: Optional[str]
         self.MODEL_CLASS = MODEL_CLASS  # type: int
@@ -772,6 +790,7 @@ class WXFT(object):
         self.LICENSE_URL = LICENSE_URL  # type: Optional[str]
         self.CITATION = CITATION  # type: Optional[str]
         self.PRODUCER_PEER_ID = PRODUCER_PEER_ID  # type: Optional[str]
+        self.TIME_BASIS = TIME_BASIS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -844,6 +863,7 @@ class WXFT(object):
         self.LICENSE_URL = WXF.LICENSE_URL()
         self.CITATION = WXF.CITATION()
         self.PRODUCER_PEER_ID = WXF.PRODUCER_PEER_ID()
+        self.TIME_BASIS = WXF.TIME_BASIS()
 
     # WXFT
     def Pack(self, builder):
@@ -948,5 +968,6 @@ class WXFT(object):
             WXFAddCITATION(builder, CITATION)
         if self.PRODUCER_PEER_ID is not None:
             WXFAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID)
+        WXFAddTIME_BASIS(builder, self.TIME_BASIS)
         WXF = WXFEnd(builder)
         return WXF

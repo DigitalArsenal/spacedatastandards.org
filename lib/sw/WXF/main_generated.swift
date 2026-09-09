@@ -76,8 +76,11 @@ public enum wxfMemberKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case probabilityabovethreshold = 9
   ///  Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
   case probabilitybelowthreshold = 10
+  ///  The source does not identify a member or ensemble statistic. A blended
+  ///  point-forecast product must not be labelled as one deterministic run.
+  case unspecified = 11
 
-  public static var max: wxfMemberKind { return .probabilitybelowthreshold }
+  public static var max: wxfMemberKind { return .unspecified }
   public static var min: wxfMemberKind { return .member }
 }
 
@@ -252,9 +255,34 @@ public enum wxfLicenseClass: Int8, FlatbuffersVectorInitializable, Enum, Verifia
   ///  Data older than the producer's real-time window, offered under an open
   ///  attribution licence named by LICENSE_URL.
   case historical = 1
+  ///  Data of any valid time offered under an open attribution licence named
+  ///  by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+  ///  producer's real-time window. API access terms can be more restrictive
+  ///  than the licence on the resulting data and must be checked separately.
+  case openattribution = 2
 
-  public static var max: wxfLicenseClass { return .historical }
+  public static var max: wxfLicenseClass { return .openattribution }
   public static var min: wxfLicenseClass { return .realtimeexperimental }
+}
+
+
+///  Which forecast times the source actually publishes. Append new values
+///  only; never reorder or reuse existing values.
+public enum wxfTimeBasis: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
+  ///  3,600,000. This is the existing WXF convention.
+  case initialization = 0
+  ///  Only VALID_TIME_MS is known. The source may blend runs or omit their
+  ///  initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
+  ///  be omitted; their zero defaults do not mean a run in 1970, zero lead,
+  ///  or zero horizon. RETRIEVED_AT is not a substitute for initialization.
+  case validtimeonly = 1
+
+  public static var max: wxfTimeBasis { return .validtimeonly }
+  public static var min: wxfTimeBasis { return .initialization }
 }
 
 
@@ -404,6 +432,7 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let LICENSE_URL: VOffset = 78
     static let CITATION: VOffset = 80
     static let PRODUCER_PEER_ID: VOffset = 82
+    static let TIME_BASIS: VOffset = 84
   }
 
   ///  Stable identifier of the whole field this record belongs to; equal
@@ -419,14 +448,16 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var MODEL_VERSION: String? { let o = _accessor.offset(VT.MODEL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
   public var MODEL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_VERSION) }
   ///  Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  ///  Present only for TIME_BASIS Initialization.
   public var INIT_TIME_MS: UInt64 { let o = _accessor.offset(VT.INIT_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Forecast lead from INIT_TIME_MS, hours.
+  ///  Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  ///  Initialization.
   public var LEAD_HOURS: Float32 { let o = _accessor.offset(VT.LEAD_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Time the field is valid at, Unix milliseconds UTC
-  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   public var VALID_TIME_MS: UInt64 { let o = _accessor.offset(VT.VALID_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  ///  cycle, 48 for an interim cycle).
+  ///  cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   public var HORIZON_HOURS: UInt16 { let o = _accessor.offset(VT.HORIZON_HOURS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Ensemble realisation or statistic the field represents.
   public var MEMBER_KIND: wxfMemberKind { let o = _accessor.offset(VT.MEMBER_KIND); return o == 0 ? .member : wxfMemberKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .member }
@@ -513,7 +544,10 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Peer identifier of the node that ingested and published this record.
   public var PRODUCER_PEER_ID: String? { let o = _accessor.offset(VT.PRODUCER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRODUCER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_PEER_ID) }
-  public static func startWXF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }
+  ///  Times published by the source; governs whether initialization, lead
+  ///  and horizon are meaningful. The default preserves existing records.
+  public var TIME_BASIS: wxfTimeBasis { let o = _accessor.offset(VT.TIME_BASIS); return o == 0 ? .initialization : wxfTimeBasis(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .initialization }
+  public static func startWXF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
   public static func add(FIELD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_ID, at: VT.FIELD_ID) }
   public static func add(MODEL_CLASS: wxfModelClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_CLASS.rawValue, def: 0, at: VT.MODEL_CLASS) }
   public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
@@ -554,6 +588,7 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
   public static func add(PRODUCER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_PEER_ID, at: VT.PRODUCER_PEER_ID) }
+  public static func add(TIME_BASIS: wxfTimeBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_BASIS.rawValue, def: 0, at: VT.TIME_BASIS) }
   public static func endWXF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 44]); return end }
   public static func createWXF(
     _ fbb: inout FlatBufferBuilder,
@@ -596,7 +631,8 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     LICENSE_CLASS: wxfLicenseClass = .realtimeexperimental,
     LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
     CITATIONOffset CITATION: Offset = Offset(),
-    PRODUCER_PEER_IDOffset PRODUCER_PEER_ID: Offset = Offset()
+    PRODUCER_PEER_IDOffset PRODUCER_PEER_ID: Offset = Offset(),
+    TIME_BASIS: wxfTimeBasis = .initialization
   ) -> Offset {
     let __start = WXF.startWXF(&fbb)
     WXF.add(FIELD_ID: FIELD_ID, &fbb)
@@ -639,6 +675,7 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     WXF.add(LICENSE_URL: LICENSE_URL, &fbb)
     WXF.add(CITATION: CITATION, &fbb)
     WXF.add(PRODUCER_PEER_ID: PRODUCER_PEER_ID, &fbb)
+    WXF.add(TIME_BASIS: TIME_BASIS, &fbb)
     return WXF.endWXF(&fbb, start: __start)
   }
 
@@ -684,6 +721,7 @@ public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PRODUCER_PEER_ID, fieldName: "PRODUCER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_BASIS, fieldName: "TIME_BASIS", required: false, type: wxfTimeBasis.self)
     _v.finish()
   }
 }

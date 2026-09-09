@@ -80,7 +80,8 @@ enum wxfMemberKind {
   Maximum(7),
   Percentile(8),
   ProbabilityAboveThreshold(9),
-  ProbabilityBelowThreshold(10);
+  ProbabilityBelowThreshold(10),
+  Unspecified(11);
 
   final int value;
   const wxfMemberKind(this.value);
@@ -98,6 +99,7 @@ enum wxfMemberKind {
       case 8: return wxfMemberKind.Percentile;
       case 9: return wxfMemberKind.ProbabilityAboveThreshold;
       case 10: return wxfMemberKind.ProbabilityBelowThreshold;
+      case 11: return wxfMemberKind.Unspecified;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -106,7 +108,7 @@ enum wxfMemberKind {
       value == null ? null : wxfMemberKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 10;
+  static const int maxValue = 11;
   static const fb.Reader<wxfMemberKind> reader = _wxfMemberKindReader();
 }
 
@@ -375,7 +377,8 @@ class _wxfValuesEncodingReader extends fb.Reader<wxfValuesEncoding> {
 ///  never reorder or reuse existing values.
 enum wxfLicenseClass {
   RealTimeExperimental(0),
-  Historical(1);
+  Historical(1),
+  OpenAttribution(2);
 
   final int value;
   const wxfLicenseClass(this.value);
@@ -384,6 +387,7 @@ enum wxfLicenseClass {
     switch (value) {
       case 0: return wxfLicenseClass.RealTimeExperimental;
       case 1: return wxfLicenseClass.Historical;
+      case 2: return wxfLicenseClass.OpenAttribution;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -392,7 +396,7 @@ enum wxfLicenseClass {
       value == null ? null : wxfLicenseClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 2;
   static const fb.Reader<wxfLicenseClass> reader = _wxfLicenseClassReader();
 }
 
@@ -405,6 +409,42 @@ class _wxfLicenseClassReader extends fb.Reader<wxfLicenseClass> {
   @override
   wxfLicenseClass read(fb.BufferContext bc, int offset) =>
       wxfLicenseClass.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Which forecast times the source actually publishes. Append new values
+///  only; never reorder or reuse existing values.
+enum wxfTimeBasis {
+  Initialization(0),
+  ValidTimeOnly(1);
+
+  final int value;
+  const wxfTimeBasis(this.value);
+
+  factory wxfTimeBasis.fromValue(int value) {
+    switch (value) {
+      case 0: return wxfTimeBasis.Initialization;
+      case 1: return wxfTimeBasis.ValidTimeOnly;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static wxfTimeBasis? _createOrNull(int? value) =>
+      value == null ? null : wxfTimeBasis.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<wxfTimeBasis> reader = _wxfTimeBasisReader();
+}
+
+class _wxfTimeBasisReader extends fb.Reader<wxfTimeBasis> {
+  const _wxfTimeBasisReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  wxfTimeBasis read(fb.BufferContext bc, int offset) =>
+      wxfTimeBasis.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Regular grid the samples are laid out on. Samples are row-major with
@@ -585,17 +625,19 @@ class WXF {
   String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get modelVersion => MODEL_VERSION;
   ///  Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  ///  Present only for TIME_BASIS Initialization.
   int get INIT_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get initTimeMs => INIT_TIME_MS;
-  ///  Forecast lead from INIT_TIME_MS, hours.
+  ///  Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  ///  Initialization.
   double get LEAD_HOURS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get leadHours => LEAD_HOURS;
   ///  Time the field is valid at, Unix milliseconds UTC
-  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   int get VALID_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
   int get validTimeMs => VALID_TIME_MS;
   ///  Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  ///  cycle, 48 for an interim cycle).
+  ///  cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   int get HORIZON_HOURS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get horizonHours => HORIZON_HOURS;
   ///  Ensemble realisation or statistic the field represents.
@@ -698,10 +740,14 @@ class WXF {
   ///  Peer identifier of the node that ingested and published this record.
   String? get PRODUCER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
   String? get producerPeerId => PRODUCER_PEER_ID;
+  ///  Times published by the source; governs whether initialization, lead
+  ///  and horizon are meaningful. The default preserves existing records.
+  wxfTimeBasis get TIME_BASIS => wxfTimeBasis.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 84, 0));
+  wxfTimeBasis get timeBasis => TIME_BASIS;
 
   @override
   String toString() {
-    return 'WXF{fieldId: ${fieldId}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, leadHours: ${leadHours}, validTimeMs: ${validTimeMs}, horizonHours: ${horizonHours}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, PERCENTILE: ${PERCENTILE}, thresholdValue: ${thresholdValue}, VARIABLE: ${VARIABLE}, variableName: ${variableName}, UNITS: ${UNITS}, levelKind: ${levelKind}, levelValue: ${levelValue}, temporalKind: ${temporalKind}, accumulationHours: ${accumulationHours}, GRID: ${GRID}, tileIndex: ${tileIndex}, tileCount: ${tileCount}, valuesEncoding: ${valuesEncoding}, VALUES: ${VALUES}, chunkCid: ${chunkCid}, chunkDtype: ${chunkDtype}, chunkCodecs: ${chunkCodecs}, chunkByteLength: ${chunkByteLength}, valueMin: ${valueMin}, valueMax: ${valueMax}, missingCount: ${missingCount}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}}';
+    return 'WXF{fieldId: ${fieldId}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, leadHours: ${leadHours}, validTimeMs: ${validTimeMs}, horizonHours: ${horizonHours}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, PERCENTILE: ${PERCENTILE}, thresholdValue: ${thresholdValue}, VARIABLE: ${VARIABLE}, variableName: ${variableName}, UNITS: ${UNITS}, levelKind: ${levelKind}, levelValue: ${levelValue}, temporalKind: ${temporalKind}, accumulationHours: ${accumulationHours}, GRID: ${GRID}, tileIndex: ${tileIndex}, tileCount: ${tileCount}, valuesEncoding: ${valuesEncoding}, VALUES: ${VALUES}, chunkCid: ${chunkCid}, chunkDtype: ${chunkDtype}, chunkCodecs: ${chunkCodecs}, chunkByteLength: ${chunkByteLength}, valueMin: ${valueMin}, valueMax: ${valueMax}, missingCount: ${missingCount}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}, timeBasis: ${timeBasis}}';
   }
 }
 
@@ -719,7 +765,7 @@ class WXFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(40);
+    fbBuilder.startTable(41);
   }
 
   int addFieldIdOffset(int? offset) {
@@ -882,6 +928,10 @@ class WXFBuilder {
     fbBuilder.addOffset(39, offset);
     return fbBuilder.offset;
   }
+  int addTimeBasis(wxfTimeBasis? TIME_BASIS) {
+    fbBuilder.addInt8(40, TIME_BASIS?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -929,6 +979,7 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
   final String? _LICENSE_URL;
   final String? _CITATION;
   final String? _PRODUCER_PEER_ID;
+  final wxfTimeBasis? _TIME_BASIS;
 
   WXFObjectBuilder({
     String? FIELD_ID,
@@ -1005,6 +1056,8 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     String? CITATION,
     String? PRODUCER_PEER_ID,
     String? producerPeerId,
+    wxfTimeBasis? TIME_BASIS,
+    wxfTimeBasis? timeBasis,
   })
       : _FIELD_ID = fieldId ?? FIELD_ID,
         _MODEL_CLASS = modelClass ?? MODEL_CLASS,
@@ -1045,7 +1098,8 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         _LICENSE_CLASS = licenseClass ?? LICENSE_CLASS,
         _LICENSE_URL = licenseUrl ?? LICENSE_URL,
         _CITATION = CITATION,
-        _PRODUCER_PEER_ID = producerPeerId ?? PRODUCER_PEER_ID;
+        _PRODUCER_PEER_ID = producerPeerId ?? PRODUCER_PEER_ID,
+        _TIME_BASIS = timeBasis ?? TIME_BASIS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1081,7 +1135,7 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CITATION!);
     final int? PRODUCER_PEER_IDOffset = _PRODUCER_PEER_ID == null ? null
         : fbBuilder.writeString(_PRODUCER_PEER_ID!);
-    fbBuilder.startTable(40);
+    fbBuilder.startTable(41);
     fbBuilder.addOffset(0, FIELD_IDOffset);
     fbBuilder.addInt8(1, _MODEL_CLASS?.value);
     fbBuilder.addOffset(2, MODEL_IDOffset);
@@ -1122,6 +1176,7 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(37, LICENSE_URLOffset);
     fbBuilder.addOffset(38, CITATIONOffset);
     fbBuilder.addOffset(39, PRODUCER_PEER_IDOffset);
+    fbBuilder.addInt8(40, _TIME_BASIS?.value);
     return fbBuilder.endTable();
   }
 

@@ -122,6 +122,7 @@ func (rcv *WXF) ModelVersion() []byte {
 
 /// Producer-defined model version.
 /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+/// Present only for TIME_BASIS Initialization.
 func (rcv *WXF) INIT_TIME_MS() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -135,6 +136,7 @@ func (rcv *WXF) InitTimeMs() uint64 {
 }
 
 /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+/// Present only for TIME_BASIS Initialization.
 func (rcv *WXF) MutateINIT_TIME_MS(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(12, n)
 }
@@ -143,7 +145,8 @@ func (rcv *WXF) MutateInitTimeMs(n uint64) bool {
 	return rcv.MutateINIT_TIME_MS(n)
 }
 
-/// Forecast lead from INIT_TIME_MS, hours.
+/// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+/// Initialization.
 func (rcv *WXF) LEAD_HOURS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -156,7 +159,8 @@ func (rcv *WXF) LeadHours() float32 {
 	return rcv.LEAD_HOURS()
 }
 
-/// Forecast lead from INIT_TIME_MS, hours.
+/// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+/// Initialization.
 func (rcv *WXF) MutateLEAD_HOURS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(14, n)
 }
@@ -166,7 +170,7 @@ func (rcv *WXF) MutateLeadHours(n float32) bool {
 }
 
 /// Time the field is valid at, Unix milliseconds UTC
-/// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+/// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
 func (rcv *WXF) VALID_TIME_MS() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -180,7 +184,7 @@ func (rcv *WXF) ValidTimeMs() uint64 {
 }
 
 /// Time the field is valid at, Unix milliseconds UTC
-/// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+/// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
 func (rcv *WXF) MutateVALID_TIME_MS(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(16, n)
 }
@@ -190,7 +194,7 @@ func (rcv *WXF) MutateValidTimeMs(n uint64) bool {
 }
 
 /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-/// cycle, 48 for an interim cycle).
+/// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
 func (rcv *WXF) HORIZON_HOURS() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -204,7 +208,7 @@ func (rcv *WXF) HorizonHours() uint16 {
 }
 
 /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-/// cycle, 48 for an interim cycle).
+/// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
 func (rcv *WXF) MutateHORIZON_HOURS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(18, n)
 }
@@ -877,8 +881,32 @@ func (rcv *WXF) ProducerPeerId() []byte {
 }
 
 /// Peer identifier of the node that ingested and published this record.
+/// Times published by the source; governs whether initialization, lead
+/// and horizon are meaningful. The default preserves existing records.
+func (rcv *WXF) TIME_BASIS() wxfTimeBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return wxfTimeBasis(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *WXF) TimeBasis() wxfTimeBasis {
+	return rcv.TIME_BASIS()
+}
+
+/// Times published by the source; governs whether initialization, lead
+/// and horizon are meaningful. The default preserves existing records.
+func (rcv *WXF) MutateTIME_BASIS(n wxfTimeBasis) bool {
+	return rcv._tab.MutateInt8Slot(84, int8(n))
+}
+
+func (rcv *WXF) MutateTimeBasis(n wxfTimeBasis) bool {
+	return rcv.MutateTIME_BASIS(n)
+}
+
 func WXFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(40)
+	builder.StartObject(41)
 }
 func WXFAddFIELD_ID(builder *flatbuffers.Builder, FIELD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FIELD_ID), 0)
@@ -1131,6 +1159,12 @@ func WXFAddPRODUCER_PEER_ID(builder *flatbuffers.Builder, PRODUCER_PEER_ID flatb
 }
 func WXFAddProducerPeerId(builder *flatbuffers.Builder, PRODUCER_PEER_ID flatbuffers.UOffsetT) {
 	WXFAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID)
+}
+func WXFAddTIME_BASIS(builder *flatbuffers.Builder, TIME_BASIS wxfTimeBasis) {
+	builder.PrependInt8Slot(40, int8(TIME_BASIS), 0)
+}
+func WXFAddTimeBasis(builder *flatbuffers.Builder, TIME_BASIS wxfTimeBasis) {
+	WXFAddTIME_BASIS(builder, TIME_BASIS)
 }
 func WXFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

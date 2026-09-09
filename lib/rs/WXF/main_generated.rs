@@ -136,10 +136,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfModelClass {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_MEMBER_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_MEMBER_KIND: i8 = 10;
+pub const ENUM_MAX_WXF_MEMBER_KIND: i8 = 11;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_MEMBER_KIND: [wxfMemberKind; 11] = [
+pub const ENUM_VALUES_WXF_MEMBER_KIND: [wxfMemberKind; 12] = [
   wxfMemberKind::Member,
   wxfMemberKind::Control,
   wxfMemberKind::Deterministic,
@@ -151,6 +151,7 @@ pub const ENUM_VALUES_WXF_MEMBER_KIND: [wxfMemberKind; 11] = [
   wxfMemberKind::Percentile,
   wxfMemberKind::ProbabilityAboveThreshold,
   wxfMemberKind::ProbabilityBelowThreshold,
+  wxfMemberKind::Unspecified,
 ];
 
 /// Which realisation of an ensemble the field represents. Append new values
@@ -182,9 +183,12 @@ impl wxfMemberKind {
   pub const ProbabilityAboveThreshold: Self = Self(9);
   /// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
   pub const ProbabilityBelowThreshold: Self = Self(10);
+  /// The source does not identify a member or ensemble statistic. A blended
+  /// point-forecast product must not be labelled as one deterministic run.
+  pub const Unspecified: Self = Self(11);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 10;
+  pub const ENUM_MAX: i8 = 11;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Member,
     Self::Control,
@@ -197,6 +201,7 @@ impl wxfMemberKind {
     Self::Percentile,
     Self::ProbabilityAboveThreshold,
     Self::ProbabilityBelowThreshold,
+    Self::Unspecified,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -212,6 +217,7 @@ impl wxfMemberKind {
       Self::Percentile => Some("Percentile"),
       Self::ProbabilityAboveThreshold => Some("ProbabilityAboveThreshold"),
       Self::ProbabilityBelowThreshold => Some("ProbabilityBelowThreshold"),
+      Self::Unspecified => Some("Unspecified"),
       _ => None,
     }
   }
@@ -887,12 +893,13 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfValuesEncoding {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_LICENSE_CLASS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_LICENSE_CLASS: i8 = 1;
+pub const ENUM_MAX_WXF_LICENSE_CLASS: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_LICENSE_CLASS: [wxfLicenseClass; 2] = [
+pub const ENUM_VALUES_WXF_LICENSE_CLASS: [wxfLicenseClass; 3] = [
   wxfLicenseClass::RealTimeExperimental,
   wxfLicenseClass::Historical,
+  wxfLicenseClass::OpenAttribution,
 ];
 
 /// Licence class of the data at RETRIEVED_AT, following the split a producer
@@ -910,18 +917,25 @@ impl wxfLicenseClass {
   /// Data older than the producer's real-time window, offered under an open
   /// attribution licence named by LICENSE_URL.
   pub const Historical: Self = Self(1);
+  /// Data of any valid time offered under an open attribution licence named
+  /// by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+  /// producer's real-time window. API access terms can be more restrictive
+  /// than the licence on the resulting data and must be checked separately.
+  pub const OpenAttribution: Self = Self(2);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_MAX: i8 = 2;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::RealTimeExperimental,
     Self::Historical,
+    Self::OpenAttribution,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::RealTimeExperimental => Some("RealTimeExperimental"),
       Self::Historical => Some("Historical"),
+      Self::OpenAttribution => Some("OpenAttribution"),
       _ => None,
     }
   }
@@ -976,6 +990,98 @@ impl<'a> ::flatbuffers::Verifiable for wxfLicenseClass {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for wxfLicenseClass {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_WXF_TIME_BASIS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_WXF_TIME_BASIS: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_WXF_TIME_BASIS: [wxfTimeBasis; 2] = [
+  wxfTimeBasis::Initialization,
+  wxfTimeBasis::ValidTimeOnly,
+];
+
+/// Which forecast times the source actually publishes. Append new values
+/// only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct wxfTimeBasis(pub i8);
+#[allow(non_upper_case_globals)]
+impl wxfTimeBasis {
+  /// INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
+  /// 3,600,000. This is the existing WXF convention.
+  pub const Initialization: Self = Self(0);
+  /// Only VALID_TIME_MS is known. The source may blend runs or omit their
+  /// initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
+  /// be omitted; their zero defaults do not mean a run in 1970, zero lead,
+  /// or zero horizon. RETRIEVED_AT is not a substitute for initialization.
+  pub const ValidTimeOnly: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Initialization,
+    Self::ValidTimeOnly,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Initialization => Some("Initialization"),
+      Self::ValidTimeOnly => Some("ValidTimeOnly"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for wxfTimeBasis {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for wxfTimeBasis {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for wxfTimeBasis {
+    type Output = wxfTimeBasis;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for wxfTimeBasis {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for wxfTimeBasis {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for wxfTimeBasis {}
 pub enum WXFGridOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1334,6 +1440,7 @@ impl<'a> WXF<'a> {
   pub const VT_LICENSE_URL: ::flatbuffers::VOffsetT = 78;
   pub const VT_CITATION: ::flatbuffers::VOffsetT = 80;
   pub const VT_PRODUCER_PEER_ID: ::flatbuffers::VOffsetT = 82;
+  pub const VT_TIME_BASIS: ::flatbuffers::VOffsetT = 84;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1378,6 +1485,7 @@ impl<'a> WXF<'a> {
     builder.add_ENSEMBLE_SIZE(args.ENSEMBLE_SIZE);
     builder.add_MEMBER_INDEX(args.MEMBER_INDEX);
     builder.add_HORIZON_HOURS(args.HORIZON_HOURS);
+    builder.add_TIME_BASIS(args.TIME_BASIS);
     builder.add_LICENSE_CLASS(args.LICENSE_CLASS);
     builder.add_VALUES_ENCODING(args.VALUES_ENCODING);
     builder.add_TEMPORAL_KIND(args.TEMPORAL_KIND);
@@ -1463,6 +1571,7 @@ impl<'a> WXF<'a> {
     let PRODUCER_PEER_ID = self.PRODUCER_PEER_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let TIME_BASIS = self.TIME_BASIS();
     WXFT {
       FIELD_ID,
       MODEL_CLASS,
@@ -1504,6 +1613,7 @@ impl<'a> WXF<'a> {
       LICENSE_URL,
       CITATION,
       PRODUCER_PEER_ID,
+      TIME_BASIS,
     }
   }
 
@@ -1541,6 +1651,7 @@ impl<'a> WXF<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(WXF::VT_MODEL_VERSION, None)}
   }
   /// Initialisation (analysis) time of the run, Unix milliseconds UTC.
+  /// Present only for TIME_BASIS Initialization.
   #[inline]
   pub fn INIT_TIME_MS(&self) -> u64 {
     // Safety:
@@ -1548,7 +1659,8 @@ impl<'a> WXF<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u64>(WXF::VT_INIT_TIME_MS, Some(0)).unwrap()}
   }
-  /// Forecast lead from INIT_TIME_MS, hours.
+  /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  /// Initialization.
   #[inline]
   pub fn LEAD_HOURS(&self) -> f32 {
     // Safety:
@@ -1557,7 +1669,7 @@ impl<'a> WXF<'a> {
     unsafe { self._tab.get::<f32>(WXF::VT_LEAD_HOURS, Some(0.0)).unwrap()}
   }
   /// Time the field is valid at, Unix milliseconds UTC
-  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+  /// (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
   #[inline]
   pub fn VALID_TIME_MS(&self) -> u64 {
     // Safety:
@@ -1566,7 +1678,7 @@ impl<'a> WXF<'a> {
     unsafe { self._tab.get::<u64>(WXF::VT_VALID_TIME_MS, Some(0)).unwrap()}
   }
   /// Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  /// cycle, 48 for an interim cycle).
+  /// cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
   #[inline]
   pub fn HORIZON_HOURS(&self) -> u16 {
     // Safety:
@@ -1840,6 +1952,15 @@ impl<'a> WXF<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(WXF::VT_PRODUCER_PEER_ID, None)}
   }
+  /// Times published by the source; governs whether initialization, lead
+  /// and horizon are meaningful. The default preserves existing records.
+  #[inline]
+  pub fn TIME_BASIS(&self) -> wxfTimeBasis {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<wxfTimeBasis>(WXF::VT_TIME_BASIS, Some(wxfTimeBasis::Initialization)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for WXF<'_> {
@@ -1888,6 +2009,7 @@ impl ::flatbuffers::Verifiable for WXF<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_URL", Self::VT_LICENSE_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_PEER_ID", Self::VT_PRODUCER_PEER_ID, false)?
+     .visit_field::<wxfTimeBasis>("TIME_BASIS", Self::VT_TIME_BASIS, false)?
      .finish();
     Ok(())
   }
@@ -1933,6 +2055,7 @@ pub struct WXFArgs<'a> {
     pub LICENSE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PRODUCER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_BASIS: wxfTimeBasis,
 }
 impl<'a> Default for WXFArgs<'a> {
   #[inline]
@@ -1978,6 +2101,7 @@ impl<'a> Default for WXFArgs<'a> {
       LICENSE_URL: None,
       CITATION: None,
       PRODUCER_PEER_ID: None,
+      TIME_BASIS: wxfTimeBasis::Initialization,
     }
   }
 }
@@ -2148,6 +2272,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> WXFBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(WXF::VT_PRODUCER_PEER_ID, PRODUCER_PEER_ID);
   }
   #[inline]
+  pub fn add_TIME_BASIS(&mut self, TIME_BASIS: wxfTimeBasis) {
+    self.fbb_.push_slot::<wxfTimeBasis>(WXF::VT_TIME_BASIS, TIME_BASIS, wxfTimeBasis::Initialization);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> WXFBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     WXFBuilder {
@@ -2207,6 +2335,7 @@ impl ::core::fmt::Debug for WXF<'_> {
       ds.field("LICENSE_URL", &self.LICENSE_URL());
       ds.field("CITATION", &self.CITATION());
       ds.field("PRODUCER_PEER_ID", &self.PRODUCER_PEER_ID());
+      ds.field("TIME_BASIS", &self.TIME_BASIS());
       ds.finish()
   }
 }
@@ -2253,6 +2382,7 @@ pub struct WXFT {
   pub LICENSE_URL: Option<alloc::string::String>,
   pub CITATION: Option<alloc::string::String>,
   pub PRODUCER_PEER_ID: Option<alloc::string::String>,
+  pub TIME_BASIS: wxfTimeBasis,
 }
 impl Default for WXFT {
   fn default() -> Self {
@@ -2297,6 +2427,7 @@ impl Default for WXFT {
       LICENSE_URL: None,
       CITATION: None,
       PRODUCER_PEER_ID: None,
+      TIME_BASIS: wxfTimeBasis::Initialization,
     }
   }
 }
@@ -2379,6 +2510,7 @@ impl WXFT {
     let PRODUCER_PEER_ID = self.PRODUCER_PEER_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let TIME_BASIS = self.TIME_BASIS;
     WXF::create(_fbb, &WXFArgs{
       FIELD_ID,
       MODEL_CLASS,
@@ -2420,6 +2552,7 @@ impl WXFT {
       LICENSE_URL,
       CITATION,
       PRODUCER_PEER_ID,
+      TIME_BASIS,
     })
   }
 }

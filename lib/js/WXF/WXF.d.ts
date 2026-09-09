@@ -5,6 +5,7 @@ import { wxfLicenseClass } from './wxfLicenseClass.js';
 import { wxfMemberKind } from './wxfMemberKind.js';
 import { wxfModelClass } from './wxfModelClass.js';
 import { wxfTemporalKind } from './wxfTemporalKind.js';
+import { wxfTimeBasis } from './wxfTimeBasis.js';
 import { wxfValuesEncoding } from './wxfValuesEncoding.js';
 import { wxfVariable } from './wxfVariable.js';
 /**
@@ -40,20 +41,22 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
     MODEL_VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Initialisation (analysis) time of the run, Unix milliseconds UTC.
+     * Present only for TIME_BASIS Initialization.
      */
     INIT_TIME_MS(): bigint;
     /**
-     * Forecast lead from INIT_TIME_MS, hours.
+     * Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+     * Initialization.
      */
     LEAD_HOURS(): number;
     /**
      * Time the field is valid at, Unix milliseconds UTC
-     * (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+     * (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
      */
     VALID_TIME_MS(): bigint;
     /**
      * Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-     * cycle, 48 for an interim cycle).
+     * cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
      */
     HORIZON_HOURS(): number;
     /**
@@ -208,6 +211,11 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
      */
     PRODUCER_PEER_ID(): string | null;
     PRODUCER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Times published by the source; governs whether initialization, lead
+     * and horizon are meaningful. The default preserves existing records.
+     */
+    TIME_BASIS(): wxfTimeBasis;
     static startWXF(builder: flatbuffers.Builder): void;
     static addFieldId(builder: flatbuffers.Builder, FIELD_IDOffset: flatbuffers.Offset): void;
     static addModelClass(builder: flatbuffers.Builder, MODEL_CLASS: wxfModelClass): void;
@@ -257,6 +265,7 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
     static addLicenseUrl(builder: flatbuffers.Builder, LICENSE_URLOffset: flatbuffers.Offset): void;
     static addCitation(builder: flatbuffers.Builder, CITATIONOffset: flatbuffers.Offset): void;
     static addProducerPeerId(builder: flatbuffers.Builder, PRODUCER_PEER_IDOffset: flatbuffers.Offset): void;
+    static addTimeBasis(builder: flatbuffers.Builder, TIME_BASIS: wxfTimeBasis): void;
     static endWXF(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishWXFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedWXFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -304,7 +313,8 @@ export declare class WXFT implements flatbuffers.IGeneratedObject {
     LICENSE_URL: string | Uint8Array | null;
     CITATION: string | Uint8Array | null;
     PRODUCER_PEER_ID: string | Uint8Array | null;
-    constructor(FIELD_ID?: string | Uint8Array | null, MODEL_CLASS?: wxfModelClass, MODEL_ID?: string | Uint8Array | null, MODEL_VERSION?: string | Uint8Array | null, INIT_TIME_MS?: bigint, LEAD_HOURS?: number, VALID_TIME_MS?: bigint, HORIZON_HOURS?: number, MEMBER_KIND?: wxfMemberKind, MEMBER_INDEX?: number, ENSEMBLE_SIZE?: number, PERCENTILE?: number, THRESHOLD_VALUE?: number, VARIABLE?: wxfVariable, VARIABLE_NAME?: string | Uint8Array | null, UNITS?: string | Uint8Array | null, LEVEL_KIND?: wxfLevelKind, LEVEL_VALUE?: number, TEMPORAL_KIND?: wxfTemporalKind, ACCUMULATION_HOURS?: number, GRID?: WXFGridT | null, TILE_INDEX?: number, TILE_COUNT?: number, VALUES_ENCODING?: wxfValuesEncoding, VALUES?: (number)[], CHUNK_CID?: string | Uint8Array | null, CHUNK_DTYPE?: string | Uint8Array | null, CHUNK_CODECS?: (string)[], CHUNK_BYTE_LENGTH?: bigint, VALUE_MIN?: number, VALUE_MAX?: number, MISSING_COUNT?: number, ORIGIN_ID?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, RETRIEVED_AT?: bigint, LICENSE_CLASS?: wxfLicenseClass, LICENSE_URL?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null);
+    TIME_BASIS: wxfTimeBasis;
+    constructor(FIELD_ID?: string | Uint8Array | null, MODEL_CLASS?: wxfModelClass, MODEL_ID?: string | Uint8Array | null, MODEL_VERSION?: string | Uint8Array | null, INIT_TIME_MS?: bigint, LEAD_HOURS?: number, VALID_TIME_MS?: bigint, HORIZON_HOURS?: number, MEMBER_KIND?: wxfMemberKind, MEMBER_INDEX?: number, ENSEMBLE_SIZE?: number, PERCENTILE?: number, THRESHOLD_VALUE?: number, VARIABLE?: wxfVariable, VARIABLE_NAME?: string | Uint8Array | null, UNITS?: string | Uint8Array | null, LEVEL_KIND?: wxfLevelKind, LEVEL_VALUE?: number, TEMPORAL_KIND?: wxfTemporalKind, ACCUMULATION_HOURS?: number, GRID?: WXFGridT | null, TILE_INDEX?: number, TILE_COUNT?: number, VALUES_ENCODING?: wxfValuesEncoding, VALUES?: (number)[], CHUNK_CID?: string | Uint8Array | null, CHUNK_DTYPE?: string | Uint8Array | null, CHUNK_CODECS?: (string)[], CHUNK_BYTE_LENGTH?: bigint, VALUE_MIN?: number, VALUE_MAX?: number, MISSING_COUNT?: number, ORIGIN_ID?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, RETRIEVED_AT?: bigint, LICENSE_CLASS?: wxfLicenseClass, LICENSE_URL?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null, TIME_BASIS?: wxfTimeBasis);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=WXF.d.ts.map

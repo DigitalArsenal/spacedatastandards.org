@@ -19,5 +19,12 @@ class wxfLicenseClass private constructor() {
          * attribution licence named by LICENSE_URL.
          */
         const val Historical: Byte = 1
+        /**
+         * Data of any valid time offered under an open attribution licence named
+         * by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+         * producer's real-time window. API access terms can be more restrictive
+         * than the licence on the resulting data and must be checked separately.
+         */
+        const val OpenAttribution: Byte = 2
     }
 }

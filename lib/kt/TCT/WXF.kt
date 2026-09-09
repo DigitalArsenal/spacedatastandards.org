@@ -83,6 +83,7 @@ class WXF : Table() {
     fun modelVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Initialisation (analysis) time of the run, Unix milliseconds UTC.
+     * Present only for TIME_BASIS Initialization.
      */
     val initTimeMs : ULong
         get() {
@@ -90,7 +91,8 @@ class WXF : Table() {
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
-     * Forecast lead from INIT_TIME_MS, hours.
+     * Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+     * Initialization.
      */
     val leadHours : Float
         get() {
@@ -99,7 +101,7 @@ class WXF : Table() {
         }
     /**
      * Time the field is valid at, Unix milliseconds UTC
-     * (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+     * (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
      */
     val validTimeMs : ULong
         get() {
@@ -108,7 +110,7 @@ class WXF : Table() {
         }
     /**
      * Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-     * cycle, 48 for an interim cycle).
+     * cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
      */
     val horizonHours : UShort
         get() {
@@ -461,6 +463,15 @@ class WXF : Table() {
         }
     val producerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
     fun producerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * Times published by the source; governs whether initialization, lead
+     * and horizon are meaningful. The default preserves existing records.
+     */
+    val timeBasis : Byte
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsWXF(_bb: ByteBuffer): WXF = getRootAsWXF(_bb, WXF())
@@ -469,8 +480,8 @@ class WXF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun WXFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WXF")
-        fun createWXF(builder: FlatBufferBuilder, fieldIdOffset: Int, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, leadHours: Float, validTimeMs: ULong, horizonHours: UShort, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, percentile: Float, thresholdValue: Float, variable: Byte, variableNameOffset: Int, unitsOffset: Int, levelKind: Byte, levelValue: Float, temporalKind: Byte, accumulationHours: Float, gridOffset: Int, tileIndex: UInt, tileCount: UInt, valuesEncoding: Byte, valuesOffset: Int, chunkCidOffset: Int, chunkDtypeOffset: Int, chunkCodecsOffset: Int, chunkByteLength: ULong, valueMin: Float, valueMax: Float, missingCount: UInt, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int) : Int {
-            builder.startTable(40)
+        fun createWXF(builder: FlatBufferBuilder, fieldIdOffset: Int, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, leadHours: Float, validTimeMs: ULong, horizonHours: UShort, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, percentile: Float, thresholdValue: Float, variable: Byte, variableNameOffset: Int, unitsOffset: Int, levelKind: Byte, levelValue: Float, temporalKind: Byte, accumulationHours: Float, gridOffset: Int, tileIndex: UInt, tileCount: UInt, valuesEncoding: Byte, valuesOffset: Int, chunkCidOffset: Int, chunkDtypeOffset: Int, chunkCodecsOffset: Int, chunkByteLength: ULong, valueMin: Float, valueMax: Float, missingCount: UInt, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int, timeBasis: Byte) : Int {
+            builder.startTable(41)
             addRETRIEVEDAT(builder, retrievedAt)
             addCHUNKBYTELENGTH(builder, chunkByteLength)
             addVALIDTIMEMS(builder, validTimeMs)
@@ -504,6 +515,7 @@ class WXF : Table() {
             addENSEMBLESIZE(builder, ensembleSize)
             addMEMBERINDEX(builder, memberIndex)
             addHORIZONHOURS(builder, horizonHours)
+            addTIMEBASIS(builder, timeBasis)
             addLICENSECLASS(builder, licenseClass)
             addVALUESENCODING(builder, valuesEncoding)
             addTEMPORALKIND(builder, temporalKind)
@@ -513,7 +525,7 @@ class WXF : Table() {
             addMODELCLASS(builder, modelClass)
             return endWXF(builder)
         }
-        fun startWXF(builder: FlatBufferBuilder) = builder.startTable(40)
+        fun startWXF(builder: FlatBufferBuilder) = builder.startTable(41)
         fun addFIELDID(builder: FlatBufferBuilder, fieldId: Int) = builder.addOffset(0, fieldId, 0)
         fun addMODELCLASS(builder: FlatBufferBuilder, modelClass: Byte) = builder.addByte(1, modelClass, 0)
         fun addMODELID(builder: FlatBufferBuilder, modelId: Int) = builder.addOffset(2, modelId, 0)
@@ -570,6 +582,7 @@ class WXF : Table() {
         fun addLICENSEURL(builder: FlatBufferBuilder, licenseUrl: Int) = builder.addOffset(37, licenseUrl, 0)
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(38, citation, 0)
         fun addPRODUCERPEERID(builder: FlatBufferBuilder, producerPeerId: Int) = builder.addOffset(39, producerPeerId, 0)
+        fun addTIMEBASIS(builder: FlatBufferBuilder, timeBasis: Byte) = builder.addByte(40, timeBasis, 0)
         fun endWXF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

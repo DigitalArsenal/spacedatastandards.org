@@ -10,6 +10,7 @@ import { wxfLicenseClass } from './wxfLicenseClass.js';
 import { wxfMemberKind } from './wxfMemberKind.js';
 import { wxfModelClass } from './wxfModelClass.js';
 import { wxfTemporalKind } from './wxfTemporalKind.js';
+import { wxfTimeBasis } from './wxfTimeBasis.js';
 import { wxfValuesEncoding } from './wxfValuesEncoding.js';
 import { wxfVariable } from './wxfVariable.js';
 
@@ -81,6 +82,7 @@ MODEL_VERSION(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Initialisation (analysis) time of the run, Unix milliseconds UTC.
+ * Present only for TIME_BASIS Initialization.
  */
 INIT_TIME_MS():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -88,7 +90,8 @@ INIT_TIME_MS():bigint {
 }
 
 /**
- * Forecast lead from INIT_TIME_MS, hours.
+ * Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+ * Initialization.
  */
 LEAD_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -97,7 +100,7 @@ LEAD_HOURS():number {
 
 /**
  * Time the field is valid at, Unix milliseconds UTC
- * (INIT_TIME_MS + LEAD_HOURS * 3.6e6).
+ * (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
  */
 VALID_TIME_MS():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -106,7 +109,7 @@ VALID_TIME_MS():bigint {
 
 /**
  * Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
- * cycle, 48 for an interim cycle).
+ * cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
  */
 HORIZON_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -416,8 +419,17 @@ PRODUCER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Times published by the source; governs whether initialization, lead
+ * and horizon are meaningful. The default preserves existing records.
+ */
+TIME_BASIS():wxfTimeBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : wxfTimeBasis.Initialization;
+}
+
 static startWXF(builder:flatbuffers.Builder) {
-  builder.startObject(40);
+  builder.startObject(41);
 }
 
 static addFieldId(builder:flatbuffers.Builder, FIELD_IDOffset:flatbuffers.Offset) {
@@ -609,6 +621,10 @@ static addProducerPeerId(builder:flatbuffers.Builder, PRODUCER_PEER_IDOffset:fla
   builder.addFieldOffset(39, PRODUCER_PEER_IDOffset, 0);
 }
 
+static addTimeBasis(builder:flatbuffers.Builder, TIME_BASIS:wxfTimeBasis) {
+  builder.addFieldInt8(40, TIME_BASIS, wxfTimeBasis.Initialization);
+}
+
 static endWXF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // FIELD_ID
@@ -666,7 +682,8 @@ unpack(): WXFT {
     this.LICENSE_CLASS(),
     this.LICENSE_URL(),
     this.CITATION(),
-    this.PRODUCER_PEER_ID()
+    this.PRODUCER_PEER_ID(),
+    this.TIME_BASIS()
   );
 }
 
@@ -712,6 +729,7 @@ unpackTo(_o: WXFT): void {
   _o.LICENSE_URL = this.LICENSE_URL();
   _o.CITATION = this.CITATION();
   _o.PRODUCER_PEER_ID = this.PRODUCER_PEER_ID();
+  _o.TIME_BASIS = this.TIME_BASIS();
 }
 }
 
@@ -756,7 +774,8 @@ constructor(
   public LICENSE_CLASS: wxfLicenseClass = wxfLicenseClass.RealTimeExperimental,
   public LICENSE_URL: string|Uint8Array|null = null,
   public CITATION: string|Uint8Array|null = null,
-  public PRODUCER_PEER_ID: string|Uint8Array|null = null
+  public PRODUCER_PEER_ID: string|Uint8Array|null = null,
+  public TIME_BASIS: wxfTimeBasis = wxfTimeBasis.Initialization
 ){}
 
 
@@ -819,6 +838,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   WXF.addLicenseUrl(builder, LICENSE_URL);
   WXF.addCitation(builder, CITATION);
   WXF.addProducerPeerId(builder, PRODUCER_PEER_ID);
+  WXF.addTimeBasis(builder, this.TIME_BASIS);
 
   return WXF.endWXF(builder);
 }

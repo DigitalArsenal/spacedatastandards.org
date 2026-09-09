@@ -7,7 +7,7 @@
     },
     "wxfMemberKind" : {
       "type" : "string",
-      "enum": ["Member", "Control", "Deterministic", "Mean", "Median", "StandardDeviation", "Minimum", "Maximum", "Percentile", "ProbabilityAboveThreshold", "ProbabilityBelowThreshold"]
+      "enum": ["Member", "Control", "Deterministic", "Mean", "Median", "StandardDeviation", "Minimum", "Maximum", "Percentile", "ProbabilityAboveThreshold", "ProbabilityBelowThreshold", "Unspecified"]
     },
     "wxfVariable" : {
       "type" : "string",
@@ -31,7 +31,11 @@
     },
     "wxfLicenseClass" : {
       "type" : "string",
-      "enum": ["RealTimeExperimental", "Historical"]
+      "enum": ["RealTimeExperimental", "Historical", "OpenAttribution"]
+    },
+    "wxfTimeBasis" : {
+      "type" : "string",
+      "enum": ["Initialization", "ValidTimeOnly"]
     },
     "tctBasin" : {
       "type" : "string",
@@ -110,19 +114,19 @@
               },
         "INIT_TIME_MS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Initialisation (analysis) time of the run, Unix milliseconds UTC."
+                "description" : "Initialisation (analysis) time of the run, Unix milliseconds UTC.\nPresent only for TIME_BASIS Initialization."
               },
         "LEAD_HOURS" : {
                 "type" : "number",
-                "description" : "Forecast lead from INIT_TIME_MS, hours."
+                "description" : "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization."
               },
         "VALID_TIME_MS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6)."
+                "description" : "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization)."
               },
         "HORIZON_HOURS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
-                "description" : "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle)."
+                "description" : "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle). Omitted for ValidTimeOnly."
               },
         "MEMBER_KIND" : {
                 "$ref" : "#/definitions/wxfMemberKind",
@@ -251,6 +255,10 @@
         "PRODUCER_PEER_ID" : {
                 "type" : "string",
                 "description" : "Peer identifier of the node that ingested and published this record."
+              },
+        "TIME_BASIS" : {
+                "$ref" : "#/definitions/wxfTimeBasis",
+                "description" : "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
               }
       },
       "required" : ["FIELD_ID", "GRID"],

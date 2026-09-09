@@ -31,6 +31,9 @@ const (
 	wxfMemberKindProbabilityAboveThreshold wxfMemberKind = 9
 	/// Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
 	wxfMemberKindProbabilityBelowThreshold wxfMemberKind = 10
+	/// The source does not identify a member or ensemble statistic. A blended
+	/// point-forecast product must not be labelled as one deterministic run.
+	wxfMemberKindUnspecified               wxfMemberKind = 11
 )
 
 var EnumNameswxfMemberKind = map[wxfMemberKind]string{
@@ -45,6 +48,7 @@ var EnumNameswxfMemberKind = map[wxfMemberKind]string{
 	wxfMemberKindPercentile:                "Percentile",
 	wxfMemberKindProbabilityAboveThreshold: "ProbabilityAboveThreshold",
 	wxfMemberKindProbabilityBelowThreshold: "ProbabilityBelowThreshold",
+	wxfMemberKindUnspecified:               "Unspecified",
 }
 
 var EnumValueswxfMemberKind = map[string]wxfMemberKind{
@@ -59,6 +63,7 @@ var EnumValueswxfMemberKind = map[string]wxfMemberKind{
 	"Percentile":                wxfMemberKindPercentile,
 	"ProbabilityAboveThreshold": wxfMemberKindProbabilityAboveThreshold,
 	"ProbabilityBelowThreshold": wxfMemberKindProbabilityBelowThreshold,
+	"Unspecified":               wxfMemberKindUnspecified,
 }
 
 func (v wxfMemberKind) String() string {

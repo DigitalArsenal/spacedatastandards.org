@@ -19,8 +19,15 @@ public final class wxfLicenseClass {
    * attribution licence named by LICENSE_URL.
    */
   public static final byte Historical = 1;
+  /**
+   * Data of any valid time offered under an open attribution licence named
+   * by LICENSE_URL. Unlike Historical, this makes no claim about age or a
+   * producer's real-time window. API access terms can be more restrictive
+   * than the licence on the resulting data and must be checked separately.
+   */
+  public static final byte OpenAttribution = 2;
 
-  public static final String[] names = { "RealTimeExperimental", "Historical", };
+  public static final String[] names = { "RealTimeExperimental", "Historical", "OpenAttribution", };
 
   public static String name(int e) { return names[e]; }
 }

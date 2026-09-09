@@ -25564,7 +25564,8 @@
                         "Maximum",
                         "Percentile",
                         "ProbabilityAboveThreshold",
-                        "ProbabilityBelowThreshold"
+                        "ProbabilityBelowThreshold",
+                        "Unspecified"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -25612,6 +25613,10 @@
                         "ProbabilityBelowThreshold": {
                             "value": 10,
                             "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                        },
+                        "Unspecified": {
+                            "value": 11,
+                            "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                         }
                     }
                 },
@@ -25884,7 +25889,8 @@
                     "type": "string",
                     "enum": [
                         "RealTimeExperimental",
-                        "Historical"
+                        "Historical",
+                        "OpenAttribution"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -25896,6 +25902,29 @@
                         "Historical": {
                             "value": 1,
                             "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                        },
+                        "OpenAttribution": {
+                            "value": 2,
+                            "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
+                        }
+                    }
+                },
+                "wxfTimeBasis": {
+                    "type": "string",
+                    "enum": [
+                        "Initialization",
+                        "ValidTimeOnly"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Initialization": {
+                            "value": 0,
+                            "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                        },
+                        "ValidTimeOnly": {
+                            "value": 1,
+                            "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
                         }
                     }
                 },
@@ -26168,26 +26197,26 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.",
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.\nPresent only for TIME_BASIS Initialization.",
                             "x-flatbuffer-type": "uint64"
                         },
                         "LEAD_HOURS": {
                             "type": "number",
-                            "description": "Forecast lead from INIT_TIME_MS, hours.",
+                            "description": "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization.",
                             "x-flatbuffer-type": "float"
                         },
                         "VALID_TIME_MS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6).",
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).",
                             "x-flatbuffer-type": "uint64"
                         },
                         "HORIZON_HOURS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle).",
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle). Omitted for ValidTimeOnly.",
                             "x-flatbuffer-type": "uint16"
                         },
                         "MEMBER_KIND": {
@@ -26239,6 +26268,10 @@
                                 "ProbabilityBelowThreshold": {
                                     "value": 10,
                                     "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                                },
+                                "Unspecified": {
+                                    "value": 11,
+                                    "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                                 }
                             },
                             "x-flatbuffer-default": "Member"
@@ -26601,6 +26634,10 @@
                                 "Historical": {
                                     "value": 1,
                                     "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                                },
+                                "OpenAttribution": {
+                                    "value": 2,
+                                    "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
                                 }
                             },
                             "x-flatbuffer-default": "RealTimeExperimental"
@@ -26619,6 +26656,23 @@
                             "type": "string",
                             "description": "Peer identifier of the node that ingested and published this record.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "TIME_BASIS": {
+                            "$ref": "#/definitions/wxfTimeBasis",
+                            "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Initialization": {
+                                    "value": 0,
+                                    "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                                },
+                                "ValidTimeOnly": {
+                                    "value": 1,
+                                    "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
+                                }
+                            },
+                            "x-flatbuffer-default": "Initialization"
                         }
                     },
                     "required": [
@@ -26970,6 +27024,10 @@
                                 "ProbabilityBelowThreshold": {
                                     "value": 10,
                                     "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                                },
+                                "Unspecified": {
+                                    "value": 11,
+                                    "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                                 }
                             },
                             "x-flatbuffer-default": "Member"
@@ -27038,6 +27096,10 @@
                                 "Historical": {
                                     "value": 1,
                                     "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                                },
+                                "OpenAttribution": {
+                                    "value": 2,
+                                    "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
                                 }
                             },
                             "x-flatbuffer-default": "RealTimeExperimental"
@@ -117770,7 +117832,8 @@
                         "Maximum",
                         "Percentile",
                         "ProbabilityAboveThreshold",
-                        "ProbabilityBelowThreshold"
+                        "ProbabilityBelowThreshold",
+                        "Unspecified"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -117818,6 +117881,10 @@
                         "ProbabilityBelowThreshold": {
                             "value": 10,
                             "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                        },
+                        "Unspecified": {
+                            "value": 11,
+                            "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                         }
                     }
                 },
@@ -118090,7 +118157,8 @@
                     "type": "string",
                     "enum": [
                         "RealTimeExperimental",
-                        "Historical"
+                        "Historical",
+                        "OpenAttribution"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -118102,6 +118170,29 @@
                         "Historical": {
                             "value": 1,
                             "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                        },
+                        "OpenAttribution": {
+                            "value": 2,
+                            "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
+                        }
+                    }
+                },
+                "wxfTimeBasis": {
+                    "type": "string",
+                    "enum": [
+                        "Initialization",
+                        "ValidTimeOnly"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Initialization": {
+                            "value": 0,
+                            "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                        },
+                        "ValidTimeOnly": {
+                            "value": 1,
+                            "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
                         }
                     }
                 },
@@ -118228,26 +118319,26 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.",
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.\nPresent only for TIME_BASIS Initialization.",
                             "x-flatbuffer-type": "uint64"
                         },
                         "LEAD_HOURS": {
                             "type": "number",
-                            "description": "Forecast lead from INIT_TIME_MS, hours.",
+                            "description": "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization.",
                             "x-flatbuffer-type": "float"
                         },
                         "VALID_TIME_MS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6).",
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).",
                             "x-flatbuffer-type": "uint64"
                         },
                         "HORIZON_HOURS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle).",
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle). Omitted for ValidTimeOnly.",
                             "x-flatbuffer-type": "uint16"
                         },
                         "MEMBER_KIND": {
@@ -118299,6 +118390,10 @@
                                 "ProbabilityBelowThreshold": {
                                     "value": 10,
                                     "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                                },
+                                "Unspecified": {
+                                    "value": 11,
+                                    "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                                 }
                             },
                             "x-flatbuffer-default": "Member"
@@ -118661,6 +118756,10 @@
                                 "Historical": {
                                     "value": 1,
                                     "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                                },
+                                "OpenAttribution": {
+                                    "value": 2,
+                                    "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
                                 }
                             },
                             "x-flatbuffer-default": "RealTimeExperimental"
@@ -118679,6 +118778,23 @@
                             "type": "string",
                             "description": "Peer identifier of the node that ingested and published this record.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "TIME_BASIS": {
+                            "$ref": "#/definitions/wxfTimeBasis",
+                            "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Initialization": {
+                                    "value": 0,
+                                    "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                                },
+                                "ValidTimeOnly": {
+                                    "value": 1,
+                                    "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
+                                }
+                            },
+                            "x-flatbuffer-default": "Initialization"
                         }
                     },
                     "required": [
@@ -167736,7 +167852,8 @@
                         "Maximum",
                         "Percentile",
                         "ProbabilityAboveThreshold",
-                        "ProbabilityBelowThreshold"
+                        "ProbabilityBelowThreshold",
+                        "Unspecified"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -167784,6 +167901,10 @@
                         "ProbabilityBelowThreshold": {
                             "value": 10,
                             "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                        },
+                        "Unspecified": {
+                            "value": 11,
+                            "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                         }
                     }
                 },
@@ -168056,7 +168177,8 @@
                     "type": "string",
                     "enum": [
                         "RealTimeExperimental",
-                        "Historical"
+                        "Historical",
+                        "OpenAttribution"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -168068,6 +168190,29 @@
                         "Historical": {
                             "value": 1,
                             "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                        },
+                        "OpenAttribution": {
+                            "value": 2,
+                            "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
+                        }
+                    }
+                },
+                "wxfTimeBasis": {
+                    "type": "string",
+                    "enum": [
+                        "Initialization",
+                        "ValidTimeOnly"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Initialization": {
+                            "value": 0,
+                            "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                        },
+                        "ValidTimeOnly": {
+                            "value": 1,
+                            "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
                         }
                     }
                 },
@@ -245255,26 +245400,26 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.",
+                            "description": "Initialisation (analysis) time of the run, Unix milliseconds UTC.\nPresent only for TIME_BASIS Initialization.",
                             "x-flatbuffer-type": "uint64"
                         },
                         "LEAD_HOURS": {
                             "type": "number",
-                            "description": "Forecast lead from INIT_TIME_MS, hours.",
+                            "description": "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization.",
                             "x-flatbuffer-type": "float"
                         },
                         "VALID_TIME_MS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6).",
+                            "description": "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).",
                             "x-flatbuffer-type": "uint64"
                         },
                         "HORIZON_HOURS": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle).",
+                            "description": "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle). Omitted for ValidTimeOnly.",
                             "x-flatbuffer-type": "uint16"
                         },
                         "MEMBER_KIND": {
@@ -245326,6 +245471,10 @@
                                 "ProbabilityBelowThreshold": {
                                     "value": 10,
                                     "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                                },
+                                "Unspecified": {
+                                    "value": 11,
+                                    "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                                 }
                             },
                             "x-flatbuffer-default": "Member"
@@ -245688,6 +245837,10 @@
                                 "Historical": {
                                     "value": 1,
                                     "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                                },
+                                "OpenAttribution": {
+                                    "value": 2,
+                                    "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
                                 }
                             },
                             "x-flatbuffer-default": "RealTimeExperimental"
@@ -245706,6 +245859,23 @@
                             "type": "string",
                             "description": "Peer identifier of the node that ingested and published this record.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "TIME_BASIS": {
+                            "$ref": "#/definitions/wxfTimeBasis",
+                            "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Initialization": {
+                                    "value": 0,
+                                    "description": "INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS * 3,600,000. This is the existing WXF convention."
+                                },
+                                "ValidTimeOnly": {
+                                    "value": 1,
+                                    "description": "Only VALID_TIME_MS is known. The source may blend runs or omit their initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST be omitted; their zero defaults do not mean a run in 1970, zero lead, or zero horizon. RETRIEVED_AT is not a substitute for initialization."
+                                }
+                            },
+                            "x-flatbuffer-default": "Initialization"
                         }
                     },
                     "required": [
@@ -246057,6 +246227,10 @@
                                 "ProbabilityBelowThreshold": {
                                     "value": 10,
                                     "description": "Probability that the variable falls below THRESHOLD_VALUE, in [0, 1]."
+                                },
+                                "Unspecified": {
+                                    "value": 11,
+                                    "description": "The source does not identify a member or ensemble statistic. A blended point-forecast product must not be labelled as one deterministic run."
                                 }
                             },
                             "x-flatbuffer-default": "Member"
@@ -246125,6 +246299,10 @@
                                 "Historical": {
                                     "value": 1,
                                     "description": "Data older than the producer's real-time window, offered under an open attribution licence named by LICENSE_URL."
+                                },
+                                "OpenAttribution": {
+                                    "value": 2,
+                                    "description": "Data of any valid time offered under an open attribution licence named by LICENSE_URL. Unlike Historical, this makes no claim about age or a producer's real-time window. API access terms can be more restrictive than the licence on the resulting data and must be checked separately."
                                 }
                             },
                             "x-flatbuffer-default": "RealTimeExperimental"
