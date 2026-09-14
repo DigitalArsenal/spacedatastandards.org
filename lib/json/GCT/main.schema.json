@@ -1,0 +1,737 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "wxfModelClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "MachineLearnedGlobalEnsemble", "NumericalGlobalEnsemble", "NumericalGlobalDeterministic", "NumericalRegional", "Reanalysis", "Analysis", "Other"]
+    },
+    "wxfMemberKind" : {
+      "type" : "string",
+      "enum": ["Member", "Control", "Deterministic", "Mean", "Median", "StandardDeviation", "Minimum", "Maximum", "Percentile", "ProbabilityAboveThreshold", "ProbabilityBelowThreshold", "Unspecified"]
+    },
+    "wxfVariable" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure"]
+    },
+    "wxfLevelKind" : {
+      "type" : "string",
+      "enum": ["Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere"]
+    },
+    "wxfTemporalKind" : {
+      "type" : "string",
+      "enum": ["Instantaneous", "Accumulated", "Averaged", "Maximum", "Minimum"]
+    },
+    "wxfGridKind" : {
+      "type" : "string",
+      "enum": ["RegularLatLon"]
+    },
+    "wxfValuesEncoding" : {
+      "type" : "string",
+      "enum": ["InlineFloat32", "ContentAddressedChunk"]
+    },
+    "wxfLicenseClass" : {
+      "type" : "string",
+      "enum": ["RealTimeExperimental", "Historical", "OpenAttribution"]
+    },
+    "wxfTimeBasis" : {
+      "type" : "string",
+      "enum": ["Initialization", "ValidTimeOnly"]
+    },
+    "gctTilingScheme" : {
+      "type" : "string",
+      "enum": ["GEOGRAPHIC_QUADTREE"]
+    },
+    "gctRefinement" : {
+      "type" : "string",
+      "enum": ["REPLACE", "ADD"]
+    },
+    "gctFieldQuantity" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CLOUD_EXTINCTION", "VOLCANIC_ASH_EXTINCTION", "SMOKE_EXTINCTION", "DUST_EXTINCTION", "CONDENSATE_MIXING_RATIO", "OTHER"]
+    },
+    "gctCloudGenus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CUMULUS_HUMILIS", "CUMULUS_MEDIOCRIS", "CUMULUS_CONGESTUS", "CUMULONIMBUS", "STRATOCUMULUS", "STRATUS", "ALTOCUMULUS", "CIRRUS", "NIMBOSTRATUS", "TILE_MIXTURE"]
+    },
+    "gctLevelDerivation" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "AUTHORED", "GRID_MERGE", "CLUSTER_MERGE", "FITTED"]
+    },
+    "gctSampleEncoding" : {
+      "type" : "string",
+      "enum": ["INLINE_FLOAT32", "CONTENT_ADDRESSED_CHUNK"]
+    },
+    "gctVariantScope" : {
+      "type" : "string",
+      "enum": ["INLINE", "SHARED_LIBRARY"]
+    },
+    "WXFGrid" : {
+      "type" : "object",
+      "description" : "Regular grid the samples are laid out on. Samples are row-major with\nlatitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON\nsits at VALUES[i * NLON + j] and is centred at\n(LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north\nto south. Longitudes are in [-180, 180) or [0, 360) exactly as the\nproducer publishes them; a consumer normalises.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/wxfGridKind",
+                "description" : "Grid geometry."
+              },
+        "LAT0" : {
+                "type" : "number",
+                "description" : "Latitude of the first row's cell centre, degrees north."
+              },
+        "LON0" : {
+                "type" : "number",
+                "description" : "Longitude of the first column's cell centre, degrees east."
+              },
+        "DLAT" : {
+                "type" : "number",
+                "description" : "Latitude step between rows, degrees (signed)."
+              },
+        "DLON" : {
+                "type" : "number",
+                "description" : "Longitude step between columns, degrees (signed)."
+              },
+        "NLAT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rows (latitudes)."
+              },
+        "NLON" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns (longitudes)."
+              },
+        "PERIODIC_LON" : {
+                "type" : "boolean",
+                "description" : "Whether the last column wraps to the first (global grid)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WXF" : {
+      "type" : "object",
+      "description" : "Weather Forecast Field - One variable, level, member and valid time on a\nregular grid.",
+      "properties" : {
+        "FIELD_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of the whole field this record belongs to; equal\nacross all tiles of one (producer, init, member, variable, level, lead)."
+              },
+        "MODEL_CLASS" : {
+                "$ref" : "#/definitions/wxfModelClass",
+                "description" : "Class of the producing model."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Producer-defined model identifier."
+              },
+        "MODEL_VERSION" : {
+                "type" : "string",
+                "description" : "Producer-defined model version."
+              },
+        "INIT_TIME_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Initialisation (analysis) time of the run, Unix milliseconds UTC.\nPresent only for TIME_BASIS Initialization."
+              },
+        "LEAD_HOURS" : {
+                "type" : "number",
+                "description" : "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization."
+              },
+        "VALID_TIME_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Time the field is valid at, Unix milliseconds UTC\n(INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization)."
+              },
+        "HORIZON_HOURS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic\ncycle, 48 for an interim cycle). Omitted for ValidTimeOnly."
+              },
+        "MEMBER_KIND" : {
+                "$ref" : "#/definitions/wxfMemberKind",
+                "description" : "Ensemble realisation or statistic the field represents."
+              },
+        "MEMBER_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Zero-based member index when MEMBER_KIND is Member."
+              },
+        "ENSEMBLE_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of members in the ensemble the run produced."
+              },
+        "PERCENTILE" : {
+                "type" : "number",
+                "description" : "Percentile rank in [0, 100] when MEMBER_KIND is Percentile."
+              },
+        "THRESHOLD_VALUE" : {
+                "type" : "number",
+                "description" : "Threshold in UNITS when MEMBER_KIND is a probability kind."
+              },
+        "VARIABLE" : {
+                "$ref" : "#/definitions/wxfVariable",
+                "description" : "Variable carried by the field."
+              },
+        "VARIABLE_NAME" : {
+                "type" : "string",
+                "description" : "Producer's native variable name (always set; authoritative when\nVARIABLE is Unspecified)."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units of every cell value, UCUM or CF style (e.g. \"K\", \"m s-1\", \"Pa\",\n\"1\")."
+              },
+        "LEVEL_KIND" : {
+                "$ref" : "#/definitions/wxfLevelKind",
+                "description" : "Vertical coordinate kind."
+              },
+        "LEVEL_VALUE" : {
+                "type" : "number",
+                "description" : "Vertical coordinate value in the unit fixed by LEVEL_KIND."
+              },
+        "TEMPORAL_KIND" : {
+                "$ref" : "#/definitions/wxfTemporalKind",
+                "description" : "Temporal character of each cell value."
+              },
+        "ACCUMULATION_HOURS" : {
+                "type" : "number",
+                "description" : "Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for\nInstantaneous."
+              },
+        "GRID" : {
+                "$ref" : "#/definitions/WXFGrid",
+                "description" : "Grid geometry of this record's samples (of this tile when tiled)."
+              },
+        "TILE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based tile index within FIELD_ID; 0 for an untiled field."
+              },
+        "TILE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of tiles FIELD_ID was split into; 1 for an untiled field."
+              },
+        "VALUES_ENCODING" : {
+                "$ref" : "#/definitions/wxfValuesEncoding",
+                "description" : "Where the samples live."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;\nNaN marks a missing cell. Present only when VALUES_ENCODING is\nInlineFloat32 and the cell count is at most 1,048,576."
+              },
+        "CHUNK_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the sample chunk when VALUES_ENCODING is\nContentAddressedChunk."
+              },
+        "CHUNK_DTYPE" : {
+                "type" : "string",
+                "description" : "Element type of the chunk (e.g. \"float32\", \"float16\")."
+              },
+        "CHUNK_CODECS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+              },
+        "CHUNK_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Encoded chunk length in bytes."
+              },
+        "VALUE_MIN" : {
+                "type" : "number",
+                "description" : "Minimum sample over the field (after decoding); statistics for display\nscaling without touching the chunk."
+              },
+        "VALUE_MAX" : {
+                "type" : "number",
+                "description" : "Maximum sample over the field (after decoding)."
+              },
+        "MISSING_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of cells with a missing value."
+              },
+        "ORIGIN_ID" : {
+                "type" : "string",
+                "description" : "Upstream publisher the field was retrieved from, as a host name or\nstable identifier."
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier within the origin (e.g. a bucket, collection\nor table name)."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Upstream URL or object path the field was retrieved from."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds UTC when the field was retrieved from the origin."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/wxfLicenseClass",
+                "description" : "Licence class applicable at RETRIEVED_AT."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the licence or terms the field is offered under."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Citation the upstream publisher asks for."
+              },
+        "PRODUCER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the node that ingested and published this record."
+              },
+        "TIME_BASIS" : {
+                "$ref" : "#/definitions/wxfTimeBasis",
+                "description" : "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
+              }
+      },
+      "required" : ["FIELD_ID", "GRID"],
+      "additionalProperties" : false
+    },
+    "GCTLevel" : {
+      "type" : "object",
+      "description" : "One level of detail of one variant: a Gaussian mixture in the variant's\nown frame (metres, origin at the variant's reference point, Z up, base of\nthe cloud near Z = 0). Levels are ordered finest first. Every per-Gaussian\nvector holds exactly 4 * GAUSSIAN_COUNT float32 values — one RGBA texel\nper Gaussian — in the same Gaussian order.",
+      "properties" : {
+        "GAUSSIAN_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of Gaussians in this level."
+              },
+        "MERGE_CELL_M" : {
+                "type" : "number",
+                "description" : "The cell this level was merged on, metres: the level's geometric error\nin the variant frame. Multiply by the instance scale in use."
+              },
+        "DERIVATION" : {
+                "$ref" : "#/definitions/gctLevelDerivation",
+                "description" : "How this level was produced."
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/gctSampleEncoding",
+                "description" : "Where the samples live."
+              },
+        "CHUNK_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the chunk when ENCODING is\nCONTENT_ADDRESSED_CHUNK."
+              },
+        "CHUNK_BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Encoded chunk length in bytes when ENCODING is CONTENT_ADDRESSED_CHUNK."
+              },
+        "CENTERS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per Gaussian: x, y, z of the centre, metres in the variant frame; w =\namplitude in AMPLITUDE_UNITS at the centre."
+              },
+        "SIGMAS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per Gaussian: standard deviation along the variant frame's x, y, z\naxes, metres (axis-aligned; the instance yaw rotates the frame); w = a\nper-Gaussian seed in [0, 1) for stochastic shading, 0 when unused."
+              },
+        "BOUNDARY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "OPTIONAL. Per Gaussian: x, y, z of the field's boundary normal at the\ncentre (unit vector scaled by a boundary weight in [0, 1]: 0 deep\ninside, 1 at a crisp condensation interface); w = the local coarse\ndensity in [0, 1]. Absent when not computed."
+              },
+        "FINE_NORMAL" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "OPTIONAL. Per Gaussian: x, y, z of a finer-scale surface normal that\nadds relief to BOUNDARY; w unused (0). Absent when not computed."
+              },
+        "OPTICAL_DEPTH_POS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "OPTIONAL. Per Gaussian: optical depth of the field from the centre\noutward along +x, +y, +z (dimensionless); w unused (0). Absent when\nnot computed."
+              },
+        "OPTICAL_DEPTH_NEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "OPTIONAL. Per Gaussian: optical depth along -x, -y, -z; w unused (0).\nAbsent when not computed."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GCTDistanceField" : {
+      "type" : "object",
+      "description" : "A signed distance field of a variant's surface (the isosurface of the\nmixture at DENSITY_THRESHOLD), on a cube of N^3 voxels over the variant's\nbounds, stored as bytes: distance / DISTANCE_SCALE_M, negative inside,\nclamped to [-128, 127]. Optional; a consumer without it sphere-traces\nnothing and lights the variant from an atlas instead.",
+      "properties" : {
+        "N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Voxels per axis."
+              },
+        "ORIGIN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Origin of voxel (0, 0, 0) in the variant frame, metres (3 values)."
+              },
+        "SPAN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Extent of the cube along each axis, metres (3 values)."
+              },
+        "DISTANCE_SCALE_M" : {
+                "type" : "number",
+                "description" : "Metres per byte step of DATA."
+              },
+        "DENSITY_THRESHOLD" : {
+                "type" : "number",
+                "description" : "Density threshold, in AMPLITUDE_UNITS, that defines the surface."
+              },
+        "MEAN_AMPLITUDE" : {
+                "type" : "number",
+                "description" : "Mean amplitude over the occupied volume, AMPLITUDE_UNITS."
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -128, "maximum" : 127},
+                "description" : "N^3 signed bytes, x fastest, then y, then z. Absent when the field\ntravels as the chunk named by CHUNK_CID."
+              },
+        "CHUNK_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the field when DATA is absent."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GCTDensityVolume" : {
+      "type" : "object",
+      "description" : "A baked density volume of a variant on the same cube as its distance\nfield, for ray marching: N^3 samples of amplitude in AMPLITUDE_UNITS,\nfloat16, x fastest. Optional.",
+      "properties" : {
+        "N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Voxels per axis."
+              },
+        "ORIGIN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Origin of voxel (0, 0, 0) in the variant frame, metres (3 values)."
+              },
+        "SPAN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Extent of the cube along each axis, metres (3 values)."
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 65535},
+                "description" : "N^3 IEEE 754 half-precision samples as their 16-bit patterns, x\nfastest, then y, then z. Absent when the volume travels as the chunk\nnamed by CHUNK_CID."
+              },
+        "CHUNK_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the volume when DATA is absent."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GCTVariant" : {
+      "type" : "object",
+      "description" : "One variant: one cloud (or one tile's merged mixture) as a chain of\nlevels of detail in its own frame. Instances place variants in the tile.",
+      "properties" : {
+        "VARIANT_ID" : {
+                "type" : "string",
+                "description" : "Producer-stable identifier of the variant within FIELD_ID."
+              },
+        "SCOPE" : {
+                "$ref" : "#/definitions/gctVariantScope",
+                "description" : "Where the levels live."
+              },
+        "VARIANT_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the variant's levels when SCOPE is\nSHARED_LIBRARY. Two references with equal VARIANT_CID are the same\nbytes."
+              },
+        "GENUS" : {
+                "$ref" : "#/definitions/gctCloudGenus",
+                "description" : "Genus, where classified."
+              },
+        "LEVELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GCTLevel"},
+                "description" : "Levels of detail, finest first, each conserving the mass of the one\nbefore it. Absent when SCOPE is SHARED_LIBRARY."
+              },
+        "BOUNDS_MIN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Axis-aligned bounds of the finest level's support in the variant\nframe, metres: min x, y, z (3 values)."
+              },
+        "BOUNDS_MAX_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Axis-aligned bounds, max x, y, z (3 values)."
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Total mass of the finest level: the integral of amplitude over space,\nAMPLITUDE_UNITS times cubic metres. Every level MUST match it within\nMASS_TOLERANCE."
+              },
+        "DISTANCE_FIELD" : {
+                "$ref" : "#/definitions/GCTDistanceField",
+                "description" : "Signed distance field of the surface. Optional."
+              },
+        "DENSITY_VOLUME" : {
+                "$ref" : "#/definitions/GCTDensityVolume",
+                "description" : "Baked density volume for ray marching. Optional."
+              },
+        "AUTHORING_SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Seed the producer authored the variant from, for reproducibility."
+              }
+      },
+      "required" : ["VARIANT_ID"],
+      "additionalProperties" : false
+    },
+    "GCTInstance" : {
+      "type" : "object",
+      "description" : "One placement of a variant in the tile frame. The transform applied to a\nvariant-frame point p is: scale by (SCALE_X, SCALE_Y, SCALE_Z), mirror per\nSYMMETRY, rotate by YAW_RAD about +Z, translate by (X_M, Y_M, Z_M). The\naligned-binary INSTANCES section carries these fields in this order as\nfloat32.",
+      "properties" : {
+        "VARIANT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into GCT.VARIANTS."
+              },
+        "X_M" : {
+                "type" : "number",
+                "description" : "Position of the variant's origin in the tile frame, metres east."
+              },
+        "Y_M" : {
+                "type" : "number",
+                "description" : "Metres north."
+              },
+        "Z_M" : {
+                "type" : "number",
+                "description" : "Metres up (above the tile's ENU origin)."
+              },
+        "SCALE_X" : {
+                "type" : "number",
+                "description" : "Scale along the variant frame's axes; 1 is the variant as authored."
+              },
+        "SCALE_Y" : {
+                "type" : "number"
+              },
+        "SCALE_Z" : {
+                "type" : "number"
+              },
+        "YAW_RAD" : {
+                "type" : "number",
+                "description" : "Rotation about +Z, radians, counter-clockwise from east."
+              },
+        "SYMMETRY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "One of eight axis mirror symmetries applied before the yaw: bit 0\nmirrors x, bit 1 mirrors y, bit 2 swaps x and y."
+              },
+        "EROSION" : {
+                "type" : "number",
+                "description" : "Strength of the consumer's per-instance erosion and warp in [0, 1] (0:\nthe variant exactly as authored). Values above 2 select a shared deck\ngap field with hole fraction VALUE - 2, per the producer's convention\nstated in PRODUCER_NOTES."
+              },
+        "CLOUD_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Producer-stable identity of the cloud this instance belongs to, equal\nacross tiles, levels and valid times while the cloud persists — the\nkey a consumer fades and tracks by. 0 means unstated."
+              },
+        "CLUSTER_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Cluster the instance belongs to (a chain of cumulus, a tower), for\ngrouping; 0 means none."
+              },
+        "SHAPE_ERROR_M" : {
+                "type" : "number",
+                "description" : "Shape error, metres: the silhouette distance between this placement\nand the cloud it stands in for. 0 means the instance IS the cloud (a\nunique variant); a class stand-in placed for a chain of five cumulus\ncarries half the member spacing. A consumer that refines below the\nshape error requests the unique variant."
+              },
+        "WIDTH_M" : {
+                "type" : "number",
+                "description" : "Width of the cloud as placed, metres, for size-dependent decisions."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GCTCoverGrid" : {
+      "type" : "object",
+      "description" : "The producer's reduction of the source fields to this tile's rectangle:\nwhat a coarse tile draws as a continuous sheet before any Gaussian is\nresolved. Samples are row-major with latitude as the outer index, cell\n(i, j) centred at (LAT0_RAD + i * DLAT_RAD, LON0_RAD + j * DLON_RAD).",
+      "properties" : {
+        "LAT0_RAD" : {
+                "type" : "number",
+                "description" : "Latitude of the first row's cell centre, radians."
+              },
+        "LON0_RAD" : {
+                "type" : "number",
+                "description" : "Longitude of the first column's cell centre, radians."
+              },
+        "DLAT_RAD" : {
+                "type" : "number",
+                "description" : "Latitude step between rows, radians (signed)."
+              },
+        "DLON_RAD" : {
+                "type" : "number",
+                "description" : "Longitude step between columns, radians (signed)."
+              },
+        "NLAT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rows."
+              },
+        "NLON" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns."
+              },
+        "LOW_COVER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Low-cloud cover fraction per cell, [0, 1]. NaN marks a missing cell."
+              },
+        "MEDIUM_COVER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Medium-cloud cover fraction per cell, [0, 1]. Absent when unstated."
+              },
+        "HIGH_COVER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "High-cloud cover fraction per cell, [0, 1]. Absent when unstated."
+              },
+        "BASE_HEIGHT_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Height of the low-cloud base per cell, metres above the ellipsoid\n(the lifting condensation level over the ground height)."
+              },
+        "TOP_HEIGHT_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Height of the low-cloud top per cell, metres above the ellipsoid."
+              },
+        "COLUMN_OPTICAL_DEPTH" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Column optical depth per cell of the whole tile content along the\nvertical, dimensionless. Absent when unstated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GCT" : {
+      "type" : "object",
+      "description" : "Gaussian Cloud Tile: one quadtree tile of a volumetric field as a mass-conserving Gaussian mixture, rendering-ready, for one valid time.",
+      "properties" : {
+        "FIELD_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of the whole tiled field this tile belongs to; equal\nacross all tiles and levels of one (producer, source fields, valid\ntime, geometric-error ladder)."
+              },
+        "TILING" : {
+                "$ref" : "#/definitions/gctTilingScheme",
+                "description" : "Quadtree the keys are stated in."
+              },
+        "LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Tile level; 0 is a root."
+              },
+        "X" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Tile column, eastward from longitude -180."
+              },
+        "Y" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Tile row, southward from latitude +90."
+              },
+        "CHILD_MASK" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Which of the four children exist (bits 0..3 as defined in the header).\n0 on a leaf. A child that does not exist has no content anywhere\nbeneath it — clear sky is never traversed."
+              },
+        "MAX_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Deepest level with content under this tile, when the producer knows\nit; 255 when unstated."
+              },
+        "REFINE" : {
+                "$ref" : "#/definitions/gctRefinement",
+                "description" : "How the tile relates to its children."
+              },
+        "GEOMETRIC_ERROR_M" : {
+                "type" : "number",
+                "description" : "The cell the tile's content was merged on, metres: its geometric\nerror. Children carry a smaller value than their parent."
+              },
+        "WEST_RAD" : {
+                "type" : "number",
+                "description" : "Bounding region of the content and every descendant's content, which\nmay exceed the nominal tile rectangle. Radians, WGS84."
+              },
+        "SOUTH_RAD" : {
+                "type" : "number"
+              },
+        "EAST_RAD" : {
+                "type" : "number"
+              },
+        "NORTH_RAD" : {
+                "type" : "number"
+              },
+        "MIN_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Lowest point of the region, metres above the WGS84 ellipsoid."
+              },
+        "MAX_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Highest point of the region, metres above the WGS84 ellipsoid."
+              },
+        "ORIGIN_LON_RAD" : {
+                "type" : "number",
+                "description" : "The tile's east-north-up frame: geodetic origin, radians and metres\nabove the WGS84 ellipsoid. Instances and variants are stated in this\nframe."
+              },
+        "ORIGIN_LAT_RAD" : {
+                "type" : "number"
+              },
+        "ORIGIN_HEIGHT_M" : {
+                "type" : "number"
+              },
+        "ENU_TO_ECEF" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Column-major 4x4 transform taking tile-frame points (metres) to WGS84\nEarth-centred Earth-fixed metres. Exactly 16 entries. Its rigid\ninverse takes ECEF points into the tile frame."
+              },
+        "FIELD_QUANTITY" : {
+                "$ref" : "#/definitions/gctFieldQuantity",
+                "description" : "Physical quantity every Gaussian amplitude measures."
+              },
+        "FIELD_QUANTITY_NAME" : {
+                "type" : "string",
+                "description" : "Producer's name for the quantity; required when FIELD_QUANTITY is\nOTHER."
+              },
+        "AMPLITUDE_UNITS" : {
+                "type" : "string",
+                "description" : "Units of every amplitude, UCUM or CF style (e.g. \"m-1\", \"kg kg-1\")."
+              },
+        "MASS_TOLERANCE" : {
+                "type" : "number",
+                "description" : "Relative tolerance on mass conservation between any two levels of a\nvariant and between a tile and its children, e.g. 0.01."
+              },
+        "VARIANTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GCTVariant"},
+                "description" : "Variants placed in this tile."
+              },
+        "INSTANCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GCTInstance"},
+                "description" : "Placements of the variants in the tile frame."
+              },
+        "COVER" : {
+                "$ref" : "#/definitions/GCTCoverGrid",
+                "description" : "The producer's reduction of the source fields to this tile, present on\ntiles whose GEOMETRIC_ERROR_M exceeds the cloud layer's thickness (the\nsheet a consumer draws before the Gaussians resolve) and optional\nelsewhere."
+              },
+        "VALID_TIME_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Time the field is valid at, Unix milliseconds UTC."
+              },
+        "INIT_TIME_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Initialisation time of the run the source fields came from, Unix\nmilliseconds UTC. Present only for TIME_BASIS Initialization."
+              },
+        "LEAD_HOURS" : {
+                "type" : "number",
+                "description" : "Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS\nInitialization."
+              },
+        "TIME_BASIS" : {
+                "$ref" : "#/definitions/wxfTimeBasis",
+                "description" : "Which times the source publishes; governs INIT_TIME_MS and LEAD_HOURS."
+              },
+        "MODEL_CLASS" : {
+                "$ref" : "#/definitions/wxfModelClass",
+                "description" : "Class of the model that produced the source fields."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Producer-defined identifier of the source model."
+              },
+        "SOURCE_FIELD_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "FIELD_ID of every `$WXF` (or other source record) the tile was derived\nfrom, including ones that contributed nothing, so a consumer can tell\n\"not consulted\" from \"consulted and empty\"."
+              },
+        "PRODUCER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer identifier of the node that produced and published this tile."
+              },
+        "PRODUCER_VERSION" : {
+                "type" : "string",
+                "description" : "Producer software and version that authored the Gaussians, e.g.\n\"orbpro-gaussian-clouds 0.13.0\"."
+              },
+        "PRODUCER_NOTES" : {
+                "type" : "string",
+                "description" : "Producer conventions a consumer needs and this schema does not fix\n(the EROSION deck convention, the erosion and warp fields' definition)."
+              },
+        "PRODUCED_AT_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix milliseconds UTC when the tile was produced."
+              },
+        "AUTHORING_SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Seed the placement and authoring were derived from; with the source\nfields it reproduces the tile."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/wxfLicenseClass",
+                "description" : "Licence class applicable to the derived tile at PRODUCED_AT_MS."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the licence or terms the tile is offered under."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Citation the upstream publishers ask for."
+              }
+      },
+      "required" : ["FIELD_ID", "AMPLITUDE_UNITS"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GCT"
+}

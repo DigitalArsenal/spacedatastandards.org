@@ -1,0 +1,534 @@
+// Hash: 0d7d638445c1ebabb52a49581757afa737816c61e3c40b7d21de878ebc86e85c
+// Version: 1.216.0
+// -----------------------------------END_HEADER
+include "../WXF/main.fbs";
+
+// Gaussian Cloud Tile (GCT)
+// Description
+// One tile of a volumetric atmospheric field represented as a POSITIVE
+// MIXTURE OF THREE-DIMENSIONAL GAUSSIANS, rendering-ready, at one geometric
+// error, for one valid time. The tile is a node of a quadtree over the WGS84
+// ellipsoid selected by screen-space error the way 3D Tiles and terrain are;
+// its content is drawn as splats, ray-marched, or merged into a coarser tile,
+// and every level of every cloud in it conserves the mass of the level above,
+// so a parent tile and its four children are the same field at two
+// resolutions. This is a DURABLE DERIVED PRODUCT: a producer turns forecast
+// fields (`$WXF`) or observations into Gaussians once and publishes the tiles;
+// a consumer streams the tiles it can see and never re-derives them.
+//
+// DIVISION OF LABOUR. `$WXF` is the forecast field — one variable, one level,
+// one member, one valid time, on a latitude-longitude grid. `$GCT` is the
+// three-dimensional derivative of one or more such fields on one tile: where
+// the clouds are, how big, how dense, at what height. A `$GCT` names every
+// `$WXF` it was derived from in SOURCE_FIELD_IDS and never restates their
+// cells; the COVER table on a coarse tile is the producer's own reduction of
+// those fields to the tile, carried so the tile is self-contained. `$TAB` /
+// `$PIV` carry a `$GCT` across a plugin boundary, in canonical FlatBuffer
+// form or as the aligned-binary twin defined below.
+//
+// THE TREE. TILING names the quadtree. For GEOGRAPHIC_QUADTREE there are two
+// root tiles at LEVEL 0 covering the western and eastern hemispheres; a tile
+// at LEVEL L is 180 / 2^L degrees square; X counts eastward from longitude
+// -180 and Y counts southward from latitude +90, both from 0, so LEVEL L has
+// 2^(L+1) columns and 2^L rows. The four children of (L, X, Y) are
+// (L+1, 2X, 2Y), (L+1, 2X+1, 2Y), (L+1, 2X, 2Y+1) and (L+1, 2X+1, 2Y+1), in
+// CHILD_MASK bit order 0..3. A tile's BOUNDING REGION (WEST/SOUTH/EAST/NORTH,
+// MIN/MAX_HEIGHT) is computed from its CONTENT and its descendants' content
+// and MAY exceed the nominal tile rectangle: a cloud belongs to the tile that
+// contains its centre and reaches past the edge. A consumer culls and measures
+// distance against the bounding region, never against the nominal rectangle.
+//
+// GEOMETRIC ERROR IS THE MERGE CELL. GEOMETRIC_ERROR_M is the size, in metres,
+// of the cell the tile's Gaussians were merged on: the field is exact to that
+// scale and blurred below it. Screen-space error is
+// GEOMETRIC_ERROR_M * viewportHeightPx / (distanceM * 2 * tan(fovY / 2)); a
+// consumer refines a tile while that exceeds its threshold. Every level of a
+// variant records its own MERGE_CELL_M for the same reason.
+//
+// REFINEMENT IS EXACT. REFINE is REPLACE: when the children draw, the parent
+// does not. Because each child holds the same clouds as its share of the
+// parent at a finer level, and each level conserves the mass of the level
+// above (the amplitude of a merged Gaussian is the sum of the amplitudes it
+// replaces, scaled so the integral over space is unchanged), the union of the
+// children equals the parent to within GEOMETRIC_ERROR_M. A producer MUST NOT
+// publish children whose total mass differs from the parent's by more than
+// MASS_TOLERANCE.
+//
+// UNITS ARE NAMED. Every length is metres (suffix _M), every angle radians
+// (suffix _RAD), every epoch Unix milliseconds UTC (suffix _MS). A Gaussian's
+// amplitude is the physical quantity named by FIELD_QUANTITY in
+// AMPLITUDE_UNITS — for CLOUD_EXTINCTION the visible-light extinction
+// coefficient at the Gaussian's centre, 1/m — and a consumer that cannot use
+// those units refuses the tile rather than rescaling it.
+//
+// ABSENT IS NOT ZERO. An optional per-Gaussian layer (BOUNDARY, FINE_NORMAL,
+// OPTICAL_DEPTH_*) that a producer did not compute is ABSENT, never a zero
+// vector; a consumer shades a Gaussian without the layer volumetrically. A
+// distance field or density volume that was not baked is absent. A scalar
+// that is not published is NaN.
+//
+// THE ALIGNED-BINARY TWIN (normative). A `$GCT` MAY travel as ALIGNED_BINARY
+// under the `$TAB` / `$PIV` dual-accept rule, beside — never instead of — this
+// FlatBuffer form. The twin exists so a producer writing into a shared arena
+// (a WebAssembly linear memory, a SharedArrayBuffer) can hand every texel
+// array to a GPU without a builder, a parse or a copy. Its layout, in bytes
+// from `TAB.OFFSET`, with `TAB.ALIGNMENT` = 64:
+//
+//   0    char[4]   "$GCT"                        file identifier
+//   4    uint32    twin layout version (1)
+//   8    uint32    header length in bytes (64)
+//   12   uint32    section count
+//   16   uint32    canonical FlatBuffer length in bytes (0 when omitted)
+//   20   uint32    canonical FlatBuffer offset, 64-byte aligned
+//   24   uint8[40] reserved, zero
+//   64   section directory: section count entries of
+//          uint32 SECTION_KIND (0 CENTERS, 1 SIGMAS, 2 BOUNDARY,
+//                 3 FINE_NORMAL, 4 OPTICAL_DEPTH_POS, 5 OPTICAL_DEPTH_NEG,
+//                 6 INSTANCES, 7 DISTANCE_FIELD, 8 DENSITY_VOLUME,
+//                 9 COVER)
+//          uint32 VARIANT index (0xFFFFFFFF for INSTANCES and COVER)
+//          uint32 LEVEL index
+//          uint32 ELEMENT_COUNT
+//          uint32 OFFSET from TAB.OFFSET, a multiple of 64
+//          uint32 BYTE_LENGTH
+//          uint32 ROW_TEXELS (texels per texture row the section was
+//                 padded to; 0 for a tightly packed section)
+//          uint32 reserved, zero
+//   then the sections, each starting on a 64-byte boundary.
+//
+// A per-Gaussian section is ELEMENT_COUNT texels of four float32 (16 bytes),
+// in the same order and with the same meaning as the FlatBuffer vector of the
+// same name, so `CENTERS` in both forms is byte-identical apart from padding.
+// When ROW_TEXELS is non-zero the section is padded with zero texels to a
+// multiple of ROW_TEXELS so that a consumer whose textures are ROW_TEXELS wide
+// uploads whole rows; the FlatBuffer form is never padded. An INSTANCES
+// section is ELEMENT_COUNT records of four texels (64 bytes) laid out as
+// GCTInstance's fields in declaration order, float32 each, integers
+// converted exactly. A DISTANCE_FIELD section is N^3 bytes; a DENSITY_VOLUME
+// section N^3 float16; a COVER section its layers in declaration order,
+// each NLAT * NLON float32. The `FlatBufferTypeRef` advertised for the twin
+// carries SCHEMA_NAME "GCT.fbs", FILE_IDENTIFIER "$GCT", ROOT_TYPE "GCT",
+// WIRE_FORMAT ALIGNED_BINARY and REQUIRED_ALIGNMENT 64; BYTE_LENGTH is left
+// unset because the record is variable-length (`TAB.SIZE` carries it).
+//
+// A consumer reading the FlatBuffer form gets the same zero-copy property for
+// the per-Gaussian vectors: a `[float]` vector in a FlatBuffer is contiguous
+// and 4-byte aligned, which is all a `Float32Array` view or a `texSubImage2D`
+// call requires. The twin adds the 64-byte alignment, the row padding and the
+// absence of a builder; it adds no field.
+
+/// Quadtree the tile keys are stated in. ORDINALS ARE WIRE VALUES; new
+/// schemes are APPENDED ONLY.
+enum gctTilingScheme : byte {
+  /// Two root tiles, geographic (equirectangular) subdivision as described
+  /// in the header. The scheme CesiumJS terrain and imagery use.
+  GEOGRAPHIC_QUADTREE = 0
+}
+
+/// How a tile relates to its children. ORDINALS ARE WIRE VALUES; new kinds
+/// are APPENDED ONLY.
+enum gctRefinement : byte {
+  /// The children replace the parent: draw one or the other, never both.
+  /// The only refinement a mass-conserving mixture needs.
+  REPLACE = 0,
+  /// The children add to the parent. Reserved; a producer MUST NOT publish
+  /// it until a consumer contract for additive mixtures is defined.
+  ADD = 1
+}
+
+/// Physical quantity a Gaussian's amplitude measures. ORDINALS ARE WIRE
+/// VALUES; new quantities are APPENDED ONLY.
+enum gctFieldQuantity : byte {
+  /// Not stated. A consumer MUST refuse the tile.
+  UNSPECIFIED = 0,
+  /// Visible-light extinction coefficient of cloud condensate (liquid and
+  /// ice), 1/m at the Gaussian's centre.
+  CLOUD_EXTINCTION = 1,
+  /// Extinction coefficient of volcanic ash, 1/m.
+  VOLCANIC_ASH_EXTINCTION = 2,
+  /// Extinction coefficient of smoke, 1/m.
+  SMOKE_EXTINCTION = 3,
+  /// Extinction coefficient of mineral dust, 1/m.
+  DUST_EXTINCTION = 4,
+  /// Cloud condensate mixing ratio, kg/kg.
+  CONDENSATE_MIXING_RATIO = 5,
+  /// A quantity this enum cannot express; FIELD_QUANTITY_NAME names it.
+  OTHER = 99
+}
+
+/// Meteorological genus of a variant, where the producer classified it.
+/// ORDINALS ARE WIRE VALUES; new genera are APPENDED ONLY.
+enum gctCloudGenus : byte {
+  /// Not classified.
+  UNSPECIFIED = 0,
+  /// Cumulus humilis: fair-weather cumulus, wider than deep.
+  CUMULUS_HUMILIS = 1,
+  /// Cumulus mediocris.
+  CUMULUS_MEDIOCRIS = 2,
+  /// Cumulus congestus: towering cumulus.
+  CUMULUS_CONGESTUS = 3,
+  /// Cumulonimbus, with or without an anvil.
+  CUMULONIMBUS = 4,
+  /// Stratocumulus deck.
+  STRATOCUMULUS = 5,
+  /// Stratus.
+  STRATUS = 6,
+  /// Altocumulus / altostratus mid-level bank.
+  ALTOCUMULUS = 7,
+  /// Cirrus / cirrostratus sheet.
+  CIRRUS = 8,
+  /// Nimbostratus.
+  NIMBOSTRATUS = 9,
+  /// The merged mixture of a whole tile, not one cloud.
+  TILE_MIXTURE = 10
+}
+
+/// How a level was produced from the field. ORDINALS ARE WIRE VALUES; new
+/// derivations are APPENDED ONLY.
+enum gctLevelDerivation : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Sampled directly from the source field or authored at this cell.
+  AUTHORED = 1,
+  /// Mass-conserving merge of the finer level on a regular grid of cell
+  /// MERGE_CELL_M, silhouette preserved.
+  GRID_MERGE = 2,
+  /// Mass-conserving k-means merge of the finer level into
+  /// GAUSSIAN_COUNT clusters.
+  CLUSTER_MERGE = 3,
+  /// Fitted to a voxel or observational field by optimisation.
+  FITTED = 4
+}
+
+/// Where a level's samples live. ORDINALS ARE WIRE VALUES; new encodings
+/// are APPENDED ONLY.
+enum gctSampleEncoding : byte {
+  /// Samples are inline in the level's vectors.
+  INLINE_FLOAT32 = 0,
+  /// Samples are a content-addressed chunk named by the level's CHUNK_CID
+  /// whose layout is the aligned-binary twin's section layout for the
+  /// level; the level's vectors are absent.
+  CONTENT_ADDRESSED_CHUNK = 1
+}
+
+/// Where a whole variant lives. ORDINALS ARE WIRE VALUES; new scopes are
+/// APPENDED ONLY.
+enum gctVariantScope : byte {
+  /// The variant's levels are carried in this tile.
+  INLINE = 0,
+  /// The variant is a shared library entry named by VARIANT_CID; its levels
+  /// are absent here and identical wherever the same CID appears, so a
+  /// consumer keeps one copy however many tiles reference it.
+  SHARED_LIBRARY = 1
+}
+
+/// One level of detail of one variant: a Gaussian mixture in the variant's
+/// own frame (metres, origin at the variant's reference point, Z up, base of
+/// the cloud near Z = 0). Levels are ordered finest first. Every per-Gaussian
+/// vector holds exactly 4 * GAUSSIAN_COUNT float32 values — one RGBA texel
+/// per Gaussian — in the same Gaussian order.
+table GCTLevel {
+  /// Number of Gaussians in this level.
+  GAUSSIAN_COUNT: uint32;
+  /// The cell this level was merged on, metres: the level's geometric error
+  /// in the variant frame. Multiply by the instance scale in use.
+  MERGE_CELL_M: float;
+  /// How this level was produced.
+  DERIVATION: gctLevelDerivation = UNSPECIFIED;
+  /// Where the samples live.
+  ENCODING: gctSampleEncoding = INLINE_FLOAT32;
+  /// Content identifier of the chunk when ENCODING is
+  /// CONTENT_ADDRESSED_CHUNK.
+  CHUNK_CID: string;
+  /// Encoded chunk length in bytes when ENCODING is CONTENT_ADDRESSED_CHUNK.
+  CHUNK_BYTE_LENGTH: uint64;
+  /// Per Gaussian: x, y, z of the centre, metres in the variant frame; w =
+  /// amplitude in AMPLITUDE_UNITS at the centre.
+  CENTERS: [float];
+  /// Per Gaussian: standard deviation along the variant frame's x, y, z
+  /// axes, metres (axis-aligned; the instance yaw rotates the frame); w = a
+  /// per-Gaussian seed in [0, 1) for stochastic shading, 0 when unused.
+  SIGMAS: [float];
+  /// OPTIONAL. Per Gaussian: x, y, z of the field's boundary normal at the
+  /// centre (unit vector scaled by a boundary weight in [0, 1]: 0 deep
+  /// inside, 1 at a crisp condensation interface); w = the local coarse
+  /// density in [0, 1]. Absent when not computed.
+  BOUNDARY: [float];
+  /// OPTIONAL. Per Gaussian: x, y, z of a finer-scale surface normal that
+  /// adds relief to BOUNDARY; w unused (0). Absent when not computed.
+  FINE_NORMAL: [float];
+  /// OPTIONAL. Per Gaussian: optical depth of the field from the centre
+  /// outward along +x, +y, +z (dimensionless); w unused (0). Absent when
+  /// not computed.
+  OPTICAL_DEPTH_POS: [float];
+  /// OPTIONAL. Per Gaussian: optical depth along -x, -y, -z; w unused (0).
+  /// Absent when not computed.
+  OPTICAL_DEPTH_NEG: [float];
+}
+
+/// A signed distance field of a variant's surface (the isosurface of the
+/// mixture at DENSITY_THRESHOLD), on a cube of N^3 voxels over the variant's
+/// bounds, stored as bytes: distance / DISTANCE_SCALE_M, negative inside,
+/// clamped to [-128, 127]. Optional; a consumer without it sphere-traces
+/// nothing and lights the variant from an atlas instead.
+table GCTDistanceField {
+  /// Voxels per axis.
+  N: uint16;
+  /// Origin of voxel (0, 0, 0) in the variant frame, metres (3 values).
+  ORIGIN_M: [float];
+  /// Extent of the cube along each axis, metres (3 values).
+  SPAN_M: [float];
+  /// Metres per byte step of DATA.
+  DISTANCE_SCALE_M: float;
+  /// Density threshold, in AMPLITUDE_UNITS, that defines the surface.
+  DENSITY_THRESHOLD: float;
+  /// Mean amplitude over the occupied volume, AMPLITUDE_UNITS.
+  MEAN_AMPLITUDE: float;
+  /// N^3 signed bytes, x fastest, then y, then z. Absent when the field
+  /// travels as the chunk named by CHUNK_CID.
+  DATA: [int8];
+  /// Content identifier of the field when DATA is absent.
+  CHUNK_CID: string;
+}
+
+/// A baked density volume of a variant on the same cube as its distance
+/// field, for ray marching: N^3 samples of amplitude in AMPLITUDE_UNITS,
+/// float16, x fastest. Optional.
+table GCTDensityVolume {
+  /// Voxels per axis.
+  N: uint16;
+  /// Origin of voxel (0, 0, 0) in the variant frame, metres (3 values).
+  ORIGIN_M: [float];
+  /// Extent of the cube along each axis, metres (3 values).
+  SPAN_M: [float];
+  /// N^3 IEEE 754 half-precision samples as their 16-bit patterns, x
+  /// fastest, then y, then z. Absent when the volume travels as the chunk
+  /// named by CHUNK_CID.
+  DATA: [uint16];
+  /// Content identifier of the volume when DATA is absent.
+  CHUNK_CID: string;
+}
+
+/// One variant: one cloud (or one tile's merged mixture) as a chain of
+/// levels of detail in its own frame. Instances place variants in the tile.
+table GCTVariant {
+  /// Producer-stable identifier of the variant within FIELD_ID.
+  VARIANT_ID: string (required);
+  /// Where the levels live.
+  SCOPE: gctVariantScope = INLINE;
+  /// Content identifier of the variant's levels when SCOPE is
+  /// SHARED_LIBRARY. Two references with equal VARIANT_CID are the same
+  /// bytes.
+  VARIANT_CID: string;
+  /// Genus, where classified.
+  GENUS: gctCloudGenus = UNSPECIFIED;
+  /// Levels of detail, finest first, each conserving the mass of the one
+  /// before it. Absent when SCOPE is SHARED_LIBRARY.
+  LEVELS: [GCTLevel];
+  /// Axis-aligned bounds of the finest level's support in the variant
+  /// frame, metres: min x, y, z (3 values).
+  BOUNDS_MIN_M: [float];
+  /// Axis-aligned bounds, max x, y, z (3 values).
+  BOUNDS_MAX_M: [float];
+  /// Total mass of the finest level: the integral of amplitude over space,
+  /// AMPLITUDE_UNITS times cubic metres. Every level MUST match it within
+  /// MASS_TOLERANCE.
+  MASS: double;
+  /// Signed distance field of the surface. Optional.
+  DISTANCE_FIELD: GCTDistanceField;
+  /// Baked density volume for ray marching. Optional.
+  DENSITY_VOLUME: GCTDensityVolume;
+  /// Seed the producer authored the variant from, for reproducibility.
+  AUTHORING_SEED: uint32;
+}
+
+/// One placement of a variant in the tile frame. The transform applied to a
+/// variant-frame point p is: scale by (SCALE_X, SCALE_Y, SCALE_Z), mirror per
+/// SYMMETRY, rotate by YAW_RAD about +Z, translate by (X_M, Y_M, Z_M). The
+/// aligned-binary INSTANCES section carries these fields in this order as
+/// float32.
+table GCTInstance {
+  /// Index into GCT.VARIANTS.
+  VARIANT: uint32;
+  /// Position of the variant's origin in the tile frame, metres east.
+  X_M: float;
+  /// Metres north.
+  Y_M: float;
+  /// Metres up (above the tile's ENU origin).
+  Z_M: float;
+  /// Scale along the variant frame's axes; 1 is the variant as authored.
+  SCALE_X: float = 1;
+  SCALE_Y: float = 1;
+  SCALE_Z: float = 1;
+  /// Rotation about +Z, radians, counter-clockwise from east.
+  YAW_RAD: float;
+  /// One of eight axis mirror symmetries applied before the yaw: bit 0
+  /// mirrors x, bit 1 mirrors y, bit 2 swaps x and y.
+  SYMMETRY: uint8;
+  /// Strength of the consumer's per-instance erosion and warp in [0, 1] (0:
+  /// the variant exactly as authored). Values above 2 select a shared deck
+  /// gap field with hole fraction VALUE - 2, per the producer's convention
+  /// stated in PRODUCER_NOTES.
+  EROSION: float;
+  /// Producer-stable identity of the cloud this instance belongs to, equal
+  /// across tiles, levels and valid times while the cloud persists — the
+  /// key a consumer fades and tracks by. 0 means unstated.
+  CLOUD_ID: uint64;
+  /// Cluster the instance belongs to (a chain of cumulus, a tower), for
+  /// grouping; 0 means none.
+  CLUSTER_ID: uint32;
+  /// Shape error, metres: the silhouette distance between this placement
+  /// and the cloud it stands in for. 0 means the instance IS the cloud (a
+  /// unique variant); a class stand-in placed for a chain of five cumulus
+  /// carries half the member spacing. A consumer that refines below the
+  /// shape error requests the unique variant.
+  SHAPE_ERROR_M: float;
+  /// Width of the cloud as placed, metres, for size-dependent decisions.
+  WIDTH_M: float;
+}
+
+/// The producer's reduction of the source fields to this tile's rectangle:
+/// what a coarse tile draws as a continuous sheet before any Gaussian is
+/// resolved. Samples are row-major with latitude as the outer index, cell
+/// (i, j) centred at (LAT0_RAD + i * DLAT_RAD, LON0_RAD + j * DLON_RAD).
+table GCTCoverGrid {
+  /// Latitude of the first row's cell centre, radians.
+  LAT0_RAD: double;
+  /// Longitude of the first column's cell centre, radians.
+  LON0_RAD: double;
+  /// Latitude step between rows, radians (signed).
+  DLAT_RAD: double;
+  /// Longitude step between columns, radians (signed).
+  DLON_RAD: double;
+  /// Number of rows.
+  NLAT: uint32;
+  /// Number of columns.
+  NLON: uint32;
+  /// Low-cloud cover fraction per cell, [0, 1]. NaN marks a missing cell.
+  LOW_COVER: [float];
+  /// Medium-cloud cover fraction per cell, [0, 1]. Absent when unstated.
+  MEDIUM_COVER: [float];
+  /// High-cloud cover fraction per cell, [0, 1]. Absent when unstated.
+  HIGH_COVER: [float];
+  /// Height of the low-cloud base per cell, metres above the ellipsoid
+  /// (the lifting condensation level over the ground height).
+  BASE_HEIGHT_M: [float];
+  /// Height of the low-cloud top per cell, metres above the ellipsoid.
+  TOP_HEIGHT_M: [float];
+  /// Column optical depth per cell of the whole tile content along the
+  /// vertical, dimensionless. Absent when unstated.
+  COLUMN_OPTICAL_DEPTH: [float];
+}
+
+/// Gaussian Cloud Tile: one quadtree tile of a volumetric field as a mass-conserving Gaussian mixture, rendering-ready, for one valid time.
+table GCT {
+  /// Stable identifier of the whole tiled field this tile belongs to; equal
+  /// across all tiles and levels of one (producer, source fields, valid
+  /// time, geometric-error ladder).
+  FIELD_ID: string (required);
+  /// Quadtree the keys are stated in.
+  TILING: gctTilingScheme = GEOGRAPHIC_QUADTREE;
+  /// Tile level; 0 is a root.
+  LEVEL: uint8;
+  /// Tile column, eastward from longitude -180.
+  X: uint32;
+  /// Tile row, southward from latitude +90.
+  Y: uint32;
+  /// Which of the four children exist (bits 0..3 as defined in the header).
+  /// 0 on a leaf. A child that does not exist has no content anywhere
+  /// beneath it — clear sky is never traversed.
+  CHILD_MASK: uint8;
+  /// Deepest level with content under this tile, when the producer knows
+  /// it; 255 when unstated.
+  MAX_LEVEL: uint8 = 255;
+  /// How the tile relates to its children.
+  REFINE: gctRefinement = REPLACE;
+  /// The cell the tile's content was merged on, metres: its geometric
+  /// error. Children carry a smaller value than their parent.
+  GEOMETRIC_ERROR_M: float;
+
+  /// Bounding region of the content and every descendant's content, which
+  /// may exceed the nominal tile rectangle. Radians, WGS84.
+  WEST_RAD: double;
+  SOUTH_RAD: double;
+  EAST_RAD: double;
+  NORTH_RAD: double;
+  /// Lowest point of the region, metres above the WGS84 ellipsoid.
+  MIN_HEIGHT_M: double;
+  /// Highest point of the region, metres above the WGS84 ellipsoid.
+  MAX_HEIGHT_M: double;
+
+  /// The tile's east-north-up frame: geodetic origin, radians and metres
+  /// above the WGS84 ellipsoid. Instances and variants are stated in this
+  /// frame.
+  ORIGIN_LON_RAD: double;
+  ORIGIN_LAT_RAD: double;
+  ORIGIN_HEIGHT_M: double;
+  /// Column-major 4x4 transform taking tile-frame points (metres) to WGS84
+  /// Earth-centred Earth-fixed metres. Exactly 16 entries. Its rigid
+  /// inverse takes ECEF points into the tile frame.
+  ENU_TO_ECEF: [double];
+
+  /// Physical quantity every Gaussian amplitude measures.
+  FIELD_QUANTITY: gctFieldQuantity = UNSPECIFIED;
+  /// Producer's name for the quantity; required when FIELD_QUANTITY is
+  /// OTHER.
+  FIELD_QUANTITY_NAME: string;
+  /// Units of every amplitude, UCUM or CF style (e.g. "m-1", "kg kg-1").
+  AMPLITUDE_UNITS: string (required);
+  /// Relative tolerance on mass conservation between any two levels of a
+  /// variant and between a tile and its children, e.g. 0.01.
+  MASS_TOLERANCE: float;
+
+  /// Variants placed in this tile.
+  VARIANTS: [GCTVariant];
+  /// Placements of the variants in the tile frame.
+  INSTANCES: [GCTInstance];
+  /// The producer's reduction of the source fields to this tile, present on
+  /// tiles whose GEOMETRIC_ERROR_M exceeds the cloud layer's thickness (the
+  /// sheet a consumer draws before the Gaussians resolve) and optional
+  /// elsewhere.
+  COVER: GCTCoverGrid;
+
+  /// Time the field is valid at, Unix milliseconds UTC.
+  VALID_TIME_MS: uint64;
+  /// Initialisation time of the run the source fields came from, Unix
+  /// milliseconds UTC. Present only for TIME_BASIS Initialization.
+  INIT_TIME_MS: uint64;
+  /// Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
+  /// Initialization.
+  LEAD_HOURS: float;
+  /// Which times the source publishes; governs INIT_TIME_MS and LEAD_HOURS.
+  TIME_BASIS: wxfTimeBasis = Initialization;
+  /// Class of the model that produced the source fields.
+  MODEL_CLASS: wxfModelClass = Unspecified;
+  /// Producer-defined identifier of the source model.
+  MODEL_ID: string;
+  /// FIELD_ID of every `$WXF` (or other source record) the tile was derived
+  /// from, including ones that contributed nothing, so a consumer can tell
+  /// "not consulted" from "consulted and empty".
+  SOURCE_FIELD_IDS: [string];
+
+  /// Peer identifier of the node that produced and published this tile.
+  PRODUCER_PEER_ID: string;
+  /// Producer software and version that authored the Gaussians, e.g.
+  /// "orbpro-gaussian-clouds 0.13.0".
+  PRODUCER_VERSION: string;
+  /// Producer conventions a consumer needs and this schema does not fix
+  /// (the EROSION deck convention, the erosion and warp fields' definition).
+  PRODUCER_NOTES: string;
+  /// Unix milliseconds UTC when the tile was produced.
+  PRODUCED_AT_MS: uint64;
+  /// Seed the placement and authoring were derived from; with the source
+  /// fields it reproduces the tile.
+  AUTHORING_SEED: uint32;
+  /// Licence class applicable to the derived tile at PRODUCED_AT_MS.
+  LICENSE_CLASS: wxfLicenseClass = RealTimeExperimental;
+  /// URL of the licence or terms the tile is offered under.
+  LICENSE_URL: string;
+  /// Citation the upstream publishers ask for.
+  CITATION: string;
+}
+
+root_type GCT;
+file_identifier "$GCT";

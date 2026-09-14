@@ -73,6 +73,7 @@ export * as FSB from './FSB/main.js';
 export * as FSM from './FSM/main.js';
 export * as FSO from './FSO/main.js';
 export * as FSP from './FSP/main.js';
+export * as GCT from './GCT/main.js';
 export * as GDI from './GDI/main.js';
 export * as GEL from './GEL/main.js';
 export * as GEO from './GEO/main.js';

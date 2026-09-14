@@ -247,6 +247,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -381,10 +382,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 246;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 247;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 247] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 248] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -632,6 +633,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 247] = [
   RecordType::TCT,
   RecordType::WXF,
   RecordType::CLM,
+  RecordType::GCT,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -900,9 +902,10 @@ impl RecordType {
   pub const TCT: Self = Self(244);
   pub const WXF: Self = Self(245);
   pub const CLM: Self = Self(246);
+  pub const GCT: Self = Self(247);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 246;
+  pub const ENUM_MAX: u8 = 247;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1151,6 +1154,7 @@ impl RecordType {
     Self::TCT,
     Self::WXF,
     Self::CLM,
+    Self::GCT,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1402,6 +1406,7 @@ impl RecordType {
       Self::TCT => Some("TCT"),
       Self::WXF => Some("WXF"),
       Self::CLM => Some("CLM"),
+      Self::GCT => Some("GCT"),
       _ => None,
     }
   }
@@ -1709,6 +1714,7 @@ pub enum RecordTypeT {
   TCT(alloc::boxed::Box<TCTT>),
   WXF(alloc::boxed::Box<WXFT>),
   CLM(alloc::boxed::Box<CLMT>),
+  GCT(alloc::boxed::Box<GCTT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1965,6 +1971,7 @@ impl RecordTypeT {
       Self::TCT(_) => RecordType::TCT,
       Self::WXF(_) => RecordType::WXF,
       Self::CLM(_) => RecordType::CLM,
+      Self::GCT(_) => RecordType::GCT,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2216,6 +2223,7 @@ impl RecordTypeT {
       Self::TCT(v) => Some(v.pack(fbb).as_union_value()),
       Self::WXF(v) => Some(v.pack(fbb).as_union_value()),
       Self::CLM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GCT(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7384,6 +7392,27 @@ impl RecordTypeT {
   pub fn as_clm_mut(&mut self) -> Option<&mut CLMT> {
     if let Self::CLM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned GCTT, setting the union to NONE.
+  pub fn take_gct(&mut self) -> Option<alloc::boxed::Box<GCTT>> {
+    if let Self::GCT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::GCT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GCTT.
+  pub fn as_gct(&self) -> Option<&GCTT> {
+    if let Self::GCT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GCTT.
+  pub fn as_gct_mut(&mut self) -> Option<&mut GCTT> {
+    if let Self::GCT(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8653,6 +8682,11 @@ impl<'a> Record<'a> {
       RecordType::CLM => RecordTypeT::CLM(alloc::boxed::Box::new(
         self.value_as_clm()
             .expect("Invalid union table, expected `RecordType::CLM`.")
+            .unpack()
+      )),
+      RecordType::GCT => RecordTypeT::GCT(alloc::boxed::Box::new(
+        self.value_as_gct()
+            .expect("Invalid union table, expected `RecordType::GCT`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -12379,6 +12413,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_gct(&self) -> Option<GCT<'a>> {
+    if self.value_type() == RecordType::GCT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GCT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12635,6 +12684,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::TCT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TCT>>("RecordType::TCT", pos),
           RecordType::WXF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<WXF>>("RecordType::WXF", pos),
           RecordType::CLM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CLM>>("RecordType::CLM", pos),
+          RecordType::GCT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GCT>>("RecordType::GCT", pos),
           _ => Ok(()),
         }
      })?
@@ -14413,6 +14463,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::CLM => {
           if let Some(x) = self.value_as_clm() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GCT => {
+          if let Some(x) = self.value_as_gct() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

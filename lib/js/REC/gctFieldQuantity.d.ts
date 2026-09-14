@@ -1,0 +1,36 @@
+/**
+ * Physical quantity a Gaussian's amplitude measures. ORDINALS ARE WIRE
+ * VALUES; new quantities are APPENDED ONLY.
+ */
+export declare enum gctFieldQuantity {
+    /**
+     * Not stated. A consumer MUST refuse the tile.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Visible-light extinction coefficient of cloud condensate (liquid and
+     * ice), 1/m at the Gaussian's centre.
+     */
+    CLOUD_EXTINCTION = 1,
+    /**
+     * Extinction coefficient of volcanic ash, 1/m.
+     */
+    VOLCANIC_ASH_EXTINCTION = 2,
+    /**
+     * Extinction coefficient of smoke, 1/m.
+     */
+    SMOKE_EXTINCTION = 3,
+    /**
+     * Extinction coefficient of mineral dust, 1/m.
+     */
+    DUST_EXTINCTION = 4,
+    /**
+     * Cloud condensate mixing ratio, kg/kg.
+     */
+    CONDENSATE_MIXING_RATIO = 5,
+    /**
+     * A quantity this enum cannot express; FIELD_QUANTITY_NAME names it.
+     */
+    OTHER = 99
+}
+//# sourceMappingURL=gctFieldQuantity.d.ts.map

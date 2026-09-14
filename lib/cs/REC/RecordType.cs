@@ -265,6 +265,7 @@ public enum RecordType : byte
   TCT = 244,
   WXF = 245,
   CLM = 246,
+  GCT = 247,
 };
 
 public class RecordTypeUnion {
@@ -769,6 +770,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromWXF(WXFT _wxf) { return new RecordTypeUnion{ Type = RecordType.WXF, Value = _wxf }; }
   public CLMT AsCLM() { return this.As<CLMT>(); }
   public static RecordTypeUnion FromCLM(CLMT _clm) { return new RecordTypeUnion{ Type = RecordType.CLM, Value = _clm }; }
+  public GCTT AsGCT() { return this.As<GCTT>(); }
+  public static RecordTypeUnion FromGCT(GCTT _gct) { return new RecordTypeUnion{ Type = RecordType.GCT, Value = _gct }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1019,6 +1022,7 @@ public class RecordTypeUnion {
       case RecordType.TCT: return TCT.Pack(builder, _o.AsTCT()).Value;
       case RecordType.WXF: return WXF.Pack(builder, _o.AsWXF()).Value;
       case RecordType.CLM: return CLM.Pack(builder, _o.AsCLM()).Value;
+      case RecordType.GCT: return GCT.Pack(builder, _o.AsGCT()).Value;
     }
   }
 }
@@ -1769,6 +1773,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.CLM:
         result = CLMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GCT:
+        result = GCTVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
