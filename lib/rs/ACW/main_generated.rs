@@ -264,6 +264,408 @@ impl<'a> ::flatbuffers::Verifiable for acwRefractionModelKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for acwRefractionModelKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ACW_CONSTRAINT_KIND: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ACW_CONSTRAINT_KIND: i8 = 9;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ACW_CONSTRAINT_KIND: [acwConstraintKind; 10] = [
+  acwConstraintKind::UNSPECIFIED,
+  acwConstraintKind::MIN_ELEVATION,
+  acwConstraintKind::ELEVATION_MASK,
+  acwConstraintKind::MAX_RANGE,
+  acwConstraintKind::MIN_RANGE,
+  acwConstraintKind::SUN_EXCLUSION,
+  acwConstraintKind::MOON_EXCLUSION,
+  acwConstraintKind::TARGET_LIGHTING,
+  acwConstraintKind::LINE_OF_SIGHT,
+  acwConstraintKind::BLACKOUT,
+];
+
+/// Kind of access constraint. Append only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct acwConstraintKind(pub i8);
+#[allow(non_upper_case_globals)]
+impl acwConstraintKind {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+  pub const MIN_ELEVATION: Self = Self(1);
+  /// Azimuth-dependent minimum elevation from MASK.
+  pub const ELEVATION_MASK: Self = Self(2);
+  /// Observer-to-target range at or below MAX_RANGE_M.
+  pub const MAX_RANGE: Self = Self(3);
+  /// Observer-to-target range at or above MIN_RANGE_M.
+  pub const MIN_RANGE: Self = Self(4);
+  /// Angle between the observer-to-target and observer-to-Sun directions at
+  /// or above THRESHOLD_RAD (solar exclusion).
+  pub const SUN_EXCLUSION: Self = Self(5);
+  /// Angle between the observer-to-target and observer-to-Moon directions at
+  /// or above THRESHOLD_RAD (lunar exclusion).
+  pub const MOON_EXCLUSION: Self = Self(6);
+  /// Target illumination state matches LIGHTING.
+  pub const TARGET_LIGHTING: Self = Self(7);
+  /// Straight-line visibility between observer and target not occulted by the
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  pub const LINE_OF_SIGHT: Self = Self(8);
+  /// Outside every observer blackout window.
+  pub const BLACKOUT: Self = Self(9);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 9;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::MIN_ELEVATION,
+    Self::ELEVATION_MASK,
+    Self::MAX_RANGE,
+    Self::MIN_RANGE,
+    Self::SUN_EXCLUSION,
+    Self::MOON_EXCLUSION,
+    Self::TARGET_LIGHTING,
+    Self::LINE_OF_SIGHT,
+    Self::BLACKOUT,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::MIN_ELEVATION => Some("MIN_ELEVATION"),
+      Self::ELEVATION_MASK => Some("ELEVATION_MASK"),
+      Self::MAX_RANGE => Some("MAX_RANGE"),
+      Self::MIN_RANGE => Some("MIN_RANGE"),
+      Self::SUN_EXCLUSION => Some("SUN_EXCLUSION"),
+      Self::MOON_EXCLUSION => Some("MOON_EXCLUSION"),
+      Self::TARGET_LIGHTING => Some("TARGET_LIGHTING"),
+      Self::LINE_OF_SIGHT => Some("LINE_OF_SIGHT"),
+      Self::BLACKOUT => Some("BLACKOUT"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for acwConstraintKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for acwConstraintKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for acwConstraintKind {
+    type Output = acwConstraintKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for acwConstraintKind {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for acwConstraintKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for acwConstraintKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ACW_CONSTRAINT_OPERATOR: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ACW_CONSTRAINT_OPERATOR: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ACW_CONSTRAINT_OPERATOR: [acwConstraintOperator; 2] = [
+  acwConstraintOperator::ALL_OF,
+  acwConstraintOperator::ANY_OF,
+];
+
+/// How the members of a constraint set combine.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct acwConstraintOperator(pub i8);
+#[allow(non_upper_case_globals)]
+impl acwConstraintOperator {
+  /// Every member must hold (AND).
+  pub const ALL_OF: Self = Self(0);
+  /// At least one member must hold (OR).
+  pub const ANY_OF: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ALL_OF,
+    Self::ANY_OF,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ALL_OF => Some("ALL_OF"),
+      Self::ANY_OF => Some("ANY_OF"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for acwConstraintOperator {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for acwConstraintOperator {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for acwConstraintOperator {
+    type Output = acwConstraintOperator;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for acwConstraintOperator {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for acwConstraintOperator {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for acwConstraintOperator {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ACW_EVALUATION_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ACW_EVALUATION_MODE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ACW_EVALUATION_MODE: [acwEvaluationMode; 2] = [
+  acwEvaluationMode::DISCRETE,
+  acwEvaluationMode::CONTINUOUS,
+];
+
+/// Whether windows are evaluated only at the supplied samples or refined to
+/// the epochs where the aggregate condition changes.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct acwEvaluationMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl acwEvaluationMode {
+  /// Evaluate at the supplied sample epochs only; window edges are samples.
+  pub const DISCRETE: Self = Self(0);
+  /// Bracket between samples and refine each edge to ROOT_TOLERANCE_S.
+  pub const CONTINUOUS: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DISCRETE,
+    Self::CONTINUOUS,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DISCRETE => Some("DISCRETE"),
+      Self::CONTINUOUS => Some("CONTINUOUS"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for acwEvaluationMode {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for acwEvaluationMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for acwEvaluationMode {
+    type Output = acwEvaluationMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for acwEvaluationMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for acwEvaluationMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for acwEvaluationMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ACW_LIGHTING_CONDITION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ACW_LIGHTING_CONDITION: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ACW_LIGHTING_CONDITION: [acwLightingCondition; 5] = [
+  acwLightingCondition::ANY,
+  acwLightingCondition::SUNLIT,
+  acwLightingCondition::PENUMBRA,
+  acwLightingCondition::UMBRA,
+  acwLightingCondition::NOT_UMBRA,
+];
+
+/// Illumination state of the target required by a TARGET_LIGHTING constraint.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct acwLightingCondition(pub i8);
+#[allow(non_upper_case_globals)]
+impl acwLightingCondition {
+  pub const ANY: Self = Self(0);
+  pub const SUNLIT: Self = Self(1);
+  pub const PENUMBRA: Self = Self(2);
+  pub const UMBRA: Self = Self(3);
+  /// Sunlit or penumbra.
+  pub const NOT_UMBRA: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ANY,
+    Self::SUNLIT,
+    Self::PENUMBRA,
+    Self::UMBRA,
+    Self::NOT_UMBRA,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ANY => Some("ANY"),
+      Self::SUNLIT => Some("SUNLIT"),
+      Self::PENUMBRA => Some("PENUMBRA"),
+      Self::UMBRA => Some("UMBRA"),
+      Self::NOT_UMBRA => Some("NOT_UMBRA"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for acwLightingCondition {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for acwLightingCondition {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for acwLightingCondition {
+    type Output = acwLightingCondition;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for acwLightingCondition {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for acwLightingCondition {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for acwLightingCondition {}
 pub enum ACWStateSampleOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1244,6 +1646,729 @@ impl ACWGroundStationT {
     })
   }
 }
+pub enum ACWConstraintOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One access constraint. Fields not used by KIND are ignored.
+pub struct ACWConstraint<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACWConstraint<'a> {
+  type Inner = ACWConstraint<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ACWConstraint<'a> {
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_THRESHOLD_RAD: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LIGHTING: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OCCULTATION_ATMOSPHERE_HEIGHT_M: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MASK: ::flatbuffers::VOffsetT = 16;
+  pub const VT_LABEL: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ACWConstraint { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ACWConstraintArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ACWConstraint<'bldr>> {
+    let mut builder = ACWConstraintBuilder::new(_fbb);
+    builder.add_OCCULTATION_ATMOSPHERE_HEIGHT_M(args.OCCULTATION_ATMOSPHERE_HEIGHT_M);
+    builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
+    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
+    builder.add_THRESHOLD_RAD(args.THRESHOLD_RAD);
+    if let Some(x) = args.LABEL { builder.add_LABEL(x); }
+    if let Some(x) = args.MASK { builder.add_MASK(x); }
+    builder.add_LIGHTING(args.LIGHTING);
+    builder.add_KIND(args.KIND);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ACWConstraintT {
+    let KIND = self.KIND();
+    let THRESHOLD_RAD = self.THRESHOLD_RAD();
+    let MIN_RANGE_M = self.MIN_RANGE_M();
+    let MAX_RANGE_M = self.MAX_RANGE_M();
+    let LIGHTING = self.LIGHTING();
+    let OCCULTATION_ATMOSPHERE_HEIGHT_M = self.OCCULTATION_ATMOSPHERE_HEIGHT_M();
+    let MASK = self.MASK().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let LABEL = self.LABEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    ACWConstraintT {
+      KIND,
+      THRESHOLD_RAD,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      LIGHTING,
+      OCCULTATION_ATMOSPHERE_HEIGHT_M,
+      MASK,
+      LABEL,
+    }
+  }
+
+  #[inline]
+  pub fn KIND(&self) -> acwConstraintKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<acwConstraintKind>(ACWConstraint::VT_KIND, Some(acwConstraintKind::UNSPECIFIED)).unwrap()}
+  }
+  /// Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
+  #[inline]
+  pub fn THRESHOLD_RAD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWConstraint::VT_THRESHOLD_RAD, Some(0.0)).unwrap()}
+  }
+  /// Range bounds, meters (MIN_RANGE, MAX_RANGE).
+  #[inline]
+  pub fn MIN_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWConstraint::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWConstraint::VT_MAX_RANGE_M, Some(0.0)).unwrap()}
+  }
+  /// Required target lighting (TARGET_LIGHTING).
+  #[inline]
+  pub fn LIGHTING(&self) -> acwLightingCondition {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<acwLightingCondition>(ACWConstraint::VT_LIGHTING, Some(acwLightingCondition::ANY)).unwrap()}
+  }
+  /// Central-body radius offset for line-of-sight occultation, meters
+  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  #[inline]
+  pub fn OCCULTATION_ATMOSPHERE_HEIGHT_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWConstraint::VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, Some(0.0)).unwrap()}
+  }
+  /// Azimuth-dependent mask (ELEVATION_MASK).
+  #[inline]
+  pub fn MASK(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint>>>>(ACWConstraint::VT_MASK, None)}
+  }
+  /// Producer label echoed in window attribution.
+  #[inline]
+  pub fn LABEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWConstraint::VT_LABEL, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ACWConstraint<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<acwConstraintKind>("KIND", Self::VT_KIND, false)?
+     .visit_field::<f64>("THRESHOLD_RAD", Self::VT_THRESHOLD_RAD, false)?
+     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
+     .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
+     .visit_field::<acwLightingCondition>("LIGHTING", Self::VT_LIGHTING, false)?
+     .visit_field::<f64>("OCCULTATION_ATMOSPHERE_HEIGHT_M", Self::VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint>>>>("MASK", Self::VT_MASK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL", Self::VT_LABEL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ACWConstraintArgs<'a> {
+    pub KIND: acwConstraintKind,
+    pub THRESHOLD_RAD: f64,
+    pub MIN_RANGE_M: f64,
+    pub MAX_RANGE_M: f64,
+    pub LIGHTING: acwLightingCondition,
+    pub OCCULTATION_ATMOSPHERE_HEIGHT_M: f64,
+    pub MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint<'a>>>>>,
+    pub LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for ACWConstraintArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ACWConstraintArgs {
+      KIND: acwConstraintKind::UNSPECIFIED,
+      THRESHOLD_RAD: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      LIGHTING: acwLightingCondition::ANY,
+      OCCULTATION_ATMOSPHERE_HEIGHT_M: 0.0,
+      MASK: None,
+      LABEL: None,
+    }
+  }
+}
+
+pub struct ACWConstraintBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWConstraintBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: acwConstraintKind) {
+    self.fbb_.push_slot::<acwConstraintKind>(ACWConstraint::VT_KIND, KIND, acwConstraintKind::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_THRESHOLD_RAD(&mut self, THRESHOLD_RAD: f64) {
+    self.fbb_.push_slot::<f64>(ACWConstraint::VT_THRESHOLD_RAD, THRESHOLD_RAD, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(ACWConstraint::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RANGE_M(&mut self, MAX_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(ACWConstraint::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_LIGHTING(&mut self, LIGHTING: acwLightingCondition) {
+    self.fbb_.push_slot::<acwLightingCondition>(ACWConstraint::VT_LIGHTING, LIGHTING, acwLightingCondition::ANY);
+  }
+  #[inline]
+  pub fn add_OCCULTATION_ATMOSPHERE_HEIGHT_M(&mut self, OCCULTATION_ATMOSPHERE_HEIGHT_M: f64) {
+    self.fbb_.push_slot::<f64>(ACWConstraint::VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, OCCULTATION_ATMOSPHERE_HEIGHT_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MASK(&mut self, MASK: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWConstraint::VT_MASK, MASK);
+  }
+  #[inline]
+  pub fn add_LABEL(&mut self, LABEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWConstraint::VT_LABEL, LABEL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWConstraintBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ACWConstraintBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ACWConstraint<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ACWConstraint<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ACWConstraint");
+      ds.field("KIND", &self.KIND());
+      ds.field("THRESHOLD_RAD", &self.THRESHOLD_RAD());
+      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
+      ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
+      ds.field("LIGHTING", &self.LIGHTING());
+      ds.field("OCCULTATION_ATMOSPHERE_HEIGHT_M", &self.OCCULTATION_ATMOSPHERE_HEIGHT_M());
+      ds.field("MASK", &self.MASK());
+      ds.field("LABEL", &self.LABEL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACWConstraintT {
+  pub KIND: acwConstraintKind,
+  pub THRESHOLD_RAD: f64,
+  pub MIN_RANGE_M: f64,
+  pub MAX_RANGE_M: f64,
+  pub LIGHTING: acwLightingCondition,
+  pub OCCULTATION_ATMOSPHERE_HEIGHT_M: f64,
+  pub MASK: Option<alloc::vec::Vec<ACWElevationMaskPointT>>,
+  pub LABEL: Option<alloc::string::String>,
+}
+impl Default for ACWConstraintT {
+  fn default() -> Self {
+    Self {
+      KIND: acwConstraintKind::UNSPECIFIED,
+      THRESHOLD_RAD: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      LIGHTING: acwLightingCondition::ANY,
+      OCCULTATION_ATMOSPHERE_HEIGHT_M: 0.0,
+      MASK: None,
+      LABEL: None,
+    }
+  }
+}
+impl ACWConstraintT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ACWConstraint<'b>> {
+    let KIND = self.KIND;
+    let THRESHOLD_RAD = self.THRESHOLD_RAD;
+    let MIN_RANGE_M = self.MIN_RANGE_M;
+    let MAX_RANGE_M = self.MAX_RANGE_M;
+    let LIGHTING = self.LIGHTING;
+    let OCCULTATION_ATMOSPHERE_HEIGHT_M = self.OCCULTATION_ATMOSPHERE_HEIGHT_M;
+    let MASK = self.MASK.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let LABEL = self.LABEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    ACWConstraint::create(_fbb, &ACWConstraintArgs{
+      KIND,
+      THRESHOLD_RAD,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      LIGHTING,
+      OCCULTATION_ATMOSPHERE_HEIGHT_M,
+      MASK,
+      LABEL,
+    })
+  }
+}
+pub enum ACWConstraintSetOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A boolean composition of constraints and nested sets.
+pub struct ACWConstraintSet<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACWConstraintSet<'a> {
+  type Inner = ACWConstraintSet<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ACWConstraintSet<'a> {
+  pub const VT_OPERATOR: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CONSTRAINTS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_SETS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_LABEL: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ACWConstraintSet { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ACWConstraintSetArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ACWConstraintSet<'bldr>> {
+    let mut builder = ACWConstraintSetBuilder::new(_fbb);
+    if let Some(x) = args.LABEL { builder.add_LABEL(x); }
+    if let Some(x) = args.SETS { builder.add_SETS(x); }
+    if let Some(x) = args.CONSTRAINTS { builder.add_CONSTRAINTS(x); }
+    builder.add_OPERATOR(args.OPERATOR);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ACWConstraintSetT {
+    let OPERATOR = self.OPERATOR();
+    let CONSTRAINTS = self.CONSTRAINTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SETS = self.SETS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let LABEL = self.LABEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    ACWConstraintSetT {
+      OPERATOR,
+      CONSTRAINTS,
+      SETS,
+      LABEL,
+    }
+  }
+
+  #[inline]
+  pub fn OPERATOR(&self) -> acwConstraintOperator {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<acwConstraintOperator>(ACWConstraintSet::VT_OPERATOR, Some(acwConstraintOperator::ALL_OF)).unwrap()}
+  }
+  #[inline]
+  pub fn CONSTRAINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraint<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraint>>>>(ACWConstraintSet::VT_CONSTRAINTS, None)}
+  }
+  /// Nested sets, combined with the same OPERATOR.
+  #[inline]
+  pub fn SETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraintSet<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraintSet>>>>(ACWConstraintSet::VT_SETS, None)}
+  }
+  #[inline]
+  pub fn LABEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWConstraintSet::VT_LABEL, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ACWConstraintSet<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<acwConstraintOperator>("OPERATOR", Self::VT_OPERATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWConstraint>>>>("CONSTRAINTS", Self::VT_CONSTRAINTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWConstraintSet>>>>("SETS", Self::VT_SETS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL", Self::VT_LABEL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ACWConstraintSetArgs<'a> {
+    pub OPERATOR: acwConstraintOperator,
+    pub CONSTRAINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraint<'a>>>>>,
+    pub SETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraintSet<'a>>>>>,
+    pub LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for ACWConstraintSetArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ACWConstraintSetArgs {
+      OPERATOR: acwConstraintOperator::ALL_OF,
+      CONSTRAINTS: None,
+      SETS: None,
+      LABEL: None,
+    }
+  }
+}
+
+pub struct ACWConstraintSetBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWConstraintSetBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_OPERATOR(&mut self, OPERATOR: acwConstraintOperator) {
+    self.fbb_.push_slot::<acwConstraintOperator>(ACWConstraintSet::VT_OPERATOR, OPERATOR, acwConstraintOperator::ALL_OF);
+  }
+  #[inline]
+  pub fn add_CONSTRAINTS(&mut self, CONSTRAINTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWConstraint<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWConstraintSet::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  #[inline]
+  pub fn add_SETS(&mut self, SETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWConstraintSet<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWConstraintSet::VT_SETS, SETS);
+  }
+  #[inline]
+  pub fn add_LABEL(&mut self, LABEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWConstraintSet::VT_LABEL, LABEL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWConstraintSetBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ACWConstraintSetBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ACWConstraintSet<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ACWConstraintSet<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ACWConstraintSet");
+      ds.field("OPERATOR", &self.OPERATOR());
+      ds.field("CONSTRAINTS", &self.CONSTRAINTS());
+      ds.field("SETS", &self.SETS());
+      ds.field("LABEL", &self.LABEL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACWConstraintSetT {
+  pub OPERATOR: acwConstraintOperator,
+  pub CONSTRAINTS: Option<alloc::vec::Vec<ACWConstraintT>>,
+  pub SETS: Option<alloc::vec::Vec<ACWConstraintSetT>>,
+  pub LABEL: Option<alloc::string::String>,
+}
+impl Default for ACWConstraintSetT {
+  fn default() -> Self {
+    Self {
+      OPERATOR: acwConstraintOperator::ALL_OF,
+      CONSTRAINTS: None,
+      SETS: None,
+      LABEL: None,
+    }
+  }
+}
+impl ACWConstraintSetT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ACWConstraintSet<'b>> {
+    let OPERATOR = self.OPERATOR;
+    let CONSTRAINTS = self.CONSTRAINTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SETS = self.SETS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let LABEL = self.LABEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    ACWConstraintSet::create(_fbb, &ACWConstraintSetArgs{
+      OPERATOR,
+      CONSTRAINTS,
+      SETS,
+      LABEL,
+    })
+  }
+}
+pub enum ACWObserverTrajectoryOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// the same frame and time scale as ACWRequest.STATES.
+pub struct ACWObserverTrajectory<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACWObserverTrajectory<'a> {
+  type Inner = ACWObserverTrajectory<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ACWObserverTrajectory<'a> {
+  pub const VT_OBSERVER_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_STATES: ::flatbuffers::VOffsetT = 8;
+  pub const VT_BLACKOUT_WINDOWS: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ACWObserverTrajectory { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ACWObserverTrajectoryArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ACWObserverTrajectory<'bldr>> {
+    let mut builder = ACWObserverTrajectoryBuilder::new(_fbb);
+    if let Some(x) = args.BLACKOUT_WINDOWS { builder.add_BLACKOUT_WINDOWS(x); }
+    if let Some(x) = args.STATES { builder.add_STATES(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ACWObserverTrajectoryT {
+    let OBSERVER_ID = self.OBSERVER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STATES = self.STATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let BLACKOUT_WINDOWS = self.BLACKOUT_WINDOWS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    ACWObserverTrajectoryT {
+      OBSERVER_ID,
+      NAME,
+      STATES,
+      BLACKOUT_WINDOWS,
+    }
+  }
+
+  #[inline]
+  pub fn OBSERVER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWObserverTrajectory::VT_OBSERVER_ID, None)}
+  }
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWObserverTrajectory::VT_NAME, None)}
+  }
+  #[inline]
+  pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>(ACWObserverTrajectory::VT_STATES, None)}
+  }
+  /// Observer-specific unavailable intervals.
+  #[inline]
+  pub fn BLACKOUT_WINDOWS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow>>>>(ACWObserverTrajectory::VT_BLACKOUT_WINDOWS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ACWObserverTrajectory<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBSERVER_ID", Self::VT_OBSERVER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>("STATES", Self::VT_STATES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow>>>>("BLACKOUT_WINDOWS", Self::VT_BLACKOUT_WINDOWS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ACWObserverTrajectoryArgs<'a> {
+    pub OBSERVER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>>>,
+    pub BLACKOUT_WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow<'a>>>>>,
+}
+impl<'a> Default for ACWObserverTrajectoryArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ACWObserverTrajectoryArgs {
+      OBSERVER_ID: None,
+      NAME: None,
+      STATES: None,
+      BLACKOUT_WINDOWS: None,
+    }
+  }
+}
+
+pub struct ACWObserverTrajectoryBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWObserverTrajectoryBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_OBSERVER_ID(&mut self, OBSERVER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWObserverTrajectory::VT_OBSERVER_ID, OBSERVER_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWObserverTrajectory::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_STATES(&mut self, STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWStateSample<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWObserverTrajectory::VT_STATES, STATES);
+  }
+  #[inline]
+  pub fn add_BLACKOUT_WINDOWS(&mut self, BLACKOUT_WINDOWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWObserverTrajectory::VT_BLACKOUT_WINDOWS, BLACKOUT_WINDOWS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWObserverTrajectoryBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ACWObserverTrajectoryBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ACWObserverTrajectory<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ACWObserverTrajectory<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ACWObserverTrajectory");
+      ds.field("OBSERVER_ID", &self.OBSERVER_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("STATES", &self.STATES());
+      ds.field("BLACKOUT_WINDOWS", &self.BLACKOUT_WINDOWS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACWObserverTrajectoryT {
+  pub OBSERVER_ID: Option<alloc::string::String>,
+  pub NAME: Option<alloc::string::String>,
+  pub STATES: Option<alloc::vec::Vec<ACWStateSampleT>>,
+  pub BLACKOUT_WINDOWS: Option<alloc::vec::Vec<ACWBlackoutWindowT>>,
+}
+impl Default for ACWObserverTrajectoryT {
+  fn default() -> Self {
+    Self {
+      OBSERVER_ID: None,
+      NAME: None,
+      STATES: None,
+      BLACKOUT_WINDOWS: None,
+    }
+  }
+}
+impl ACWObserverTrajectoryT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ACWObserverTrajectory<'b>> {
+    let OBSERVER_ID = self.OBSERVER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATES = self.STATES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let BLACKOUT_WINDOWS = self.BLACKOUT_WINDOWS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    ACWObserverTrajectory::create(_fbb, &ACWObserverTrajectoryArgs{
+      OBSERVER_ID,
+      NAME,
+      STATES,
+      BLACKOUT_WINDOWS,
+    })
+  }
+}
 pub enum ACWRequestOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1269,6 +2394,12 @@ impl<'a> ACWRequest<'a> {
   pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 14;
   pub const VT_ELEVATION_MASK: ::flatbuffers::VOffsetT = 16;
   pub const VT_REFRACTION_MODEL: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CONSTRAINTS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_OBSERVERS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_EVALUATION_MODE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_ROOT_TOLERANCE_S: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SUN_STATES: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MOON_STATES: ::flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1280,13 +2411,19 @@ impl<'a> ACWRequest<'a> {
     args: &'args ACWRequestArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ACWRequest<'bldr>> {
     let mut builder = ACWRequestBuilder::new(_fbb);
+    builder.add_ROOT_TOLERANCE_S(args.ROOT_TOLERANCE_S);
     builder.add_MIN_ELEVATION_OVERRIDE_RAD(args.MIN_ELEVATION_OVERRIDE_RAD);
+    if let Some(x) = args.MOON_STATES { builder.add_MOON_STATES(x); }
+    if let Some(x) = args.SUN_STATES { builder.add_SUN_STATES(x); }
+    if let Some(x) = args.OBSERVERS { builder.add_OBSERVERS(x); }
+    if let Some(x) = args.CONSTRAINTS { builder.add_CONSTRAINTS(x); }
     if let Some(x) = args.REFRACTION_MODEL { builder.add_REFRACTION_MODEL(x); }
     if let Some(x) = args.ELEVATION_MASK { builder.add_ELEVATION_MASK(x); }
     if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
     if let Some(x) = args.TARGET_STATION_ID { builder.add_TARGET_STATION_ID(x); }
     if let Some(x) = args.STATES { builder.add_STATES(x); }
     if let Some(x) = args.GROUND_STATIONS { builder.add_GROUND_STATIONS(x); }
+    builder.add_EVALUATION_MODE(args.EVALUATION_MODE);
     builder.add_OPERATION(args.OPERATION);
     builder.finish()
   }
@@ -1312,6 +2449,20 @@ impl<'a> ACWRequest<'a> {
     let REFRACTION_MODEL = self.REFRACTION_MODEL().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let CONSTRAINTS = self.CONSTRAINTS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let OBSERVERS = self.OBSERVERS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let EVALUATION_MODE = self.EVALUATION_MODE();
+    let ROOT_TOLERANCE_S = self.ROOT_TOLERANCE_S();
+    let SUN_STATES = self.SUN_STATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MOON_STATES = self.MOON_STATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     ACWRequestT {
       OPERATION,
       GROUND_STATIONS,
@@ -1321,6 +2472,12 @@ impl<'a> ACWRequest<'a> {
       TRACE_ID,
       ELEVATION_MASK,
       REFRACTION_MODEL,
+      CONSTRAINTS,
+      OBSERVERS,
+      EVALUATION_MODE,
+      ROOT_TOLERANCE_S,
+      SUN_STATES,
+      MOON_STATES,
     }
   }
 
@@ -1387,6 +2544,58 @@ impl<'a> ACWRequest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ACWRefractionModel>>(ACWRequest::VT_REFRACTION_MODEL, None)}
   }
+  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+  /// ELEVATION_MASK, all required.
+  #[inline]
+  pub fn CONSTRAINTS(&self) -> Option<ACWConstraintSet<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ACWConstraintSet>>(ACWRequest::VT_CONSTRAINTS, None)}
+  }
+  /// Optional moving observers (satellite-to-satellite access). Each observer
+  /// is evaluated against STATES like a ground station.
+  #[inline]
+  pub fn OBSERVERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWObserverTrajectory<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWObserverTrajectory>>>>(ACWRequest::VT_OBSERVERS, None)}
+  }
+  /// Sample-only or root-refined window edges.
+  #[inline]
+  pub fn EVALUATION_MODE(&self) -> acwEvaluationMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<acwEvaluationMode>(ACWRequest::VT_EVALUATION_MODE, Some(acwEvaluationMode::DISCRETE)).unwrap()}
+  }
+  /// Edge refinement tolerance for CONTINUOUS, seconds.
+  #[inline]
+  pub fn ROOT_TOLERANCE_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWRequest::VT_ROOT_TOLERANCE_S, Some(0.1)).unwrap()}
+  }
+  /// Sun states in the STATES frame and time scale, required by
+  /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+  #[inline]
+  pub fn SUN_STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>(ACWRequest::VT_SUN_STATES, None)}
+  }
+  /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+  #[inline]
+  pub fn MOON_STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>(ACWRequest::VT_MOON_STATES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ACWRequest<'_> {
@@ -1403,6 +2612,12 @@ impl ::flatbuffers::Verifiable for ACWRequest<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACE_ID", Self::VT_TRACE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint>>>>("ELEVATION_MASK", Self::VT_ELEVATION_MASK, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<ACWRefractionModel>>("REFRACTION_MODEL", Self::VT_REFRACTION_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ACWConstraintSet>>("CONSTRAINTS", Self::VT_CONSTRAINTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWObserverTrajectory>>>>("OBSERVERS", Self::VT_OBSERVERS, false)?
+     .visit_field::<acwEvaluationMode>("EVALUATION_MODE", Self::VT_EVALUATION_MODE, false)?
+     .visit_field::<f64>("ROOT_TOLERANCE_S", Self::VT_ROOT_TOLERANCE_S, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>("SUN_STATES", Self::VT_SUN_STATES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>("MOON_STATES", Self::VT_MOON_STATES, false)?
      .finish();
     Ok(())
   }
@@ -1416,6 +2631,12 @@ pub struct ACWRequestArgs<'a> {
     pub TRACE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ELEVATION_MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint<'a>>>>>,
     pub REFRACTION_MODEL: Option<::flatbuffers::WIPOffset<ACWRefractionModel<'a>>>,
+    pub CONSTRAINTS: Option<::flatbuffers::WIPOffset<ACWConstraintSet<'a>>>,
+    pub OBSERVERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWObserverTrajectory<'a>>>>>,
+    pub EVALUATION_MODE: acwEvaluationMode,
+    pub ROOT_TOLERANCE_S: f64,
+    pub SUN_STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>>>,
+    pub MOON_STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>>>,
 }
 impl<'a> Default for ACWRequestArgs<'a> {
   #[inline]
@@ -1429,6 +2650,12 @@ impl<'a> Default for ACWRequestArgs<'a> {
       TRACE_ID: None,
       ELEVATION_MASK: None,
       REFRACTION_MODEL: None,
+      CONSTRAINTS: None,
+      OBSERVERS: None,
+      EVALUATION_MODE: acwEvaluationMode::DISCRETE,
+      ROOT_TOLERANCE_S: 0.1,
+      SUN_STATES: None,
+      MOON_STATES: None,
     }
   }
 }
@@ -1471,6 +2698,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWRequestBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ACWRefractionModel>>(ACWRequest::VT_REFRACTION_MODEL, REFRACTION_MODEL);
   }
   #[inline]
+  pub fn add_CONSTRAINTS(&mut self, CONSTRAINTS: ::flatbuffers::WIPOffset<ACWConstraintSet<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ACWConstraintSet>>(ACWRequest::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  #[inline]
+  pub fn add_OBSERVERS(&mut self, OBSERVERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWObserverTrajectory<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWRequest::VT_OBSERVERS, OBSERVERS);
+  }
+  #[inline]
+  pub fn add_EVALUATION_MODE(&mut self, EVALUATION_MODE: acwEvaluationMode) {
+    self.fbb_.push_slot::<acwEvaluationMode>(ACWRequest::VT_EVALUATION_MODE, EVALUATION_MODE, acwEvaluationMode::DISCRETE);
+  }
+  #[inline]
+  pub fn add_ROOT_TOLERANCE_S(&mut self, ROOT_TOLERANCE_S: f64) {
+    self.fbb_.push_slot::<f64>(ACWRequest::VT_ROOT_TOLERANCE_S, ROOT_TOLERANCE_S, 0.1);
+  }
+  #[inline]
+  pub fn add_SUN_STATES(&mut self, SUN_STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWStateSample<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWRequest::VT_SUN_STATES, SUN_STATES);
+  }
+  #[inline]
+  pub fn add_MOON_STATES(&mut self, MOON_STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWStateSample<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWRequest::VT_MOON_STATES, MOON_STATES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWRequestBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACWRequestBuilder {
@@ -1496,6 +2747,12 @@ impl ::core::fmt::Debug for ACWRequest<'_> {
       ds.field("TRACE_ID", &self.TRACE_ID());
       ds.field("ELEVATION_MASK", &self.ELEVATION_MASK());
       ds.field("REFRACTION_MODEL", &self.REFRACTION_MODEL());
+      ds.field("CONSTRAINTS", &self.CONSTRAINTS());
+      ds.field("OBSERVERS", &self.OBSERVERS());
+      ds.field("EVALUATION_MODE", &self.EVALUATION_MODE());
+      ds.field("ROOT_TOLERANCE_S", &self.ROOT_TOLERANCE_S());
+      ds.field("SUN_STATES", &self.SUN_STATES());
+      ds.field("MOON_STATES", &self.MOON_STATES());
       ds.finish()
   }
 }
@@ -1510,6 +2767,12 @@ pub struct ACWRequestT {
   pub TRACE_ID: Option<alloc::string::String>,
   pub ELEVATION_MASK: Option<alloc::vec::Vec<ACWElevationMaskPointT>>,
   pub REFRACTION_MODEL: Option<alloc::boxed::Box<ACWRefractionModelT>>,
+  pub CONSTRAINTS: Option<alloc::boxed::Box<ACWConstraintSetT>>,
+  pub OBSERVERS: Option<alloc::vec::Vec<ACWObserverTrajectoryT>>,
+  pub EVALUATION_MODE: acwEvaluationMode,
+  pub ROOT_TOLERANCE_S: f64,
+  pub SUN_STATES: Option<alloc::vec::Vec<ACWStateSampleT>>,
+  pub MOON_STATES: Option<alloc::vec::Vec<ACWStateSampleT>>,
 }
 impl Default for ACWRequestT {
   fn default() -> Self {
@@ -1522,6 +2785,12 @@ impl Default for ACWRequestT {
       TRACE_ID: None,
       ELEVATION_MASK: None,
       REFRACTION_MODEL: None,
+      CONSTRAINTS: None,
+      OBSERVERS: None,
+      EVALUATION_MODE: acwEvaluationMode::DISCRETE,
+      ROOT_TOLERANCE_S: 0.1,
+      SUN_STATES: None,
+      MOON_STATES: None,
     }
   }
 }
@@ -1550,6 +2819,20 @@ impl ACWRequestT {
     let REFRACTION_MODEL = self.REFRACTION_MODEL.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let CONSTRAINTS = self.CONSTRAINTS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBSERVERS = self.OBSERVERS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let EVALUATION_MODE = self.EVALUATION_MODE;
+    let ROOT_TOLERANCE_S = self.ROOT_TOLERANCE_S;
+    let SUN_STATES = self.SUN_STATES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MOON_STATES = self.MOON_STATES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     ACWRequest::create(_fbb, &ACWRequestArgs{
       OPERATION,
       GROUND_STATIONS,
@@ -1559,6 +2842,12 @@ impl ACWRequestT {
       TRACE_ID,
       ELEVATION_MASK,
       REFRACTION_MODEL,
+      CONSTRAINTS,
+      OBSERVERS,
+      EVALUATION_MODE,
+      ROOT_TOLERANCE_S,
+      SUN_STATES,
+      MOON_STATES,
     })
   }
 }
@@ -1584,6 +2873,14 @@ impl<'a> ACWAccessWindow<'a> {
   pub const VT_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 8;
   pub const VT_MAX_ELEVATION_RAD: ::flatbuffers::VOffsetT = 10;
   pub const VT_SAMPLE_COUNT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OBSERVER_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_START_LIMITING_CONSTRAINT_INDEX: ::flatbuffers::VOffsetT = 16;
+  pub const VT_END_LIMITING_CONSTRAINT_INDEX: ::flatbuffers::VOffsetT = 18;
+  pub const VT_START_LIMITING_CONSTRAINT_LABEL: ::flatbuffers::VOffsetT = 20;
+  pub const VT_END_LIMITING_CONSTRAINT_LABEL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 26;
+  pub const VT_EDGES_REFINED: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1595,11 +2892,19 @@ impl<'a> ACWAccessWindow<'a> {
     args: &'args ACWAccessWindowArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ACWAccessWindow<'bldr>> {
     let mut builder = ACWAccessWindowBuilder::new(_fbb);
+    builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
+    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
     builder.add_MAX_ELEVATION_RAD(args.MAX_ELEVATION_RAD);
     builder.add_END_JULIAN_DATE_TT(args.END_JULIAN_DATE_TT);
     builder.add_START_JULIAN_DATE_TT(args.START_JULIAN_DATE_TT);
+    if let Some(x) = args.END_LIMITING_CONSTRAINT_LABEL { builder.add_END_LIMITING_CONSTRAINT_LABEL(x); }
+    if let Some(x) = args.START_LIMITING_CONSTRAINT_LABEL { builder.add_START_LIMITING_CONSTRAINT_LABEL(x); }
+    builder.add_END_LIMITING_CONSTRAINT_INDEX(args.END_LIMITING_CONSTRAINT_INDEX);
+    builder.add_START_LIMITING_CONSTRAINT_INDEX(args.START_LIMITING_CONSTRAINT_INDEX);
+    if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
     builder.add_SAMPLE_COUNT(args.SAMPLE_COUNT);
     if let Some(x) = args.STATION_ID { builder.add_STATION_ID(x); }
+    builder.add_EDGES_REFINED(args.EDGES_REFINED);
     builder.finish()
   }
 
@@ -1611,12 +2916,34 @@ impl<'a> ACWAccessWindow<'a> {
     let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT();
     let MAX_ELEVATION_RAD = self.MAX_ELEVATION_RAD();
     let SAMPLE_COUNT = self.SAMPLE_COUNT();
+    let OBSERVER_ID = self.OBSERVER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let START_LIMITING_CONSTRAINT_INDEX = self.START_LIMITING_CONSTRAINT_INDEX();
+    let END_LIMITING_CONSTRAINT_INDEX = self.END_LIMITING_CONSTRAINT_INDEX();
+    let START_LIMITING_CONSTRAINT_LABEL = self.START_LIMITING_CONSTRAINT_LABEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let END_LIMITING_CONSTRAINT_LABEL = self.END_LIMITING_CONSTRAINT_LABEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MIN_RANGE_M = self.MIN_RANGE_M();
+    let MAX_RANGE_M = self.MAX_RANGE_M();
+    let EDGES_REFINED = self.EDGES_REFINED();
     ACWAccessWindowT {
       STATION_ID,
       START_JULIAN_DATE_TT,
       END_JULIAN_DATE_TT,
       MAX_ELEVATION_RAD,
       SAMPLE_COUNT,
+      OBSERVER_ID,
+      START_LIMITING_CONSTRAINT_INDEX,
+      END_LIMITING_CONSTRAINT_INDEX,
+      START_LIMITING_CONSTRAINT_LABEL,
+      END_LIMITING_CONSTRAINT_LABEL,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      EDGES_REFINED,
     }
   }
 
@@ -1659,6 +2986,72 @@ impl<'a> ACWAccessWindow<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(ACWAccessWindow::VT_SAMPLE_COUNT, Some(0)).unwrap()}
   }
+  /// Observer id when the observer is an ACWObserverTrajectory; empty for a
+  /// ground station (then STATION_ID names it).
+  #[inline]
+  pub fn OBSERVER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWAccessWindow::VT_OBSERVER_ID, None)}
+  }
+  /// Index into the flattened, depth-first constraint list of the constraint
+  /// whose transition opens the window; -1 when the window starts at the
+  /// first sample.
+  #[inline]
+  pub fn START_LIMITING_CONSTRAINT_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_INDEX, Some(-1)).unwrap()}
+  }
+  /// Index of the constraint whose transition closes the window; -1 when the
+  /// window ends at the last sample.
+  #[inline]
+  pub fn END_LIMITING_CONSTRAINT_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_INDEX, Some(-1)).unwrap()}
+  }
+  /// Labels of those constraints, when the producer set them.
+  #[inline]
+  pub fn START_LIMITING_CONSTRAINT_LABEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_LABEL, None)}
+  }
+  #[inline]
+  pub fn END_LIMITING_CONSTRAINT_LABEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_LABEL, None)}
+  }
+  /// Range extrema over the window, meters.
+  #[inline]
+  pub fn MIN_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWAccessWindow::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ACWAccessWindow::VT_MAX_RANGE_M, Some(0.0)).unwrap()}
+  }
+  /// True when edges were root-refined (CONTINUOUS); false when they are samples.
+  #[inline]
+  pub fn EDGES_REFINED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_EDGES_REFINED, Some(false)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
@@ -1672,6 +3065,14 @@ impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
      .visit_field::<f64>("END_JULIAN_DATE_TT", Self::VT_END_JULIAN_DATE_TT, false)?
      .visit_field::<f64>("MAX_ELEVATION_RAD", Self::VT_MAX_ELEVATION_RAD, false)?
      .visit_field::<u32>("SAMPLE_COUNT", Self::VT_SAMPLE_COUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBSERVER_ID", Self::VT_OBSERVER_ID, false)?
+     .visit_field::<i32>("START_LIMITING_CONSTRAINT_INDEX", Self::VT_START_LIMITING_CONSTRAINT_INDEX, false)?
+     .visit_field::<i32>("END_LIMITING_CONSTRAINT_INDEX", Self::VT_END_LIMITING_CONSTRAINT_INDEX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_LIMITING_CONSTRAINT_LABEL", Self::VT_START_LIMITING_CONSTRAINT_LABEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("END_LIMITING_CONSTRAINT_LABEL", Self::VT_END_LIMITING_CONSTRAINT_LABEL, false)?
+     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
+     .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
+     .visit_field::<bool>("EDGES_REFINED", Self::VT_EDGES_REFINED, false)?
      .finish();
     Ok(())
   }
@@ -1682,6 +3083,14 @@ pub struct ACWAccessWindowArgs<'a> {
     pub END_JULIAN_DATE_TT: f64,
     pub MAX_ELEVATION_RAD: f64,
     pub SAMPLE_COUNT: u32,
+    pub OBSERVER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub START_LIMITING_CONSTRAINT_INDEX: i32,
+    pub END_LIMITING_CONSTRAINT_INDEX: i32,
+    pub START_LIMITING_CONSTRAINT_LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub END_LIMITING_CONSTRAINT_LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MIN_RANGE_M: f64,
+    pub MAX_RANGE_M: f64,
+    pub EDGES_REFINED: bool,
 }
 impl<'a> Default for ACWAccessWindowArgs<'a> {
   #[inline]
@@ -1692,6 +3101,14 @@ impl<'a> Default for ACWAccessWindowArgs<'a> {
       END_JULIAN_DATE_TT: 0.0,
       MAX_ELEVATION_RAD: 0.0,
       SAMPLE_COUNT: 0,
+      OBSERVER_ID: None,
+      START_LIMITING_CONSTRAINT_INDEX: -1,
+      END_LIMITING_CONSTRAINT_INDEX: -1,
+      START_LIMITING_CONSTRAINT_LABEL: None,
+      END_LIMITING_CONSTRAINT_LABEL: None,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      EDGES_REFINED: false,
     }
   }
 }
@@ -1722,6 +3139,38 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWAccessWindowBuilder<'a, 'b
     self.fbb_.push_slot::<u32>(ACWAccessWindow::VT_SAMPLE_COUNT, SAMPLE_COUNT, 0);
   }
   #[inline]
+  pub fn add_OBSERVER_ID(&mut self, OBSERVER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWAccessWindow::VT_OBSERVER_ID, OBSERVER_ID);
+  }
+  #[inline]
+  pub fn add_START_LIMITING_CONSTRAINT_INDEX(&mut self, START_LIMITING_CONSTRAINT_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_INDEX, START_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  #[inline]
+  pub fn add_END_LIMITING_CONSTRAINT_INDEX(&mut self, END_LIMITING_CONSTRAINT_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_INDEX, END_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  #[inline]
+  pub fn add_START_LIMITING_CONSTRAINT_LABEL(&mut self, START_LIMITING_CONSTRAINT_LABEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_LABEL, START_LIMITING_CONSTRAINT_LABEL);
+  }
+  #[inline]
+  pub fn add_END_LIMITING_CONSTRAINT_LABEL(&mut self, END_LIMITING_CONSTRAINT_LABEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_LABEL, END_LIMITING_CONSTRAINT_LABEL);
+  }
+  #[inline]
+  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(ACWAccessWindow::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RANGE_M(&mut self, MAX_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(ACWAccessWindow::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_EDGES_REFINED(&mut self, EDGES_REFINED: bool) {
+    self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_EDGES_REFINED, EDGES_REFINED, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWAccessWindowBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACWAccessWindowBuilder {
@@ -1744,6 +3193,14 @@ impl ::core::fmt::Debug for ACWAccessWindow<'_> {
       ds.field("END_JULIAN_DATE_TT", &self.END_JULIAN_DATE_TT());
       ds.field("MAX_ELEVATION_RAD", &self.MAX_ELEVATION_RAD());
       ds.field("SAMPLE_COUNT", &self.SAMPLE_COUNT());
+      ds.field("OBSERVER_ID", &self.OBSERVER_ID());
+      ds.field("START_LIMITING_CONSTRAINT_INDEX", &self.START_LIMITING_CONSTRAINT_INDEX());
+      ds.field("END_LIMITING_CONSTRAINT_INDEX", &self.END_LIMITING_CONSTRAINT_INDEX());
+      ds.field("START_LIMITING_CONSTRAINT_LABEL", &self.START_LIMITING_CONSTRAINT_LABEL());
+      ds.field("END_LIMITING_CONSTRAINT_LABEL", &self.END_LIMITING_CONSTRAINT_LABEL());
+      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
+      ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
+      ds.field("EDGES_REFINED", &self.EDGES_REFINED());
       ds.finish()
   }
 }
@@ -1755,6 +3212,14 @@ pub struct ACWAccessWindowT {
   pub END_JULIAN_DATE_TT: f64,
   pub MAX_ELEVATION_RAD: f64,
   pub SAMPLE_COUNT: u32,
+  pub OBSERVER_ID: Option<alloc::string::String>,
+  pub START_LIMITING_CONSTRAINT_INDEX: i32,
+  pub END_LIMITING_CONSTRAINT_INDEX: i32,
+  pub START_LIMITING_CONSTRAINT_LABEL: Option<alloc::string::String>,
+  pub END_LIMITING_CONSTRAINT_LABEL: Option<alloc::string::String>,
+  pub MIN_RANGE_M: f64,
+  pub MAX_RANGE_M: f64,
+  pub EDGES_REFINED: bool,
 }
 impl Default for ACWAccessWindowT {
   fn default() -> Self {
@@ -1764,6 +3229,14 @@ impl Default for ACWAccessWindowT {
       END_JULIAN_DATE_TT: 0.0,
       MAX_ELEVATION_RAD: 0.0,
       SAMPLE_COUNT: 0,
+      OBSERVER_ID: None,
+      START_LIMITING_CONSTRAINT_INDEX: -1,
+      END_LIMITING_CONSTRAINT_INDEX: -1,
+      START_LIMITING_CONSTRAINT_LABEL: None,
+      END_LIMITING_CONSTRAINT_LABEL: None,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      EDGES_REFINED: false,
     }
   }
 }
@@ -1779,12 +3252,34 @@ impl ACWAccessWindowT {
     let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT;
     let MAX_ELEVATION_RAD = self.MAX_ELEVATION_RAD;
     let SAMPLE_COUNT = self.SAMPLE_COUNT;
+    let OBSERVER_ID = self.OBSERVER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let START_LIMITING_CONSTRAINT_INDEX = self.START_LIMITING_CONSTRAINT_INDEX;
+    let END_LIMITING_CONSTRAINT_INDEX = self.END_LIMITING_CONSTRAINT_INDEX;
+    let START_LIMITING_CONSTRAINT_LABEL = self.START_LIMITING_CONSTRAINT_LABEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let END_LIMITING_CONSTRAINT_LABEL = self.END_LIMITING_CONSTRAINT_LABEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MIN_RANGE_M = self.MIN_RANGE_M;
+    let MAX_RANGE_M = self.MAX_RANGE_M;
+    let EDGES_REFINED = self.EDGES_REFINED;
     ACWAccessWindow::create(_fbb, &ACWAccessWindowArgs{
       STATION_ID,
       START_JULIAN_DATE_TT,
       END_JULIAN_DATE_TT,
       MAX_ELEVATION_RAD,
       SAMPLE_COUNT,
+      OBSERVER_ID,
+      START_LIMITING_CONSTRAINT_INDEX,
+      END_LIMITING_CONSTRAINT_INDEX,
+      START_LIMITING_CONSTRAINT_LABEL,
+      END_LIMITING_CONSTRAINT_LABEL,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      EDGES_REFINED,
     })
   }
 }
@@ -1809,6 +3304,8 @@ impl<'a> ACWResult<'a> {
   pub const VT_ERROR_MESSAGE: ::flatbuffers::VOffsetT = 6;
   pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 8;
   pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_EVALUATION_MODE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CONSTRAINT_LABELS: ::flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1820,9 +3317,11 @@ impl<'a> ACWResult<'a> {
     args: &'args ACWResultArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ACWResult<'bldr>> {
     let mut builder = ACWResultBuilder::new(_fbb);
+    if let Some(x) = args.CONSTRAINT_LABELS { builder.add_CONSTRAINT_LABELS(x); }
     if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
     if let Some(x) = args.WINDOWS { builder.add_WINDOWS(x); }
     if let Some(x) = args.ERROR_MESSAGE { builder.add_ERROR_MESSAGE(x); }
+    builder.add_EVALUATION_MODE(args.EVALUATION_MODE);
     builder.add_STATUS(args.STATUS);
     builder.finish()
   }
@@ -1838,11 +3337,17 @@ impl<'a> ACWResult<'a> {
     let TRACE_ID = self.TRACE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let EVALUATION_MODE = self.EVALUATION_MODE();
+    let CONSTRAINT_LABELS = self.CONSTRAINT_LABELS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
     ACWResultT {
       STATUS,
       ERROR_MESSAGE,
       WINDOWS,
       TRACE_ID,
+      EVALUATION_MODE,
+      CONSTRAINT_LABELS,
     }
   }
 
@@ -1875,6 +3380,22 @@ impl<'a> ACWResult<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWResult::VT_TRACE_ID, None)}
   }
+  /// Evaluation mode actually used.
+  #[inline]
+  pub fn EVALUATION_MODE(&self) -> acwEvaluationMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<acwEvaluationMode>(ACWResult::VT_EVALUATION_MODE, Some(acwEvaluationMode::DISCRETE)).unwrap()}
+  }
+  /// Flattened depth-first constraint list the window indices refer to.
+  #[inline]
+  pub fn CONSTRAINT_LABELS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(ACWResult::VT_CONSTRAINT_LABELS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ACWResult<'_> {
@@ -1887,6 +3408,8 @@ impl ::flatbuffers::Verifiable for ACWResult<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_MESSAGE", Self::VT_ERROR_MESSAGE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWAccessWindow>>>>("WINDOWS", Self::VT_WINDOWS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACE_ID", Self::VT_TRACE_ID, false)?
+     .visit_field::<acwEvaluationMode>("EVALUATION_MODE", Self::VT_EVALUATION_MODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("CONSTRAINT_LABELS", Self::VT_CONSTRAINT_LABELS, false)?
      .finish();
     Ok(())
   }
@@ -1896,6 +3419,8 @@ pub struct ACWResultArgs<'a> {
     pub ERROR_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWAccessWindow<'a>>>>>,
     pub TRACE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EVALUATION_MODE: acwEvaluationMode,
+    pub CONSTRAINT_LABELS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for ACWResultArgs<'a> {
   #[inline]
@@ -1905,6 +3430,8 @@ impl<'a> Default for ACWResultArgs<'a> {
       ERROR_MESSAGE: None,
       WINDOWS: None,
       TRACE_ID: None,
+      EVALUATION_MODE: acwEvaluationMode::DISCRETE,
+      CONSTRAINT_LABELS: None,
     }
   }
 }
@@ -1931,6 +3458,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWResultBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWResult::VT_TRACE_ID, TRACE_ID);
   }
   #[inline]
+  pub fn add_EVALUATION_MODE(&mut self, EVALUATION_MODE: acwEvaluationMode) {
+    self.fbb_.push_slot::<acwEvaluationMode>(ACWResult::VT_EVALUATION_MODE, EVALUATION_MODE, acwEvaluationMode::DISCRETE);
+  }
+  #[inline]
+  pub fn add_CONSTRAINT_LABELS(&mut self, CONSTRAINT_LABELS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWResult::VT_CONSTRAINT_LABELS, CONSTRAINT_LABELS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWResultBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACWResultBuilder {
@@ -1952,6 +3487,8 @@ impl ::core::fmt::Debug for ACWResult<'_> {
       ds.field("ERROR_MESSAGE", &self.ERROR_MESSAGE());
       ds.field("WINDOWS", &self.WINDOWS());
       ds.field("TRACE_ID", &self.TRACE_ID());
+      ds.field("EVALUATION_MODE", &self.EVALUATION_MODE());
+      ds.field("CONSTRAINT_LABELS", &self.CONSTRAINT_LABELS());
       ds.finish()
   }
 }
@@ -1962,6 +3499,8 @@ pub struct ACWResultT {
   pub ERROR_MESSAGE: Option<alloc::string::String>,
   pub WINDOWS: Option<alloc::vec::Vec<ACWAccessWindowT>>,
   pub TRACE_ID: Option<alloc::string::String>,
+  pub EVALUATION_MODE: acwEvaluationMode,
+  pub CONSTRAINT_LABELS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 impl Default for ACWResultT {
   fn default() -> Self {
@@ -1970,6 +3509,8 @@ impl Default for ACWResultT {
       ERROR_MESSAGE: None,
       WINDOWS: None,
       TRACE_ID: None,
+      EVALUATION_MODE: acwEvaluationMode::DISCRETE,
+      CONSTRAINT_LABELS: None,
     }
   }
 }
@@ -1988,11 +3529,17 @@ impl ACWResultT {
     let TRACE_ID = self.TRACE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let EVALUATION_MODE = self.EVALUATION_MODE;
+    let CONSTRAINT_LABELS = self.CONSTRAINT_LABELS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
     ACWResult::create(_fbb, &ACWResultArgs{
       STATUS,
       ERROR_MESSAGE,
       WINDOWS,
       TRACE_ID,
+      EVALUATION_MODE,
+      CONSTRAINT_LABELS,
     })
   }
 }

@@ -50,6 +50,87 @@ public enum acwRefractionModelKind: Int8, FlatbuffersVectorInitializable, Enum, 
 }
 
 
+///  Kind of access constraint. Append only.
+public enum acwConstraintKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+  case minElevation = 1
+  ///  Azimuth-dependent minimum elevation from MASK.
+  case elevationMask = 2
+  ///  Observer-to-target range at or below MAX_RANGE_M.
+  case maxRange = 3
+  ///  Observer-to-target range at or above MIN_RANGE_M.
+  case minRange = 4
+  ///  Angle between the observer-to-target and observer-to-Sun directions at
+  ///  or above THRESHOLD_RAD (solar exclusion).
+  case sunExclusion = 5
+  ///  Angle between the observer-to-target and observer-to-Moon directions at
+  ///  or above THRESHOLD_RAD (lunar exclusion).
+  case moonExclusion = 6
+  ///  Target illumination state matches LIGHTING.
+  case targetLighting = 7
+  ///  Straight-line visibility between observer and target not occulted by the
+  ///  central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  case lineOfSight = 8
+  ///  Outside every observer blackout window.
+  case blackout = 9
+
+  public static var max: acwConstraintKind { return .blackout }
+  public static var min: acwConstraintKind { return .unspecified }
+}
+
+
+///  How the members of a constraint set combine.
+public enum acwConstraintOperator: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Every member must hold (AND).
+  case allOf = 0
+  ///  At least one member must hold (OR).
+  case anyOf = 1
+
+  public static var max: acwConstraintOperator { return .anyOf }
+  public static var min: acwConstraintOperator { return .allOf }
+}
+
+
+///  Whether windows are evaluated only at the supplied samples or refined to
+///  the epochs where the aggregate condition changes.
+public enum acwEvaluationMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Evaluate at the supplied sample epochs only; window edges are samples.
+  case discrete = 0
+  ///  Bracket between samples and refine each edge to ROOT_TOLERANCE_S.
+  case continuous = 1
+
+  public static var max: acwEvaluationMode { return .continuous }
+  public static var min: acwEvaluationMode { return .discrete }
+}
+
+
+///  Illumination state of the target required by a TARGET_LIGHTING constraint.
+public enum acwLightingCondition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case any = 0
+  case sunlit = 1
+  case penumbra = 2
+  case umbra = 3
+  ///  Sunlit or penumbra.
+  case notUmbra = 4
+
+  public static var max: acwLightingCondition { return .notUmbra }
+  public static var min: acwLightingCondition { return .any }
+}
+
+
 ///  Target Cartesian state sample in an Earth-fixed frame.
 public struct ACWStateSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -332,6 +413,206 @@ public struct ACWGroundStation: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
+///  One access constraint. Fields not used by KIND are ignored.
+public struct ACWConstraint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACWConstraint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let THRESHOLD_RAD: VOffset = 6
+    static let MIN_RANGE_M: VOffset = 8
+    static let MAX_RANGE_M: VOffset = 10
+    static let LIGHTING: VOffset = 12
+    static let OCCULTATION_ATMOSPHERE_HEIGHT_M: VOffset = 14
+    static let MASK: VOffset = 16
+    static let LABEL: VOffset = 18
+  }
+
+  public var KIND: acwConstraintKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : acwConstraintKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
+  public var THRESHOLD_RAD: Double { let o = _accessor.offset(VT.THRESHOLD_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range bounds, meters (MIN_RANGE, MAX_RANGE).
+  public var MIN_RANGE_M: Double { let o = _accessor.offset(VT.MIN_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Required target lighting (TARGET_LIGHTING).
+  public var LIGHTING: acwLightingCondition { let o = _accessor.offset(VT.LIGHTING); return o == 0 ? .any : acwLightingCondition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .any }
+  ///  Central-body radius offset for line-of-sight occultation, meters
+  ///  (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  public var OCCULTATION_ATMOSPHERE_HEIGHT_M: Double { let o = _accessor.offset(VT.OCCULTATION_ATMOSPHERE_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Azimuth-dependent mask (ELEVATION_MASK).
+  public var MASK: FlatbufferVector<ACWElevationMaskPoint> { return _accessor.vector(at: VT.MASK, byteSize: 4) }
+  ///  Producer label echoed in window attribution.
+  public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
+  public static func startACWConstraint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(KIND: acwConstraintKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(THRESHOLD_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_RAD, def: 0.0, at: VT.THRESHOLD_RAD) }
+  public static func add(MIN_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE_M, def: 0.0, at: VT.MIN_RANGE_M) }
+  public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
+  public static func add(LIGHTING: acwLightingCondition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIGHTING.rawValue, def: 0, at: VT.LIGHTING) }
+  public static func add(OCCULTATION_ATMOSPHERE_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCCULTATION_ATMOSPHERE_HEIGHT_M, def: 0.0, at: VT.OCCULTATION_ATMOSPHERE_HEIGHT_M) }
+  public static func addVectorOf(MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASK, at: VT.MASK) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func endACWConstraint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACWConstraint(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: acwConstraintKind = .unspecified,
+    THRESHOLD_RAD: Double = 0.0,
+    MIN_RANGE_M: Double = 0.0,
+    MAX_RANGE_M: Double = 0.0,
+    LIGHTING: acwLightingCondition = .any,
+    OCCULTATION_ATMOSPHERE_HEIGHT_M: Double = 0.0,
+    MASKVectorOffset MASK: Offset = Offset(),
+    LABELOffset LABEL: Offset = Offset()
+  ) -> Offset {
+    let __start = ACWConstraint.startACWConstraint(&fbb)
+    ACWConstraint.add(KIND: KIND, &fbb)
+    ACWConstraint.add(THRESHOLD_RAD: THRESHOLD_RAD, &fbb)
+    ACWConstraint.add(MIN_RANGE_M: MIN_RANGE_M, &fbb)
+    ACWConstraint.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
+    ACWConstraint.add(LIGHTING: LIGHTING, &fbb)
+    ACWConstraint.add(OCCULTATION_ATMOSPHERE_HEIGHT_M: OCCULTATION_ATMOSPHERE_HEIGHT_M, &fbb)
+    ACWConstraint.addVectorOf(MASK: MASK, &fbb)
+    ACWConstraint.add(LABEL: LABEL, &fbb)
+    return ACWConstraint.endACWConstraint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: acwConstraintKind.self)
+    try _v.visit(field: VT.THRESHOLD_RAD, fieldName: "THRESHOLD_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE_M, fieldName: "MIN_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LIGHTING, fieldName: "LIGHTING", required: false, type: acwLightingCondition.self)
+    try _v.visit(field: VT.OCCULTATION_ATMOSPHERE_HEIGHT_M, fieldName: "OCCULTATION_ATMOSPHERE_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MASK, fieldName: "MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWElevationMaskPoint>, ACWElevationMaskPoint>>.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  A boolean composition of constraints and nested sets.
+public struct ACWConstraintSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACWConstraintSet.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OPERATOR: VOffset = 4
+    static let CONSTRAINTS: VOffset = 6
+    static let SETS: VOffset = 8
+    static let LABEL: VOffset = 10
+  }
+
+  public var OPERATOR: acwConstraintOperator { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? .allOf : acwConstraintOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .allOf }
+  public var CONSTRAINTS: FlatbufferVector<ACWConstraint> { return _accessor.vector(at: VT.CONSTRAINTS, byteSize: 4) }
+  ///  Nested sets, combined with the same OPERATOR.
+  public var SETS: FlatbufferVector<ACWConstraintSet> { return _accessor.vector(at: VT.SETS, byteSize: 4) }
+  public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
+  public static func startACWConstraintSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(OPERATOR: acwConstraintOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VT.OPERATOR) }
+  public static func addVectorOf(CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINTS, at: VT.CONSTRAINTS) }
+  public static func addVectorOf(SETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SETS, at: VT.SETS) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func endACWConstraintSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACWConstraintSet(
+    _ fbb: inout FlatBufferBuilder,
+    OPERATOR: acwConstraintOperator = .allOf,
+    CONSTRAINTSVectorOffset CONSTRAINTS: Offset = Offset(),
+    SETSVectorOffset SETS: Offset = Offset(),
+    LABELOffset LABEL: Offset = Offset()
+  ) -> Offset {
+    let __start = ACWConstraintSet.startACWConstraintSet(&fbb)
+    ACWConstraintSet.add(OPERATOR: OPERATOR, &fbb)
+    ACWConstraintSet.addVectorOf(CONSTRAINTS: CONSTRAINTS, &fbb)
+    ACWConstraintSet.addVectorOf(SETS: SETS, &fbb)
+    ACWConstraintSet.add(LABEL: LABEL, &fbb)
+    return ACWConstraintSet.endACWConstraintSet(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OPERATOR, fieldName: "OPERATOR", required: false, type: acwConstraintOperator.self)
+    try _v.visit(field: VT.CONSTRAINTS, fieldName: "CONSTRAINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWConstraint>, ACWConstraint>>.self)
+    try _v.visit(field: VT.SETS, fieldName: "SETS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWConstraintSet>, ACWConstraintSet>>.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+///  the same frame and time scale as ACWRequest.STATES.
+public struct ACWObserverTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACWObserverTrajectory.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OBSERVER_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let STATES: VOffset = 8
+    static let BLACKOUT_WINDOWS: VOffset = 10
+  }
+
+  public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.STATES, byteSize: 4) }
+  ///  Observer-specific unavailable intervals.
+  public var BLACKOUT_WINDOWS: FlatbufferVector<ACWBlackoutWindow> { return _accessor.vector(at: VT.BLACKOUT_WINDOWS, byteSize: 4) }
+  public static func startACWObserverTrajectory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VT.OBSERVER_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
+  public static func addVectorOf(BLACKOUT_WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLACKOUT_WINDOWS, at: VT.BLACKOUT_WINDOWS) }
+  public static func endACWObserverTrajectory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACWObserverTrajectory(
+    _ fbb: inout FlatBufferBuilder,
+    OBSERVER_IDOffset OBSERVER_ID: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    STATESVectorOffset STATES: Offset = Offset(),
+    BLACKOUT_WINDOWSVectorOffset BLACKOUT_WINDOWS: Offset = Offset()
+  ) -> Offset {
+    let __start = ACWObserverTrajectory.startACWObserverTrajectory(&fbb)
+    ACWObserverTrajectory.add(OBSERVER_ID: OBSERVER_ID, &fbb)
+    ACWObserverTrajectory.add(NAME: NAME, &fbb)
+    ACWObserverTrajectory.addVectorOf(STATES: STATES, &fbb)
+    ACWObserverTrajectory.addVectorOf(BLACKOUT_WINDOWS: BLACKOUT_WINDOWS, &fbb)
+    return ACWObserverTrajectory.endACWObserverTrajectory(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBSERVER_ID, fieldName: "OBSERVER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATES, fieldName: "STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWStateSample>, ACWStateSample>>.self)
+    try _v.visit(field: VT.BLACKOUT_WINDOWS, fieldName: "BLACKOUT_WINDOWS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWBlackoutWindow>, ACWBlackoutWindow>>.self)
+    _v.finish()
+  }
+}
+
 ///  One access-window compute request.
 public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -353,6 +634,12 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     static let TRACE_ID: VOffset = 14
     static let ELEVATION_MASK: VOffset = 16
     static let REFRACTION_MODEL: VOffset = 18
+    static let CONSTRAINTS: VOffset = 20
+    static let OBSERVERS: VOffset = 22
+    static let EVALUATION_MODE: VOffset = 24
+    static let ROOT_TOLERANCE_S: VOffset = 26
+    static let SUN_STATES: VOffset = 28
+    static let MOON_STATES: VOffset = 30
   }
 
   public var OPERATION: acwOperationCode { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .unknown : acwOperationCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
@@ -372,7 +659,23 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public var ELEVATION_MASK: FlatbufferVector<ACWElevationMaskPoint> { return _accessor.vector(at: VT.ELEVATION_MASK, byteSize: 4) }
   ///  Optional apparent-elevation refraction model.
   public var REFRACTION_MODEL: ACWRefractionModel? { let o = _accessor.offset(VT.REFRACTION_MODEL); return o == 0 ? nil : ACWRefractionModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Optional constraint composition. When absent the legacy behaviour holds:
+  ///  every ground station's MIN_ELEVATION_RAD (or the override) plus
+  ///  ELEVATION_MASK, all required.
+  public var CONSTRAINTS: ACWConstraintSet? { let o = _accessor.offset(VT.CONSTRAINTS); return o == 0 ? nil : ACWConstraintSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional moving observers (satellite-to-satellite access). Each observer
+  ///  is evaluated against STATES like a ground station.
+  public var OBSERVERS: FlatbufferVector<ACWObserverTrajectory> { return _accessor.vector(at: VT.OBSERVERS, byteSize: 4) }
+  ///  Sample-only or root-refined window edges.
+  public var EVALUATION_MODE: acwEvaluationMode { let o = _accessor.offset(VT.EVALUATION_MODE); return o == 0 ? .discrete : acwEvaluationMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .discrete }
+  ///  Edge refinement tolerance for CONTINUOUS, seconds.
+  public var ROOT_TOLERANCE_S: Double { let o = _accessor.offset(VT.ROOT_TOLERANCE_S); return o == 0 ? 0.1 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sun states in the STATES frame and time scale, required by
+  ///  SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+  public var SUN_STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.SUN_STATES, byteSize: 4) }
+  ///  Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+  public var MOON_STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.MOON_STATES, byteSize: 4) }
+  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(OPERATION: acwOperationCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
   public static func addVectorOf(GROUND_STATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_STATIONS, at: VT.GROUND_STATIONS) }
   public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
@@ -381,6 +684,12 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
   public static func addVectorOf(ELEVATION_MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEVATION_MASK, at: VT.ELEVATION_MASK) }
   public static func add(REFRACTION_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFRACTION_MODEL, at: VT.REFRACTION_MODEL) }
+  public static func add(CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINTS, at: VT.CONSTRAINTS) }
+  public static func addVectorOf(OBSERVERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVERS, at: VT.OBSERVERS) }
+  public static func add(EVALUATION_MODE: acwEvaluationMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATION_MODE.rawValue, def: 0, at: VT.EVALUATION_MODE) }
+  public static func add(ROOT_TOLERANCE_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROOT_TOLERANCE_S, def: 0.1, at: VT.ROOT_TOLERANCE_S) }
+  public static func addVectorOf(SUN_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUN_STATES, at: VT.SUN_STATES) }
+  public static func addVectorOf(MOON_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOON_STATES, at: VT.MOON_STATES) }
   public static func endACWRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -391,7 +700,13 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     MIN_ELEVATION_OVERRIDE_RAD: Double = 0.0,
     TRACE_IDOffset TRACE_ID: Offset = Offset(),
     ELEVATION_MASKVectorOffset ELEVATION_MASK: Offset = Offset(),
-    REFRACTION_MODELOffset REFRACTION_MODEL: Offset = Offset()
+    REFRACTION_MODELOffset REFRACTION_MODEL: Offset = Offset(),
+    CONSTRAINTSOffset CONSTRAINTS: Offset = Offset(),
+    OBSERVERSVectorOffset OBSERVERS: Offset = Offset(),
+    EVALUATION_MODE: acwEvaluationMode = .discrete,
+    ROOT_TOLERANCE_S: Double = 0.1,
+    SUN_STATESVectorOffset SUN_STATES: Offset = Offset(),
+    MOON_STATESVectorOffset MOON_STATES: Offset = Offset()
   ) -> Offset {
     let __start = ACWRequest.startACWRequest(&fbb)
     ACWRequest.add(OPERATION: OPERATION, &fbb)
@@ -402,6 +717,12 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     ACWRequest.add(TRACE_ID: TRACE_ID, &fbb)
     ACWRequest.addVectorOf(ELEVATION_MASK: ELEVATION_MASK, &fbb)
     ACWRequest.add(REFRACTION_MODEL: REFRACTION_MODEL, &fbb)
+    ACWRequest.add(CONSTRAINTS: CONSTRAINTS, &fbb)
+    ACWRequest.addVectorOf(OBSERVERS: OBSERVERS, &fbb)
+    ACWRequest.add(EVALUATION_MODE: EVALUATION_MODE, &fbb)
+    ACWRequest.add(ROOT_TOLERANCE_S: ROOT_TOLERANCE_S, &fbb)
+    ACWRequest.addVectorOf(SUN_STATES: SUN_STATES, &fbb)
+    ACWRequest.addVectorOf(MOON_STATES: MOON_STATES, &fbb)
     return ACWRequest.endACWRequest(&fbb, start: __start)
   }
 
@@ -415,6 +736,12 @@ public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ELEVATION_MASK, fieldName: "ELEVATION_MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWElevationMaskPoint>, ACWElevationMaskPoint>>.self)
     try _v.visit(field: VT.REFRACTION_MODEL, fieldName: "REFRACTION_MODEL", required: false, type: ForwardOffset<ACWRefractionModel>.self)
+    try _v.visit(field: VT.CONSTRAINTS, fieldName: "CONSTRAINTS", required: false, type: ForwardOffset<ACWConstraintSet>.self)
+    try _v.visit(field: VT.OBSERVERS, fieldName: "OBSERVERS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWObserverTrajectory>, ACWObserverTrajectory>>.self)
+    try _v.visit(field: VT.EVALUATION_MODE, fieldName: "EVALUATION_MODE", required: false, type: acwEvaluationMode.self)
+    try _v.visit(field: VT.ROOT_TOLERANCE_S, fieldName: "ROOT_TOLERANCE_S", required: false, type: Double.self)
+    try _v.visit(field: VT.SUN_STATES, fieldName: "SUN_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWStateSample>, ACWStateSample>>.self)
+    try _v.visit(field: VT.MOON_STATES, fieldName: "MOON_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWStateSample>, ACWStateSample>>.self)
     _v.finish()
   }
 }
@@ -437,6 +764,14 @@ public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, 
     static let END_JULIAN_DATE_TT: VOffset = 8
     static let MAX_ELEVATION_RAD: VOffset = 10
     static let SAMPLE_COUNT: VOffset = 12
+    static let OBSERVER_ID: VOffset = 14
+    static let START_LIMITING_CONSTRAINT_INDEX: VOffset = 16
+    static let END_LIMITING_CONSTRAINT_INDEX: VOffset = 18
+    static let START_LIMITING_CONSTRAINT_LABEL: VOffset = 20
+    static let END_LIMITING_CONSTRAINT_LABEL: VOffset = 22
+    static let MIN_RANGE_M: VOffset = 24
+    static let MAX_RANGE_M: VOffset = 26
+    static let EDGES_REFINED: VOffset = 28
   }
 
   public var STATION_ID: String? { let o = _accessor.offset(VT.STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -449,12 +784,42 @@ public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var MAX_ELEVATION_RAD: Double { let o = _accessor.offset(VT.MAX_ELEVATION_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of visible input samples contributing to the window.
   public var SAMPLE_COUNT: UInt32 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Observer id when the observer is an ACWObserverTrajectory; empty for a
+  ///  ground station (then STATION_ID names it).
+  public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
+  ///  Index into the flattened, depth-first constraint list of the constraint
+  ///  whose transition opens the window; -1 when the window starts at the
+  ///  first sample.
+  public var START_LIMITING_CONSTRAINT_INDEX: Int32 { let o = _accessor.offset(VT.START_LIMITING_CONSTRAINT_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Index of the constraint whose transition closes the window; -1 when the
+  ///  window ends at the last sample.
+  public var END_LIMITING_CONSTRAINT_INDEX: Int32 { let o = _accessor.offset(VT.END_LIMITING_CONSTRAINT_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Labels of those constraints, when the producer set them.
+  public var START_LIMITING_CONSTRAINT_LABEL: String? { let o = _accessor.offset(VT.START_LIMITING_CONSTRAINT_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_LIMITING_CONSTRAINT_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_LIMITING_CONSTRAINT_LABEL) }
+  public var END_LIMITING_CONSTRAINT_LABEL: String? { let o = _accessor.offset(VT.END_LIMITING_CONSTRAINT_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_LIMITING_CONSTRAINT_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_LIMITING_CONSTRAINT_LABEL) }
+  ///  Range extrema over the window, meters.
+  public var MIN_RANGE_M: Double { let o = _accessor.offset(VT.MIN_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
+  public var EDGES_REFINED: Bool { let o = _accessor.offset(VT.EDGES_REFINED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VT.STATION_ID) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
   public static func add(MAX_ELEVATION_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ELEVATION_RAD, def: 0.0, at: VT.MAX_ELEVATION_RAD) }
   public static func add(SAMPLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_COUNT, def: 0, at: VT.SAMPLE_COUNT) }
+  public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VT.OBSERVER_ID) }
+  public static func add(START_LIMITING_CONSTRAINT_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_LIMITING_CONSTRAINT_INDEX, def: -1, at: VT.START_LIMITING_CONSTRAINT_INDEX) }
+  public static func add(END_LIMITING_CONSTRAINT_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_LIMITING_CONSTRAINT_INDEX, def: -1, at: VT.END_LIMITING_CONSTRAINT_INDEX) }
+  public static func add(START_LIMITING_CONSTRAINT_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_LIMITING_CONSTRAINT_LABEL, at: VT.START_LIMITING_CONSTRAINT_LABEL) }
+  public static func add(END_LIMITING_CONSTRAINT_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_LIMITING_CONSTRAINT_LABEL, at: VT.END_LIMITING_CONSTRAINT_LABEL) }
+  public static func add(MIN_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE_M, def: 0.0, at: VT.MIN_RANGE_M) }
+  public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
+  public static func add(EDGES_REFINED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDGES_REFINED, def: false,
+   at: VT.EDGES_REFINED) }
   public static func endACWAccessWindow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWAccessWindow(
     _ fbb: inout FlatBufferBuilder,
@@ -462,7 +827,15 @@ public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, 
     START_JULIAN_DATE_TT: Double = 0.0,
     END_JULIAN_DATE_TT: Double = 0.0,
     MAX_ELEVATION_RAD: Double = 0.0,
-    SAMPLE_COUNT: UInt32 = 0
+    SAMPLE_COUNT: UInt32 = 0,
+    OBSERVER_IDOffset OBSERVER_ID: Offset = Offset(),
+    START_LIMITING_CONSTRAINT_INDEX: Int32 = -1,
+    END_LIMITING_CONSTRAINT_INDEX: Int32 = -1,
+    START_LIMITING_CONSTRAINT_LABELOffset START_LIMITING_CONSTRAINT_LABEL: Offset = Offset(),
+    END_LIMITING_CONSTRAINT_LABELOffset END_LIMITING_CONSTRAINT_LABEL: Offset = Offset(),
+    MIN_RANGE_M: Double = 0.0,
+    MAX_RANGE_M: Double = 0.0,
+    EDGES_REFINED: Bool = false
   ) -> Offset {
     let __start = ACWAccessWindow.startACWAccessWindow(&fbb)
     ACWAccessWindow.add(STATION_ID: STATION_ID, &fbb)
@@ -470,6 +843,14 @@ public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, 
     ACWAccessWindow.add(END_JULIAN_DATE_TT: END_JULIAN_DATE_TT, &fbb)
     ACWAccessWindow.add(MAX_ELEVATION_RAD: MAX_ELEVATION_RAD, &fbb)
     ACWAccessWindow.add(SAMPLE_COUNT: SAMPLE_COUNT, &fbb)
+    ACWAccessWindow.add(OBSERVER_ID: OBSERVER_ID, &fbb)
+    ACWAccessWindow.add(START_LIMITING_CONSTRAINT_INDEX: START_LIMITING_CONSTRAINT_INDEX, &fbb)
+    ACWAccessWindow.add(END_LIMITING_CONSTRAINT_INDEX: END_LIMITING_CONSTRAINT_INDEX, &fbb)
+    ACWAccessWindow.add(START_LIMITING_CONSTRAINT_LABEL: START_LIMITING_CONSTRAINT_LABEL, &fbb)
+    ACWAccessWindow.add(END_LIMITING_CONSTRAINT_LABEL: END_LIMITING_CONSTRAINT_LABEL, &fbb)
+    ACWAccessWindow.add(MIN_RANGE_M: MIN_RANGE_M, &fbb)
+    ACWAccessWindow.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
+    ACWAccessWindow.add(EDGES_REFINED: EDGES_REFINED, &fbb)
     return ACWAccessWindow.endACWAccessWindow(&fbb, start: __start)
   }
 
@@ -480,6 +861,14 @@ public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, 
     try _v.visit(field: VT.END_JULIAN_DATE_TT, fieldName: "END_JULIAN_DATE_TT", required: false, type: Double.self)
     try _v.visit(field: VT.MAX_ELEVATION_RAD, fieldName: "MAX_ELEVATION_RAD", required: false, type: Double.self)
     try _v.visit(field: VT.SAMPLE_COUNT, fieldName: "SAMPLE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBSERVER_ID, fieldName: "OBSERVER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_LIMITING_CONSTRAINT_INDEX, fieldName: "START_LIMITING_CONSTRAINT_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.END_LIMITING_CONSTRAINT_INDEX, fieldName: "END_LIMITING_CONSTRAINT_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.START_LIMITING_CONSTRAINT_LABEL, fieldName: "START_LIMITING_CONSTRAINT_LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_LIMITING_CONSTRAINT_LABEL, fieldName: "END_LIMITING_CONSTRAINT_LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MIN_RANGE_M, fieldName: "MIN_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.EDGES_REFINED, fieldName: "EDGES_REFINED", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -501,6 +890,8 @@ public struct ACWResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let ERROR_MESSAGE: VOffset = 6
     static let WINDOWS: VOffset = 8
     static let TRACE_ID: VOffset = 10
+    static let EVALUATION_MODE: VOffset = 12
+    static let CONSTRAINT_LABELS: VOffset = 14
   }
 
   public var STATUS: acwResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : acwResultStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
@@ -510,24 +901,34 @@ public struct ACWResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   ///  Caller trace/correlation identifier copied from the request when present.
   public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startACWResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Evaluation mode actually used.
+  public var EVALUATION_MODE: acwEvaluationMode { let o = _accessor.offset(VT.EVALUATION_MODE); return o == 0 ? .discrete : acwEvaluationMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .discrete }
+  ///  Flattened depth-first constraint list the window indices refer to.
+  public var CONSTRAINT_LABELS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CONSTRAINT_LABELS, byteSize: 4) }
+  public static func startACWResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(STATUS: acwResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func addVectorOf(WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOWS, at: VT.WINDOWS) }
   public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
+  public static func add(EVALUATION_MODE: acwEvaluationMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATION_MODE.rawValue, def: 0, at: VT.EVALUATION_MODE) }
+  public static func addVectorOf(CONSTRAINT_LABELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_LABELS, at: VT.CONSTRAINT_LABELS) }
   public static func endACWResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWResult(
     _ fbb: inout FlatBufferBuilder,
     STATUS: acwResultStatus = .ok,
     ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
     WINDOWSVectorOffset WINDOWS: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    TRACE_IDOffset TRACE_ID: Offset = Offset(),
+    EVALUATION_MODE: acwEvaluationMode = .discrete,
+    CONSTRAINT_LABELSVectorOffset CONSTRAINT_LABELS: Offset = Offset()
   ) -> Offset {
     let __start = ACWResult.startACWResult(&fbb)
     ACWResult.add(STATUS: STATUS, &fbb)
     ACWResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
     ACWResult.addVectorOf(WINDOWS: WINDOWS, &fbb)
     ACWResult.add(TRACE_ID: TRACE_ID, &fbb)
+    ACWResult.add(EVALUATION_MODE: EVALUATION_MODE, &fbb)
+    ACWResult.addVectorOf(CONSTRAINT_LABELS: CONSTRAINT_LABELS, &fbb)
     return ACWResult.endACWResult(&fbb, start: __start)
   }
 
@@ -537,6 +938,8 @@ public struct ACWResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.WINDOWS, fieldName: "WINDOWS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWAccessWindow>, ACWAccessWindow>>.self)
     try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVALUATION_MODE, fieldName: "EVALUATION_MODE", required: false, type: acwEvaluationMode.self)
+    try _v.visit(field: VT.CONSTRAINT_LABELS, fieldName: "CONSTRAINT_LABELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

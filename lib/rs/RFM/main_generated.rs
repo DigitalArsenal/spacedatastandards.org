@@ -766,10 +766,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for CustomFrame {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RFM_AXIS_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFM_AXIS_TYPE: u8 = 24;
+pub const ENUM_MAX_RFM_AXIS_TYPE: u8 = 32;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 25] = [
+pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 33] = [
   rfmAxisType::UNSPECIFIED,
   rfmAxisType::MEAN_EQUATOR_EQUINOX_J2000,
   rfmAxisType::MEAN_ECLIPTIC_EQUINOX_J2000,
@@ -795,6 +795,14 @@ pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 25] = [
   rfmAxisType::EPHEMERIS_KERNEL_DEFINED,
   rfmAxisType::MEAN_OF_DATE_EQUATOR_FK5,
   rfmAxisType::TRUE_OF_DATE_EQUATOR_FK5,
+  rfmAxisType::TRUE_OF_DATE_EQUATOR_IERS1996,
+  rfmAxisType::TRUE_OF_DATE_EQUATOR_IERS2003,
+  rfmAxisType::TOPOCENTRIC_EAST_NORTH_UP,
+  rfmAxisType::TOPOCENTRIC_NORTH_EAST_DOWN,
+  rfmAxisType::TOPOCENTRIC_SOUTH_EAST_ZENITH,
+  rfmAxisType::ORBITAL_VELOCITY_NORMAL_CONORMAL,
+  rfmAxisType::ORBITAL_RADIAL_TRANSVERSE_NORMAL,
+  rfmAxisType::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL,
 ];
 
 /// Axis-set capability classes for a fully specified coordinate system.
@@ -866,9 +874,37 @@ impl rfmAxisType {
   /// LEGACY, retained and NAMED: true equator of date computed with the
   /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
   pub const TRUE_OF_DATE_EQUATOR_FK5: Self = Self(24);
+  /// True equator of date computed with the IERS Conventions (1996)
+  /// reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
+  /// nutation with the observed celestial pole offsets applied. Distinct from
+  /// TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
+  /// (IAU-2006/2000A).
+  pub const TRUE_OF_DATE_EQUATOR_IERS1996: Self = Self(25);
+  /// True equator of date computed with the IERS Conventions (2003)
+  /// reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
+  /// precession with the IAU 2000 precession-rate corrections. The mean-of-date
+  /// equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
+  pub const TRUE_OF_DATE_EQUATOR_IERS2003: Self = Self(26);
+  /// Topocentric East-North-Up axes at a surface site; the site is carried on
+  /// RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
+  pub const TOPOCENTRIC_EAST_NORTH_UP: Self = Self(27);
+  /// Topocentric North-East-Down axes at a surface site.
+  pub const TOPOCENTRIC_NORTH_EAST_DOWN: Self = Self(28);
+  /// Topocentric South-East-Zenith axes at a surface site.
+  pub const TOPOCENTRIC_SOUTH_EAST_ZENITH: Self = Self(29);
+  /// Orbital axes from the object's state: X along the velocity, Z along the
+  /// orbit normal, Y completing the right-handed set (VNC). The object is the
+  /// origin body of the coordinate system.
+  pub const ORBITAL_VELOCITY_NORMAL_CONORMAL: Self = Self(30);
+  /// Orbital axes from the object's state: X radial (outward), Z along the
+  /// orbit normal, Y transverse completing the set (RTN, also RSW).
+  pub const ORBITAL_RADIAL_TRANSVERSE_NORMAL: Self = Self(31);
+  /// Orbital axes from the object's state: Z toward the central body (nadir),
+  /// Y opposite the orbit normal, X completing the set (LVLH).
+  pub const ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: Self = Self(32);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 24;
+  pub const ENUM_MAX: u8 = 32;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::UNSPECIFIED,
     Self::MEAN_EQUATOR_EQUINOX_J2000,
@@ -895,6 +931,14 @@ impl rfmAxisType {
     Self::EPHEMERIS_KERNEL_DEFINED,
     Self::MEAN_OF_DATE_EQUATOR_FK5,
     Self::TRUE_OF_DATE_EQUATOR_FK5,
+    Self::TRUE_OF_DATE_EQUATOR_IERS1996,
+    Self::TRUE_OF_DATE_EQUATOR_IERS2003,
+    Self::TOPOCENTRIC_EAST_NORTH_UP,
+    Self::TOPOCENTRIC_NORTH_EAST_DOWN,
+    Self::TOPOCENTRIC_SOUTH_EAST_ZENITH,
+    Self::ORBITAL_VELOCITY_NORMAL_CONORMAL,
+    Self::ORBITAL_RADIAL_TRANSVERSE_NORMAL,
+    Self::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -924,6 +968,14 @@ impl rfmAxisType {
       Self::EPHEMERIS_KERNEL_DEFINED => Some("EPHEMERIS_KERNEL_DEFINED"),
       Self::MEAN_OF_DATE_EQUATOR_FK5 => Some("MEAN_OF_DATE_EQUATOR_FK5"),
       Self::TRUE_OF_DATE_EQUATOR_FK5 => Some("TRUE_OF_DATE_EQUATOR_FK5"),
+      Self::TRUE_OF_DATE_EQUATOR_IERS1996 => Some("TRUE_OF_DATE_EQUATOR_IERS1996"),
+      Self::TRUE_OF_DATE_EQUATOR_IERS2003 => Some("TRUE_OF_DATE_EQUATOR_IERS2003"),
+      Self::TOPOCENTRIC_EAST_NORTH_UP => Some("TOPOCENTRIC_EAST_NORTH_UP"),
+      Self::TOPOCENTRIC_NORTH_EAST_DOWN => Some("TOPOCENTRIC_NORTH_EAST_DOWN"),
+      Self::TOPOCENTRIC_SOUTH_EAST_ZENITH => Some("TOPOCENTRIC_SOUTH_EAST_ZENITH"),
+      Self::ORBITAL_VELOCITY_NORMAL_CONORMAL => Some("ORBITAL_VELOCITY_NORMAL_CONORMAL"),
+      Self::ORBITAL_RADIAL_TRANSVERSE_NORMAL => Some("ORBITAL_RADIAL_TRANSVERSE_NORMAL"),
+      Self::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL => Some("ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"),
       _ => None,
     }
   }

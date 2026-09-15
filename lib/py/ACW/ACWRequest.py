@@ -150,8 +150,118 @@ class ACWRequest(object):
             return obj
         return None
 
+    # Optional constraint composition. When absent the legacy behaviour holds:
+    # every ground station's MIN_ELEVATION_RAD (or the override) plus
+    # ELEVATION_MASK, all required.
+    # ACWRequest
+    def CONSTRAINTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ACWConstraintSet import ACWConstraintSet
+            obj = ACWConstraintSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Optional moving observers (satellite-to-satellite access). Each observer
+    # is evaluated against STATES like a ground station.
+    # ACWRequest
+    def OBSERVERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACWObserverTrajectory import ACWObserverTrajectory
+            obj = ACWObserverTrajectory()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACWRequest
+    def OBSERVERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACWRequest
+    def OBSERVERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Sample-only or root-refined window edges.
+    # ACWRequest
+    def EVALUATION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Edge refinement tolerance for CONTINUOUS, seconds.
+    # ACWRequest
+    def ROOT_TOLERANCE_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.1
+
+    # Sun states in the STATES frame and time scale, required by
+    # SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+    # ACWRequest
+    def SUN_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACWStateSample import ACWStateSample
+            obj = ACWStateSample()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACWRequest
+    def SUN_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACWRequest
+    def SUN_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+    # ACWRequest
+    def MOON_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACWStateSample import ACWStateSample
+            obj = ACWStateSample()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACWRequest
+    def MOON_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACWRequest
+    def MOON_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
 def ACWRequestStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(14)
 
 def Start(builder):
     ACWRequestStart(builder)
@@ -240,14 +350,88 @@ def ACWRequestAddREFRACTION_MODEL(builder, REFRACTION_MODEL):
 def AddREFRACTION_MODEL(builder, REFRACTION_MODEL):
     ACWRequestAddREFRACTION_MODEL(builder, REFRACTION_MODEL)
 
+def ACWRequestAddCONSTRAINTS(builder, CONSTRAINTS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINTS), 0)
+
+def AddCONSTRAINTS(builder, CONSTRAINTS):
+    ACWRequestAddCONSTRAINTS(builder, CONSTRAINTS)
+
+def ACWRequestAddOBSERVERS(builder, OBSERVERS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVERS), 0)
+
+def AddOBSERVERS(builder, OBSERVERS):
+    ACWRequestAddOBSERVERS(builder, OBSERVERS)
+
+def ACWRequestStartOBSERVERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOBSERVERSVector(builder, numElems):
+    return ACWRequestStartOBSERVERSVector(builder, numElems)
+
+def ACWRequestCreateOBSERVERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBSERVERSVector(builder, data):
+    ACWRequestCreateOBSERVERSVector(builder, data)
+
+def ACWRequestAddEVALUATION_MODE(builder, EVALUATION_MODE):
+    builder.PrependInt8Slot(10, EVALUATION_MODE, 0)
+
+def AddEVALUATION_MODE(builder, EVALUATION_MODE):
+    ACWRequestAddEVALUATION_MODE(builder, EVALUATION_MODE)
+
+def ACWRequestAddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S):
+    builder.PrependFloat64Slot(11, ROOT_TOLERANCE_S, 0.1)
+
+def AddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S):
+    ACWRequestAddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S)
+
+def ACWRequestAddSUN_STATES(builder, SUN_STATES):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_STATES), 0)
+
+def AddSUN_STATES(builder, SUN_STATES):
+    ACWRequestAddSUN_STATES(builder, SUN_STATES)
+
+def ACWRequestStartSUN_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSUN_STATESVector(builder, numElems):
+    return ACWRequestStartSUN_STATESVector(builder, numElems)
+
+def ACWRequestCreateSUN_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSUN_STATESVector(builder, data):
+    ACWRequestCreateSUN_STATESVector(builder, data)
+
+def ACWRequestAddMOON_STATES(builder, MOON_STATES):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MOON_STATES), 0)
+
+def AddMOON_STATES(builder, MOON_STATES):
+    ACWRequestAddMOON_STATES(builder, MOON_STATES)
+
+def ACWRequestStartMOON_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMOON_STATESVector(builder, numElems):
+    return ACWRequestStartMOON_STATESVector(builder, numElems)
+
+def ACWRequestCreateMOON_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMOON_STATESVector(builder, data):
+    ACWRequestCreateMOON_STATESVector(builder, data)
+
 def ACWRequestEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return ACWRequestEnd(builder)
 
+import ACWConstraintSet
 import ACWElevationMaskPoint
 import ACWGroundStation
+import ACWObserverTrajectory
 import ACWRefractionModel
 import ACWStateSample
 try:
@@ -268,6 +452,12 @@ class ACWRequestT(object):
         TRACE_ID = None,
         ELEVATION_MASK = None,
         REFRACTION_MODEL = None,
+        CONSTRAINTS = None,
+        OBSERVERS = None,
+        EVALUATION_MODE = 0,
+        ROOT_TOLERANCE_S = 0.1,
+        SUN_STATES = None,
+        MOON_STATES = None,
     ):
         self.OPERATION = OPERATION  # type: int
         self.GROUND_STATIONS = GROUND_STATIONS  # type: Optional[List[ACWGroundStation.ACWGroundStationT]]
@@ -277,6 +467,12 @@ class ACWRequestT(object):
         self.TRACE_ID = TRACE_ID  # type: Optional[str]
         self.ELEVATION_MASK = ELEVATION_MASK  # type: Optional[List[ACWElevationMaskPoint.ACWElevationMaskPointT]]
         self.REFRACTION_MODEL = REFRACTION_MODEL  # type: Optional[ACWRefractionModel.ACWRefractionModelT]
+        self.CONSTRAINTS = CONSTRAINTS  # type: Optional[ACWConstraintSet.ACWConstraintSetT]
+        self.OBSERVERS = OBSERVERS  # type: Optional[List[ACWObserverTrajectory.ACWObserverTrajectoryT]]
+        self.EVALUATION_MODE = EVALUATION_MODE  # type: int
+        self.ROOT_TOLERANCE_S = ROOT_TOLERANCE_S  # type: float
+        self.SUN_STATES = SUN_STATES  # type: Optional[List[ACWStateSample.ACWStateSampleT]]
+        self.MOON_STATES = MOON_STATES  # type: Optional[List[ACWStateSample.ACWStateSampleT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -329,6 +525,34 @@ class ACWRequestT(object):
                     self.ELEVATION_MASK.append(aCWElevationMaskPoint_)
         if ACWRequest.REFRACTION_MODEL() is not None:
             self.REFRACTION_MODEL = ACWRefractionModel.ACWRefractionModelT.InitFromObj(ACWRequest.REFRACTION_MODEL())
+        if ACWRequest.CONSTRAINTS() is not None:
+            self.CONSTRAINTS = ACWConstraintSet.ACWConstraintSetT.InitFromObj(ACWRequest.CONSTRAINTS())
+        if not ACWRequest.OBSERVERSIsNone():
+            self.OBSERVERS = []
+            for i in range(ACWRequest.OBSERVERSLength()):
+                if ACWRequest.OBSERVERS(i) is None:
+                    self.OBSERVERS.append(None)
+                else:
+                    aCWObserverTrajectory_ = ACWObserverTrajectory.ACWObserverTrajectoryT.InitFromObj(ACWRequest.OBSERVERS(i))
+                    self.OBSERVERS.append(aCWObserverTrajectory_)
+        self.EVALUATION_MODE = ACWRequest.EVALUATION_MODE()
+        self.ROOT_TOLERANCE_S = ACWRequest.ROOT_TOLERANCE_S()
+        if not ACWRequest.SUN_STATESIsNone():
+            self.SUN_STATES = []
+            for i in range(ACWRequest.SUN_STATESLength()):
+                if ACWRequest.SUN_STATES(i) is None:
+                    self.SUN_STATES.append(None)
+                else:
+                    aCWStateSample_ = ACWStateSample.ACWStateSampleT.InitFromObj(ACWRequest.SUN_STATES(i))
+                    self.SUN_STATES.append(aCWStateSample_)
+        if not ACWRequest.MOON_STATESIsNone():
+            self.MOON_STATES = []
+            for i in range(ACWRequest.MOON_STATESLength()):
+                if ACWRequest.MOON_STATES(i) is None:
+                    self.MOON_STATES.append(None)
+                else:
+                    aCWStateSample_ = ACWStateSample.ACWStateSampleT.InitFromObj(ACWRequest.MOON_STATES(i))
+                    self.MOON_STATES.append(aCWStateSample_)
 
     # ACWRequestT
     def Pack(self, builder):
@@ -362,6 +586,32 @@ class ACWRequestT(object):
             ELEVATION_MASK = builder.EndVector()
         if self.REFRACTION_MODEL is not None:
             REFRACTION_MODEL = self.REFRACTION_MODEL.Pack(builder)
+        if self.CONSTRAINTS is not None:
+            CONSTRAINTS = self.CONSTRAINTS.Pack(builder)
+        if self.OBSERVERS is not None:
+            OBSERVERSlist = []
+            for i in range(len(self.OBSERVERS)):
+                OBSERVERSlist.append(self.OBSERVERS[i].Pack(builder))
+            ACWRequestStartOBSERVERSVector(builder, len(self.OBSERVERS))
+            for i in reversed(range(len(self.OBSERVERS))):
+                builder.PrependUOffsetTRelative(OBSERVERSlist[i])
+            OBSERVERS = builder.EndVector()
+        if self.SUN_STATES is not None:
+            SUN_STATESlist = []
+            for i in range(len(self.SUN_STATES)):
+                SUN_STATESlist.append(self.SUN_STATES[i].Pack(builder))
+            ACWRequestStartSUN_STATESVector(builder, len(self.SUN_STATES))
+            for i in reversed(range(len(self.SUN_STATES))):
+                builder.PrependUOffsetTRelative(SUN_STATESlist[i])
+            SUN_STATES = builder.EndVector()
+        if self.MOON_STATES is not None:
+            MOON_STATESlist = []
+            for i in range(len(self.MOON_STATES)):
+                MOON_STATESlist.append(self.MOON_STATES[i].Pack(builder))
+            ACWRequestStartMOON_STATESVector(builder, len(self.MOON_STATES))
+            for i in reversed(range(len(self.MOON_STATES))):
+                builder.PrependUOffsetTRelative(MOON_STATESlist[i])
+            MOON_STATES = builder.EndVector()
         ACWRequestStart(builder)
         ACWRequestAddOPERATION(builder, self.OPERATION)
         if self.GROUND_STATIONS is not None:
@@ -377,5 +627,15 @@ class ACWRequestT(object):
             ACWRequestAddELEVATION_MASK(builder, ELEVATION_MASK)
         if self.REFRACTION_MODEL is not None:
             ACWRequestAddREFRACTION_MODEL(builder, REFRACTION_MODEL)
+        if self.CONSTRAINTS is not None:
+            ACWRequestAddCONSTRAINTS(builder, CONSTRAINTS)
+        if self.OBSERVERS is not None:
+            ACWRequestAddOBSERVERS(builder, OBSERVERS)
+        ACWRequestAddEVALUATION_MODE(builder, self.EVALUATION_MODE)
+        ACWRequestAddROOT_TOLERANCE_S(builder, self.ROOT_TOLERANCE_S)
+        if self.SUN_STATES is not None:
+            ACWRequestAddSUN_STATES(builder, SUN_STATES)
+        if self.MOON_STATES is not None:
+            ACWRequestAddMOON_STATES(builder, MOON_STATES)
         ACWRequest = ACWRequestEnd(builder)
         return ACWRequest

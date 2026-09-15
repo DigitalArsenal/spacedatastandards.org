@@ -142,8 +142,164 @@ func (rcv *ACWAccessWindow) MutateSampleCount(n uint32) bool {
 	return rcv.MutateSAMPLE_COUNT(n)
 }
 
+/// Observer id when the observer is an ACWObserverTrajectory; empty for a
+/// ground station (then STATION_ID names it).
+func (rcv *ACWAccessWindow) OBSERVER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACWAccessWindow) ObserverId() []byte {
+	return rcv.OBSERVER_ID()
+}
+
+/// Observer id when the observer is an ACWObserverTrajectory; empty for a
+/// ground station (then STATION_ID names it).
+/// Index into the flattened, depth-first constraint list of the constraint
+/// whose transition opens the window; -1 when the window starts at the
+/// first sample.
+func (rcv *ACWAccessWindow) START_LIMITING_CONSTRAINT_INDEX() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return -1
+}
+
+func (rcv *ACWAccessWindow) StartLimitingConstraintIndex() int32 {
+	return rcv.START_LIMITING_CONSTRAINT_INDEX()
+}
+
+/// Index into the flattened, depth-first constraint list of the constraint
+/// whose transition opens the window; -1 when the window starts at the
+/// first sample.
+func (rcv *ACWAccessWindow) MutateSTART_LIMITING_CONSTRAINT_INDEX(n int32) bool {
+	return rcv._tab.MutateInt32Slot(16, n)
+}
+
+func (rcv *ACWAccessWindow) MutateStartLimitingConstraintIndex(n int32) bool {
+	return rcv.MutateSTART_LIMITING_CONSTRAINT_INDEX(n)
+}
+
+/// Index of the constraint whose transition closes the window; -1 when the
+/// window ends at the last sample.
+func (rcv *ACWAccessWindow) END_LIMITING_CONSTRAINT_INDEX() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return -1
+}
+
+func (rcv *ACWAccessWindow) EndLimitingConstraintIndex() int32 {
+	return rcv.END_LIMITING_CONSTRAINT_INDEX()
+}
+
+/// Index of the constraint whose transition closes the window; -1 when the
+/// window ends at the last sample.
+func (rcv *ACWAccessWindow) MutateEND_LIMITING_CONSTRAINT_INDEX(n int32) bool {
+	return rcv._tab.MutateInt32Slot(18, n)
+}
+
+func (rcv *ACWAccessWindow) MutateEndLimitingConstraintIndex(n int32) bool {
+	return rcv.MutateEND_LIMITING_CONSTRAINT_INDEX(n)
+}
+
+/// Labels of those constraints, when the producer set them.
+func (rcv *ACWAccessWindow) START_LIMITING_CONSTRAINT_LABEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACWAccessWindow) StartLimitingConstraintLabel() []byte {
+	return rcv.START_LIMITING_CONSTRAINT_LABEL()
+}
+
+/// Labels of those constraints, when the producer set them.
+func (rcv *ACWAccessWindow) END_LIMITING_CONSTRAINT_LABEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACWAccessWindow) EndLimitingConstraintLabel() []byte {
+	return rcv.END_LIMITING_CONSTRAINT_LABEL()
+}
+
+/// Range extrema over the window, meters.
+func (rcv *ACWAccessWindow) MIN_RANGE_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWAccessWindow) MinRangeM() float64 {
+	return rcv.MIN_RANGE_M()
+}
+
+/// Range extrema over the window, meters.
+func (rcv *ACWAccessWindow) MutateMIN_RANGE_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ACWAccessWindow) MutateMinRangeM(n float64) bool {
+	return rcv.MutateMIN_RANGE_M(n)
+}
+
+func (rcv *ACWAccessWindow) MAX_RANGE_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWAccessWindow) MaxRangeM() float64 {
+	return rcv.MAX_RANGE_M()
+}
+
+func (rcv *ACWAccessWindow) MutateMAX_RANGE_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ACWAccessWindow) MutateMaxRangeM(n float64) bool {
+	return rcv.MutateMAX_RANGE_M(n)
+}
+
+/// True when edges were root-refined (CONTINUOUS); false when they are samples.
+func (rcv *ACWAccessWindow) EDGES_REFINED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) EdgesRefined() bool {
+	return rcv.EDGES_REFINED()
+}
+
+/// True when edges were root-refined (CONTINUOUS); false when they are samples.
+func (rcv *ACWAccessWindow) MutateEDGES_REFINED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *ACWAccessWindow) MutateEdgesRefined(n bool) bool {
+	return rcv.MutateEDGES_REFINED(n)
+}
+
 func ACWAccessWindowStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(13)
 }
 func ACWAccessWindowAddSTATION_ID(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATION_ID), 0)
@@ -174,6 +330,54 @@ func ACWAccessWindowAddSAMPLE_COUNT(builder *flatbuffers.Builder, SAMPLE_COUNT u
 }
 func ACWAccessWindowAddSampleCount(builder *flatbuffers.Builder, SAMPLE_COUNT uint32) {
 	ACWAccessWindowAddSAMPLE_COUNT(builder, SAMPLE_COUNT)
+}
+func ACWAccessWindowAddOBSERVER_ID(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OBSERVER_ID), 0)
+}
+func ACWAccessWindowAddObserverId(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
+	ACWAccessWindowAddOBSERVER_ID(builder, OBSERVER_ID)
+}
+func ACWAccessWindowAddSTART_LIMITING_CONSTRAINT_INDEX(builder *flatbuffers.Builder, START_LIMITING_CONSTRAINT_INDEX int32) {
+	builder.PrependInt32Slot(6, START_LIMITING_CONSTRAINT_INDEX, -1)
+}
+func ACWAccessWindowAddStartLimitingConstraintIndex(builder *flatbuffers.Builder, START_LIMITING_CONSTRAINT_INDEX int32) {
+	ACWAccessWindowAddSTART_LIMITING_CONSTRAINT_INDEX(builder, START_LIMITING_CONSTRAINT_INDEX)
+}
+func ACWAccessWindowAddEND_LIMITING_CONSTRAINT_INDEX(builder *flatbuffers.Builder, END_LIMITING_CONSTRAINT_INDEX int32) {
+	builder.PrependInt32Slot(7, END_LIMITING_CONSTRAINT_INDEX, -1)
+}
+func ACWAccessWindowAddEndLimitingConstraintIndex(builder *flatbuffers.Builder, END_LIMITING_CONSTRAINT_INDEX int32) {
+	ACWAccessWindowAddEND_LIMITING_CONSTRAINT_INDEX(builder, END_LIMITING_CONSTRAINT_INDEX)
+}
+func ACWAccessWindowAddSTART_LIMITING_CONSTRAINT_LABEL(builder *flatbuffers.Builder, START_LIMITING_CONSTRAINT_LABEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(START_LIMITING_CONSTRAINT_LABEL), 0)
+}
+func ACWAccessWindowAddStartLimitingConstraintLabel(builder *flatbuffers.Builder, START_LIMITING_CONSTRAINT_LABEL flatbuffers.UOffsetT) {
+	ACWAccessWindowAddSTART_LIMITING_CONSTRAINT_LABEL(builder, START_LIMITING_CONSTRAINT_LABEL)
+}
+func ACWAccessWindowAddEND_LIMITING_CONSTRAINT_LABEL(builder *flatbuffers.Builder, END_LIMITING_CONSTRAINT_LABEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(END_LIMITING_CONSTRAINT_LABEL), 0)
+}
+func ACWAccessWindowAddEndLimitingConstraintLabel(builder *flatbuffers.Builder, END_LIMITING_CONSTRAINT_LABEL flatbuffers.UOffsetT) {
+	ACWAccessWindowAddEND_LIMITING_CONSTRAINT_LABEL(builder, END_LIMITING_CONSTRAINT_LABEL)
+}
+func ACWAccessWindowAddMIN_RANGE_M(builder *flatbuffers.Builder, MIN_RANGE_M float64) {
+	builder.PrependFloat64Slot(10, MIN_RANGE_M, 0.0)
+}
+func ACWAccessWindowAddMinRangeM(builder *flatbuffers.Builder, MIN_RANGE_M float64) {
+	ACWAccessWindowAddMIN_RANGE_M(builder, MIN_RANGE_M)
+}
+func ACWAccessWindowAddMAX_RANGE_M(builder *flatbuffers.Builder, MAX_RANGE_M float64) {
+	builder.PrependFloat64Slot(11, MAX_RANGE_M, 0.0)
+}
+func ACWAccessWindowAddMaxRangeM(builder *flatbuffers.Builder, MAX_RANGE_M float64) {
+	ACWAccessWindowAddMAX_RANGE_M(builder, MAX_RANGE_M)
+}
+func ACWAccessWindowAddEDGES_REFINED(builder *flatbuffers.Builder, EDGES_REFINED bool) {
+	builder.PrependBoolSlot(12, EDGES_REFINED, false)
+}
+func ACWAccessWindowAddEdgesRefined(builder *flatbuffers.Builder, EDGES_REFINED bool) {
+	ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED)
 }
 func ACWAccessWindowEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

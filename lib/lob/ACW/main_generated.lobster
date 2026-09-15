@@ -19,6 +19,55 @@ enum acwRefractionModelKind:
     /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
     acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE = 1
 
+/// Kind of access constraint. Append only.
+enum acwConstraintKind:
+    acwConstraintKind_UNSPECIFIED = 0
+    /// Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+    acwConstraintKind_MIN_ELEVATION = 1
+    /// Azimuth-dependent minimum elevation from MASK.
+    acwConstraintKind_ELEVATION_MASK = 2
+    /// Observer-to-target range at or below MAX_RANGE_M.
+    acwConstraintKind_MAX_RANGE = 3
+    /// Observer-to-target range at or above MIN_RANGE_M.
+    acwConstraintKind_MIN_RANGE = 4
+    /// Angle between the observer-to-target and observer-to-Sun directions at
+    /// or above THRESHOLD_RAD (solar exclusion).
+    acwConstraintKind_SUN_EXCLUSION = 5
+    /// Angle between the observer-to-target and observer-to-Moon directions at
+    /// or above THRESHOLD_RAD (lunar exclusion).
+    acwConstraintKind_MOON_EXCLUSION = 6
+    /// Target illumination state matches LIGHTING.
+    acwConstraintKind_TARGET_LIGHTING = 7
+    /// Straight-line visibility between observer and target not occulted by the
+    /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+    acwConstraintKind_LINE_OF_SIGHT = 8
+    /// Outside every observer blackout window.
+    acwConstraintKind_BLACKOUT = 9
+
+/// How the members of a constraint set combine.
+enum acwConstraintOperator:
+    /// Every member must hold (AND).
+    acwConstraintOperator_ALL_OF = 0
+    /// At least one member must hold (OR).
+    acwConstraintOperator_ANY_OF = 1
+
+/// Whether windows are evaluated only at the supplied samples or refined to
+/// the epochs where the aggregate condition changes.
+enum acwEvaluationMode:
+    /// Evaluate at the supplied sample epochs only; window edges are samples.
+    acwEvaluationMode_DISCRETE = 0
+    /// Bracket between samples and refine each edge to ROOT_TOLERANCE_S.
+    acwEvaluationMode_CONTINUOUS = 1
+
+/// Illumination state of the target required by a TARGET_LIGHTING constraint.
+enum acwLightingCondition:
+    acwLightingCondition_ANY = 0
+    acwLightingCondition_SUNLIT = 1
+    acwLightingCondition_PENUMBRA = 2
+    acwLightingCondition_UMBRA = 3
+    /// Sunlit or penumbra.
+    acwLightingCondition_NOT_UMBRA = 4
+
 class ACWStateSample
 
 class ACWElevationMaskPoint
@@ -28,6 +77,12 @@ class ACWRefractionModel
 class ACWBlackoutWindow
 
 class ACWGroundStation
+
+class ACWConstraint
+
+class ACWConstraintSet
+
+class ACWObserverTrajectory
 
 class ACWRequest
 
@@ -222,6 +277,180 @@ def ACWGroundStationCreateBLACKOUTWINDOWSVector(b_:flatbuffers.builder, v_:[flat
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// One access constraint. Fields not used by KIND are ignored.
+class ACWConstraint : flatbuffers.handle
+    def KIND() -> acwConstraintKind:
+        return acwConstraintKind(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
+    def THRESHOLD_RAD() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Range bounds, meters (MIN_RANGE, MAX_RANGE).
+    def MIN_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def MAX_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Required target lighting (TARGET_LIGHTING).
+    def LIGHTING() -> acwLightingCondition:
+        return acwLightingCondition(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Central-body radius offset for line-of-sight occultation, meters
+    /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+    def OCCULTATION_ATMOSPHERE_HEIGHT_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Azimuth-dependent mask (ELEVATION_MASK).
+    def MASK(i:int) -> ACWElevationMaskPoint:
+        return ACWElevationMaskPoint { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
+    def MASK_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// Producer label echoed in window attribution.
+    def LABEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+
+def GetRootAsACWConstraint(buf:string): return ACWConstraint { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACWConstraintBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_KIND(KIND:acwConstraintKind):
+        b_.PrependInt8Slot(0, KIND, 0)
+        return this
+    def add_THRESHOLD_RAD(THRESHOLD_RAD:float):
+        b_.PrependFloat64Slot(1, THRESHOLD_RAD, 0.0)
+        return this
+    def add_MIN_RANGE_M(MIN_RANGE_M:float):
+        b_.PrependFloat64Slot(2, MIN_RANGE_M, 0.0)
+        return this
+    def add_MAX_RANGE_M(MAX_RANGE_M:float):
+        b_.PrependFloat64Slot(3, MAX_RANGE_M, 0.0)
+        return this
+    def add_LIGHTING(LIGHTING:acwLightingCondition):
+        b_.PrependInt8Slot(4, LIGHTING, 0)
+        return this
+    def add_OCCULTATION_ATMOSPHERE_HEIGHT_M(OCCULTATION_ATMOSPHERE_HEIGHT_M:float):
+        b_.PrependFloat64Slot(5, OCCULTATION_ATMOSPHERE_HEIGHT_M, 0.0)
+        return this
+    def add_MASK(MASK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MASK)
+        return this
+    def add_LABEL(LABEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, LABEL)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACWConstraintStartMASKVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWConstraintCreateMASKVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// A boolean composition of constraints and nested sets.
+class ACWConstraintSet : flatbuffers.handle
+    def OPERATOR() -> acwConstraintOperator:
+        return acwConstraintOperator(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    def CONSTRAINTS(i:int) -> ACWConstraint:
+        return ACWConstraint { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
+    def CONSTRAINTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Nested sets, combined with the same OPERATOR.
+    def SETS(i:int) -> ACWConstraintSet:
+        return ACWConstraintSet { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def SETS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    def LABEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsACWConstraintSet(buf:string): return ACWConstraintSet { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACWConstraintSetBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_OPERATOR(OPERATOR:acwConstraintOperator):
+        b_.PrependInt8Slot(0, OPERATOR, 0)
+        return this
+    def add_CONSTRAINTS(CONSTRAINTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, CONSTRAINTS)
+        return this
+    def add_SETS(SETS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SETS)
+        return this
+    def add_LABEL(LABEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, LABEL)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACWConstraintSetStartCONSTRAINTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWConstraintSetCreateCONSTRAINTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWConstraintSetStartSETSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWConstraintSetCreateSETSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// the same frame and time scale as ACWRequest.STATES.
+class ACWObserverTrajectory : flatbuffers.handle
+    def OBSERVER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def STATES(i:int) -> ACWStateSample:
+        return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Observer-specific unavailable intervals.
+    def BLACKOUT_WINDOWS(i:int) -> ACWBlackoutWindow:
+        return ACWBlackoutWindow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
+    def BLACKOUT_WINDOWS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+
+def GetRootAsACWObserverTrajectory(buf:string): return ACWObserverTrajectory { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACWObserverTrajectoryBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_OBSERVER_ID(OBSERVER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, OBSERVER_ID)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, NAME)
+        return this
+    def add_STATES(STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, STATES)
+        return this
+    def add_BLACKOUT_WINDOWS(BLACKOUT_WINDOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, BLACKOUT_WINDOWS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACWObserverTrajectoryStartSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWObserverTrajectoryCreateSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWObserverTrajectoryStartBLACKOUTWINDOWSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWObserverTrajectoryCreateBLACKOUTWINDOWSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// One access-window compute request.
 class ACWRequest : flatbuffers.handle
     def OPERATION() -> acwOperationCode:
@@ -254,13 +483,42 @@ class ACWRequest : flatbuffers.handle
     def REFRACTION_MODEL() -> ACWRefractionModel?:
         let o = flatbuffers.field_table(buf_, pos_, 18)
         return if o: ACWRefractionModel { buf_, o } else: nil
+    /// Optional constraint composition. When absent the legacy behaviour holds:
+    /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+    /// ELEVATION_MASK, all required.
+    def CONSTRAINTS() -> ACWConstraintSet?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: ACWConstraintSet { buf_, o } else: nil
+    /// Optional moving observers (satellite-to-satellite access). Each observer
+    /// is evaluated against STATES like a ground station.
+    def OBSERVERS(i:int) -> ACWObserverTrajectory:
+        return ACWObserverTrajectory { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+    def OBSERVERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Sample-only or root-refined window edges.
+    def EVALUATION_MODE() -> acwEvaluationMode:
+        return acwEvaluationMode(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    /// Edge refinement tolerance for CONTINUOUS, seconds.
+    def ROOT_TOLERANCE_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.1)
+    /// Sun states in the STATES frame and time scale, required by
+    /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+    def SUN_STATES(i:int) -> ACWStateSample:
+        return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
+    def SUN_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+    def MOON_STATES(i:int) -> ACWStateSample:
+        return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+    def MOON_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
 
 def GetRootAsACWRequest(buf:string): return ACWRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(14)
         return this
     def add_OPERATION(OPERATION:acwOperationCode):
         b_.PrependInt8Slot(0, OPERATION, 0)
@@ -286,6 +544,24 @@ struct ACWRequestBuilder:
     def add_REFRACTION_MODEL(REFRACTION_MODEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, REFRACTION_MODEL)
         return this
+    def add_CONSTRAINTS(CONSTRAINTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, CONSTRAINTS)
+        return this
+    def add_OBSERVERS(OBSERVERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, OBSERVERS)
+        return this
+    def add_EVALUATION_MODE(EVALUATION_MODE:acwEvaluationMode):
+        b_.PrependInt8Slot(10, EVALUATION_MODE, 0)
+        return this
+    def add_ROOT_TOLERANCE_S(ROOT_TOLERANCE_S:float):
+        b_.PrependFloat64Slot(11, ROOT_TOLERANCE_S, 0.1)
+        return this
+    def add_SUN_STATES(SUN_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, SUN_STATES)
+        return this
+    def add_MOON_STATES(MOON_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, MOON_STATES)
+        return this
     def end():
         return b_.EndObject()
 
@@ -310,6 +586,27 @@ def ACWRequestCreateELEVATIONMASKVector(b_:flatbuffers.builder, v_:[flatbuffers.
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+def ACWRequestStartOBSERVERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWRequestCreateOBSERVERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWRequestStartSUNSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWRequestCreateSUNSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWRequestStartMOONSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWRequestCreateMOONSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// One computed access interval.
 class ACWAccessWindow : flatbuffers.handle
     def STATION_ID() -> string:
@@ -326,13 +623,39 @@ class ACWAccessWindow : flatbuffers.handle
     /// Number of visible input samples contributing to the window.
     def SAMPLE_COUNT() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    /// Observer id when the observer is an ACWObserverTrajectory; empty for a
+    /// ground station (then STATION_ID names it).
+    def OBSERVER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Index into the flattened, depth-first constraint list of the constraint
+    /// whose transition opens the window; -1 when the window starts at the
+    /// first sample.
+    def START_LIMITING_CONSTRAINT_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 16, -1)
+    /// Index of the constraint whose transition closes the window; -1 when the
+    /// window ends at the last sample.
+    def END_LIMITING_CONSTRAINT_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 18, -1)
+    /// Labels of those constraints, when the producer set them.
+    def START_LIMITING_CONSTRAINT_LABEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    def END_LIMITING_CONSTRAINT_LABEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Range extrema over the window, meters.
+    def MIN_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    def MAX_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// True when edges were root-refined (CONTINUOUS); false when they are samples.
+    def EDGES_REFINED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
 
 def GetRootAsACWAccessWindow(buf:string): return ACWAccessWindow { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWAccessWindowBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(5)
+        b_.StartObject(13)
         return this
     def add_STATION_ID(STATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, STATION_ID)
@@ -348,6 +671,30 @@ struct ACWAccessWindowBuilder:
         return this
     def add_SAMPLE_COUNT(SAMPLE_COUNT:int):
         b_.PrependUint32Slot(4, SAMPLE_COUNT, 0)
+        return this
+    def add_OBSERVER_ID(OBSERVER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, OBSERVER_ID)
+        return this
+    def add_START_LIMITING_CONSTRAINT_INDEX(START_LIMITING_CONSTRAINT_INDEX:int):
+        b_.PrependInt32Slot(6, START_LIMITING_CONSTRAINT_INDEX, -1)
+        return this
+    def add_END_LIMITING_CONSTRAINT_INDEX(END_LIMITING_CONSTRAINT_INDEX:int):
+        b_.PrependInt32Slot(7, END_LIMITING_CONSTRAINT_INDEX, -1)
+        return this
+    def add_START_LIMITING_CONSTRAINT_LABEL(START_LIMITING_CONSTRAINT_LABEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, START_LIMITING_CONSTRAINT_LABEL)
+        return this
+    def add_END_LIMITING_CONSTRAINT_LABEL(END_LIMITING_CONSTRAINT_LABEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, END_LIMITING_CONSTRAINT_LABEL)
+        return this
+    def add_MIN_RANGE_M(MIN_RANGE_M:float):
+        b_.PrependFloat64Slot(10, MIN_RANGE_M, 0.0)
+        return this
+    def add_MAX_RANGE_M(MAX_RANGE_M:float):
+        b_.PrependFloat64Slot(11, MAX_RANGE_M, 0.0)
+        return this
+    def add_EDGES_REFINED(EDGES_REFINED:bool):
+        b_.PrependBoolSlot(12, EDGES_REFINED, 0)
         return this
     def end():
         return b_.EndObject()
@@ -365,13 +712,21 @@ class ACWResult : flatbuffers.handle
     /// Caller trace/correlation identifier copied from the request when present.
     def TRACE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
+    /// Evaluation mode actually used.
+    def EVALUATION_MODE() -> acwEvaluationMode:
+        return acwEvaluationMode(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Flattened depth-first constraint list the window indices refer to.
+    def CONSTRAINT_LABELS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
+    def CONSTRAINT_LABELS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
 
 def GetRootAsACWResult(buf:string): return ACWResult { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWResultBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(6)
         return this
     def add_STATUS(STATUS:acwResultStatus):
         b_.PrependInt8Slot(0, STATUS, 0)
@@ -385,12 +740,25 @@ struct ACWResultBuilder:
     def add_TRACE_ID(TRACE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, TRACE_ID)
         return this
+    def add_EVALUATION_MODE(EVALUATION_MODE:acwEvaluationMode):
+        b_.PrependInt8Slot(4, EVALUATION_MODE, 0)
+        return this
+    def add_CONSTRAINT_LABELS(CONSTRAINT_LABELS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, CONSTRAINT_LABELS)
+        return this
     def end():
         return b_.EndObject()
 
 def ACWResultStartWINDOWSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def ACWResultCreateWINDOWSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWResultStartCONSTRAINTLABELSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWResultCreateCONSTRAINTLABELSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

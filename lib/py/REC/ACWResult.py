@@ -76,8 +76,37 @@ class ACWResult(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Evaluation mode actually used.
+    # ACWResult
+    def EVALUATION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Flattened depth-first constraint list the window indices refer to.
+    # ACWResult
+    def CONSTRAINT_LABELS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # ACWResult
+    def CONSTRAINT_LABELSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACWResult
+    def CONSTRAINT_LABELSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
 def ACWResultStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(6)
 
 def Start(builder):
     ACWResultStart(builder)
@@ -118,6 +147,30 @@ def ACWResultAddTRACE_ID(builder, TRACE_ID):
 def AddTRACE_ID(builder, TRACE_ID):
     ACWResultAddTRACE_ID(builder, TRACE_ID)
 
+def ACWResultAddEVALUATION_MODE(builder, EVALUATION_MODE):
+    builder.PrependInt8Slot(4, EVALUATION_MODE, 0)
+
+def AddEVALUATION_MODE(builder, EVALUATION_MODE):
+    ACWResultAddEVALUATION_MODE(builder, EVALUATION_MODE)
+
+def ACWResultAddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELS):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINT_LABELS), 0)
+
+def AddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELS):
+    ACWResultAddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELS)
+
+def ACWResultStartCONSTRAINT_LABELSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCONSTRAINT_LABELSVector(builder, numElems):
+    return ACWResultStartCONSTRAINT_LABELSVector(builder, numElems)
+
+def ACWResultCreateCONSTRAINT_LABELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONSTRAINT_LABELSVector(builder, data):
+    ACWResultCreateCONSTRAINT_LABELSVector(builder, data)
+
 def ACWResultEnd(builder):
     return builder.EndObject()
 
@@ -139,11 +192,15 @@ class ACWResultT(object):
         ERROR_MESSAGE = None,
         WINDOWS = None,
         TRACE_ID = None,
+        EVALUATION_MODE = 0,
+        CONSTRAINT_LABELS = None,
     ):
         self.STATUS = STATUS  # type: int
         self.ERROR_MESSAGE = ERROR_MESSAGE  # type: Optional[str]
         self.WINDOWS = WINDOWS  # type: Optional[List[ACWAccessWindow.ACWAccessWindowT]]
         self.TRACE_ID = TRACE_ID  # type: Optional[str]
+        self.EVALUATION_MODE = EVALUATION_MODE  # type: int
+        self.CONSTRAINT_LABELS = CONSTRAINT_LABELS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -177,6 +234,11 @@ class ACWResultT(object):
                     aCWAccessWindow_ = ACWAccessWindow.ACWAccessWindowT.InitFromObj(ACWResult.WINDOWS(i))
                     self.WINDOWS.append(aCWAccessWindow_)
         self.TRACE_ID = ACWResult.TRACE_ID()
+        self.EVALUATION_MODE = ACWResult.EVALUATION_MODE()
+        if not ACWResult.CONSTRAINT_LABELSIsNone():
+            self.CONSTRAINT_LABELS = []
+            for i in range(ACWResult.CONSTRAINT_LABELSLength()):
+                self.CONSTRAINT_LABELS.append(ACWResult.CONSTRAINT_LABELS(i))
 
     # ACWResultT
     def Pack(self, builder):
@@ -192,6 +254,14 @@ class ACWResultT(object):
             WINDOWS = builder.EndVector()
         if self.TRACE_ID is not None:
             TRACE_ID = builder.CreateString(self.TRACE_ID)
+        if self.CONSTRAINT_LABELS is not None:
+            CONSTRAINT_LABELSlist = []
+            for i in range(len(self.CONSTRAINT_LABELS)):
+                CONSTRAINT_LABELSlist.append(builder.CreateString(self.CONSTRAINT_LABELS[i]))
+            ACWResultStartCONSTRAINT_LABELSVector(builder, len(self.CONSTRAINT_LABELS))
+            for i in reversed(range(len(self.CONSTRAINT_LABELS))):
+                builder.PrependUOffsetTRelative(CONSTRAINT_LABELSlist[i])
+            CONSTRAINT_LABELS = builder.EndVector()
         ACWResultStart(builder)
         ACWResultAddSTATUS(builder, self.STATUS)
         if self.ERROR_MESSAGE is not None:
@@ -200,5 +270,8 @@ class ACWResultT(object):
             ACWResultAddWINDOWS(builder, WINDOWS)
         if self.TRACE_ID is not None:
             ACWResultAddTRACE_ID(builder, TRACE_ID)
+        ACWResultAddEVALUATION_MODE(builder, self.EVALUATION_MODE)
+        if self.CONSTRAINT_LABELS is not None:
+            ACWResultAddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELS)
         ACWResult = ACWResultEnd(builder)
         return ACWResult

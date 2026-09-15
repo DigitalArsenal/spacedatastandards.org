@@ -87,27 +87,108 @@ class ACWAccessWindow extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Observer id when the observer is an ACWObserverTrajectory; empty for a
+    /// ground station (then STATION_ID names it).
+    public function getOBSERVER_ID()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Index into the flattened, depth-first constraint list of the constraint
+    /// whose transition opens the window; -1 when the window starts at the
+    /// first sample.
+    /**
+     * @return int
+     */
+    public function getSTART_LIMITING_CONSTRAINT_INDEX()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
+    }
+
+    /// Index of the constraint whose transition closes the window; -1 when the
+    /// window ends at the last sample.
+    /**
+     * @return int
+     */
+    public function getEND_LIMITING_CONSTRAINT_INDEX()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
+    }
+
+    /// Labels of those constraints, when the producer set them.
+    public function getSTART_LIMITING_CONSTRAINT_LABEL()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getEND_LIMITING_CONSTRAINT_LABEL()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Range extrema over the window, meters.
+    /**
+     * @return double
+     */
+    public function getMIN_RANGE_M()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getMAX_RANGE_M()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when edges were root-refined (CONTINUOUS); false when they are samples.
+    /**
+     * @return bool
+     */
+    public function getEDGES_REFINED()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWAccessWindow(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWAccessWindow
      */
-    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT)
+    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT, $OBSERVER_ID, $START_LIMITING_CONSTRAINT_INDEX, $END_LIMITING_CONSTRAINT_INDEX, $START_LIMITING_CONSTRAINT_LABEL, $END_LIMITING_CONSTRAINT_LABEL, $MIN_RANGE_M, $MAX_RANGE_M, $EDGES_REFINED)
     {
-        $builder->startObject(5);
+        $builder->startObject(13);
         self::addSTATION_ID($builder, $STATION_ID);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
         self::addMAX_ELEVATION_RAD($builder, $MAX_ELEVATION_RAD);
         self::addSAMPLE_COUNT($builder, $SAMPLE_COUNT);
+        self::addOBSERVER_ID($builder, $OBSERVER_ID);
+        self::addSTART_LIMITING_CONSTRAINT_INDEX($builder, $START_LIMITING_CONSTRAINT_INDEX);
+        self::addEND_LIMITING_CONSTRAINT_INDEX($builder, $END_LIMITING_CONSTRAINT_INDEX);
+        self::addSTART_LIMITING_CONSTRAINT_LABEL($builder, $START_LIMITING_CONSTRAINT_LABEL);
+        self::addEND_LIMITING_CONSTRAINT_LABEL($builder, $END_LIMITING_CONSTRAINT_LABEL);
+        self::addMIN_RANGE_M($builder, $MIN_RANGE_M);
+        self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
+        self::addEDGES_REFINED($builder, $EDGES_REFINED);
         $o = $builder->endObject();
         return $o;
     }
@@ -160,6 +241,86 @@ class ACWAccessWindow extends Table
     public static function addSAMPLE_COUNT(FlatBufferBuilder $builder, $SAMPLE_COUNT)
     {
         $builder->addUintX(4, $SAMPLE_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBSERVER_ID(FlatBufferBuilder $builder, $OBSERVER_ID)
+    {
+        $builder->addOffsetX(5, $OBSERVER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addSTART_LIMITING_CONSTRAINT_INDEX(FlatBufferBuilder $builder, $START_LIMITING_CONSTRAINT_INDEX)
+    {
+        $builder->addIntX(6, $START_LIMITING_CONSTRAINT_INDEX, -1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addEND_LIMITING_CONSTRAINT_INDEX(FlatBufferBuilder $builder, $END_LIMITING_CONSTRAINT_INDEX)
+    {
+        $builder->addIntX(7, $END_LIMITING_CONSTRAINT_INDEX, -1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_LIMITING_CONSTRAINT_LABEL(FlatBufferBuilder $builder, $START_LIMITING_CONSTRAINT_LABEL)
+    {
+        $builder->addOffsetX(8, $START_LIMITING_CONSTRAINT_LABEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEND_LIMITING_CONSTRAINT_LABEL(FlatBufferBuilder $builder, $END_LIMITING_CONSTRAINT_LABEL)
+    {
+        $builder->addOffsetX(9, $END_LIMITING_CONSTRAINT_LABEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMIN_RANGE_M(FlatBufferBuilder $builder, $MIN_RANGE_M)
+    {
+        $builder->addDoubleX(10, $MIN_RANGE_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_RANGE_M(FlatBufferBuilder $builder, $MAX_RANGE_M)
+    {
+        $builder->addDoubleX(11, $MAX_RANGE_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addEDGES_REFINED(FlatBufferBuilder $builder, $EDGES_REFINED)
+    {
+        $builder->addBoolX(12, $EDGES_REFINED, false);
     }
 
     /**

@@ -73,6 +73,47 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
    */
   public ACWRefractionModel REFRACTION_MODEL() { return REFRACTION_MODEL(new ACWRefractionModel()); }
   public ACWRefractionModel REFRACTION_MODEL(ACWRefractionModel obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Optional constraint composition. When absent the legacy behaviour holds:
+   * every ground station's MIN_ELEVATION_RAD (or the override) plus
+   * ELEVATION_MASK, all required.
+   */
+  public ACWConstraintSet CONSTRAINTS() { return CONSTRAINTS(new ACWConstraintSet()); }
+  public ACWConstraintSet CONSTRAINTS(ACWConstraintSet obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Optional moving observers (satellite-to-satellite access). Each observer
+   * is evaluated against STATES like a ground station.
+   */
+  public ACWObserverTrajectory OBSERVERS(int j) { return OBSERVERS(new ACWObserverTrajectory(), j); }
+  public ACWObserverTrajectory OBSERVERS(ACWObserverTrajectory obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int OBSERVERSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public ACWObserverTrajectory.Vector observersVector() { return observersVector(new ACWObserverTrajectory.Vector()); }
+  public ACWObserverTrajectory.Vector observersVector(ACWObserverTrajectory.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Sample-only or root-refined window edges.
+   */
+  public byte EVALUATION_MODE() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Edge refinement tolerance for CONTINUOUS, seconds.
+   */
+  public double ROOT_TOLERANCE_S() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.1; }
+  /**
+   * Sun states in the STATES frame and time scale, required by
+   * SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+   */
+  public ACWStateSample SUN_STATES(int j) { return SUN_STATES(new ACWStateSample(), j); }
+  public ACWStateSample SUN_STATES(ACWStateSample obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SUN_STATESLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public ACWStateSample.Vector sunStatesVector() { return sunStatesVector(new ACWStateSample.Vector()); }
+  public ACWStateSample.Vector sunStatesVector(ACWStateSample.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+   */
+  public ACWStateSample MOON_STATES(int j) { return MOON_STATES(new ACWStateSample(), j); }
+  public ACWStateSample MOON_STATES(ACWStateSample obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MOON_STATESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public ACWStateSample.Vector moonStatesVector() { return moonStatesVector(new ACWStateSample.Vector()); }
+  public ACWStateSample.Vector moonStatesVector(ACWStateSample.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createACWRequest(FlatBufferBuilder builder,
       byte OPERATION,
@@ -82,20 +123,32 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
       double MIN_ELEVATION_OVERRIDE_RAD,
       int TRACE_IDOffset,
       int ELEVATION_MASKOffset,
-      int REFRACTION_MODELOffset) {
-    builder.startTable(8);
+      int REFRACTION_MODELOffset,
+      int CONSTRAINTSOffset,
+      int OBSERVERSOffset,
+      byte EVALUATION_MODE,
+      double ROOT_TOLERANCE_S,
+      int SUN_STATESOffset,
+      int MOON_STATESOffset) {
+    builder.startTable(14);
+    ACWRequest.addRootToleranceS(builder, ROOT_TOLERANCE_S);
     ACWRequest.addMinElevationOverrideRad(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.addMoonStates(builder, MOON_STATESOffset);
+    ACWRequest.addSunStates(builder, SUN_STATESOffset);
+    ACWRequest.addObservers(builder, OBSERVERSOffset);
+    ACWRequest.addConstraints(builder, CONSTRAINTSOffset);
     ACWRequest.addRefractionModel(builder, REFRACTION_MODELOffset);
     ACWRequest.addElevationMask(builder, ELEVATION_MASKOffset);
     ACWRequest.addTraceId(builder, TRACE_IDOffset);
     ACWRequest.addTargetStationId(builder, TARGET_STATION_IDOffset);
     ACWRequest.addStates(builder, STATESOffset);
     ACWRequest.addGroundStations(builder, GROUND_STATIONSOffset);
+    ACWRequest.addEvaluationMode(builder, EVALUATION_MODE);
     ACWRequest.addOperation(builder, OPERATION);
     return ACWRequest.endACWRequest(builder);
   }
 
-  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addOperation(FlatBufferBuilder builder, byte OPERATION) { builder.addByte(0, OPERATION, 0); }
   public static void addGroundStations(FlatBufferBuilder builder, int GROUND_STATIONSOffset) { builder.addOffset(1, GROUND_STATIONSOffset, 0); }
   public static int createGroundStationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -110,6 +163,18 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public static int createElevationMaskVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startElevationMaskVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addRefractionModel(FlatBufferBuilder builder, int REFRACTION_MODELOffset) { builder.addOffset(7, REFRACTION_MODELOffset, 0); }
+  public static void addConstraints(FlatBufferBuilder builder, int CONSTRAINTSOffset) { builder.addOffset(8, CONSTRAINTSOffset, 0); }
+  public static void addObservers(FlatBufferBuilder builder, int OBSERVERSOffset) { builder.addOffset(9, OBSERVERSOffset, 0); }
+  public static int createObserversVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startObserversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEvaluationMode(FlatBufferBuilder builder, byte EVALUATION_MODE) { builder.addByte(10, EVALUATION_MODE, 0); }
+  public static void addRootToleranceS(FlatBufferBuilder builder, double ROOT_TOLERANCE_S) { builder.addDouble(11, ROOT_TOLERANCE_S, 0.1); }
+  public static void addSunStates(FlatBufferBuilder builder, int SUN_STATESOffset) { builder.addOffset(12, SUN_STATESOffset, 0); }
+  public static int createSunStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSunStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMoonStates(FlatBufferBuilder builder, int MOON_STATESOffset) { builder.addOffset(13, MOON_STATESOffset, 0); }
+  public static int createMoonStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startMoonStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endACWRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

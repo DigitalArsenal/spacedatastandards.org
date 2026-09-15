@@ -582,11 +582,39 @@ enum rfmAxisType : uint8_t {
   /// LEGACY, retained and NAMED: true equator of date computed with the
   /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
   rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5 = 24,
+  /// True equator of date computed with the IERS Conventions (1996)
+  /// reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
+  /// nutation with the observed celestial pole offsets applied. Distinct from
+  /// TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
+  /// (IAU-2006/2000A).
+  rfmAxisType_TRUE_OF_DATE_EQUATOR_IERS1996 = 25,
+  /// True equator of date computed with the IERS Conventions (2003)
+  /// reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
+  /// precession with the IAU 2000 precession-rate corrections. The mean-of-date
+  /// equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
+  rfmAxisType_TRUE_OF_DATE_EQUATOR_IERS2003 = 26,
+  /// Topocentric East-North-Up axes at a surface site; the site is carried on
+  /// RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
+  rfmAxisType_TOPOCENTRIC_EAST_NORTH_UP = 27,
+  /// Topocentric North-East-Down axes at a surface site.
+  rfmAxisType_TOPOCENTRIC_NORTH_EAST_DOWN = 28,
+  /// Topocentric South-East-Zenith axes at a surface site.
+  rfmAxisType_TOPOCENTRIC_SOUTH_EAST_ZENITH = 29,
+  /// Orbital axes from the object's state: X along the velocity, Z along the
+  /// orbit normal, Y completing the right-handed set (VNC). The object is the
+  /// origin body of the coordinate system.
+  rfmAxisType_ORBITAL_VELOCITY_NORMAL_CONORMAL = 30,
+  /// Orbital axes from the object's state: X radial (outward), Z along the
+  /// orbit normal, Y transverse completing the set (RTN, also RSW).
+  rfmAxisType_ORBITAL_RADIAL_TRANSVERSE_NORMAL = 31,
+  /// Orbital axes from the object's state: Z toward the central body (nadir),
+  /// Y opposite the orbit normal, X completing the set (LVLH).
+  rfmAxisType_ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32,
   rfmAxisType_MIN = rfmAxisType_UNSPECIFIED,
-  rfmAxisType_MAX = rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5
+  rfmAxisType_MAX = rfmAxisType_ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL
 };
 
-inline const rfmAxisType (&EnumValuesrfmAxisType())[25] {
+inline const rfmAxisType (&EnumValuesrfmAxisType())[33] {
   static const rfmAxisType values[] = {
     rfmAxisType_UNSPECIFIED,
     rfmAxisType_MEAN_EQUATOR_EQUINOX_J2000,
@@ -612,13 +640,21 @@ inline const rfmAxisType (&EnumValuesrfmAxisType())[25] {
     rfmAxisType_BODY_SPIN_SUN,
     rfmAxisType_EPHEMERIS_KERNEL_DEFINED,
     rfmAxisType_MEAN_OF_DATE_EQUATOR_FK5,
-    rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5
+    rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5,
+    rfmAxisType_TRUE_OF_DATE_EQUATOR_IERS1996,
+    rfmAxisType_TRUE_OF_DATE_EQUATOR_IERS2003,
+    rfmAxisType_TOPOCENTRIC_EAST_NORTH_UP,
+    rfmAxisType_TOPOCENTRIC_NORTH_EAST_DOWN,
+    rfmAxisType_TOPOCENTRIC_SOUTH_EAST_ZENITH,
+    rfmAxisType_ORBITAL_VELOCITY_NORMAL_CONORMAL,
+    rfmAxisType_ORBITAL_RADIAL_TRANSVERSE_NORMAL,
+    rfmAxisType_ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL
   };
   return values;
 }
 
 inline const char * const *EnumNamesrfmAxisType() {
-  static const char * const names[26] = {
+  static const char * const names[34] = {
     "UNSPECIFIED",
     "MEAN_EQUATOR_EQUINOX_J2000",
     "MEAN_ECLIPTIC_EQUINOX_J2000",
@@ -644,13 +680,21 @@ inline const char * const *EnumNamesrfmAxisType() {
     "EPHEMERIS_KERNEL_DEFINED",
     "MEAN_OF_DATE_EQUATOR_FK5",
     "TRUE_OF_DATE_EQUATOR_FK5",
+    "TRUE_OF_DATE_EQUATOR_IERS1996",
+    "TRUE_OF_DATE_EQUATOR_IERS2003",
+    "TOPOCENTRIC_EAST_NORTH_UP",
+    "TOPOCENTRIC_NORTH_EAST_DOWN",
+    "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+    "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+    "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+    "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamerfmAxisType(rfmAxisType e) {
-  if (::flatbuffers::IsOutRange(e, rfmAxisType_UNSPECIFIED, rfmAxisType_TRUE_OF_DATE_EQUATOR_FK5)) return "";
+  if (::flatbuffers::IsOutRange(e, rfmAxisType_UNSPECIFIED, rfmAxisType_ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesrfmAxisType()[index];
 }

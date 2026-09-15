@@ -66,8 +66,76 @@ SAMPLE_COUNT():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Observer id when the observer is an ACWObserverTrajectory; empty for a
+ * ground station (then STATION_ID names it).
+ */
+OBSERVER_ID():string|null
+OBSERVER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBSERVER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Index into the flattened, depth-first constraint list of the constraint
+ * whose transition opens the window; -1 when the window starts at the
+ * first sample.
+ */
+START_LIMITING_CONSTRAINT_INDEX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
+}
+
+/**
+ * Index of the constraint whose transition closes the window; -1 when the
+ * window ends at the last sample.
+ */
+END_LIMITING_CONSTRAINT_INDEX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
+}
+
+/**
+ * Labels of those constraints, when the producer set them.
+ */
+START_LIMITING_CONSTRAINT_LABEL():string|null
+START_LIMITING_CONSTRAINT_LABEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+START_LIMITING_CONSTRAINT_LABEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+END_LIMITING_CONSTRAINT_LABEL():string|null
+END_LIMITING_CONSTRAINT_LABEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_LIMITING_CONSTRAINT_LABEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Range extrema over the window, meters.
+ */
+MIN_RANGE_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+MAX_RANGE_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when edges were root-refined (CONTINUOUS); false when they are samples.
+ */
+EDGES_REFINED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWAccessWindow(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(13);
 }
 
 static addStationId(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset) {
@@ -90,18 +158,58 @@ static addSampleCount(builder:flatbuffers.Builder, SAMPLE_COUNT:number) {
   builder.addFieldInt32(4, SAMPLE_COUNT, 0);
 }
 
+static addObserverId(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, OBSERVER_IDOffset, 0);
+}
+
+static addStartLimitingConstraintIndex(builder:flatbuffers.Builder, START_LIMITING_CONSTRAINT_INDEX:number) {
+  builder.addFieldInt32(6, START_LIMITING_CONSTRAINT_INDEX, -1);
+}
+
+static addEndLimitingConstraintIndex(builder:flatbuffers.Builder, END_LIMITING_CONSTRAINT_INDEX:number) {
+  builder.addFieldInt32(7, END_LIMITING_CONSTRAINT_INDEX, -1);
+}
+
+static addStartLimitingConstraintLabel(builder:flatbuffers.Builder, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, START_LIMITING_CONSTRAINT_LABELOffset, 0);
+}
+
+static addEndLimitingConstraintLabel(builder:flatbuffers.Builder, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, END_LIMITING_CONSTRAINT_LABELOffset, 0);
+}
+
+static addMinRangeM(builder:flatbuffers.Builder, MIN_RANGE_M:number) {
+  builder.addFieldFloat64(10, MIN_RANGE_M, 0.0);
+}
+
+static addMaxRangeM(builder:flatbuffers.Builder, MAX_RANGE_M:number) {
+  builder.addFieldFloat64(11, MAX_RANGE_M, 0.0);
+}
+
+static addEdgesRefined(builder:flatbuffers.Builder, EDGES_REFINED:boolean) {
+  builder.addFieldInt8(12, +EDGES_REFINED, +false);
+}
+
 static endACWAccessWindow(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number):flatbuffers.Offset {
+static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number, OBSERVER_IDOffset:flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX:number, END_LIMITING_CONSTRAINT_INDEX:number, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, MIN_RANGE_M:number, MAX_RANGE_M:number, EDGES_REFINED:boolean):flatbuffers.Offset {
   ACWAccessWindow.startACWAccessWindow(builder);
   ACWAccessWindow.addStationId(builder, STATION_IDOffset);
   ACWAccessWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
   ACWAccessWindow.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
   ACWAccessWindow.addMaxElevationRad(builder, MAX_ELEVATION_RAD);
   ACWAccessWindow.addSampleCount(builder, SAMPLE_COUNT);
+  ACWAccessWindow.addObserverId(builder, OBSERVER_IDOffset);
+  ACWAccessWindow.addStartLimitingConstraintIndex(builder, START_LIMITING_CONSTRAINT_INDEX);
+  ACWAccessWindow.addEndLimitingConstraintIndex(builder, END_LIMITING_CONSTRAINT_INDEX);
+  ACWAccessWindow.addStartLimitingConstraintLabel(builder, START_LIMITING_CONSTRAINT_LABELOffset);
+  ACWAccessWindow.addEndLimitingConstraintLabel(builder, END_LIMITING_CONSTRAINT_LABELOffset);
+  ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
+  ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
+  ACWAccessWindow.addEdgesRefined(builder, EDGES_REFINED);
   return ACWAccessWindow.endACWAccessWindow(builder);
 }
 
@@ -111,7 +219,15 @@ unpack(): ACWAccessWindowT {
     this.START_JULIAN_DATE_TT(),
     this.END_JULIAN_DATE_TT(),
     this.MAX_ELEVATION_RAD(),
-    this.SAMPLE_COUNT()
+    this.SAMPLE_COUNT(),
+    this.OBSERVER_ID(),
+    this.START_LIMITING_CONSTRAINT_INDEX(),
+    this.END_LIMITING_CONSTRAINT_INDEX(),
+    this.START_LIMITING_CONSTRAINT_LABEL(),
+    this.END_LIMITING_CONSTRAINT_LABEL(),
+    this.MIN_RANGE_M(),
+    this.MAX_RANGE_M(),
+    this.EDGES_REFINED()
   );
 }
 
@@ -122,6 +238,14 @@ unpackTo(_o: ACWAccessWindowT): void {
   _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT();
   _o.MAX_ELEVATION_RAD = this.MAX_ELEVATION_RAD();
   _o.SAMPLE_COUNT = this.SAMPLE_COUNT();
+  _o.OBSERVER_ID = this.OBSERVER_ID();
+  _o.START_LIMITING_CONSTRAINT_INDEX = this.START_LIMITING_CONSTRAINT_INDEX();
+  _o.END_LIMITING_CONSTRAINT_INDEX = this.END_LIMITING_CONSTRAINT_INDEX();
+  _o.START_LIMITING_CONSTRAINT_LABEL = this.START_LIMITING_CONSTRAINT_LABEL();
+  _o.END_LIMITING_CONSTRAINT_LABEL = this.END_LIMITING_CONSTRAINT_LABEL();
+  _o.MIN_RANGE_M = this.MIN_RANGE_M();
+  _o.MAX_RANGE_M = this.MAX_RANGE_M();
+  _o.EDGES_REFINED = this.EDGES_REFINED();
 }
 }
 
@@ -131,19 +255,38 @@ constructor(
   public START_JULIAN_DATE_TT: number = 0.0,
   public END_JULIAN_DATE_TT: number = 0.0,
   public MAX_ELEVATION_RAD: number = 0.0,
-  public SAMPLE_COUNT: number = 0
+  public SAMPLE_COUNT: number = 0,
+  public OBSERVER_ID: string|Uint8Array|null = null,
+  public START_LIMITING_CONSTRAINT_INDEX: number = -1,
+  public END_LIMITING_CONSTRAINT_INDEX: number = -1,
+  public START_LIMITING_CONSTRAINT_LABEL: string|Uint8Array|null = null,
+  public END_LIMITING_CONSTRAINT_LABEL: string|Uint8Array|null = null,
+  public MIN_RANGE_M: number = 0.0,
+  public MAX_RANGE_M: number = 0.0,
+  public EDGES_REFINED: boolean = false
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const STATION_ID = (this.STATION_ID !== null ? builder.createString(this.STATION_ID!) : 0);
+  const OBSERVER_ID = (this.OBSERVER_ID !== null ? builder.createString(this.OBSERVER_ID!) : 0);
+  const START_LIMITING_CONSTRAINT_LABEL = (this.START_LIMITING_CONSTRAINT_LABEL !== null ? builder.createString(this.START_LIMITING_CONSTRAINT_LABEL!) : 0);
+  const END_LIMITING_CONSTRAINT_LABEL = (this.END_LIMITING_CONSTRAINT_LABEL !== null ? builder.createString(this.END_LIMITING_CONSTRAINT_LABEL!) : 0);
 
   return ACWAccessWindow.createACWAccessWindow(builder,
     STATION_ID,
     this.START_JULIAN_DATE_TT,
     this.END_JULIAN_DATE_TT,
     this.MAX_ELEVATION_RAD,
-    this.SAMPLE_COUNT
+    this.SAMPLE_COUNT,
+    OBSERVER_ID,
+    this.START_LIMITING_CONSTRAINT_INDEX,
+    this.END_LIMITING_CONSTRAINT_INDEX,
+    START_LIMITING_CONSTRAINT_LABEL,
+    END_LIMITING_CONSTRAINT_LABEL,
+    this.MIN_RANGE_M,
+    this.MAX_RANGE_M,
+    this.EDGES_REFINED
   );
 }
 }

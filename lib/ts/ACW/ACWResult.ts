@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { ACWAccessWindow, ACWAccessWindowT } from './ACWAccessWindow.js';
+import { acwEvaluationMode } from './acwEvaluationMode.js';
 import { acwResultStatus } from './acwResultStatus.js';
 
 
@@ -61,8 +62,31 @@ TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Evaluation mode actually used.
+ */
+EVALUATION_MODE():acwEvaluationMode {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : acwEvaluationMode.DISCRETE;
+}
+
+/**
+ * Flattened depth-first constraint list the window indices refer to.
+ */
+CONSTRAINT_LABELS(index: number):string
+CONSTRAINT_LABELS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+CONSTRAINT_LABELS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+constraintLabelsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startACWResult(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(6);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:acwResultStatus) {
@@ -93,17 +117,39 @@ static addTraceId(builder:flatbuffers.Builder, TRACE_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(3, TRACE_IDOffset, 0);
 }
 
+static addEvaluationMode(builder:flatbuffers.Builder, EVALUATION_MODE:acwEvaluationMode) {
+  builder.addFieldInt8(4, EVALUATION_MODE, acwEvaluationMode.DISCRETE);
+}
+
+static addConstraintLabels(builder:flatbuffers.Builder, CONSTRAINT_LABELSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, CONSTRAINT_LABELSOffset, 0);
+}
+
+static createConstraintLabelsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startConstraintLabelsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endACWResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset, EVALUATION_MODE:acwEvaluationMode, CONSTRAINT_LABELSOffset:flatbuffers.Offset):flatbuffers.Offset {
   ACWResult.startACWResult(builder);
   ACWResult.addStatus(builder, STATUS);
   ACWResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
   ACWResult.addWindows(builder, WINDOWSOffset);
   ACWResult.addTraceId(builder, TRACE_IDOffset);
+  ACWResult.addEvaluationMode(builder, EVALUATION_MODE);
+  ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
   return ACWResult.endACWResult(builder);
 }
 
@@ -112,7 +158,9 @@ unpack(): ACWResultT {
     this.STATUS(),
     this.ERROR_MESSAGE(),
     this.bb!.createObjList<ACWAccessWindow, ACWAccessWindowT>(this.WINDOWS.bind(this), this.windowsLength()),
-    this.TRACE_ID()
+    this.TRACE_ID(),
+    this.EVALUATION_MODE(),
+    this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength())
   );
 }
 
@@ -122,6 +170,8 @@ unpackTo(_o: ACWResultT): void {
   _o.ERROR_MESSAGE = this.ERROR_MESSAGE();
   _o.WINDOWS = this.bb!.createObjList<ACWAccessWindow, ACWAccessWindowT>(this.WINDOWS.bind(this), this.windowsLength());
   _o.TRACE_ID = this.TRACE_ID();
+  _o.EVALUATION_MODE = this.EVALUATION_MODE();
+  _o.CONSTRAINT_LABELS = this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength());
 }
 }
 
@@ -130,7 +180,9 @@ constructor(
   public STATUS: acwResultStatus = acwResultStatus.OK,
   public ERROR_MESSAGE: string|Uint8Array|null = null,
   public WINDOWS: (ACWAccessWindowT)[] = [],
-  public TRACE_ID: string|Uint8Array|null = null
+  public TRACE_ID: string|Uint8Array|null = null,
+  public EVALUATION_MODE: acwEvaluationMode = acwEvaluationMode.DISCRETE,
+  public CONSTRAINT_LABELS: (string)[] = []
 ){}
 
 
@@ -138,12 +190,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ERROR_MESSAGE = (this.ERROR_MESSAGE !== null ? builder.createString(this.ERROR_MESSAGE!) : 0);
   const WINDOWS = ACWResult.createWindowsVector(builder, builder.createObjectOffsetList(this.WINDOWS));
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
+  const CONSTRAINT_LABELS = ACWResult.createConstraintLabelsVector(builder, builder.createObjectOffsetList(this.CONSTRAINT_LABELS));
 
   return ACWResult.createACWResult(builder,
     this.STATUS,
     ERROR_MESSAGE,
     WINDOWS,
-    TRACE_ID
+    TRACE_ID,
+    this.EVALUATION_MODE,
+    CONSTRAINT_LABELS
   );
 }
 }

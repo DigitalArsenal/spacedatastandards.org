@@ -130,6 +130,86 @@ class ACWRequest : Table() {
             null
         }
     }
+    /**
+     * Optional constraint composition. When absent the legacy behaviour holds:
+     * every ground station's MIN_ELEVATION_RAD (or the override) plus
+     * ELEVATION_MASK, all required.
+     */
+    val constraints : ACWConstraintSet? get() = constraints(ACWConstraintSet())
+    fun constraints(obj: ACWConstraintSet) : ACWConstraintSet? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Optional moving observers (satellite-to-satellite access). Each observer
+     * is evaluated against STATES like a ground station.
+     */
+    fun observers(j: Int) : ACWObserverTrajectory? = observers(ACWObserverTrajectory(), j)
+    fun observers(obj: ACWObserverTrajectory, j: Int) : ACWObserverTrajectory? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val observersLength : Int
+        get() {
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Sample-only or root-refined window edges.
+     */
+    val evaluationMode : Byte
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Edge refinement tolerance for CONTINUOUS, seconds.
+     */
+    val rootToleranceS : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.1
+        }
+    /**
+     * Sun states in the STATES frame and time scale, required by
+     * SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+     */
+    fun sunStates(j: Int) : ACWStateSample? = sunStates(ACWStateSample(), j)
+    fun sunStates(obj: ACWStateSample, j: Int) : ACWStateSample? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val sunStatesLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+     */
+    fun moonStates(j: Int) : ACWStateSample? = moonStates(ACWStateSample(), j)
+    fun moonStates(obj: ACWStateSample, j: Int) : ACWStateSample? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val moonStatesLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWRequest(_bb: ByteBuffer): ACWRequest = getRootAsACWRequest(_bb, ACWRequest())
@@ -137,19 +217,25 @@ class ACWRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int) : Int {
-            builder.startTable(8)
+        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int) : Int {
+            builder.startTable(14)
+            addROOTTOLERANCES(builder, rootToleranceS)
             addMINELEVATIONOVERRIDERAD(builder, minElevationOverrideRad)
+            addMOONSTATES(builder, moonStatesOffset)
+            addSUNSTATES(builder, sunStatesOffset)
+            addOBSERVERS(builder, observersOffset)
+            addCONSTRAINTS(builder, constraintsOffset)
             addREFRACTIONMODEL(builder, refractionModelOffset)
             addELEVATIONMASK(builder, elevationMaskOffset)
             addTRACEID(builder, traceIdOffset)
             addTARGETSTATIONID(builder, targetStationIdOffset)
             addSTATES(builder, statesOffset)
             addGROUNDSTATIONS(builder, groundStationsOffset)
+            addEVALUATIONMODE(builder, evaluationMode)
             addOPERATION(builder, operation)
             return endACWRequest(builder)
         }
-        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addOPERATION(builder: FlatBufferBuilder, operation: Byte) = builder.addByte(0, operation, 0)
         fun addGROUNDSTATIONS(builder: FlatBufferBuilder, groundStations: Int) = builder.addOffset(1, groundStations, 0)
         fun createGroundStationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -182,6 +268,36 @@ class ACWRequest : Table() {
         }
         fun startElevationMaskVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addREFRACTIONMODEL(builder: FlatBufferBuilder, refractionModel: Int) = builder.addOffset(7, refractionModel, 0)
+        fun addCONSTRAINTS(builder: FlatBufferBuilder, constraints: Int) = builder.addOffset(8, constraints, 0)
+        fun addOBSERVERS(builder: FlatBufferBuilder, observers: Int) = builder.addOffset(9, observers, 0)
+        fun createObserversVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startObserversVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addEVALUATIONMODE(builder: FlatBufferBuilder, evaluationMode: Byte) = builder.addByte(10, evaluationMode, 0)
+        fun addROOTTOLERANCES(builder: FlatBufferBuilder, rootToleranceS: Double) = builder.addDouble(11, rootToleranceS, 0.1)
+        fun addSUNSTATES(builder: FlatBufferBuilder, sunStates: Int) = builder.addOffset(12, sunStates, 0)
+        fun createSunStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSunStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMOONSTATES(builder: FlatBufferBuilder, moonStates: Int) = builder.addOffset(13, moonStates, 0)
+        fun createMoonStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startMoonStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endACWRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

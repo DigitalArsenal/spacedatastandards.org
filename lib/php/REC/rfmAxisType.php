@@ -67,6 +67,34 @@ class rfmAxisType
     /// LEGACY, retained and NAMED: true equator of date computed with the
     /// IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
     const TRUE_OF_DATE_EQUATOR_FK5 = 24;
+    /// True equator of date computed with the IERS Conventions (1996)
+    /// reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
+    /// nutation with the observed celestial pole offsets applied. Distinct from
+    /// TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
+    /// (IAU-2006/2000A).
+    const TRUE_OF_DATE_EQUATOR_IERS1996 = 25;
+    /// True equator of date computed with the IERS Conventions (2003)
+    /// reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
+    /// precession with the IAU 2000 precession-rate corrections. The mean-of-date
+    /// equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
+    const TRUE_OF_DATE_EQUATOR_IERS2003 = 26;
+    /// Topocentric East-North-Up axes at a surface site; the site is carried on
+    /// RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
+    const TOPOCENTRIC_EAST_NORTH_UP = 27;
+    /// Topocentric North-East-Down axes at a surface site.
+    const TOPOCENTRIC_NORTH_EAST_DOWN = 28;
+    /// Topocentric South-East-Zenith axes at a surface site.
+    const TOPOCENTRIC_SOUTH_EAST_ZENITH = 29;
+    /// Orbital axes from the object's state: X along the velocity, Z along the
+    /// orbit normal, Y completing the right-handed set (VNC). The object is the
+    /// origin body of the coordinate system.
+    const ORBITAL_VELOCITY_NORMAL_CONORMAL = 30;
+    /// Orbital axes from the object's state: X radial (outward), Z along the
+    /// orbit normal, Y transverse completing the set (RTN, also RSW).
+    const ORBITAL_RADIAL_TRANSVERSE_NORMAL = 31;
+    /// Orbital axes from the object's state: Z toward the central body (nadir),
+    /// Y opposite the orbit normal, X completing the set (LVLH).
+    const ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32;
 
     private static $names = array(
         rfmAxisType::UNSPECIFIED=>"UNSPECIFIED",
@@ -94,6 +122,14 @@ class rfmAxisType
         rfmAxisType::EPHEMERIS_KERNEL_DEFINED=>"EPHEMERIS_KERNEL_DEFINED",
         rfmAxisType::MEAN_OF_DATE_EQUATOR_FK5=>"MEAN_OF_DATE_EQUATOR_FK5",
         rfmAxisType::TRUE_OF_DATE_EQUATOR_FK5=>"TRUE_OF_DATE_EQUATOR_FK5",
+        rfmAxisType::TRUE_OF_DATE_EQUATOR_IERS1996=>"TRUE_OF_DATE_EQUATOR_IERS1996",
+        rfmAxisType::TRUE_OF_DATE_EQUATOR_IERS2003=>"TRUE_OF_DATE_EQUATOR_IERS2003",
+        rfmAxisType::TOPOCENTRIC_EAST_NORTH_UP=>"TOPOCENTRIC_EAST_NORTH_UP",
+        rfmAxisType::TOPOCENTRIC_NORTH_EAST_DOWN=>"TOPOCENTRIC_NORTH_EAST_DOWN",
+        rfmAxisType::TOPOCENTRIC_SOUTH_EAST_ZENITH=>"TOPOCENTRIC_SOUTH_EAST_ZENITH",
+        rfmAxisType::ORBITAL_VELOCITY_NORMAL_CONORMAL=>"ORBITAL_VELOCITY_NORMAL_CONORMAL",
+        rfmAxisType::ORBITAL_RADIAL_TRANSVERSE_NORMAL=>"ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+        rfmAxisType::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL=>"ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL",
     );
 
     public static function Name($e)

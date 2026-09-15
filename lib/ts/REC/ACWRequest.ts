@@ -4,10 +4,13 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ACWConstraintSet, ACWConstraintSetT } from './ACWConstraintSet.js';
 import { ACWElevationMaskPoint, ACWElevationMaskPointT } from './ACWElevationMaskPoint.js';
 import { ACWGroundStation, ACWGroundStationT } from './ACWGroundStation.js';
+import { ACWObserverTrajectory, ACWObserverTrajectoryT } from './ACWObserverTrajectory.js';
 import { ACWRefractionModel, ACWRefractionModelT } from './ACWRefractionModel.js';
 import { ACWStateSample, ACWStateSampleT } from './ACWStateSample.js';
+import { acwEvaluationMode } from './acwEvaluationMode.js';
 import { acwOperationCode } from './acwOperationCode.js';
 
 
@@ -112,8 +115,75 @@ REFRACTION_MODEL(obj?:ACWRefractionModel):ACWRefractionModel|null {
   return offset ? (obj || new ACWRefractionModel()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Optional constraint composition. When absent the legacy behaviour holds:
+ * every ground station's MIN_ELEVATION_RAD (or the override) plus
+ * ELEVATION_MASK, all required.
+ */
+CONSTRAINTS(obj?:ACWConstraintSet):ACWConstraintSet|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new ACWConstraintSet()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Optional moving observers (satellite-to-satellite access). Each observer
+ * is evaluated against STATES like a ground station.
+ */
+OBSERVERS(index: number, obj?:ACWObserverTrajectory):ACWObserverTrajectory|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new ACWObserverTrajectory()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+observersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sample-only or root-refined window edges.
+ */
+EVALUATION_MODE():acwEvaluationMode {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : acwEvaluationMode.DISCRETE;
+}
+
+/**
+ * Edge refinement tolerance for CONTINUOUS, seconds.
+ */
+ROOT_TOLERANCE_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.1;
+}
+
+/**
+ * Sun states in the STATES frame and time scale, required by
+ * SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+ */
+SUN_STATES(index: number, obj?:ACWStateSample):ACWStateSample|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new ACWStateSample()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+sunStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+ */
+MOON_STATES(index: number, obj?:ACWStateSample):ACWStateSample|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new ACWStateSample()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+moonStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startACWRequest(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(14);
 }
 
 static addOperation(builder:flatbuffers.Builder, OPERATION:acwOperationCode) {
@@ -184,6 +254,66 @@ static addRefractionModel(builder:flatbuffers.Builder, REFRACTION_MODELOffset:fl
   builder.addFieldOffset(7, REFRACTION_MODELOffset, 0);
 }
 
+static addConstraints(builder:flatbuffers.Builder, CONSTRAINTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, CONSTRAINTSOffset, 0);
+}
+
+static addObservers(builder:flatbuffers.Builder, OBSERVERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, OBSERVERSOffset, 0);
+}
+
+static createObserversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startObserversVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addEvaluationMode(builder:flatbuffers.Builder, EVALUATION_MODE:acwEvaluationMode) {
+  builder.addFieldInt8(10, EVALUATION_MODE, acwEvaluationMode.DISCRETE);
+}
+
+static addRootToleranceS(builder:flatbuffers.Builder, ROOT_TOLERANCE_S:number) {
+  builder.addFieldFloat64(11, ROOT_TOLERANCE_S, 0.1);
+}
+
+static addSunStates(builder:flatbuffers.Builder, SUN_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, SUN_STATESOffset, 0);
+}
+
+static createSunStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSunStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addMoonStates(builder:flatbuffers.Builder, MOON_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, MOON_STATESOffset, 0);
+}
+
+static createMoonStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startMoonStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endACWRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -199,7 +329,13 @@ unpack(): ACWRequestT {
     this.MIN_ELEVATION_OVERRIDE_RAD(),
     this.TRACE_ID(),
     this.bb!.createObjList<ACWElevationMaskPoint, ACWElevationMaskPointT>(this.ELEVATION_MASK.bind(this), this.elevationMaskLength()),
-    (this.REFRACTION_MODEL() !== null ? this.REFRACTION_MODEL()!.unpack() : null)
+    (this.REFRACTION_MODEL() !== null ? this.REFRACTION_MODEL()!.unpack() : null),
+    (this.CONSTRAINTS() !== null ? this.CONSTRAINTS()!.unpack() : null),
+    this.bb!.createObjList<ACWObserverTrajectory, ACWObserverTrajectoryT>(this.OBSERVERS.bind(this), this.observersLength()),
+    this.EVALUATION_MODE(),
+    this.ROOT_TOLERANCE_S(),
+    this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.SUN_STATES.bind(this), this.sunStatesLength()),
+    this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.MOON_STATES.bind(this), this.moonStatesLength())
   );
 }
 
@@ -213,6 +349,12 @@ unpackTo(_o: ACWRequestT): void {
   _o.TRACE_ID = this.TRACE_ID();
   _o.ELEVATION_MASK = this.bb!.createObjList<ACWElevationMaskPoint, ACWElevationMaskPointT>(this.ELEVATION_MASK.bind(this), this.elevationMaskLength());
   _o.REFRACTION_MODEL = (this.REFRACTION_MODEL() !== null ? this.REFRACTION_MODEL()!.unpack() : null);
+  _o.CONSTRAINTS = (this.CONSTRAINTS() !== null ? this.CONSTRAINTS()!.unpack() : null);
+  _o.OBSERVERS = this.bb!.createObjList<ACWObserverTrajectory, ACWObserverTrajectoryT>(this.OBSERVERS.bind(this), this.observersLength());
+  _o.EVALUATION_MODE = this.EVALUATION_MODE();
+  _o.ROOT_TOLERANCE_S = this.ROOT_TOLERANCE_S();
+  _o.SUN_STATES = this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.SUN_STATES.bind(this), this.sunStatesLength());
+  _o.MOON_STATES = this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.MOON_STATES.bind(this), this.moonStatesLength());
 }
 }
 
@@ -225,7 +367,13 @@ constructor(
   public MIN_ELEVATION_OVERRIDE_RAD: number = 0.0,
   public TRACE_ID: string|Uint8Array|null = null,
   public ELEVATION_MASK: (ACWElevationMaskPointT)[] = [],
-  public REFRACTION_MODEL: ACWRefractionModelT|null = null
+  public REFRACTION_MODEL: ACWRefractionModelT|null = null,
+  public CONSTRAINTS: ACWConstraintSetT|null = null,
+  public OBSERVERS: (ACWObserverTrajectoryT)[] = [],
+  public EVALUATION_MODE: acwEvaluationMode = acwEvaluationMode.DISCRETE,
+  public ROOT_TOLERANCE_S: number = 0.1,
+  public SUN_STATES: (ACWStateSampleT)[] = [],
+  public MOON_STATES: (ACWStateSampleT)[] = []
 ){}
 
 
@@ -236,6 +384,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
   const ELEVATION_MASK = ACWRequest.createElevationMaskVector(builder, builder.createObjectOffsetList(this.ELEVATION_MASK));
   const REFRACTION_MODEL = (this.REFRACTION_MODEL !== null ? this.REFRACTION_MODEL!.pack(builder) : 0);
+  const CONSTRAINTS = (this.CONSTRAINTS !== null ? this.CONSTRAINTS!.pack(builder) : 0);
+  const OBSERVERS = ACWRequest.createObserversVector(builder, builder.createObjectOffsetList(this.OBSERVERS));
+  const SUN_STATES = ACWRequest.createSunStatesVector(builder, builder.createObjectOffsetList(this.SUN_STATES));
+  const MOON_STATES = ACWRequest.createMoonStatesVector(builder, builder.createObjectOffsetList(this.MOON_STATES));
 
   ACWRequest.startACWRequest(builder);
   ACWRequest.addOperation(builder, this.OPERATION);
@@ -246,6 +398,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWRequest.addTraceId(builder, TRACE_ID);
   ACWRequest.addElevationMask(builder, ELEVATION_MASK);
   ACWRequest.addRefractionModel(builder, REFRACTION_MODEL);
+  ACWRequest.addConstraints(builder, CONSTRAINTS);
+  ACWRequest.addObservers(builder, OBSERVERS);
+  ACWRequest.addEvaluationMode(builder, this.EVALUATION_MODE);
+  ACWRequest.addRootToleranceS(builder, this.ROOT_TOLERANCE_S);
+  ACWRequest.addSunStates(builder, SUN_STATES);
+  ACWRequest.addMoonStates(builder, MOON_STATES);
 
   return ACWRequest.endACWRequest(builder);
 }

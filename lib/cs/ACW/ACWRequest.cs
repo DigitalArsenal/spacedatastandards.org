@@ -47,6 +47,25 @@ public struct ACWRequest : IFlatbufferObject
   public int ELEVATION_MASKLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Optional apparent-elevation refraction model.
   public ACWRefractionModel? REFRACTION_MODEL { get { int o = __p.__offset(18); return o != 0 ? (ACWRefractionModel?)(new ACWRefractionModel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+  /// ELEVATION_MASK, all required.
+  public ACWConstraintSet? CONSTRAINTS { get { int o = __p.__offset(20); return o != 0 ? (ACWConstraintSet?)(new ACWConstraintSet()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Optional moving observers (satellite-to-satellite access). Each observer
+  /// is evaluated against STATES like a ground station.
+  public ACWObserverTrajectory? OBSERVERS(int j) { int o = __p.__offset(22); return o != 0 ? (ACWObserverTrajectory?)(new ACWObserverTrajectory()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int OBSERVERSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Sample-only or root-refined window edges.
+  public acwEvaluationMode EVALUATION_MODE { get { int o = __p.__offset(24); return o != 0 ? (acwEvaluationMode)__p.bb.GetSbyte(o + __p.bb_pos) : acwEvaluationMode.DISCRETE; } }
+  /// Edge refinement tolerance for CONTINUOUS, seconds.
+  public double ROOT_TOLERANCE_S { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.1; } }
+  /// Sun states in the STATES frame and time scale, required by
+  /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+  public ACWStateSample? SUN_STATES(int j) { int o = __p.__offset(28); return o != 0 ? (ACWStateSample?)(new ACWStateSample()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SUN_STATESLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+  public ACWStateSample? MOON_STATES(int j) { int o = __p.__offset(30); return o != 0 ? (ACWStateSample?)(new ACWStateSample()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MOON_STATESLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ACWRequest> CreateACWRequest(FlatBufferBuilder builder,
       acwOperationCode OPERATION = acwOperationCode.UNKNOWN,
@@ -56,20 +75,32 @@ public struct ACWRequest : IFlatbufferObject
       double MIN_ELEVATION_OVERRIDE_RAD = 0.0,
       StringOffset TRACE_IDOffset = default(StringOffset),
       VectorOffset ELEVATION_MASKOffset = default(VectorOffset),
-      Offset<ACWRefractionModel> REFRACTION_MODELOffset = default(Offset<ACWRefractionModel>)) {
-    builder.StartTable(8);
+      Offset<ACWRefractionModel> REFRACTION_MODELOffset = default(Offset<ACWRefractionModel>),
+      Offset<ACWConstraintSet> CONSTRAINTSOffset = default(Offset<ACWConstraintSet>),
+      VectorOffset OBSERVERSOffset = default(VectorOffset),
+      acwEvaluationMode EVALUATION_MODE = acwEvaluationMode.DISCRETE,
+      double ROOT_TOLERANCE_S = 0.1,
+      VectorOffset SUN_STATESOffset = default(VectorOffset),
+      VectorOffset MOON_STATESOffset = default(VectorOffset)) {
+    builder.StartTable(14);
+    ACWRequest.AddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S);
     ACWRequest.AddMIN_ELEVATION_OVERRIDE_RAD(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.AddMOON_STATES(builder, MOON_STATESOffset);
+    ACWRequest.AddSUN_STATES(builder, SUN_STATESOffset);
+    ACWRequest.AddOBSERVERS(builder, OBSERVERSOffset);
+    ACWRequest.AddCONSTRAINTS(builder, CONSTRAINTSOffset);
     ACWRequest.AddREFRACTION_MODEL(builder, REFRACTION_MODELOffset);
     ACWRequest.AddELEVATION_MASK(builder, ELEVATION_MASKOffset);
     ACWRequest.AddTRACE_ID(builder, TRACE_IDOffset);
     ACWRequest.AddTARGET_STATION_ID(builder, TARGET_STATION_IDOffset);
     ACWRequest.AddSTATES(builder, STATESOffset);
     ACWRequest.AddGROUND_STATIONS(builder, GROUND_STATIONSOffset);
+    ACWRequest.AddEVALUATION_MODE(builder, EVALUATION_MODE);
     ACWRequest.AddOPERATION(builder, OPERATION);
     return ACWRequest.EndACWRequest(builder);
   }
 
-  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddOPERATION(FlatBufferBuilder builder, acwOperationCode OPERATION) { builder.AddSbyte(0, (sbyte)OPERATION, 0); }
   public static void AddGROUND_STATIONS(FlatBufferBuilder builder, VectorOffset GROUND_STATIONSOffset) { builder.AddOffset(1, GROUND_STATIONSOffset.Value, 0); }
   public static VectorOffset CreateGROUND_STATIONSVector(FlatBufferBuilder builder, Offset<ACWGroundStation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -93,6 +124,27 @@ public struct ACWRequest : IFlatbufferObject
   public static VectorOffset CreateELEVATION_MASKVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWElevationMaskPoint>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartELEVATION_MASKVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddREFRACTION_MODEL(FlatBufferBuilder builder, Offset<ACWRefractionModel> REFRACTION_MODELOffset) { builder.AddOffset(7, REFRACTION_MODELOffset.Value, 0); }
+  public static void AddCONSTRAINTS(FlatBufferBuilder builder, Offset<ACWConstraintSet> CONSTRAINTSOffset) { builder.AddOffset(8, CONSTRAINTSOffset.Value, 0); }
+  public static void AddOBSERVERS(FlatBufferBuilder builder, VectorOffset OBSERVERSOffset) { builder.AddOffset(9, OBSERVERSOffset.Value, 0); }
+  public static VectorOffset CreateOBSERVERSVector(FlatBufferBuilder builder, Offset<ACWObserverTrajectory>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVERSVectorBlock(FlatBufferBuilder builder, Offset<ACWObserverTrajectory>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWObserverTrajectory>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOBSERVERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWObserverTrajectory>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOBSERVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddEVALUATION_MODE(FlatBufferBuilder builder, acwEvaluationMode EVALUATION_MODE) { builder.AddSbyte(10, (sbyte)EVALUATION_MODE, 0); }
+  public static void AddROOT_TOLERANCE_S(FlatBufferBuilder builder, double ROOT_TOLERANCE_S) { builder.AddDouble(11, ROOT_TOLERANCE_S, 0.1); }
+  public static void AddSUN_STATES(FlatBufferBuilder builder, VectorOffset SUN_STATESOffset) { builder.AddOffset(12, SUN_STATESOffset.Value, 0); }
+  public static VectorOffset CreateSUN_STATESVector(FlatBufferBuilder builder, Offset<ACWStateSample>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSUN_STATESVectorBlock(FlatBufferBuilder builder, Offset<ACWStateSample>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSUN_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWStateSample>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSUN_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWStateSample>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSUN_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMOON_STATES(FlatBufferBuilder builder, VectorOffset MOON_STATESOffset) { builder.AddOffset(13, MOON_STATESOffset.Value, 0); }
+  public static VectorOffset CreateMOON_STATESVector(FlatBufferBuilder builder, Offset<ACWStateSample>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMOON_STATESVectorBlock(FlatBufferBuilder builder, Offset<ACWStateSample>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMOON_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWStateSample>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMOON_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWStateSample>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMOON_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ACWRequest> EndACWRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWRequest>(o);
@@ -114,6 +166,15 @@ public struct ACWRequest : IFlatbufferObject
     _o.ELEVATION_MASK = new List<ACWElevationMaskPointT>();
     for (var _j = 0; _j < this.ELEVATION_MASKLength; ++_j) {_o.ELEVATION_MASK.Add(this.ELEVATION_MASK(_j).HasValue ? this.ELEVATION_MASK(_j).Value.UnPack() : null);}
     _o.REFRACTION_MODEL = this.REFRACTION_MODEL.HasValue ? this.REFRACTION_MODEL.Value.UnPack() : null;
+    _o.CONSTRAINTS = this.CONSTRAINTS.HasValue ? this.CONSTRAINTS.Value.UnPack() : null;
+    _o.OBSERVERS = new List<ACWObserverTrajectoryT>();
+    for (var _j = 0; _j < this.OBSERVERSLength; ++_j) {_o.OBSERVERS.Add(this.OBSERVERS(_j).HasValue ? this.OBSERVERS(_j).Value.UnPack() : null);}
+    _o.EVALUATION_MODE = this.EVALUATION_MODE;
+    _o.ROOT_TOLERANCE_S = this.ROOT_TOLERANCE_S;
+    _o.SUN_STATES = new List<ACWStateSampleT>();
+    for (var _j = 0; _j < this.SUN_STATESLength; ++_j) {_o.SUN_STATES.Add(this.SUN_STATES(_j).HasValue ? this.SUN_STATES(_j).Value.UnPack() : null);}
+    _o.MOON_STATES = new List<ACWStateSampleT>();
+    for (var _j = 0; _j < this.MOON_STATESLength; ++_j) {_o.MOON_STATES.Add(this.MOON_STATES(_j).HasValue ? this.MOON_STATES(_j).Value.UnPack() : null);}
   }
   public static Offset<ACWRequest> Pack(FlatBufferBuilder builder, ACWRequestT _o) {
     if (_o == null) return default(Offset<ACWRequest>);
@@ -138,6 +199,25 @@ public struct ACWRequest : IFlatbufferObject
       _ELEVATION_MASK = CreateELEVATION_MASKVector(builder, __ELEVATION_MASK);
     }
     var _REFRACTION_MODEL = _o.REFRACTION_MODEL == null ? default(Offset<ACWRefractionModel>) : ACWRefractionModel.Pack(builder, _o.REFRACTION_MODEL);
+    var _CONSTRAINTS = _o.CONSTRAINTS == null ? default(Offset<ACWConstraintSet>) : ACWConstraintSet.Pack(builder, _o.CONSTRAINTS);
+    var _OBSERVERS = default(VectorOffset);
+    if (_o.OBSERVERS != null) {
+      var __OBSERVERS = new Offset<ACWObserverTrajectory>[_o.OBSERVERS.Count];
+      for (var _j = 0; _j < __OBSERVERS.Length; ++_j) { __OBSERVERS[_j] = ACWObserverTrajectory.Pack(builder, _o.OBSERVERS[_j]); }
+      _OBSERVERS = CreateOBSERVERSVector(builder, __OBSERVERS);
+    }
+    var _SUN_STATES = default(VectorOffset);
+    if (_o.SUN_STATES != null) {
+      var __SUN_STATES = new Offset<ACWStateSample>[_o.SUN_STATES.Count];
+      for (var _j = 0; _j < __SUN_STATES.Length; ++_j) { __SUN_STATES[_j] = ACWStateSample.Pack(builder, _o.SUN_STATES[_j]); }
+      _SUN_STATES = CreateSUN_STATESVector(builder, __SUN_STATES);
+    }
+    var _MOON_STATES = default(VectorOffset);
+    if (_o.MOON_STATES != null) {
+      var __MOON_STATES = new Offset<ACWStateSample>[_o.MOON_STATES.Count];
+      for (var _j = 0; _j < __MOON_STATES.Length; ++_j) { __MOON_STATES[_j] = ACWStateSample.Pack(builder, _o.MOON_STATES[_j]); }
+      _MOON_STATES = CreateMOON_STATESVector(builder, __MOON_STATES);
+    }
     return CreateACWRequest(
       builder,
       _o.OPERATION,
@@ -147,7 +227,13 @@ public struct ACWRequest : IFlatbufferObject
       _o.MIN_ELEVATION_OVERRIDE_RAD,
       _TRACE_ID,
       _ELEVATION_MASK,
-      _REFRACTION_MODEL);
+      _REFRACTION_MODEL,
+      _CONSTRAINTS,
+      _OBSERVERS,
+      _o.EVALUATION_MODE,
+      _o.ROOT_TOLERANCE_S,
+      _SUN_STATES,
+      _MOON_STATES);
   }
 }
 
@@ -161,6 +247,12 @@ public class ACWRequestT
   public string TRACE_ID { get; set; }
   public List<ACWElevationMaskPointT> ELEVATION_MASK { get; set; }
   public ACWRefractionModelT REFRACTION_MODEL { get; set; }
+  public ACWConstraintSetT CONSTRAINTS { get; set; }
+  public List<ACWObserverTrajectoryT> OBSERVERS { get; set; }
+  public acwEvaluationMode EVALUATION_MODE { get; set; }
+  public double ROOT_TOLERANCE_S { get; set; }
+  public List<ACWStateSampleT> SUN_STATES { get; set; }
+  public List<ACWStateSampleT> MOON_STATES { get; set; }
 
   public ACWRequestT() {
     this.OPERATION = acwOperationCode.UNKNOWN;
@@ -171,6 +263,12 @@ public class ACWRequestT
     this.TRACE_ID = null;
     this.ELEVATION_MASK = null;
     this.REFRACTION_MODEL = null;
+    this.CONSTRAINTS = null;
+    this.OBSERVERS = null;
+    this.EVALUATION_MODE = acwEvaluationMode.DISCRETE;
+    this.ROOT_TOLERANCE_S = 0.1;
+    this.SUN_STATES = null;
+    this.MOON_STATES = null;
   }
 }
 
@@ -188,6 +286,12 @@ static public class ACWRequestVerify
       && verifier.VerifyString(tablePos, 14 /*TRACE_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 16 /*ELEVATION_MASK*/, ACWElevationMaskPointVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 18 /*REFRACTION_MODEL*/, ACWRefractionModelVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*CONSTRAINTS*/, ACWConstraintSetVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 22 /*OBSERVERS*/, ACWObserverTrajectoryVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 24 /*EVALUATION_MODE*/, 1 /*acwEvaluationMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*ROOT_TOLERANCE_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 28 /*SUN_STATES*/, ACWStateSampleVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*MOON_STATES*/, ACWStateSampleVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

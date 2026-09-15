@@ -230,8 +230,178 @@ func (rcv *ACWRequest) RefractionModel(obj *ACWRefractionModel) *ACWRefractionMo
 }
 
 /// Optional apparent-elevation refraction model.
+/// Optional constraint composition. When absent the legacy behaviour holds:
+/// every ground station's MIN_ELEVATION_RAD (or the override) plus
+/// ELEVATION_MASK, all required.
+func (rcv *ACWRequest) CONSTRAINTS(obj *ACWConstraintSet) *ACWConstraintSet {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ACWConstraintSet)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *ACWRequest) Constraints(obj *ACWConstraintSet) *ACWConstraintSet {
+	return rcv.CONSTRAINTS(obj)
+}
+
+/// Optional constraint composition. When absent the legacy behaviour holds:
+/// every ground station's MIN_ELEVATION_RAD (or the override) plus
+/// ELEVATION_MASK, all required.
+/// Optional moving observers (satellite-to-satellite access). Each observer
+/// is evaluated against STATES like a ground station.
+func (rcv *ACWRequest) OBSERVERS(obj *ACWObserverTrajectory, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWObserverTrajectory)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) Observers(obj *ACWObserverTrajectory, j int) bool {
+	return rcv.OBSERVERS(obj, j)
+}
+
+func (rcv *ACWRequest) OBSERVERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) ObserversLength() int {
+	return rcv.OBSERVERSLength()
+}
+
+/// Optional moving observers (satellite-to-satellite access). Each observer
+/// is evaluated against STATES like a ground station.
+/// Sample-only or root-refined window edges.
+func (rcv *ACWRequest) EVALUATION_MODE() acwEvaluationMode {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return acwEvaluationMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) EvaluationMode() acwEvaluationMode {
+	return rcv.EVALUATION_MODE()
+}
+
+/// Sample-only or root-refined window edges.
+func (rcv *ACWRequest) MutateEVALUATION_MODE(n acwEvaluationMode) bool {
+	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+func (rcv *ACWRequest) MutateEvaluationMode(n acwEvaluationMode) bool {
+	return rcv.MutateEVALUATION_MODE(n)
+}
+
+/// Edge refinement tolerance for CONTINUOUS, seconds.
+func (rcv *ACWRequest) ROOT_TOLERANCE_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.1
+}
+
+func (rcv *ACWRequest) RootToleranceS() float64 {
+	return rcv.ROOT_TOLERANCE_S()
+}
+
+/// Edge refinement tolerance for CONTINUOUS, seconds.
+func (rcv *ACWRequest) MutateROOT_TOLERANCE_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ACWRequest) MutateRootToleranceS(n float64) bool {
+	return rcv.MutateROOT_TOLERANCE_S(n)
+}
+
+/// Sun states in the STATES frame and time scale, required by
+/// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+func (rcv *ACWRequest) SUN_STATES(obj *ACWStateSample, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWStateSample)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) SunStates(obj *ACWStateSample, j int) bool {
+	return rcv.SUN_STATES(obj, j)
+}
+
+func (rcv *ACWRequest) SUN_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) SunStatesLength() int {
+	return rcv.SUN_STATESLength()
+}
+
+/// Sun states in the STATES frame and time scale, required by
+/// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+/// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+func (rcv *ACWRequest) MOON_STATES(obj *ACWStateSample, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWStateSample)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) MoonStates(obj *ACWStateSample, j int) bool {
+	return rcv.MOON_STATES(obj, j)
+}
+
+func (rcv *ACWRequest) MOON_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) MoonStatesLength() int {
+	return rcv.MOON_STATESLength()
+}
+
+/// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
 func ACWRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(14)
 }
 func ACWRequestAddOPERATION(builder *flatbuffers.Builder, OPERATION acwOperationCode) {
 	builder.PrependInt8Slot(0, int8(OPERATION), 0)
@@ -298,6 +468,60 @@ func ACWRequestAddREFRACTION_MODEL(builder *flatbuffers.Builder, REFRACTION_MODE
 }
 func ACWRequestAddRefractionModel(builder *flatbuffers.Builder, REFRACTION_MODEL flatbuffers.UOffsetT) {
 	ACWRequestAddREFRACTION_MODEL(builder, REFRACTION_MODEL)
+}
+func ACWRequestAddCONSTRAINTS(builder *flatbuffers.Builder, CONSTRAINTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CONSTRAINTS), 0)
+}
+func ACWRequestAddConstraints(builder *flatbuffers.Builder, CONSTRAINTS flatbuffers.UOffsetT) {
+	ACWRequestAddCONSTRAINTS(builder, CONSTRAINTS)
+}
+func ACWRequestAddOBSERVERS(builder *flatbuffers.Builder, OBSERVERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OBSERVERS), 0)
+}
+func ACWRequestAddObservers(builder *flatbuffers.Builder, OBSERVERS flatbuffers.UOffsetT) {
+	ACWRequestAddOBSERVERS(builder, OBSERVERS)
+}
+func ACWRequestStartOBSERVERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartObserversVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartOBSERVERSVector(builder, numElems)
+}
+func ACWRequestAddEVALUATION_MODE(builder *flatbuffers.Builder, EVALUATION_MODE acwEvaluationMode) {
+	builder.PrependInt8Slot(10, int8(EVALUATION_MODE), 0)
+}
+func ACWRequestAddEvaluationMode(builder *flatbuffers.Builder, EVALUATION_MODE acwEvaluationMode) {
+	ACWRequestAddEVALUATION_MODE(builder, EVALUATION_MODE)
+}
+func ACWRequestAddROOT_TOLERANCE_S(builder *flatbuffers.Builder, ROOT_TOLERANCE_S float64) {
+	builder.PrependFloat64Slot(11, ROOT_TOLERANCE_S, 0.1)
+}
+func ACWRequestAddRootToleranceS(builder *flatbuffers.Builder, ROOT_TOLERANCE_S float64) {
+	ACWRequestAddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S)
+}
+func ACWRequestAddSUN_STATES(builder *flatbuffers.Builder, SUN_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SUN_STATES), 0)
+}
+func ACWRequestAddSunStates(builder *flatbuffers.Builder, SUN_STATES flatbuffers.UOffsetT) {
+	ACWRequestAddSUN_STATES(builder, SUN_STATES)
+}
+func ACWRequestStartSUN_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartSunStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartSUN_STATESVector(builder, numElems)
+}
+func ACWRequestAddMOON_STATES(builder *flatbuffers.Builder, MOON_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MOON_STATES), 0)
+}
+func ACWRequestAddMoonStates(builder *flatbuffers.Builder, MOON_STATES flatbuffers.UOffsetT) {
+	ACWRequestAddMOON_STATES(builder, MOON_STATES)
+}
+func ACWRequestStartMOON_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartMoonStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartMOON_STATESVector(builder, numElems)
 }
 func ACWRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

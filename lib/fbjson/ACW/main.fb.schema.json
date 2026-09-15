@@ -61,6 +61,132 @@
         }
       }
     },
+    "acwConstraintKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MIN_ELEVATION",
+        "ELEVATION_MASK",
+        "MAX_RANGE",
+        "MIN_RANGE",
+        "SUN_EXCLUSION",
+        "MOON_EXCLUSION",
+        "TARGET_LIGHTING",
+        "LINE_OF_SIGHT",
+        "BLACKOUT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MIN_ELEVATION": {
+          "value": 1,
+          "description": "Observer-to-target elevation at or above THRESHOLD_RAD (ground observers)."
+        },
+        "ELEVATION_MASK": {
+          "value": 2,
+          "description": "Azimuth-dependent minimum elevation from MASK."
+        },
+        "MAX_RANGE": {
+          "value": 3,
+          "description": "Observer-to-target range at or below MAX_RANGE_M."
+        },
+        "MIN_RANGE": {
+          "value": 4,
+          "description": "Observer-to-target range at or above MIN_RANGE_M."
+        },
+        "SUN_EXCLUSION": {
+          "value": 5,
+          "description": "Angle between the observer-to-target and observer-to-Sun directions at or above THRESHOLD_RAD (solar exclusion)."
+        },
+        "MOON_EXCLUSION": {
+          "value": 6,
+          "description": "Angle between the observer-to-target and observer-to-Moon directions at or above THRESHOLD_RAD (lunar exclusion)."
+        },
+        "TARGET_LIGHTING": {
+          "value": 7,
+          "description": "Target illumination state matches LIGHTING."
+        },
+        "LINE_OF_SIGHT": {
+          "value": 8,
+          "description": "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+        },
+        "BLACKOUT": {
+          "value": 9,
+          "description": "Outside every observer blackout window."
+        }
+      }
+    },
+    "acwConstraintOperator": {
+      "type": "string",
+      "enum": [
+        "ALL_OF",
+        "ANY_OF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ALL_OF": {
+          "value": 0,
+          "description": "Every member must hold (AND)."
+        },
+        "ANY_OF": {
+          "value": 1,
+          "description": "At least one member must hold (OR)."
+        }
+      }
+    },
+    "acwEvaluationMode": {
+      "type": "string",
+      "enum": [
+        "DISCRETE",
+        "CONTINUOUS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DISCRETE": {
+          "value": 0,
+          "description": "Evaluate at the supplied sample epochs only; window edges are samples."
+        },
+        "CONTINUOUS": {
+          "value": 1,
+          "description": "Bracket between samples and refine each edge to ROOT_TOLERANCE_S."
+        }
+      }
+    },
+    "acwLightingCondition": {
+      "type": "string",
+      "enum": [
+        "ANY",
+        "SUNLIT",
+        "PENUMBRA",
+        "UMBRA",
+        "NOT_UMBRA"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ANY": {
+          "value": 0
+        },
+        "SUNLIT": {
+          "value": 1
+        },
+        "PENUMBRA": {
+          "value": 2
+        },
+        "UMBRA": {
+          "value": 3
+        },
+        "NOT_UMBRA": {
+          "value": 4,
+          "description": "Sunlit or penumbra."
+        }
+      }
+    },
     "ACWStateSample": {
       "type": "object",
       "description": "Target Cartesian state sample in an Earth-fixed frame.",
@@ -205,6 +331,186 @@
       },
       "additionalProperties": false
     },
+    "ACWConstraint": {
+      "type": "object",
+      "description": "One access constraint. Fields not used by KIND are ignored.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/acwConstraintKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MIN_ELEVATION": {
+              "value": 1,
+              "description": "Observer-to-target elevation at or above THRESHOLD_RAD (ground observers)."
+            },
+            "ELEVATION_MASK": {
+              "value": 2,
+              "description": "Azimuth-dependent minimum elevation from MASK."
+            },
+            "MAX_RANGE": {
+              "value": 3,
+              "description": "Observer-to-target range at or below MAX_RANGE_M."
+            },
+            "MIN_RANGE": {
+              "value": 4,
+              "description": "Observer-to-target range at or above MIN_RANGE_M."
+            },
+            "SUN_EXCLUSION": {
+              "value": 5,
+              "description": "Angle between the observer-to-target and observer-to-Sun directions at or above THRESHOLD_RAD (solar exclusion)."
+            },
+            "MOON_EXCLUSION": {
+              "value": 6,
+              "description": "Angle between the observer-to-target and observer-to-Moon directions at or above THRESHOLD_RAD (lunar exclusion)."
+            },
+            "TARGET_LIGHTING": {
+              "value": 7,
+              "description": "Target illumination state matches LIGHTING."
+            },
+            "LINE_OF_SIGHT": {
+              "value": 8,
+              "description": "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+            },
+            "BLACKOUT": {
+              "value": 9,
+              "description": "Outside every observer blackout window."
+            }
+          }
+        },
+        "THRESHOLD_RAD": {
+          "type": "number",
+          "description": "Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE_M": {
+          "type": "number",
+          "description": "Range bounds, meters (MIN_RANGE, MAX_RANGE).",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIGHTING": {
+          "$ref": "#/definitions/acwLightingCondition",
+          "description": "Required target lighting (TARGET_LIGHTING).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ANY": {
+              "value": 0
+            },
+            "SUNLIT": {
+              "value": 1
+            },
+            "PENUMBRA": {
+              "value": 2
+            },
+            "UMBRA": {
+              "value": 3
+            },
+            "NOT_UMBRA": {
+              "value": 4,
+              "description": "Sunlit or penumbra."
+            }
+          }
+        },
+        "OCCULTATION_ATMOSPHERE_HEIGHT_M": {
+          "type": "number",
+          "description": "Central-body radius offset for line-of-sight occultation, meters\n(LINE_OF_SIGHT); 0 grazes the ellipsoid surface.",
+          "x-flatbuffer-type": "double"
+        },
+        "MASK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWElevationMaskPoint"
+          },
+          "description": "Azimuth-dependent mask (ELEVATION_MASK).",
+          "x-flatbuffer-type": "[ACWElevationMaskPoint]"
+        },
+        "LABEL": {
+          "type": "string",
+          "description": "Producer label echoed in window attribution.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWConstraintSet": {
+      "type": "object",
+      "description": "A boolean composition of constraints and nested sets.",
+      "properties": {
+        "OPERATOR": {
+          "$ref": "#/definitions/acwConstraintOperator",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ALL_OF": {
+              "value": 0,
+              "description": "Every member must hold (AND)."
+            },
+            "ANY_OF": {
+              "value": 1,
+              "description": "At least one member must hold (OR)."
+            }
+          }
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWConstraint"
+          },
+          "x-flatbuffer-type": "[ACWConstraint]"
+        },
+        "SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWConstraintSet"
+          },
+          "description": "Nested sets, combined with the same OPERATOR.",
+          "x-flatbuffer-type": "[ACWConstraintSet]"
+        },
+        "LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWObserverTrajectory": {
+      "type": "object",
+      "description": "A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
+      "properties": {
+        "OBSERVER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "BLACKOUT_WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWBlackoutWindow"
+          },
+          "description": "Observer-specific unavailable intervals.",
+          "x-flatbuffer-type": "[ACWBlackoutWindow]"
+        }
+      },
+      "additionalProperties": false
+    },
     "ACWRequest": {
       "type": "object",
       "description": "One access-window compute request.",
@@ -266,6 +572,57 @@
           "$ref": "#/definitions/ACWRefractionModel",
           "description": "Optional apparent-elevation refraction model.",
           "x-flatbuffer-type": "ACWRefractionModel"
+        },
+        "CONSTRAINTS": {
+          "$ref": "#/definitions/ACWConstraintSet",
+          "description": "Optional constraint composition. When absent the legacy behaviour holds:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required.",
+          "x-flatbuffer-type": "ACWConstraintSet"
+        },
+        "OBSERVERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWObserverTrajectory"
+          },
+          "description": "Optional moving observers (satellite-to-satellite access). Each observer\nis evaluated against STATES like a ground station.",
+          "x-flatbuffer-type": "[ACWObserverTrajectory]"
+        },
+        "EVALUATION_MODE": {
+          "$ref": "#/definitions/acwEvaluationMode",
+          "description": "Sample-only or root-refined window edges.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DISCRETE": {
+              "value": 0,
+              "description": "Evaluate at the supplied sample epochs only; window edges are samples."
+            },
+            "CONTINUOUS": {
+              "value": 1,
+              "description": "Bracket between samples and refine each edge to ROOT_TOLERANCE_S."
+            }
+          }
+        },
+        "ROOT_TOLERANCE_S": {
+          "type": "number",
+          "description": "Edge refinement tolerance for CONTINUOUS, seconds.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.1"
+        },
+        "SUN_STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "description": "Sun states in the STATES frame and time scale, required by\nSUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.",
+          "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "MOON_STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "description": "Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.",
+          "x-flatbuffer-type": "[ACWStateSample]"
         }
       },
       "additionalProperties": false
@@ -299,6 +656,50 @@
           "maximum": 4294967295,
           "description": "Number of visible input samples contributing to the window.",
           "x-flatbuffer-type": "uint32"
+        },
+        "OBSERVER_ID": {
+          "type": "string",
+          "description": "Observer id when the observer is an ACWObserverTrajectory; empty for a\nground station (then STATION_ID names it).",
+          "x-flatbuffer-type": "string"
+        },
+        "START_LIMITING_CONSTRAINT_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window; -1 when the window starts at the\nfirst sample.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "END_LIMITING_CONSTRAINT_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Index of the constraint whose transition closes the window; -1 when the\nwindow ends at the last sample.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "START_LIMITING_CONSTRAINT_LABEL": {
+          "type": "string",
+          "description": "Labels of those constraints, when the producer set them.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_LIMITING_CONSTRAINT_LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_RANGE_M": {
+          "type": "number",
+          "description": "Range extrema over the window, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EDGES_REFINED": {
+          "type": "boolean",
+          "description": "True when edges were root-refined (CONTINUOUS); false when they are samples.",
+          "x-flatbuffer-type": "bool"
         }
       },
       "additionalProperties": false
@@ -341,6 +742,30 @@
           "type": "string",
           "description": "Caller trace/correlation identifier copied from the request when present.",
           "x-flatbuffer-type": "string"
+        },
+        "EVALUATION_MODE": {
+          "$ref": "#/definitions/acwEvaluationMode",
+          "description": "Evaluation mode actually used.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DISCRETE": {
+              "value": 0,
+              "description": "Evaluate at the supplied sample epochs only; window edges are samples."
+            },
+            "CONTINUOUS": {
+              "value": 1,
+              "description": "Bracket between samples and refine each edge to ROOT_TOLERANCE_S."
+            }
+          }
+        },
+        "CONSTRAINT_LABELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Flattened depth-first constraint list the window indices refer to.",
+          "x-flatbuffer-type": "[string]"
         }
       },
       "additionalProperties": false

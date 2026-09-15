@@ -117,5 +117,49 @@ class rfmAxisType private constructor() {
          * IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
          */
         const val TRUE_OF_DATE_EQUATOR_FK5: UByte = 24u
+        /**
+         * True equator of date computed with the IERS Conventions (1996)
+         * reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
+         * nutation with the observed celestial pole offsets applied. Distinct from
+         * TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
+         * (IAU-2006/2000A).
+         */
+        const val TRUE_OF_DATE_EQUATOR_IERS1996: UByte = 25u
+        /**
+         * True equator of date computed with the IERS Conventions (2003)
+         * reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
+         * precession with the IAU 2000 precession-rate corrections. The mean-of-date
+         * equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
+         */
+        const val TRUE_OF_DATE_EQUATOR_IERS2003: UByte = 26u
+        /**
+         * Topocentric East-North-Up axes at a surface site; the site is carried on
+         * RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
+         */
+        const val TOPOCENTRIC_EAST_NORTH_UP: UByte = 27u
+        /**
+         * Topocentric North-East-Down axes at a surface site.
+         */
+        const val TOPOCENTRIC_NORTH_EAST_DOWN: UByte = 28u
+        /**
+         * Topocentric South-East-Zenith axes at a surface site.
+         */
+        const val TOPOCENTRIC_SOUTH_EAST_ZENITH: UByte = 29u
+        /**
+         * Orbital axes from the object's state: X along the velocity, Z along the
+         * orbit normal, Y completing the right-handed set (VNC). The object is the
+         * origin body of the coordinate system.
+         */
+        const val ORBITAL_VELOCITY_NORMAL_CONORMAL: UByte = 30u
+        /**
+         * Orbital axes from the object's state: X radial (outward), Z along the
+         * orbit normal, Y transverse completing the set (RTN, also RSW).
+         */
+        const val ORBITAL_RADIAL_TRANSVERSE_NORMAL: UByte = 31u
+        /**
+         * Orbital axes from the object's state: Z toward the central body (nadir),
+         * Y opposite the orbit normal, X completing the set (LVLH).
+         */
+        const val ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: UByte = 32u
     }
 }

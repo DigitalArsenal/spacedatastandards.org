@@ -42,27 +42,46 @@ public final class ACWResult extends com.google.flatbuffers.Table {
   public String TRACE_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACE_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer TRACE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Evaluation mode actually used.
+   */
+  public byte EVALUATION_MODE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Flattened depth-first constraint list the window indices refer to.
+   */
+  public String CONSTRAINT_LABELS(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int CONSTRAINT_LABELSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector constraintLabelsVector() { return constraintLabelsVector(new StringVector()); }
+  public StringVector constraintLabelsVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createACWResult(FlatBufferBuilder builder,
       byte STATUS,
       int ERROR_MESSAGEOffset,
       int WINDOWSOffset,
-      int TRACE_IDOffset) {
-    builder.startTable(4);
+      int TRACE_IDOffset,
+      byte EVALUATION_MODE,
+      int CONSTRAINT_LABELSOffset) {
+    builder.startTable(6);
+    ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
     ACWResult.addTraceId(builder, TRACE_IDOffset);
     ACWResult.addWindows(builder, WINDOWSOffset);
     ACWResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
+    ACWResult.addEvaluationMode(builder, EVALUATION_MODE);
     ACWResult.addStatus(builder, STATUS);
     return ACWResult.endACWResult(builder);
   }
 
-  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addErrorMessage(FlatBufferBuilder builder, int ERROR_MESSAGEOffset) { builder.addOffset(1, ERROR_MESSAGEOffset, 0); }
   public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(2, WINDOWSOffset, 0); }
   public static int createWindowsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startWindowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addTraceId(FlatBufferBuilder builder, int TRACE_IDOffset) { builder.addOffset(3, TRACE_IDOffset, 0); }
+  public static void addEvaluationMode(FlatBufferBuilder builder, byte EVALUATION_MODE) { builder.addByte(4, EVALUATION_MODE, 0); }
+  public static void addConstraintLabels(FlatBufferBuilder builder, int CONSTRAINT_LABELSOffset) { builder.addOffset(5, CONSTRAINT_LABELSOffset, 0); }
+  public static int createConstraintLabelsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startConstraintLabelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endACWResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

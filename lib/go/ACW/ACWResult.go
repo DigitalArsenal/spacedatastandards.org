@@ -119,8 +119,57 @@ func (rcv *ACWResult) TraceId() []byte {
 }
 
 /// Caller trace/correlation identifier copied from the request when present.
+/// Evaluation mode actually used.
+func (rcv *ACWResult) EVALUATION_MODE() acwEvaluationMode {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return acwEvaluationMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *ACWResult) EvaluationMode() acwEvaluationMode {
+	return rcv.EVALUATION_MODE()
+}
+
+/// Evaluation mode actually used.
+func (rcv *ACWResult) MutateEVALUATION_MODE(n acwEvaluationMode) bool {
+	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *ACWResult) MutateEvaluationMode(n acwEvaluationMode) bool {
+	return rcv.MutateEVALUATION_MODE(n)
+}
+
+/// Flattened depth-first constraint list the window indices refer to.
+func (rcv *ACWResult) CONSTRAINT_LABELS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *ACWResult) ConstraintLabels(j int) []byte {
+	return rcv.CONSTRAINT_LABELS(j)
+}
+
+func (rcv *ACWResult) CONSTRAINT_LABELSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWResult) ConstraintLabelsLength() int {
+	return rcv.CONSTRAINT_LABELSLength()
+}
+
+/// Flattened depth-first constraint list the window indices refer to.
 func ACWResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(6)
 }
 func ACWResultAddSTATUS(builder *flatbuffers.Builder, STATUS acwResultStatus) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -151,6 +200,24 @@ func ACWResultAddTRACE_ID(builder *flatbuffers.Builder, TRACE_ID flatbuffers.UOf
 }
 func ACWResultAddTraceId(builder *flatbuffers.Builder, TRACE_ID flatbuffers.UOffsetT) {
 	ACWResultAddTRACE_ID(builder, TRACE_ID)
+}
+func ACWResultAddEVALUATION_MODE(builder *flatbuffers.Builder, EVALUATION_MODE acwEvaluationMode) {
+	builder.PrependInt8Slot(4, int8(EVALUATION_MODE), 0)
+}
+func ACWResultAddEvaluationMode(builder *flatbuffers.Builder, EVALUATION_MODE acwEvaluationMode) {
+	ACWResultAddEVALUATION_MODE(builder, EVALUATION_MODE)
+}
+func ACWResultAddCONSTRAINT_LABELS(builder *flatbuffers.Builder, CONSTRAINT_LABELS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONSTRAINT_LABELS), 0)
+}
+func ACWResultAddConstraintLabels(builder *flatbuffers.Builder, CONSTRAINT_LABELS flatbuffers.UOffsetT) {
+	ACWResultAddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELS)
+}
+func ACWResultStartCONSTRAINT_LABELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWResultStartConstraintLabelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWResultStartCONSTRAINT_LABELSVector(builder, numElems)
 }
 func ACWResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

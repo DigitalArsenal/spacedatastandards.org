@@ -1,5 +1,5 @@
-// Hash: 20277e69a4c6d21cf60ecef9fe043dcd831c9c458ec103e0c78ad0b92074238b
-// Version: 0.0.2
+// Hash: 33f4fc2fced4355d0f1ac3a949aa8e1e92a2fec53249a51ca6180ea86d40be12
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 // Access-window request/result records for ground-station visibility analysis.
 
@@ -79,6 +79,97 @@ table ACWGroundStation {
   BLACKOUT_WINDOWS:[ACWBlackoutWindow];
 }
 
+/// Kind of access constraint. Append only.
+enum acwConstraintKind : byte {
+  UNSPECIFIED = 0,
+  /// Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+  MIN_ELEVATION = 1,
+  /// Azimuth-dependent minimum elevation from MASK.
+  ELEVATION_MASK = 2,
+  /// Observer-to-target range at or below MAX_RANGE_M.
+  MAX_RANGE = 3,
+  /// Observer-to-target range at or above MIN_RANGE_M.
+  MIN_RANGE = 4,
+  /// Angle between the observer-to-target and observer-to-Sun directions at
+  /// or above THRESHOLD_RAD (solar exclusion).
+  SUN_EXCLUSION = 5,
+  /// Angle between the observer-to-target and observer-to-Moon directions at
+  /// or above THRESHOLD_RAD (lunar exclusion).
+  MOON_EXCLUSION = 6,
+  /// Target illumination state matches LIGHTING.
+  TARGET_LIGHTING = 7,
+  /// Straight-line visibility between observer and target not occulted by the
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  LINE_OF_SIGHT = 8,
+  /// Outside every observer blackout window.
+  BLACKOUT = 9
+}
+
+/// How the members of a constraint set combine.
+enum acwConstraintOperator : byte {
+  /// Every member must hold (AND).
+  ALL_OF = 0,
+  /// At least one member must hold (OR).
+  ANY_OF = 1
+}
+
+/// Whether windows are evaluated only at the supplied samples or refined to
+/// the epochs where the aggregate condition changes.
+enum acwEvaluationMode : byte {
+  /// Evaluate at the supplied sample epochs only; window edges are samples.
+  DISCRETE = 0,
+  /// Bracket between samples and refine each edge to ROOT_TOLERANCE_S.
+  CONTINUOUS = 1
+}
+
+/// Illumination state of the target required by a TARGET_LIGHTING constraint.
+enum acwLightingCondition : byte {
+  ANY = 0,
+  SUNLIT = 1,
+  PENUMBRA = 2,
+  UMBRA = 3,
+  /// Sunlit or penumbra.
+  NOT_UMBRA = 4
+}
+
+/// One access constraint. Fields not used by KIND are ignored.
+table ACWConstraint {
+  KIND:acwConstraintKind;
+  /// Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
+  THRESHOLD_RAD:double;
+  /// Range bounds, meters (MIN_RANGE, MAX_RANGE).
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  /// Required target lighting (TARGET_LIGHTING).
+  LIGHTING:acwLightingCondition;
+  /// Central-body radius offset for line-of-sight occultation, meters
+  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  OCCULTATION_ATMOSPHERE_HEIGHT_M:double;
+  /// Azimuth-dependent mask (ELEVATION_MASK).
+  MASK:[ACWElevationMaskPoint];
+  /// Producer label echoed in window attribution.
+  LABEL:string;
+}
+
+/// A boolean composition of constraints and nested sets.
+table ACWConstraintSet {
+  OPERATOR:acwConstraintOperator;
+  CONSTRAINTS:[ACWConstraint];
+  /// Nested sets, combined with the same OPERATOR.
+  SETS:[ACWConstraintSet];
+  LABEL:string;
+}
+
+/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// the same frame and time scale as ACWRequest.STATES.
+table ACWObserverTrajectory {
+  OBSERVER_ID:string;
+  NAME:string;
+  STATES:[ACWStateSample];
+  /// Observer-specific unavailable intervals.
+  BLACKOUT_WINDOWS:[ACWBlackoutWindow];
+}
+
 /// One access-window compute request.
 table ACWRequest {
   OPERATION:acwOperationCode;
@@ -96,6 +187,22 @@ table ACWRequest {
   ELEVATION_MASK:[ACWElevationMaskPoint];
   /// Optional apparent-elevation refraction model.
   REFRACTION_MODEL:ACWRefractionModel;
+  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+  /// ELEVATION_MASK, all required.
+  CONSTRAINTS:ACWConstraintSet;
+  /// Optional moving observers (satellite-to-satellite access). Each observer
+  /// is evaluated against STATES like a ground station.
+  OBSERVERS:[ACWObserverTrajectory];
+  /// Sample-only or root-refined window edges.
+  EVALUATION_MODE:acwEvaluationMode;
+  /// Edge refinement tolerance for CONTINUOUS, seconds.
+  ROOT_TOLERANCE_S:double = 0.1;
+  /// Sun states in the STATES frame and time scale, required by
+  /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+  SUN_STATES:[ACWStateSample];
+  /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+  MOON_STATES:[ACWStateSample];
 }
 
 /// One computed access interval.
@@ -109,6 +216,24 @@ table ACWAccessWindow {
   MAX_ELEVATION_RAD:double;
   /// Number of visible input samples contributing to the window.
   SAMPLE_COUNT:uint32;
+  /// Observer id when the observer is an ACWObserverTrajectory; empty for a
+  /// ground station (then STATION_ID names it).
+  OBSERVER_ID:string;
+  /// Index into the flattened, depth-first constraint list of the constraint
+  /// whose transition opens the window; -1 when the window starts at the
+  /// first sample.
+  START_LIMITING_CONSTRAINT_INDEX:int32 = -1;
+  /// Index of the constraint whose transition closes the window; -1 when the
+  /// window ends at the last sample.
+  END_LIMITING_CONSTRAINT_INDEX:int32 = -1;
+  /// Labels of those constraints, when the producer set them.
+  START_LIMITING_CONSTRAINT_LABEL:string;
+  END_LIMITING_CONSTRAINT_LABEL:string;
+  /// Range extrema over the window, meters.
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  /// True when edges were root-refined (CONTINUOUS); false when they are samples.
+  EDGES_REFINED:bool;
 }
 
 /// Result for one access-window compute request.
@@ -118,6 +243,10 @@ table ACWResult {
   WINDOWS:[ACWAccessWindow];
   /// Caller trace/correlation identifier copied from the request when present.
   TRACE_ID:string;
+  /// Evaluation mode actually used.
+  EVALUATION_MODE:acwEvaluationMode;
+  /// Flattened depth-first constraint list the window indices refer to.
+  CONSTRAINT_LABELS:[string];
 }
 
 /// Access-window analysis envelope.

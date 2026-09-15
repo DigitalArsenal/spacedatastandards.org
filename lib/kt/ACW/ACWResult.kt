@@ -72,6 +72,29 @@ class ACWResult : Table() {
         }
     val traceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun traceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Evaluation mode actually used.
+     */
+    val evaluationMode : Byte
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Flattened depth-first constraint list the window indices refer to.
+     */
+    fun constraintLabels(j: Int) : String? {
+        val o = __offset(14)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val constraintLabelsLength : Int
+        get() {
+            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWResult(_bb: ByteBuffer): ACWResult = getRootAsACWResult(_bb, ACWResult())
@@ -79,15 +102,17 @@ class ACWResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int) : Int {
-            builder.startTable(4)
+        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int, evaluationMode: Byte, constraintLabelsOffset: Int) : Int {
+            builder.startTable(6)
+            addCONSTRAINTLABELS(builder, constraintLabelsOffset)
             addTRACEID(builder, traceIdOffset)
             addWINDOWS(builder, windowsOffset)
             addERRORMESSAGE(builder, errorMessageOffset)
+            addEVALUATIONMODE(builder, evaluationMode)
             addSTATUS(builder, status)
             return endACWResult(builder)
         }
-        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addERRORMESSAGE(builder: FlatBufferBuilder, errorMessage: Int) = builder.addOffset(1, errorMessage, 0)
         fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(2, windows, 0)
@@ -100,6 +125,16 @@ class ACWResult : Table() {
         }
         fun startWindowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: Int) = builder.addOffset(3, traceId, 0)
+        fun addEVALUATIONMODE(builder: FlatBufferBuilder, evaluationMode: Byte) = builder.addByte(4, evaluationMode, 0)
+        fun addCONSTRAINTLABELS(builder: FlatBufferBuilder, constraintLabels: Int) = builder.addOffset(5, constraintLabels, 0)
+        fun createConstraintLabelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startConstraintLabelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endACWResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

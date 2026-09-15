@@ -28,6 +28,15 @@ struct ACWBlackoutWindowBuilder;
 struct ACWGroundStation;
 struct ACWGroundStationBuilder;
 
+struct ACWConstraint;
+struct ACWConstraintBuilder;
+
+struct ACWConstraintSet;
+struct ACWConstraintSetBuilder;
+
+struct ACWObserverTrajectory;
+struct ACWObserverTrajectoryBuilder;
+
 struct ACWRequest;
 struct ACWRequestBuilder;
 
@@ -136,6 +145,181 @@ inline const char *EnumNameacwRefractionModelKind(acwRefractionModelKind e) {
   if (::flatbuffers::IsOutRange(e, acwRefractionModelKind_NONE, acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesacwRefractionModelKind()[index];
+}
+
+/// Kind of access constraint. Append only.
+enum acwConstraintKind : int8_t {
+  acwConstraintKind_UNSPECIFIED = 0,
+  /// Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+  acwConstraintKind_MIN_ELEVATION = 1,
+  /// Azimuth-dependent minimum elevation from MASK.
+  acwConstraintKind_ELEVATION_MASK = 2,
+  /// Observer-to-target range at or below MAX_RANGE_M.
+  acwConstraintKind_MAX_RANGE = 3,
+  /// Observer-to-target range at or above MIN_RANGE_M.
+  acwConstraintKind_MIN_RANGE = 4,
+  /// Angle between the observer-to-target and observer-to-Sun directions at
+  /// or above THRESHOLD_RAD (solar exclusion).
+  acwConstraintKind_SUN_EXCLUSION = 5,
+  /// Angle between the observer-to-target and observer-to-Moon directions at
+  /// or above THRESHOLD_RAD (lunar exclusion).
+  acwConstraintKind_MOON_EXCLUSION = 6,
+  /// Target illumination state matches LIGHTING.
+  acwConstraintKind_TARGET_LIGHTING = 7,
+  /// Straight-line visibility between observer and target not occulted by the
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  acwConstraintKind_LINE_OF_SIGHT = 8,
+  /// Outside every observer blackout window.
+  acwConstraintKind_BLACKOUT = 9,
+  acwConstraintKind_MIN = acwConstraintKind_UNSPECIFIED,
+  acwConstraintKind_MAX = acwConstraintKind_BLACKOUT
+};
+
+inline const acwConstraintKind (&EnumValuesacwConstraintKind())[10] {
+  static const acwConstraintKind values[] = {
+    acwConstraintKind_UNSPECIFIED,
+    acwConstraintKind_MIN_ELEVATION,
+    acwConstraintKind_ELEVATION_MASK,
+    acwConstraintKind_MAX_RANGE,
+    acwConstraintKind_MIN_RANGE,
+    acwConstraintKind_SUN_EXCLUSION,
+    acwConstraintKind_MOON_EXCLUSION,
+    acwConstraintKind_TARGET_LIGHTING,
+    acwConstraintKind_LINE_OF_SIGHT,
+    acwConstraintKind_BLACKOUT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesacwConstraintKind() {
+  static const char * const names[11] = {
+    "UNSPECIFIED",
+    "MIN_ELEVATION",
+    "ELEVATION_MASK",
+    "MAX_RANGE",
+    "MIN_RANGE",
+    "SUN_EXCLUSION",
+    "MOON_EXCLUSION",
+    "TARGET_LIGHTING",
+    "LINE_OF_SIGHT",
+    "BLACKOUT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameacwConstraintKind(acwConstraintKind e) {
+  if (::flatbuffers::IsOutRange(e, acwConstraintKind_UNSPECIFIED, acwConstraintKind_BLACKOUT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesacwConstraintKind()[index];
+}
+
+/// How the members of a constraint set combine.
+enum acwConstraintOperator : int8_t {
+  /// Every member must hold (AND).
+  acwConstraintOperator_ALL_OF = 0,
+  /// At least one member must hold (OR).
+  acwConstraintOperator_ANY_OF = 1,
+  acwConstraintOperator_MIN = acwConstraintOperator_ALL_OF,
+  acwConstraintOperator_MAX = acwConstraintOperator_ANY_OF
+};
+
+inline const acwConstraintOperator (&EnumValuesacwConstraintOperator())[2] {
+  static const acwConstraintOperator values[] = {
+    acwConstraintOperator_ALL_OF,
+    acwConstraintOperator_ANY_OF
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesacwConstraintOperator() {
+  static const char * const names[3] = {
+    "ALL_OF",
+    "ANY_OF",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameacwConstraintOperator(acwConstraintOperator e) {
+  if (::flatbuffers::IsOutRange(e, acwConstraintOperator_ALL_OF, acwConstraintOperator_ANY_OF)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesacwConstraintOperator()[index];
+}
+
+/// Whether windows are evaluated only at the supplied samples or refined to
+/// the epochs where the aggregate condition changes.
+enum acwEvaluationMode : int8_t {
+  /// Evaluate at the supplied sample epochs only; window edges are samples.
+  acwEvaluationMode_DISCRETE = 0,
+  /// Bracket between samples and refine each edge to ROOT_TOLERANCE_S.
+  acwEvaluationMode_CONTINUOUS = 1,
+  acwEvaluationMode_MIN = acwEvaluationMode_DISCRETE,
+  acwEvaluationMode_MAX = acwEvaluationMode_CONTINUOUS
+};
+
+inline const acwEvaluationMode (&EnumValuesacwEvaluationMode())[2] {
+  static const acwEvaluationMode values[] = {
+    acwEvaluationMode_DISCRETE,
+    acwEvaluationMode_CONTINUOUS
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesacwEvaluationMode() {
+  static const char * const names[3] = {
+    "DISCRETE",
+    "CONTINUOUS",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameacwEvaluationMode(acwEvaluationMode e) {
+  if (::flatbuffers::IsOutRange(e, acwEvaluationMode_DISCRETE, acwEvaluationMode_CONTINUOUS)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesacwEvaluationMode()[index];
+}
+
+/// Illumination state of the target required by a TARGET_LIGHTING constraint.
+enum acwLightingCondition : int8_t {
+  acwLightingCondition_ANY = 0,
+  acwLightingCondition_SUNLIT = 1,
+  acwLightingCondition_PENUMBRA = 2,
+  acwLightingCondition_UMBRA = 3,
+  /// Sunlit or penumbra.
+  acwLightingCondition_NOT_UMBRA = 4,
+  acwLightingCondition_MIN = acwLightingCondition_ANY,
+  acwLightingCondition_MAX = acwLightingCondition_NOT_UMBRA
+};
+
+inline const acwLightingCondition (&EnumValuesacwLightingCondition())[5] {
+  static const acwLightingCondition values[] = {
+    acwLightingCondition_ANY,
+    acwLightingCondition_SUNLIT,
+    acwLightingCondition_PENUMBRA,
+    acwLightingCondition_UMBRA,
+    acwLightingCondition_NOT_UMBRA
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesacwLightingCondition() {
+  static const char * const names[6] = {
+    "ANY",
+    "SUNLIT",
+    "PENUMBRA",
+    "UMBRA",
+    "NOT_UMBRA",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameacwLightingCondition(acwLightingCondition e) {
+  if (::flatbuffers::IsOutRange(e, acwLightingCondition_ANY, acwLightingCondition_NOT_UMBRA)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesacwLightingCondition()[index];
 }
 
 /// Target Cartesian state sample in an Earth-fixed frame.
@@ -538,6 +722,348 @@ inline ::flatbuffers::Offset<ACWGroundStation> CreateACWGroundStationDirect(
       BLACKOUT_WINDOWS__);
 }
 
+/// One access constraint. Fields not used by KIND are ignored.
+struct ACWConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACWConstraintBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_THRESHOLD_RAD = 6,
+    VT_MIN_RANGE_M = 8,
+    VT_MAX_RANGE_M = 10,
+    VT_LIGHTING = 12,
+    VT_OCCULTATION_ATMOSPHERE_HEIGHT_M = 14,
+    VT_MASK = 16,
+    VT_LABEL = 18
+  };
+  acwConstraintKind KIND() const {
+    return static_cast<acwConstraintKind>(GetField<int8_t>(VT_KIND, 0));
+  }
+  /// Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
+  double THRESHOLD_RAD() const {
+    return GetField<double>(VT_THRESHOLD_RAD, 0.0);
+  }
+  /// Range bounds, meters (MIN_RANGE, MAX_RANGE).
+  double MIN_RANGE_M() const {
+    return GetField<double>(VT_MIN_RANGE_M, 0.0);
+  }
+  double MAX_RANGE_M() const {
+    return GetField<double>(VT_MAX_RANGE_M, 0.0);
+  }
+  /// Required target lighting (TARGET_LIGHTING).
+  acwLightingCondition LIGHTING() const {
+    return static_cast<acwLightingCondition>(GetField<int8_t>(VT_LIGHTING, 0));
+  }
+  /// Central-body radius offset for line-of-sight occultation, meters
+  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  double OCCULTATION_ATMOSPHERE_HEIGHT_M() const {
+    return GetField<double>(VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, 0.0);
+  }
+  /// Azimuth-dependent mask (ELEVATION_MASK).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>> *MASK() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>> *>(VT_MASK);
+  }
+  /// Producer label echoed in window attribution.
+  const ::flatbuffers::String *LABEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LABEL);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_KIND, 1) &&
+           VerifyField<double>(verifier, VT_THRESHOLD_RAD, 8) &&
+           VerifyField<double>(verifier, VT_MIN_RANGE_M, 8) &&
+           VerifyField<double>(verifier, VT_MAX_RANGE_M, 8) &&
+           VerifyField<int8_t>(verifier, VT_LIGHTING, 1) &&
+           VerifyField<double>(verifier, VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, 8) &&
+           VerifyOffset(verifier, VT_MASK) &&
+           verifier.VerifyVector(MASK()) &&
+           verifier.VerifyVectorOfTables(MASK()) &&
+           VerifyOffset(verifier, VT_LABEL) &&
+           verifier.VerifyString(LABEL()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACWConstraintBuilder {
+  typedef ACWConstraint Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KIND(acwConstraintKind KIND) {
+    fbb_.AddElement<int8_t>(ACWConstraint::VT_KIND, static_cast<int8_t>(KIND), 0);
+  }
+  void add_THRESHOLD_RAD(double THRESHOLD_RAD) {
+    fbb_.AddElement<double>(ACWConstraint::VT_THRESHOLD_RAD, THRESHOLD_RAD, 0.0);
+  }
+  void add_MIN_RANGE_M(double MIN_RANGE_M) {
+    fbb_.AddElement<double>(ACWConstraint::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  void add_MAX_RANGE_M(double MAX_RANGE_M) {
+    fbb_.AddElement<double>(ACWConstraint::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  void add_LIGHTING(acwLightingCondition LIGHTING) {
+    fbb_.AddElement<int8_t>(ACWConstraint::VT_LIGHTING, static_cast<int8_t>(LIGHTING), 0);
+  }
+  void add_OCCULTATION_ATMOSPHERE_HEIGHT_M(double OCCULTATION_ATMOSPHERE_HEIGHT_M) {
+    fbb_.AddElement<double>(ACWConstraint::VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, OCCULTATION_ATMOSPHERE_HEIGHT_M, 0.0);
+  }
+  void add_MASK(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>>> MASK) {
+    fbb_.AddOffset(ACWConstraint::VT_MASK, MASK);
+  }
+  void add_LABEL(::flatbuffers::Offset<::flatbuffers::String> LABEL) {
+    fbb_.AddOffset(ACWConstraint::VT_LABEL, LABEL);
+  }
+  explicit ACWConstraintBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACWConstraint> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACWConstraint>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraint(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    acwConstraintKind KIND = acwConstraintKind_UNSPECIFIED,
+    double THRESHOLD_RAD = 0.0,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    acwLightingCondition LIGHTING = acwLightingCondition_ANY,
+    double OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>>> MASK = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0) {
+  ACWConstraintBuilder builder_(_fbb);
+  builder_.add_OCCULTATION_ATMOSPHERE_HEIGHT_M(OCCULTATION_ATMOSPHERE_HEIGHT_M);
+  builder_.add_MAX_RANGE_M(MAX_RANGE_M);
+  builder_.add_MIN_RANGE_M(MIN_RANGE_M);
+  builder_.add_THRESHOLD_RAD(THRESHOLD_RAD);
+  builder_.add_LABEL(LABEL);
+  builder_.add_MASK(MASK);
+  builder_.add_LIGHTING(LIGHTING);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraintDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    acwConstraintKind KIND = acwConstraintKind_UNSPECIFIED,
+    double THRESHOLD_RAD = 0.0,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    acwLightingCondition LIGHTING = acwLightingCondition_ANY,
+    double OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
+    const std::vector<::flatbuffers::Offset<ACWElevationMaskPoint>> *MASK = nullptr,
+    const char *LABEL = nullptr) {
+  auto MASK__ = MASK ? _fbb.CreateVector<::flatbuffers::Offset<ACWElevationMaskPoint>>(*MASK) : 0;
+  auto LABEL__ = LABEL ? _fbb.CreateString(LABEL) : 0;
+  return CreateACWConstraint(
+      _fbb,
+      KIND,
+      THRESHOLD_RAD,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      LIGHTING,
+      OCCULTATION_ATMOSPHERE_HEIGHT_M,
+      MASK__,
+      LABEL__);
+}
+
+/// A boolean composition of constraints and nested sets.
+struct ACWConstraintSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACWConstraintSetBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_OPERATOR = 4,
+    VT_CONSTRAINTS = 6,
+    VT_SETS = 8,
+    VT_LABEL = 10
+  };
+  acwConstraintOperator OPERATOR() const {
+    return static_cast<acwConstraintOperator>(GetField<int8_t>(VT_OPERATOR, 0));
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraint>> *CONSTRAINTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraint>> *>(VT_CONSTRAINTS);
+  }
+  /// Nested sets, combined with the same OPERATOR.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraintSet>> *SETS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraintSet>> *>(VT_SETS);
+  }
+  const ::flatbuffers::String *LABEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LABEL);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_OPERATOR, 1) &&
+           VerifyOffset(verifier, VT_CONSTRAINTS) &&
+           verifier.VerifyVector(CONSTRAINTS()) &&
+           verifier.VerifyVectorOfTables(CONSTRAINTS()) &&
+           VerifyOffset(verifier, VT_SETS) &&
+           verifier.VerifyVector(SETS()) &&
+           verifier.VerifyVectorOfTables(SETS()) &&
+           VerifyOffset(verifier, VT_LABEL) &&
+           verifier.VerifyString(LABEL()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACWConstraintSetBuilder {
+  typedef ACWConstraintSet Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_OPERATOR(acwConstraintOperator OPERATOR) {
+    fbb_.AddElement<int8_t>(ACWConstraintSet::VT_OPERATOR, static_cast<int8_t>(OPERATOR), 0);
+  }
+  void add_CONSTRAINTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraint>>> CONSTRAINTS) {
+    fbb_.AddOffset(ACWConstraintSet::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  void add_SETS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraintSet>>> SETS) {
+    fbb_.AddOffset(ACWConstraintSet::VT_SETS, SETS);
+  }
+  void add_LABEL(::flatbuffers::Offset<::flatbuffers::String> LABEL) {
+    fbb_.AddOffset(ACWConstraintSet::VT_LABEL, LABEL);
+  }
+  explicit ACWConstraintSetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACWConstraintSet> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACWConstraintSet>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACWConstraintSet> CreateACWConstraintSet(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    acwConstraintOperator OPERATOR = acwConstraintOperator_ALL_OF,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraint>>> CONSTRAINTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraintSet>>> SETS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0) {
+  ACWConstraintSetBuilder builder_(_fbb);
+  builder_.add_LABEL(LABEL);
+  builder_.add_SETS(SETS);
+  builder_.add_CONSTRAINTS(CONSTRAINTS);
+  builder_.add_OPERATOR(OPERATOR);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACWConstraintSet> CreateACWConstraintSetDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    acwConstraintOperator OPERATOR = acwConstraintOperator_ALL_OF,
+    const std::vector<::flatbuffers::Offset<ACWConstraint>> *CONSTRAINTS = nullptr,
+    const std::vector<::flatbuffers::Offset<ACWConstraintSet>> *SETS = nullptr,
+    const char *LABEL = nullptr) {
+  auto CONSTRAINTS__ = CONSTRAINTS ? _fbb.CreateVector<::flatbuffers::Offset<ACWConstraint>>(*CONSTRAINTS) : 0;
+  auto SETS__ = SETS ? _fbb.CreateVector<::flatbuffers::Offset<ACWConstraintSet>>(*SETS) : 0;
+  auto LABEL__ = LABEL ? _fbb.CreateString(LABEL) : 0;
+  return CreateACWConstraintSet(
+      _fbb,
+      OPERATOR,
+      CONSTRAINTS__,
+      SETS__,
+      LABEL__);
+}
+
+/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// the same frame and time scale as ACWRequest.STATES.
+struct ACWObserverTrajectory FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACWObserverTrajectoryBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_OBSERVER_ID = 4,
+    VT_NAME = 6,
+    VT_STATES = 8,
+    VT_BLACKOUT_WINDOWS = 10
+  };
+  const ::flatbuffers::String *OBSERVER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVER_ID);
+  }
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_STATES);
+  }
+  /// Observer-specific unavailable intervals.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>> *BLACKOUT_WINDOWS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>> *>(VT_BLACKOUT_WINDOWS);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_OBSERVER_ID) &&
+           verifier.VerifyString(OBSERVER_ID()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_STATES) &&
+           verifier.VerifyVector(STATES()) &&
+           verifier.VerifyVectorOfTables(STATES()) &&
+           VerifyOffset(verifier, VT_BLACKOUT_WINDOWS) &&
+           verifier.VerifyVector(BLACKOUT_WINDOWS()) &&
+           verifier.VerifyVectorOfTables(BLACKOUT_WINDOWS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACWObserverTrajectoryBuilder {
+  typedef ACWObserverTrajectory Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_OBSERVER_ID(::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID) {
+    fbb_.AddOffset(ACWObserverTrajectory::VT_OBSERVER_ID, OBSERVER_ID);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(ACWObserverTrajectory::VT_NAME, NAME);
+  }
+  void add_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> STATES) {
+    fbb_.AddOffset(ACWObserverTrajectory::VT_STATES, STATES);
+  }
+  void add_BLACKOUT_WINDOWS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>>> BLACKOUT_WINDOWS) {
+    fbb_.AddOffset(ACWObserverTrajectory::VT_BLACKOUT_WINDOWS, BLACKOUT_WINDOWS);
+  }
+  explicit ACWObserverTrajectoryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACWObserverTrajectory> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACWObserverTrajectory>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACWObserverTrajectory> CreateACWObserverTrajectory(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>>> BLACKOUT_WINDOWS = 0) {
+  ACWObserverTrajectoryBuilder builder_(_fbb);
+  builder_.add_BLACKOUT_WINDOWS(BLACKOUT_WINDOWS);
+  builder_.add_STATES(STATES);
+  builder_.add_NAME(NAME);
+  builder_.add_OBSERVER_ID(OBSERVER_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACWObserverTrajectory> CreateACWObserverTrajectoryDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *OBSERVER_ID = nullptr,
+    const char *NAME = nullptr,
+    const std::vector<::flatbuffers::Offset<ACWStateSample>> *STATES = nullptr,
+    const std::vector<::flatbuffers::Offset<ACWBlackoutWindow>> *BLACKOUT_WINDOWS = nullptr) {
+  auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
+  auto BLACKOUT_WINDOWS__ = BLACKOUT_WINDOWS ? _fbb.CreateVector<::flatbuffers::Offset<ACWBlackoutWindow>>(*BLACKOUT_WINDOWS) : 0;
+  return CreateACWObserverTrajectory(
+      _fbb,
+      OBSERVER_ID__,
+      NAME__,
+      STATES__,
+      BLACKOUT_WINDOWS__);
+}
+
 /// One access-window compute request.
 struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ACWRequestBuilder Builder;
@@ -549,7 +1075,13 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MIN_ELEVATION_OVERRIDE_RAD = 12,
     VT_TRACE_ID = 14,
     VT_ELEVATION_MASK = 16,
-    VT_REFRACTION_MODEL = 18
+    VT_REFRACTION_MODEL = 18,
+    VT_CONSTRAINTS = 20,
+    VT_OBSERVERS = 22,
+    VT_EVALUATION_MODE = 24,
+    VT_ROOT_TOLERANCE_S = 26,
+    VT_SUN_STATES = 28,
+    VT_MOON_STATES = 30
   };
   acwOperationCode OPERATION() const {
     return static_cast<acwOperationCode>(GetField<int8_t>(VT_OPERATION, 0));
@@ -582,6 +1114,34 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ACWRefractionModel *REFRACTION_MODEL() const {
     return GetPointer<const ACWRefractionModel *>(VT_REFRACTION_MODEL);
   }
+  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+  /// ELEVATION_MASK, all required.
+  const ACWConstraintSet *CONSTRAINTS() const {
+    return GetPointer<const ACWConstraintSet *>(VT_CONSTRAINTS);
+  }
+  /// Optional moving observers (satellite-to-satellite access). Each observer
+  /// is evaluated against STATES like a ground station.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWObserverTrajectory>> *OBSERVERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWObserverTrajectory>> *>(VT_OBSERVERS);
+  }
+  /// Sample-only or root-refined window edges.
+  acwEvaluationMode EVALUATION_MODE() const {
+    return static_cast<acwEvaluationMode>(GetField<int8_t>(VT_EVALUATION_MODE, 0));
+  }
+  /// Edge refinement tolerance for CONTINUOUS, seconds.
+  double ROOT_TOLERANCE_S() const {
+    return GetField<double>(VT_ROOT_TOLERANCE_S, 0.1);
+  }
+  /// Sun states in the STATES frame and time scale, required by
+  /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *SUN_STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_SUN_STATES);
+  }
+  /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *MOON_STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_MOON_STATES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -602,6 +1162,19 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(ELEVATION_MASK()) &&
            VerifyOffset(verifier, VT_REFRACTION_MODEL) &&
            verifier.VerifyTable(REFRACTION_MODEL()) &&
+           VerifyOffset(verifier, VT_CONSTRAINTS) &&
+           verifier.VerifyTable(CONSTRAINTS()) &&
+           VerifyOffset(verifier, VT_OBSERVERS) &&
+           verifier.VerifyVector(OBSERVERS()) &&
+           verifier.VerifyVectorOfTables(OBSERVERS()) &&
+           VerifyField<int8_t>(verifier, VT_EVALUATION_MODE, 1) &&
+           VerifyField<double>(verifier, VT_ROOT_TOLERANCE_S, 8) &&
+           VerifyOffset(verifier, VT_SUN_STATES) &&
+           verifier.VerifyVector(SUN_STATES()) &&
+           verifier.VerifyVectorOfTables(SUN_STATES()) &&
+           VerifyOffset(verifier, VT_MOON_STATES) &&
+           verifier.VerifyVector(MOON_STATES()) &&
+           verifier.VerifyVectorOfTables(MOON_STATES()) &&
            verifier.EndTable();
   }
 };
@@ -634,6 +1207,24 @@ struct ACWRequestBuilder {
   void add_REFRACTION_MODEL(::flatbuffers::Offset<ACWRefractionModel> REFRACTION_MODEL) {
     fbb_.AddOffset(ACWRequest::VT_REFRACTION_MODEL, REFRACTION_MODEL);
   }
+  void add_CONSTRAINTS(::flatbuffers::Offset<ACWConstraintSet> CONSTRAINTS) {
+    fbb_.AddOffset(ACWRequest::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  void add_OBSERVERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWObserverTrajectory>>> OBSERVERS) {
+    fbb_.AddOffset(ACWRequest::VT_OBSERVERS, OBSERVERS);
+  }
+  void add_EVALUATION_MODE(acwEvaluationMode EVALUATION_MODE) {
+    fbb_.AddElement<int8_t>(ACWRequest::VT_EVALUATION_MODE, static_cast<int8_t>(EVALUATION_MODE), 0);
+  }
+  void add_ROOT_TOLERANCE_S(double ROOT_TOLERANCE_S) {
+    fbb_.AddElement<double>(ACWRequest::VT_ROOT_TOLERANCE_S, ROOT_TOLERANCE_S, 0.1);
+  }
+  void add_SUN_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> SUN_STATES) {
+    fbb_.AddOffset(ACWRequest::VT_SUN_STATES, SUN_STATES);
+  }
+  void add_MOON_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> MOON_STATES) {
+    fbb_.AddOffset(ACWRequest::VT_MOON_STATES, MOON_STATES);
+  }
   explicit ACWRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -654,15 +1245,27 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequest(
     double MIN_ELEVATION_OVERRIDE_RAD = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>>> ELEVATION_MASK = 0,
-    ::flatbuffers::Offset<ACWRefractionModel> REFRACTION_MODEL = 0) {
+    ::flatbuffers::Offset<ACWRefractionModel> REFRACTION_MODEL = 0,
+    ::flatbuffers::Offset<ACWConstraintSet> CONSTRAINTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWObserverTrajectory>>> OBSERVERS = 0,
+    acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
+    double ROOT_TOLERANCE_S = 0.1,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> SUN_STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> MOON_STATES = 0) {
   ACWRequestBuilder builder_(_fbb);
+  builder_.add_ROOT_TOLERANCE_S(ROOT_TOLERANCE_S);
   builder_.add_MIN_ELEVATION_OVERRIDE_RAD(MIN_ELEVATION_OVERRIDE_RAD);
+  builder_.add_MOON_STATES(MOON_STATES);
+  builder_.add_SUN_STATES(SUN_STATES);
+  builder_.add_OBSERVERS(OBSERVERS);
+  builder_.add_CONSTRAINTS(CONSTRAINTS);
   builder_.add_REFRACTION_MODEL(REFRACTION_MODEL);
   builder_.add_ELEVATION_MASK(ELEVATION_MASK);
   builder_.add_TRACE_ID(TRACE_ID);
   builder_.add_TARGET_STATION_ID(TARGET_STATION_ID);
   builder_.add_STATES(STATES);
   builder_.add_GROUND_STATIONS(GROUND_STATIONS);
+  builder_.add_EVALUATION_MODE(EVALUATION_MODE);
   builder_.add_OPERATION(OPERATION);
   return builder_.Finish();
 }
@@ -676,12 +1279,21 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
     double MIN_ELEVATION_OVERRIDE_RAD = 0.0,
     const char *TRACE_ID = nullptr,
     const std::vector<::flatbuffers::Offset<ACWElevationMaskPoint>> *ELEVATION_MASK = nullptr,
-    ::flatbuffers::Offset<ACWRefractionModel> REFRACTION_MODEL = 0) {
+    ::flatbuffers::Offset<ACWRefractionModel> REFRACTION_MODEL = 0,
+    ::flatbuffers::Offset<ACWConstraintSet> CONSTRAINTS = 0,
+    const std::vector<::flatbuffers::Offset<ACWObserverTrajectory>> *OBSERVERS = nullptr,
+    acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
+    double ROOT_TOLERANCE_S = 0.1,
+    const std::vector<::flatbuffers::Offset<ACWStateSample>> *SUN_STATES = nullptr,
+    const std::vector<::flatbuffers::Offset<ACWStateSample>> *MOON_STATES = nullptr) {
   auto GROUND_STATIONS__ = GROUND_STATIONS ? _fbb.CreateVector<::flatbuffers::Offset<ACWGroundStation>>(*GROUND_STATIONS) : 0;
   auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
   auto TARGET_STATION_ID__ = TARGET_STATION_ID ? _fbb.CreateString(TARGET_STATION_ID) : 0;
   auto TRACE_ID__ = TRACE_ID ? _fbb.CreateString(TRACE_ID) : 0;
   auto ELEVATION_MASK__ = ELEVATION_MASK ? _fbb.CreateVector<::flatbuffers::Offset<ACWElevationMaskPoint>>(*ELEVATION_MASK) : 0;
+  auto OBSERVERS__ = OBSERVERS ? _fbb.CreateVector<::flatbuffers::Offset<ACWObserverTrajectory>>(*OBSERVERS) : 0;
+  auto SUN_STATES__ = SUN_STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*SUN_STATES) : 0;
+  auto MOON_STATES__ = MOON_STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*MOON_STATES) : 0;
   return CreateACWRequest(
       _fbb,
       OPERATION,
@@ -691,7 +1303,13 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
       MIN_ELEVATION_OVERRIDE_RAD,
       TRACE_ID__,
       ELEVATION_MASK__,
-      REFRACTION_MODEL);
+      REFRACTION_MODEL,
+      CONSTRAINTS,
+      OBSERVERS__,
+      EVALUATION_MODE,
+      ROOT_TOLERANCE_S,
+      SUN_STATES__,
+      MOON_STATES__);
 }
 
 /// One computed access interval.
@@ -702,7 +1320,15 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_START_JULIAN_DATE_TT = 6,
     VT_END_JULIAN_DATE_TT = 8,
     VT_MAX_ELEVATION_RAD = 10,
-    VT_SAMPLE_COUNT = 12
+    VT_SAMPLE_COUNT = 12,
+    VT_OBSERVER_ID = 14,
+    VT_START_LIMITING_CONSTRAINT_INDEX = 16,
+    VT_END_LIMITING_CONSTRAINT_INDEX = 18,
+    VT_START_LIMITING_CONSTRAINT_LABEL = 20,
+    VT_END_LIMITING_CONSTRAINT_LABEL = 22,
+    VT_MIN_RANGE_M = 24,
+    VT_MAX_RANGE_M = 26,
+    VT_EDGES_REFINED = 28
   };
   const ::flatbuffers::String *STATION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STATION_ID);
@@ -723,6 +1349,40 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t SAMPLE_COUNT() const {
     return GetField<uint32_t>(VT_SAMPLE_COUNT, 0);
   }
+  /// Observer id when the observer is an ACWObserverTrajectory; empty for a
+  /// ground station (then STATION_ID names it).
+  const ::flatbuffers::String *OBSERVER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVER_ID);
+  }
+  /// Index into the flattened, depth-first constraint list of the constraint
+  /// whose transition opens the window; -1 when the window starts at the
+  /// first sample.
+  int32_t START_LIMITING_CONSTRAINT_INDEX() const {
+    return GetField<int32_t>(VT_START_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  /// Index of the constraint whose transition closes the window; -1 when the
+  /// window ends at the last sample.
+  int32_t END_LIMITING_CONSTRAINT_INDEX() const {
+    return GetField<int32_t>(VT_END_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  /// Labels of those constraints, when the producer set them.
+  const ::flatbuffers::String *START_LIMITING_CONSTRAINT_LABEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_LIMITING_CONSTRAINT_LABEL);
+  }
+  const ::flatbuffers::String *END_LIMITING_CONSTRAINT_LABEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_END_LIMITING_CONSTRAINT_LABEL);
+  }
+  /// Range extrema over the window, meters.
+  double MIN_RANGE_M() const {
+    return GetField<double>(VT_MIN_RANGE_M, 0.0);
+  }
+  double MAX_RANGE_M() const {
+    return GetField<double>(VT_MAX_RANGE_M, 0.0);
+  }
+  /// True when edges were root-refined (CONTINUOUS); false when they are samples.
+  bool EDGES_REFINED() const {
+    return GetField<uint8_t>(VT_EDGES_REFINED, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -732,6 +1392,17 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_END_JULIAN_DATE_TT, 8) &&
            VerifyField<double>(verifier, VT_MAX_ELEVATION_RAD, 8) &&
            VerifyField<uint32_t>(verifier, VT_SAMPLE_COUNT, 4) &&
+           VerifyOffset(verifier, VT_OBSERVER_ID) &&
+           verifier.VerifyString(OBSERVER_ID()) &&
+           VerifyField<int32_t>(verifier, VT_START_LIMITING_CONSTRAINT_INDEX, 4) &&
+           VerifyField<int32_t>(verifier, VT_END_LIMITING_CONSTRAINT_INDEX, 4) &&
+           VerifyOffset(verifier, VT_START_LIMITING_CONSTRAINT_LABEL) &&
+           verifier.VerifyString(START_LIMITING_CONSTRAINT_LABEL()) &&
+           VerifyOffset(verifier, VT_END_LIMITING_CONSTRAINT_LABEL) &&
+           verifier.VerifyString(END_LIMITING_CONSTRAINT_LABEL()) &&
+           VerifyField<double>(verifier, VT_MIN_RANGE_M, 8) &&
+           VerifyField<double>(verifier, VT_MAX_RANGE_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_EDGES_REFINED, 1) &&
            verifier.EndTable();
   }
 };
@@ -755,6 +1426,30 @@ struct ACWAccessWindowBuilder {
   void add_SAMPLE_COUNT(uint32_t SAMPLE_COUNT) {
     fbb_.AddElement<uint32_t>(ACWAccessWindow::VT_SAMPLE_COUNT, SAMPLE_COUNT, 0);
   }
+  void add_OBSERVER_ID(::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID) {
+    fbb_.AddOffset(ACWAccessWindow::VT_OBSERVER_ID, OBSERVER_ID);
+  }
+  void add_START_LIMITING_CONSTRAINT_INDEX(int32_t START_LIMITING_CONSTRAINT_INDEX) {
+    fbb_.AddElement<int32_t>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_INDEX, START_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  void add_END_LIMITING_CONSTRAINT_INDEX(int32_t END_LIMITING_CONSTRAINT_INDEX) {
+    fbb_.AddElement<int32_t>(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_INDEX, END_LIMITING_CONSTRAINT_INDEX, -1);
+  }
+  void add_START_LIMITING_CONSTRAINT_LABEL(::flatbuffers::Offset<::flatbuffers::String> START_LIMITING_CONSTRAINT_LABEL) {
+    fbb_.AddOffset(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_LABEL, START_LIMITING_CONSTRAINT_LABEL);
+  }
+  void add_END_LIMITING_CONSTRAINT_LABEL(::flatbuffers::Offset<::flatbuffers::String> END_LIMITING_CONSTRAINT_LABEL) {
+    fbb_.AddOffset(ACWAccessWindow::VT_END_LIMITING_CONSTRAINT_LABEL, END_LIMITING_CONSTRAINT_LABEL);
+  }
+  void add_MIN_RANGE_M(double MIN_RANGE_M) {
+    fbb_.AddElement<double>(ACWAccessWindow::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  void add_MAX_RANGE_M(double MAX_RANGE_M) {
+    fbb_.AddElement<double>(ACWAccessWindow::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  void add_EDGES_REFINED(bool EDGES_REFINED) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_EDGES_REFINED, static_cast<uint8_t>(EDGES_REFINED), 0);
+  }
   explicit ACWAccessWindowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -772,13 +1467,29 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindow(
     double START_JULIAN_DATE_TT = 0.0,
     double END_JULIAN_DATE_TT = 0.0,
     double MAX_ELEVATION_RAD = 0.0,
-    uint32_t SAMPLE_COUNT = 0) {
+    uint32_t SAMPLE_COUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID = 0,
+    int32_t START_LIMITING_CONSTRAINT_INDEX = -1,
+    int32_t END_LIMITING_CONSTRAINT_INDEX = -1,
+    ::flatbuffers::Offset<::flatbuffers::String> START_LIMITING_CONSTRAINT_LABEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> END_LIMITING_CONSTRAINT_LABEL = 0,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    bool EDGES_REFINED = false) {
   ACWAccessWindowBuilder builder_(_fbb);
+  builder_.add_MAX_RANGE_M(MAX_RANGE_M);
+  builder_.add_MIN_RANGE_M(MIN_RANGE_M);
   builder_.add_MAX_ELEVATION_RAD(MAX_ELEVATION_RAD);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
+  builder_.add_END_LIMITING_CONSTRAINT_LABEL(END_LIMITING_CONSTRAINT_LABEL);
+  builder_.add_START_LIMITING_CONSTRAINT_LABEL(START_LIMITING_CONSTRAINT_LABEL);
+  builder_.add_END_LIMITING_CONSTRAINT_INDEX(END_LIMITING_CONSTRAINT_INDEX);
+  builder_.add_START_LIMITING_CONSTRAINT_INDEX(START_LIMITING_CONSTRAINT_INDEX);
+  builder_.add_OBSERVER_ID(OBSERVER_ID);
   builder_.add_SAMPLE_COUNT(SAMPLE_COUNT);
   builder_.add_STATION_ID(STATION_ID);
+  builder_.add_EDGES_REFINED(EDGES_REFINED);
   return builder_.Finish();
 }
 
@@ -788,15 +1499,34 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindowDirect(
     double START_JULIAN_DATE_TT = 0.0,
     double END_JULIAN_DATE_TT = 0.0,
     double MAX_ELEVATION_RAD = 0.0,
-    uint32_t SAMPLE_COUNT = 0) {
+    uint32_t SAMPLE_COUNT = 0,
+    const char *OBSERVER_ID = nullptr,
+    int32_t START_LIMITING_CONSTRAINT_INDEX = -1,
+    int32_t END_LIMITING_CONSTRAINT_INDEX = -1,
+    const char *START_LIMITING_CONSTRAINT_LABEL = nullptr,
+    const char *END_LIMITING_CONSTRAINT_LABEL = nullptr,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    bool EDGES_REFINED = false) {
   auto STATION_ID__ = STATION_ID ? _fbb.CreateString(STATION_ID) : 0;
+  auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
+  auto START_LIMITING_CONSTRAINT_LABEL__ = START_LIMITING_CONSTRAINT_LABEL ? _fbb.CreateString(START_LIMITING_CONSTRAINT_LABEL) : 0;
+  auto END_LIMITING_CONSTRAINT_LABEL__ = END_LIMITING_CONSTRAINT_LABEL ? _fbb.CreateString(END_LIMITING_CONSTRAINT_LABEL) : 0;
   return CreateACWAccessWindow(
       _fbb,
       STATION_ID__,
       START_JULIAN_DATE_TT,
       END_JULIAN_DATE_TT,
       MAX_ELEVATION_RAD,
-      SAMPLE_COUNT);
+      SAMPLE_COUNT,
+      OBSERVER_ID__,
+      START_LIMITING_CONSTRAINT_INDEX,
+      END_LIMITING_CONSTRAINT_INDEX,
+      START_LIMITING_CONSTRAINT_LABEL__,
+      END_LIMITING_CONSTRAINT_LABEL__,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      EDGES_REFINED);
 }
 
 /// Result for one access-window compute request.
@@ -806,7 +1536,9 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_STATUS = 4,
     VT_ERROR_MESSAGE = 6,
     VT_WINDOWS = 8,
-    VT_TRACE_ID = 10
+    VT_TRACE_ID = 10,
+    VT_EVALUATION_MODE = 12,
+    VT_CONSTRAINT_LABELS = 14
   };
   acwResultStatus STATUS() const {
     return static_cast<acwResultStatus>(GetField<int8_t>(VT_STATUS, 0));
@@ -821,6 +1553,14 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRACE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACE_ID);
   }
+  /// Evaluation mode actually used.
+  acwEvaluationMode EVALUATION_MODE() const {
+    return static_cast<acwEvaluationMode>(GetField<int8_t>(VT_EVALUATION_MODE, 0));
+  }
+  /// Flattened depth-first constraint list the window indices refer to.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *CONSTRAINT_LABELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CONSTRAINT_LABELS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -832,6 +1572,10 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(WINDOWS()) &&
            VerifyOffset(verifier, VT_TRACE_ID) &&
            verifier.VerifyString(TRACE_ID()) &&
+           VerifyField<int8_t>(verifier, VT_EVALUATION_MODE, 1) &&
+           VerifyOffset(verifier, VT_CONSTRAINT_LABELS) &&
+           verifier.VerifyVector(CONSTRAINT_LABELS()) &&
+           verifier.VerifyVectorOfStrings(CONSTRAINT_LABELS()) &&
            verifier.EndTable();
   }
 };
@@ -852,6 +1596,12 @@ struct ACWResultBuilder {
   void add_TRACE_ID(::flatbuffers::Offset<::flatbuffers::String> TRACE_ID) {
     fbb_.AddOffset(ACWResult::VT_TRACE_ID, TRACE_ID);
   }
+  void add_EVALUATION_MODE(acwEvaluationMode EVALUATION_MODE) {
+    fbb_.AddElement<int8_t>(ACWResult::VT_EVALUATION_MODE, static_cast<int8_t>(EVALUATION_MODE), 0);
+  }
+  void add_CONSTRAINT_LABELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CONSTRAINT_LABELS) {
+    fbb_.AddOffset(ACWResult::VT_CONSTRAINT_LABELS, CONSTRAINT_LABELS);
+  }
   explicit ACWResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -868,11 +1618,15 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResult(
     acwResultStatus STATUS = acwResultStatus_OK,
     ::flatbuffers::Offset<::flatbuffers::String> ERROR_MESSAGE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWAccessWindow>>> WINDOWS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0,
+    acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CONSTRAINT_LABELS = 0) {
   ACWResultBuilder builder_(_fbb);
+  builder_.add_CONSTRAINT_LABELS(CONSTRAINT_LABELS);
   builder_.add_TRACE_ID(TRACE_ID);
   builder_.add_WINDOWS(WINDOWS);
   builder_.add_ERROR_MESSAGE(ERROR_MESSAGE);
+  builder_.add_EVALUATION_MODE(EVALUATION_MODE);
   builder_.add_STATUS(STATUS);
   return builder_.Finish();
 }
@@ -882,16 +1636,21 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResultDirect(
     acwResultStatus STATUS = acwResultStatus_OK,
     const char *ERROR_MESSAGE = nullptr,
     const std::vector<::flatbuffers::Offset<ACWAccessWindow>> *WINDOWS = nullptr,
-    const char *TRACE_ID = nullptr) {
+    const char *TRACE_ID = nullptr,
+    acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *CONSTRAINT_LABELS = nullptr) {
   auto ERROR_MESSAGE__ = ERROR_MESSAGE ? _fbb.CreateString(ERROR_MESSAGE) : 0;
   auto WINDOWS__ = WINDOWS ? _fbb.CreateVector<::flatbuffers::Offset<ACWAccessWindow>>(*WINDOWS) : 0;
   auto TRACE_ID__ = TRACE_ID ? _fbb.CreateString(TRACE_ID) : 0;
+  auto CONSTRAINT_LABELS__ = CONSTRAINT_LABELS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*CONSTRAINT_LABELS) : 0;
   return CreateACWResult(
       _fbb,
       STATUS,
       ERROR_MESSAGE__,
       WINDOWS__,
-      TRACE_ID__);
+      TRACE_ID__,
+      EVALUATION_MODE,
+      CONSTRAINT_LABELS__);
 }
 
 /// Access-window analysis envelope.

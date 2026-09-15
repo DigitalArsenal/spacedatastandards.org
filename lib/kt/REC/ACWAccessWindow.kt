@@ -72,6 +72,86 @@ class ACWAccessWindow : Table() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Observer id when the observer is an ACWObserverTrajectory; empty for a
+     * ground station (then STATION_ID names it).
+     */
+    val observerId : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val observerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun observerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Index into the flattened, depth-first constraint list of the constraint
+     * whose transition opens the window; -1 when the window starts at the
+     * first sample.
+     */
+    val startLimitingConstraintIndex : Int
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getInt(o + bb_pos) else -1
+        }
+    /**
+     * Index of the constraint whose transition closes the window; -1 when the
+     * window ends at the last sample.
+     */
+    val endLimitingConstraintIndex : Int
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getInt(o + bb_pos) else -1
+        }
+    /**
+     * Labels of those constraints, when the producer set them.
+     */
+    val startLimitingConstraintLabel : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val startLimitingConstraintLabelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun startLimitingConstraintLabelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val endLimitingConstraintLabel : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val endLimitingConstraintLabelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun endLimitingConstraintLabelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Range extrema over the window, meters.
+     */
+    val minRangeM : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val maxRangeM : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when edges were root-refined (CONTINUOUS); false when they are samples.
+     */
+    val edgesRefined : Boolean
+        get() {
+            val o = __offset(28)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWAccessWindow(_bb: ByteBuffer): ACWAccessWindow = getRootAsACWAccessWindow(_bb, ACWAccessWindow())
@@ -79,21 +159,37 @@ class ACWAccessWindow : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt) : Int {
-            builder.startTable(5)
+        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt, observerIdOffset: Int, startLimitingConstraintIndex: Int, endLimitingConstraintIndex: Int, startLimitingConstraintLabelOffset: Int, endLimitingConstraintLabelOffset: Int, minRangeM: Double, maxRangeM: Double, edgesRefined: Boolean) : Int {
+            builder.startTable(13)
+            addMAXRANGEM(builder, maxRangeM)
+            addMINRANGEM(builder, minRangeM)
             addMAXELEVATIONRAD(builder, maxElevationRad)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
+            addENDLIMITINGCONSTRAINTLABEL(builder, endLimitingConstraintLabelOffset)
+            addSTARTLIMITINGCONSTRAINTLABEL(builder, startLimitingConstraintLabelOffset)
+            addENDLIMITINGCONSTRAINTINDEX(builder, endLimitingConstraintIndex)
+            addSTARTLIMITINGCONSTRAINTINDEX(builder, startLimitingConstraintIndex)
+            addOBSERVERID(builder, observerIdOffset)
             addSAMPLECOUNT(builder, sampleCount)
             addSTATIONID(builder, stationIdOffset)
+            addEDGESREFINED(builder, edgesRefined)
             return endACWAccessWindow(builder)
         }
-        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addSTATIONID(builder: FlatBufferBuilder, stationId: Int) = builder.addOffset(0, stationId, 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(1, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(2, endJulianDateTt, 0.0)
         fun addMAXELEVATIONRAD(builder: FlatBufferBuilder, maxElevationRad: Double) = builder.addDouble(3, maxElevationRad, 0.0)
         fun addSAMPLECOUNT(builder: FlatBufferBuilder, sampleCount: UInt) = builder.addInt(4, sampleCount.toInt(), 0)
+        fun addOBSERVERID(builder: FlatBufferBuilder, observerId: Int) = builder.addOffset(5, observerId, 0)
+        fun addSTARTLIMITINGCONSTRAINTINDEX(builder: FlatBufferBuilder, startLimitingConstraintIndex: Int) = builder.addInt(6, startLimitingConstraintIndex, -1)
+        fun addENDLIMITINGCONSTRAINTINDEX(builder: FlatBufferBuilder, endLimitingConstraintIndex: Int) = builder.addInt(7, endLimitingConstraintIndex, -1)
+        fun addSTARTLIMITINGCONSTRAINTLABEL(builder: FlatBufferBuilder, startLimitingConstraintLabel: Int) = builder.addOffset(8, startLimitingConstraintLabel, 0)
+        fun addENDLIMITINGCONSTRAINTLABEL(builder: FlatBufferBuilder, endLimitingConstraintLabel: Int) = builder.addOffset(9, endLimitingConstraintLabel, 0)
+        fun addMINRANGEM(builder: FlatBufferBuilder, minRangeM: Double) = builder.addDouble(10, minRangeM, 0.0)
+        fun addMAXRANGEM(builder: FlatBufferBuilder, maxRangeM: Double) = builder.addDouble(11, maxRangeM, 0.0)
+        fun addEDGESREFINED(builder: FlatBufferBuilder, edgesRefined: Boolean) = builder.addBoolean(12, edgesRefined, false)
         fun endACWAccessWindow(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

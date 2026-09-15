@@ -82,26 +82,58 @@ class ACWResult extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Evaluation mode actually used.
+    /**
+     * @return sbyte
+     */
+    public function getEVALUATION_MODE()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \acwEvaluationMode::DISCRETE;
+    }
+
+    /// Flattened depth-first constraint list the window indices refer to.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCONSTRAINT_LABELS($j)
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCONSTRAINT_LABELSLength()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWResult
      */
-    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID)
+    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID, $EVALUATION_MODE, $CONSTRAINT_LABELS)
     {
-        $builder->startObject(4);
+        $builder->startObject(6);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_MESSAGE($builder, $ERROR_MESSAGE);
         self::addWINDOWS($builder, $WINDOWS);
         self::addTRACE_ID($builder, $TRACE_ID);
+        self::addEVALUATION_MODE($builder, $EVALUATION_MODE);
+        self::addCONSTRAINT_LABELS($builder, $CONSTRAINT_LABELS);
         $o = $builder->endObject();
         return $o;
     }
@@ -168,6 +200,50 @@ class ACWResult extends Table
     public static function addTRACE_ID(FlatBufferBuilder $builder, $TRACE_ID)
     {
         $builder->addOffsetX(3, $TRACE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addEVALUATION_MODE(FlatBufferBuilder $builder, $EVALUATION_MODE)
+    {
+        $builder->addSbyteX(4, $EVALUATION_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONSTRAINT_LABELS(FlatBufferBuilder $builder, $CONSTRAINT_LABELS)
+    {
+        $builder->addOffsetX(5, $CONSTRAINT_LABELS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCONSTRAINT_LABELSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCONSTRAINT_LABELSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

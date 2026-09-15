@@ -117,8 +117,52 @@ public final class rfmAxisType {
    * IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
    */
   public static final int TRUE_OF_DATE_EQUATOR_FK5 = 24;
+  /**
+   * True equator of date computed with the IERS Conventions (1996)
+   * reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
+   * nutation with the observed celestial pole offsets applied. Distinct from
+   * TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
+   * (IAU-2006/2000A).
+   */
+  public static final int TRUE_OF_DATE_EQUATOR_IERS1996 = 25;
+  /**
+   * True equator of date computed with the IERS Conventions (2003)
+   * reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
+   * precession with the IAU 2000 precession-rate corrections. The mean-of-date
+   * equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
+   */
+  public static final int TRUE_OF_DATE_EQUATOR_IERS2003 = 26;
+  /**
+   * Topocentric East-North-Up axes at a surface site; the site is carried on
+   * RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
+   */
+  public static final int TOPOCENTRIC_EAST_NORTH_UP = 27;
+  /**
+   * Topocentric North-East-Down axes at a surface site.
+   */
+  public static final int TOPOCENTRIC_NORTH_EAST_DOWN = 28;
+  /**
+   * Topocentric South-East-Zenith axes at a surface site.
+   */
+  public static final int TOPOCENTRIC_SOUTH_EAST_ZENITH = 29;
+  /**
+   * Orbital axes from the object's state: X along the velocity, Z along the
+   * orbit normal, Y completing the right-handed set (VNC). The object is the
+   * origin body of the coordinate system.
+   */
+  public static final int ORBITAL_VELOCITY_NORMAL_CONORMAL = 30;
+  /**
+   * Orbital axes from the object's state: X radial (outward), Z along the
+   * orbit normal, Y transverse completing the set (RTN, also RSW).
+   */
+  public static final int ORBITAL_RADIAL_TRANSVERSE_NORMAL = 31;
+  /**
+   * Orbital axes from the object's state: Z toward the central body (nadir),
+   * Y opposite the orbit normal, X completing the set (LVLH).
+   */
+  public static final int ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32;
 
-  public static final String[] names = { "UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", };
+  public static final String[] names = { "UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", };
 
   public static String name(int e) { return names[e]; }
 }

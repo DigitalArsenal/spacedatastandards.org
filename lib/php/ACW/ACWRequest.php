@@ -142,22 +142,114 @@ class ACWRequest extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Optional constraint composition. When absent the legacy behaviour holds:
+    /// every ground station's MIN_ELEVATION_RAD (or the override) plus
+    /// ELEVATION_MASK, all required.
+    public function getCONSTRAINTS()
+    {
+        $obj = new ACWConstraintSet();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Optional moving observers (satellite-to-satellite access). Each observer
+    /// is evaluated against STATES like a ground station.
+    /**
+     * @returnVectorOffset
+     */
+    public function getOBSERVERS($j)
+    {
+        $o = $this->__offset(22);
+        $obj = new ACWObserverTrajectory();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOBSERVERSLength()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Sample-only or root-refined window edges.
+    /**
+     * @return sbyte
+     */
+    public function getEVALUATION_MODE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \acwEvaluationMode::DISCRETE;
+    }
+
+    /// Edge refinement tolerance for CONTINUOUS, seconds.
+    /**
+     * @return double
+     */
+    public function getROOT_TOLERANCE_S()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.1;
+    }
+
+    /// Sun states in the STATES frame and time scale, required by
+    /// SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSUN_STATES($j)
+    {
+        $o = $this->__offset(28);
+        $obj = new ACWStateSample();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSUN_STATESLength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMOON_STATES($j)
+    {
+        $o = $this->__offset(30);
+        $obj = new ACWStateSample();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMOON_STATESLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWRequest
      */
-    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL)
+    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES)
     {
-        $builder->startObject(8);
+        $builder->startObject(14);
         self::addOPERATION($builder, $OPERATION);
         self::addGROUND_STATIONS($builder, $GROUND_STATIONS);
         self::addSTATES($builder, $STATES);
@@ -166,6 +258,12 @@ class ACWRequest extends Table
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addELEVATION_MASK($builder, $ELEVATION_MASK);
         self::addREFRACTION_MODEL($builder, $REFRACTION_MODEL);
+        self::addCONSTRAINTS($builder, $CONSTRAINTS);
+        self::addOBSERVERS($builder, $OBSERVERS);
+        self::addEVALUATION_MODE($builder, $EVALUATION_MODE);
+        self::addROOT_TOLERANCE_S($builder, $ROOT_TOLERANCE_S);
+        self::addSUN_STATES($builder, $SUN_STATES);
+        self::addMOON_STATES($builder, $MOON_STATES);
         $o = $builder->endObject();
         return $o;
     }
@@ -320,6 +418,138 @@ class ACWRequest extends Table
     public static function addREFRACTION_MODEL(FlatBufferBuilder $builder, $REFRACTION_MODEL)
     {
         $builder->addOffsetX(7, $REFRACTION_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONSTRAINTS(FlatBufferBuilder $builder, $CONSTRAINTS)
+    {
+        $builder->addOffsetX(8, $CONSTRAINTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOBSERVERS(FlatBufferBuilder $builder, $OBSERVERS)
+    {
+        $builder->addOffsetX(9, $OBSERVERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOBSERVERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOBSERVERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addEVALUATION_MODE(FlatBufferBuilder $builder, $EVALUATION_MODE)
+    {
+        $builder->addSbyteX(10, $EVALUATION_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addROOT_TOLERANCE_S(FlatBufferBuilder $builder, $ROOT_TOLERANCE_S)
+    {
+        $builder->addDoubleX(11, $ROOT_TOLERANCE_S, 0.1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSUN_STATES(FlatBufferBuilder $builder, $SUN_STATES)
+    {
+        $builder->addOffsetX(12, $SUN_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSUN_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSUN_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMOON_STATES(FlatBufferBuilder $builder, $MOON_STATES)
+    {
+        $builder->addOffsetX(13, $MOON_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMOON_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMOON_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

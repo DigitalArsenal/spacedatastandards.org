@@ -46,28 +46,88 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
    * Number of visible input samples contributing to the window.
    */
   public long SAMPLE_COUNT() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Observer id when the observer is an ACWObserverTrajectory; empty for a
+   * ground station (then STATION_ID names it).
+   */
+  public String OBSERVER_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBSERVER_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer OBSERVER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Index into the flattened, depth-first constraint list of the constraint
+   * whose transition opens the window; -1 when the window starts at the
+   * first sample.
+   */
+  public int START_LIMITING_CONSTRAINT_INDEX() { int o = __offset(16); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Index of the constraint whose transition closes the window; -1 when the
+   * window ends at the last sample.
+   */
+  public int END_LIMITING_CONSTRAINT_INDEX() { int o = __offset(18); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Labels of those constraints, when the producer set them.
+   */
+  public String START_LIMITING_CONSTRAINT_LABEL() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_LIMITING_CONSTRAINT_LABELAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer START_LIMITING_CONSTRAINT_LABELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String END_LIMITING_CONSTRAINT_LABEL() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_LIMITING_CONSTRAINT_LABELAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer END_LIMITING_CONSTRAINT_LABELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Range extrema over the window, meters.
+   */
+  public double MIN_RANGE_M() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_RANGE_M() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when edges were root-refined (CONTINUOUS); false when they are samples.
+   */
+  public boolean EDGES_REFINED() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWAccessWindow(FlatBufferBuilder builder,
       int STATION_IDOffset,
       double START_JULIAN_DATE_TT,
       double END_JULIAN_DATE_TT,
       double MAX_ELEVATION_RAD,
-      long SAMPLE_COUNT) {
-    builder.startTable(5);
+      long SAMPLE_COUNT,
+      int OBSERVER_IDOffset,
+      int START_LIMITING_CONSTRAINT_INDEX,
+      int END_LIMITING_CONSTRAINT_INDEX,
+      int START_LIMITING_CONSTRAINT_LABELOffset,
+      int END_LIMITING_CONSTRAINT_LABELOffset,
+      double MIN_RANGE_M,
+      double MAX_RANGE_M,
+      boolean EDGES_REFINED) {
+    builder.startTable(13);
+    ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
+    ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
     ACWAccessWindow.addMaxElevationRad(builder, MAX_ELEVATION_RAD);
     ACWAccessWindow.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWAccessWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
+    ACWAccessWindow.addEndLimitingConstraintLabel(builder, END_LIMITING_CONSTRAINT_LABELOffset);
+    ACWAccessWindow.addStartLimitingConstraintLabel(builder, START_LIMITING_CONSTRAINT_LABELOffset);
+    ACWAccessWindow.addEndLimitingConstraintIndex(builder, END_LIMITING_CONSTRAINT_INDEX);
+    ACWAccessWindow.addStartLimitingConstraintIndex(builder, START_LIMITING_CONSTRAINT_INDEX);
+    ACWAccessWindow.addObserverId(builder, OBSERVER_IDOffset);
     ACWAccessWindow.addSampleCount(builder, SAMPLE_COUNT);
     ACWAccessWindow.addStationId(builder, STATION_IDOffset);
+    ACWAccessWindow.addEdgesRefined(builder, EDGES_REFINED);
     return ACWAccessWindow.endACWAccessWindow(builder);
   }
 
-  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addStationId(FlatBufferBuilder builder, int STATION_IDOffset) { builder.addOffset(0, STATION_IDOffset, 0); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(1, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(2, END_JULIAN_DATE_TT, 0.0); }
   public static void addMaxElevationRad(FlatBufferBuilder builder, double MAX_ELEVATION_RAD) { builder.addDouble(3, MAX_ELEVATION_RAD, 0.0); }
   public static void addSampleCount(FlatBufferBuilder builder, long SAMPLE_COUNT) { builder.addInt(4, (int) SAMPLE_COUNT, (int) 0L); }
+  public static void addObserverId(FlatBufferBuilder builder, int OBSERVER_IDOffset) { builder.addOffset(5, OBSERVER_IDOffset, 0); }
+  public static void addStartLimitingConstraintIndex(FlatBufferBuilder builder, int START_LIMITING_CONSTRAINT_INDEX) { builder.addInt(6, START_LIMITING_CONSTRAINT_INDEX, -1); }
+  public static void addEndLimitingConstraintIndex(FlatBufferBuilder builder, int END_LIMITING_CONSTRAINT_INDEX) { builder.addInt(7, END_LIMITING_CONSTRAINT_INDEX, -1); }
+  public static void addStartLimitingConstraintLabel(FlatBufferBuilder builder, int START_LIMITING_CONSTRAINT_LABELOffset) { builder.addOffset(8, START_LIMITING_CONSTRAINT_LABELOffset, 0); }
+  public static void addEndLimitingConstraintLabel(FlatBufferBuilder builder, int END_LIMITING_CONSTRAINT_LABELOffset) { builder.addOffset(9, END_LIMITING_CONSTRAINT_LABELOffset, 0); }
+  public static void addMinRangeM(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.addDouble(10, MIN_RANGE_M, 0.0); }
+  public static void addMaxRangeM(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.addDouble(11, MAX_RANGE_M, 0.0); }
+  public static void addEdgesRefined(FlatBufferBuilder builder, boolean EDGES_REFINED) { builder.addBoolean(12, EDGES_REFINED, false); }
   public static int endACWAccessWindow(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

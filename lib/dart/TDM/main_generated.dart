@@ -318,7 +318,15 @@ enum rfmAxisType {
   BODY_SPIN_SUN(21),
   EPHEMERIS_KERNEL_DEFINED(22),
   MEAN_OF_DATE_EQUATOR_FK5(23),
-  TRUE_OF_DATE_EQUATOR_FK5(24);
+  TRUE_OF_DATE_EQUATOR_FK5(24),
+  TRUE_OF_DATE_EQUATOR_IERS1996(25),
+  TRUE_OF_DATE_EQUATOR_IERS2003(26),
+  TOPOCENTRIC_EAST_NORTH_UP(27),
+  TOPOCENTRIC_NORTH_EAST_DOWN(28),
+  TOPOCENTRIC_SOUTH_EAST_ZENITH(29),
+  ORBITAL_VELOCITY_NORMAL_CONORMAL(30),
+  ORBITAL_RADIAL_TRANSVERSE_NORMAL(31),
+  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL(32);
 
   final int value;
   const rfmAxisType(this.value);
@@ -350,6 +358,14 @@ enum rfmAxisType {
       case 22: return rfmAxisType.EPHEMERIS_KERNEL_DEFINED;
       case 23: return rfmAxisType.MEAN_OF_DATE_EQUATOR_FK5;
       case 24: return rfmAxisType.TRUE_OF_DATE_EQUATOR_FK5;
+      case 25: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS1996;
+      case 26: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS2003;
+      case 27: return rfmAxisType.TOPOCENTRIC_EAST_NORTH_UP;
+      case 28: return rfmAxisType.TOPOCENTRIC_NORTH_EAST_DOWN;
+      case 29: return rfmAxisType.TOPOCENTRIC_SOUTH_EAST_ZENITH;
+      case 30: return rfmAxisType.ORBITAL_VELOCITY_NORMAL_CONORMAL;
+      case 31: return rfmAxisType.ORBITAL_RADIAL_TRANSVERSE_NORMAL;
+      case 32: return rfmAxisType.ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -358,7 +374,7 @@ enum rfmAxisType {
       value == null ? null : rfmAxisType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
+  static const int maxValue = 32;
   static const fb.Reader<rfmAxisType> reader = _rfmAxisTypeReader();
 }
 

@@ -13,6 +13,22 @@
       "type" : "string",
       "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE"]
     },
+    "acwConstraintKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MIN_ELEVATION", "ELEVATION_MASK", "MAX_RANGE", "MIN_RANGE", "SUN_EXCLUSION", "MOON_EXCLUSION", "TARGET_LIGHTING", "LINE_OF_SIGHT", "BLACKOUT"]
+    },
+    "acwConstraintOperator" : {
+      "type" : "string",
+      "enum": ["ALL_OF", "ANY_OF"]
+    },
+    "acwEvaluationMode" : {
+      "type" : "string",
+      "enum": ["DISCRETE", "CONTINUOUS"]
+    },
+    "acwLightingCondition" : {
+      "type" : "string",
+      "enum": ["ANY", "SUNLIT", "PENUMBRA", "UMBRA", "NOT_UMBRA"]
+    },
     "ACWStateSample" : {
       "type" : "object",
       "description" : "Target Cartesian state sample in an Earth-fixed frame.",
@@ -121,6 +137,83 @@
       },
       "additionalProperties" : false
     },
+    "ACWConstraint" : {
+      "type" : "object",
+      "description" : "One access constraint. Fields not used by KIND are ignored.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/acwConstraintKind"
+              },
+        "THRESHOLD_RAD" : {
+                "type" : "number",
+                "description" : "Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION)."
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number",
+                "description" : "Range bounds, meters (MIN_RANGE, MAX_RANGE)."
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "LIGHTING" : {
+                "$ref" : "#/definitions/acwLightingCondition",
+                "description" : "Required target lighting (TARGET_LIGHTING)."
+              },
+        "OCCULTATION_ATMOSPHERE_HEIGHT_M" : {
+                "type" : "number",
+                "description" : "Central-body radius offset for line-of-sight occultation, meters\n(LINE_OF_SIGHT); 0 grazes the ellipsoid surface."
+              },
+        "MASK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWElevationMaskPoint"},
+                "description" : "Azimuth-dependent mask (ELEVATION_MASK)."
+              },
+        "LABEL" : {
+                "type" : "string",
+                "description" : "Producer label echoed in window attribution."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWConstraintSet" : {
+      "type" : "object",
+      "description" : "A boolean composition of constraints and nested sets.",
+      "properties" : {
+        "OPERATOR" : {
+                "$ref" : "#/definitions/acwConstraintOperator"
+              },
+        "CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWConstraint"}
+              },
+        "SETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWConstraintSet"},
+                "description" : "Nested sets, combined with the same OPERATOR."
+              },
+        "LABEL" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWObserverTrajectory" : {
+      "type" : "object",
+      "description" : "A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
+      "properties" : {
+        "OBSERVER_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"}
+              },
+        "BLACKOUT_WINDOWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWBlackoutWindow"},
+                "description" : "Observer-specific unavailable intervals."
+              }
+      },
+      "additionalProperties" : false
+    },
     "ACWRequest" : {
       "type" : "object",
       "description" : "One access-window compute request.",
@@ -155,6 +248,30 @@
         "REFRACTION_MODEL" : {
                 "$ref" : "#/definitions/ACWRefractionModel",
                 "description" : "Optional apparent-elevation refraction model."
+              },
+        "CONSTRAINTS" : {
+                "$ref" : "#/definitions/ACWConstraintSet",
+                "description" : "Optional constraint composition. When absent the legacy behaviour holds:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required."
+              },
+        "OBSERVERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWObserverTrajectory"},
+                "description" : "Optional moving observers (satellite-to-satellite access). Each observer\nis evaluated against STATES like a ground station."
+              },
+        "EVALUATION_MODE" : {
+                "$ref" : "#/definitions/acwEvaluationMode",
+                "description" : "Sample-only or root-refined window edges."
+              },
+        "ROOT_TOLERANCE_S" : {
+                "type" : "number",
+                "description" : "Edge refinement tolerance for CONTINUOUS, seconds."
+              },
+        "SUN_STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
+                "description" : "Sun states in the STATES frame and time scale, required by\nSUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs."
+              },
+        "MOON_STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
+                "description" : "Moon states in the STATES frame and time scale, required by MOON_EXCLUSION."
               }
       },
       "additionalProperties" : false
@@ -181,6 +298,36 @@
         "SAMPLE_COUNT" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Number of visible input samples contributing to the window."
+              },
+        "OBSERVER_ID" : {
+                "type" : "string",
+                "description" : "Observer id when the observer is an ACWObserverTrajectory; empty for a\nground station (then STATION_ID names it)."
+              },
+        "START_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window; -1 when the window starts at the\nfirst sample."
+              },
+        "END_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index of the constraint whose transition closes the window; -1 when the\nwindow ends at the last sample."
+              },
+        "START_LIMITING_CONSTRAINT_LABEL" : {
+                "type" : "string",
+                "description" : "Labels of those constraints, when the producer set them."
+              },
+        "END_LIMITING_CONSTRAINT_LABEL" : {
+                "type" : "string"
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number",
+                "description" : "Range extrema over the window, meters."
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "EDGES_REFINED" : {
+                "type" : "boolean",
+                "description" : "True when edges were root-refined (CONTINUOUS); false when they are samples."
               }
       },
       "additionalProperties" : false
@@ -201,6 +348,14 @@
         "TRACE_ID" : {
                 "type" : "string",
                 "description" : "Caller trace/correlation identifier copied from the request when present."
+              },
+        "EVALUATION_MODE" : {
+                "$ref" : "#/definitions/acwEvaluationMode",
+                "description" : "Evaluation mode actually used."
+              },
+        "CONSTRAINT_LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Flattened depth-first constraint list the window indices refer to."
               }
       },
       "additionalProperties" : false

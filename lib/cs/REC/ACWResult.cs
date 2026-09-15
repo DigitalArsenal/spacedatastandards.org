@@ -35,21 +35,30 @@ public struct ACWResult : IFlatbufferObject
   public ArraySegment<byte>? GetTRACE_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetTRACE_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// Evaluation mode actually used.
+  public acwEvaluationMode EVALUATION_MODE { get { int o = __p.__offset(12); return o != 0 ? (acwEvaluationMode)__p.bb.GetSbyte(o + __p.bb_pos) : acwEvaluationMode.DISCRETE; } }
+  /// Flattened depth-first constraint list the window indices refer to.
+  public string CONSTRAINT_LABELS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int CONSTRAINT_LABELSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ACWResult> CreateACWResult(FlatBufferBuilder builder,
       acwResultStatus STATUS = acwResultStatus.OK,
       StringOffset ERROR_MESSAGEOffset = default(StringOffset),
       VectorOffset WINDOWSOffset = default(VectorOffset),
-      StringOffset TRACE_IDOffset = default(StringOffset)) {
-    builder.StartTable(4);
+      StringOffset TRACE_IDOffset = default(StringOffset),
+      acwEvaluationMode EVALUATION_MODE = acwEvaluationMode.DISCRETE,
+      VectorOffset CONSTRAINT_LABELSOffset = default(VectorOffset)) {
+    builder.StartTable(6);
+    ACWResult.AddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELSOffset);
     ACWResult.AddTRACE_ID(builder, TRACE_IDOffset);
     ACWResult.AddWINDOWS(builder, WINDOWSOffset);
     ACWResult.AddERROR_MESSAGE(builder, ERROR_MESSAGEOffset);
+    ACWResult.AddEVALUATION_MODE(builder, EVALUATION_MODE);
     ACWResult.AddSTATUS(builder, STATUS);
     return ACWResult.EndACWResult(builder);
   }
 
-  public static void StartACWResult(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartACWResult(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddSTATUS(FlatBufferBuilder builder, acwResultStatus STATUS) { builder.AddSbyte(0, (sbyte)STATUS, 0); }
   public static void AddERROR_MESSAGE(FlatBufferBuilder builder, StringOffset ERROR_MESSAGEOffset) { builder.AddOffset(1, ERROR_MESSAGEOffset.Value, 0); }
   public static void AddWINDOWS(FlatBufferBuilder builder, VectorOffset WINDOWSOffset) { builder.AddOffset(2, WINDOWSOffset.Value, 0); }
@@ -59,6 +68,13 @@ public struct ACWResult : IFlatbufferObject
   public static VectorOffset CreateWINDOWSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWAccessWindow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartWINDOWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, StringOffset TRACE_IDOffset) { builder.AddOffset(3, TRACE_IDOffset.Value, 0); }
+  public static void AddEVALUATION_MODE(FlatBufferBuilder builder, acwEvaluationMode EVALUATION_MODE) { builder.AddSbyte(4, (sbyte)EVALUATION_MODE, 0); }
+  public static void AddCONSTRAINT_LABELS(FlatBufferBuilder builder, VectorOffset CONSTRAINT_LABELSOffset) { builder.AddOffset(5, CONSTRAINT_LABELSOffset.Value, 0); }
+  public static VectorOffset CreateCONSTRAINT_LABELSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCONSTRAINT_LABELSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCONSTRAINT_LABELSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCONSTRAINT_LABELSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCONSTRAINT_LABELSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ACWResult> EndACWResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWResult>(o);
@@ -74,6 +90,9 @@ public struct ACWResult : IFlatbufferObject
     _o.WINDOWS = new List<ACWAccessWindowT>();
     for (var _j = 0; _j < this.WINDOWSLength; ++_j) {_o.WINDOWS.Add(this.WINDOWS(_j).HasValue ? this.WINDOWS(_j).Value.UnPack() : null);}
     _o.TRACE_ID = this.TRACE_ID;
+    _o.EVALUATION_MODE = this.EVALUATION_MODE;
+    _o.CONSTRAINT_LABELS = new List<string>();
+    for (var _j = 0; _j < this.CONSTRAINT_LABELSLength; ++_j) {_o.CONSTRAINT_LABELS.Add(this.CONSTRAINT_LABELS(_j));}
   }
   public static Offset<ACWResult> Pack(FlatBufferBuilder builder, ACWResultT _o) {
     if (_o == null) return default(Offset<ACWResult>);
@@ -85,12 +104,20 @@ public struct ACWResult : IFlatbufferObject
       _WINDOWS = CreateWINDOWSVector(builder, __WINDOWS);
     }
     var _TRACE_ID = _o.TRACE_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACE_ID);
+    var _CONSTRAINT_LABELS = default(VectorOffset);
+    if (_o.CONSTRAINT_LABELS != null) {
+      var __CONSTRAINT_LABELS = new StringOffset[_o.CONSTRAINT_LABELS.Count];
+      for (var _j = 0; _j < __CONSTRAINT_LABELS.Length; ++_j) { __CONSTRAINT_LABELS[_j] = builder.CreateString(_o.CONSTRAINT_LABELS[_j]); }
+      _CONSTRAINT_LABELS = CreateCONSTRAINT_LABELSVector(builder, __CONSTRAINT_LABELS);
+    }
     return CreateACWResult(
       builder,
       _o.STATUS,
       _ERROR_MESSAGE,
       _WINDOWS,
-      _TRACE_ID);
+      _TRACE_ID,
+      _o.EVALUATION_MODE,
+      _CONSTRAINT_LABELS);
   }
 }
 
@@ -100,12 +127,16 @@ public class ACWResultT
   public string ERROR_MESSAGE { get; set; }
   public List<ACWAccessWindowT> WINDOWS { get; set; }
   public string TRACE_ID { get; set; }
+  public acwEvaluationMode EVALUATION_MODE { get; set; }
+  public List<string> CONSTRAINT_LABELS { get; set; }
 
   public ACWResultT() {
     this.STATUS = acwResultStatus.OK;
     this.ERROR_MESSAGE = null;
     this.WINDOWS = null;
     this.TRACE_ID = null;
+    this.EVALUATION_MODE = acwEvaluationMode.DISCRETE;
+    this.CONSTRAINT_LABELS = null;
   }
 }
 
@@ -119,6 +150,8 @@ static public class ACWResultVerify
       && verifier.VerifyString(tablePos, 6 /*ERROR_MESSAGE*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 8 /*WINDOWS*/, ACWAccessWindowVerify.Verify, false)
       && verifier.VerifyString(tablePos, 10 /*TRACE_ID*/, false)
+      && verifier.VerifyField(tablePos, 12 /*EVALUATION_MODE*/, 1 /*acwEvaluationMode*/, 1, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 14 /*CONSTRAINT_LABELS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }
