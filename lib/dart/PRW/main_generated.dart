@@ -6,893 +6,294 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Propagator Runtime Wire — arena-addressed init / batch request / batch
-///  response envelopes for orbital propagators that produce state vectors
-///  into a shared memory arena.
+///  Native container format class.
 ///
-///  Data interchange for the underlying content (state vectors, covariance,
-///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
-///  lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
-///  wire that moves those across a JS ↔ WASM boundary, not a substitute for
-///  any of them.
-///  Runtime state-flag bitfield (sized to match a single uint).
-///  Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
-///  HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
-///  flags live here because they describe runtime propagation health, not
-///  a persisted record.
-enum propagatorStateFlags {
-  VALID(1),
-  IN_ECLIPSE(2),
-  DECAYED(4),
-  EXTRAPOLATED(8),
-  RESERVED_4(16),
-  RESERVED_5(32),
-  RESERVED_6(64),
-  RESERVED_7(128),
-  _default(0);
+///  These are FORMAT designations, not products: each names a published or
+///  widely implemented container layout, and a capability description states
+///  what the layout can express. Reserve 0 so an unset byte never decodes as a
+///  real format. Append new members only; never reorder or reuse a value.
+enum ncdContainerFormat {
+  UNSPECIFIED(0),
+  SPK_DAF(1),
+  SP3_C(2),
+  SP3_D(3),
+  CODE_500(4),
+  SCENARIO_EPOCH_EPHEMERIS_TEXT(5),
+  SCENARIO_EPOCH_ATTITUDE_TEXT(6),
+  CCSDS_OEM_KVN(7),
+  CCSDS_OEM_XML(8),
+  CCSDS_AEM_KVN(9),
+  CCSDS_AEM_XML(10),
+  CCSDS_TDM_KVN(11),
+  CCSDS_TDM_XML(12),
+  PROVIDER_DEFINED(255);
 
   final int value;
-  const propagatorStateFlags(this.value);
+  const ncdContainerFormat(this.value);
 
-  factory propagatorStateFlags.fromValue(int value) {
+  factory ncdContainerFormat.fromValue(int value) {
     switch (value) {
-      case 1: return propagatorStateFlags.VALID;
-      case 2: return propagatorStateFlags.IN_ECLIPSE;
-      case 4: return propagatorStateFlags.DECAYED;
-      case 8: return propagatorStateFlags.EXTRAPOLATED;
-      case 16: return propagatorStateFlags.RESERVED_4;
-      case 32: return propagatorStateFlags.RESERVED_5;
-      case 64: return propagatorStateFlags.RESERVED_6;
-      case 128: return propagatorStateFlags.RESERVED_7;
-      case 0: return propagatorStateFlags._default;
+      case 0: return ncdContainerFormat.UNSPECIFIED;
+      case 1: return ncdContainerFormat.SPK_DAF;
+      case 2: return ncdContainerFormat.SP3_C;
+      case 3: return ncdContainerFormat.SP3_D;
+      case 4: return ncdContainerFormat.CODE_500;
+      case 5: return ncdContainerFormat.SCENARIO_EPOCH_EPHEMERIS_TEXT;
+      case 6: return ncdContainerFormat.SCENARIO_EPOCH_ATTITUDE_TEXT;
+      case 7: return ncdContainerFormat.CCSDS_OEM_KVN;
+      case 8: return ncdContainerFormat.CCSDS_OEM_XML;
+      case 9: return ncdContainerFormat.CCSDS_AEM_KVN;
+      case 10: return ncdContainerFormat.CCSDS_AEM_XML;
+      case 11: return ncdContainerFormat.CCSDS_TDM_KVN;
+      case 12: return ncdContainerFormat.CCSDS_TDM_XML;
+      case 255: return ncdContainerFormat.PROVIDER_DEFINED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static propagatorStateFlags? _createOrNull(int? value) =>
-      value == null ? null : propagatorStateFlags.fromValue(value);
-
-  static const fb.Reader<propagatorStateFlags> reader = _propagatorStateFlagsReader();
-}
-
-class _propagatorStateFlagsReader extends fb.Reader<propagatorStateFlags> {
-  const _propagatorStateFlagsReader();
-
-  @override
-  int get size => 4;
-
-  @override
-  propagatorStateFlags read(fb.BufferContext bc, int offset) =>
-      propagatorStateFlags.fromValue(const fb.Uint32Reader().read(bc, offset));
-}
-
-///  Error codes surfaced by runtime propagation calls.
-enum propagatorErrorCode {
-  OK(0),
-  UNKNOWN(1),
-  UNKNOWN_ENTITY(2),
-  INVALID_EPOCH(3),
-  OUTPUT_BUFFER_OVERFLOW(4),
-  NOT_INITIALIZED(5);
-
-  final int value;
-  const propagatorErrorCode(this.value);
-
-  factory propagatorErrorCode.fromValue(int value) {
-    switch (value) {
-      case 0: return propagatorErrorCode.OK;
-      case 1: return propagatorErrorCode.UNKNOWN;
-      case 2: return propagatorErrorCode.UNKNOWN_ENTITY;
-      case 3: return propagatorErrorCode.INVALID_EPOCH;
-      case 4: return propagatorErrorCode.OUTPUT_BUFFER_OVERFLOW;
-      case 5: return propagatorErrorCode.NOT_INITIALIZED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static propagatorErrorCode? _createOrNull(int? value) =>
-      value == null ? null : propagatorErrorCode.fromValue(value);
+  static ncdContainerFormat? _createOrNull(int? value) =>
+      value == null ? null : ncdContainerFormat.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<propagatorErrorCode> reader = _propagatorErrorCodeReader();
+  static const int maxValue = 255;
+  static const fb.Reader<ncdContainerFormat> reader = _ncdContainerFormatReader();
 }
 
-class _propagatorErrorCodeReader extends fb.Reader<propagatorErrorCode> {
-  const _propagatorErrorCodeReader();
-
-  @override
-  int get size => 4;
-
-  @override
-  propagatorErrorCode read(fb.BufferContext bc, int offset) =>
-      propagatorErrorCode.fromValue(const fb.Int32Reader().read(bc, offset));
-}
-
-enum prwSourceKind {
-  OMM(0),
-  TLE(1),
-  OCM(2),
-  OEM(3),
-  PPE(4),
-  KEPLERIAN(5);
-
-  final int value;
-  const prwSourceKind(this.value);
-
-  factory prwSourceKind.fromValue(int value) {
-    switch (value) {
-      case 0: return prwSourceKind.OMM;
-      case 1: return prwSourceKind.TLE;
-      case 2: return prwSourceKind.OCM;
-      case 3: return prwSourceKind.OEM;
-      case 4: return prwSourceKind.PPE;
-      case 5: return prwSourceKind.KEPLERIAN;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static prwSourceKind? _createOrNull(int? value) =>
-      value == null ? null : prwSourceKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<prwSourceKind> reader = _prwSourceKindReader();
-}
-
-class _prwSourceKindReader extends fb.Reader<prwSourceKind> {
-  const _prwSourceKindReader();
+class _ncdContainerFormatReader extends fb.Reader<ncdContainerFormat> {
+  const _ncdContainerFormatReader();
 
   @override
   int get size => 1;
 
   @override
-  prwSourceKind read(fb.BufferContext bc, int offset) =>
-      prwSourceKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+  ncdContainerFormat read(fb.BufferContext bc, int offset) =>
+      ncdContainerFormat.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Propagator initialization request — assigns TLE / OMM / Keplerian /
-///  polynomial inputs to entity handles.
+///  One independently addressed segment inside a native container.
 ///
-///  The actual per-entity source record is carried inline as raw bytes
-///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
-///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
-///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
-///  consume them.
-class PRWInit {
-  PRWInit._(this._bc, this._bcOffset);
-  factory PRWInit(List<int> bytes) {
+///  A segmented binary ephemeris is not a single span: each segment has its own
+///  body pair, frame, numeric type and time bounds, and a reader must choose
+///  among them. $OEM carries the STATES; this carries the segment DESCRIPTOR
+///  that says which states came from where and what must be written back.
+class NCDSegmentDescriptor {
+  NCDSegmentDescriptor._(this._bc, this._bcOffset);
+  factory NCDSegmentDescriptor(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PRWInit> reader = _PRWInitReader();
+  static const fb.Reader<NCDSegmentDescriptor> reader = _NCDSegmentDescriptorReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Entity handles to assign results to (same order as SOURCES[]).
-  List<int>? get ENTITY_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 4);
-  List<int>? get entityHandles => ENTITY_HANDLES;
-  ///  Per-entity source records, encoded as SDS FlatBuffers.
-  List<PRWInitSource>? get SOURCES => const fb.ListReader<PRWInitSource>(PRWInitSource.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Segment name as recorded in the container.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Integer body code of the segment target.
+  int get TARGET_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get targetNaifId => TARGET_NAIF_ID;
+  ///  Integer body code of the segment centre.
+  int get CENTER_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get centerNaifId => CENTER_NAIF_ID;
+  ///  Integer reference frame code of the segment.
+  int get FRAME_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get frameNaifId => FRAME_NAIF_ID;
+  ///  Reference frame name as recorded in the container.
+  String? get FRAME_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get frameName => FRAME_NAME;
+  ///  Numeric segment data type, verbatim. The evaluation rule is a property of
+  ///  this number (for example, Chebyshev position with fixed interval, or
+  ///  discrete states with Lagrange interpolation); it is carried as the
+  ///  container's own integer so a rewrite is exact.
+  int get SEGMENT_TYPE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get segmentType => SEGMENT_TYPE;
+  ///  Segment coverage start, ISO 8601.
+  String? get START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get startEpoch => START_EPOCH;
+  ///  Segment coverage stop, ISO 8601.
+  String? get STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get stopEpoch => STOP_EPOCH;
+  ///  Segment coverage start, seconds past J2000 in the barycentric dynamical
+  ///  time scale, as stored in the container.
+  double get START_SECONDS_PAST_J2000_TDB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get startSecondsPastJ2000Tdb => START_SECONDS_PAST_J2000_TDB;
+  ///  Segment coverage stop, same scale.
+  double get STOP_SECONDS_PAST_J2000_TDB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get stopSecondsPastJ2000Tdb => STOP_SECONDS_PAST_J2000_TDB;
+  ///  First addressed element of the segment inside the file.
+  int get INITIAL_ADDRESS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get initialAddress => INITIAL_ADDRESS;
+  ///  Last addressed element of the segment inside the file.
+  int get FINAL_ADDRESS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get finalAddress => FINAL_ADDRESS;
+  ///  Polynomial degree or record size the segment type parameterises, when the
+  ///  type carries one.
+  int get POLYNOMIAL_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get polynomialDegree => POLYNOMIAL_DEGREE;
 
   @override
   String toString() {
-    return 'PRWInit{entityHandles: ${entityHandles}, SOURCES: ${SOURCES}}';
+    return 'NCDSegmentDescriptor{NAME: ${NAME}, targetNaifId: ${targetNaifId}, centerNaifId: ${centerNaifId}, frameNaifId: ${frameNaifId}, frameName: ${frameName}, segmentType: ${segmentType}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, startSecondsPastJ2000Tdb: ${startSecondsPastJ2000Tdb}, stopSecondsPastJ2000Tdb: ${stopSecondsPastJ2000Tdb}, initialAddress: ${initialAddress}, finalAddress: ${finalAddress}, polynomialDegree: ${polynomialDegree}}';
   }
 }
 
-class _PRWInitReader extends fb.TableReader<PRWInit> {
-  const _PRWInitReader();
+class _NCDSegmentDescriptorReader extends fb.TableReader<NCDSegmentDescriptor> {
+  const _NCDSegmentDescriptorReader();
 
   @override
-  PRWInit createObject(fb.BufferContext bc, int offset) =>
-    PRWInit._(bc, offset);
+  NCDSegmentDescriptor createObject(fb.BufferContext bc, int offset) =>
+    NCDSegmentDescriptor._(bc, offset);
 }
 
-class PRWInitBuilder {
-  PRWInitBuilder(this.fbBuilder);
+class NCDSegmentDescriptorBuilder {
+  NCDSegmentDescriptorBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(13);
   }
 
-  int addEntityHandlesOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSourcesOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PRWInitObjectBuilder extends fb.ObjectBuilder {
-  final List<int>? _ENTITY_HANDLES;
-  final List<PRWInitSourceObjectBuilder>? _SOURCES;
-
-  PRWInitObjectBuilder({
-    List<int>? ENTITY_HANDLES,
-    List<int>? entityHandles,
-    List<PRWInitSourceObjectBuilder>? SOURCES,
-  })
-      : _ENTITY_HANDLES = entityHandles ?? ENTITY_HANDLES,
-        _SOURCES = SOURCES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ENTITY_HANDLESOffset = _ENTITY_HANDLES == null ? null
-        : fbBuilder.writeListUint32(_ENTITY_HANDLES!);
-    final int? SOURCESOffset = _SOURCES == null ? null
-        : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, ENTITY_HANDLESOffset);
-    fbBuilder.addOffset(1, SOURCESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class PRWKeplerianElements {
-  PRWKeplerianElements._(this._bc, this._bcOffset);
-  factory PRWKeplerianElements(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PRWKeplerianElements> reader = _PRWKeplerianElementsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Gravitational parameter of the central body (km^3 / s^2).
-  double get MU => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Semi-major axis (km).
-  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get semiMajorAxis => SEMI_MAJOR_AXIS;
-  ///  Eccentricity (0 = circular, <1 = ellipse).
-  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Inclination (radians).
-  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Right ascension of the ascending node (radians).
-  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///  Argument of periapsis (radians).
-  double get ARG_PERIAPSIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get argPeriapsis => ARG_PERIAPSIS;
-  ///  True anomaly (radians).
-  double get TRUE_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get trueAnomaly => TRUE_ANOMALY;
-  ///  Epoch as Julian date.
-  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-
-  @override
-  String toString() {
-    return 'PRWKeplerianElements{MU: ${MU}, semiMajorAxis: ${semiMajorAxis}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RAAN: ${RAAN}, argPeriapsis: ${argPeriapsis}, trueAnomaly: ${trueAnomaly}, EPOCH: ${EPOCH}}';
-  }
-}
-
-class _PRWKeplerianElementsReader extends fb.TableReader<PRWKeplerianElements> {
-  const _PRWKeplerianElementsReader();
-
-  @override
-  PRWKeplerianElements createObject(fb.BufferContext bc, int offset) =>
-    PRWKeplerianElements._(bc, offset);
-}
-
-class PRWKeplerianElementsBuilder {
-  PRWKeplerianElementsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addMu(double? MU) {
-    fbBuilder.addFloat64(0, MU);
-    return fbBuilder.offset;
-  }
-  int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
-    fbBuilder.addFloat64(1, SEMI_MAJOR_AXIS);
-    return fbBuilder.offset;
-  }
-  int addEccentricity(double? ECCENTRICITY) {
-    fbBuilder.addFloat64(2, ECCENTRICITY);
-    return fbBuilder.offset;
-  }
-  int addInclination(double? INCLINATION) {
-    fbBuilder.addFloat64(3, INCLINATION);
-    return fbBuilder.offset;
-  }
-  int addRaan(double? RAAN) {
-    fbBuilder.addFloat64(4, RAAN);
-    return fbBuilder.offset;
-  }
-  int addArgPeriapsis(double? ARG_PERIAPSIS) {
-    fbBuilder.addFloat64(5, ARG_PERIAPSIS);
-    return fbBuilder.offset;
-  }
-  int addTrueAnomaly(double? TRUE_ANOMALY) {
-    fbBuilder.addFloat64(6, TRUE_ANOMALY);
-    return fbBuilder.offset;
-  }
-  int addEpoch(double? EPOCH) {
-    fbBuilder.addFloat64(7, EPOCH);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PRWKeplerianElementsObjectBuilder extends fb.ObjectBuilder {
-  final double? _MU;
-  final double? _SEMI_MAJOR_AXIS;
-  final double? _ECCENTRICITY;
-  final double? _INCLINATION;
-  final double? _RAAN;
-  final double? _ARG_PERIAPSIS;
-  final double? _TRUE_ANOMALY;
-  final double? _EPOCH;
-
-  PRWKeplerianElementsObjectBuilder({
-    double? MU,
-    double? SEMI_MAJOR_AXIS,
-    double? semiMajorAxis,
-    double? ECCENTRICITY,
-    double? INCLINATION,
-    double? RAAN,
-    double? ARG_PERIAPSIS,
-    double? argPeriapsis,
-    double? TRUE_ANOMALY,
-    double? trueAnomaly,
-    double? EPOCH,
-  })
-      : _MU = MU,
-        _SEMI_MAJOR_AXIS = semiMajorAxis ?? SEMI_MAJOR_AXIS,
-        _ECCENTRICITY = ECCENTRICITY,
-        _INCLINATION = INCLINATION,
-        _RAAN = RAAN,
-        _ARG_PERIAPSIS = argPeriapsis ?? ARG_PERIAPSIS,
-        _TRUE_ANOMALY = trueAnomaly ?? TRUE_ANOMALY,
-        _EPOCH = EPOCH;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(8);
-    fbBuilder.addFloat64(0, _MU);
-    fbBuilder.addFloat64(1, _SEMI_MAJOR_AXIS);
-    fbBuilder.addFloat64(2, _ECCENTRICITY);
-    fbBuilder.addFloat64(3, _INCLINATION);
-    fbBuilder.addFloat64(4, _RAAN);
-    fbBuilder.addFloat64(5, _ARG_PERIAPSIS);
-    fbBuilder.addFloat64(6, _TRUE_ANOMALY);
-    fbBuilder.addFloat64(7, _EPOCH);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class PRWTleLines {
-  PRWTleLines._(this._bc, this._bcOffset);
-  factory PRWTleLines(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PRWTleLines> reader = _PRWTleLinesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  TLE line 1 (69 characters).
-  String? get LINE1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  TLE line 2 (69 characters).
-  String? get LINE2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Satellite name (optional, line 0 of 3LE).
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  NORAD catalog number parsed from the TLE.
-  int get NORAD_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get noradId => NORAD_ID;
-
-  @override
-  String toString() {
-    return 'PRWTleLines{LINE1: ${LINE1}, LINE2: ${LINE2}, NAME: ${NAME}, noradId: ${noradId}}';
-  }
-}
-
-class _PRWTleLinesReader extends fb.TableReader<PRWTleLines> {
-  const _PRWTleLinesReader();
-
-  @override
-  PRWTleLines createObject(fb.BufferContext bc, int offset) =>
-    PRWTleLines._(bc, offset);
-}
-
-class PRWTleLinesBuilder {
-  PRWTleLinesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addLine1Offset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLine2Offset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
   int addNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNoradId(int? NORAD_ID) {
-    fbBuilder.addUint32(3, NORAD_ID);
+  int addTargetNaifId(int? TARGET_NAIF_ID) {
+    fbBuilder.addInt32(1, TARGET_NAIF_ID);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PRWTleLinesObjectBuilder extends fb.ObjectBuilder {
-  final String? _LINE1;
-  final String? _LINE2;
-  final String? _NAME;
-  final int? _NORAD_ID;
-
-  PRWTleLinesObjectBuilder({
-    String? LINE1,
-    String? LINE2,
-    String? NAME,
-    int? NORAD_ID,
-    int? noradId,
-  })
-      : _LINE1 = LINE1,
-        _LINE2 = LINE2,
-        _NAME = NAME,
-        _NORAD_ID = noradId ?? NORAD_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? LINE1Offset = _LINE1 == null ? null
-        : fbBuilder.writeString(_LINE1!);
-    final int? LINE2Offset = _LINE2 == null ? null
-        : fbBuilder.writeString(_LINE2!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, LINE1Offset);
-    fbBuilder.addOffset(1, LINE2Offset);
-    fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addUint32(3, _NORAD_ID);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class PRWInitSource {
-  PRWInitSource._(this._bc, this._bcOffset);
-  factory PRWInitSource(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PRWInitSource> reader = _PRWInitSourceReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Wire kind identifier for BYTES.
-  prwSourceKind get KIND => prwSourceKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
-  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get fileIdentifier => FILE_IDENTIFIER;
-  ///  Encoded source record as a FlatBuffer (consumed per KIND).
-  List<int>? get BYTES => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Convenience inline form when KIND == KEPLERIAN.
-  PRWKeplerianElements? get KEPLERIAN => PRWKeplerianElements.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Convenience inline form when KIND == TLE.
-  PRWTleLines? get TLE => PRWTleLines.reader.vTableGetNullable(_bc, _bcOffset, 12);
-
-  @override
-  String toString() {
-    return 'PRWInitSource{KIND: ${KIND}, fileIdentifier: ${fileIdentifier}, BYTES: ${BYTES}, KEPLERIAN: ${KEPLERIAN}, TLE: ${TLE}}';
-  }
-}
-
-class _PRWInitSourceReader extends fb.TableReader<PRWInitSource> {
-  const _PRWInitSourceReader();
-
-  @override
-  PRWInitSource createObject(fb.BufferContext bc, int offset) =>
-    PRWInitSource._(bc, offset);
-}
-
-class PRWInitSourceBuilder {
-  PRWInitSourceBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addKind(prwSourceKind? KIND) {
-    fbBuilder.addUint8(0, KIND?.value);
+  int addCenterNaifId(int? CENTER_NAIF_ID) {
+    fbBuilder.addInt32(2, CENTER_NAIF_ID);
     return fbBuilder.offset;
   }
-  int addFileIdentifierOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addFrameNaifId(int? FRAME_NAIF_ID) {
+    fbBuilder.addInt32(3, FRAME_NAIF_ID);
     return fbBuilder.offset;
   }
-  int addBytesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addKeplerianOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addTleOffset(int? offset) {
+  int addFrameNameOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PRWInitSourceObjectBuilder extends fb.ObjectBuilder {
-  final prwSourceKind? _KIND;
-  final String? _FILE_IDENTIFIER;
-  final List<int>? _BYTES;
-  final PRWKeplerianElementsObjectBuilder? _KEPLERIAN;
-  final PRWTleLinesObjectBuilder? _TLE;
-
-  PRWInitSourceObjectBuilder({
-    prwSourceKind? KIND,
-    String? FILE_IDENTIFIER,
-    String? fileIdentifier,
-    List<int>? BYTES,
-    PRWKeplerianElementsObjectBuilder? KEPLERIAN,
-    PRWTleLinesObjectBuilder? TLE,
-  })
-      : _KIND = KIND,
-        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
-        _BYTES = BYTES,
-        _KEPLERIAN = KEPLERIAN,
-        _TLE = TLE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
-        : fbBuilder.writeString(_FILE_IDENTIFIER!);
-    final int? BYTESOffset = _BYTES == null ? null
-        : fbBuilder.writeListUint8(_BYTES!);
-    final int? KEPLERIANOffset = _KEPLERIAN?.getOrCreateOffset(fbBuilder);
-    final int? TLEOffset = _TLE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
-    fbBuilder.addUint8(0, _KIND?.value);
-    fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
-    fbBuilder.addOffset(2, BYTESOffset);
-    fbBuilder.addOffset(3, KEPLERIANOffset);
-    fbBuilder.addOffset(4, TLEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
-///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
-///  shared arena.
-class PRWBatchRequest {
-  PRWBatchRequest._(this._bc, this._bcOffset);
-  factory PRWBatchRequest(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PRWBatchRequest> reader = _PRWBatchRequestReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
-  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Entity handles to propagate (empty = all initialized entities).
-  List<int>? get ENTITY_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 6);
-  List<int>? get entityHandles => ENTITY_HANDLES;
-  ///  Output buffer offset in the arena where the StateVector stream begins.
-  int get OUTPUT_OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get outputOffset => OUTPUT_OFFSET;
-  ///  Maximum entities to process in this call (0 = unbounded).
-  int get MAX_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get maxCount => MAX_COUNT;
-  ///  Target reference frame for the output state stream. Matches enum
-  ///  values in SDS `RFM`. If zero, the propagator chooses its native frame.
-  String? get TARGET_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get targetFrame => TARGET_FRAME;
-
-  @override
-  String toString() {
-    return 'PRWBatchRequest{EPOCH: ${EPOCH}, entityHandles: ${entityHandles}, outputOffset: ${outputOffset}, maxCount: ${maxCount}, targetFrame: ${targetFrame}}';
-  }
-}
-
-class _PRWBatchRequestReader extends fb.TableReader<PRWBatchRequest> {
-  const _PRWBatchRequestReader();
-
-  @override
-  PRWBatchRequest createObject(fb.BufferContext bc, int offset) =>
-    PRWBatchRequest._(bc, offset);
-}
-
-class PRWBatchRequestBuilder {
-  PRWBatchRequestBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addEpoch(double? EPOCH) {
-    fbBuilder.addFloat64(0, EPOCH);
+  int addSegmentType(int? SEGMENT_TYPE) {
+    fbBuilder.addInt32(5, SEGMENT_TYPE);
     return fbBuilder.offset;
   }
-  int addEntityHandlesOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addOutputOffset(int? OUTPUT_OFFSET) {
-    fbBuilder.addUint32(2, OUTPUT_OFFSET);
-    return fbBuilder.offset;
-  }
-  int addMaxCount(int? MAX_COUNT) {
-    fbBuilder.addUint32(3, MAX_COUNT);
-    return fbBuilder.offset;
-  }
-  int addTargetFrameOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PRWBatchRequestObjectBuilder extends fb.ObjectBuilder {
-  final double? _EPOCH;
-  final List<int>? _ENTITY_HANDLES;
-  final int? _OUTPUT_OFFSET;
-  final int? _MAX_COUNT;
-  final String? _TARGET_FRAME;
-
-  PRWBatchRequestObjectBuilder({
-    double? EPOCH,
-    List<int>? ENTITY_HANDLES,
-    List<int>? entityHandles,
-    int? OUTPUT_OFFSET,
-    int? outputOffset,
-    int? MAX_COUNT,
-    int? maxCount,
-    String? TARGET_FRAME,
-    String? targetFrame,
-  })
-      : _EPOCH = EPOCH,
-        _ENTITY_HANDLES = entityHandles ?? ENTITY_HANDLES,
-        _OUTPUT_OFFSET = outputOffset ?? OUTPUT_OFFSET,
-        _MAX_COUNT = maxCount ?? MAX_COUNT,
-        _TARGET_FRAME = targetFrame ?? TARGET_FRAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ENTITY_HANDLESOffset = _ENTITY_HANDLES == null ? null
-        : fbBuilder.writeListUint32(_ENTITY_HANDLES!);
-    final int? TARGET_FRAMEOffset = _TARGET_FRAME == null ? null
-        : fbBuilder.writeString(_TARGET_FRAME!);
-    fbBuilder.startTable(5);
-    fbBuilder.addFloat64(0, _EPOCH);
-    fbBuilder.addOffset(1, ENTITY_HANDLESOffset);
-    fbBuilder.addUint32(2, _OUTPUT_OFFSET);
-    fbBuilder.addUint32(3, _MAX_COUNT);
-    fbBuilder.addOffset(4, TARGET_FRAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Batch propagation response header — describes the stream written to
-///  OUTPUT_OFFSET and reports errors. The stream itself is
-///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
-class PRWBatchResponse {
-  PRWBatchResponse._(this._bc, this._bcOffset);
-  factory PRWBatchResponse(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PRWBatchResponse> reader = _PRWBatchResponseReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Number of state vectors written.
-  int get COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  ///  Offset in the arena where the state-vector stream begins.
-  int get OUTPUT_OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get outputOffset => OUTPUT_OFFSET;
-  ///  Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
-  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get stateVectorSize => STATE_VECTOR_SIZE;
-  ///  Reference frame for the stream (SDS `RFM`-compatible string tag).
-  String? get REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get referenceFrame => REFERENCE_FRAME;
-  ///  Per-entity status flags (same cardinality as COUNT).
-  List<propagatorStateFlags>? get FLAGS => const fb.ListReader<propagatorStateFlags>(propagatorStateFlags.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Error code (0 == OK).
-  propagatorErrorCode get ERROR_CODE => propagatorErrorCode.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  propagatorErrorCode get errorCode => ERROR_CODE;
-  ///  Optional error message when ERROR_CODE != OK.
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get errorMessage => ERROR_MESSAGE;
-
-  @override
-  String toString() {
-    return 'PRWBatchResponse{COUNT: ${COUNT}, outputOffset: ${outputOffset}, stateVectorSize: ${stateVectorSize}, referenceFrame: ${referenceFrame}, FLAGS: ${FLAGS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}}';
-  }
-}
-
-class _PRWBatchResponseReader extends fb.TableReader<PRWBatchResponse> {
-  const _PRWBatchResponseReader();
-
-  @override
-  PRWBatchResponse createObject(fb.BufferContext bc, int offset) =>
-    PRWBatchResponse._(bc, offset);
-}
-
-class PRWBatchResponseBuilder {
-  PRWBatchResponseBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addCount(int? COUNT) {
-    fbBuilder.addUint32(0, COUNT);
-    return fbBuilder.offset;
-  }
-  int addOutputOffset(int? OUTPUT_OFFSET) {
-    fbBuilder.addUint32(1, OUTPUT_OFFSET);
-    return fbBuilder.offset;
-  }
-  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
-    fbBuilder.addUint8(2, STATE_VECTOR_SIZE);
-    return fbBuilder.offset;
-  }
-  int addReferenceFrameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addFlagsOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addErrorCode(propagatorErrorCode? ERROR_CODE) {
-    fbBuilder.addInt32(5, ERROR_CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
+  int addStartEpochOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addStartSecondsPastJ2000Tdb(double? START_SECONDS_PAST_J2000_TDB) {
+    fbBuilder.addFloat64(8, START_SECONDS_PAST_J2000_TDB);
+    return fbBuilder.offset;
+  }
+  int addStopSecondsPastJ2000Tdb(double? STOP_SECONDS_PAST_J2000_TDB) {
+    fbBuilder.addFloat64(9, STOP_SECONDS_PAST_J2000_TDB);
+    return fbBuilder.offset;
+  }
+  int addInitialAddress(int? INITIAL_ADDRESS) {
+    fbBuilder.addUint64(10, INITIAL_ADDRESS);
+    return fbBuilder.offset;
+  }
+  int addFinalAddress(int? FINAL_ADDRESS) {
+    fbBuilder.addUint64(11, FINAL_ADDRESS);
+    return fbBuilder.offset;
+  }
+  int addPolynomialDegree(int? POLYNOMIAL_DEGREE) {
+    fbBuilder.addUint32(12, POLYNOMIAL_DEGREE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class PRWBatchResponseObjectBuilder extends fb.ObjectBuilder {
-  final int? _COUNT;
-  final int? _OUTPUT_OFFSET;
-  final int? _STATE_VECTOR_SIZE;
-  final String? _REFERENCE_FRAME;
-  final List<propagatorStateFlags>? _FLAGS;
-  final propagatorErrorCode? _ERROR_CODE;
-  final String? _ERROR_MESSAGE;
+class NCDSegmentDescriptorObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final int? _TARGET_NAIF_ID;
+  final int? _CENTER_NAIF_ID;
+  final int? _FRAME_NAIF_ID;
+  final String? _FRAME_NAME;
+  final int? _SEGMENT_TYPE;
+  final String? _START_EPOCH;
+  final String? _STOP_EPOCH;
+  final double? _START_SECONDS_PAST_J2000_TDB;
+  final double? _STOP_SECONDS_PAST_J2000_TDB;
+  final int? _INITIAL_ADDRESS;
+  final int? _FINAL_ADDRESS;
+  final int? _POLYNOMIAL_DEGREE;
 
-  PRWBatchResponseObjectBuilder({
-    int? COUNT,
-    int? OUTPUT_OFFSET,
-    int? outputOffset,
-    int? STATE_VECTOR_SIZE,
-    int? stateVectorSize,
-    String? REFERENCE_FRAME,
-    String? referenceFrame,
-    List<propagatorStateFlags>? FLAGS,
-    propagatorErrorCode? ERROR_CODE,
-    propagatorErrorCode? errorCode,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
+  NCDSegmentDescriptorObjectBuilder({
+    String? NAME,
+    int? TARGET_NAIF_ID,
+    int? targetNaifId,
+    int? CENTER_NAIF_ID,
+    int? centerNaifId,
+    int? FRAME_NAIF_ID,
+    int? frameNaifId,
+    String? FRAME_NAME,
+    String? frameName,
+    int? SEGMENT_TYPE,
+    int? segmentType,
+    String? START_EPOCH,
+    String? startEpoch,
+    String? STOP_EPOCH,
+    String? stopEpoch,
+    double? START_SECONDS_PAST_J2000_TDB,
+    double? startSecondsPastJ2000Tdb,
+    double? STOP_SECONDS_PAST_J2000_TDB,
+    double? stopSecondsPastJ2000Tdb,
+    int? INITIAL_ADDRESS,
+    int? initialAddress,
+    int? FINAL_ADDRESS,
+    int? finalAddress,
+    int? POLYNOMIAL_DEGREE,
+    int? polynomialDegree,
   })
-      : _COUNT = COUNT,
-        _OUTPUT_OFFSET = outputOffset ?? OUTPUT_OFFSET,
-        _STATE_VECTOR_SIZE = stateVectorSize ?? STATE_VECTOR_SIZE,
-        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
-        _FLAGS = FLAGS,
-        _ERROR_CODE = errorCode ?? ERROR_CODE,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE;
+      : _NAME = NAME,
+        _TARGET_NAIF_ID = targetNaifId ?? TARGET_NAIF_ID,
+        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID,
+        _FRAME_NAIF_ID = frameNaifId ?? FRAME_NAIF_ID,
+        _FRAME_NAME = frameName ?? FRAME_NAME,
+        _SEGMENT_TYPE = segmentType ?? SEGMENT_TYPE,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _STOP_EPOCH = stopEpoch ?? STOP_EPOCH,
+        _START_SECONDS_PAST_J2000_TDB = startSecondsPastJ2000Tdb ?? START_SECONDS_PAST_J2000_TDB,
+        _STOP_SECONDS_PAST_J2000_TDB = stopSecondsPastJ2000Tdb ?? STOP_SECONDS_PAST_J2000_TDB,
+        _INITIAL_ADDRESS = initialAddress ?? INITIAL_ADDRESS,
+        _FINAL_ADDRESS = finalAddress ?? FINAL_ADDRESS,
+        _POLYNOMIAL_DEGREE = polynomialDegree ?? POLYNOMIAL_DEGREE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME == null ? null
-        : fbBuilder.writeString(_REFERENCE_FRAME!);
-    final int? FLAGSOffset = _FLAGS == null ? null
-        : fbBuilder.writeListUint32(_FLAGS!.map((f) => f.value).toList());
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addUint32(0, _COUNT);
-    fbBuilder.addUint32(1, _OUTPUT_OFFSET);
-    fbBuilder.addUint8(2, _STATE_VECTOR_SIZE);
-    fbBuilder.addOffset(3, REFERENCE_FRAMEOffset);
-    fbBuilder.addOffset(4, FLAGSOffset);
-    fbBuilder.addInt32(5, _ERROR_CODE?.value);
-    fbBuilder.addOffset(6, ERROR_MESSAGEOffset);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? FRAME_NAMEOffset = _FRAME_NAME == null ? null
+        : fbBuilder.writeString(_FRAME_NAME!);
+    final int? START_EPOCHOffset = _START_EPOCH == null ? null
+        : fbBuilder.writeString(_START_EPOCH!);
+    final int? STOP_EPOCHOffset = _STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_STOP_EPOCH!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addInt32(1, _TARGET_NAIF_ID);
+    fbBuilder.addInt32(2, _CENTER_NAIF_ID);
+    fbBuilder.addInt32(3, _FRAME_NAIF_ID);
+    fbBuilder.addOffset(4, FRAME_NAMEOffset);
+    fbBuilder.addInt32(5, _SEGMENT_TYPE);
+    fbBuilder.addOffset(6, START_EPOCHOffset);
+    fbBuilder.addOffset(7, STOP_EPOCHOffset);
+    fbBuilder.addFloat64(8, _START_SECONDS_PAST_J2000_TDB);
+    fbBuilder.addFloat64(9, _STOP_SECONDS_PAST_J2000_TDB);
+    fbBuilder.addUint64(10, _INITIAL_ADDRESS);
+    fbBuilder.addUint64(11, _FINAL_ADDRESS);
+    fbBuilder.addUint32(12, _POLYNOMIAL_DEGREE);
     return fbBuilder.endTable();
   }
 
@@ -904,59 +305,169 @@ class PRWBatchResponseObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Propagator Runtime Wire — envelope that carries either an init request,
-///  a batch request, or a batch response across a runtime boundary.
-class PRW {
-  PRW._(this._bc, this._bcOffset);
-  factory PRW(List<int> bytes) {
+///  Header block of a fixed-column satellite position container (SP3).
+class NCDSP3Header {
+  NCDSP3Header._(this._bc, this._bcOffset);
+  factory NCDSP3Header(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PRW> reader = _PRWReader();
+  static const fb.Reader<NCDSP3Header> reader = _NCDSP3HeaderReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  PRWInit? get INIT => PRWInit.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  PRWBatchRequest? get BATCH_REQUEST => PRWBatchRequest.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  PRWBatchRequest? get batchRequest => BATCH_REQUEST;
-  PRWBatchResponse? get BATCH_RESPONSE => PRWBatchResponse.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  PRWBatchResponse? get batchResponse => BATCH_RESPONSE;
+  ///  Record content indicator, e.g. "P" for positions only, "V" with
+  ///  velocities.
+  String? get FILE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get fileType => FILE_TYPE;
+  ///  Satellite system indicator recorded in the header.
+  String? get SATELLITE_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get satelliteSystem => SATELLITE_SYSTEM;
+  ///  Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert.
+  String? get ORBIT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get orbitType => ORBIT_TYPE;
+  ///  Data used to produce the file, as recorded.
+  String? get DATA_USED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get dataUsed => DATA_USED;
+  ///  Terrestrial reference frame name as recorded.
+  String? get COORDINATE_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get coordinateSystem => COORDINATE_SYSTEM;
+  ///  Producing agency as recorded IN THE FILE. This is observed content, not a
+  ///  classification.
+  String? get AGENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Time system as recorded in the header.
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  Week number of the first epoch in the file's own week counter.
+  int get GPS_WEEK => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get gpsWeek => GPS_WEEK;
+  ///  Seconds of week of the first epoch.
+  double get SECONDS_OF_WEEK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get secondsOfWeek => SECONDS_OF_WEEK;
+  ///  Modified Julian Day of the first epoch.
+  int get MODIFIED_JULIAN_DAY_START => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get modifiedJulianDayStart => MODIFIED_JULIAN_DAY_START;
+  ///  Fractional day of the first epoch.
+  double get FRACTIONAL_DAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get fractionalDay => FRACTIONAL_DAY;
+  ///  Uniform interval between epochs, seconds.
+  double get EPOCH_INTERVAL_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get epochIntervalSeconds => EPOCH_INTERVAL_SECONDS;
+  ///  Number of epochs declared in the header.
+  int get NUMBER_OF_EPOCHS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get numberOfEpochs => NUMBER_OF_EPOCHS;
+  ///  Satellite identifiers in header order.
+  List<String>? get SATELLITE_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<String>? get satelliteIds => SATELLITE_IDS;
+  ///  Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy
+  ///  is POSITION_VELOCITY_BASE raised to this power.
+  List<int>? get SATELLITE_ACCURACY_EXPONENTS => const fb.Int8ListReader().vTableGetNullable(_bc, _bcOffset, 32);
+  List<int>? get satelliteAccuracyExponents => SATELLITE_ACCURACY_EXPONENTS;
+  ///  Base for the position and velocity standard-deviation exponents carried
+  ///  per state in $OEM.
+  double get POSITION_VELOCITY_BASE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get positionVelocityBase => POSITION_VELOCITY_BASE;
+  ///  Base for the clock bias and clock rate standard-deviation exponents.
+  double get CLOCK_RATE_BASE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get clockRateBase => CLOCK_RATE_BASE;
+  ///  Header comment lines in file order.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
 
   @override
   String toString() {
-    return 'PRW{INIT: ${INIT}, batchRequest: ${batchRequest}, batchResponse: ${batchResponse}}';
+    return 'NCDSP3Header{fileType: ${fileType}, satelliteSystem: ${satelliteSystem}, orbitType: ${orbitType}, dataUsed: ${dataUsed}, coordinateSystem: ${coordinateSystem}, AGENCY: ${AGENCY}, timeSystem: ${timeSystem}, gpsWeek: ${gpsWeek}, secondsOfWeek: ${secondsOfWeek}, modifiedJulianDayStart: ${modifiedJulianDayStart}, fractionalDay: ${fractionalDay}, epochIntervalSeconds: ${epochIntervalSeconds}, numberOfEpochs: ${numberOfEpochs}, satelliteIds: ${satelliteIds}, satelliteAccuracyExponents: ${satelliteAccuracyExponents}, positionVelocityBase: ${positionVelocityBase}, clockRateBase: ${clockRateBase}, COMMENT: ${COMMENT}}';
   }
 }
 
-class _PRWReader extends fb.TableReader<PRW> {
-  const _PRWReader();
+class _NCDSP3HeaderReader extends fb.TableReader<NCDSP3Header> {
+  const _NCDSP3HeaderReader();
 
   @override
-  PRW createObject(fb.BufferContext bc, int offset) =>
-    PRW._(bc, offset);
+  NCDSP3Header createObject(fb.BufferContext bc, int offset) =>
+    NCDSP3Header._(bc, offset);
 }
 
-class PRWBuilder {
-  PRWBuilder(this.fbBuilder);
+class NCDSP3HeaderBuilder {
+  NCDSP3HeaderBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(18);
   }
 
-  int addInitOffset(int? offset) {
+  int addFileTypeOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addBatchRequestOffset(int? offset) {
+  int addSatelliteSystemOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addBatchResponseOffset(int? offset) {
+  int addOrbitTypeOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDataUsedOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystemOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAgencyOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addGpsWeek(int? GPS_WEEK) {
+    fbBuilder.addUint32(7, GPS_WEEK);
+    return fbBuilder.offset;
+  }
+  int addSecondsOfWeek(double? SECONDS_OF_WEEK) {
+    fbBuilder.addFloat64(8, SECONDS_OF_WEEK);
+    return fbBuilder.offset;
+  }
+  int addModifiedJulianDayStart(int? MODIFIED_JULIAN_DAY_START) {
+    fbBuilder.addInt32(9, MODIFIED_JULIAN_DAY_START);
+    return fbBuilder.offset;
+  }
+  int addFractionalDay(double? FRACTIONAL_DAY) {
+    fbBuilder.addFloat64(10, FRACTIONAL_DAY);
+    return fbBuilder.offset;
+  }
+  int addEpochIntervalSeconds(double? EPOCH_INTERVAL_SECONDS) {
+    fbBuilder.addFloat64(11, EPOCH_INTERVAL_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addNumberOfEpochs(int? NUMBER_OF_EPOCHS) {
+    fbBuilder.addUint32(12, NUMBER_OF_EPOCHS);
+    return fbBuilder.offset;
+  }
+  int addSatelliteIdsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSatelliteAccuracyExponentsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionVelocityBase(double? POSITION_VELOCITY_BASE) {
+    fbBuilder.addFloat64(15, POSITION_VELOCITY_BASE);
+    return fbBuilder.offset;
+  }
+  int addClockRateBase(double? CLOCK_RATE_BASE) {
+    fbBuilder.addFloat64(16, CLOCK_RATE_BASE);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
 
@@ -965,32 +476,845 @@ class PRWBuilder {
   }
 }
 
-class PRWObjectBuilder extends fb.ObjectBuilder {
-  final PRWInitObjectBuilder? _INIT;
-  final PRWBatchRequestObjectBuilder? _BATCH_REQUEST;
-  final PRWBatchResponseObjectBuilder? _BATCH_RESPONSE;
+class NCDSP3HeaderObjectBuilder extends fb.ObjectBuilder {
+  final String? _FILE_TYPE;
+  final String? _SATELLITE_SYSTEM;
+  final String? _ORBIT_TYPE;
+  final String? _DATA_USED;
+  final String? _COORDINATE_SYSTEM;
+  final String? _AGENCY;
+  final String? _TIME_SYSTEM;
+  final int? _GPS_WEEK;
+  final double? _SECONDS_OF_WEEK;
+  final int? _MODIFIED_JULIAN_DAY_START;
+  final double? _FRACTIONAL_DAY;
+  final double? _EPOCH_INTERVAL_SECONDS;
+  final int? _NUMBER_OF_EPOCHS;
+  final List<String>? _SATELLITE_IDS;
+  final List<int>? _SATELLITE_ACCURACY_EXPONENTS;
+  final double? _POSITION_VELOCITY_BASE;
+  final double? _CLOCK_RATE_BASE;
+  final List<String>? _COMMENT;
 
-  PRWObjectBuilder({
-    PRWInitObjectBuilder? INIT,
-    PRWBatchRequestObjectBuilder? BATCH_REQUEST,
-    PRWBatchRequestObjectBuilder? batchRequest,
-    PRWBatchResponseObjectBuilder? BATCH_RESPONSE,
-    PRWBatchResponseObjectBuilder? batchResponse,
+  NCDSP3HeaderObjectBuilder({
+    String? FILE_TYPE,
+    String? fileType,
+    String? SATELLITE_SYSTEM,
+    String? satelliteSystem,
+    String? ORBIT_TYPE,
+    String? orbitType,
+    String? DATA_USED,
+    String? dataUsed,
+    String? COORDINATE_SYSTEM,
+    String? coordinateSystem,
+    String? AGENCY,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    int? GPS_WEEK,
+    int? gpsWeek,
+    double? SECONDS_OF_WEEK,
+    double? secondsOfWeek,
+    int? MODIFIED_JULIAN_DAY_START,
+    int? modifiedJulianDayStart,
+    double? FRACTIONAL_DAY,
+    double? fractionalDay,
+    double? EPOCH_INTERVAL_SECONDS,
+    double? epochIntervalSeconds,
+    int? NUMBER_OF_EPOCHS,
+    int? numberOfEpochs,
+    List<String>? SATELLITE_IDS,
+    List<String>? satelliteIds,
+    List<int>? SATELLITE_ACCURACY_EXPONENTS,
+    List<int>? satelliteAccuracyExponents,
+    double? POSITION_VELOCITY_BASE,
+    double? positionVelocityBase,
+    double? CLOCK_RATE_BASE,
+    double? clockRateBase,
+    List<String>? COMMENT,
   })
-      : _INIT = INIT,
-        _BATCH_REQUEST = batchRequest ?? BATCH_REQUEST,
-        _BATCH_RESPONSE = batchResponse ?? BATCH_RESPONSE;
+      : _FILE_TYPE = fileType ?? FILE_TYPE,
+        _SATELLITE_SYSTEM = satelliteSystem ?? SATELLITE_SYSTEM,
+        _ORBIT_TYPE = orbitType ?? ORBIT_TYPE,
+        _DATA_USED = dataUsed ?? DATA_USED,
+        _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM,
+        _AGENCY = AGENCY,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _GPS_WEEK = gpsWeek ?? GPS_WEEK,
+        _SECONDS_OF_WEEK = secondsOfWeek ?? SECONDS_OF_WEEK,
+        _MODIFIED_JULIAN_DAY_START = modifiedJulianDayStart ?? MODIFIED_JULIAN_DAY_START,
+        _FRACTIONAL_DAY = fractionalDay ?? FRACTIONAL_DAY,
+        _EPOCH_INTERVAL_SECONDS = epochIntervalSeconds ?? EPOCH_INTERVAL_SECONDS,
+        _NUMBER_OF_EPOCHS = numberOfEpochs ?? NUMBER_OF_EPOCHS,
+        _SATELLITE_IDS = satelliteIds ?? SATELLITE_IDS,
+        _SATELLITE_ACCURACY_EXPONENTS = satelliteAccuracyExponents ?? SATELLITE_ACCURACY_EXPONENTS,
+        _POSITION_VELOCITY_BASE = positionVelocityBase ?? POSITION_VELOCITY_BASE,
+        _CLOCK_RATE_BASE = clockRateBase ?? CLOCK_RATE_BASE,
+        _COMMENT = COMMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? INITOffset = _INIT?.getOrCreateOffset(fbBuilder);
-    final int? BATCH_REQUESTOffset = _BATCH_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? BATCH_RESPONSEOffset = _BATCH_RESPONSE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, INITOffset);
-    fbBuilder.addOffset(1, BATCH_REQUESTOffset);
-    fbBuilder.addOffset(2, BATCH_RESPONSEOffset);
+    final int? FILE_TYPEOffset = _FILE_TYPE == null ? null
+        : fbBuilder.writeString(_FILE_TYPE!);
+    final int? SATELLITE_SYSTEMOffset = _SATELLITE_SYSTEM == null ? null
+        : fbBuilder.writeString(_SATELLITE_SYSTEM!);
+    final int? ORBIT_TYPEOffset = _ORBIT_TYPE == null ? null
+        : fbBuilder.writeString(_ORBIT_TYPE!);
+    final int? DATA_USEDOffset = _DATA_USED == null ? null
+        : fbBuilder.writeString(_DATA_USED!);
+    final int? COORDINATE_SYSTEMOffset = _COORDINATE_SYSTEM == null ? null
+        : fbBuilder.writeString(_COORDINATE_SYSTEM!);
+    final int? AGENCYOffset = _AGENCY == null ? null
+        : fbBuilder.writeString(_AGENCY!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? SATELLITE_IDSOffset = _SATELLITE_IDS == null ? null
+        : fbBuilder.writeList(_SATELLITE_IDS!.map(fbBuilder.writeString).toList());
+    final int? SATELLITE_ACCURACY_EXPONENTSOffset = _SATELLITE_ACCURACY_EXPONENTS == null ? null
+        : fbBuilder.writeListInt8(_SATELLITE_ACCURACY_EXPONENTS!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(18);
+    fbBuilder.addOffset(0, FILE_TYPEOffset);
+    fbBuilder.addOffset(1, SATELLITE_SYSTEMOffset);
+    fbBuilder.addOffset(2, ORBIT_TYPEOffset);
+    fbBuilder.addOffset(3, DATA_USEDOffset);
+    fbBuilder.addOffset(4, COORDINATE_SYSTEMOffset);
+    fbBuilder.addOffset(5, AGENCYOffset);
+    fbBuilder.addOffset(6, TIME_SYSTEMOffset);
+    fbBuilder.addUint32(7, _GPS_WEEK);
+    fbBuilder.addFloat64(8, _SECONDS_OF_WEEK);
+    fbBuilder.addInt32(9, _MODIFIED_JULIAN_DAY_START);
+    fbBuilder.addFloat64(10, _FRACTIONAL_DAY);
+    fbBuilder.addFloat64(11, _EPOCH_INTERVAL_SECONDS);
+    fbBuilder.addUint32(12, _NUMBER_OF_EPOCHS);
+    fbBuilder.addOffset(13, SATELLITE_IDSOffset);
+    fbBuilder.addOffset(14, SATELLITE_ACCURACY_EXPONENTSOffset);
+    fbBuilder.addFloat64(15, _POSITION_VELOCITY_BASE);
+    fbBuilder.addFloat64(16, _CLOCK_RATE_BASE);
+    fbBuilder.addOffset(17, COMMENTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Parameters of a scenario-epoch text container.
+class NCDScenarioEpochContainer {
+  NCDScenarioEpochContainer._(this._bc, this._bcOffset);
+  factory NCDScenarioEpochContainer(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<NCDScenarioEpochContainer> reader = _NCDScenarioEpochContainerReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch that every record offset is measured from, ISO 8601.
+  String? get SCENARIO_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get scenarioEpoch => SCENARIO_EPOCH;
+  ///  Time scale the scenario epoch is expressed in.
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  Distance unit of the records, e.g. "Meters", "Kilometers".
+  String? get DISTANCE_UNIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get distanceUnit => DISTANCE_UNIT;
+  ///  Named coordinate system of the records.
+  String? get COORDINATE_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get coordinateSystem => COORDINATE_SYSTEM;
+  ///  Named coordinate axes, when stated separately from the system.
+  String? get COORDINATE_AXES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get coordinateAxes => COORDINATE_AXES;
+  ///  Central body of the records.
+  String? get CENTRAL_BODY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get centralBody => CENTRAL_BODY;
+  ///  Named interpolation method, e.g. "Lagrange", "Hermite".
+  String? get INTERPOLATION_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get interpolationMethod => INTERPOLATION_METHOD;
+  ///  Interpolation order expressed as (samples - 1), which is how these
+  ///  containers state it. Carried verbatim rather than converted, so a rewrite
+  ///  reproduces the source exactly.
+  int get INTERPOLATION_SAMPLES_M1 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get interpolationSamplesM1 => INTERPOLATION_SAMPLES_M1;
+  ///  Number of ephemeris points declared in the container.
+  int get NUMBER_OF_EPHEMERIS_POINTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get numberOfEphemerisPoints => NUMBER_OF_EPHEMERIS_POINTS;
+  ///  Segment boundary offsets in seconds from SCENARIO_EPOCH, when present.
+  List<double>? get SEGMENT_BOUNDARY_TIMES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get segmentBoundaryTimes => SEGMENT_BOUNDARY_TIMES;
+
+  @override
+  String toString() {
+    return 'NCDScenarioEpochContainer{scenarioEpoch: ${scenarioEpoch}, timeSystem: ${timeSystem}, distanceUnit: ${distanceUnit}, coordinateSystem: ${coordinateSystem}, coordinateAxes: ${coordinateAxes}, centralBody: ${centralBody}, interpolationMethod: ${interpolationMethod}, interpolationSamplesM1: ${interpolationSamplesM1}, numberOfEphemerisPoints: ${numberOfEphemerisPoints}, segmentBoundaryTimes: ${segmentBoundaryTimes}}';
+  }
+}
+
+class _NCDScenarioEpochContainerReader extends fb.TableReader<NCDScenarioEpochContainer> {
+  const _NCDScenarioEpochContainerReader();
+
+  @override
+  NCDScenarioEpochContainer createObject(fb.BufferContext bc, int offset) =>
+    NCDScenarioEpochContainer._(bc, offset);
+}
+
+class NCDScenarioEpochContainerBuilder {
+  NCDScenarioEpochContainerBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addScenarioEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDistanceUnitOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystemOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateAxesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCentralBodyOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationMethodOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationSamplesM1(int? INTERPOLATION_SAMPLES_M1) {
+    fbBuilder.addUint32(7, INTERPOLATION_SAMPLES_M1);
+    return fbBuilder.offset;
+  }
+  int addNumberOfEphemerisPoints(int? NUMBER_OF_EPHEMERIS_POINTS) {
+    fbBuilder.addUint32(8, NUMBER_OF_EPHEMERIS_POINTS);
+    return fbBuilder.offset;
+  }
+  int addSegmentBoundaryTimesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class NCDScenarioEpochContainerObjectBuilder extends fb.ObjectBuilder {
+  final String? _SCENARIO_EPOCH;
+  final String? _TIME_SYSTEM;
+  final String? _DISTANCE_UNIT;
+  final String? _COORDINATE_SYSTEM;
+  final String? _COORDINATE_AXES;
+  final String? _CENTRAL_BODY;
+  final String? _INTERPOLATION_METHOD;
+  final int? _INTERPOLATION_SAMPLES_M1;
+  final int? _NUMBER_OF_EPHEMERIS_POINTS;
+  final List<double>? _SEGMENT_BOUNDARY_TIMES;
+
+  NCDScenarioEpochContainerObjectBuilder({
+    String? SCENARIO_EPOCH,
+    String? scenarioEpoch,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    String? DISTANCE_UNIT,
+    String? distanceUnit,
+    String? COORDINATE_SYSTEM,
+    String? coordinateSystem,
+    String? COORDINATE_AXES,
+    String? coordinateAxes,
+    String? CENTRAL_BODY,
+    String? centralBody,
+    String? INTERPOLATION_METHOD,
+    String? interpolationMethod,
+    int? INTERPOLATION_SAMPLES_M1,
+    int? interpolationSamplesM1,
+    int? NUMBER_OF_EPHEMERIS_POINTS,
+    int? numberOfEphemerisPoints,
+    List<double>? SEGMENT_BOUNDARY_TIMES,
+    List<double>? segmentBoundaryTimes,
+  })
+      : _SCENARIO_EPOCH = scenarioEpoch ?? SCENARIO_EPOCH,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _DISTANCE_UNIT = distanceUnit ?? DISTANCE_UNIT,
+        _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM,
+        _COORDINATE_AXES = coordinateAxes ?? COORDINATE_AXES,
+        _CENTRAL_BODY = centralBody ?? CENTRAL_BODY,
+        _INTERPOLATION_METHOD = interpolationMethod ?? INTERPOLATION_METHOD,
+        _INTERPOLATION_SAMPLES_M1 = interpolationSamplesM1 ?? INTERPOLATION_SAMPLES_M1,
+        _NUMBER_OF_EPHEMERIS_POINTS = numberOfEphemerisPoints ?? NUMBER_OF_EPHEMERIS_POINTS,
+        _SEGMENT_BOUNDARY_TIMES = segmentBoundaryTimes ?? SEGMENT_BOUNDARY_TIMES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SCENARIO_EPOCHOffset = _SCENARIO_EPOCH == null ? null
+        : fbBuilder.writeString(_SCENARIO_EPOCH!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? DISTANCE_UNITOffset = _DISTANCE_UNIT == null ? null
+        : fbBuilder.writeString(_DISTANCE_UNIT!);
+    final int? COORDINATE_SYSTEMOffset = _COORDINATE_SYSTEM == null ? null
+        : fbBuilder.writeString(_COORDINATE_SYSTEM!);
+    final int? COORDINATE_AXESOffset = _COORDINATE_AXES == null ? null
+        : fbBuilder.writeString(_COORDINATE_AXES!);
+    final int? CENTRAL_BODYOffset = _CENTRAL_BODY == null ? null
+        : fbBuilder.writeString(_CENTRAL_BODY!);
+    final int? INTERPOLATION_METHODOffset = _INTERPOLATION_METHOD == null ? null
+        : fbBuilder.writeString(_INTERPOLATION_METHOD!);
+    final int? SEGMENT_BOUNDARY_TIMESOffset = _SEGMENT_BOUNDARY_TIMES == null ? null
+        : fbBuilder.writeListFloat64(_SEGMENT_BOUNDARY_TIMES!);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, SCENARIO_EPOCHOffset);
+    fbBuilder.addOffset(1, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(2, DISTANCE_UNITOffset);
+    fbBuilder.addOffset(3, COORDINATE_SYSTEMOffset);
+    fbBuilder.addOffset(4, COORDINATE_AXESOffset);
+    fbBuilder.addOffset(5, CENTRAL_BODYOffset);
+    fbBuilder.addOffset(6, INTERPOLATION_METHODOffset);
+    fbBuilder.addUint32(7, _INTERPOLATION_SAMPLES_M1);
+    fbBuilder.addUint32(8, _NUMBER_OF_EPHEMERIS_POINTS);
+    fbBuilder.addOffset(9, SEGMENT_BOUNDARY_TIMESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Header words of a fixed-record binary ephemeris container.
+class NCDCode500Header {
+  NCDCode500Header._(this._bc, this._bcOffset);
+  factory NCDCode500Header(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<NCDCode500Header> reader = _NCDCode500HeaderReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Object name as recorded in the header.
+  String? get SATELLITE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get satelliteName => SATELLITE_NAME;
+  ///  Container-internal tape or file identifier.
+  String? get TAPE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get tapeId => TAPE_ID;
+  ///  Time system indicator as recorded.
+  String? get TIME_SYSTEM_INDICATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get timeSystemIndicator => TIME_SYSTEM_INDICATOR;
+  ///  Coordinate system indicator as recorded.
+  int get COORDINATE_SYSTEM_INDICATOR => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get coordinateSystemIndicator => COORDINATE_SYSTEM_INDICATOR;
+  ///  Coverage start, ISO 8601.
+  String? get START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get startEpoch => START_EPOCH;
+  ///  Coverage stop, ISO 8601.
+  String? get STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get stopEpoch => STOP_EPOCH;
+  ///  Uniform step between data records, seconds.
+  double get EPOCH_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get epochStepSeconds => EPOCH_STEP_SECONDS;
+  ///  The header record's packed words in file order, undecoded. A reader that
+  ///  understands a word decodes it; a rewriter reproduces the record exactly
+  ///  without having to.
+  List<double>? get HEADER_WORDS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get headerWords => HEADER_WORDS;
+
+  @override
+  String toString() {
+    return 'NCDCode500Header{satelliteName: ${satelliteName}, tapeId: ${tapeId}, timeSystemIndicator: ${timeSystemIndicator}, coordinateSystemIndicator: ${coordinateSystemIndicator}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, epochStepSeconds: ${epochStepSeconds}, headerWords: ${headerWords}}';
+  }
+}
+
+class _NCDCode500HeaderReader extends fb.TableReader<NCDCode500Header> {
+  const _NCDCode500HeaderReader();
+
+  @override
+  NCDCode500Header createObject(fb.BufferContext bc, int offset) =>
+    NCDCode500Header._(bc, offset);
+}
+
+class NCDCode500HeaderBuilder {
+  NCDCode500HeaderBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addSatelliteNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTapeIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemIndicatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystemIndicator(int? COORDINATE_SYSTEM_INDICATOR) {
+    fbBuilder.addInt32(3, COORDINATE_SYSTEM_INDICATOR);
+    return fbBuilder.offset;
+  }
+  int addStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochStepSeconds(double? EPOCH_STEP_SECONDS) {
+    fbBuilder.addFloat64(6, EPOCH_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHeaderWordsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class NCDCode500HeaderObjectBuilder extends fb.ObjectBuilder {
+  final String? _SATELLITE_NAME;
+  final String? _TAPE_ID;
+  final String? _TIME_SYSTEM_INDICATOR;
+  final int? _COORDINATE_SYSTEM_INDICATOR;
+  final String? _START_EPOCH;
+  final String? _STOP_EPOCH;
+  final double? _EPOCH_STEP_SECONDS;
+  final List<double>? _HEADER_WORDS;
+
+  NCDCode500HeaderObjectBuilder({
+    String? SATELLITE_NAME,
+    String? satelliteName,
+    String? TAPE_ID,
+    String? tapeId,
+    String? TIME_SYSTEM_INDICATOR,
+    String? timeSystemIndicator,
+    int? COORDINATE_SYSTEM_INDICATOR,
+    int? coordinateSystemIndicator,
+    String? START_EPOCH,
+    String? startEpoch,
+    String? STOP_EPOCH,
+    String? stopEpoch,
+    double? EPOCH_STEP_SECONDS,
+    double? epochStepSeconds,
+    List<double>? HEADER_WORDS,
+    List<double>? headerWords,
+  })
+      : _SATELLITE_NAME = satelliteName ?? SATELLITE_NAME,
+        _TAPE_ID = tapeId ?? TAPE_ID,
+        _TIME_SYSTEM_INDICATOR = timeSystemIndicator ?? TIME_SYSTEM_INDICATOR,
+        _COORDINATE_SYSTEM_INDICATOR = coordinateSystemIndicator ?? COORDINATE_SYSTEM_INDICATOR,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _STOP_EPOCH = stopEpoch ?? STOP_EPOCH,
+        _EPOCH_STEP_SECONDS = epochStepSeconds ?? EPOCH_STEP_SECONDS,
+        _HEADER_WORDS = headerWords ?? HEADER_WORDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SATELLITE_NAMEOffset = _SATELLITE_NAME == null ? null
+        : fbBuilder.writeString(_SATELLITE_NAME!);
+    final int? TAPE_IDOffset = _TAPE_ID == null ? null
+        : fbBuilder.writeString(_TAPE_ID!);
+    final int? TIME_SYSTEM_INDICATOROffset = _TIME_SYSTEM_INDICATOR == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM_INDICATOR!);
+    final int? START_EPOCHOffset = _START_EPOCH == null ? null
+        : fbBuilder.writeString(_START_EPOCH!);
+    final int? STOP_EPOCHOffset = _STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_STOP_EPOCH!);
+    final int? HEADER_WORDSOffset = _HEADER_WORDS == null ? null
+        : fbBuilder.writeListFloat64(_HEADER_WORDS!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, SATELLITE_NAMEOffset);
+    fbBuilder.addOffset(1, TAPE_IDOffset);
+    fbBuilder.addOffset(2, TIME_SYSTEM_INDICATOROffset);
+    fbBuilder.addInt32(3, _COORDINATE_SYSTEM_INDICATOR);
+    fbBuilder.addOffset(4, START_EPOCHOffset);
+    fbBuilder.addOffset(5, STOP_EPOCHOffset);
+    fbBuilder.addFloat64(6, _EPOCH_STEP_SECONDS);
+    fbBuilder.addOffset(7, HEADER_WORDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Native Container Descriptor.
+///
+///  The file-level facts of an ephemeris, attitude or tracking container that
+///  are NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the
+///  states, attitudes and observations; none of them can carry the internal
+///  file name, the comment area, the segment address ranges, the header accuracy
+///  block or the interpolation order the source declared, because those describe
+///  the CONTAINER. Without them a read-then-write cycle silently invents header
+///  values, and a segmented binary file cannot be reproduced at all.
+///
+///  ONE record covers every container class rather than one record per format:
+///  the file-level facts are the same kind of fact in each, and the
+///  format-specific blocks are optional sub-tables selected by FORMAT. Only the
+///  block matching FORMAT is populated.
+class NCD {
+  NCD._(this._bc, this._bcOffset);
+  factory NCD(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<NCD> reader = _NCDReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Container format class.
+  ncdContainerFormat get FORMAT => ncdContainerFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise.
+  String? get PROVIDER_DEFINED_FORMAT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get providerDefinedFormatName => PROVIDER_DEFINED_FORMAT_NAME;
+  ///  Version of the container format as declared by the file itself.
+  String? get FORMAT_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get formatVersion => FORMAT_VERSION;
+  ///  Producing system or organization as recorded IN THE FILE.
+  String? get PRODUCER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Creation date recorded in the file, ISO 8601.
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get creationDate => CREATION_DATE;
+  ///  Originator recorded in the file.
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Container-internal file name, which is stored inside the file and is
+  ///  independent of the name on disk.
+  String? get INTERNAL_FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get internalFileName => INTERNAL_FILE_NAME;
+  ///  Free-text comment area carried inside the container, one entry per line,
+  ///  in file order.
+  List<String>? get COMMENT_AREA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<String>? get commentArea => COMMENT_AREA;
+  ///  Reference frame name as the container itself spells it, before any
+  ///  mapping onto $RFM.
+  String? get NATIVE_FRAME_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get nativeFrameName => NATIVE_FRAME_NAME;
+  ///  Integer reference frame code as the container stores it.
+  int get NATIVE_FRAME_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get nativeFrameId => NATIVE_FRAME_ID;
+  ///  Time system as the container itself spells it, before any mapping onto
+  ///  the ratified time-scale vocabulary.
+  String? get NATIVE_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get nativeTimeSystem => NATIVE_TIME_SYSTEM;
+  ///  Descriptors of the container's segments, in file order. Empty for a
+  ///  single-span container.
+  List<NCDSegmentDescriptor>? get SEGMENTS => const fb.ListReader<NCDSegmentDescriptor>(NCDSegmentDescriptor.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Header block when FORMAT is SP3_C or SP3_D.
+  NCDSP3Header? get SP3_HEADER => NCDSP3Header.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  NCDSP3Header? get sp3Header => SP3_HEADER;
+  ///  Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or
+  ///  SCENARIO_EPOCH_ATTITUDE_TEXT.
+  NCDScenarioEpochContainer? get SCENARIO_CONTAINER => NCDScenarioEpochContainer.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  NCDScenarioEpochContainer? get scenarioContainer => SCENARIO_CONTAINER;
+  ///  Header words when FORMAT is CODE_500.
+  NCDCode500Header? get CODE_500_HEADER => NCDCode500Header.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  NCDCode500Header? get code500Header => CODE_500_HEADER;
+  ///  Total coverage start across all segments, ISO 8601.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get startTime => START_TIME;
+  ///  Total coverage stop across all segments, ISO 8601.
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get stopTime => STOP_TIME;
+  ///  Length of the described container in bytes.
+  int get SOURCE_BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get sourceByteLength => SOURCE_BYTE_LENGTH;
+  ///  SHA-256 of the described container's exact bytes, lowercase hex. This is
+  ///  what makes the descriptor checkable: a consumer can prove the descriptor
+  ///  belongs to the file it holds.
+  String? get SOURCE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get sourceSha256 => SOURCE_SHA256;
+  ///  Content identifier of the described container when it is addressed by
+  ///  content rather than by path.
+  String? get SOURCE_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get sourceCid => SOURCE_CID;
+
+  @override
+  String toString() {
+    return 'NCD{FORMAT: ${FORMAT}, providerDefinedFormatName: ${providerDefinedFormatName}, formatVersion: ${formatVersion}, PRODUCER: ${PRODUCER}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, internalFileName: ${internalFileName}, commentArea: ${commentArea}, nativeFrameName: ${nativeFrameName}, nativeFrameId: ${nativeFrameId}, nativeTimeSystem: ${nativeTimeSystem}, SEGMENTS: ${SEGMENTS}, sp3Header: ${sp3Header}, scenarioContainer: ${scenarioContainer}, code500Header: ${code500Header}, startTime: ${startTime}, stopTime: ${stopTime}, sourceByteLength: ${sourceByteLength}, sourceSha256: ${sourceSha256}, sourceCid: ${sourceCid}}';
+  }
+}
+
+class _NCDReader extends fb.TableReader<NCD> {
+  const _NCDReader();
+
+  @override
+  NCD createObject(fb.BufferContext bc, int offset) =>
+    NCD._(bc, offset);
+}
+
+class NCDBuilder {
+  NCDBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(20);
+  }
+
+  int addFormat(ncdContainerFormat? FORMAT) {
+    fbBuilder.addUint8(0, FORMAT?.value);
+    return fbBuilder.offset;
+  }
+  int addProviderDefinedFormatNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addFormatVersionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addProducerOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addInternalFileNameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentAreaOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addNativeFrameNameOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addNativeFrameId(int? NATIVE_FRAME_ID) {
+    fbBuilder.addInt32(9, NATIVE_FRAME_ID);
+    return fbBuilder.offset;
+  }
+  int addNativeTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addSp3HeaderOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addScenarioContainerOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addCode500HeaderOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceByteLength(int? SOURCE_BYTE_LENGTH) {
+    fbBuilder.addUint64(17, SOURCE_BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addSourceSha256Offset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceCidOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class NCDObjectBuilder extends fb.ObjectBuilder {
+  final ncdContainerFormat? _FORMAT;
+  final String? _PROVIDER_DEFINED_FORMAT_NAME;
+  final String? _FORMAT_VERSION;
+  final String? _PRODUCER;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _INTERNAL_FILE_NAME;
+  final List<String>? _COMMENT_AREA;
+  final String? _NATIVE_FRAME_NAME;
+  final int? _NATIVE_FRAME_ID;
+  final String? _NATIVE_TIME_SYSTEM;
+  final List<NCDSegmentDescriptorObjectBuilder>? _SEGMENTS;
+  final NCDSP3HeaderObjectBuilder? _SP3_HEADER;
+  final NCDScenarioEpochContainerObjectBuilder? _SCENARIO_CONTAINER;
+  final NCDCode500HeaderObjectBuilder? _CODE_500_HEADER;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final int? _SOURCE_BYTE_LENGTH;
+  final String? _SOURCE_SHA256;
+  final String? _SOURCE_CID;
+
+  NCDObjectBuilder({
+    ncdContainerFormat? FORMAT,
+    String? PROVIDER_DEFINED_FORMAT_NAME,
+    String? providerDefinedFormatName,
+    String? FORMAT_VERSION,
+    String? formatVersion,
+    String? PRODUCER,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? INTERNAL_FILE_NAME,
+    String? internalFileName,
+    List<String>? COMMENT_AREA,
+    List<String>? commentArea,
+    String? NATIVE_FRAME_NAME,
+    String? nativeFrameName,
+    int? NATIVE_FRAME_ID,
+    int? nativeFrameId,
+    String? NATIVE_TIME_SYSTEM,
+    String? nativeTimeSystem,
+    List<NCDSegmentDescriptorObjectBuilder>? SEGMENTS,
+    NCDSP3HeaderObjectBuilder? SP3_HEADER,
+    NCDSP3HeaderObjectBuilder? sp3Header,
+    NCDScenarioEpochContainerObjectBuilder? SCENARIO_CONTAINER,
+    NCDScenarioEpochContainerObjectBuilder? scenarioContainer,
+    NCDCode500HeaderObjectBuilder? CODE_500_HEADER,
+    NCDCode500HeaderObjectBuilder? code500Header,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    int? SOURCE_BYTE_LENGTH,
+    int? sourceByteLength,
+    String? SOURCE_SHA256,
+    String? sourceSha256,
+    String? SOURCE_CID,
+    String? sourceCid,
+  })
+      : _FORMAT = FORMAT,
+        _PROVIDER_DEFINED_FORMAT_NAME = providerDefinedFormatName ?? PROVIDER_DEFINED_FORMAT_NAME,
+        _FORMAT_VERSION = formatVersion ?? FORMAT_VERSION,
+        _PRODUCER = PRODUCER,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _INTERNAL_FILE_NAME = internalFileName ?? INTERNAL_FILE_NAME,
+        _COMMENT_AREA = commentArea ?? COMMENT_AREA,
+        _NATIVE_FRAME_NAME = nativeFrameName ?? NATIVE_FRAME_NAME,
+        _NATIVE_FRAME_ID = nativeFrameId ?? NATIVE_FRAME_ID,
+        _NATIVE_TIME_SYSTEM = nativeTimeSystem ?? NATIVE_TIME_SYSTEM,
+        _SEGMENTS = SEGMENTS,
+        _SP3_HEADER = sp3Header ?? SP3_HEADER,
+        _SCENARIO_CONTAINER = scenarioContainer ?? SCENARIO_CONTAINER,
+        _CODE_500_HEADER = code500Header ?? CODE_500_HEADER,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _SOURCE_BYTE_LENGTH = sourceByteLength ?? SOURCE_BYTE_LENGTH,
+        _SOURCE_SHA256 = sourceSha256 ?? SOURCE_SHA256,
+        _SOURCE_CID = sourceCid ?? SOURCE_CID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVIDER_DEFINED_FORMAT_NAMEOffset = _PROVIDER_DEFINED_FORMAT_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_DEFINED_FORMAT_NAME!);
+    final int? FORMAT_VERSIONOffset = _FORMAT_VERSION == null ? null
+        : fbBuilder.writeString(_FORMAT_VERSION!);
+    final int? PRODUCEROffset = _PRODUCER == null ? null
+        : fbBuilder.writeString(_PRODUCER!);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? INTERNAL_FILE_NAMEOffset = _INTERNAL_FILE_NAME == null ? null
+        : fbBuilder.writeString(_INTERNAL_FILE_NAME!);
+    final int? COMMENT_AREAOffset = _COMMENT_AREA == null ? null
+        : fbBuilder.writeList(_COMMENT_AREA!.map(fbBuilder.writeString).toList());
+    final int? NATIVE_FRAME_NAMEOffset = _NATIVE_FRAME_NAME == null ? null
+        : fbBuilder.writeString(_NATIVE_FRAME_NAME!);
+    final int? NATIVE_TIME_SYSTEMOffset = _NATIVE_TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_NATIVE_TIME_SYSTEM!);
+    final int? SEGMENTSOffset = _SEGMENTS == null ? null
+        : fbBuilder.writeList(_SEGMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SP3_HEADEROffset = _SP3_HEADER?.getOrCreateOffset(fbBuilder);
+    final int? SCENARIO_CONTAINEROffset = _SCENARIO_CONTAINER?.getOrCreateOffset(fbBuilder);
+    final int? CODE_500_HEADEROffset = _CODE_500_HEADER?.getOrCreateOffset(fbBuilder);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? SOURCE_SHA256Offset = _SOURCE_SHA256 == null ? null
+        : fbBuilder.writeString(_SOURCE_SHA256!);
+    final int? SOURCE_CIDOffset = _SOURCE_CID == null ? null
+        : fbBuilder.writeString(_SOURCE_CID!);
+    fbBuilder.startTable(20);
+    fbBuilder.addUint8(0, _FORMAT?.value);
+    fbBuilder.addOffset(1, PROVIDER_DEFINED_FORMAT_NAMEOffset);
+    fbBuilder.addOffset(2, FORMAT_VERSIONOffset);
+    fbBuilder.addOffset(3, PRODUCEROffset);
+    fbBuilder.addOffset(4, CREATION_DATEOffset);
+    fbBuilder.addOffset(5, ORIGINATOROffset);
+    fbBuilder.addOffset(6, INTERNAL_FILE_NAMEOffset);
+    fbBuilder.addOffset(7, COMMENT_AREAOffset);
+    fbBuilder.addOffset(8, NATIVE_FRAME_NAMEOffset);
+    fbBuilder.addInt32(9, _NATIVE_FRAME_ID);
+    fbBuilder.addOffset(10, NATIVE_TIME_SYSTEMOffset);
+    fbBuilder.addOffset(11, SEGMENTSOffset);
+    fbBuilder.addOffset(12, SP3_HEADEROffset);
+    fbBuilder.addOffset(13, SCENARIO_CONTAINEROffset);
+    fbBuilder.addOffset(14, CODE_500_HEADEROffset);
+    fbBuilder.addOffset(15, START_TIMEOffset);
+    fbBuilder.addOffset(16, STOP_TIMEOffset);
+    fbBuilder.addUint64(17, _SOURCE_BYTE_LENGTH);
+    fbBuilder.addOffset(18, SOURCE_SHA256Offset);
+    fbBuilder.addOffset(19, SOURCE_CIDOffset);
     return fbBuilder.endTable();
   }
 

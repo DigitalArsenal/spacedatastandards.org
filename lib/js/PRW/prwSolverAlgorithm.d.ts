@@ -1,0 +1,19 @@
+/**
+ * Propagator Runtime Wire — envelope that carries either an init request,
+ * a batch request, or a batch response across a runtime boundary.
+ * New numeric choices are append-only and are not legacy C++ enum ordinals.
+ */
+export declare enum prwSolverAlgorithm {
+    UNSPECIFIED = 0,
+    RK4 = 1,
+    RKF45 = 2,
+    RKF78 = 3,
+    RK78 = 4,
+    RKDP87 = 5,
+    ABM = 6,
+    BS = 7,
+    COWELL = 8,
+    ENCKE = 9,
+    EQUINOCTIAL_VOP = 10
+}
+//# sourceMappingURL=prwSolverAlgorithm.d.ts.map

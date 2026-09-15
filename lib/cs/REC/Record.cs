@@ -267,6 +267,7 @@ public struct Record : IFlatbufferObject
   public WXF valueAsWXF() { return value<WXF>().Value; }
   public CLM valueAsCLM() { return value<CLM>().Value; }
   public GCT valueAsGCT() { return value<GCT>().Value; }
+  public CQR valueAsCQR() { return value<CQR>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -1045,6 +1046,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.GCT:
         _o.value.Value = this.value<GCT>().HasValue ? this.value<GCT>().Value.UnPack() : null;
+        break;
+      case RecordType.CQR:
+        _o.value.Value = this.value<CQR>().HasValue ? this.value<CQR>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

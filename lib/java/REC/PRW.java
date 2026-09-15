@@ -17,8 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Propagator Runtime Wire — envelope that carries either an init request,
- * a batch request, or a batch response across a runtime boundary.
+ * Exactly one arm per envelope. Existing three arms keep their ordinals.
  */
 @SuppressWarnings("unused")
 public final class PRW extends com.google.flatbuffers.Table {
@@ -35,22 +34,99 @@ public final class PRW extends com.google.flatbuffers.Table {
   public PRWBatchRequest BATCH_REQUEST(PRWBatchRequest obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public PRWBatchResponse BATCH_RESPONSE() { return BATCH_RESPONSE(new PRWBatchResponse()); }
   public PRWBatchResponse BATCH_RESPONSE(PRWBatchResponse obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Appended portable arms; each method names its permitted arm.
+   */
+  public PRWExecutionRequest EXECUTION_REQUEST() { return EXECUTION_REQUEST(new PRWExecutionRequest()); }
+  public PRWExecutionRequest EXECUTION_REQUEST(PRWExecutionRequest obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWExecutionResult EXECUTION_RESULT() { return EXECUTION_RESULT(new PRWExecutionResult()); }
+  public PRWExecutionResult EXECUTION_RESULT(PRWExecutionResult obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWResidentState RESIDENT_STATE() { return RESIDENT_STATE(new PRWResidentState()); }
+  public PRWResidentState RESIDENT_STATE(PRWResidentState obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWResidentRequest RESIDENT_REQUEST() { return RESIDENT_REQUEST(new PRWResidentRequest()); }
+  public PRWResidentRequest RESIDENT_REQUEST(PRWResidentRequest obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWPrepareRequest PREPARE_REQUEST() { return PREPARE_REQUEST(new PRWPrepareRequest()); }
+  public PRWPrepareRequest PREPARE_REQUEST(PRWPrepareRequest obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWPrepareResult PREPARE_RESULT() { return PREPARE_RESULT(new PRWPrepareResult()); }
+  public PRWPrepareResult PREPARE_RESULT(PRWPrepareResult obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWDescribeRequest DESCRIBE_REQUEST() { return DESCRIBE_REQUEST(new PRWDescribeRequest()); }
+  public PRWDescribeRequest DESCRIBE_REQUEST(PRWDescribeRequest obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWDescribeResult DESCRIBE_RESULT() { return DESCRIBE_RESULT(new PRWDescribeResult()); }
+  public PRWDescribeResult DESCRIBE_RESULT(PRWDescribeResult obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWNativeInput NATIVE_INPUT() { return NATIVE_INPUT(new PRWNativeInput()); }
+  public PRWNativeInput NATIVE_INPUT(PRWNativeInput obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWEphemerisRequest EPHEMERIS_REQUEST() { return EPHEMERIS_REQUEST(new PRWEphemerisRequest()); }
+  public PRWEphemerisRequest EPHEMERIS_REQUEST(PRWEphemerisRequest obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWEphemerisResult EPHEMERIS_RESULT() { return EPHEMERIS_RESULT(new PRWEphemerisResult()); }
+  public PRWEphemerisResult EPHEMERIS_RESULT(PRWEphemerisResult obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWAtmosphereRequest ATMOSPHERE_REQUEST() { return ATMOSPHERE_REQUEST(new PRWAtmosphereRequest()); }
+  public PRWAtmosphereRequest ATMOSPHERE_REQUEST(PRWAtmosphereRequest obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWAtmosphereResult ATMOSPHERE_RESULT() { return ATMOSPHERE_RESULT(new PRWAtmosphereResult()); }
+  public PRWAtmosphereResult ATMOSPHERE_RESULT(PRWAtmosphereResult obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public boolean VERSION_QUERY() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public PRWVersionResult VERSION_RESULT() { return VERSION_RESULT(new PRWVersionResult()); }
+  public PRWVersionResult VERSION_RESULT(PRWVersionResult obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRW(FlatBufferBuilder builder,
       int INITOffset,
       int BATCH_REQUESTOffset,
-      int BATCH_RESPONSEOffset) {
-    builder.startTable(3);
+      int BATCH_RESPONSEOffset,
+      int EXECUTION_REQUESTOffset,
+      int EXECUTION_RESULTOffset,
+      int RESIDENT_STATEOffset,
+      int RESIDENT_REQUESTOffset,
+      int PREPARE_REQUESTOffset,
+      int PREPARE_RESULTOffset,
+      int DESCRIBE_REQUESTOffset,
+      int DESCRIBE_RESULTOffset,
+      int NATIVE_INPUTOffset,
+      int EPHEMERIS_REQUESTOffset,
+      int EPHEMERIS_RESULTOffset,
+      int ATMOSPHERE_REQUESTOffset,
+      int ATMOSPHERE_RESULTOffset,
+      boolean VERSION_QUERY,
+      int VERSION_RESULTOffset) {
+    builder.startTable(18);
+    PRW.addVersionResult(builder, VERSION_RESULTOffset);
+    PRW.addAtmosphereResult(builder, ATMOSPHERE_RESULTOffset);
+    PRW.addAtmosphereRequest(builder, ATMOSPHERE_REQUESTOffset);
+    PRW.addEphemerisResult(builder, EPHEMERIS_RESULTOffset);
+    PRW.addEphemerisRequest(builder, EPHEMERIS_REQUESTOffset);
+    PRW.addNativeInput(builder, NATIVE_INPUTOffset);
+    PRW.addDescribeResult(builder, DESCRIBE_RESULTOffset);
+    PRW.addDescribeRequest(builder, DESCRIBE_REQUESTOffset);
+    PRW.addPrepareResult(builder, PREPARE_RESULTOffset);
+    PRW.addPrepareRequest(builder, PREPARE_REQUESTOffset);
+    PRW.addResidentRequest(builder, RESIDENT_REQUESTOffset);
+    PRW.addResidentState(builder, RESIDENT_STATEOffset);
+    PRW.addExecutionResult(builder, EXECUTION_RESULTOffset);
+    PRW.addExecutionRequest(builder, EXECUTION_REQUESTOffset);
     PRW.addBatchResponse(builder, BATCH_RESPONSEOffset);
     PRW.addBatchRequest(builder, BATCH_REQUESTOffset);
     PRW.addInit(builder, INITOffset);
+    PRW.addVersionQuery(builder, VERSION_QUERY);
     return PRW.endPRW(builder);
   }
 
-  public static void startPRW(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startPRW(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addInit(FlatBufferBuilder builder, int INITOffset) { builder.addOffset(0, INITOffset, 0); }
   public static void addBatchRequest(FlatBufferBuilder builder, int BATCH_REQUESTOffset) { builder.addOffset(1, BATCH_REQUESTOffset, 0); }
   public static void addBatchResponse(FlatBufferBuilder builder, int BATCH_RESPONSEOffset) { builder.addOffset(2, BATCH_RESPONSEOffset, 0); }
+  public static void addExecutionRequest(FlatBufferBuilder builder, int EXECUTION_REQUESTOffset) { builder.addOffset(3, EXECUTION_REQUESTOffset, 0); }
+  public static void addExecutionResult(FlatBufferBuilder builder, int EXECUTION_RESULTOffset) { builder.addOffset(4, EXECUTION_RESULTOffset, 0); }
+  public static void addResidentState(FlatBufferBuilder builder, int RESIDENT_STATEOffset) { builder.addOffset(5, RESIDENT_STATEOffset, 0); }
+  public static void addResidentRequest(FlatBufferBuilder builder, int RESIDENT_REQUESTOffset) { builder.addOffset(6, RESIDENT_REQUESTOffset, 0); }
+  public static void addPrepareRequest(FlatBufferBuilder builder, int PREPARE_REQUESTOffset) { builder.addOffset(7, PREPARE_REQUESTOffset, 0); }
+  public static void addPrepareResult(FlatBufferBuilder builder, int PREPARE_RESULTOffset) { builder.addOffset(8, PREPARE_RESULTOffset, 0); }
+  public static void addDescribeRequest(FlatBufferBuilder builder, int DESCRIBE_REQUESTOffset) { builder.addOffset(9, DESCRIBE_REQUESTOffset, 0); }
+  public static void addDescribeResult(FlatBufferBuilder builder, int DESCRIBE_RESULTOffset) { builder.addOffset(10, DESCRIBE_RESULTOffset, 0); }
+  public static void addNativeInput(FlatBufferBuilder builder, int NATIVE_INPUTOffset) { builder.addOffset(11, NATIVE_INPUTOffset, 0); }
+  public static void addEphemerisRequest(FlatBufferBuilder builder, int EPHEMERIS_REQUESTOffset) { builder.addOffset(12, EPHEMERIS_REQUESTOffset, 0); }
+  public static void addEphemerisResult(FlatBufferBuilder builder, int EPHEMERIS_RESULTOffset) { builder.addOffset(13, EPHEMERIS_RESULTOffset, 0); }
+  public static void addAtmosphereRequest(FlatBufferBuilder builder, int ATMOSPHERE_REQUESTOffset) { builder.addOffset(14, ATMOSPHERE_REQUESTOffset, 0); }
+  public static void addAtmosphereResult(FlatBufferBuilder builder, int ATMOSPHERE_RESULTOffset) { builder.addOffset(15, ATMOSPHERE_RESULTOffset, 0); }
+  public static void addVersionQuery(FlatBufferBuilder builder, boolean VERSION_QUERY) { builder.addBoolean(16, VERSION_QUERY, false); }
+  public static void addVersionResult(FlatBufferBuilder builder, int VERSION_RESULTOffset) { builder.addOffset(17, VERSION_RESULTOffset, 0); }
   public static int endPRW(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

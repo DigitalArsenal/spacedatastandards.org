@@ -4,14 +4,27 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PRWAtmosphereRequest, PRWAtmosphereRequestT } from './PRWAtmosphereRequest.js';
+import { PRWAtmosphereResult, PRWAtmosphereResultT } from './PRWAtmosphereResult.js';
 import { PRWBatchRequest, PRWBatchRequestT } from './PRWBatchRequest.js';
 import { PRWBatchResponse, PRWBatchResponseT } from './PRWBatchResponse.js';
+import { PRWDescribeRequest, PRWDescribeRequestT } from './PRWDescribeRequest.js';
+import { PRWDescribeResult, PRWDescribeResultT } from './PRWDescribeResult.js';
+import { PRWEphemerisRequest, PRWEphemerisRequestT } from './PRWEphemerisRequest.js';
+import { PRWEphemerisResult, PRWEphemerisResultT } from './PRWEphemerisResult.js';
+import { PRWExecutionRequest, PRWExecutionRequestT } from './PRWExecutionRequest.js';
+import { PRWExecutionResult, PRWExecutionResultT } from './PRWExecutionResult.js';
 import { PRWInit, PRWInitT } from './PRWInit.js';
+import { PRWNativeInput, PRWNativeInputT } from './PRWNativeInput.js';
+import { PRWPrepareRequest, PRWPrepareRequestT } from './PRWPrepareRequest.js';
+import { PRWPrepareResult, PRWPrepareResultT } from './PRWPrepareResult.js';
+import { PRWResidentRequest, PRWResidentRequestT } from './PRWResidentRequest.js';
+import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
+import { PRWVersionResult, PRWVersionResultT } from './PRWVersionResult.js';
 
 
 /**
- * Propagator Runtime Wire — envelope that carries either an init request,
- * a batch request, or a batch response across a runtime boundary.
+ * Exactly one arm per envelope. Existing three arms keep their ordinals.
  */
 export class PRW implements flatbuffers.IUnpackableObject<PRWT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -50,8 +63,86 @@ BATCH_RESPONSE(obj?:PRWBatchResponse):PRWBatchResponse|null {
   return offset ? (obj || new PRWBatchResponse()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Appended portable arms; each method names its permitted arm.
+ */
+EXECUTION_REQUEST(obj?:PRWExecutionRequest):PRWExecutionRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? (obj || new PRWExecutionRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+EXECUTION_RESULT(obj?:PRWExecutionResult):PRWExecutionResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? (obj || new PRWExecutionResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+RESIDENT_STATE(obj?:PRWResidentState):PRWResidentState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? (obj || new PRWResidentState()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+RESIDENT_REQUEST(obj?:PRWResidentRequest):PRWResidentRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new PRWResidentRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+PREPARE_REQUEST(obj?:PRWPrepareRequest):PRWPrepareRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new PRWPrepareRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+PREPARE_RESULT(obj?:PRWPrepareResult):PRWPrepareResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new PRWPrepareResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+DESCRIBE_REQUEST(obj?:PRWDescribeRequest):PRWDescribeRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new PRWDescribeRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+DESCRIBE_RESULT(obj?:PRWDescribeResult):PRWDescribeResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new PRWDescribeResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+NATIVE_INPUT(obj?:PRWNativeInput):PRWNativeInput|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new PRWNativeInput()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+EPHEMERIS_REQUEST(obj?:PRWEphemerisRequest):PRWEphemerisRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new PRWEphemerisRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+EPHEMERIS_RESULT(obj?:PRWEphemerisResult):PRWEphemerisResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new PRWEphemerisResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+ATMOSPHERE_REQUEST(obj?:PRWAtmosphereRequest):PRWAtmosphereRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new PRWAtmosphereRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+ATMOSPHERE_RESULT(obj?:PRWAtmosphereResult):PRWAtmosphereResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new PRWAtmosphereResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+VERSION_QUERY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+VERSION_RESULT(obj?:PRWVersionResult):PRWVersionResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new PRWVersionResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRW(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(18);
 }
 
 static addInit(builder:flatbuffers.Builder, INITOffset:flatbuffers.Offset) {
@@ -64,6 +155,66 @@ static addBatchRequest(builder:flatbuffers.Builder, BATCH_REQUESTOffset:flatbuff
 
 static addBatchResponse(builder:flatbuffers.Builder, BATCH_RESPONSEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, BATCH_RESPONSEOffset, 0);
+}
+
+static addExecutionRequest(builder:flatbuffers.Builder, EXECUTION_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, EXECUTION_REQUESTOffset, 0);
+}
+
+static addExecutionResult(builder:flatbuffers.Builder, EXECUTION_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, EXECUTION_RESULTOffset, 0);
+}
+
+static addResidentState(builder:flatbuffers.Builder, RESIDENT_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, RESIDENT_STATEOffset, 0);
+}
+
+static addResidentRequest(builder:flatbuffers.Builder, RESIDENT_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, RESIDENT_REQUESTOffset, 0);
+}
+
+static addPrepareRequest(builder:flatbuffers.Builder, PREPARE_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, PREPARE_REQUESTOffset, 0);
+}
+
+static addPrepareResult(builder:flatbuffers.Builder, PREPARE_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, PREPARE_RESULTOffset, 0);
+}
+
+static addDescribeRequest(builder:flatbuffers.Builder, DESCRIBE_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, DESCRIBE_REQUESTOffset, 0);
+}
+
+static addDescribeResult(builder:flatbuffers.Builder, DESCRIBE_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, DESCRIBE_RESULTOffset, 0);
+}
+
+static addNativeInput(builder:flatbuffers.Builder, NATIVE_INPUTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, NATIVE_INPUTOffset, 0);
+}
+
+static addEphemerisRequest(builder:flatbuffers.Builder, EPHEMERIS_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, EPHEMERIS_REQUESTOffset, 0);
+}
+
+static addEphemerisResult(builder:flatbuffers.Builder, EPHEMERIS_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, EPHEMERIS_RESULTOffset, 0);
+}
+
+static addAtmosphereRequest(builder:flatbuffers.Builder, ATMOSPHERE_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, ATMOSPHERE_REQUESTOffset, 0);
+}
+
+static addAtmosphereResult(builder:flatbuffers.Builder, ATMOSPHERE_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, ATMOSPHERE_RESULTOffset, 0);
+}
+
+static addVersionQuery(builder:flatbuffers.Builder, VERSION_QUERY:boolean) {
+  builder.addFieldInt8(16, +VERSION_QUERY, +false);
+}
+
+static addVersionResult(builder:flatbuffers.Builder, VERSION_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, VERSION_RESULTOffset, 0);
 }
 
 static endPRW(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -84,7 +235,22 @@ unpack(): PRWT {
   return new PRWT(
     (this.INIT() !== null ? this.INIT()!.unpack() : null),
     (this.BATCH_REQUEST() !== null ? this.BATCH_REQUEST()!.unpack() : null),
-    (this.BATCH_RESPONSE() !== null ? this.BATCH_RESPONSE()!.unpack() : null)
+    (this.BATCH_RESPONSE() !== null ? this.BATCH_RESPONSE()!.unpack() : null),
+    (this.EXECUTION_REQUEST() !== null ? this.EXECUTION_REQUEST()!.unpack() : null),
+    (this.EXECUTION_RESULT() !== null ? this.EXECUTION_RESULT()!.unpack() : null),
+    (this.RESIDENT_STATE() !== null ? this.RESIDENT_STATE()!.unpack() : null),
+    (this.RESIDENT_REQUEST() !== null ? this.RESIDENT_REQUEST()!.unpack() : null),
+    (this.PREPARE_REQUEST() !== null ? this.PREPARE_REQUEST()!.unpack() : null),
+    (this.PREPARE_RESULT() !== null ? this.PREPARE_RESULT()!.unpack() : null),
+    (this.DESCRIBE_REQUEST() !== null ? this.DESCRIBE_REQUEST()!.unpack() : null),
+    (this.DESCRIBE_RESULT() !== null ? this.DESCRIBE_RESULT()!.unpack() : null),
+    (this.NATIVE_INPUT() !== null ? this.NATIVE_INPUT()!.unpack() : null),
+    (this.EPHEMERIS_REQUEST() !== null ? this.EPHEMERIS_REQUEST()!.unpack() : null),
+    (this.EPHEMERIS_RESULT() !== null ? this.EPHEMERIS_RESULT()!.unpack() : null),
+    (this.ATMOSPHERE_REQUEST() !== null ? this.ATMOSPHERE_REQUEST()!.unpack() : null),
+    (this.ATMOSPHERE_RESULT() !== null ? this.ATMOSPHERE_RESULT()!.unpack() : null),
+    this.VERSION_QUERY(),
+    (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null)
   );
 }
 
@@ -93,6 +259,21 @@ unpackTo(_o: PRWT): void {
   _o.INIT = (this.INIT() !== null ? this.INIT()!.unpack() : null);
   _o.BATCH_REQUEST = (this.BATCH_REQUEST() !== null ? this.BATCH_REQUEST()!.unpack() : null);
   _o.BATCH_RESPONSE = (this.BATCH_RESPONSE() !== null ? this.BATCH_RESPONSE()!.unpack() : null);
+  _o.EXECUTION_REQUEST = (this.EXECUTION_REQUEST() !== null ? this.EXECUTION_REQUEST()!.unpack() : null);
+  _o.EXECUTION_RESULT = (this.EXECUTION_RESULT() !== null ? this.EXECUTION_RESULT()!.unpack() : null);
+  _o.RESIDENT_STATE = (this.RESIDENT_STATE() !== null ? this.RESIDENT_STATE()!.unpack() : null);
+  _o.RESIDENT_REQUEST = (this.RESIDENT_REQUEST() !== null ? this.RESIDENT_REQUEST()!.unpack() : null);
+  _o.PREPARE_REQUEST = (this.PREPARE_REQUEST() !== null ? this.PREPARE_REQUEST()!.unpack() : null);
+  _o.PREPARE_RESULT = (this.PREPARE_RESULT() !== null ? this.PREPARE_RESULT()!.unpack() : null);
+  _o.DESCRIBE_REQUEST = (this.DESCRIBE_REQUEST() !== null ? this.DESCRIBE_REQUEST()!.unpack() : null);
+  _o.DESCRIBE_RESULT = (this.DESCRIBE_RESULT() !== null ? this.DESCRIBE_RESULT()!.unpack() : null);
+  _o.NATIVE_INPUT = (this.NATIVE_INPUT() !== null ? this.NATIVE_INPUT()!.unpack() : null);
+  _o.EPHEMERIS_REQUEST = (this.EPHEMERIS_REQUEST() !== null ? this.EPHEMERIS_REQUEST()!.unpack() : null);
+  _o.EPHEMERIS_RESULT = (this.EPHEMERIS_RESULT() !== null ? this.EPHEMERIS_RESULT()!.unpack() : null);
+  _o.ATMOSPHERE_REQUEST = (this.ATMOSPHERE_REQUEST() !== null ? this.ATMOSPHERE_REQUEST()!.unpack() : null);
+  _o.ATMOSPHERE_RESULT = (this.ATMOSPHERE_RESULT() !== null ? this.ATMOSPHERE_RESULT()!.unpack() : null);
+  _o.VERSION_QUERY = this.VERSION_QUERY();
+  _o.VERSION_RESULT = (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null);
 }
 }
 
@@ -100,7 +281,22 @@ export class PRWT implements flatbuffers.IGeneratedObject {
 constructor(
   public INIT: PRWInitT|null = null,
   public BATCH_REQUEST: PRWBatchRequestT|null = null,
-  public BATCH_RESPONSE: PRWBatchResponseT|null = null
+  public BATCH_RESPONSE: PRWBatchResponseT|null = null,
+  public EXECUTION_REQUEST: PRWExecutionRequestT|null = null,
+  public EXECUTION_RESULT: PRWExecutionResultT|null = null,
+  public RESIDENT_STATE: PRWResidentStateT|null = null,
+  public RESIDENT_REQUEST: PRWResidentRequestT|null = null,
+  public PREPARE_REQUEST: PRWPrepareRequestT|null = null,
+  public PREPARE_RESULT: PRWPrepareResultT|null = null,
+  public DESCRIBE_REQUEST: PRWDescribeRequestT|null = null,
+  public DESCRIBE_RESULT: PRWDescribeResultT|null = null,
+  public NATIVE_INPUT: PRWNativeInputT|null = null,
+  public EPHEMERIS_REQUEST: PRWEphemerisRequestT|null = null,
+  public EPHEMERIS_RESULT: PRWEphemerisResultT|null = null,
+  public ATMOSPHERE_REQUEST: PRWAtmosphereRequestT|null = null,
+  public ATMOSPHERE_RESULT: PRWAtmosphereResultT|null = null,
+  public VERSION_QUERY: boolean = false,
+  public VERSION_RESULT: PRWVersionResultT|null = null
 ){}
 
 
@@ -108,11 +304,40 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const INIT = (this.INIT !== null ? this.INIT!.pack(builder) : 0);
   const BATCH_REQUEST = (this.BATCH_REQUEST !== null ? this.BATCH_REQUEST!.pack(builder) : 0);
   const BATCH_RESPONSE = (this.BATCH_RESPONSE !== null ? this.BATCH_RESPONSE!.pack(builder) : 0);
+  const EXECUTION_REQUEST = (this.EXECUTION_REQUEST !== null ? this.EXECUTION_REQUEST!.pack(builder) : 0);
+  const EXECUTION_RESULT = (this.EXECUTION_RESULT !== null ? this.EXECUTION_RESULT!.pack(builder) : 0);
+  const RESIDENT_STATE = (this.RESIDENT_STATE !== null ? this.RESIDENT_STATE!.pack(builder) : 0);
+  const RESIDENT_REQUEST = (this.RESIDENT_REQUEST !== null ? this.RESIDENT_REQUEST!.pack(builder) : 0);
+  const PREPARE_REQUEST = (this.PREPARE_REQUEST !== null ? this.PREPARE_REQUEST!.pack(builder) : 0);
+  const PREPARE_RESULT = (this.PREPARE_RESULT !== null ? this.PREPARE_RESULT!.pack(builder) : 0);
+  const DESCRIBE_REQUEST = (this.DESCRIBE_REQUEST !== null ? this.DESCRIBE_REQUEST!.pack(builder) : 0);
+  const DESCRIBE_RESULT = (this.DESCRIBE_RESULT !== null ? this.DESCRIBE_RESULT!.pack(builder) : 0);
+  const NATIVE_INPUT = (this.NATIVE_INPUT !== null ? this.NATIVE_INPUT!.pack(builder) : 0);
+  const EPHEMERIS_REQUEST = (this.EPHEMERIS_REQUEST !== null ? this.EPHEMERIS_REQUEST!.pack(builder) : 0);
+  const EPHEMERIS_RESULT = (this.EPHEMERIS_RESULT !== null ? this.EPHEMERIS_RESULT!.pack(builder) : 0);
+  const ATMOSPHERE_REQUEST = (this.ATMOSPHERE_REQUEST !== null ? this.ATMOSPHERE_REQUEST!.pack(builder) : 0);
+  const ATMOSPHERE_RESULT = (this.ATMOSPHERE_RESULT !== null ? this.ATMOSPHERE_RESULT!.pack(builder) : 0);
+  const VERSION_RESULT = (this.VERSION_RESULT !== null ? this.VERSION_RESULT!.pack(builder) : 0);
 
   PRW.startPRW(builder);
   PRW.addInit(builder, INIT);
   PRW.addBatchRequest(builder, BATCH_REQUEST);
   PRW.addBatchResponse(builder, BATCH_RESPONSE);
+  PRW.addExecutionRequest(builder, EXECUTION_REQUEST);
+  PRW.addExecutionResult(builder, EXECUTION_RESULT);
+  PRW.addResidentState(builder, RESIDENT_STATE);
+  PRW.addResidentRequest(builder, RESIDENT_REQUEST);
+  PRW.addPrepareRequest(builder, PREPARE_REQUEST);
+  PRW.addPrepareResult(builder, PREPARE_RESULT);
+  PRW.addDescribeRequest(builder, DESCRIBE_REQUEST);
+  PRW.addDescribeResult(builder, DESCRIBE_RESULT);
+  PRW.addNativeInput(builder, NATIVE_INPUT);
+  PRW.addEphemerisRequest(builder, EPHEMERIS_REQUEST);
+  PRW.addEphemerisResult(builder, EPHEMERIS_RESULT);
+  PRW.addAtmosphereRequest(builder, ATMOSPHERE_REQUEST);
+  PRW.addAtmosphereResult(builder, ATMOSPHERE_RESULT);
+  PRW.addVersionQuery(builder, this.VERSION_QUERY);
+  PRW.addVersionResult(builder, VERSION_RESULT);
 
   return PRW.endPRW(builder);
 }

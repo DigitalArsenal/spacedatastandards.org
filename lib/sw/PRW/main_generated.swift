@@ -8,552 +8,770 @@ import Common
 
 import FlatBuffers
 
-///  Propagator Runtime Wire — arena-addressed init / batch request / batch
-///  response envelopes for orbital propagators that produce state vectors
-///  into a shared memory arena.
+///  Native container format class.
 ///
-///  Data interchange for the underlying content (state vectors, covariance,
-///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
-///  lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
-///  wire that moves those across a JS ↔ WASM boundary, not a substitute for
-///  any of them.
-///  Runtime state-flag bitfield (sized to match a single uint).
-///  Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
-///  HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
-///  flags live here because they describe runtime propagation health, not
-///  a persisted record.
-public enum propagatorStateFlags: UInt32, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt32
-  public static var byteSize: Int { return MemoryLayout<UInt32>.size }
-  public var value: UInt32 { return self.rawValue }
-  ///  State vector data is valid.
-  case valid = 1
-  ///  Satellite is in Earth's shadow at this epoch.
-  case inEclipse = 2
-  ///  Orbit has decayed (re-entry imminent or complete).
-  case decayed = 4
-  ///  Propagation extrapolated beyond the input epoch.
-  case extrapolated = 8
-  ///  Reserved.
-  case reserved4 = 16
-  ///  Reserved.
-  case reserved5 = 32
-  ///  Reserved.
-  case reserved6 = 64
-  ///  Reserved.
-  case reserved7 = 128
-
-  public static var max: propagatorStateFlags { return .reserved7 }
-  public static var min: propagatorStateFlags { return .valid }
-}
-
-
-///  Error codes surfaced by runtime propagation calls.
-public enum propagatorErrorCode: Int32, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int32
-  public static var byteSize: Int { return MemoryLayout<Int32>.size }
-  public var value: Int32 { return self.rawValue }
-  ///  No error.
-  case ok = 0
-  ///  Unknown / unspecified error.
-  case unknown = 1
-  ///  One or more entity handles not found.
-  case unknownEntity = 2
-  ///  Invalid epoch (NaN, out of range, before earliest init epoch, etc.).
-  case invalidEpoch = 3
-  ///  Output buffer too small for the requested count.
-  case outputBufferOverflow = 4
-  ///  Propagator not initialized.
-  case notInitialized = 5
-
-  public static var max: propagatorErrorCode { return .notInitialized }
-  public static var min: propagatorErrorCode { return .ok }
-}
-
-
-public enum prwSourceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  These are FORMAT designations, not products: each names a published or
+///  widely implemented container layout, and a capability description states
+///  what the layout can express. Reserve 0 so an unset byte never decodes as a
+///  real format. Append new members only; never reorder or reuse a value.
+public enum ncdContainerFormat: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  Source is an OMM (CCSDS mean elements) FlatBuffer.
-  case omm = 0
-  ///  Source is a raw TLE line pair (3LE supported via NAME).
-  case tle = 1
-  ///  Source is an OCM FlatBuffer.
-  case ocm = 2
-  ///  Source is an OEM FlatBuffer.
-  case oem = 3
-  ///  Source is a PPE (polynomial ephemeris) FlatBuffer.
-  case ppe = 4
-  ///  Source is a single classical Keplerian element set.
-  case keplerian = 5
+  case unspecified = 0
+  ///  Double-precision Array File container carrying Spacecraft and Planet
+  ///  Kernel segments: a binary file of typed, independently addressed
+  ///  ephemeris segments, each with an integer target and centre, an integer
+  ///  reference frame, a numeric segment type, and a contiguous address range
+  ///  inside the file.
+  case spkDaf = 1
+  ///  SP3 version c: fixed-column text container of per-epoch satellite
+  ///  positions and optional velocities with a clock column, a header block of
+  ///  accuracy codes, and one uniform epoch interval.
+  case sp3C = 2
+  ///  SP3 version d: as SP3_C, with an unbounded satellite count and extended
+  ///  header lines.
+  case sp3D = 3
+  ///  Code-500 fixed-record binary ephemeris: a header record of packed words
+  ///  followed by fixed-length data records on a uniform step.
+  case code500 = 4
+  ///  Scenario-epoch ephemeris text container: time-ordered position and
+  ///  velocity records whose epochs are offsets in seconds from a declared
+  ///  scenario epoch, qualified by a named coordinate system, a distance unit,
+  ///  a named interpolation method and an interpolation order.
+  case scenarioEpochEphemerisText = 5
+  ///  Scenario-epoch attitude text container: the attitude counterpart of
+  ///  SCENARIO_EPOCH_EPHEMERIS_TEXT, carrying quaternion, Euler or angular
+  ///  velocity records against the same scenario epoch.
+  case scenarioEpochAttitudeText = 6
+  ///  CCSDS Orbit Ephemeris Message, keyword-value notation.
+  case ccsdsOemKvn = 7
+  ///  CCSDS Orbit Ephemeris Message, XML.
+  case ccsdsOemXml = 8
+  ///  CCSDS Attitude Ephemeris Message, keyword-value notation.
+  case ccsdsAemKvn = 9
+  ///  CCSDS Attitude Ephemeris Message, XML.
+  case ccsdsAemXml = 10
+  ///  CCSDS Tracking Data Message, keyword-value notation.
+  case ccsdsTdmKvn = 11
+  ///  CCSDS Tracking Data Message, XML.
+  case ccsdsTdmXml = 12
+  ///  A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
+  ///  which; a producer never reuses a neighbouring member instead.
+  case providerDefined = 255
 
-  public static var max: prwSourceKind { return .keplerian }
-  public static var min: prwSourceKind { return .omm }
+  public static var max: ncdContainerFormat { return .providerDefined }
+  public static var min: ncdContainerFormat { return .unspecified }
 }
 
 
-///  Propagator initialization request — assigns TLE / OMM / Keplerian /
-///  polynomial inputs to entity handles.
+///  One independently addressed segment inside a native container.
 ///
-///  The actual per-entity source record is carried inline as raw bytes
-///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
-///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
-///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
-///  consume them.
-public struct PRWInit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  A segmented binary ephemeris is not a single span: each segment has its own
+///  body pair, frame, numeric type and time bounds, and a reader must choose
+///  among them. $OEM carries the STATES; this carries the segment DESCRIPTOR
+///  that says which states came from where and what must be written back.
+public struct NCDSegmentDescriptor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInit.id, addPrefix: prefix) }
+  public static var id: String { "$NCD" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: NCDSegmentDescriptor.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ENTITY_HANDLES: VOffset = 4
-    static let SOURCES: VOffset = 6
+    static let NAME: VOffset = 4
+    static let TARGET_NAIF_ID: VOffset = 6
+    static let CENTER_NAIF_ID: VOffset = 8
+    static let FRAME_NAIF_ID: VOffset = 10
+    static let FRAME_NAME: VOffset = 12
+    static let SEGMENT_TYPE: VOffset = 14
+    static let START_EPOCH: VOffset = 16
+    static let STOP_EPOCH: VOffset = 18
+    static let START_SECONDS_PAST_J2000_TDB: VOffset = 20
+    static let STOP_SECONDS_PAST_J2000_TDB: VOffset = 22
+    static let INITIAL_ADDRESS: VOffset = 24
+    static let FINAL_ADDRESS: VOffset = 26
+    static let POLYNOMIAL_DEGREE: VOffset = 28
   }
 
-  ///  Entity handles to assign results to (same order as SOURCES[]).
-  public var ENTITY_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_HANDLES, byteSize: 4) }
-  public func withUnsafePointerToEntityHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_HANDLES, body: body) }
-  ///  Per-entity source records, encoded as SDS FlatBuffers.
-  public var SOURCES: FlatbufferVector<PRWInitSource> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
-  public static func startPRWInit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func addVectorOf(ENTITY_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_HANDLES, at: VT.ENTITY_HANDLES) }
-  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
-  public static func endPRWInit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWInit(
-    _ fbb: inout FlatBufferBuilder,
-    ENTITY_HANDLESVectorOffset ENTITY_HANDLES: Offset = Offset(),
-    SOURCESVectorOffset SOURCES: Offset = Offset()
-  ) -> Offset {
-    let __start = PRWInit.startPRWInit(&fbb)
-    PRWInit.addVectorOf(ENTITY_HANDLES: ENTITY_HANDLES, &fbb)
-    PRWInit.addVectorOf(SOURCES: SOURCES, &fbb)
-    return PRWInit.endPRWInit(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ENTITY_HANDLES, fieldName: "ENTITY_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWInitSource>, PRWInitSource>>.self)
-    _v.finish()
-  }
-}
-
-public struct PRWKeplerianElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWKeplerianElements.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let MU: VOffset = 4
-    static let SEMI_MAJOR_AXIS: VOffset = 6
-    static let ECCENTRICITY: VOffset = 8
-    static let INCLINATION: VOffset = 10
-    static let RAAN: VOffset = 12
-    static let ARG_PERIAPSIS: VOffset = 14
-    static let TRUE_ANOMALY: VOffset = 16
-    static let EPOCH: VOffset = 18
-  }
-
-  ///  Gravitational parameter of the central body (km^3 / s^2).
-  public var MU: Double { let o = _accessor.offset(VT.MU); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Semi-major axis (km).
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentricity (0 = circular, <1 = ellipse).
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Inclination (radians).
-  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Right ascension of the ascending node (radians).
-  public var RAAN: Double { let o = _accessor.offset(VT.RAAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Argument of periapsis (radians).
-  public var ARG_PERIAPSIS: Double { let o = _accessor.offset(VT.ARG_PERIAPSIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  True anomaly (radians).
-  public var TRUE_ANOMALY: Double { let o = _accessor.offset(VT.TRUE_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Epoch as Julian date.
-  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPRWKeplerianElements(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(MU: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MU, def: 0.0, at: VT.MU) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
-  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VT.RAAN) }
-  public static func add(ARG_PERIAPSIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_PERIAPSIS, def: 0.0, at: VT.ARG_PERIAPSIS) }
-  public static func add(TRUE_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_ANOMALY, def: 0.0, at: VT.TRUE_ANOMALY) }
-  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
-  public static func endPRWKeplerianElements(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWKeplerianElements(
-    _ fbb: inout FlatBufferBuilder,
-    MU: Double = 0.0,
-    SEMI_MAJOR_AXIS: Double = 0.0,
-    ECCENTRICITY: Double = 0.0,
-    INCLINATION: Double = 0.0,
-    RAAN: Double = 0.0,
-    ARG_PERIAPSIS: Double = 0.0,
-    TRUE_ANOMALY: Double = 0.0,
-    EPOCH: Double = 0.0
-  ) -> Offset {
-    let __start = PRWKeplerianElements.startPRWKeplerianElements(&fbb)
-    PRWKeplerianElements.add(MU: MU, &fbb)
-    PRWKeplerianElements.add(SEMI_MAJOR_AXIS: SEMI_MAJOR_AXIS, &fbb)
-    PRWKeplerianElements.add(ECCENTRICITY: ECCENTRICITY, &fbb)
-    PRWKeplerianElements.add(INCLINATION: INCLINATION, &fbb)
-    PRWKeplerianElements.add(RAAN: RAAN, &fbb)
-    PRWKeplerianElements.add(ARG_PERIAPSIS: ARG_PERIAPSIS, &fbb)
-    PRWKeplerianElements.add(TRUE_ANOMALY: TRUE_ANOMALY, &fbb)
-    PRWKeplerianElements.add(EPOCH: EPOCH, &fbb)
-    return PRWKeplerianElements.endPRWKeplerianElements(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.MU, fieldName: "MU", required: false, type: Double.self)
-    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VT.RAAN, fieldName: "RAAN", required: false, type: Double.self)
-    try _v.visit(field: VT.ARG_PERIAPSIS, fieldName: "ARG_PERIAPSIS", required: false, type: Double.self)
-    try _v.visit(field: VT.TRUE_ANOMALY, fieldName: "TRUE_ANOMALY", required: false, type: Double.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-public struct PRWTleLines: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWTleLines.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let LINE1: VOffset = 4
-    static let LINE2: VOffset = 6
-    static let NAME: VOffset = 8
-    static let NORAD_ID: VOffset = 10
-  }
-
-  ///  TLE line 1 (69 characters).
-  public var LINE1: String? { let o = _accessor.offset(VT.LINE1); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINE1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE1) }
-  ///  TLE line 2 (69 characters).
-  public var LINE2: String? { let o = _accessor.offset(VT.LINE2); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINE2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE2) }
-  ///  Satellite name (optional, line 0 of 3LE).
+  ///  Segment name as recorded in the container.
   public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  NORAD catalog number parsed from the TLE.
-  public var NORAD_ID: UInt32 { let o = _accessor.offset(VT.NORAD_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPRWTleLines(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(LINE1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE1, at: VT.LINE1) }
-  public static func add(LINE2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE2, at: VT.LINE2) }
+  ///  Integer body code of the segment target.
+  public var TARGET_NAIF_ID: Int32 { let o = _accessor.offset(VT.TARGET_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Integer body code of the segment centre.
+  public var CENTER_NAIF_ID: Int32 { let o = _accessor.offset(VT.CENTER_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Integer reference frame code of the segment.
+  public var FRAME_NAIF_ID: Int32 { let o = _accessor.offset(VT.FRAME_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Reference frame name as recorded in the container.
+  public var FRAME_NAME: String? { let o = _accessor.offset(VT.FRAME_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FRAME_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FRAME_NAME) }
+  ///  Numeric segment data type, verbatim. The evaluation rule is a property of
+  ///  this number (for example, Chebyshev position with fixed interval, or
+  ///  discrete states with Lagrange interpolation); it is carried as the
+  ///  container's own integer so a rewrite is exact.
+  public var SEGMENT_TYPE: Int32 { let o = _accessor.offset(VT.SEGMENT_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Segment coverage start, ISO 8601.
+  public var START_EPOCH: String? { let o = _accessor.offset(VT.START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_EPOCH) }
+  ///  Segment coverage stop, ISO 8601.
+  public var STOP_EPOCH: String? { let o = _accessor.offset(VT.STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_EPOCH) }
+  ///  Segment coverage start, seconds past J2000 in the barycentric dynamical
+  ///  time scale, as stored in the container.
+  public var START_SECONDS_PAST_J2000_TDB: Double { let o = _accessor.offset(VT.START_SECONDS_PAST_J2000_TDB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Segment coverage stop, same scale.
+  public var STOP_SECONDS_PAST_J2000_TDB: Double { let o = _accessor.offset(VT.STOP_SECONDS_PAST_J2000_TDB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  First addressed element of the segment inside the file.
+  public var INITIAL_ADDRESS: UInt64 { let o = _accessor.offset(VT.INITIAL_ADDRESS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Last addressed element of the segment inside the file.
+  public var FINAL_ADDRESS: UInt64 { let o = _accessor.offset(VT.FINAL_ADDRESS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Polynomial degree or record size the segment type parameterises, when the
+  ///  type carries one.
+  public var POLYNOMIAL_DEGREE: UInt32 { let o = _accessor.offset(VT.POLYNOMIAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startNCDSegmentDescriptor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(NORAD_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_ID, def: 0, at: VT.NORAD_ID) }
-  public static func endPRWTleLines(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWTleLines(
+  public static func add(TARGET_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_NAIF_ID, def: 0, at: VT.TARGET_NAIF_ID) }
+  public static func add(CENTER_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_NAIF_ID, def: 0, at: VT.CENTER_NAIF_ID) }
+  public static func add(FRAME_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_NAIF_ID, def: 0, at: VT.FRAME_NAIF_ID) }
+  public static func add(FRAME_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAME_NAME, at: VT.FRAME_NAME) }
+  public static func add(SEGMENT_TYPE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_TYPE, def: 0, at: VT.SEGMENT_TYPE) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_EPOCH, at: VT.STOP_EPOCH) }
+  public static func add(START_SECONDS_PAST_J2000_TDB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_SECONDS_PAST_J2000_TDB, def: 0.0, at: VT.START_SECONDS_PAST_J2000_TDB) }
+  public static func add(STOP_SECONDS_PAST_J2000_TDB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_SECONDS_PAST_J2000_TDB, def: 0.0, at: VT.STOP_SECONDS_PAST_J2000_TDB) }
+  public static func add(INITIAL_ADDRESS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_ADDRESS, def: 0, at: VT.INITIAL_ADDRESS) }
+  public static func add(FINAL_ADDRESS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FINAL_ADDRESS, def: 0, at: VT.FINAL_ADDRESS) }
+  public static func add(POLYNOMIAL_DEGREE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYNOMIAL_DEGREE, def: 0, at: VT.POLYNOMIAL_DEGREE) }
+  public static func endNCDSegmentDescriptor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createNCDSegmentDescriptor(
     _ fbb: inout FlatBufferBuilder,
-    LINE1Offset LINE1: Offset = Offset(),
-    LINE2Offset LINE2: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
-    NORAD_ID: UInt32 = 0
+    TARGET_NAIF_ID: Int32 = 0,
+    CENTER_NAIF_ID: Int32 = 0,
+    FRAME_NAIF_ID: Int32 = 0,
+    FRAME_NAMEOffset FRAME_NAME: Offset = Offset(),
+    SEGMENT_TYPE: Int32 = 0,
+    START_EPOCHOffset START_EPOCH: Offset = Offset(),
+    STOP_EPOCHOffset STOP_EPOCH: Offset = Offset(),
+    START_SECONDS_PAST_J2000_TDB: Double = 0.0,
+    STOP_SECONDS_PAST_J2000_TDB: Double = 0.0,
+    INITIAL_ADDRESS: UInt64 = 0,
+    FINAL_ADDRESS: UInt64 = 0,
+    POLYNOMIAL_DEGREE: UInt32 = 0
   ) -> Offset {
-    let __start = PRWTleLines.startPRWTleLines(&fbb)
-    PRWTleLines.add(LINE1: LINE1, &fbb)
-    PRWTleLines.add(LINE2: LINE2, &fbb)
-    PRWTleLines.add(NAME: NAME, &fbb)
-    PRWTleLines.add(NORAD_ID: NORAD_ID, &fbb)
-    return PRWTleLines.endPRWTleLines(&fbb, start: __start)
+    let __start = NCDSegmentDescriptor.startNCDSegmentDescriptor(&fbb)
+    NCDSegmentDescriptor.add(NAME: NAME, &fbb)
+    NCDSegmentDescriptor.add(TARGET_NAIF_ID: TARGET_NAIF_ID, &fbb)
+    NCDSegmentDescriptor.add(CENTER_NAIF_ID: CENTER_NAIF_ID, &fbb)
+    NCDSegmentDescriptor.add(FRAME_NAIF_ID: FRAME_NAIF_ID, &fbb)
+    NCDSegmentDescriptor.add(FRAME_NAME: FRAME_NAME, &fbb)
+    NCDSegmentDescriptor.add(SEGMENT_TYPE: SEGMENT_TYPE, &fbb)
+    NCDSegmentDescriptor.add(START_EPOCH: START_EPOCH, &fbb)
+    NCDSegmentDescriptor.add(STOP_EPOCH: STOP_EPOCH, &fbb)
+    NCDSegmentDescriptor.add(START_SECONDS_PAST_J2000_TDB: START_SECONDS_PAST_J2000_TDB, &fbb)
+    NCDSegmentDescriptor.add(STOP_SECONDS_PAST_J2000_TDB: STOP_SECONDS_PAST_J2000_TDB, &fbb)
+    NCDSegmentDescriptor.add(INITIAL_ADDRESS: INITIAL_ADDRESS, &fbb)
+    NCDSegmentDescriptor.add(FINAL_ADDRESS: FINAL_ADDRESS, &fbb)
+    NCDSegmentDescriptor.add(POLYNOMIAL_DEGREE: POLYNOMIAL_DEGREE, &fbb)
+    return NCDSegmentDescriptor.endNCDSegmentDescriptor(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.LINE1, fieldName: "LINE1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LINE2, fieldName: "LINE2", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NORAD_ID, fieldName: "NORAD_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_NAIF_ID, fieldName: "TARGET_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.CENTER_NAIF_ID, fieldName: "CENTER_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.FRAME_NAIF_ID, fieldName: "FRAME_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.FRAME_NAME, fieldName: "FRAME_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENT_TYPE, fieldName: "SEGMENT_TYPE", required: false, type: Int32.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_EPOCH, fieldName: "STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_SECONDS_PAST_J2000_TDB, fieldName: "START_SECONDS_PAST_J2000_TDB", required: false, type: Double.self)
+    try _v.visit(field: VT.STOP_SECONDS_PAST_J2000_TDB, fieldName: "STOP_SECONDS_PAST_J2000_TDB", required: false, type: Double.self)
+    try _v.visit(field: VT.INITIAL_ADDRESS, fieldName: "INITIAL_ADDRESS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FINAL_ADDRESS, fieldName: "FINAL_ADDRESS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.POLYNOMIAL_DEGREE, fieldName: "POLYNOMIAL_DEGREE", required: false, type: UInt32.self)
     _v.finish()
   }
 }
 
-public struct PRWInitSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Header block of a fixed-column satellite position container (SP3).
+public struct NCDSP3Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInitSource.id, addPrefix: prefix) }
+  public static var id: String { "$NCD" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: NCDSP3Header.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let KIND: VOffset = 4
-    static let FILE_IDENTIFIER: VOffset = 6
-    static let BYTES: VOffset = 8
-    static let KEPLERIAN: VOffset = 10
-    static let TLE: VOffset = 12
+    static let FILE_TYPE: VOffset = 4
+    static let SATELLITE_SYSTEM: VOffset = 6
+    static let ORBIT_TYPE: VOffset = 8
+    static let DATA_USED: VOffset = 10
+    static let COORDINATE_SYSTEM: VOffset = 12
+    static let AGENCY: VOffset = 14
+    static let TIME_SYSTEM: VOffset = 16
+    static let GPS_WEEK: VOffset = 18
+    static let SECONDS_OF_WEEK: VOffset = 20
+    static let MODIFIED_JULIAN_DAY_START: VOffset = 22
+    static let FRACTIONAL_DAY: VOffset = 24
+    static let EPOCH_INTERVAL_SECONDS: VOffset = 26
+    static let NUMBER_OF_EPOCHS: VOffset = 28
+    static let SATELLITE_IDS: VOffset = 30
+    static let SATELLITE_ACCURACY_EXPONENTS: VOffset = 32
+    static let POSITION_VELOCITY_BASE: VOffset = 34
+    static let CLOCK_RATE_BASE: VOffset = 36
+    static let COMMENT: VOffset = 38
   }
 
-  ///  Wire kind identifier for BYTES.
-  public var KIND: prwSourceKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .omm : prwSourceKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .omm }
-  ///  Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
-  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
-  ///  Encoded source record as a FlatBuffer (consumed per KIND).
-  public var BYTES: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BYTES, byteSize: 1) }
-  public func withUnsafePointerToBytes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BYTES, body: body) }
-  ///  Convenience inline form when KIND == KEPLERIAN.
-  public var KEPLERIAN: PRWKeplerianElements? { let o = _accessor.offset(VT.KEPLERIAN); return o == 0 ? nil : PRWKeplerianElements(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Convenience inline form when KIND == TLE.
-  public var TLE: PRWTleLines? { let o = _accessor.offset(VT.TLE); return o == 0 ? nil : PRWTleLines(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPRWInitSource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(KIND: prwSourceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
-  public static func addVectorOf(BYTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTES, at: VT.BYTES) }
-  public static func add(KEPLERIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEPLERIAN, at: VT.KEPLERIAN) }
-  public static func add(TLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TLE, at: VT.TLE) }
-  public static func endPRWInitSource(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWInitSource(
+  ///  Record content indicator, e.g. "P" for positions only, "V" with
+  ///  velocities.
+  public var FILE_TYPE: String? { let o = _accessor.offset(VT.FILE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_TYPE) }
+  ///  Satellite system indicator recorded in the header.
+  public var SATELLITE_SYSTEM: String? { let o = _accessor.offset(VT.SATELLITE_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SATELLITE_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SATELLITE_SYSTEM) }
+  ///  Orbit type as recorded, e.g. fitted, extrapolated, broadcast, helmert.
+  public var ORBIT_TYPE: String? { let o = _accessor.offset(VT.ORBIT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_TYPE) }
+  ///  Data used to produce the file, as recorded.
+  public var DATA_USED: String? { let o = _accessor.offset(VT.DATA_USED); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_USEDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_USED) }
+  ///  Terrestrial reference frame name as recorded.
+  public var COORDINATE_SYSTEM: String? { let o = _accessor.offset(VT.COORDINATE_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COORDINATE_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORDINATE_SYSTEM) }
+  ///  Producing agency as recorded IN THE FILE. This is observed content, not a
+  ///  classification.
+  public var AGENCY: String? { let o = _accessor.offset(VT.AGENCY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AGENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY) }
+  ///  Time system as recorded in the header.
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  Week number of the first epoch in the file's own week counter.
+  public var GPS_WEEK: UInt32 { let o = _accessor.offset(VT.GPS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Seconds of week of the first epoch.
+  public var SECONDS_OF_WEEK: Double { let o = _accessor.offset(VT.SECONDS_OF_WEEK); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Modified Julian Day of the first epoch.
+  public var MODIFIED_JULIAN_DAY_START: Int32 { let o = _accessor.offset(VT.MODIFIED_JULIAN_DAY_START); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Fractional day of the first epoch.
+  public var FRACTIONAL_DAY: Double { let o = _accessor.offset(VT.FRACTIONAL_DAY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Uniform interval between epochs, seconds.
+  public var EPOCH_INTERVAL_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_INTERVAL_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of epochs declared in the header.
+  public var NUMBER_OF_EPOCHS: UInt32 { let o = _accessor.offset(VT.NUMBER_OF_EPOCHS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Satellite identifiers in header order.
+  public var SATELLITE_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SATELLITE_IDS, byteSize: 4) }
+  ///  Per-satellite accuracy exponents, parallel to SATELLITE_IDS. The accuracy
+  ///  is POSITION_VELOCITY_BASE raised to this power.
+  public var SATELLITE_ACCURACY_EXPONENTS: FlatbufferVector<Int8> { return _accessor.vector(at: VT.SATELLITE_ACCURACY_EXPONENTS, byteSize: 1) }
+  public func withUnsafePointerToSatelliteAccuracyExponents<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SATELLITE_ACCURACY_EXPONENTS, body: body) }
+  ///  Base for the position and velocity standard-deviation exponents carried
+  ///  per state in $OEM.
+  public var POSITION_VELOCITY_BASE: Double { let o = _accessor.offset(VT.POSITION_VELOCITY_BASE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Base for the clock bias and clock rate standard-deviation exponents.
+  public var CLOCK_RATE_BASE: Double { let o = _accessor.offset(VT.CLOCK_RATE_BASE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Header comment lines in file order.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  public static func startNCDSP3Header(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  public static func add(FILE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_TYPE, at: VT.FILE_TYPE) }
+  public static func add(SATELLITE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_SYSTEM, at: VT.SATELLITE_SYSTEM) }
+  public static func add(ORBIT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_TYPE, at: VT.ORBIT_TYPE) }
+  public static func add(DATA_USED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_USED, at: VT.DATA_USED) }
+  public static func add(COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM, at: VT.COORDINATE_SYSTEM) }
+  public static func add(AGENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY, at: VT.AGENCY) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(GPS_WEEK: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GPS_WEEK, def: 0, at: VT.GPS_WEEK) }
+  public static func add(SECONDS_OF_WEEK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS_OF_WEEK, def: 0.0, at: VT.SECONDS_OF_WEEK) }
+  public static func add(MODIFIED_JULIAN_DAY_START: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODIFIED_JULIAN_DAY_START, def: 0, at: VT.MODIFIED_JULIAN_DAY_START) }
+  public static func add(FRACTIONAL_DAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRACTIONAL_DAY, def: 0.0, at: VT.FRACTIONAL_DAY) }
+  public static func add(EPOCH_INTERVAL_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_INTERVAL_SECONDS, def: 0.0, at: VT.EPOCH_INTERVAL_SECONDS) }
+  public static func add(NUMBER_OF_EPOCHS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_EPOCHS, def: 0, at: VT.NUMBER_OF_EPOCHS) }
+  public static func addVectorOf(SATELLITE_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_IDS, at: VT.SATELLITE_IDS) }
+  public static func addVectorOf(SATELLITE_ACCURACY_EXPONENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_ACCURACY_EXPONENTS, at: VT.SATELLITE_ACCURACY_EXPONENTS) }
+  public static func add(POSITION_VELOCITY_BASE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_VELOCITY_BASE, def: 0.0, at: VT.POSITION_VELOCITY_BASE) }
+  public static func add(CLOCK_RATE_BASE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_RATE_BASE, def: 0.0, at: VT.CLOCK_RATE_BASE) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func endNCDSP3Header(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createNCDSP3Header(
     _ fbb: inout FlatBufferBuilder,
-    KIND: prwSourceKind = .omm,
-    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
-    BYTESVectorOffset BYTES: Offset = Offset(),
-    KEPLERIANOffset KEPLERIAN: Offset = Offset(),
-    TLEOffset TLE: Offset = Offset()
+    FILE_TYPEOffset FILE_TYPE: Offset = Offset(),
+    SATELLITE_SYSTEMOffset SATELLITE_SYSTEM: Offset = Offset(),
+    ORBIT_TYPEOffset ORBIT_TYPE: Offset = Offset(),
+    DATA_USEDOffset DATA_USED: Offset = Offset(),
+    COORDINATE_SYSTEMOffset COORDINATE_SYSTEM: Offset = Offset(),
+    AGENCYOffset AGENCY: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    GPS_WEEK: UInt32 = 0,
+    SECONDS_OF_WEEK: Double = 0.0,
+    MODIFIED_JULIAN_DAY_START: Int32 = 0,
+    FRACTIONAL_DAY: Double = 0.0,
+    EPOCH_INTERVAL_SECONDS: Double = 0.0,
+    NUMBER_OF_EPOCHS: UInt32 = 0,
+    SATELLITE_IDSVectorOffset SATELLITE_IDS: Offset = Offset(),
+    SATELLITE_ACCURACY_EXPONENTSVectorOffset SATELLITE_ACCURACY_EXPONENTS: Offset = Offset(),
+    POSITION_VELOCITY_BASE: Double = 0.0,
+    CLOCK_RATE_BASE: Double = 0.0,
+    COMMENTVectorOffset COMMENT: Offset = Offset()
   ) -> Offset {
-    let __start = PRWInitSource.startPRWInitSource(&fbb)
-    PRWInitSource.add(KIND: KIND, &fbb)
-    PRWInitSource.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
-    PRWInitSource.addVectorOf(BYTES: BYTES, &fbb)
-    PRWInitSource.add(KEPLERIAN: KEPLERIAN, &fbb)
-    PRWInitSource.add(TLE: TLE, &fbb)
-    return PRWInitSource.endPRWInitSource(&fbb, start: __start)
+    let __start = NCDSP3Header.startNCDSP3Header(&fbb)
+    NCDSP3Header.add(FILE_TYPE: FILE_TYPE, &fbb)
+    NCDSP3Header.add(SATELLITE_SYSTEM: SATELLITE_SYSTEM, &fbb)
+    NCDSP3Header.add(ORBIT_TYPE: ORBIT_TYPE, &fbb)
+    NCDSP3Header.add(DATA_USED: DATA_USED, &fbb)
+    NCDSP3Header.add(COORDINATE_SYSTEM: COORDINATE_SYSTEM, &fbb)
+    NCDSP3Header.add(AGENCY: AGENCY, &fbb)
+    NCDSP3Header.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    NCDSP3Header.add(GPS_WEEK: GPS_WEEK, &fbb)
+    NCDSP3Header.add(SECONDS_OF_WEEK: SECONDS_OF_WEEK, &fbb)
+    NCDSP3Header.add(MODIFIED_JULIAN_DAY_START: MODIFIED_JULIAN_DAY_START, &fbb)
+    NCDSP3Header.add(FRACTIONAL_DAY: FRACTIONAL_DAY, &fbb)
+    NCDSP3Header.add(EPOCH_INTERVAL_SECONDS: EPOCH_INTERVAL_SECONDS, &fbb)
+    NCDSP3Header.add(NUMBER_OF_EPOCHS: NUMBER_OF_EPOCHS, &fbb)
+    NCDSP3Header.addVectorOf(SATELLITE_IDS: SATELLITE_IDS, &fbb)
+    NCDSP3Header.addVectorOf(SATELLITE_ACCURACY_EXPONENTS: SATELLITE_ACCURACY_EXPONENTS, &fbb)
+    NCDSP3Header.add(POSITION_VELOCITY_BASE: POSITION_VELOCITY_BASE, &fbb)
+    NCDSP3Header.add(CLOCK_RATE_BASE: CLOCK_RATE_BASE, &fbb)
+    NCDSP3Header.addVectorOf(COMMENT: COMMENT, &fbb)
+    return NCDSP3Header.endNCDSP3Header(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: prwSourceKind.self)
-    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.BYTES, fieldName: "BYTES", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.KEPLERIAN, fieldName: "KEPLERIAN", required: false, type: ForwardOffset<PRWKeplerianElements>.self)
-    try _v.visit(field: VT.TLE, fieldName: "TLE", required: false, type: ForwardOffset<PRWTleLines>.self)
+    try _v.visit(field: VT.FILE_TYPE, fieldName: "FILE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SATELLITE_SYSTEM, fieldName: "SATELLITE_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_TYPE, fieldName: "ORBIT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_USED, fieldName: "DATA_USED", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COORDINATE_SYSTEM, fieldName: "COORDINATE_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AGENCY, fieldName: "AGENCY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GPS_WEEK, fieldName: "GPS_WEEK", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SECONDS_OF_WEEK, fieldName: "SECONDS_OF_WEEK", required: false, type: Double.self)
+    try _v.visit(field: VT.MODIFIED_JULIAN_DAY_START, fieldName: "MODIFIED_JULIAN_DAY_START", required: false, type: Int32.self)
+    try _v.visit(field: VT.FRACTIONAL_DAY, fieldName: "FRACTIONAL_DAY", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH_INTERVAL_SECONDS, fieldName: "EPOCH_INTERVAL_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.NUMBER_OF_EPOCHS, fieldName: "NUMBER_OF_EPOCHS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SATELLITE_IDS, fieldName: "SATELLITE_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SATELLITE_ACCURACY_EXPONENTS, fieldName: "SATELLITE_ACCURACY_EXPONENTS", required: false, type: ForwardOffset<Vector<Int8, Int8>>.self)
+    try _v.visit(field: VT.POSITION_VELOCITY_BASE, fieldName: "POSITION_VELOCITY_BASE", required: false, type: Double.self)
+    try _v.visit(field: VT.CLOCK_RATE_BASE, fieldName: "CLOCK_RATE_BASE", required: false, type: Double.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }
 
-///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
-///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
-///  shared arena.
-public struct PRWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Parameters of a scenario-epoch text container.
+public struct NCDScenarioEpochContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchRequest.id, addPrefix: prefix) }
+  public static var id: String { "$NCD" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: NCDScenarioEpochContainer.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let EPOCH: VOffset = 4
-    static let ENTITY_HANDLES: VOffset = 6
-    static let OUTPUT_OFFSET: VOffset = 8
-    static let MAX_COUNT: VOffset = 10
-    static let TARGET_FRAME: VOffset = 12
+    static let SCENARIO_EPOCH: VOffset = 4
+    static let TIME_SYSTEM: VOffset = 6
+    static let DISTANCE_UNIT: VOffset = 8
+    static let COORDINATE_SYSTEM: VOffset = 10
+    static let COORDINATE_AXES: VOffset = 12
+    static let CENTRAL_BODY: VOffset = 14
+    static let INTERPOLATION_METHOD: VOffset = 16
+    static let INTERPOLATION_SAMPLES_M1: VOffset = 18
+    static let NUMBER_OF_EPHEMERIS_POINTS: VOffset = 20
+    static let SEGMENT_BOUNDARY_TIMES: VOffset = 22
   }
 
-  ///  Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
-  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Entity handles to propagate (empty = all initialized entities).
-  public var ENTITY_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_HANDLES, byteSize: 4) }
-  public func withUnsafePointerToEntityHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_HANDLES, body: body) }
-  ///  Output buffer offset in the arena where the StateVector stream begins.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Maximum entities to process in this call (0 = unbounded).
-  public var MAX_COUNT: UInt32 { let o = _accessor.offset(VT.MAX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Target reference frame for the output state stream. Matches enum
-  ///  values in SDS `RFM`. If zero, the propagator chooses its native frame.
-  public var TARGET_FRAME: String? { let o = _accessor.offset(VT.TARGET_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_FRAME) }
-  public static func startPRWBatchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
-  public static func addVectorOf(ENTITY_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_HANDLES, at: VT.ENTITY_HANDLES) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
-  public static func add(MAX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_COUNT, def: 0, at: VT.MAX_COUNT) }
-  public static func add(TARGET_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_FRAME, at: VT.TARGET_FRAME) }
-  public static func endPRWBatchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWBatchRequest(
+  ///  Epoch that every record offset is measured from, ISO 8601.
+  public var SCENARIO_EPOCH: String? { let o = _accessor.offset(VT.SCENARIO_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_EPOCH) }
+  ///  Time scale the scenario epoch is expressed in.
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  Distance unit of the records, e.g. "Meters", "Kilometers".
+  public var DISTANCE_UNIT: String? { let o = _accessor.offset(VT.DISTANCE_UNIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISTANCE_UNITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISTANCE_UNIT) }
+  ///  Named coordinate system of the records.
+  public var COORDINATE_SYSTEM: String? { let o = _accessor.offset(VT.COORDINATE_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COORDINATE_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORDINATE_SYSTEM) }
+  ///  Named coordinate axes, when stated separately from the system.
+  public var COORDINATE_AXES: String? { let o = _accessor.offset(VT.COORDINATE_AXES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COORDINATE_AXESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORDINATE_AXES) }
+  ///  Central body of the records.
+  public var CENTRAL_BODY: String? { let o = _accessor.offset(VT.CENTRAL_BODY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTRAL_BODYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTRAL_BODY) }
+  ///  Named interpolation method, e.g. "Lagrange", "Hermite".
+  public var INTERPOLATION_METHOD: String? { let o = _accessor.offset(VT.INTERPOLATION_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERPOLATION_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERPOLATION_METHOD) }
+  ///  Interpolation order expressed as (samples - 1), which is how these
+  ///  containers state it. Carried verbatim rather than converted, so a rewrite
+  ///  reproduces the source exactly.
+  public var INTERPOLATION_SAMPLES_M1: UInt32 { let o = _accessor.offset(VT.INTERPOLATION_SAMPLES_M1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of ephemeris points declared in the container.
+  public var NUMBER_OF_EPHEMERIS_POINTS: UInt32 { let o = _accessor.offset(VT.NUMBER_OF_EPHEMERIS_POINTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Segment boundary offsets in seconds from SCENARIO_EPOCH, when present.
+  public var SEGMENT_BOUNDARY_TIMES: FlatbufferVector<Double> { return _accessor.vector(at: VT.SEGMENT_BOUNDARY_TIMES, byteSize: 8) }
+  public func withUnsafePointerToSegmentBoundaryTimes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SEGMENT_BOUNDARY_TIMES, body: body) }
+  public static func startNCDScenarioEpochContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(SCENARIO_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_EPOCH, at: VT.SCENARIO_EPOCH) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(DISTANCE_UNIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTANCE_UNIT, at: VT.DISTANCE_UNIT) }
+  public static func add(COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM, at: VT.COORDINATE_SYSTEM) }
+  public static func add(COORDINATE_AXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_AXES, at: VT.COORDINATE_AXES) }
+  public static func add(CENTRAL_BODY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTRAL_BODY, at: VT.CENTRAL_BODY) }
+  public static func add(INTERPOLATION_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION_METHOD, at: VT.INTERPOLATION_METHOD) }
+  public static func add(INTERPOLATION_SAMPLES_M1: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION_SAMPLES_M1, def: 0, at: VT.INTERPOLATION_SAMPLES_M1) }
+  public static func add(NUMBER_OF_EPHEMERIS_POINTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_EPHEMERIS_POINTS, def: 0, at: VT.NUMBER_OF_EPHEMERIS_POINTS) }
+  public static func addVectorOf(SEGMENT_BOUNDARY_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_BOUNDARY_TIMES, at: VT.SEGMENT_BOUNDARY_TIMES) }
+  public static func endNCDScenarioEpochContainer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createNCDScenarioEpochContainer(
     _ fbb: inout FlatBufferBuilder,
-    EPOCH: Double = 0.0,
-    ENTITY_HANDLESVectorOffset ENTITY_HANDLES: Offset = Offset(),
-    OUTPUT_OFFSET: UInt32 = 0,
-    MAX_COUNT: UInt32 = 0,
-    TARGET_FRAMEOffset TARGET_FRAME: Offset = Offset()
+    SCENARIO_EPOCHOffset SCENARIO_EPOCH: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    DISTANCE_UNITOffset DISTANCE_UNIT: Offset = Offset(),
+    COORDINATE_SYSTEMOffset COORDINATE_SYSTEM: Offset = Offset(),
+    COORDINATE_AXESOffset COORDINATE_AXES: Offset = Offset(),
+    CENTRAL_BODYOffset CENTRAL_BODY: Offset = Offset(),
+    INTERPOLATION_METHODOffset INTERPOLATION_METHOD: Offset = Offset(),
+    INTERPOLATION_SAMPLES_M1: UInt32 = 0,
+    NUMBER_OF_EPHEMERIS_POINTS: UInt32 = 0,
+    SEGMENT_BOUNDARY_TIMESVectorOffset SEGMENT_BOUNDARY_TIMES: Offset = Offset()
   ) -> Offset {
-    let __start = PRWBatchRequest.startPRWBatchRequest(&fbb)
-    PRWBatchRequest.add(EPOCH: EPOCH, &fbb)
-    PRWBatchRequest.addVectorOf(ENTITY_HANDLES: ENTITY_HANDLES, &fbb)
-    PRWBatchRequest.add(OUTPUT_OFFSET: OUTPUT_OFFSET, &fbb)
-    PRWBatchRequest.add(MAX_COUNT: MAX_COUNT, &fbb)
-    PRWBatchRequest.add(TARGET_FRAME: TARGET_FRAME, &fbb)
-    return PRWBatchRequest.endPRWBatchRequest(&fbb, start: __start)
+    let __start = NCDScenarioEpochContainer.startNCDScenarioEpochContainer(&fbb)
+    NCDScenarioEpochContainer.add(SCENARIO_EPOCH: SCENARIO_EPOCH, &fbb)
+    NCDScenarioEpochContainer.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    NCDScenarioEpochContainer.add(DISTANCE_UNIT: DISTANCE_UNIT, &fbb)
+    NCDScenarioEpochContainer.add(COORDINATE_SYSTEM: COORDINATE_SYSTEM, &fbb)
+    NCDScenarioEpochContainer.add(COORDINATE_AXES: COORDINATE_AXES, &fbb)
+    NCDScenarioEpochContainer.add(CENTRAL_BODY: CENTRAL_BODY, &fbb)
+    NCDScenarioEpochContainer.add(INTERPOLATION_METHOD: INTERPOLATION_METHOD, &fbb)
+    NCDScenarioEpochContainer.add(INTERPOLATION_SAMPLES_M1: INTERPOLATION_SAMPLES_M1, &fbb)
+    NCDScenarioEpochContainer.add(NUMBER_OF_EPHEMERIS_POINTS: NUMBER_OF_EPHEMERIS_POINTS, &fbb)
+    NCDScenarioEpochContainer.addVectorOf(SEGMENT_BOUNDARY_TIMES: SEGMENT_BOUNDARY_TIMES, &fbb)
+    return NCDScenarioEpochContainer.endNCDScenarioEpochContainer(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
-    try _v.visit(field: VT.ENTITY_HANDLES, fieldName: "ENTITY_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VT.MAX_COUNT, fieldName: "MAX_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.TARGET_FRAME, fieldName: "TARGET_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO_EPOCH, fieldName: "SCENARIO_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISTANCE_UNIT, fieldName: "DISTANCE_UNIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COORDINATE_SYSTEM, fieldName: "COORDINATE_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COORDINATE_AXES, fieldName: "COORDINATE_AXES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTRAL_BODY, fieldName: "CENTRAL_BODY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION_METHOD, fieldName: "INTERPOLATION_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION_SAMPLES_M1, fieldName: "INTERPOLATION_SAMPLES_M1", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NUMBER_OF_EPHEMERIS_POINTS, fieldName: "NUMBER_OF_EPHEMERIS_POINTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SEGMENT_BOUNDARY_TIMES, fieldName: "SEGMENT_BOUNDARY_TIMES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
 
-///  Batch propagation response header — describes the stream written to
-///  OUTPUT_OFFSET and reports errors. The stream itself is
-///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
-public struct PRWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Header words of a fixed-record binary ephemeris container.
+public struct NCDCode500Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchResponse.id, addPrefix: prefix) }
+  public static var id: String { "$NCD" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: NCDCode500Header.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let COUNT: VOffset = 4
-    static let OUTPUT_OFFSET: VOffset = 6
-    static let STATE_VECTOR_SIZE: VOffset = 8
-    static let REFERENCE_FRAME: VOffset = 10
-    static let FLAGS: VOffset = 12
-    static let ERROR_CODE: VOffset = 14
-    static let ERROR_MESSAGE: VOffset = 16
+    static let SATELLITE_NAME: VOffset = 4
+    static let TAPE_ID: VOffset = 6
+    static let TIME_SYSTEM_INDICATOR: VOffset = 8
+    static let COORDINATE_SYSTEM_INDICATOR: VOffset = 10
+    static let START_EPOCH: VOffset = 12
+    static let STOP_EPOCH: VOffset = 14
+    static let EPOCH_STEP_SECONDS: VOffset = 16
+    static let HEADER_WORDS: VOffset = 18
   }
 
-  ///  Number of state vectors written.
-  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Offset in the arena where the state-vector stream begins.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
-  public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VT.STATE_VECTOR_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Reference frame for the stream (SDS `RFM`-compatible string tag).
-  public var REFERENCE_FRAME: String? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_FRAME) }
-  ///  Per-entity status flags (same cardinality as COUNT).
-  public var FLAGS: FlatbufferVector<propagatorStateFlags> { return _accessor.vector(at: VT.FLAGS, byteSize: 4) }
-  ///  Error code (0 == OK).
-  public var ERROR_CODE: propagatorErrorCode { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? .ok : propagatorErrorCode(rawValue: _accessor.readBuffer(of: Int32.self, at: o)) ?? .ok }
-  ///  Optional error message when ERROR_CODE != OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  public static func startPRWBatchResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
-  public static func add(STATE_VECTOR_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_VECTOR_SIZE, def: 0, at: VT.STATE_VECTOR_SIZE) }
-  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
-  public static func addVectorOf(FLAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLAGS, at: VT.FLAGS) }
-  public static func add(ERROR_CODE: propagatorErrorCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE.rawValue, def: 0, at: VT.ERROR_CODE) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func endPRWBatchResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRWBatchResponse(
+  ///  Object name as recorded in the header.
+  public var SATELLITE_NAME: String? { let o = _accessor.offset(VT.SATELLITE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SATELLITE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SATELLITE_NAME) }
+  ///  Container-internal tape or file identifier.
+  public var TAPE_ID: String? { let o = _accessor.offset(VT.TAPE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TAPE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TAPE_ID) }
+  ///  Time system indicator as recorded.
+  public var TIME_SYSTEM_INDICATOR: String? { let o = _accessor.offset(VT.TIME_SYSTEM_INDICATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEM_INDICATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM_INDICATOR) }
+  ///  Coordinate system indicator as recorded.
+  public var COORDINATE_SYSTEM_INDICATOR: Int32 { let o = _accessor.offset(VT.COORDINATE_SYSTEM_INDICATOR); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Coverage start, ISO 8601.
+  public var START_EPOCH: String? { let o = _accessor.offset(VT.START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_EPOCH) }
+  ///  Coverage stop, ISO 8601.
+  public var STOP_EPOCH: String? { let o = _accessor.offset(VT.STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_EPOCH) }
+  ///  Uniform step between data records, seconds.
+  public var EPOCH_STEP_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The header record's packed words in file order, undecoded. A reader that
+  ///  understands a word decodes it; a rewriter reproduces the record exactly
+  ///  without having to.
+  public var HEADER_WORDS: FlatbufferVector<Double> { return _accessor.vector(at: VT.HEADER_WORDS, byteSize: 8) }
+  public func withUnsafePointerToHeaderWords<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.HEADER_WORDS, body: body) }
+  public static func startNCDCode500Header(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(SATELLITE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_NAME, at: VT.SATELLITE_NAME) }
+  public static func add(TAPE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAPE_ID, at: VT.TAPE_ID) }
+  public static func add(TIME_SYSTEM_INDICATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM_INDICATOR, at: VT.TIME_SYSTEM_INDICATOR) }
+  public static func add(COORDINATE_SYSTEM_INDICATOR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COORDINATE_SYSTEM_INDICATOR, def: 0, at: VT.COORDINATE_SYSTEM_INDICATOR) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_EPOCH, at: VT.STOP_EPOCH) }
+  public static func add(EPOCH_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_STEP_SECONDS, def: 0.0, at: VT.EPOCH_STEP_SECONDS) }
+  public static func addVectorOf(HEADER_WORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER_WORDS, at: VT.HEADER_WORDS) }
+  public static func endNCDCode500Header(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createNCDCode500Header(
     _ fbb: inout FlatBufferBuilder,
-    COUNT: UInt32 = 0,
-    OUTPUT_OFFSET: UInt32 = 0,
-    STATE_VECTOR_SIZE: UInt8 = 0,
-    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    FLAGSVectorOffset FLAGS: Offset = Offset(),
-    ERROR_CODE: propagatorErrorCode = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset()
+    SATELLITE_NAMEOffset SATELLITE_NAME: Offset = Offset(),
+    TAPE_IDOffset TAPE_ID: Offset = Offset(),
+    TIME_SYSTEM_INDICATOROffset TIME_SYSTEM_INDICATOR: Offset = Offset(),
+    COORDINATE_SYSTEM_INDICATOR: Int32 = 0,
+    START_EPOCHOffset START_EPOCH: Offset = Offset(),
+    STOP_EPOCHOffset STOP_EPOCH: Offset = Offset(),
+    EPOCH_STEP_SECONDS: Double = 0.0,
+    HEADER_WORDSVectorOffset HEADER_WORDS: Offset = Offset()
   ) -> Offset {
-    let __start = PRWBatchResponse.startPRWBatchResponse(&fbb)
-    PRWBatchResponse.add(COUNT: COUNT, &fbb)
-    PRWBatchResponse.add(OUTPUT_OFFSET: OUTPUT_OFFSET, &fbb)
-    PRWBatchResponse.add(STATE_VECTOR_SIZE: STATE_VECTOR_SIZE, &fbb)
-    PRWBatchResponse.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
-    PRWBatchResponse.addVectorOf(FLAGS: FLAGS, &fbb)
-    PRWBatchResponse.add(ERROR_CODE: ERROR_CODE, &fbb)
-    PRWBatchResponse.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    return PRWBatchResponse.endPRWBatchResponse(&fbb, start: __start)
+    let __start = NCDCode500Header.startNCDCode500Header(&fbb)
+    NCDCode500Header.add(SATELLITE_NAME: SATELLITE_NAME, &fbb)
+    NCDCode500Header.add(TAPE_ID: TAPE_ID, &fbb)
+    NCDCode500Header.add(TIME_SYSTEM_INDICATOR: TIME_SYSTEM_INDICATOR, &fbb)
+    NCDCode500Header.add(COORDINATE_SYSTEM_INDICATOR: COORDINATE_SYSTEM_INDICATOR, &fbb)
+    NCDCode500Header.add(START_EPOCH: START_EPOCH, &fbb)
+    NCDCode500Header.add(STOP_EPOCH: STOP_EPOCH, &fbb)
+    NCDCode500Header.add(EPOCH_STEP_SECONDS: EPOCH_STEP_SECONDS, &fbb)
+    NCDCode500Header.addVectorOf(HEADER_WORDS: HEADER_WORDS, &fbb)
+    return NCDCode500Header.endNCDCode500Header(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VT.STATE_VECTOR_SIZE, fieldName: "STATE_VECTOR_SIZE", required: false, type: UInt8.self)
-    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FLAGS, fieldName: "FLAGS", required: false, type: ForwardOffset<Vector<propagatorStateFlags, propagatorStateFlags>>.self)
-    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: propagatorErrorCode.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SATELLITE_NAME, fieldName: "SATELLITE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAPE_ID, fieldName: "TAPE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM_INDICATOR, fieldName: "TIME_SYSTEM_INDICATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COORDINATE_SYSTEM_INDICATOR, fieldName: "COORDINATE_SYSTEM_INDICATOR", required: false, type: Int32.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_EPOCH, fieldName: "STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_STEP_SECONDS, fieldName: "EPOCH_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HEADER_WORDS, fieldName: "HEADER_WORDS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
 
-///  Propagator Runtime Wire — envelope that carries either an init request,
-///  a batch request, or a batch response across a runtime boundary.
-public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Native Container Descriptor.
+///
+///  The file-level facts of an ephemeris, attitude or tracking container that
+///  are NOT properties of the messages inside it. $OEM, $AEM and $TDM carry the
+///  states, attitudes and observations; none of them can carry the internal
+///  file name, the comment area, the segment address ranges, the header accuracy
+///  block or the interpolation order the source declared, because those describe
+///  the CONTAINER. Without them a read-then-write cycle silently invents header
+///  values, and a segmented binary file cannot be reproduced at all.
+///
+///  ONE record covers every container class rather than one record per format:
+///  the file-level facts are the same kind of fact in each, and the
+///  format-specific blocks are optional sub-tables selected by FORMAT. Only the
+///  block matching FORMAT is populated.
+public struct NCD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRW.id, addPrefix: prefix) }
+  public static var id: String { "$NCD" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: NCD.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let INIT: VOffset = 4
-    static let BATCH_REQUEST: VOffset = 6
-    static let BATCH_RESPONSE: VOffset = 8
+    static let FORMAT: VOffset = 4
+    static let PROVIDER_DEFINED_FORMAT_NAME: VOffset = 6
+    static let FORMAT_VERSION: VOffset = 8
+    static let PRODUCER: VOffset = 10
+    static let CREATION_DATE: VOffset = 12
+    static let ORIGINATOR: VOffset = 14
+    static let INTERNAL_FILE_NAME: VOffset = 16
+    static let COMMENT_AREA: VOffset = 18
+    static let NATIVE_FRAME_NAME: VOffset = 20
+    static let NATIVE_FRAME_ID: VOffset = 22
+    static let NATIVE_TIME_SYSTEM: VOffset = 24
+    static let SEGMENTS: VOffset = 26
+    static let SP3_HEADER: VOffset = 28
+    static let SCENARIO_CONTAINER: VOffset = 30
+    static let CODE_500_HEADER: VOffset = 32
+    static let START_TIME: VOffset = 34
+    static let STOP_TIME: VOffset = 36
+    static let SOURCE_BYTE_LENGTH: VOffset = 38
+    static let SOURCE_SHA256: VOffset = 40
+    static let SOURCE_CID: VOffset = 42
   }
 
-  public var INIT: PRWInit? { let o = _accessor.offset(VT.INIT); return o == 0 ? nil : PRWInit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_REQUEST: PRWBatchRequest? { let o = _accessor.offset(VT.BATCH_REQUEST); return o == 0 ? nil : PRWBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_RESPONSE: PRWBatchResponse? { let o = _accessor.offset(VT.BATCH_RESPONSE); return o == 0 ? nil : PRWBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPRW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(INIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INIT, at: VT.INIT) }
-  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
-  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
-  public static func endPRW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRW(
+  ///  Container format class.
+  public var FORMAT: ncdContainerFormat { let o = _accessor.offset(VT.FORMAT); return o == 0 ? .unspecified : ncdContainerFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Format name when FORMAT is PROVIDER_DEFINED. Empty otherwise.
+  public var PROVIDER_DEFINED_FORMAT_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_FORMAT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DEFINED_FORMAT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_FORMAT_NAME) }
+  ///  Version of the container format as declared by the file itself.
+  public var FORMAT_VERSION: String? { let o = _accessor.offset(VT.FORMAT_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FORMAT_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FORMAT_VERSION) }
+  ///  Producing system or organization as recorded IN THE FILE.
+  public var PRODUCER: String? { let o = _accessor.offset(VT.PRODUCER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER) }
+  ///  Creation date recorded in the file, ISO 8601.
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  ///  Originator recorded in the file.
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  ///  Container-internal file name, which is stored inside the file and is
+  ///  independent of the name on disk.
+  public var INTERNAL_FILE_NAME: String? { let o = _accessor.offset(VT.INTERNAL_FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERNAL_FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERNAL_FILE_NAME) }
+  ///  Free-text comment area carried inside the container, one entry per line,
+  ///  in file order.
+  public var COMMENT_AREA: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT_AREA, byteSize: 4) }
+  ///  Reference frame name as the container itself spells it, before any
+  ///  mapping onto $RFM.
+  public var NATIVE_FRAME_NAME: String? { let o = _accessor.offset(VT.NATIVE_FRAME_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NATIVE_FRAME_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NATIVE_FRAME_NAME) }
+  ///  Integer reference frame code as the container stores it.
+  public var NATIVE_FRAME_ID: Int32 { let o = _accessor.offset(VT.NATIVE_FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Time system as the container itself spells it, before any mapping onto
+  ///  the ratified time-scale vocabulary.
+  public var NATIVE_TIME_SYSTEM: String? { let o = _accessor.offset(VT.NATIVE_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NATIVE_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NATIVE_TIME_SYSTEM) }
+  ///  Descriptors of the container's segments, in file order. Empty for a
+  ///  single-span container.
+  public var SEGMENTS: FlatbufferVector<NCDSegmentDescriptor> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
+  ///  Header block when FORMAT is SP3_C or SP3_D.
+  public var SP3_HEADER: NCDSP3Header? { let o = _accessor.offset(VT.SP3_HEADER); return o == 0 ? nil : NCDSP3Header(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Parameters when FORMAT is SCENARIO_EPOCH_EPHEMERIS_TEXT or
+  ///  SCENARIO_EPOCH_ATTITUDE_TEXT.
+  public var SCENARIO_CONTAINER: NCDScenarioEpochContainer? { let o = _accessor.offset(VT.SCENARIO_CONTAINER); return o == 0 ? nil : NCDScenarioEpochContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Header words when FORMAT is CODE_500.
+  public var CODE_500_HEADER: NCDCode500Header? { let o = _accessor.offset(VT.CODE_500_HEADER); return o == 0 ? nil : NCDCode500Header(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Total coverage start across all segments, ISO 8601.
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
+  ///  Total coverage stop across all segments, ISO 8601.
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
+  ///  Length of the described container in bytes.
+  public var SOURCE_BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.SOURCE_BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SHA-256 of the described container's exact bytes, lowercase hex. This is
+  ///  what makes the descriptor checkable: a consumer can prove the descriptor
+  ///  belongs to the file it holds.
+  public var SOURCE_SHA256: String? { let o = _accessor.offset(VT.SOURCE_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_SHA256) }
+  ///  Content identifier of the described container when it is addressed by
+  ///  content rather than by path.
+  public var SOURCE_CID: String? { let o = _accessor.offset(VT.SOURCE_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_CID) }
+  public static func startNCD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  public static func add(FORMAT: ncdContainerFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORMAT.rawValue, def: 0, at: VT.FORMAT) }
+  public static func add(PROVIDER_DEFINED_FORMAT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_FORMAT_NAME, at: VT.PROVIDER_DEFINED_FORMAT_NAME) }
+  public static func add(FORMAT_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMAT_VERSION, at: VT.FORMAT_VERSION) }
+  public static func add(PRODUCER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER, at: VT.PRODUCER) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(INTERNAL_FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNAL_FILE_NAME, at: VT.INTERNAL_FILE_NAME) }
+  public static func addVectorOf(COMMENT_AREA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT_AREA, at: VT.COMMENT_AREA) }
+  public static func add(NATIVE_FRAME_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_FRAME_NAME, at: VT.NATIVE_FRAME_NAME) }
+  public static func add(NATIVE_FRAME_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NATIVE_FRAME_ID, def: 0, at: VT.NATIVE_FRAME_ID) }
+  public static func add(NATIVE_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_TIME_SYSTEM, at: VT.NATIVE_TIME_SYSTEM) }
+  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func add(SP3_HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SP3_HEADER, at: VT.SP3_HEADER) }
+  public static func add(SCENARIO_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_CONTAINER, at: VT.SCENARIO_CONTAINER) }
+  public static func add(CODE_500_HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CODE_500_HEADER, at: VT.CODE_500_HEADER) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
+  public static func add(SOURCE_BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_BYTE_LENGTH, def: 0, at: VT.SOURCE_BYTE_LENGTH) }
+  public static func add(SOURCE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_SHA256, at: VT.SOURCE_SHA256) }
+  public static func add(SOURCE_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CID, at: VT.SOURCE_CID) }
+  public static func endNCD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createNCD(
     _ fbb: inout FlatBufferBuilder,
-    INITOffset INIT: Offset = Offset(),
-    BATCH_REQUESTOffset BATCH_REQUEST: Offset = Offset(),
-    BATCH_RESPONSEOffset BATCH_RESPONSE: Offset = Offset()
+    FORMAT: ncdContainerFormat = .unspecified,
+    PROVIDER_DEFINED_FORMAT_NAMEOffset PROVIDER_DEFINED_FORMAT_NAME: Offset = Offset(),
+    FORMAT_VERSIONOffset FORMAT_VERSION: Offset = Offset(),
+    PRODUCEROffset PRODUCER: Offset = Offset(),
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    INTERNAL_FILE_NAMEOffset INTERNAL_FILE_NAME: Offset = Offset(),
+    COMMENT_AREAVectorOffset COMMENT_AREA: Offset = Offset(),
+    NATIVE_FRAME_NAMEOffset NATIVE_FRAME_NAME: Offset = Offset(),
+    NATIVE_FRAME_ID: Int32 = 0,
+    NATIVE_TIME_SYSTEMOffset NATIVE_TIME_SYSTEM: Offset = Offset(),
+    SEGMENTSVectorOffset SEGMENTS: Offset = Offset(),
+    SP3_HEADEROffset SP3_HEADER: Offset = Offset(),
+    SCENARIO_CONTAINEROffset SCENARIO_CONTAINER: Offset = Offset(),
+    CODE_500_HEADEROffset CODE_500_HEADER: Offset = Offset(),
+    START_TIMEOffset START_TIME: Offset = Offset(),
+    STOP_TIMEOffset STOP_TIME: Offset = Offset(),
+    SOURCE_BYTE_LENGTH: UInt64 = 0,
+    SOURCE_SHA256Offset SOURCE_SHA256: Offset = Offset(),
+    SOURCE_CIDOffset SOURCE_CID: Offset = Offset()
   ) -> Offset {
-    let __start = PRW.startPRW(&fbb)
-    PRW.add(INIT: INIT, &fbb)
-    PRW.add(BATCH_REQUEST: BATCH_REQUEST, &fbb)
-    PRW.add(BATCH_RESPONSE: BATCH_RESPONSE, &fbb)
-    return PRW.endPRW(&fbb, start: __start)
+    let __start = NCD.startNCD(&fbb)
+    NCD.add(FORMAT: FORMAT, &fbb)
+    NCD.add(PROVIDER_DEFINED_FORMAT_NAME: PROVIDER_DEFINED_FORMAT_NAME, &fbb)
+    NCD.add(FORMAT_VERSION: FORMAT_VERSION, &fbb)
+    NCD.add(PRODUCER: PRODUCER, &fbb)
+    NCD.add(CREATION_DATE: CREATION_DATE, &fbb)
+    NCD.add(ORIGINATOR: ORIGINATOR, &fbb)
+    NCD.add(INTERNAL_FILE_NAME: INTERNAL_FILE_NAME, &fbb)
+    NCD.addVectorOf(COMMENT_AREA: COMMENT_AREA, &fbb)
+    NCD.add(NATIVE_FRAME_NAME: NATIVE_FRAME_NAME, &fbb)
+    NCD.add(NATIVE_FRAME_ID: NATIVE_FRAME_ID, &fbb)
+    NCD.add(NATIVE_TIME_SYSTEM: NATIVE_TIME_SYSTEM, &fbb)
+    NCD.addVectorOf(SEGMENTS: SEGMENTS, &fbb)
+    NCD.add(SP3_HEADER: SP3_HEADER, &fbb)
+    NCD.add(SCENARIO_CONTAINER: SCENARIO_CONTAINER, &fbb)
+    NCD.add(CODE_500_HEADER: CODE_500_HEADER, &fbb)
+    NCD.add(START_TIME: START_TIME, &fbb)
+    NCD.add(STOP_TIME: STOP_TIME, &fbb)
+    NCD.add(SOURCE_BYTE_LENGTH: SOURCE_BYTE_LENGTH, &fbb)
+    NCD.add(SOURCE_SHA256: SOURCE_SHA256, &fbb)
+    NCD.add(SOURCE_CID: SOURCE_CID, &fbb)
+    return NCD.endNCD(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.INIT, fieldName: "INIT", required: false, type: ForwardOffset<PRWInit>.self)
-    try _v.visit(field: VT.BATCH_REQUEST, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<PRWBatchRequest>.self)
-    try _v.visit(field: VT.BATCH_RESPONSE, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<PRWBatchResponse>.self)
+    try _v.visit(field: VT.FORMAT, fieldName: "FORMAT", required: false, type: ncdContainerFormat.self)
+    try _v.visit(field: VT.PROVIDER_DEFINED_FORMAT_NAME, fieldName: "PROVIDER_DEFINED_FORMAT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FORMAT_VERSION, fieldName: "FORMAT_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCER, fieldName: "PRODUCER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERNAL_FILE_NAME, fieldName: "INTERNAL_FILE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT_AREA, fieldName: "COMMENT_AREA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.NATIVE_FRAME_NAME, fieldName: "NATIVE_FRAME_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NATIVE_FRAME_ID, fieldName: "NATIVE_FRAME_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.NATIVE_TIME_SYSTEM, fieldName: "NATIVE_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<NCDSegmentDescriptor>, NCDSegmentDescriptor>>.self)
+    try _v.visit(field: VT.SP3_HEADER, fieldName: "SP3_HEADER", required: false, type: ForwardOffset<NCDSP3Header>.self)
+    try _v.visit(field: VT.SCENARIO_CONTAINER, fieldName: "SCENARIO_CONTAINER", required: false, type: ForwardOffset<NCDScenarioEpochContainer>.self)
+    try _v.visit(field: VT.CODE_500_HEADER, fieldName: "CODE_500_HEADER", required: false, type: ForwardOffset<NCDCode500Header>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_BYTE_LENGTH, fieldName: "SOURCE_BYTE_LENGTH", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SOURCE_SHA256, fieldName: "SOURCE_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_CID, fieldName: "SOURCE_CID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

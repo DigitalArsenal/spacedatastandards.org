@@ -1,0 +1,331 @@
+// Hash: 7772b663d09600c33e5e16fcc0eae709e8b143bbe7bd7a90a97c9ef6417fa3db
+// Version: 1.219.0
+// -----------------------------------END_HEADER
+include "../PRW/main.fbs";
+include "../OMM/main.fbs";
+include "../OEM/main.fbs";
+include "../OCM/main.fbs";
+include "../CDM/main.fbs";
+include "../CSM/main.fbs";
+
+/// Conjunction request/result semantics (normative): use exactly one payload
+/// arm consistent with PIV.METHOD_ID. Errors belong in PIV status/error fields;
+/// an empty scientific result is not a successful response. UNSPECIFIED choices
+/// that affect evaluation and unsupported controls fail explicitly.
+///
+/// Inputs resolve to a common explicit RFM frame/origin and TIM time scale.
+/// Unknown ECI/ECEF realizations are errors, never aliases inferred by a guest.
+/// The host selects the propagator for mean elements; propagated OEM/PPE tracks
+/// accept any compatible provider. Source queries are provenance, not commands.
+///
+/// These tables define canonical FlatBuffers. Port manifests retain both
+/// FLATBUFFER and ALIGNED_BINARY with identical logical schema identity; an
+/// aligned peer needs a declared portable layout and codec, not merely an
+/// aligned pointer to these bytes. See TAB/PLG and GCT's section-layout precedent.
+///
+/// Append-only; no claim that every provider implements every choice.
+enum cqrProbabilityAlgorithm : ubyte {
+  UNSPECIFIED = 0, FOSTER = 1, PATERA = 2, ALFANO_MAXIMUM = 3, CHAN = 4,
+  ALFRIEND_1999 = 5, ALFRIEND_1999_MAXIMUM = 6, ALFANO_2005 = 7,
+  LAAS_2015 = 8, ALFRIEND_2D = 9
+}
+enum cqrUncertaintyOrigin : ubyte {
+  UNSPECIFIED = 0, SUPPLIED_COVARIANCE = 1, SYNTHESIZED_COVARIANCE = 2,
+  MAXIMUM_PROBABILITY_ONLY = 3
+}
+enum cqrDocumentSyntax : ubyte {
+  UNSPECIFIED = 0, CCSDS_CDM_KVN = 1, CCSDS_CDM_XML = 2
+}
+enum cqrIndexRepresentation : ubyte {
+  UNSPECIFIED = 0, SOURCE_DESCRIPTIONS = 1, POLYNOMIAL_SEGMENTS = 2,
+  SAMPLED_STATES = 3
+}
+enum cqrRefinementStrategy : ubyte {
+  UNSPECIFIED = 0, EXACT_ONLY = 1, POLYNOMIAL_ONLY = 2,
+  POLYNOMIAL_WITH_EXACT_POLISH = 3
+}
+enum cqrDataOrigin : ubyte {
+  UNSPECIFIED = 0, OMM_RECORD = 1, OCM_RECORD = 2, OEM_RECORD = 3,
+  CDM_RECORD = 4, QUERY_SELECTION = 5, PUBLICATION = 6, PUBSUB_TOPIC = 7
+}
+
+/// Host-resolved provenance. Strings are evidence, not commands to execute.
+table CQRSourceProvenance {
+  ORIGIN_CLASS:cqrDataOrigin = UNSPECIFIED;
+  SOURCE_ID:string;
+  PROVIDER_ID:string;
+  SCHEMA_NAME:string;
+  FILE_IDENTIFIER:string;
+  QUERY:string;
+  QUERY_HASH:string;
+  PNM_CID:string;
+  MANIFEST_CID:string;
+  TOPIC:string;
+}
+
+/// Exactly one scientific source arm, or a validated instance/source handle.
+/// OMM/TLE use their native mean-element units; OEM/PPE km and km/s; OCM its
+/// declared units. No implicit conversion of TEME, ECEF or ICRF-labelled data.
+table CQRObjectSource {
+  OBJECT_ID:string (required);
+  OBJECT_NAME:string;
+  NORAD_CATALOG_ID:uint;
+  INSTANCE:PRWInstance;
+  SOURCE_HANDLE:uint;
+  /// Host-connected provider for mean elements; no embedded fixed SGP4 choice.
+  PROPAGATOR_PORT_ID:string;
+  MEAN_ELEMENTS:OMM;
+  EPHEMERIS:OEM;
+  COMPREHENSIVE_ORBIT:OCM;
+  POLYNOMIAL_EPHEMERIS:PPE;
+  TLE_LINES:PRWTleLines;
+  PROVENANCE:CQRSourceProvenance;
+  /// Optional source epoch and perigee/apogee altitude above the reference
+  /// Earth radius used by the source model, in SI metres (not geocentric radii).
+  SOURCE_EPOCH:TIMInstant;
+  PERIGEE_ALTITUDE_M:double;
+  /// True when PERIGEE_ALTITUDE_M carries a value; false means absent.
+  HAS_PERIGEE_ALTITUDE_M:bool = false;
+  APOGEE_ALTITUDE_M:double;
+  /// True when APOGEE_ALTITUDE_M carries a value; false means absent.
+  HAS_APOGEE_ALTITUDE_M:bool = false;
+}
+
+/// Explicit UTC search window and positive resolution, SI seconds/metres.
+table CQRScreeningControls {
+  START_EPOCH:TIMInstant (required);
+  DURATION_SECONDS:double = 604800;
+  THRESHOLD_M:double = 5000;
+  REQUESTED_WORKERS:uint = 1;
+  COARSE_STEP_SECONDS:double = 60;
+  REFINEMENT_TOLERANCE_SECONDS:double = 0.001;
+  COMBINED_RADIUS_M:double = 10;
+  USE_KD_TREE:bool = true;
+  USE_DYNAMIC_WINDOW:bool = true;
+  USE_PERIGEE_FILTER:bool = true;
+  /// Optional progress cadence; PIV carries backpressure, not scientific data.
+  PROGRESS_INTERVAL_SECONDS:double;
+  /// True when PROGRESS_INTERVAL_SECONDS carries a value; false means absent.
+  HAS_PROGRESS_INTERVAL_SECONDS:bool = false;
+  ALGORITHM:cqrProbabilityAlgorithm = ALFANO_MAXIMUM;
+}
+
+/// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
+/// Reject inconsistent radii instead of silently choosing one source.
+table CQRPairRequest {
+  PRIMARY:CQRObjectSource (required);
+  SECONDARY:CQRObjectSource (required);
+  CONTROLS:CQRScreeningControls (required);
+  PRIMARY_RADIUS_M:double = 5;
+  SECONDARY_RADIUS_M:double = 5;
+  /// Common inertial frame used for relative state and encounter-plane geometry.
+  EVALUATION_FRAME:RFMCoordinateSystem (required);
+}
+
+/// All numerical fields in metres or square metres in one orthonormal plane.
+/// Xi/zeta axes are normal to relative velocity. Rotate displacement and
+/// covariance together when changing basis; covariance is finite symmetric
+/// positive semidefinite. Probability algorithms requiring an inverse reject
+/// singular covariance unless their documented method supports it.
+table CQRPlaneGeometry {
+  XI_M:double;
+  ZETA_M:double;
+  VARIANCE_XI_M2:double;
+  COVARIANCE_XI_ZETA_M2:double;
+  VARIANCE_ZETA_M2:double;
+  COMBINED_RADIUS_M:double = 10;
+}
+
+table CQRProbabilityRequest {
+  GEOMETRY:CQRPlaneGeometry (required);
+  ALGORITHM:cqrProbabilityAlgorithm = FOSTER;
+}
+
+/// Report the actual algorithm and uncertainty origin. With
+/// MAXIMUM_PROBABILITY_ONLY, MAXIMUM_PROBABILITY is present and PROBABILITY is
+/// inapplicable: consumers must ignore its default zero. Never report a heuristic
+/// maximum as probability computed from supplied covariance. Otherwise
+/// PROBABILITY is unitless in [0,1]; supplied/synthesized covariance is explicit.
+table CQRProbabilityResult {
+  PROBABILITY:double;
+  ALGORITHM:cqrProbabilityAlgorithm = UNSPECIFIED;
+  CONVERGED:bool;
+  ITERATIONS:ulong;
+  MAXIMUM_PROBABILITY:double;
+  /// True when MAXIMUM_PROBABILITY carries a value; false means absent.
+  HAS_MAXIMUM_PROBABILITY:bool = false;
+  /// Explicitly squared distance d^T C^-1 d, dimensionless.
+  MAHALANOBIS_SQUARED:double;
+  /// True when MAHALANOBIS_SQUARED carries a value; false means absent.
+  HAS_MAHALANOBIS_SQUARED:bool = false;
+  UNCERTAINTY_SOURCE:cqrUncertaintyOrigin = UNSPECIFIED;
+}
+
+table CQRAlfanoRequest {
+  MISS_DISTANCE_M:double;
+  COMBINED_RADIUS_M:double = 10;
+}
+
+table CQRAlfanoResult {
+  MAXIMUM_PROBABILITY:double;
+  DILUTION_THRESHOLD_M:double;
+  SIGMA_STAR_M:double;
+}
+
+/// Typed replacement of a bare raw-text port. Content is UTF-8 with no BOM;
+/// XML declaration, if present, must agree. Content must be nonempty CDM KVN
+/// or CDM XML matching SERIALIZATION; reject UNSPECIFIED and other documents.
+/// Not an arbitrary JSON container.
+table CQRNativeDocument {
+  SERIALIZATION:cqrDocumentSyntax = UNSPECIFIED;
+  CONTENT:[ubyte] (required);
+}
+
+/// Order arrays index the supplied catalog stream in exact reception order.
+/// Ranges are half-open; absent endpoints select the full respective range.
+table CQRCatalogRequest {
+  PRIMARIES:[CQRObjectSource];
+  SECONDARIES:[CQRObjectSource];
+  CONTROLS:CQRScreeningControls (required);
+  EVALUATION_FRAME:RFMCoordinateSystem (required);
+  ORDERED_CATALOG_INDICES:[uint];
+  START_ORDER_INDEX:uint;
+  /// True when START_ORDER_INDEX carries a value; false means absent.
+  HAS_START_ORDER_INDEX:bool = false;
+  END_ORDER_INDEX:uint;
+  /// True when END_ORDER_INDEX carries a value; false means absent.
+  HAS_END_ORDER_INDEX:bool = false;
+  SECONDARY_START_ORDER_INDEX:uint;
+  /// True when SECONDARY_START_ORDER_INDEX carries a value; false means absent.
+  HAS_SECONDARY_START_ORDER_INDEX:bool = false;
+  SECONDARY_END_ORDER_INDEX:uint;
+  /// True when SECONDARY_END_ORDER_INDEX carries a value; false means absent.
+  HAS_SECONDARY_END_ORDER_INDEX:bool = false;
+  SELECTED_SOURCES:[CQRSourceProvenance];
+}
+
+/// Explicit summary when legacy source lacks sufficient data for a full CDM.
+table CQREvent {
+  PRIMARY_ID:string (required);
+  SECONDARY_ID:string (required);
+  PRIMARY_NAME:string;
+  SECONDARY_NAME:string;
+  PRIMARY_NORAD_ID:uint;
+  SECONDARY_NORAD_ID:uint;
+  TCA:TIMInstant (required);
+  MISS_DISTANCE_M:double;
+  RELATIVE_SPEED_M_S:double;
+  PROBABILITY:CQRProbabilityResult;
+  DILUTION_THRESHOLD_M:double;
+  /// True when DILUTION_THRESHOLD_M carries a value; false means absent.
+  HAS_DILUTION_THRESHOLD_M:bool = false;
+  /// Primary-object RTN components in m and m/s; omitted when unavailable.
+  RELATIVE_POSITION_RTN:FRMVector3;
+  RELATIVE_VELOCITY_RTN:FRMVector3;
+  /// One-sigma RTN values in metres, not covariance matrices.
+  PRIMARY_SIGMA_RTN_M:FRMVector3;
+  SECONDARY_SIGMA_RTN_M:FRMVector3;
+  PRIMARY_DAYS_SINCE_EPOCH:double;
+  /// True when PRIMARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  HAS_PRIMARY_DAYS_SINCE_EPOCH:bool = false;
+  SECONDARY_DAYS_SINCE_EPOCH:double;
+  /// True when SECONDARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  HAS_SECONDARY_DAYS_SINCE_EPOCH:bool = false;
+  /// Full standards-backed result when physically available.
+  CONJUNCTION_MESSAGE:CDM;
+  PRIMARY_STATE:PRWResidentState;
+  SECONDARY_STATE:PRWResidentState;
+  MAHALANOBIS_3D_SQUARED:double;
+  /// True when MAHALANOBIS_3D_SQUARED carries a value; false means absent.
+  HAS_MAHALANOBIS_3D_SQUARED:bool = false;
+  COMBINED_RADIUS_M:double;
+  /// True when COMBINED_RADIUS_M carries a value; false means absent.
+  HAS_COMBINED_RADIUS_M:bool = false;
+}
+
+table CQRScreeningStatistics {
+  TOTAL_OBJECTS:ulong;
+  PAIRS_SCREENED:ulong;
+  PAIRS_PREFILTERED:ulong;
+  KD_TREE_CANDIDATES:ulong;
+  TCA_REFINED:ulong;
+  CONJUNCTIONS_FOUND:ulong;
+  PROPAGATIONS:ulong;
+  FAILED_PAIRS:ulong;
+  /// No elapsed wall-clock field: host instrumentation records that separately.
+}
+
+/// Stable order by TCA then primary/secondary identity; ties retain original
+/// input-pair order. EVENT_OFFSET indexes this order across bounded chunks.
+/// PIV output cap, YIELDED and BACKLOG_REMAINING carry stream backpressure.
+table CQRCatalogResult {
+  OBJECTS_PARSED:ulong;
+  CONJUNCTIONS_FOUND:ulong;
+  EVENTS:[CQREvent];
+  STATISTICS:CQRScreeningStatistics;
+  EVENT_OFFSET:ulong;
+  FINAL_CHUNK:bool = true;
+}
+
+/// Resident index construction reuses canonical sources, samples and PPE.
+/// SAMPLED_STATES consumes sampled OEM records in SOURCES[].EPHEMERIS;
+/// POLYNOMIAL_SEGMENTS consumes SEGMENTS/PPE. Handles are validated against
+/// INSTANCE identity/generation; they are never persisted process addresses.
+table CQRIndexRequest {
+  INSTANCE:PRWInstance (required);
+  CATALOG_HANDLE:uint;
+  SOURCE_HANDLES:[uint];
+  SEGMENT_SET_HANDLE:uint;
+  PRIMARY_SOURCE_HANDLES:[uint];
+  INDEX_CONTENT:cqrIndexRepresentation = UNSPECIFIED;
+  REFINEMENT_MODE:cqrRefinementStrategy = UNSPECIFIED;
+  SOURCES:[CQRObjectSource];
+  SEGMENTS:PRWDescribeResult;
+}
+
+table CQRIndexResult {
+  INSTANCE:PRWInstance (required);
+  SCREENING_INDEX_HANDLE:uint;
+  SOURCE_COUNT:ulong;
+  CANDIDATE_PAIR_COUNT:ulong;
+}
+
+table CQRWindowRequest {
+  INSTANCE:PRWInstance (required);
+  SCREENING_INDEX_HANDLE:uint;
+  CONTROLS:CQRScreeningControls (required);
+  EVALUATION_FRAME:RFMCoordinateSystem (required);
+}
+
+table CQRDestroyRequest {
+  INSTANCE:PRWInstance (required);
+  SCREENING_INDEX_HANDLE:uint;
+}
+
+table CQRVersionResult {
+  VERSION:string (required);
+}
+
+/// Conjunction Query and Result — pair/catalog screening, encounter-plane
+/// probability, typed native documents and resident screening-index control.
+/// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
+table CQR {
+  PAIR_REQUEST:CQRPairRequest;
+  CATALOG_REQUEST:CQRCatalogRequest;
+  PROBABILITY_REQUEST:CQRProbabilityRequest;
+  PROBABILITY_RESULT:CQRProbabilityResult;
+  ALFANO_REQUEST:CQRAlfanoRequest;
+  ALFANO_RESULT:CQRAlfanoResult;
+  EVENT_RESULT:CQREvent;
+  TCA_RESULT:TIMInstant;
+  CATALOG_RESULT:CQRCatalogResult;
+  NATIVE_DOCUMENT:CQRNativeDocument;
+  INDEX_REQUEST:CQRIndexRequest;
+  INDEX_RESULT:CQRIndexResult;
+  WINDOW_REQUEST:CQRWindowRequest;
+  DESTROY_REQUEST:CQRDestroyRequest;
+  VERSION_QUERY:bool = false;
+  VERSION_RESULT:CQRVersionResult;
+}
+root_type CQR;
+file_identifier "$CQR";

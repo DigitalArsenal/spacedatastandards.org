@@ -17,8 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Propagator Runtime Wire — envelope that carries either an init request,
- * a batch request, or a batch response across a runtime boundary.
+ * Exactly one arm per envelope. Existing three arms keep their ordinals.
  */
 @Suppress("unused")
 class PRW : Table() {
@@ -57,6 +56,140 @@ class PRW : Table() {
             null
         }
     }
+    /**
+     * Appended portable arms; each method names its permitted arm.
+     */
+    val executionRequest : PRWExecutionRequest? get() = executionRequest(PRWExecutionRequest())
+    fun executionRequest(obj: PRWExecutionRequest) : PRWExecutionRequest? {
+        val o = __offset(10)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val executionResult : PRWExecutionResult? get() = executionResult(PRWExecutionResult())
+    fun executionResult(obj: PRWExecutionResult) : PRWExecutionResult? {
+        val o = __offset(12)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val residentState : PRWResidentState? get() = residentState(PRWResidentState())
+    fun residentState(obj: PRWResidentState) : PRWResidentState? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val residentRequest : PRWResidentRequest? get() = residentRequest(PRWResidentRequest())
+    fun residentRequest(obj: PRWResidentRequest) : PRWResidentRequest? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val prepareRequest : PRWPrepareRequest? get() = prepareRequest(PRWPrepareRequest())
+    fun prepareRequest(obj: PRWPrepareRequest) : PRWPrepareRequest? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val prepareResult : PRWPrepareResult? get() = prepareResult(PRWPrepareResult())
+    fun prepareResult(obj: PRWPrepareResult) : PRWPrepareResult? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val describeRequest : PRWDescribeRequest? get() = describeRequest(PRWDescribeRequest())
+    fun describeRequest(obj: PRWDescribeRequest) : PRWDescribeRequest? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val describeResult : PRWDescribeResult? get() = describeResult(PRWDescribeResult())
+    fun describeResult(obj: PRWDescribeResult) : PRWDescribeResult? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val nativeInput : PRWNativeInput? get() = nativeInput(PRWNativeInput())
+    fun nativeInput(obj: PRWNativeInput) : PRWNativeInput? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val ephemerisRequest : PRWEphemerisRequest? get() = ephemerisRequest(PRWEphemerisRequest())
+    fun ephemerisRequest(obj: PRWEphemerisRequest) : PRWEphemerisRequest? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val ephemerisResult : PRWEphemerisResult? get() = ephemerisResult(PRWEphemerisResult())
+    fun ephemerisResult(obj: PRWEphemerisResult) : PRWEphemerisResult? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val atmosphereRequest : PRWAtmosphereRequest? get() = atmosphereRequest(PRWAtmosphereRequest())
+    fun atmosphereRequest(obj: PRWAtmosphereRequest) : PRWAtmosphereRequest? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val atmosphereResult : PRWAtmosphereResult? get() = atmosphereResult(PRWAtmosphereResult())
+    fun atmosphereResult(obj: PRWAtmosphereResult) : PRWAtmosphereResult? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val versionQuery : Boolean
+        get() {
+            val o = __offset(36)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val versionResult : PRWVersionResult? get() = versionResult(PRWVersionResult())
+    fun versionResult(obj: PRWVersionResult) : PRWVersionResult? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRW(_bb: ByteBuffer): PRW = getRootAsPRW(_bb, PRW())
@@ -65,17 +198,47 @@ class PRW : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PRWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRW")
-        fun createPRW(builder: FlatBufferBuilder, initOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int) : Int {
-            builder.startTable(3)
+        fun createPRW(builder: FlatBufferBuilder, initOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, executionRequestOffset: Int, executionResultOffset: Int, residentStateOffset: Int, residentRequestOffset: Int, prepareRequestOffset: Int, prepareResultOffset: Int, describeRequestOffset: Int, describeResultOffset: Int, nativeInputOffset: Int, ephemerisRequestOffset: Int, ephemerisResultOffset: Int, atmosphereRequestOffset: Int, atmosphereResultOffset: Int, versionQuery: Boolean, versionResultOffset: Int) : Int {
+            builder.startTable(18)
+            addVERSIONRESULT(builder, versionResultOffset)
+            addATMOSPHERERESULT(builder, atmosphereResultOffset)
+            addATMOSPHEREREQUEST(builder, atmosphereRequestOffset)
+            addEPHEMERISRESULT(builder, ephemerisResultOffset)
+            addEPHEMERISREQUEST(builder, ephemerisRequestOffset)
+            addNATIVEINPUT(builder, nativeInputOffset)
+            addDESCRIBERESULT(builder, describeResultOffset)
+            addDESCRIBEREQUEST(builder, describeRequestOffset)
+            addPREPARERESULT(builder, prepareResultOffset)
+            addPREPAREREQUEST(builder, prepareRequestOffset)
+            addRESIDENTREQUEST(builder, residentRequestOffset)
+            addRESIDENTSTATE(builder, residentStateOffset)
+            addEXECUTIONRESULT(builder, executionResultOffset)
+            addEXECUTIONREQUEST(builder, executionRequestOffset)
             addBATCHRESPONSE(builder, batchResponseOffset)
             addBATCHREQUEST(builder, batchRequestOffset)
             addINIT(builder, initOffset)
+            addVERSIONQUERY(builder, versionQuery)
             return endPRW(builder)
         }
-        fun startPRW(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startPRW(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addINIT(builder: FlatBufferBuilder, init: Int) = builder.addOffset(0, init, 0)
         fun addBATCHREQUEST(builder: FlatBufferBuilder, batchRequest: Int) = builder.addOffset(1, batchRequest, 0)
         fun addBATCHRESPONSE(builder: FlatBufferBuilder, batchResponse: Int) = builder.addOffset(2, batchResponse, 0)
+        fun addEXECUTIONREQUEST(builder: FlatBufferBuilder, executionRequest: Int) = builder.addOffset(3, executionRequest, 0)
+        fun addEXECUTIONRESULT(builder: FlatBufferBuilder, executionResult: Int) = builder.addOffset(4, executionResult, 0)
+        fun addRESIDENTSTATE(builder: FlatBufferBuilder, residentState: Int) = builder.addOffset(5, residentState, 0)
+        fun addRESIDENTREQUEST(builder: FlatBufferBuilder, residentRequest: Int) = builder.addOffset(6, residentRequest, 0)
+        fun addPREPAREREQUEST(builder: FlatBufferBuilder, prepareRequest: Int) = builder.addOffset(7, prepareRequest, 0)
+        fun addPREPARERESULT(builder: FlatBufferBuilder, prepareResult: Int) = builder.addOffset(8, prepareResult, 0)
+        fun addDESCRIBEREQUEST(builder: FlatBufferBuilder, describeRequest: Int) = builder.addOffset(9, describeRequest, 0)
+        fun addDESCRIBERESULT(builder: FlatBufferBuilder, describeResult: Int) = builder.addOffset(10, describeResult, 0)
+        fun addNATIVEINPUT(builder: FlatBufferBuilder, nativeInput: Int) = builder.addOffset(11, nativeInput, 0)
+        fun addEPHEMERISREQUEST(builder: FlatBufferBuilder, ephemerisRequest: Int) = builder.addOffset(12, ephemerisRequest, 0)
+        fun addEPHEMERISRESULT(builder: FlatBufferBuilder, ephemerisResult: Int) = builder.addOffset(13, ephemerisResult, 0)
+        fun addATMOSPHEREREQUEST(builder: FlatBufferBuilder, atmosphereRequest: Int) = builder.addOffset(14, atmosphereRequest, 0)
+        fun addATMOSPHERERESULT(builder: FlatBufferBuilder, atmosphereResult: Int) = builder.addOffset(15, atmosphereResult, 0)
+        fun addVERSIONQUERY(builder: FlatBufferBuilder, versionQuery: Boolean) = builder.addBoolean(16, versionQuery, false)
+        fun addVERSIONRESULT(builder: FlatBufferBuilder, versionResult: Int) = builder.addOffset(17, versionResult, 0)
         fun endPRW(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -1,6 +1,12 @@
-// Hash: 486144ff54a4992e7e03803b3382f82a6b434835373fd39fcb48e4650fc80915
-// Version: 0.0.2
+// Hash: 9fbedacfd84173543132a156605e3c9aaa5c2784791c4f59dd276acacbf3615e
+// Version: 1.219.0
 // -----------------------------------END_HEADER
+include "../FRM/main.fbs";
+include "../TIM/main.fbs";
+include "../PCE/main.fbs";
+include "../PPE/main.fbs";
+include "../NCD/main.fbs";
+
 /// Propagator Runtime Wire — arena-addressed init / batch request / batch
 /// response envelopes for orbital propagators that produce state vectors
 /// into a shared memory arena.
@@ -163,10 +169,390 @@ table PRWBatchResponse {
 
 /// Propagator Runtime Wire — envelope that carries either an init request,
 /// a batch request, or a batch response across a runtime boundary.
+/// New numeric choices are append-only and are not legacy C++ enum ordinals.
+enum prwSolverAlgorithm : ubyte {
+  UNSPECIFIED = 0, RK4 = 1, RKF45 = 2, RKF78 = 3, RK78 = 4,
+  RKDP87 = 5, ABM = 6, BS = 7, COWELL = 8, ENCKE = 9,
+  EQUINOCTIAL_VOP = 10
+}
+enum prwGravitySelection : ubyte {
+  INFER_FLAGS = 0, POINT_MASS = 1, J2_ONLY = 2, J2_TO_J4 = 3,
+  SPHERICAL_HARMONICS = 4, EGM2008 = 5
+}
+enum prwAtmosphereFamily : ubyte {
+  UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,
+  USSA1976 = 3, HARRIS_PRIESTER = 4
+}
+enum prwDerivativeTechnique : ubyte {
+  UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2
+}
+enum prwDensityTreatment : ubyte {
+  UNSPECIFIED = 0, NEGLECTED = 1, FINITE_DIFFERENCE = 2
+}
+enum prwSteeringBasis : ubyte {
+  UNSPECIFIED = 0, INTEGRATION_FRAME = 1, RTN_AXES = 2, VNC_AXES = 3,
+  ALONG_VELOCITY = 4, OPPOSITE_VELOCITY = 5
+}
+enum prwThrustPrescription : ubyte {
+  UNSPECIFIED = 0, FORCE = 1, ACCELERATION = 2
+}
+enum prwQualityEvidence : ubyte {
+  UNMEASURED = 0, SAMPLED_RESIDUAL = 1, PROVEN_BOUND = 2
+}
+enum prwDensitySpecies : ubyte {
+  UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,
+  MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,
+  ANOMALOUS_OXYGEN = 8
+}
+
+/// Instance identity is host-provided, opaque, and not a physical quantity.
+table PRWInstance {
+  MODULE_ID:string (required);
+  INSTANCE_ID:string (required);
+  /// Incremented on reinitialization or configuration invalidation.
+  GENERATION:ulong;
+}
+
+/// Units are SI. A scalar legacy tolerance must be expanded by the adapter.
+table PRWIntegratorSettings {
+  ALGORITHM:prwSolverAlgorithm = UNSPECIFIED;
+  INITIAL_STEP_SECONDS:double = 60;
+  MINIMUM_STEP_SECONDS:double = 1;
+  MAXIMUM_STEP_SECONDS:double = 3600;
+  /// Six or seven positive tolerances, respectively m, m/s and optional kg.
+  ABSOLUTE_TOLERANCES:[double] (required);
+  RELATIVE_TOLERANCE:double = 1e-12;
+  MAXIMUM_STEPS:uint = 100000;
+}
+
+/// Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
+table PRWSpaceWeather {
+  EPOCH:TIMInstant (required);
+  F107:double = 150;
+  F107_AVERAGE:double = 150;
+  /// Conventional daily Ap and three-hour Kp index values; not accelerations.
+  AP_INDEX:double = 15;
+  KP_INDEX:double = 3;
+}
+
+/// Executable subset currently reachable through HPOP invoke. No implied
+/// support for coefficients, drag models or bodies the provider cannot supply.
+table PRWForceConfiguration {
+  GRAVITY_CHOICE:prwGravitySelection = INFER_FLAGS;
+  ENABLE_POINT_MASS:bool = true;
+  /// m3/s2; required positive when a central gravity term is enabled.
+  GRAVITATIONAL_PARAMETER:double;
+  ENABLE_J2:bool = true;
+  ENABLE_J3:bool = false;
+  ENABLE_J4:bool = false;
+  ENABLE_HIGHER_ZONALS:bool = false;
+  /// Optional truncations; absent selects the explicitly reported model default.
+  MAXIMUM_DEGREE:ushort;
+  /// True when MAXIMUM_DEGREE carries a value; false means absent.
+  HAS_MAXIMUM_DEGREE:bool = false;
+  MAXIMUM_ORDER:ushort;
+  /// True when MAXIMUM_ORDER carries a value; false means absent.
+  HAS_MAXIMUM_ORDER:bool = false;
+  ENABLE_THIRD_BODY:bool = false;
+  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
+  THIRD_BODY_IDS:[int];
+  ENABLE_SRP:bool = false;
+  ENABLE_DRAG:bool = false;
+  INITIAL_MASS_KG:double = 1000;
+  AREA_M2:double = 10;
+  REFLECTIVITY_COEFFICIENT:double = 1.5;
+  DRAG_COEFFICIENT:double = 2.2;
+  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;
+  WEATHER:PRWSpaceWeather;
+  /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+  EPHEMERIS_SOURCE:string (required);
+}
+
+/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.
+/// Covariance entries have row*column units; STM entries row/column units.
+table PRWStateMatrix {
+  DIMENSION:ubyte;
+  VALUES:[double] (required);
+}
+
+/// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
+table PRWResidentState {
+  INSTANCE:PRWInstance;
+  ENTITY_HANDLE:uint;
+  CATALOG_NUMBER:uint;
+  OBJECT_ID:string;
+  STATE:FRMStateVector (required);
+  COORDINATE_SYSTEM:RFMCoordinateSystem (required);
+  COVARIANCE:PRWStateMatrix;
+  /// Optional initial dynamical mass in kg; distinct from a missing mass.
+  MASS_KG:double;
+  /// True when MASS_KG carries a value; false means absent.
+  HAS_MASS_KG:bool = false;
+  /// Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy
+  /// ignored/underspecified coefficients; require a caller-provided mapping.
+  DRAG_AREA_OVER_MASS_M2_KG:double;
+  /// True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_M2_KG:bool = false;
+  SRP_AREA_OVER_MASS_M2_KG:double;
+  /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_SRP_AREA_OVER_MASS_M2_KG:bool = false;
+  VALID:bool = true;
+}
+
+/// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
+table PRWImpulse {
+  EPOCH:TIMInstant (required);
+  DELTA_V:FRMVector3 (required);
+  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;
+}
+
+/// Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
+table PRWThrottlePoint {
+  ELAPSED_SECONDS:double;
+  FRACTION:double;
+}
+
+/// Scheduled time gates an optional condition. At least one must be present.
+table PRWBurnBoundary {
+  ELAPSED_SECONDS:double;
+  /// True when ELAPSED_SECONDS carries a value; false means absent.
+  HAS_ELAPSED_SECONDS:bool = false;
+  /// SI PCE predicate; direction and goal tolerance explicitly populated.
+  CONDITION:PCEParameterCondition;
+}
+
+/// Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
+/// VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
+table PRWFiniteBurn {
+  START:PRWBurnBoundary (required);
+  STOP:PRWBurnBoundary (required);
+  THRUST_LAW:prwThrustPrescription = UNSPECIFIED;
+  FORCE_NEWTONS:double;
+  /// True when FORCE_NEWTONS carries a value; false means absent.
+  HAS_FORCE_NEWTONS:bool = false;
+  ACCELERATION_M_S2:double;
+  /// True when ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_ACCELERATION_M_S2:bool = false;
+  SPECIFIC_IMPULSE_SECONDS:double;
+  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;
+  /// Dimensionless components; normalized after adding elapsed*time rate.
+  DIRECTION:FRMVector3;
+  /// Direction-component change per second, not radians/second.
+  DIRECTION_RATE:FRMVector3;
+  THROTTLE:[PRWThrottlePoint];
+}
+
+/// Fixed endpoint propagation. Provider selected by the host's connected port.
+table PRWExecutionRequest {
+  INITIAL:PRWResidentState (required);
+  TARGET_EPOCH:TIMInstant (required);
+  INTEGRATOR:PRWIntegratorSettings (required);
+  FORCES:PRWForceConfiguration (required);
+  INCLUDE_STM:bool = false;
+  STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;
+  DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;
+  INITIAL_COVARIANCE:PRWStateMatrix;
+  INITIAL_MASS_COVARIANCE:PRWStateMatrix;
+  SAMPLE_EPOCHS:[TIMInstant];
+  IMPULSES:[PRWImpulse];
+  /// Explicitly selects 7-state integration even if FINITE_BURNS is empty.
+  INCLUDE_MASS_DYNAMICS:bool = false;
+  FINITE_BURNS:[PRWFiniteBurn];
+}
+
+/// Burn times absent until reached; zero means an actual edge at initial epoch.
+table PRWBurnReport {
+  BURN_INDEX:uint;
+  STARTED:bool;
+  STOPPED:bool;
+  START_BY_EVENT:bool;
+  STOP_BY_EVENT:bool;
+  START_SECONDS:double;
+  /// True when START_SECONDS carries a value; false means absent.
+  HAS_START_SECONDS:bool = false;
+  STOP_SECONDS:double;
+  /// True when STOP_SECONDS carries a value; false means absent.
+  HAS_STOP_SECONDS:bool = false;
+  START_EPOCH:TIMInstant;
+  STOP_EPOCH:TIMInstant;
+  /// Integral of thrust acceleration magnitude, m/s; not vector net delta-v.
+  DELTA_V_M_S:double;
+  PROPELLANT_KG:double;
+}
+
+table PRWPropagationSample {
+  STATE:PRWResidentState (required);
+  /// Both STMs cumulative from request initial epoch; SI state units.
+  STM:PRWStateMatrix;
+  MASS_STM:PRWStateMatrix;
+  COVARIANCE:PRWStateMatrix;
+  MASS_COVARIANCE:PRWStateMatrix;
+  ACCEPTED_STEPS:ulong;
+  REJECTED_STEPS:ulong;
+  BURNS:[PRWBurnReport];
+}
+
+table PRWExecutionResult {
+  FINAL_SAMPLE:PRWPropagationSample (required);
+  SAMPLES:[PRWPropagationSample];
+  ELAPSED_SECONDS:double;
+  EPHEMERIS_SOURCE:string (required);
+  STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;
+  DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;
+}
+
+/// Portable batch request: no output pointer; state records returned via TAB.
+table PRWResidentRequest {
+  INSTANCE:PRWInstance (required);
+  TARGET_EPOCH:TIMInstant (required);
+  ENTITY_HANDLES:[uint];
+  MAXIMUM_COUNT:uint;
+  TARGET_COORDINATE_SYSTEM:RFMCoordinateSystem (required);
+}
+
+/// All epochs explicit; duration seconds >=0; empty handles means all resident.
+table PRWPrepareRequest {
+  INSTANCE:PRWInstance (required);
+  CATALOG_HANDLE:uint;
+  SOURCE_HANDLES:[uint];
+  START_EPOCH:TIMInstant (required);
+  DURATION_SECONDS:double;
+  /// Provider-advertised profile name; unrecognized nonempty values fail.
+  PROFILE:string;
+}
+
+table PRWFitQuality {
+  EVIDENCE_KIND:prwQualityEvidence = UNMEASURED;
+  /// SI metres and metres/second; absent when UNMEASURED.
+  MAXIMUM_POSITION_ERROR_M:double;
+  /// True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.
+  HAS_MAXIMUM_POSITION_ERROR_M:bool = false;
+  MAXIMUM_VELOCITY_ERROR_M_S:double;
+  /// True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.
+  HAS_MAXIMUM_VELOCITY_ERROR_M_S:bool = false;
+  METHOD:string;
+  REFERENCE_CONTENT_ID:string;
+}
+
+table PRWPrepareResult {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  COVERAGE_COMPLETE:bool;
+  QUALITY:PRWFitQuality (required);
+}
+
+table PRWDescribeRequest {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  SOURCE_HANDLES:[uint];
+}
+
+/// Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
+table PRWTrajectorySource {
+  SOURCE_HANDLE:uint;
+  OBJECT_ID:string;
+  EPHEMERIS:PPE (required);
+  /// One quality record per PPE.POSITION_RECORDS entry, same order.
+  SEGMENT_QUALITY:[PRWFitQuality];
+}
+
+table PRWDescribeResult {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  SOURCES:[PRWTrajectorySource];
+  /// Chunking indexes SOURCES; no partial polynomial coefficient vector.
+  SOURCE_OFFSET:ulong;
+  FINAL_CHUNK:bool = true;
+}
+
+/// Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
+table PRWNativeInput {
+  DESCRIPTOR:NCD (required);
+  /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.
+  CONTENT:[ubyte] (required);
+}
+
+/// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
+table PRWEphemerisRequest {
+  EPOCH:TIMInstant (required);
+  TARGET_NAIF_ID:int;
+  CENTER_NAIF_ID:int = 399;
+}
+
+table PRWEphemerisResult {
+  TARGET_NAIF_ID:int;
+  CENTER_NAIF_ID:int;
+  /// Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.
+  STATE:PRWResidentState (required);
+  EPHEMERIS_SOURCE:string (required);
+}
+
+/// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
+table PRWAtmosphereRequest {
+  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;
+  EPOCH:TIMInstant (required);
+  ALTITUDE_M:double;
+  LATITUDE_RAD:double;
+  LONGITUDE_RAD:double;
+  /// Optional local solar time; hours [0,24); absent derives from UTC/longitude.
+  LOCAL_SOLAR_TIME_HOURS:double;
+  /// True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.
+  HAS_LOCAL_SOLAR_TIME_HOURS:bool = false;
+  F107:double = 150;
+  F107_AVERAGE:double = 150;
+  AP_INDEX:double = 4;
+  INCLUDE_ANOMALOUS_OXYGEN:bool = false;
+}
+
+table PRWSpeciesDensity {
+  CONSTITUENT:prwDensitySpecies = UNSPECIFIED;
+  NUMBER_PER_M3:double;
+}
+
+table PRWAtmosphereResult {
+  ATMOSPHERE_MODEL:prwAtmosphereFamily = UNSPECIFIED;
+  VARIANT:string;
+  ALTITUDE_M:double;
+  DENSITY_KG_M3:double;
+  TEMPERATURE_K:double;
+  /// True when TEMPERATURE_K carries a value; false means absent.
+  HAS_TEMPERATURE_K:bool = false;
+  EXOSPHERIC_TEMPERATURE_K:double;
+  /// True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.
+  HAS_EXOSPHERIC_TEMPERATURE_K:bool = false;
+  SCALE_HEIGHT_M:double;
+  /// True when SCALE_HEIGHT_M carries a value; false means absent.
+  HAS_SCALE_HEIGHT_M:bool = false;
+  NUMBER_DENSITIES:[PRWSpeciesDensity];
+}
+
+/// Runtime diagnostic version; PLG remains the authoritative manifest identity.
+table PRWVersionResult {
+  VERSION:string (required);
+  MODULE_ID:string (required);
+}
+
+/// Exactly one arm per envelope. Existing three arms keep their ordinals.
 table PRW {
   INIT:PRWInit;
   BATCH_REQUEST:PRWBatchRequest;
   BATCH_RESPONSE:PRWBatchResponse;
+  /// Appended portable arms; each method names its permitted arm.
+  EXECUTION_REQUEST:PRWExecutionRequest;
+  EXECUTION_RESULT:PRWExecutionResult;
+  RESIDENT_STATE:PRWResidentState;
+  RESIDENT_REQUEST:PRWResidentRequest;
+  PREPARE_REQUEST:PRWPrepareRequest;
+  PREPARE_RESULT:PRWPrepareResult;
+  DESCRIBE_REQUEST:PRWDescribeRequest;
+  DESCRIBE_RESULT:PRWDescribeResult;
+  NATIVE_INPUT:PRWNativeInput;
+  EPHEMERIS_REQUEST:PRWEphemerisRequest;
+  EPHEMERIS_RESULT:PRWEphemerisResult;
+  ATMOSPHERE_REQUEST:PRWAtmosphereRequest;
+  ATMOSPHERE_RESULT:PRWAtmosphereResult;
+  VERSION_QUERY:bool = false;
+  VERSION_RESULT:PRWVersionResult;
 }
 
 root_type PRW;

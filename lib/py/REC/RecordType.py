@@ -265,6 +265,7 @@ class RecordType(object):
     WXF = 245
     CLM = 246
     GCT = 247
+    CQR = 248
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -1011,4 +1012,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.GCT:
         import GCT
         return GCT.GCTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CQR:
+        import CQR
+        return CQR.CQRT.InitFromBuf(table.Bytes, table.Pos)
     return None

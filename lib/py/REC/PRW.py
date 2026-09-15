@@ -6,8 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Propagator Runtime Wire — envelope that carries either an init request,
-# a batch request, or a batch response across a runtime boundary.
+# Exactly one arm per envelope. Existing three arms keep their ordinals.
 class PRW(object):
     __slots__ = ['_tab']
 
@@ -63,8 +62,170 @@ class PRW(object):
             return obj
         return None
 
+    # Appended portable arms; each method names its permitted arm.
+    # PRW
+    def EXECUTION_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWExecutionRequest import PRWExecutionRequest
+            obj = PRWExecutionRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def EXECUTION_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWExecutionResult import PRWExecutionResult
+            obj = PRWExecutionResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def RESIDENT_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWResidentState import PRWResidentState
+            obj = PRWResidentState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def RESIDENT_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWResidentRequest import PRWResidentRequest
+            obj = PRWResidentRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def PREPARE_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWPrepareRequest import PRWPrepareRequest
+            obj = PRWPrepareRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def PREPARE_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWPrepareResult import PRWPrepareResult
+            obj = PRWPrepareResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def DESCRIBE_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWDescribeRequest import PRWDescribeRequest
+            obj = PRWDescribeRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def DESCRIBE_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWDescribeResult import PRWDescribeResult
+            obj = PRWDescribeResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def NATIVE_INPUT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWNativeInput import PRWNativeInput
+            obj = PRWNativeInput()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def EPHEMERIS_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWEphemerisRequest import PRWEphemerisRequest
+            obj = PRWEphemerisRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def EPHEMERIS_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWEphemerisResult import PRWEphemerisResult
+            obj = PRWEphemerisResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def ATMOSPHERE_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWAtmosphereRequest import PRWAtmosphereRequest
+            obj = PRWAtmosphereRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def ATMOSPHERE_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWAtmosphereResult import PRWAtmosphereResult
+            obj = PRWAtmosphereResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def VERSION_QUERY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # PRW
+    def VERSION_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWVersionResult import PRWVersionResult
+            obj = PRWVersionResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(18)
 
 def Start(builder):
     PRWStart(builder)
@@ -87,15 +248,119 @@ def PRWAddBATCH_RESPONSE(builder, BATCH_RESPONSE):
 def AddBATCH_RESPONSE(builder, BATCH_RESPONSE):
     PRWAddBATCH_RESPONSE(builder, BATCH_RESPONSE)
 
+def PRWAddEXECUTION_REQUEST(builder, EXECUTION_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EXECUTION_REQUEST), 0)
+
+def AddEXECUTION_REQUEST(builder, EXECUTION_REQUEST):
+    PRWAddEXECUTION_REQUEST(builder, EXECUTION_REQUEST)
+
+def PRWAddEXECUTION_RESULT(builder, EXECUTION_RESULT):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EXECUTION_RESULT), 0)
+
+def AddEXECUTION_RESULT(builder, EXECUTION_RESULT):
+    PRWAddEXECUTION_RESULT(builder, EXECUTION_RESULT)
+
+def PRWAddRESIDENT_STATE(builder, RESIDENT_STATE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(RESIDENT_STATE), 0)
+
+def AddRESIDENT_STATE(builder, RESIDENT_STATE):
+    PRWAddRESIDENT_STATE(builder, RESIDENT_STATE)
+
+def PRWAddRESIDENT_REQUEST(builder, RESIDENT_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RESIDENT_REQUEST), 0)
+
+def AddRESIDENT_REQUEST(builder, RESIDENT_REQUEST):
+    PRWAddRESIDENT_REQUEST(builder, RESIDENT_REQUEST)
+
+def PRWAddPREPARE_REQUEST(builder, PREPARE_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PREPARE_REQUEST), 0)
+
+def AddPREPARE_REQUEST(builder, PREPARE_REQUEST):
+    PRWAddPREPARE_REQUEST(builder, PREPARE_REQUEST)
+
+def PRWAddPREPARE_RESULT(builder, PREPARE_RESULT):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PREPARE_RESULT), 0)
+
+def AddPREPARE_RESULT(builder, PREPARE_RESULT):
+    PRWAddPREPARE_RESULT(builder, PREPARE_RESULT)
+
+def PRWAddDESCRIBE_REQUEST(builder, DESCRIBE_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIBE_REQUEST), 0)
+
+def AddDESCRIBE_REQUEST(builder, DESCRIBE_REQUEST):
+    PRWAddDESCRIBE_REQUEST(builder, DESCRIBE_REQUEST)
+
+def PRWAddDESCRIBE_RESULT(builder, DESCRIBE_RESULT):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIBE_RESULT), 0)
+
+def AddDESCRIBE_RESULT(builder, DESCRIBE_RESULT):
+    PRWAddDESCRIBE_RESULT(builder, DESCRIBE_RESULT)
+
+def PRWAddNATIVE_INPUT(builder, NATIVE_INPUT):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(NATIVE_INPUT), 0)
+
+def AddNATIVE_INPUT(builder, NATIVE_INPUT):
+    PRWAddNATIVE_INPUT(builder, NATIVE_INPUT)
+
+def PRWAddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_REQUEST), 0)
+
+def AddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUEST):
+    PRWAddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUEST)
+
+def PRWAddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULT):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_RESULT), 0)
+
+def AddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULT):
+    PRWAddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULT)
+
+def PRWAddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERE_REQUEST), 0)
+
+def AddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUEST):
+    PRWAddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUEST)
+
+def PRWAddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULT):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERE_RESULT), 0)
+
+def AddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULT):
+    PRWAddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULT)
+
+def PRWAddVERSION_QUERY(builder, VERSION_QUERY):
+    builder.PrependBoolSlot(16, VERSION_QUERY, 0)
+
+def AddVERSION_QUERY(builder, VERSION_QUERY):
+    PRWAddVERSION_QUERY(builder, VERSION_QUERY)
+
+def PRWAddVERSION_RESULT(builder, VERSION_RESULT):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(VERSION_RESULT), 0)
+
+def AddVERSION_RESULT(builder, VERSION_RESULT):
+    PRWAddVERSION_RESULT(builder, VERSION_RESULT)
+
 def PRWEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PRWEnd(builder)
 
+import PRWAtmosphereRequest
+import PRWAtmosphereResult
 import PRWBatchRequest
 import PRWBatchResponse
+import PRWDescribeRequest
+import PRWDescribeResult
+import PRWEphemerisRequest
+import PRWEphemerisResult
+import PRWExecutionRequest
+import PRWExecutionResult
 import PRWInit
+import PRWNativeInput
+import PRWPrepareRequest
+import PRWPrepareResult
+import PRWResidentRequest
+import PRWResidentState
+import PRWVersionResult
 try:
     from typing import Optional
 except:
@@ -109,10 +374,40 @@ class PRWT(object):
         INIT = None,
         BATCH_REQUEST = None,
         BATCH_RESPONSE = None,
+        EXECUTION_REQUEST = None,
+        EXECUTION_RESULT = None,
+        RESIDENT_STATE = None,
+        RESIDENT_REQUEST = None,
+        PREPARE_REQUEST = None,
+        PREPARE_RESULT = None,
+        DESCRIBE_REQUEST = None,
+        DESCRIBE_RESULT = None,
+        NATIVE_INPUT = None,
+        EPHEMERIS_REQUEST = None,
+        EPHEMERIS_RESULT = None,
+        ATMOSPHERE_REQUEST = None,
+        ATMOSPHERE_RESULT = None,
+        VERSION_QUERY = False,
+        VERSION_RESULT = None,
     ):
         self.INIT = INIT  # type: Optional[PRWInit.PRWInitT]
         self.BATCH_REQUEST = BATCH_REQUEST  # type: Optional[PRWBatchRequest.PRWBatchRequestT]
         self.BATCH_RESPONSE = BATCH_RESPONSE  # type: Optional[PRWBatchResponse.PRWBatchResponseT]
+        self.EXECUTION_REQUEST = EXECUTION_REQUEST  # type: Optional[PRWExecutionRequest.PRWExecutionRequestT]
+        self.EXECUTION_RESULT = EXECUTION_RESULT  # type: Optional[PRWExecutionResult.PRWExecutionResultT]
+        self.RESIDENT_STATE = RESIDENT_STATE  # type: Optional[PRWResidentState.PRWResidentStateT]
+        self.RESIDENT_REQUEST = RESIDENT_REQUEST  # type: Optional[PRWResidentRequest.PRWResidentRequestT]
+        self.PREPARE_REQUEST = PREPARE_REQUEST  # type: Optional[PRWPrepareRequest.PRWPrepareRequestT]
+        self.PREPARE_RESULT = PREPARE_RESULT  # type: Optional[PRWPrepareResult.PRWPrepareResultT]
+        self.DESCRIBE_REQUEST = DESCRIBE_REQUEST  # type: Optional[PRWDescribeRequest.PRWDescribeRequestT]
+        self.DESCRIBE_RESULT = DESCRIBE_RESULT  # type: Optional[PRWDescribeResult.PRWDescribeResultT]
+        self.NATIVE_INPUT = NATIVE_INPUT  # type: Optional[PRWNativeInput.PRWNativeInputT]
+        self.EPHEMERIS_REQUEST = EPHEMERIS_REQUEST  # type: Optional[PRWEphemerisRequest.PRWEphemerisRequestT]
+        self.EPHEMERIS_RESULT = EPHEMERIS_RESULT  # type: Optional[PRWEphemerisResult.PRWEphemerisResultT]
+        self.ATMOSPHERE_REQUEST = ATMOSPHERE_REQUEST  # type: Optional[PRWAtmosphereRequest.PRWAtmosphereRequestT]
+        self.ATMOSPHERE_RESULT = ATMOSPHERE_RESULT  # type: Optional[PRWAtmosphereResult.PRWAtmosphereResultT]
+        self.VERSION_QUERY = VERSION_QUERY  # type: bool
+        self.VERSION_RESULT = VERSION_RESULT  # type: Optional[PRWVersionResult.PRWVersionResultT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -141,6 +436,35 @@ class PRWT(object):
             self.BATCH_REQUEST = PRWBatchRequest.PRWBatchRequestT.InitFromObj(PRW.BATCH_REQUEST())
         if PRW.BATCH_RESPONSE() is not None:
             self.BATCH_RESPONSE = PRWBatchResponse.PRWBatchResponseT.InitFromObj(PRW.BATCH_RESPONSE())
+        if PRW.EXECUTION_REQUEST() is not None:
+            self.EXECUTION_REQUEST = PRWExecutionRequest.PRWExecutionRequestT.InitFromObj(PRW.EXECUTION_REQUEST())
+        if PRW.EXECUTION_RESULT() is not None:
+            self.EXECUTION_RESULT = PRWExecutionResult.PRWExecutionResultT.InitFromObj(PRW.EXECUTION_RESULT())
+        if PRW.RESIDENT_STATE() is not None:
+            self.RESIDENT_STATE = PRWResidentState.PRWResidentStateT.InitFromObj(PRW.RESIDENT_STATE())
+        if PRW.RESIDENT_REQUEST() is not None:
+            self.RESIDENT_REQUEST = PRWResidentRequest.PRWResidentRequestT.InitFromObj(PRW.RESIDENT_REQUEST())
+        if PRW.PREPARE_REQUEST() is not None:
+            self.PREPARE_REQUEST = PRWPrepareRequest.PRWPrepareRequestT.InitFromObj(PRW.PREPARE_REQUEST())
+        if PRW.PREPARE_RESULT() is not None:
+            self.PREPARE_RESULT = PRWPrepareResult.PRWPrepareResultT.InitFromObj(PRW.PREPARE_RESULT())
+        if PRW.DESCRIBE_REQUEST() is not None:
+            self.DESCRIBE_REQUEST = PRWDescribeRequest.PRWDescribeRequestT.InitFromObj(PRW.DESCRIBE_REQUEST())
+        if PRW.DESCRIBE_RESULT() is not None:
+            self.DESCRIBE_RESULT = PRWDescribeResult.PRWDescribeResultT.InitFromObj(PRW.DESCRIBE_RESULT())
+        if PRW.NATIVE_INPUT() is not None:
+            self.NATIVE_INPUT = PRWNativeInput.PRWNativeInputT.InitFromObj(PRW.NATIVE_INPUT())
+        if PRW.EPHEMERIS_REQUEST() is not None:
+            self.EPHEMERIS_REQUEST = PRWEphemerisRequest.PRWEphemerisRequestT.InitFromObj(PRW.EPHEMERIS_REQUEST())
+        if PRW.EPHEMERIS_RESULT() is not None:
+            self.EPHEMERIS_RESULT = PRWEphemerisResult.PRWEphemerisResultT.InitFromObj(PRW.EPHEMERIS_RESULT())
+        if PRW.ATMOSPHERE_REQUEST() is not None:
+            self.ATMOSPHERE_REQUEST = PRWAtmosphereRequest.PRWAtmosphereRequestT.InitFromObj(PRW.ATMOSPHERE_REQUEST())
+        if PRW.ATMOSPHERE_RESULT() is not None:
+            self.ATMOSPHERE_RESULT = PRWAtmosphereResult.PRWAtmosphereResultT.InitFromObj(PRW.ATMOSPHERE_RESULT())
+        self.VERSION_QUERY = PRW.VERSION_QUERY()
+        if PRW.VERSION_RESULT() is not None:
+            self.VERSION_RESULT = PRWVersionResult.PRWVersionResultT.InitFromObj(PRW.VERSION_RESULT())
 
     # PRWT
     def Pack(self, builder):
@@ -150,6 +474,34 @@ class PRWT(object):
             BATCH_REQUEST = self.BATCH_REQUEST.Pack(builder)
         if self.BATCH_RESPONSE is not None:
             BATCH_RESPONSE = self.BATCH_RESPONSE.Pack(builder)
+        if self.EXECUTION_REQUEST is not None:
+            EXECUTION_REQUEST = self.EXECUTION_REQUEST.Pack(builder)
+        if self.EXECUTION_RESULT is not None:
+            EXECUTION_RESULT = self.EXECUTION_RESULT.Pack(builder)
+        if self.RESIDENT_STATE is not None:
+            RESIDENT_STATE = self.RESIDENT_STATE.Pack(builder)
+        if self.RESIDENT_REQUEST is not None:
+            RESIDENT_REQUEST = self.RESIDENT_REQUEST.Pack(builder)
+        if self.PREPARE_REQUEST is not None:
+            PREPARE_REQUEST = self.PREPARE_REQUEST.Pack(builder)
+        if self.PREPARE_RESULT is not None:
+            PREPARE_RESULT = self.PREPARE_RESULT.Pack(builder)
+        if self.DESCRIBE_REQUEST is not None:
+            DESCRIBE_REQUEST = self.DESCRIBE_REQUEST.Pack(builder)
+        if self.DESCRIBE_RESULT is not None:
+            DESCRIBE_RESULT = self.DESCRIBE_RESULT.Pack(builder)
+        if self.NATIVE_INPUT is not None:
+            NATIVE_INPUT = self.NATIVE_INPUT.Pack(builder)
+        if self.EPHEMERIS_REQUEST is not None:
+            EPHEMERIS_REQUEST = self.EPHEMERIS_REQUEST.Pack(builder)
+        if self.EPHEMERIS_RESULT is not None:
+            EPHEMERIS_RESULT = self.EPHEMERIS_RESULT.Pack(builder)
+        if self.ATMOSPHERE_REQUEST is not None:
+            ATMOSPHERE_REQUEST = self.ATMOSPHERE_REQUEST.Pack(builder)
+        if self.ATMOSPHERE_RESULT is not None:
+            ATMOSPHERE_RESULT = self.ATMOSPHERE_RESULT.Pack(builder)
+        if self.VERSION_RESULT is not None:
+            VERSION_RESULT = self.VERSION_RESULT.Pack(builder)
         PRWStart(builder)
         if self.INIT is not None:
             PRWAddINIT(builder, INIT)
@@ -157,5 +509,34 @@ class PRWT(object):
             PRWAddBATCH_REQUEST(builder, BATCH_REQUEST)
         if self.BATCH_RESPONSE is not None:
             PRWAddBATCH_RESPONSE(builder, BATCH_RESPONSE)
+        if self.EXECUTION_REQUEST is not None:
+            PRWAddEXECUTION_REQUEST(builder, EXECUTION_REQUEST)
+        if self.EXECUTION_RESULT is not None:
+            PRWAddEXECUTION_RESULT(builder, EXECUTION_RESULT)
+        if self.RESIDENT_STATE is not None:
+            PRWAddRESIDENT_STATE(builder, RESIDENT_STATE)
+        if self.RESIDENT_REQUEST is not None:
+            PRWAddRESIDENT_REQUEST(builder, RESIDENT_REQUEST)
+        if self.PREPARE_REQUEST is not None:
+            PRWAddPREPARE_REQUEST(builder, PREPARE_REQUEST)
+        if self.PREPARE_RESULT is not None:
+            PRWAddPREPARE_RESULT(builder, PREPARE_RESULT)
+        if self.DESCRIBE_REQUEST is not None:
+            PRWAddDESCRIBE_REQUEST(builder, DESCRIBE_REQUEST)
+        if self.DESCRIBE_RESULT is not None:
+            PRWAddDESCRIBE_RESULT(builder, DESCRIBE_RESULT)
+        if self.NATIVE_INPUT is not None:
+            PRWAddNATIVE_INPUT(builder, NATIVE_INPUT)
+        if self.EPHEMERIS_REQUEST is not None:
+            PRWAddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUEST)
+        if self.EPHEMERIS_RESULT is not None:
+            PRWAddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULT)
+        if self.ATMOSPHERE_REQUEST is not None:
+            PRWAddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUEST)
+        if self.ATMOSPHERE_RESULT is not None:
+            PRWAddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULT)
+        PRWAddVERSION_QUERY(builder, self.VERSION_QUERY)
+        if self.VERSION_RESULT is not None:
+            PRWAddVERSION_RESULT(builder, VERSION_RESULT)
         PRW = PRWEnd(builder)
         return PRW

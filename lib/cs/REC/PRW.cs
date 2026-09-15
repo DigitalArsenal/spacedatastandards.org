@@ -6,8 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Propagator Runtime Wire — envelope that carries either an init request,
-/// a batch request, or a batch response across a runtime boundary.
+/// Exactly one arm per envelope. Existing three arms keep their ordinals.
 public struct PRW : IFlatbufferObject
 {
   private Table __p;
@@ -23,22 +22,83 @@ public struct PRW : IFlatbufferObject
   public PRWInit? INIT { get { int o = __p.__offset(4); return o != 0 ? (PRWInit?)(new PRWInit()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public PRWBatchRequest? BATCH_REQUEST { get { int o = __p.__offset(6); return o != 0 ? (PRWBatchRequest?)(new PRWBatchRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public PRWBatchResponse? BATCH_RESPONSE { get { int o = __p.__offset(8); return o != 0 ? (PRWBatchResponse?)(new PRWBatchResponse()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Appended portable arms; each method names its permitted arm.
+  public PRWExecutionRequest? EXECUTION_REQUEST { get { int o = __p.__offset(10); return o != 0 ? (PRWExecutionRequest?)(new PRWExecutionRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWExecutionResult? EXECUTION_RESULT { get { int o = __p.__offset(12); return o != 0 ? (PRWExecutionResult?)(new PRWExecutionResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWResidentState? RESIDENT_STATE { get { int o = __p.__offset(14); return o != 0 ? (PRWResidentState?)(new PRWResidentState()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWResidentRequest? RESIDENT_REQUEST { get { int o = __p.__offset(16); return o != 0 ? (PRWResidentRequest?)(new PRWResidentRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWPrepareRequest? PREPARE_REQUEST { get { int o = __p.__offset(18); return o != 0 ? (PRWPrepareRequest?)(new PRWPrepareRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWPrepareResult? PREPARE_RESULT { get { int o = __p.__offset(20); return o != 0 ? (PRWPrepareResult?)(new PRWPrepareResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWDescribeRequest? DESCRIBE_REQUEST { get { int o = __p.__offset(22); return o != 0 ? (PRWDescribeRequest?)(new PRWDescribeRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWDescribeResult? DESCRIBE_RESULT { get { int o = __p.__offset(24); return o != 0 ? (PRWDescribeResult?)(new PRWDescribeResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWNativeInput? NATIVE_INPUT { get { int o = __p.__offset(26); return o != 0 ? (PRWNativeInput?)(new PRWNativeInput()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWEphemerisRequest? EPHEMERIS_REQUEST { get { int o = __p.__offset(28); return o != 0 ? (PRWEphemerisRequest?)(new PRWEphemerisRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWEphemerisResult? EPHEMERIS_RESULT { get { int o = __p.__offset(30); return o != 0 ? (PRWEphemerisResult?)(new PRWEphemerisResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWAtmosphereRequest? ATMOSPHERE_REQUEST { get { int o = __p.__offset(32); return o != 0 ? (PRWAtmosphereRequest?)(new PRWAtmosphereRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWAtmosphereResult? ATMOSPHERE_RESULT { get { int o = __p.__offset(34); return o != 0 ? (PRWAtmosphereResult?)(new PRWAtmosphereResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public bool VERSION_QUERY { get { int o = __p.__offset(36); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public PRWVersionResult? VERSION_RESULT { get { int o = __p.__offset(38); return o != 0 ? (PRWVersionResult?)(new PRWVersionResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRW> CreatePRW(FlatBufferBuilder builder,
       Offset<PRWInit> INITOffset = default(Offset<PRWInit>),
       Offset<PRWBatchRequest> BATCH_REQUESTOffset = default(Offset<PRWBatchRequest>),
-      Offset<PRWBatchResponse> BATCH_RESPONSEOffset = default(Offset<PRWBatchResponse>)) {
-    builder.StartTable(3);
+      Offset<PRWBatchResponse> BATCH_RESPONSEOffset = default(Offset<PRWBatchResponse>),
+      Offset<PRWExecutionRequest> EXECUTION_REQUESTOffset = default(Offset<PRWExecutionRequest>),
+      Offset<PRWExecutionResult> EXECUTION_RESULTOffset = default(Offset<PRWExecutionResult>),
+      Offset<PRWResidentState> RESIDENT_STATEOffset = default(Offset<PRWResidentState>),
+      Offset<PRWResidentRequest> RESIDENT_REQUESTOffset = default(Offset<PRWResidentRequest>),
+      Offset<PRWPrepareRequest> PREPARE_REQUESTOffset = default(Offset<PRWPrepareRequest>),
+      Offset<PRWPrepareResult> PREPARE_RESULTOffset = default(Offset<PRWPrepareResult>),
+      Offset<PRWDescribeRequest> DESCRIBE_REQUESTOffset = default(Offset<PRWDescribeRequest>),
+      Offset<PRWDescribeResult> DESCRIBE_RESULTOffset = default(Offset<PRWDescribeResult>),
+      Offset<PRWNativeInput> NATIVE_INPUTOffset = default(Offset<PRWNativeInput>),
+      Offset<PRWEphemerisRequest> EPHEMERIS_REQUESTOffset = default(Offset<PRWEphemerisRequest>),
+      Offset<PRWEphemerisResult> EPHEMERIS_RESULTOffset = default(Offset<PRWEphemerisResult>),
+      Offset<PRWAtmosphereRequest> ATMOSPHERE_REQUESTOffset = default(Offset<PRWAtmosphereRequest>),
+      Offset<PRWAtmosphereResult> ATMOSPHERE_RESULTOffset = default(Offset<PRWAtmosphereResult>),
+      bool VERSION_QUERY = false,
+      Offset<PRWVersionResult> VERSION_RESULTOffset = default(Offset<PRWVersionResult>)) {
+    builder.StartTable(18);
+    PRW.AddVERSION_RESULT(builder, VERSION_RESULTOffset);
+    PRW.AddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULTOffset);
+    PRW.AddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUESTOffset);
+    PRW.AddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULTOffset);
+    PRW.AddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUESTOffset);
+    PRW.AddNATIVE_INPUT(builder, NATIVE_INPUTOffset);
+    PRW.AddDESCRIBE_RESULT(builder, DESCRIBE_RESULTOffset);
+    PRW.AddDESCRIBE_REQUEST(builder, DESCRIBE_REQUESTOffset);
+    PRW.AddPREPARE_RESULT(builder, PREPARE_RESULTOffset);
+    PRW.AddPREPARE_REQUEST(builder, PREPARE_REQUESTOffset);
+    PRW.AddRESIDENT_REQUEST(builder, RESIDENT_REQUESTOffset);
+    PRW.AddRESIDENT_STATE(builder, RESIDENT_STATEOffset);
+    PRW.AddEXECUTION_RESULT(builder, EXECUTION_RESULTOffset);
+    PRW.AddEXECUTION_REQUEST(builder, EXECUTION_REQUESTOffset);
     PRW.AddBATCH_RESPONSE(builder, BATCH_RESPONSEOffset);
     PRW.AddBATCH_REQUEST(builder, BATCH_REQUESTOffset);
     PRW.AddINIT(builder, INITOffset);
+    PRW.AddVERSION_QUERY(builder, VERSION_QUERY);
     return PRW.EndPRW(builder);
   }
 
-  public static void StartPRW(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartPRW(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddINIT(FlatBufferBuilder builder, Offset<PRWInit> INITOffset) { builder.AddOffset(0, INITOffset.Value, 0); }
   public static void AddBATCH_REQUEST(FlatBufferBuilder builder, Offset<PRWBatchRequest> BATCH_REQUESTOffset) { builder.AddOffset(1, BATCH_REQUESTOffset.Value, 0); }
   public static void AddBATCH_RESPONSE(FlatBufferBuilder builder, Offset<PRWBatchResponse> BATCH_RESPONSEOffset) { builder.AddOffset(2, BATCH_RESPONSEOffset.Value, 0); }
+  public static void AddEXECUTION_REQUEST(FlatBufferBuilder builder, Offset<PRWExecutionRequest> EXECUTION_REQUESTOffset) { builder.AddOffset(3, EXECUTION_REQUESTOffset.Value, 0); }
+  public static void AddEXECUTION_RESULT(FlatBufferBuilder builder, Offset<PRWExecutionResult> EXECUTION_RESULTOffset) { builder.AddOffset(4, EXECUTION_RESULTOffset.Value, 0); }
+  public static void AddRESIDENT_STATE(FlatBufferBuilder builder, Offset<PRWResidentState> RESIDENT_STATEOffset) { builder.AddOffset(5, RESIDENT_STATEOffset.Value, 0); }
+  public static void AddRESIDENT_REQUEST(FlatBufferBuilder builder, Offset<PRWResidentRequest> RESIDENT_REQUESTOffset) { builder.AddOffset(6, RESIDENT_REQUESTOffset.Value, 0); }
+  public static void AddPREPARE_REQUEST(FlatBufferBuilder builder, Offset<PRWPrepareRequest> PREPARE_REQUESTOffset) { builder.AddOffset(7, PREPARE_REQUESTOffset.Value, 0); }
+  public static void AddPREPARE_RESULT(FlatBufferBuilder builder, Offset<PRWPrepareResult> PREPARE_RESULTOffset) { builder.AddOffset(8, PREPARE_RESULTOffset.Value, 0); }
+  public static void AddDESCRIBE_REQUEST(FlatBufferBuilder builder, Offset<PRWDescribeRequest> DESCRIBE_REQUESTOffset) { builder.AddOffset(9, DESCRIBE_REQUESTOffset.Value, 0); }
+  public static void AddDESCRIBE_RESULT(FlatBufferBuilder builder, Offset<PRWDescribeResult> DESCRIBE_RESULTOffset) { builder.AddOffset(10, DESCRIBE_RESULTOffset.Value, 0); }
+  public static void AddNATIVE_INPUT(FlatBufferBuilder builder, Offset<PRWNativeInput> NATIVE_INPUTOffset) { builder.AddOffset(11, NATIVE_INPUTOffset.Value, 0); }
+  public static void AddEPHEMERIS_REQUEST(FlatBufferBuilder builder, Offset<PRWEphemerisRequest> EPHEMERIS_REQUESTOffset) { builder.AddOffset(12, EPHEMERIS_REQUESTOffset.Value, 0); }
+  public static void AddEPHEMERIS_RESULT(FlatBufferBuilder builder, Offset<PRWEphemerisResult> EPHEMERIS_RESULTOffset) { builder.AddOffset(13, EPHEMERIS_RESULTOffset.Value, 0); }
+  public static void AddATMOSPHERE_REQUEST(FlatBufferBuilder builder, Offset<PRWAtmosphereRequest> ATMOSPHERE_REQUESTOffset) { builder.AddOffset(14, ATMOSPHERE_REQUESTOffset.Value, 0); }
+  public static void AddATMOSPHERE_RESULT(FlatBufferBuilder builder, Offset<PRWAtmosphereResult> ATMOSPHERE_RESULTOffset) { builder.AddOffset(15, ATMOSPHERE_RESULTOffset.Value, 0); }
+  public static void AddVERSION_QUERY(FlatBufferBuilder builder, bool VERSION_QUERY) { builder.AddBool(16, VERSION_QUERY, false); }
+  public static void AddVERSION_RESULT(FlatBufferBuilder builder, Offset<PRWVersionResult> VERSION_RESULTOffset) { builder.AddOffset(17, VERSION_RESULTOffset.Value, 0); }
   public static Offset<PRW> EndPRW(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PRW>(o);
@@ -54,17 +114,61 @@ public struct PRW : IFlatbufferObject
     _o.INIT = this.INIT.HasValue ? this.INIT.Value.UnPack() : null;
     _o.BATCH_REQUEST = this.BATCH_REQUEST.HasValue ? this.BATCH_REQUEST.Value.UnPack() : null;
     _o.BATCH_RESPONSE = this.BATCH_RESPONSE.HasValue ? this.BATCH_RESPONSE.Value.UnPack() : null;
+    _o.EXECUTION_REQUEST = this.EXECUTION_REQUEST.HasValue ? this.EXECUTION_REQUEST.Value.UnPack() : null;
+    _o.EXECUTION_RESULT = this.EXECUTION_RESULT.HasValue ? this.EXECUTION_RESULT.Value.UnPack() : null;
+    _o.RESIDENT_STATE = this.RESIDENT_STATE.HasValue ? this.RESIDENT_STATE.Value.UnPack() : null;
+    _o.RESIDENT_REQUEST = this.RESIDENT_REQUEST.HasValue ? this.RESIDENT_REQUEST.Value.UnPack() : null;
+    _o.PREPARE_REQUEST = this.PREPARE_REQUEST.HasValue ? this.PREPARE_REQUEST.Value.UnPack() : null;
+    _o.PREPARE_RESULT = this.PREPARE_RESULT.HasValue ? this.PREPARE_RESULT.Value.UnPack() : null;
+    _o.DESCRIBE_REQUEST = this.DESCRIBE_REQUEST.HasValue ? this.DESCRIBE_REQUEST.Value.UnPack() : null;
+    _o.DESCRIBE_RESULT = this.DESCRIBE_RESULT.HasValue ? this.DESCRIBE_RESULT.Value.UnPack() : null;
+    _o.NATIVE_INPUT = this.NATIVE_INPUT.HasValue ? this.NATIVE_INPUT.Value.UnPack() : null;
+    _o.EPHEMERIS_REQUEST = this.EPHEMERIS_REQUEST.HasValue ? this.EPHEMERIS_REQUEST.Value.UnPack() : null;
+    _o.EPHEMERIS_RESULT = this.EPHEMERIS_RESULT.HasValue ? this.EPHEMERIS_RESULT.Value.UnPack() : null;
+    _o.ATMOSPHERE_REQUEST = this.ATMOSPHERE_REQUEST.HasValue ? this.ATMOSPHERE_REQUEST.Value.UnPack() : null;
+    _o.ATMOSPHERE_RESULT = this.ATMOSPHERE_RESULT.HasValue ? this.ATMOSPHERE_RESULT.Value.UnPack() : null;
+    _o.VERSION_QUERY = this.VERSION_QUERY;
+    _o.VERSION_RESULT = this.VERSION_RESULT.HasValue ? this.VERSION_RESULT.Value.UnPack() : null;
   }
   public static Offset<PRW> Pack(FlatBufferBuilder builder, PRWT _o) {
     if (_o == null) return default(Offset<PRW>);
     var _INIT = _o.INIT == null ? default(Offset<PRWInit>) : PRWInit.Pack(builder, _o.INIT);
     var _BATCH_REQUEST = _o.BATCH_REQUEST == null ? default(Offset<PRWBatchRequest>) : PRWBatchRequest.Pack(builder, _o.BATCH_REQUEST);
     var _BATCH_RESPONSE = _o.BATCH_RESPONSE == null ? default(Offset<PRWBatchResponse>) : PRWBatchResponse.Pack(builder, _o.BATCH_RESPONSE);
+    var _EXECUTION_REQUEST = _o.EXECUTION_REQUEST == null ? default(Offset<PRWExecutionRequest>) : PRWExecutionRequest.Pack(builder, _o.EXECUTION_REQUEST);
+    var _EXECUTION_RESULT = _o.EXECUTION_RESULT == null ? default(Offset<PRWExecutionResult>) : PRWExecutionResult.Pack(builder, _o.EXECUTION_RESULT);
+    var _RESIDENT_STATE = _o.RESIDENT_STATE == null ? default(Offset<PRWResidentState>) : PRWResidentState.Pack(builder, _o.RESIDENT_STATE);
+    var _RESIDENT_REQUEST = _o.RESIDENT_REQUEST == null ? default(Offset<PRWResidentRequest>) : PRWResidentRequest.Pack(builder, _o.RESIDENT_REQUEST);
+    var _PREPARE_REQUEST = _o.PREPARE_REQUEST == null ? default(Offset<PRWPrepareRequest>) : PRWPrepareRequest.Pack(builder, _o.PREPARE_REQUEST);
+    var _PREPARE_RESULT = _o.PREPARE_RESULT == null ? default(Offset<PRWPrepareResult>) : PRWPrepareResult.Pack(builder, _o.PREPARE_RESULT);
+    var _DESCRIBE_REQUEST = _o.DESCRIBE_REQUEST == null ? default(Offset<PRWDescribeRequest>) : PRWDescribeRequest.Pack(builder, _o.DESCRIBE_REQUEST);
+    var _DESCRIBE_RESULT = _o.DESCRIBE_RESULT == null ? default(Offset<PRWDescribeResult>) : PRWDescribeResult.Pack(builder, _o.DESCRIBE_RESULT);
+    var _NATIVE_INPUT = _o.NATIVE_INPUT == null ? default(Offset<PRWNativeInput>) : PRWNativeInput.Pack(builder, _o.NATIVE_INPUT);
+    var _EPHEMERIS_REQUEST = _o.EPHEMERIS_REQUEST == null ? default(Offset<PRWEphemerisRequest>) : PRWEphemerisRequest.Pack(builder, _o.EPHEMERIS_REQUEST);
+    var _EPHEMERIS_RESULT = _o.EPHEMERIS_RESULT == null ? default(Offset<PRWEphemerisResult>) : PRWEphemerisResult.Pack(builder, _o.EPHEMERIS_RESULT);
+    var _ATMOSPHERE_REQUEST = _o.ATMOSPHERE_REQUEST == null ? default(Offset<PRWAtmosphereRequest>) : PRWAtmosphereRequest.Pack(builder, _o.ATMOSPHERE_REQUEST);
+    var _ATMOSPHERE_RESULT = _o.ATMOSPHERE_RESULT == null ? default(Offset<PRWAtmosphereResult>) : PRWAtmosphereResult.Pack(builder, _o.ATMOSPHERE_RESULT);
+    var _VERSION_RESULT = _o.VERSION_RESULT == null ? default(Offset<PRWVersionResult>) : PRWVersionResult.Pack(builder, _o.VERSION_RESULT);
     return CreatePRW(
       builder,
       _INIT,
       _BATCH_REQUEST,
-      _BATCH_RESPONSE);
+      _BATCH_RESPONSE,
+      _EXECUTION_REQUEST,
+      _EXECUTION_RESULT,
+      _RESIDENT_STATE,
+      _RESIDENT_REQUEST,
+      _PREPARE_REQUEST,
+      _PREPARE_RESULT,
+      _DESCRIBE_REQUEST,
+      _DESCRIBE_RESULT,
+      _NATIVE_INPUT,
+      _EPHEMERIS_REQUEST,
+      _EPHEMERIS_RESULT,
+      _ATMOSPHERE_REQUEST,
+      _ATMOSPHERE_RESULT,
+      _o.VERSION_QUERY,
+      _VERSION_RESULT);
   }
 }
 
@@ -73,11 +177,41 @@ public class PRWT
   public PRWInitT INIT { get; set; }
   public PRWBatchRequestT BATCH_REQUEST { get; set; }
   public PRWBatchResponseT BATCH_RESPONSE { get; set; }
+  public PRWExecutionRequestT EXECUTION_REQUEST { get; set; }
+  public PRWExecutionResultT EXECUTION_RESULT { get; set; }
+  public PRWResidentStateT RESIDENT_STATE { get; set; }
+  public PRWResidentRequestT RESIDENT_REQUEST { get; set; }
+  public PRWPrepareRequestT PREPARE_REQUEST { get; set; }
+  public PRWPrepareResultT PREPARE_RESULT { get; set; }
+  public PRWDescribeRequestT DESCRIBE_REQUEST { get; set; }
+  public PRWDescribeResultT DESCRIBE_RESULT { get; set; }
+  public PRWNativeInputT NATIVE_INPUT { get; set; }
+  public PRWEphemerisRequestT EPHEMERIS_REQUEST { get; set; }
+  public PRWEphemerisResultT EPHEMERIS_RESULT { get; set; }
+  public PRWAtmosphereRequestT ATMOSPHERE_REQUEST { get; set; }
+  public PRWAtmosphereResultT ATMOSPHERE_RESULT { get; set; }
+  public bool VERSION_QUERY { get; set; }
+  public PRWVersionResultT VERSION_RESULT { get; set; }
 
   public PRWT() {
     this.INIT = null;
     this.BATCH_REQUEST = null;
     this.BATCH_RESPONSE = null;
+    this.EXECUTION_REQUEST = null;
+    this.EXECUTION_RESULT = null;
+    this.RESIDENT_STATE = null;
+    this.RESIDENT_REQUEST = null;
+    this.PREPARE_REQUEST = null;
+    this.PREPARE_RESULT = null;
+    this.DESCRIBE_REQUEST = null;
+    this.DESCRIBE_RESULT = null;
+    this.NATIVE_INPUT = null;
+    this.EPHEMERIS_REQUEST = null;
+    this.EPHEMERIS_RESULT = null;
+    this.ATMOSPHERE_REQUEST = null;
+    this.ATMOSPHERE_RESULT = null;
+    this.VERSION_QUERY = false;
+    this.VERSION_RESULT = null;
   }
   public static PRWT DeserializeFromBinary(byte[] fbBuffer) {
     return PRW.GetRootAsPRW(new ByteBuffer(fbBuffer)).UnPack();
@@ -98,6 +232,21 @@ static public class PRWVerify
       && verifier.VerifyTable(tablePos, 4 /*INIT*/, PRWInitVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 6 /*BATCH_REQUEST*/, PRWBatchRequestVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 8 /*BATCH_RESPONSE*/, PRWBatchResponseVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 10 /*EXECUTION_REQUEST*/, PRWExecutionRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 12 /*EXECUTION_RESULT*/, PRWExecutionResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 14 /*RESIDENT_STATE*/, PRWResidentStateVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*RESIDENT_REQUEST*/, PRWResidentRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 18 /*PREPARE_REQUEST*/, PRWPrepareRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*PREPARE_RESULT*/, PRWPrepareResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 22 /*DESCRIBE_REQUEST*/, PRWDescribeRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 24 /*DESCRIBE_RESULT*/, PRWDescribeResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 26 /*NATIVE_INPUT*/, PRWNativeInputVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 28 /*EPHEMERIS_REQUEST*/, PRWEphemerisRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*EPHEMERIS_RESULT*/, PRWEphemerisResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 32 /*ATMOSPHERE_REQUEST*/, PRWAtmosphereRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 34 /*ATMOSPHERE_RESULT*/, PRWAtmosphereResultVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 36 /*VERSION_QUERY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 38 /*VERSION_RESULT*/, PRWVersionResultVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

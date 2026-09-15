@@ -39,6 +39,7 @@ export * as CNP from './CNP/main.js';
 export * as COM from './COM/main.js';
 export * as COT from './COT/main.js';
 export * as CPS from './CPS/main.js';
+export * as CQR from './CQR/main.js';
 export * as CRD from './CRD/main.js';
 export * as CRM from './CRM/main.js';
 export * as CSM from './CSM/main.js';

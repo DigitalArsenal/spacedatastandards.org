@@ -1,0 +1,78 @@
+/**
+ * Native container format class.
+ *
+ * These are FORMAT designations, not products: each names a published or
+ * widely implemented container layout, and a capability description states
+ * what the layout can express. Reserve 0 so an unset byte never decodes as a
+ * real format. Append new members only; never reorder or reuse a value.
+ */
+export declare enum ncdContainerFormat {
+    UNSPECIFIED = 0,
+    /**
+     * Double-precision Array File container carrying Spacecraft and Planet
+     * Kernel segments: a binary file of typed, independently addressed
+     * ephemeris segments, each with an integer target and centre, an integer
+     * reference frame, a numeric segment type, and a contiguous address range
+     * inside the file.
+     */
+    SPK_DAF = 1,
+    /**
+     * SP3 version c: fixed-column text container of per-epoch satellite
+     * positions and optional velocities with a clock column, a header block of
+     * accuracy codes, and one uniform epoch interval.
+     */
+    SP3_C = 2,
+    /**
+     * SP3 version d: as SP3_C, with an unbounded satellite count and extended
+     * header lines.
+     */
+    SP3_D = 3,
+    /**
+     * Code-500 fixed-record binary ephemeris: a header record of packed words
+     * followed by fixed-length data records on a uniform step.
+     */
+    CODE_500 = 4,
+    /**
+     * Scenario-epoch ephemeris text container: time-ordered position and
+     * velocity records whose epochs are offsets in seconds from a declared
+     * scenario epoch, qualified by a named coordinate system, a distance unit,
+     * a named interpolation method and an interpolation order.
+     */
+    SCENARIO_EPOCH_EPHEMERIS_TEXT = 5,
+    /**
+     * Scenario-epoch attitude text container: the attitude counterpart of
+     * SCENARIO_EPOCH_EPHEMERIS_TEXT, carrying quaternion, Euler or angular
+     * velocity records against the same scenario epoch.
+     */
+    SCENARIO_EPOCH_ATTITUDE_TEXT = 6,
+    /**
+     * CCSDS Orbit Ephemeris Message, keyword-value notation.
+     */
+    CCSDS_OEM_KVN = 7,
+    /**
+     * CCSDS Orbit Ephemeris Message, XML.
+     */
+    CCSDS_OEM_XML = 8,
+    /**
+     * CCSDS Attitude Ephemeris Message, keyword-value notation.
+     */
+    CCSDS_AEM_KVN = 9,
+    /**
+     * CCSDS Attitude Ephemeris Message, XML.
+     */
+    CCSDS_AEM_XML = 10,
+    /**
+     * CCSDS Tracking Data Message, keyword-value notation.
+     */
+    CCSDS_TDM_KVN = 11,
+    /**
+     * CCSDS Tracking Data Message, XML.
+     */
+    CCSDS_TDM_XML = 12,
+    /**
+     * A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
+     * which; a producer never reuses a neighbouring member instead.
+     */
+    PROVIDER_DEFINED = 255
+}
+//# sourceMappingURL=ncdContainerFormat.d.ts.map

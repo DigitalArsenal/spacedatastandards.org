@@ -6,8 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Propagator Runtime Wire — envelope that carries either an init request,
-/// a batch request, or a batch response across a runtime boundary.
+/// Exactly one arm per envelope. Existing three arms keep their ordinals.
 class PRW extends Table
 {
     /**
@@ -63,25 +62,148 @@ class PRW extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Appended portable arms; each method names its permitted arm.
+    public function getEXECUTION_REQUEST()
+    {
+        $obj = new PRWExecutionRequest();
+        $o = $this->__offset(10);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getEXECUTION_RESULT()
+    {
+        $obj = new PRWExecutionResult();
+        $o = $this->__offset(12);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getRESIDENT_STATE()
+    {
+        $obj = new PRWResidentState();
+        $o = $this->__offset(14);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getRESIDENT_REQUEST()
+    {
+        $obj = new PRWResidentRequest();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getPREPARE_REQUEST()
+    {
+        $obj = new PRWPrepareRequest();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getPREPARE_RESULT()
+    {
+        $obj = new PRWPrepareResult();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getDESCRIBE_REQUEST()
+    {
+        $obj = new PRWDescribeRequest();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getDESCRIBE_RESULT()
+    {
+        $obj = new PRWDescribeResult();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getNATIVE_INPUT()
+    {
+        $obj = new PRWNativeInput();
+        $o = $this->__offset(26);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getEPHEMERIS_REQUEST()
+    {
+        $obj = new PRWEphemerisRequest();
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getEPHEMERIS_RESULT()
+    {
+        $obj = new PRWEphemerisResult();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getATMOSPHERE_REQUEST()
+    {
+        $obj = new PRWAtmosphereRequest();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getATMOSPHERE_RESULT()
+    {
+        $obj = new PRWAtmosphereResult();
+        $o = $this->__offset(34);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getVERSION_QUERY()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    public function getVERSION_RESULT()
+    {
+        $obj = new PRWVersionResult();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRW(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRW
      */
-    public static function createPRW(FlatBufferBuilder $builder, $INIT, $BATCH_REQUEST, $BATCH_RESPONSE)
+    public static function createPRW(FlatBufferBuilder $builder, $INIT, $BATCH_REQUEST, $BATCH_RESPONSE, $EXECUTION_REQUEST, $EXECUTION_RESULT, $RESIDENT_STATE, $RESIDENT_REQUEST, $PREPARE_REQUEST, $PREPARE_RESULT, $DESCRIBE_REQUEST, $DESCRIBE_RESULT, $NATIVE_INPUT, $EPHEMERIS_REQUEST, $EPHEMERIS_RESULT, $ATMOSPHERE_REQUEST, $ATMOSPHERE_RESULT, $VERSION_QUERY, $VERSION_RESULT)
     {
-        $builder->startObject(3);
+        $builder->startObject(18);
         self::addINIT($builder, $INIT);
         self::addBATCH_REQUEST($builder, $BATCH_REQUEST);
         self::addBATCH_RESPONSE($builder, $BATCH_RESPONSE);
+        self::addEXECUTION_REQUEST($builder, $EXECUTION_REQUEST);
+        self::addEXECUTION_RESULT($builder, $EXECUTION_RESULT);
+        self::addRESIDENT_STATE($builder, $RESIDENT_STATE);
+        self::addRESIDENT_REQUEST($builder, $RESIDENT_REQUEST);
+        self::addPREPARE_REQUEST($builder, $PREPARE_REQUEST);
+        self::addPREPARE_RESULT($builder, $PREPARE_RESULT);
+        self::addDESCRIBE_REQUEST($builder, $DESCRIBE_REQUEST);
+        self::addDESCRIBE_RESULT($builder, $DESCRIBE_RESULT);
+        self::addNATIVE_INPUT($builder, $NATIVE_INPUT);
+        self::addEPHEMERIS_REQUEST($builder, $EPHEMERIS_REQUEST);
+        self::addEPHEMERIS_RESULT($builder, $EPHEMERIS_RESULT);
+        self::addATMOSPHERE_REQUEST($builder, $ATMOSPHERE_REQUEST);
+        self::addATMOSPHERE_RESULT($builder, $ATMOSPHERE_RESULT);
+        self::addVERSION_QUERY($builder, $VERSION_QUERY);
+        self::addVERSION_RESULT($builder, $VERSION_RESULT);
         $o = $builder->endObject();
         return $o;
     }
@@ -114,6 +236,156 @@ class PRW extends Table
     public static function addBATCH_RESPONSE(FlatBufferBuilder $builder, $BATCH_RESPONSE)
     {
         $builder->addOffsetX(2, $BATCH_RESPONSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXECUTION_REQUEST(FlatBufferBuilder $builder, $EXECUTION_REQUEST)
+    {
+        $builder->addOffsetX(3, $EXECUTION_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXECUTION_RESULT(FlatBufferBuilder $builder, $EXECUTION_RESULT)
+    {
+        $builder->addOffsetX(4, $EXECUTION_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRESIDENT_STATE(FlatBufferBuilder $builder, $RESIDENT_STATE)
+    {
+        $builder->addOffsetX(5, $RESIDENT_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRESIDENT_REQUEST(FlatBufferBuilder $builder, $RESIDENT_REQUEST)
+    {
+        $builder->addOffsetX(6, $RESIDENT_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPREPARE_REQUEST(FlatBufferBuilder $builder, $PREPARE_REQUEST)
+    {
+        $builder->addOffsetX(7, $PREPARE_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPREPARE_RESULT(FlatBufferBuilder $builder, $PREPARE_RESULT)
+    {
+        $builder->addOffsetX(8, $PREPARE_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDESCRIBE_REQUEST(FlatBufferBuilder $builder, $DESCRIBE_REQUEST)
+    {
+        $builder->addOffsetX(9, $DESCRIBE_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDESCRIBE_RESULT(FlatBufferBuilder $builder, $DESCRIBE_RESULT)
+    {
+        $builder->addOffsetX(10, $DESCRIBE_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addNATIVE_INPUT(FlatBufferBuilder $builder, $NATIVE_INPUT)
+    {
+        $builder->addOffsetX(11, $NATIVE_INPUT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_REQUEST(FlatBufferBuilder $builder, $EPHEMERIS_REQUEST)
+    {
+        $builder->addOffsetX(12, $EPHEMERIS_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_RESULT(FlatBufferBuilder $builder, $EPHEMERIS_RESULT)
+    {
+        $builder->addOffsetX(13, $EPHEMERIS_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addATMOSPHERE_REQUEST(FlatBufferBuilder $builder, $ATMOSPHERE_REQUEST)
+    {
+        $builder->addOffsetX(14, $ATMOSPHERE_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addATMOSPHERE_RESULT(FlatBufferBuilder $builder, $ATMOSPHERE_RESULT)
+    {
+        $builder->addOffsetX(15, $ATMOSPHERE_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addVERSION_QUERY(FlatBufferBuilder $builder, $VERSION_QUERY)
+    {
+        $builder->addBoolX(16, $VERSION_QUERY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addVERSION_RESULT(FlatBufferBuilder $builder, $VERSION_RESULT)
+    {
+        $builder->addOffsetX(17, $VERSION_RESULT, 0);
     }
 
     /**

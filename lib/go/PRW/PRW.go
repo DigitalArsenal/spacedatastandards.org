@@ -6,8 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Propagator Runtime Wire — envelope that carries either an init request,
-/// a batch request, or a batch response across a runtime boundary.
+/// Exactly one arm per envelope. Existing three arms keep their ordinals.
 type PRW struct {
 	_tab flatbuffers.Table
 }
@@ -103,8 +102,268 @@ func (rcv *PRW) BatchResponse(obj *PRWBatchResponse) *PRWBatchResponse {
 	return rcv.BATCH_RESPONSE(obj)
 }
 
+/// Appended portable arms; each method names its permitted arm.
+func (rcv *PRW) EXECUTION_REQUEST(obj *PRWExecutionRequest) *PRWExecutionRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWExecutionRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) ExecutionRequest(obj *PRWExecutionRequest) *PRWExecutionRequest {
+	return rcv.EXECUTION_REQUEST(obj)
+}
+
+/// Appended portable arms; each method names its permitted arm.
+func (rcv *PRW) EXECUTION_RESULT(obj *PRWExecutionResult) *PRWExecutionResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWExecutionResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) ExecutionResult(obj *PRWExecutionResult) *PRWExecutionResult {
+	return rcv.EXECUTION_RESULT(obj)
+}
+
+func (rcv *PRW) RESIDENT_STATE(obj *PRWResidentState) *PRWResidentState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWResidentState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) ResidentState(obj *PRWResidentState) *PRWResidentState {
+	return rcv.RESIDENT_STATE(obj)
+}
+
+func (rcv *PRW) RESIDENT_REQUEST(obj *PRWResidentRequest) *PRWResidentRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWResidentRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) ResidentRequest(obj *PRWResidentRequest) *PRWResidentRequest {
+	return rcv.RESIDENT_REQUEST(obj)
+}
+
+func (rcv *PRW) PREPARE_REQUEST(obj *PRWPrepareRequest) *PRWPrepareRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWPrepareRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) PrepareRequest(obj *PRWPrepareRequest) *PRWPrepareRequest {
+	return rcv.PREPARE_REQUEST(obj)
+}
+
+func (rcv *PRW) PREPARE_RESULT(obj *PRWPrepareResult) *PRWPrepareResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWPrepareResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) PrepareResult(obj *PRWPrepareResult) *PRWPrepareResult {
+	return rcv.PREPARE_RESULT(obj)
+}
+
+func (rcv *PRW) DESCRIBE_REQUEST(obj *PRWDescribeRequest) *PRWDescribeRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWDescribeRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) DescribeRequest(obj *PRWDescribeRequest) *PRWDescribeRequest {
+	return rcv.DESCRIBE_REQUEST(obj)
+}
+
+func (rcv *PRW) DESCRIBE_RESULT(obj *PRWDescribeResult) *PRWDescribeResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWDescribeResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) DescribeResult(obj *PRWDescribeResult) *PRWDescribeResult {
+	return rcv.DESCRIBE_RESULT(obj)
+}
+
+func (rcv *PRW) NATIVE_INPUT(obj *PRWNativeInput) *PRWNativeInput {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWNativeInput)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) NativeInput(obj *PRWNativeInput) *PRWNativeInput {
+	return rcv.NATIVE_INPUT(obj)
+}
+
+func (rcv *PRW) EPHEMERIS_REQUEST(obj *PRWEphemerisRequest) *PRWEphemerisRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWEphemerisRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) EphemerisRequest(obj *PRWEphemerisRequest) *PRWEphemerisRequest {
+	return rcv.EPHEMERIS_REQUEST(obj)
+}
+
+func (rcv *PRW) EPHEMERIS_RESULT(obj *PRWEphemerisResult) *PRWEphemerisResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWEphemerisResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) EphemerisResult(obj *PRWEphemerisResult) *PRWEphemerisResult {
+	return rcv.EPHEMERIS_RESULT(obj)
+}
+
+func (rcv *PRW) ATMOSPHERE_REQUEST(obj *PRWAtmosphereRequest) *PRWAtmosphereRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWAtmosphereRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) AtmosphereRequest(obj *PRWAtmosphereRequest) *PRWAtmosphereRequest {
+	return rcv.ATMOSPHERE_REQUEST(obj)
+}
+
+func (rcv *PRW) ATMOSPHERE_RESULT(obj *PRWAtmosphereResult) *PRWAtmosphereResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWAtmosphereResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) AtmosphereResult(obj *PRWAtmosphereResult) *PRWAtmosphereResult {
+	return rcv.ATMOSPHERE_RESULT(obj)
+}
+
+func (rcv *PRW) VERSION_QUERY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRW) VersionQuery() bool {
+	return rcv.VERSION_QUERY()
+}
+
+func (rcv *PRW) MutateVERSION_QUERY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+func (rcv *PRW) MutateVersionQuery(n bool) bool {
+	return rcv.MutateVERSION_QUERY(n)
+}
+
+func (rcv *PRW) VERSION_RESULT(obj *PRWVersionResult) *PRWVersionResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWVersionResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) VersionResult(obj *PRWVersionResult) *PRWVersionResult {
+	return rcv.VERSION_RESULT(obj)
+}
+
 func PRWStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(18)
 }
 func PRWAddINIT(builder *flatbuffers.Builder, INIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INIT), 0)
@@ -123,6 +382,96 @@ func PRWAddBATCH_RESPONSE(builder *flatbuffers.Builder, BATCH_RESPONSE flatbuffe
 }
 func PRWAddBatchResponse(builder *flatbuffers.Builder, BATCH_RESPONSE flatbuffers.UOffsetT) {
 	PRWAddBATCH_RESPONSE(builder, BATCH_RESPONSE)
+}
+func PRWAddEXECUTION_REQUEST(builder *flatbuffers.Builder, EXECUTION_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EXECUTION_REQUEST), 0)
+}
+func PRWAddExecutionRequest(builder *flatbuffers.Builder, EXECUTION_REQUEST flatbuffers.UOffsetT) {
+	PRWAddEXECUTION_REQUEST(builder, EXECUTION_REQUEST)
+}
+func PRWAddEXECUTION_RESULT(builder *flatbuffers.Builder, EXECUTION_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EXECUTION_RESULT), 0)
+}
+func PRWAddExecutionResult(builder *flatbuffers.Builder, EXECUTION_RESULT flatbuffers.UOffsetT) {
+	PRWAddEXECUTION_RESULT(builder, EXECUTION_RESULT)
+}
+func PRWAddRESIDENT_STATE(builder *flatbuffers.Builder, RESIDENT_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(RESIDENT_STATE), 0)
+}
+func PRWAddResidentState(builder *flatbuffers.Builder, RESIDENT_STATE flatbuffers.UOffsetT) {
+	PRWAddRESIDENT_STATE(builder, RESIDENT_STATE)
+}
+func PRWAddRESIDENT_REQUEST(builder *flatbuffers.Builder, RESIDENT_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(RESIDENT_REQUEST), 0)
+}
+func PRWAddResidentRequest(builder *flatbuffers.Builder, RESIDENT_REQUEST flatbuffers.UOffsetT) {
+	PRWAddRESIDENT_REQUEST(builder, RESIDENT_REQUEST)
+}
+func PRWAddPREPARE_REQUEST(builder *flatbuffers.Builder, PREPARE_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PREPARE_REQUEST), 0)
+}
+func PRWAddPrepareRequest(builder *flatbuffers.Builder, PREPARE_REQUEST flatbuffers.UOffsetT) {
+	PRWAddPREPARE_REQUEST(builder, PREPARE_REQUEST)
+}
+func PRWAddPREPARE_RESULT(builder *flatbuffers.Builder, PREPARE_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PREPARE_RESULT), 0)
+}
+func PRWAddPrepareResult(builder *flatbuffers.Builder, PREPARE_RESULT flatbuffers.UOffsetT) {
+	PRWAddPREPARE_RESULT(builder, PREPARE_RESULT)
+}
+func PRWAddDESCRIBE_REQUEST(builder *flatbuffers.Builder, DESCRIBE_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DESCRIBE_REQUEST), 0)
+}
+func PRWAddDescribeRequest(builder *flatbuffers.Builder, DESCRIBE_REQUEST flatbuffers.UOffsetT) {
+	PRWAddDESCRIBE_REQUEST(builder, DESCRIBE_REQUEST)
+}
+func PRWAddDESCRIBE_RESULT(builder *flatbuffers.Builder, DESCRIBE_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DESCRIBE_RESULT), 0)
+}
+func PRWAddDescribeResult(builder *flatbuffers.Builder, DESCRIBE_RESULT flatbuffers.UOffsetT) {
+	PRWAddDESCRIBE_RESULT(builder, DESCRIBE_RESULT)
+}
+func PRWAddNATIVE_INPUT(builder *flatbuffers.Builder, NATIVE_INPUT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(NATIVE_INPUT), 0)
+}
+func PRWAddNativeInput(builder *flatbuffers.Builder, NATIVE_INPUT flatbuffers.UOffsetT) {
+	PRWAddNATIVE_INPUT(builder, NATIVE_INPUT)
+}
+func PRWAddEPHEMERIS_REQUEST(builder *flatbuffers.Builder, EPHEMERIS_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(EPHEMERIS_REQUEST), 0)
+}
+func PRWAddEphemerisRequest(builder *flatbuffers.Builder, EPHEMERIS_REQUEST flatbuffers.UOffsetT) {
+	PRWAddEPHEMERIS_REQUEST(builder, EPHEMERIS_REQUEST)
+}
+func PRWAddEPHEMERIS_RESULT(builder *flatbuffers.Builder, EPHEMERIS_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(EPHEMERIS_RESULT), 0)
+}
+func PRWAddEphemerisResult(builder *flatbuffers.Builder, EPHEMERIS_RESULT flatbuffers.UOffsetT) {
+	PRWAddEPHEMERIS_RESULT(builder, EPHEMERIS_RESULT)
+}
+func PRWAddATMOSPHERE_REQUEST(builder *flatbuffers.Builder, ATMOSPHERE_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(ATMOSPHERE_REQUEST), 0)
+}
+func PRWAddAtmosphereRequest(builder *flatbuffers.Builder, ATMOSPHERE_REQUEST flatbuffers.UOffsetT) {
+	PRWAddATMOSPHERE_REQUEST(builder, ATMOSPHERE_REQUEST)
+}
+func PRWAddATMOSPHERE_RESULT(builder *flatbuffers.Builder, ATMOSPHERE_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ATMOSPHERE_RESULT), 0)
+}
+func PRWAddAtmosphereResult(builder *flatbuffers.Builder, ATMOSPHERE_RESULT flatbuffers.UOffsetT) {
+	PRWAddATMOSPHERE_RESULT(builder, ATMOSPHERE_RESULT)
+}
+func PRWAddVERSION_QUERY(builder *flatbuffers.Builder, VERSION_QUERY bool) {
+	builder.PrependBoolSlot(16, VERSION_QUERY, false)
+}
+func PRWAddVersionQuery(builder *flatbuffers.Builder, VERSION_QUERY bool) {
+	PRWAddVERSION_QUERY(builder, VERSION_QUERY)
+}
+func PRWAddVERSION_RESULT(builder *flatbuffers.Builder, VERSION_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(VERSION_RESULT), 0)
+}
+func PRWAddVersionResult(builder *flatbuffers.Builder, VERSION_RESULT flatbuffers.UOffsetT) {
+	PRWAddVERSION_RESULT(builder, VERSION_RESULT)
 }
 func PRWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
