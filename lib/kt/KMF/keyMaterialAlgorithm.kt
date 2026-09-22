@@ -10,5 +10,6 @@ class keyMaterialAlgorithm private constructor() {
         const val X25519Public: Byte = 4
         const val Aes256Gcm: Byte = 5
         const val Opaque: Byte = 6
+        const val Secp256k1Public: Byte = 7
     }
 }

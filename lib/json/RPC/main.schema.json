@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "KeyExchange" : {
+      "type" : "string",
+      "enum": ["X25519", "Secp256k1", "P256"]
+    },
+    "SymmetricAlgo" : {
+      "type" : "string",
+      "enum": ["AES_256_CTR"]
+    },
+    "KDF" : {
+      "type" : "string",
+      "enum": ["HKDF_SHA256"]
+    },
+    "rpcDirection" : {
+      "type" : "string",
+      "enum": ["Request", "Response"]
+    },
+    "ENC" : {
+      "type" : "object",
+      "description" : "Encryption Header containing all parameters needed for decryption",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Schema version for forward compatibility"
+              },
+        "KEY_EXCHANGE" : {
+                "$ref" : "#/definitions/KeyExchange",
+                "description" : "Key exchange algorithm used"
+              },
+        "SYMMETRIC" : {
+                "$ref" : "#/definitions/SymmetricAlgo",
+                "description" : "Symmetric encryption algorithm used"
+              },
+        "KEY_DERIVATION" : {
+                "$ref" : "#/definitions/KDF",
+                "description" : "Key derivation function used"
+              },
+        "EPHEMERAL_PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)"
+              },
+        "NONCE_START" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
+              },
+        "RECIPIENT_KEY_ID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional identifier for the recipient's public key (up to 32 bytes)"
+              },
+        "CONTEXT" : {
+                "type" : "string",
+                "description" : "Optional domain separation context string"
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)"
+              },
+        "ROOT_TYPE" : {
+                "type" : "string",
+                "description" : "Optional root type name from the schema"
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Optional Unix timestamp (milliseconds) when encryption was performed"
+              }
+      },
+      "required" : ["EPHEMERAL_PUBLIC_KEY", "NONCE_START"],
+      "additionalProperties" : false
+    },
+    "RPCBody" : {
+      "type" : "object",
+      "description" : "Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.",
+      "properties" : {
+        "METHOD" : {
+                "type" : "string",
+                "description" : "Request method verb (for example GET, POST). Empty on a response."
+              },
+        "ROUTE" : {
+                "type" : "string",
+                "description" : "Request route, path plus optional query. Empty on a response."
+              },
+        "BODY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Request or response payload bytes."
+              },
+        "BODY_FILE_ID" : {
+                "type" : "string",
+                "description" : "Four-character file identifier of BODY when BODY is a FlatBuffer,\n`$` included (for example \"$EPM\"). Empty when BODY is not a FlatBuffer."
+              },
+        "STATUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Response status code. Zero on a request."
+              },
+        "SIGNER_KEY_ID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Identifier of the signer's key; MUST identify RPC.SIGNER_PUBLIC_KEY."
+              },
+        "REPLY_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Request only: public key the response is sealed to."
+              },
+        "REQUEST_NONCE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Response only: RPC.NONCE of the request being answered."
+              },
+        "REQUEST_DIGEST" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Response only: SHA-256 (32 bytes) of the complete size-prefixed request\nRPC FlatBuffer as received, signatures included."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RPC" : {
+      "type" : "object",
+      "description" : "Sealed Remote Procedure Call envelope (outer, plaintext, signed).",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Envelope version. This document defines version 1."
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/rpcDirection",
+                "description" : "Request or response."
+              },
+        "ENCRYPTION" : {
+                "$ref" : "#/definitions/ENC",
+                "description" : "Encryption header for CIPHERTEXT. CONTEXT is \"RPC/1|request\" or\n\"RPC/1|response\" matching DIRECTION."
+              },
+        "SESSION_ID" : {
+                "type" : "string",
+                "description" : "Optional session identifier established by a prior sign-in."
+              },
+        "SENDER_KEY_ID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional identifier of the sender's key (routing hint only; the binding\nidentity is SIGNER_PUBLIC_KEY checked against RPCBody.SIGNER_KEY_ID)."
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Sender clock at signing, milliseconds since the Unix epoch (UTC)."
+              },
+        "NONCE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 16-byte nonce, unique per envelope."
+              },
+        "CIPHERTEXT" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Encrypted size-prefixed RPCBody."
+              },
+        "SIGNER_PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 public key (32 bytes) that verifies both signatures."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string",
+                "description" : "Signature algorithm name. Version 1 defines \"Ed25519\"."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets."
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+              }
+      },
+      "required" : ["ENCRYPTION", "CIPHERTEXT", "SIGNER_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RPC"
+}

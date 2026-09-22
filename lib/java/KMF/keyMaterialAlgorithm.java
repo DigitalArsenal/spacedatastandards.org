@@ -10,8 +10,9 @@ public final class keyMaterialAlgorithm {
   public static final byte X25519Public = 4;
   public static final byte Aes256Gcm = 5;
   public static final byte Opaque = 6;
+  public static final byte Secp256k1Public = 7;
 
-  public static final String[] names = { "Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque", };
+  public static final String[] names = { "Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque", "Secp256k1Public", };
 
   public static String name(int e) { return names[e]; }
 }

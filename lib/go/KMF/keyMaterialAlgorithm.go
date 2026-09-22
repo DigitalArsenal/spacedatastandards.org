@@ -7,33 +7,36 @@ import "strconv"
 type keyMaterialAlgorithm int8
 
 const (
-	keyMaterialAlgorithmUnknown       keyMaterialAlgorithm = 0
-	keyMaterialAlgorithmEd25519Seed   keyMaterialAlgorithm = 1
-	keyMaterialAlgorithmEd25519Public keyMaterialAlgorithm = 2
-	keyMaterialAlgorithmX25519Private keyMaterialAlgorithm = 3
-	keyMaterialAlgorithmX25519Public  keyMaterialAlgorithm = 4
-	keyMaterialAlgorithmAes256Gcm     keyMaterialAlgorithm = 5
-	keyMaterialAlgorithmOpaque        keyMaterialAlgorithm = 6
+	keyMaterialAlgorithmUnknown         keyMaterialAlgorithm = 0
+	keyMaterialAlgorithmEd25519Seed     keyMaterialAlgorithm = 1
+	keyMaterialAlgorithmEd25519Public   keyMaterialAlgorithm = 2
+	keyMaterialAlgorithmX25519Private   keyMaterialAlgorithm = 3
+	keyMaterialAlgorithmX25519Public    keyMaterialAlgorithm = 4
+	keyMaterialAlgorithmAes256Gcm       keyMaterialAlgorithm = 5
+	keyMaterialAlgorithmOpaque          keyMaterialAlgorithm = 6
+	keyMaterialAlgorithmSecp256k1Public keyMaterialAlgorithm = 7
 )
 
 var EnumNameskeyMaterialAlgorithm = map[keyMaterialAlgorithm]string{
-	keyMaterialAlgorithmUnknown:       "Unknown",
-	keyMaterialAlgorithmEd25519Seed:   "Ed25519Seed",
-	keyMaterialAlgorithmEd25519Public: "Ed25519Public",
-	keyMaterialAlgorithmX25519Private: "X25519Private",
-	keyMaterialAlgorithmX25519Public:  "X25519Public",
-	keyMaterialAlgorithmAes256Gcm:     "Aes256Gcm",
-	keyMaterialAlgorithmOpaque:        "Opaque",
+	keyMaterialAlgorithmUnknown:         "Unknown",
+	keyMaterialAlgorithmEd25519Seed:     "Ed25519Seed",
+	keyMaterialAlgorithmEd25519Public:   "Ed25519Public",
+	keyMaterialAlgorithmX25519Private:   "X25519Private",
+	keyMaterialAlgorithmX25519Public:    "X25519Public",
+	keyMaterialAlgorithmAes256Gcm:       "Aes256Gcm",
+	keyMaterialAlgorithmOpaque:          "Opaque",
+	keyMaterialAlgorithmSecp256k1Public: "Secp256k1Public",
 }
 
 var EnumValueskeyMaterialAlgorithm = map[string]keyMaterialAlgorithm{
-	"Unknown":       keyMaterialAlgorithmUnknown,
-	"Ed25519Seed":   keyMaterialAlgorithmEd25519Seed,
-	"Ed25519Public": keyMaterialAlgorithmEd25519Public,
-	"X25519Private": keyMaterialAlgorithmX25519Private,
-	"X25519Public":  keyMaterialAlgorithmX25519Public,
-	"Aes256Gcm":     keyMaterialAlgorithmAes256Gcm,
-	"Opaque":        keyMaterialAlgorithmOpaque,
+	"Unknown":         keyMaterialAlgorithmUnknown,
+	"Ed25519Seed":     keyMaterialAlgorithmEd25519Seed,
+	"Ed25519Public":   keyMaterialAlgorithmEd25519Public,
+	"X25519Private":   keyMaterialAlgorithmX25519Private,
+	"X25519Public":    keyMaterialAlgorithmX25519Public,
+	"Aes256Gcm":       keyMaterialAlgorithmAes256Gcm,
+	"Opaque":          keyMaterialAlgorithmOpaque,
+	"Secp256k1Public": keyMaterialAlgorithmSecp256k1Public,
 }
 
 func (v keyMaterialAlgorithm) String() string {

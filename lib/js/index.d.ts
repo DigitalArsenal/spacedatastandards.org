@@ -182,6 +182,7 @@ export * as RFM from './RFM/main.js';
 export * as RFO from './RFO/main.js';
 export * as RFS from './RFS/main.js';
 export * as ROC from './ROC/main.js';
+export * as RPC from './RPC/main.js';
 export * as RPT from './RPT/main.js';
 export * as RSD from './RSD/main.js';
 export * as SAR from './SAR/main.js';

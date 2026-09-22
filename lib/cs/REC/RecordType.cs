@@ -267,6 +267,7 @@ public enum RecordType : byte
   CLM = 246,
   GCT = 247,
   CQR = 248,
+  RPC = 249,
 };
 
 public class RecordTypeUnion {
@@ -775,6 +776,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromGCT(GCTT _gct) { return new RecordTypeUnion{ Type = RecordType.GCT, Value = _gct }; }
   public CQRT AsCQR() { return this.As<CQRT>(); }
   public static RecordTypeUnion FromCQR(CQRT _cqr) { return new RecordTypeUnion{ Type = RecordType.CQR, Value = _cqr }; }
+  public RPCT AsRPC() { return this.As<RPCT>(); }
+  public static RecordTypeUnion FromRPC(RPCT _rpc) { return new RecordTypeUnion{ Type = RecordType.RPC, Value = _rpc }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1027,6 +1030,7 @@ public class RecordTypeUnion {
       case RecordType.CLM: return CLM.Pack(builder, _o.AsCLM()).Value;
       case RecordType.GCT: return GCT.Pack(builder, _o.AsGCT()).Value;
       case RecordType.CQR: return CQR.Pack(builder, _o.AsCQR()).Value;
+      case RecordType.RPC: return RPC.Pack(builder, _o.AsRPC()).Value;
     }
   }
 }
@@ -1783,6 +1787,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.CQR:
         result = CQRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RPC:
+        result = RPCVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

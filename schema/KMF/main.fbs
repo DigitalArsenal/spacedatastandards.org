@@ -1,5 +1,5 @@
-// Hash: d8de3ea254f27aafc70f13bc5a569b57be4f6ba0591dc85603a523c2525c3a24
-// Version: 1.82.1
+// Hash: b3c9bf85aad282c5fc528df9d2f3e0690da00536d5b2a33e6f1e0d7f67900acb
+// Version: 1.82.2
 // -----------------------------------END_HEADER
 attribute "encrypted";
 
@@ -18,7 +18,8 @@ enum keyMaterialAlgorithm : byte {
   X25519Private,
   X25519Public,
   Aes256Gcm,
-  Opaque
+  Opaque,
+  Secp256k1Public
 }
 
 enum keyMaterialEncoding : byte {

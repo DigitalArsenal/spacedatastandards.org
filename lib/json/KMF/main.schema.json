@@ -7,7 +7,7 @@
     },
     "keyMaterialAlgorithm" : {
       "type" : "string",
-      "enum": ["Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque"]
+      "enum": ["Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque", "Secp256k1Public"]
     },
     "keyMaterialEncoding" : {
       "type" : "string",

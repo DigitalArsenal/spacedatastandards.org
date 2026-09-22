@@ -14233,7 +14233,8 @@
         "X25519Private",
         "X25519Public",
         "Aes256Gcm",
-        "Opaque"
+        "Opaque",
+        "Secp256k1Public"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -14258,6 +14259,9 @@
         },
         "Opaque": {
           "value": 6
+        },
+        "Secp256k1Public": {
+          "value": 7
         }
       }
     },
@@ -18533,6 +18537,23 @@
         },
         "INTERFERENCE_ONLY": {
           "value": 4
+        }
+      }
+    },
+    "rpcDirection": {
+      "type": "string",
+      "enum": [
+        "Request",
+        "Response"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Request": {
+          "value": 0
+        },
+        "Response": {
+          "value": 1
         }
       }
     },
@@ -24361,7 +24382,8 @@
         "WXF",
         "CLM",
         "GCT",
-        "CQR"
+        "CQR",
+        "RPC"
       ]
     },
     "LKS": {
@@ -71715,6 +71737,9 @@
             },
             "Opaque": {
               "value": 6
+            },
+            "Secp256k1Public": {
+              "value": 7
             }
           },
           "x-flatbuffer-default": "Unknown"
@@ -89713,6 +89738,209 @@
           "x-flatbuffer-type": "[string]"
         }
       },
+      "additionalProperties": false
+    },
+    "RPCBody": {
+      "type": "object",
+      "description": "Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.",
+      "properties": {
+        "METHOD": {
+          "type": "string",
+          "description": "Request method verb (for example GET, POST). Empty on a response.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROUTE": {
+          "type": "string",
+          "description": "Request route, path plus optional query. Empty on a response.",
+          "x-flatbuffer-type": "string"
+        },
+        "BODY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Request or response payload bytes.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "BODY_FILE_ID": {
+          "type": "string",
+          "description": "Four-character file identifier of BODY when BODY is a FlatBuffer,\n`$` included (for example \"$EPM\"). Empty when BODY is not a FlatBuffer.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Response status code. Zero on a request.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "SIGNER_KEY_ID": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Identifier of the signer's key; MUST identify RPC.SIGNER_PUBLIC_KEY.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "REPLY_KEY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Request only: public key the response is sealed to.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "REQUEST_NONCE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Response only: RPC.NONCE of the request being answered.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "REQUEST_DIGEST": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Response only: SHA-256 (32 bytes) of the complete size-prefixed request\nRPC FlatBuffer as received, signatures included.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RPC": {
+      "type": "object",
+      "description": "Sealed Remote Procedure Call envelope (outer, plaintext, signed).",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Envelope version. This document defines version 1.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "1"
+        },
+        "DIRECTION": {
+          "$ref": "#/definitions/rpcDirection",
+          "description": "Request or response.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Request": {
+              "value": 0
+            },
+            "Response": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "Request"
+        },
+        "ENCRYPTION": {
+          "$ref": "#/definitions/ENC",
+          "description": "Encryption header for CIPHERTEXT. CONTEXT is \"RPC/1|request\" or\n\"RPC/1|response\" matching DIRECTION.",
+          "x-flatbuffer-type": "ENC",
+          "x-flatbuffer-required": true
+        },
+        "SESSION_ID": {
+          "type": "string",
+          "description": "Optional session identifier established by a prior sign-in.",
+          "x-flatbuffer-type": "string"
+        },
+        "SENDER_KEY_ID": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Optional identifier of the sender's key (routing hint only; the binding\nidentity is SIGNER_PUBLIC_KEY checked against RPCBody.SIGNER_KEY_ID).",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "TIMESTAMP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Sender clock at signing, milliseconds since the Unix epoch (UTC).",
+          "x-flatbuffer-type": "uint64"
+        },
+        "NONCE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Random 16-byte nonce, unique per envelope.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CIPHERTEXT": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Encrypted size-prefixed RPCBody.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "SIGNER_PUBLIC_KEY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 public key (32 bytes) that verifies both signatures.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "description": "Signature algorithm name. Version 1 defines \"Ed25519\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\nsignature payloads zeroed while preserving their vectors and offsets.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ENCRYPTION",
+        "CIPHERTEXT",
+        "SIGNER_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
       "additionalProperties": false
     },
     "RPT": {
@@ -114005,6 +114233,9 @@
             },
             {
               "$ref": "#/definitions/CQR"
+            },
+            {
+              "$ref": "#/definitions/RPC"
             }
           ],
           "description": "The record data (union of all supported standards)",

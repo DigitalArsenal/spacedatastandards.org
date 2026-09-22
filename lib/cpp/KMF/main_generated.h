@@ -63,11 +63,12 @@ enum keyMaterialAlgorithm : int8_t {
   keyMaterialAlgorithm_X25519Public = 4,
   keyMaterialAlgorithm_Aes256Gcm = 5,
   keyMaterialAlgorithm_Opaque = 6,
+  keyMaterialAlgorithm_Secp256k1Public = 7,
   keyMaterialAlgorithm_MIN = keyMaterialAlgorithm_Unknown,
-  keyMaterialAlgorithm_MAX = keyMaterialAlgorithm_Opaque
+  keyMaterialAlgorithm_MAX = keyMaterialAlgorithm_Secp256k1Public
 };
 
-inline const keyMaterialAlgorithm (&EnumValueskeyMaterialAlgorithm())[7] {
+inline const keyMaterialAlgorithm (&EnumValueskeyMaterialAlgorithm())[8] {
   static const keyMaterialAlgorithm values[] = {
     keyMaterialAlgorithm_Unknown,
     keyMaterialAlgorithm_Ed25519Seed,
@@ -75,13 +76,14 @@ inline const keyMaterialAlgorithm (&EnumValueskeyMaterialAlgorithm())[7] {
     keyMaterialAlgorithm_X25519Private,
     keyMaterialAlgorithm_X25519Public,
     keyMaterialAlgorithm_Aes256Gcm,
-    keyMaterialAlgorithm_Opaque
+    keyMaterialAlgorithm_Opaque,
+    keyMaterialAlgorithm_Secp256k1Public
   };
   return values;
 }
 
 inline const char * const *EnumNameskeyMaterialAlgorithm() {
-  static const char * const names[8] = {
+  static const char * const names[9] = {
     "Unknown",
     "Ed25519Seed",
     "Ed25519Public",
@@ -89,13 +91,14 @@ inline const char * const *EnumNameskeyMaterialAlgorithm() {
     "X25519Public",
     "Aes256Gcm",
     "Opaque",
+    "Secp256k1Public",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamekeyMaterialAlgorithm(keyMaterialAlgorithm e) {
-  if (::flatbuffers::IsOutRange(e, keyMaterialAlgorithm_Unknown, keyMaterialAlgorithm_Opaque)) return "";
+  if (::flatbuffers::IsOutRange(e, keyMaterialAlgorithm_Unknown, keyMaterialAlgorithm_Secp256k1Public)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameskeyMaterialAlgorithm()[index];
 }

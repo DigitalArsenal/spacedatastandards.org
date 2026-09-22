@@ -39,7 +39,8 @@
         "X25519Private",
         "X25519Public",
         "Aes256Gcm",
-        "Opaque"
+        "Opaque",
+        "Secp256k1Public"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -64,6 +65,9 @@
         },
         "Opaque": {
           "value": 6
+        },
+        "Secp256k1Public": {
+          "value": 7
         }
       }
     },
@@ -151,6 +155,9 @@
             },
             "Opaque": {
               "value": 6
+            },
+            "Secp256k1Public": {
+              "value": 7
             }
           },
           "x-flatbuffer-default": "Unknown"

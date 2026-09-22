@@ -268,5 +268,6 @@ class RecordType private constructor() {
         const val CLM: UByte = 246u
         const val GCT: UByte = 247u
         const val CQR: UByte = 248u
+        const val RPC: UByte = 249u
     }
 }

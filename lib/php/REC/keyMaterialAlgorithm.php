@@ -10,6 +10,7 @@ class keyMaterialAlgorithm
     const X25519Public = 4;
     const Aes256Gcm = 5;
     const Opaque = 6;
+    const Secp256k1Public = 7;
 
     private static $names = array(
         keyMaterialAlgorithm::Unknown=>"Unknown",
@@ -19,6 +20,7 @@ class keyMaterialAlgorithm
         keyMaterialAlgorithm::X25519Public=>"X25519Public",
         keyMaterialAlgorithm::Aes256Gcm=>"Aes256Gcm",
         keyMaterialAlgorithm::Opaque=>"Opaque",
+        keyMaterialAlgorithm::Secp256k1Public=>"Secp256k1Public",
     );
 
     public static function Name($e)

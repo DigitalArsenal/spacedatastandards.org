@@ -249,6 +249,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -383,10 +384,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 248;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 249;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 249] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 250] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -636,6 +637,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 249] = [
   RecordType::CLM,
   RecordType::GCT,
   RecordType::CQR,
+  RecordType::RPC,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -906,9 +908,10 @@ impl RecordType {
   pub const CLM: Self = Self(246);
   pub const GCT: Self = Self(247);
   pub const CQR: Self = Self(248);
+  pub const RPC: Self = Self(249);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 248;
+  pub const ENUM_MAX: u8 = 249;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1159,6 +1162,7 @@ impl RecordType {
     Self::CLM,
     Self::GCT,
     Self::CQR,
+    Self::RPC,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1412,6 +1416,7 @@ impl RecordType {
       Self::CLM => Some("CLM"),
       Self::GCT => Some("GCT"),
       Self::CQR => Some("CQR"),
+      Self::RPC => Some("RPC"),
       _ => None,
     }
   }
@@ -1721,6 +1726,7 @@ pub enum RecordTypeT {
   CLM(alloc::boxed::Box<CLMT>),
   GCT(alloc::boxed::Box<GCTT>),
   CQR(alloc::boxed::Box<CQRT>),
+  RPC(alloc::boxed::Box<RPCT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1979,6 +1985,7 @@ impl RecordTypeT {
       Self::CLM(_) => RecordType::CLM,
       Self::GCT(_) => RecordType::GCT,
       Self::CQR(_) => RecordType::CQR,
+      Self::RPC(_) => RecordType::RPC,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2232,6 +2239,7 @@ impl RecordTypeT {
       Self::CLM(v) => Some(v.pack(fbb).as_union_value()),
       Self::GCT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CQR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RPC(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7442,6 +7450,27 @@ impl RecordTypeT {
   pub fn as_cqr_mut(&mut self) -> Option<&mut CQRT> {
     if let Self::CQR(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned RPCT, setting the union to NONE.
+  pub fn take_rpc(&mut self) -> Option<alloc::boxed::Box<RPCT>> {
+    if let Self::RPC(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::RPC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RPCT.
+  pub fn as_rpc(&self) -> Option<&RPCT> {
+    if let Self::RPC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RPCT.
+  pub fn as_rpc_mut(&mut self) -> Option<&mut RPCT> {
+    if let Self::RPC(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8721,6 +8750,11 @@ impl<'a> Record<'a> {
       RecordType::CQR => RecordTypeT::CQR(alloc::boxed::Box::new(
         self.value_as_cqr()
             .expect("Invalid union table, expected `RecordType::CQR`.")
+            .unpack()
+      )),
+      RecordType::RPC => RecordTypeT::RPC(alloc::boxed::Box::new(
+        self.value_as_rpc()
+            .expect("Invalid union table, expected `RecordType::RPC`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -12477,6 +12511,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_rpc(&self) -> Option<RPC<'a>> {
+    if self.value_type() == RecordType::RPC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RPC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12735,6 +12784,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::CLM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CLM>>("RecordType::CLM", pos),
           RecordType::GCT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GCT>>("RecordType::GCT", pos),
           RecordType::CQR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CQR>>("RecordType::CQR", pos),
+          RecordType::RPC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RPC>>("RecordType::RPC", pos),
           _ => Ok(()),
         }
      })?
@@ -14527,6 +14577,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::CQR => {
           if let Some(x) = self.value_as_cqr() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RPC => {
+          if let Some(x) = self.value_as_rpc() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

@@ -163,7 +163,8 @@ enum keyMaterialAlgorithm {
   X25519Private(3),
   X25519Public(4),
   Aes256Gcm(5),
-  Opaque(6);
+  Opaque(6),
+  Secp256k1Public(7);
 
   final int value;
   const keyMaterialAlgorithm(this.value);
@@ -177,6 +178,7 @@ enum keyMaterialAlgorithm {
       case 4: return keyMaterialAlgorithm.X25519Public;
       case 5: return keyMaterialAlgorithm.Aes256Gcm;
       case 6: return keyMaterialAlgorithm.Opaque;
+      case 7: return keyMaterialAlgorithm.Secp256k1Public;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -185,7 +187,7 @@ enum keyMaterialAlgorithm {
       value == null ? null : keyMaterialAlgorithm.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<keyMaterialAlgorithm> reader = _keyMaterialAlgorithmReader();
 }
 

@@ -34,8 +34,9 @@ public enum keyMaterialAlgorithm: Int8, FlatbuffersVectorInitializable, Enum, Ve
   case x25519public = 4
   case aes256gcm = 5
   case opaque = 6
+  case secp256k1public = 7
 
-  public static var max: keyMaterialAlgorithm { return .opaque }
+  public static var max: keyMaterialAlgorithm { return .secp256k1public }
   public static var min: keyMaterialAlgorithm { return .unknown }
 }
 

@@ -261,6 +261,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -532,11 +533,12 @@ enum RecordType : uint8_t {
   RecordType_CLM = 246,
   RecordType_GCT = 247,
   RecordType_CQR = 248,
+  RecordType_RPC = 249,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_CQR
+  RecordType_MAX = RecordType_RPC
 };
 
-inline const RecordType (&EnumValuesRecordType())[249] {
+inline const RecordType (&EnumValuesRecordType())[250] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -786,13 +788,14 @@ inline const RecordType (&EnumValuesRecordType())[249] {
     RecordType_WXF,
     RecordType_CLM,
     RecordType_GCT,
-    RecordType_CQR
+    RecordType_CQR,
+    RecordType_RPC
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[250] = {
+  static const char * const names[251] = {
     "NONE",
     "ACL",
     "ACM",
@@ -1042,13 +1045,14 @@ inline const char * const *EnumNamesRecordType() {
     "CLM",
     "GCT",
     "CQR",
+    "RPC",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_CQR)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_RPC)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -2049,6 +2053,10 @@ template<> struct RecordTypeTraits<CQR> {
   static const RecordType enum_value = RecordType_CQR;
 };
 
+template<> struct RecordTypeTraits<RPC> {
+  static const RecordType enum_value = RecordType_RPC;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2813,6 +2821,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const CQR *value_as_CQR() const {
     return value_type() == RecordType_CQR ? static_cast<const CQR *>(value()) : nullptr;
+  }
+  const RPC *value_as_RPC() const {
+    return value_type() == RecordType_RPC ? static_cast<const RPC *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3820,6 +3831,10 @@ template<> inline const GCT *Record::value_as<GCT>() const {
 
 template<> inline const CQR *Record::value_as<CQR>() const {
   return value_as_CQR();
+}
+
+template<> inline const RPC *Record::value_as<RPC>() const {
+  return value_as_RPC();
 }
 
 struct RecordBuilder {
@@ -4937,6 +4952,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_CQR: {
       auto ptr = reinterpret_cast<const CQR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_RPC: {
+      auto ptr = reinterpret_cast<const RPC *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

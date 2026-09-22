@@ -231,10 +231,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for keyMaterialRole {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_KEY_MATERIAL_ALGORITHM: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_KEY_MATERIAL_ALGORITHM: i8 = 6;
+pub const ENUM_MAX_KEY_MATERIAL_ALGORITHM: i8 = 7;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_KEY_MATERIAL_ALGORITHM: [keyMaterialAlgorithm; 7] = [
+pub const ENUM_VALUES_KEY_MATERIAL_ALGORITHM: [keyMaterialAlgorithm; 8] = [
   keyMaterialAlgorithm::Unknown,
   keyMaterialAlgorithm::Ed25519Seed,
   keyMaterialAlgorithm::Ed25519Public,
@@ -242,6 +242,7 @@ pub const ENUM_VALUES_KEY_MATERIAL_ALGORITHM: [keyMaterialAlgorithm; 7] = [
   keyMaterialAlgorithm::X25519Public,
   keyMaterialAlgorithm::Aes256Gcm,
   keyMaterialAlgorithm::Opaque,
+  keyMaterialAlgorithm::Secp256k1Public,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -256,9 +257,10 @@ impl keyMaterialAlgorithm {
   pub const X25519Public: Self = Self(4);
   pub const Aes256Gcm: Self = Self(5);
   pub const Opaque: Self = Self(6);
+  pub const Secp256k1Public: Self = Self(7);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_MAX: i8 = 7;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Unknown,
     Self::Ed25519Seed,
@@ -267,6 +269,7 @@ impl keyMaterialAlgorithm {
     Self::X25519Public,
     Self::Aes256Gcm,
     Self::Opaque,
+    Self::Secp256k1Public,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -278,6 +281,7 @@ impl keyMaterialAlgorithm {
       Self::X25519Public => Some("X25519Public"),
       Self::Aes256Gcm => Some("Aes256Gcm"),
       Self::Opaque => Some("Opaque"),
+      Self::Secp256k1Public => Some("Secp256k1Public"),
       _ => None,
     }
   }

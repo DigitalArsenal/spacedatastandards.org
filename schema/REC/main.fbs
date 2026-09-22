@@ -1,5 +1,5 @@
-// Hash: 8db2f10b0b797f4bb9e8bf986a6d47ecf94b2ff146f6e2195392192445d46839
-// Version: 1.44.73
+// Hash: 8668c4b6c1693c02af51f2172392f1185441b11e3198dbf91e7f6567b55d723d
+// Version: 1.44.74
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -184,6 +184,7 @@ include "../RFM/main.fbs";
 include "../RFO/main.fbs";
 include "../RFS/main.fbs";
 include "../ROC/main.fbs";
+include "../RPC/main.fbs";
 include "../RPT/main.fbs";
 include "../RSD/main.fbs";
 include "../SAR/main.fbs";
@@ -326,7 +327,8 @@ union RecordType {
   TRH, SLP, PSS, ICN,
   TRP, TRV, ACT, AGR,
   NDS, NST, QRP, TCT,
-  WXF, CLM, GCT, CQR
+  WXF, CLM, GCT, CQR,
+  RPC
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

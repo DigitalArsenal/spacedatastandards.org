@@ -9,5 +9,6 @@ export enum keyMaterialAlgorithm {
   X25519Private = 3,
   X25519Public = 4,
   Aes256Gcm = 5,
-  Opaque = 6
+  Opaque = 6,
+  Secp256k1Public = 7
 }

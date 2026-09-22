@@ -64,6 +64,7 @@ enum keyMaterialAlgorithm:
     keyMaterialAlgorithm_X25519Public = 4
     keyMaterialAlgorithm_Aes256Gcm = 5
     keyMaterialAlgorithm_Opaque = 6
+    keyMaterialAlgorithm_Secp256k1Public = 7
 
 enum keyMaterialEncoding:
     keyMaterialEncoding_Unknown = 0
