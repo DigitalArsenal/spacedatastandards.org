@@ -195,6 +195,10 @@ jobs:
   # ============================================
   # PyPI (Python)
   # ============================================
+  # PyPI is not an intended target unless the PYPI_ENABLED repository variable
+  # is 'true' (owner decision 2026-09-22): the project still carries legacy
+  # 23.3.3.0.3.x releases that sort above every 1.x version, so publishing 1.x
+  # there is refused until those are yanked.
   publish-pypi:
     needs: build
     runs-on: ubuntu-latest
@@ -202,9 +206,11 @@ jobs:
       contents: read
       id-token: write
     if: |
-      github.event_name == 'release' ||
-      contains(inputs.packages, 'pypi') ||
-      inputs.packages == 'all'
+      vars.PYPI_ENABLED == 'true' && (
+        github.event_name == 'release' ||
+        contains(inputs.packages, 'pypi') ||
+        inputs.packages == 'all'
+      )
     steps:
       - uses: actions/checkout@v4
 
@@ -1083,7 +1089,11 @@ jobs:
           echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| npm (npmjs.org) | ${{ needs.publish-npm.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| npm (GitHub Packages) | ${{ needs.publish-github-npm.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| PyPI | ${{ needs.publish-pypi.result }} |" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ vars.PYPI_ENABLED }}" = "true" ]; then
+            echo "| PyPI | ${{ needs.publish-pypi.result }} |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| PyPI | not configured (PYPI_ENABLED is not 'true') |" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "| crates.io | ${{ needs.publish-cargo.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| pub.dev | ${{ needs.publish-dart.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Maven Central | ${{ needs.publish-maven-java.result }} |" >> $GITHUB_STEP_SUMMARY

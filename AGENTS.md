@@ -51,7 +51,8 @@
      not just from workflow status. At minimum:
      `npm view spacedatastandards.org version`,
      `npm view @digitalarsenal/spacedatastandards version --registry=https://npm.pkg.github.com`,
-     `curl https://pypi.org/pypi/spacedatastandards.org/json`,
+     `curl https://pypi.org/pypi/spacedatastandards.org/json` (only when the
+     `PYPI_ENABLED` repository variable is `true`; see below),
      `curl https://crates.io/api/v1/crates/spacedatastandards-org`,
      `curl https://pub.dev/api/packages/spacedatastandards`,
      Maven Central lookup for the configured Maven coordinate,
@@ -59,6 +60,10 @@
      and
      `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
      must show the new release.
+     PyPI is not an intended target unless the `PYPI_ENABLED` repository
+     variable is `true` (owner decision 2026-09-22): the project carries
+     legacy `23.3.3.0.3.x` releases that sort above every 1.x version, so the
+     publish job refuses 1.x there until they are yanked.
      Java/Maven Central is not an intended target unless the `MAVEN_GROUP_ID`
      repository variable is configured to a Central-verified namespace; if it
      is absent, the workflow must say Maven is not configured instead of
