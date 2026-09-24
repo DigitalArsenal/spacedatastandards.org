@@ -26,6 +26,11 @@ export declare enum wxfLevelKind {
     /**
      * Top of atmosphere; LEVEL_VALUE is unused.
      */
-    TopOfAtmosphere = 5
+    TopOfAtmosphere = 5,
+    /**
+     * The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+     * a GeopotentialHeight field at this level, never implied by a pressure.
+     */
+    Tropopause = 6
 }
 //# sourceMappingURL=wxfLevelKind.d.ts.map

@@ -76,6 +76,10 @@ const (
 	wxfVariableTotalColumnWaterVapour                wxfVariable = 28
 	/// Surface pressure, pascal.
 	wxfVariableSurfacePressure                       wxfVariable = 29
+	/// Geopotential height, geopotential metres (gpm): the height a producer
+	/// such as GFS publishes on pressure levels and at the tropopause. Distinct
+	/// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+	wxfVariableGeopotentialHeight                    wxfVariable = 30
 )
 
 var EnumNameswxfVariable = map[wxfVariable]string{
@@ -109,6 +113,7 @@ var EnumNameswxfVariable = map[wxfVariable]string{
 	wxfVariableRelativeHumidity:                      "RelativeHumidity",
 	wxfVariableTotalColumnWaterVapour:                "TotalColumnWaterVapour",
 	wxfVariableSurfacePressure:                       "SurfacePressure",
+	wxfVariableGeopotentialHeight:                    "GeopotentialHeight",
 }
 
 var EnumValueswxfVariable = map[string]wxfVariable{
@@ -142,6 +147,7 @@ var EnumValueswxfVariable = map[string]wxfVariable{
 	"RelativeHumidity":                      wxfVariableRelativeHumidity,
 	"TotalColumnWaterVapour":                wxfVariableTotalColumnWaterVapour,
 	"SurfacePressure":                       wxfVariableSurfacePressure,
+	"GeopotentialHeight":                    wxfVariableGeopotentialHeight,
 }
 
 func (v wxfVariable) String() string {

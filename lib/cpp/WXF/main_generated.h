@@ -234,11 +234,15 @@ enum wxfVariable : int8_t {
   wxfVariable_TotalColumnWaterVapour = 28,
   /// Surface pressure, pascal.
   wxfVariable_SurfacePressure = 29,
+  /// Geopotential height, geopotential metres (gpm): the height a producer
+  /// such as GFS publishes on pressure levels and at the tropopause. Distinct
+  /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+  wxfVariable_GeopotentialHeight = 30,
   wxfVariable_MIN = wxfVariable_Unspecified,
-  wxfVariable_MAX = wxfVariable_SurfacePressure
+  wxfVariable_MAX = wxfVariable_GeopotentialHeight
 };
 
-inline const wxfVariable (&EnumValueswxfVariable())[30] {
+inline const wxfVariable (&EnumValueswxfVariable())[31] {
   static const wxfVariable values[] = {
     wxfVariable_Unspecified,
     wxfVariable_Temperature2m,
@@ -269,13 +273,14 @@ inline const wxfVariable (&EnumValueswxfVariable())[30] {
     wxfVariable_PrecipitationRate,
     wxfVariable_RelativeHumidity,
     wxfVariable_TotalColumnWaterVapour,
-    wxfVariable_SurfacePressure
+    wxfVariable_SurfacePressure,
+    wxfVariable_GeopotentialHeight
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfVariable() {
-  static const char * const names[31] = {
+  static const char * const names[32] = {
     "Unspecified",
     "Temperature2m",
     "DewpointTemperature2m",
@@ -306,13 +311,14 @@ inline const char * const *EnumNameswxfVariable() {
     "RelativeHumidity",
     "TotalColumnWaterVapour",
     "SurfacePressure",
+    "GeopotentialHeight",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfVariable(wxfVariable e) {
-  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_SurfacePressure)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_GeopotentialHeight)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfVariable()[index];
 }
@@ -332,37 +338,42 @@ enum wxfLevelKind : int8_t {
   wxfLevelKind_EntireAtmosphere = 4,
   /// Top of atmosphere; LEVEL_VALUE is unused.
   wxfLevelKind_TopOfAtmosphere = 5,
+  /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+  /// a GeopotentialHeight field at this level, never implied by a pressure.
+  wxfLevelKind_Tropopause = 6,
   wxfLevelKind_MIN = wxfLevelKind_Surface,
-  wxfLevelKind_MAX = wxfLevelKind_TopOfAtmosphere
+  wxfLevelKind_MAX = wxfLevelKind_Tropopause
 };
 
-inline const wxfLevelKind (&EnumValueswxfLevelKind())[6] {
+inline const wxfLevelKind (&EnumValueswxfLevelKind())[7] {
   static const wxfLevelKind values[] = {
     wxfLevelKind_Surface,
     wxfLevelKind_HeightAboveGround,
     wxfLevelKind_PressureLevel,
     wxfLevelKind_MeanSeaLevel,
     wxfLevelKind_EntireAtmosphere,
-    wxfLevelKind_TopOfAtmosphere
+    wxfLevelKind_TopOfAtmosphere,
+    wxfLevelKind_Tropopause
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfLevelKind() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "Surface",
     "HeightAboveGround",
     "PressureLevel",
     "MeanSeaLevel",
     "EntireAtmosphere",
     "TopOfAtmosphere",
+    "Tropopause",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfLevelKind(wxfLevelKind e) {
-  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_TopOfAtmosphere)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_Tropopause)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfLevelKind()[index];
 }

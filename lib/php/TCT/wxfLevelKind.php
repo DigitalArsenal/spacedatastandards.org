@@ -17,6 +17,9 @@ class wxfLevelKind
     const EntireAtmosphere = 4;
     /// Top of atmosphere; LEVEL_VALUE is unused.
     const TopOfAtmosphere = 5;
+    /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+    /// a GeopotentialHeight field at this level, never implied by a pressure.
+    const Tropopause = 6;
 
     private static $names = array(
         wxfLevelKind::Surface=>"Surface",
@@ -25,6 +28,7 @@ class wxfLevelKind
         wxfLevelKind::MeanSeaLevel=>"MeanSeaLevel",
         wxfLevelKind::EntireAtmosphere=>"EntireAtmosphere",
         wxfLevelKind::TopOfAtmosphere=>"TopOfAtmosphere",
+        wxfLevelKind::Tropopause=>"Tropopause",
     );
 
     public static function Name($e)

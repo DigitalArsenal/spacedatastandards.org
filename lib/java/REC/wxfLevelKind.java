@@ -31,8 +31,13 @@ public final class wxfLevelKind {
    * Top of atmosphere; LEVEL_VALUE is unused.
    */
   public static final byte TopOfAtmosphere = 5;
+  /**
+   * The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+   * a GeopotentialHeight field at this level, never implied by a pressure.
+   */
+  public static final byte Tropopause = 6;
 
-  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", };
+  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", };
 
   public static String name(int e) { return names[e]; }
 }

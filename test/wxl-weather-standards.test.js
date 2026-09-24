@@ -99,6 +99,27 @@ describe("weather forecast standards round-trip through the generated JS", () =>
     assert.equal(back.UNITS, "1");
   });
 
+  it("$WXF carries a tropopause geopotential height without relabelling Geopotential", () => {
+    // Appended members: existing wire values stay where they were.
+    assert.equal(WXF.wxfLevelKind.TopOfAtmosphere, 5);
+    assert.equal(WXF.wxfLevelKind.Tropopause, 6);
+    assert.equal(WXF.wxfVariable.SurfacePressure, 29);
+    assert.equal(WXF.wxfVariable.GeopotentialHeight, 30);
+    assert.notEqual(WXF.wxfVariable.GeopotentialHeight, WXF.wxfVariable.Geopotential);
+    const field = new WXF.WXFT();
+    field.FIELD_ID = "gfs-tropopause-height";
+    field.GRID = grid({ lat0: 10, lon0: -107.25, dlat: 0.25, dlon: 0.25, nlat: 2, nlon: 2, periodic: false });
+    field.VALUES = [16891.5, 17410, 16950.25, 17002];
+    field.VARIABLE = WXF.wxfVariable.GeopotentialHeight;
+    field.UNITS = "gpm";
+    field.LEVEL_KIND = WXF.wxfLevelKind.Tropopause;
+    const back = roundTrip(field, WXF.WXF.finishSizePrefixedWXFBuffer, WXF.WXF.getSizePrefixedRootAsWXF, "$WXF");
+    assert.equal(back.VARIABLE, WXF.wxfVariable.GeopotentialHeight);
+    assert.equal(back.LEVEL_KIND, WXF.wxfLevelKind.Tropopause);
+    assert.equal(back.LEVEL_VALUE, 0);
+    assert.deepEqual(Array.from(back.VALUES), [16891.5, 17410, 16950.25, 17002]);
+  });
+
   it("$WXF keeps epochs as uint64 BigInt and every enum selector", () => {
     assert.equal(new Date(Number(INIT_TIME_MS)).toISOString(), "2026-09-02T00:00:00.000Z");
     const field = new WXF.WXFT();

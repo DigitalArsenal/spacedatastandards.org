@@ -1071,11 +1071,11 @@
     },
     "wxfVariable" : {
       "type" : "string",
-      "enum": ["Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure"]
+      "enum": ["Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight"]
     },
     "wxfLevelKind" : {
       "type" : "string",
-      "enum": ["Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere"]
+      "enum": ["Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause"]
     },
     "wxfTemporalKind" : {
       "type" : "string",

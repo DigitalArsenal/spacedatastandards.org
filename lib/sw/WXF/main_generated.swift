@@ -158,8 +158,12 @@ public enum wxfVariable: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   case totalcolumnwatervapour = 28
   ///  Surface pressure, pascal.
   case surfacepressure = 29
+  ///  Geopotential height, geopotential metres (gpm): the height a producer
+  ///  such as GFS publishes on pressure levels and at the tropopause. Distinct
+  ///  from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+  case geopotentialheight = 30
 
-  public static var max: wxfVariable { return .surfacepressure }
+  public static var max: wxfVariable { return .geopotentialheight }
   public static var min: wxfVariable { return .unspecified }
 }
 
@@ -182,8 +186,11 @@ public enum wxfLevelKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   case entireatmosphere = 4
   ///  Top of atmosphere; LEVEL_VALUE is unused.
   case topofatmosphere = 5
+  ///  The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+  ///  a GeopotentialHeight field at this level, never implied by a pressure.
+  case tropopause = 6
 
-  public static var max: wxfLevelKind { return .topofatmosphere }
+  public static var max: wxfLevelKind { return .tropopause }
   public static var min: wxfLevelKind { return .surface }
 }
 

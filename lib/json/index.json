@@ -8430,7 +8430,8 @@
                         "PrecipitationRate",
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
-                        "SurfacePressure"
+                        "SurfacePressure",
+                        "GeopotentialHeight"
                     ]
                 },
                 "wxfLevelKind": {
@@ -8441,7 +8442,8 @@
                         "PressureLevel",
                         "MeanSeaLevel",
                         "EntireAtmosphere",
-                        "TopOfAtmosphere"
+                        "TopOfAtmosphere",
+                        "Tropopause"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -48469,7 +48471,8 @@
                         "PrecipitationRate",
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
-                        "SurfacePressure"
+                        "SurfacePressure",
+                        "GeopotentialHeight"
                     ]
                 },
                 "wxfLevelKind": {
@@ -48480,7 +48483,8 @@
                         "PressureLevel",
                         "MeanSeaLevel",
                         "EntireAtmosphere",
-                        "TopOfAtmosphere"
+                        "TopOfAtmosphere",
+                        "Tropopause"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -64436,7 +64440,8 @@
                         "PrecipitationRate",
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
-                        "SurfacePressure"
+                        "SurfacePressure",
+                        "GeopotentialHeight"
                     ]
                 },
                 "wxfLevelKind": {
@@ -64447,7 +64452,8 @@
                         "PressureLevel",
                         "MeanSeaLevel",
                         "EntireAtmosphere",
-                        "TopOfAtmosphere"
+                        "TopOfAtmosphere",
+                        "Tropopause"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -190541,7 +190547,8 @@
                         "PrecipitationRate",
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
-                        "SurfacePressure"
+                        "SurfacePressure",
+                        "GeopotentialHeight"
                     ]
                 },
                 "wxfLevelKind": {
@@ -190552,7 +190559,8 @@
                         "PressureLevel",
                         "MeanSeaLevel",
                         "EntireAtmosphere",
-                        "TopOfAtmosphere"
+                        "TopOfAtmosphere",
+                        "Tropopause"
                     ]
                 },
                 "wxfTemporalKind": {

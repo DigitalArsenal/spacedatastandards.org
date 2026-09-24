@@ -72,6 +72,10 @@ class wxfVariable
     const TotalColumnWaterVapour = 28;
     /// Surface pressure, pascal.
     const SurfacePressure = 29;
+    /// Geopotential height, geopotential metres (gpm): the height a producer
+    /// such as GFS publishes on pressure levels and at the tropopause. Distinct
+    /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+    const GeopotentialHeight = 30;
 
     private static $names = array(
         wxfVariable::Unspecified=>"Unspecified",
@@ -104,6 +108,7 @@ class wxfVariable
         wxfVariable::RelativeHumidity=>"RelativeHumidity",
         wxfVariable::TotalColumnWaterVapour=>"TotalColumnWaterVapour",
         wxfVariable::SurfacePressure=>"SurfacePressure",
+        wxfVariable::GeopotentialHeight=>"GeopotentialHeight",
     );
 
     public static function Name($e)

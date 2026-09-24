@@ -156,7 +156,8 @@ enum wxfVariable {
   PrecipitationRate(26),
   RelativeHumidity(27),
   TotalColumnWaterVapour(28),
-  SurfacePressure(29);
+  SurfacePressure(29),
+  GeopotentialHeight(30);
 
   final int value;
   const wxfVariable(this.value);
@@ -193,6 +194,7 @@ enum wxfVariable {
       case 27: return wxfVariable.RelativeHumidity;
       case 28: return wxfVariable.TotalColumnWaterVapour;
       case 29: return wxfVariable.SurfacePressure;
+      case 30: return wxfVariable.GeopotentialHeight;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -201,7 +203,7 @@ enum wxfVariable {
       value == null ? null : wxfVariable.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 29;
+  static const int maxValue = 30;
   static const fb.Reader<wxfVariable> reader = _wxfVariableReader();
 }
 
@@ -224,7 +226,8 @@ enum wxfLevelKind {
   PressureLevel(2),
   MeanSeaLevel(3),
   EntireAtmosphere(4),
-  TopOfAtmosphere(5);
+  TopOfAtmosphere(5),
+  Tropopause(6);
 
   final int value;
   const wxfLevelKind(this.value);
@@ -237,6 +240,7 @@ enum wxfLevelKind {
       case 3: return wxfLevelKind.MeanSeaLevel;
       case 4: return wxfLevelKind.EntireAtmosphere;
       case 5: return wxfLevelKind.TopOfAtmosphere;
+      case 6: return wxfLevelKind.Tropopause;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -245,7 +249,7 @@ enum wxfLevelKind {
       value == null ? null : wxfLevelKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<wxfLevelKind> reader = _wxfLevelKindReader();
 }
 

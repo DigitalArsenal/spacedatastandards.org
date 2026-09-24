@@ -150,7 +150,8 @@
         "PrecipitationRate",
         "RelativeHumidity",
         "TotalColumnWaterVapour",
-        "SurfacePressure"
+        "SurfacePressure",
+        "GeopotentialHeight"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -274,6 +275,10 @@
         "SurfacePressure": {
           "value": 29,
           "description": "Surface pressure, pascal."
+        },
+        "GeopotentialHeight": {
+          "value": 30,
+          "description": "Geopotential height, geopotential metres (gpm): the height a producer such as GFS publishes on pressure levels and at the tropopause. Distinct from Geopotential (m^2/s^2); a consumer never relabels one as the other."
         }
       }
     },
@@ -285,7 +290,8 @@
         "PressureLevel",
         "MeanSeaLevel",
         "EntireAtmosphere",
-        "TopOfAtmosphere"
+        "TopOfAtmosphere",
+        "Tropopause"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -313,6 +319,10 @@
         "TopOfAtmosphere": {
           "value": 5,
           "description": "Top of atmosphere; LEVEL_VALUE is unused."
+        },
+        "Tropopause": {
+          "value": 6,
+          "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
         }
       }
     },
@@ -923,6 +933,10 @@
             "SurfacePressure": {
               "value": 29,
               "description": "Surface pressure, pascal."
+            },
+            "GeopotentialHeight": {
+              "value": 30,
+              "description": "Geopotential height, geopotential metres (gpm): the height a producer such as GFS publishes on pressure levels and at the tropopause. Distinct from Geopotential (m^2/s^2); a consumer never relabels one as the other."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -966,6 +980,10 @@
             "TopOfAtmosphere": {
               "value": 5,
               "description": "Top of atmosphere; LEVEL_VALUE is unused."
+            },
+            "Tropopause": {
+              "value": 6,
+              "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
             }
           },
           "x-flatbuffer-default": "Surface"

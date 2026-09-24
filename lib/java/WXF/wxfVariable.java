@@ -134,8 +134,14 @@ public final class wxfVariable {
    * Surface pressure, pascal.
    */
   public static final byte SurfacePressure = 29;
+  /**
+   * Geopotential height, geopotential metres (gpm): the height a producer
+   * such as GFS publishes on pressure levels and at the tropopause. Distinct
+   * from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+   */
+  public static final byte GeopotentialHeight = 30;
 
-  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", };
+  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -132,6 +132,10 @@ enum wxfVariable:
     wxfVariable_TotalColumnWaterVapour = 28
     /// Surface pressure, pascal.
     wxfVariable_SurfacePressure = 29
+    /// Geopotential height, geopotential metres (gpm): the height a producer
+    /// such as GFS publishes on pressure levels and at the tropopause. Distinct
+    /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+    wxfVariable_GeopotentialHeight = 30
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
 /// reuse existing values.
@@ -148,6 +152,9 @@ enum wxfLevelKind:
     wxfLevelKind_EntireAtmosphere = 4
     /// Top of atmosphere; LEVEL_VALUE is unused.
     wxfLevelKind_TopOfAtmosphere = 5
+    /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+    /// a GeopotentialHeight field at this level, never implied by a pressure.
+    wxfLevelKind_Tropopause = 6
 
 /// Temporal character of the value in each cell. Append new values only;
 /// never reorder or reuse existing values.

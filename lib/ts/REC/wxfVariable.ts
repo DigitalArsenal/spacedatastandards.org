@@ -162,5 +162,12 @@ export enum wxfVariable {
   /**
    * Surface pressure, pascal.
    */
-  SurfacePressure = 29
+  SurfacePressure = 29,
+
+  /**
+   * Geopotential height, geopotential metres (gpm): the height a producer
+   * such as GFS publishes on pressure levels and at the tropopause. Distinct
+   * from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+   */
+  GeopotentialHeight = 30
 }

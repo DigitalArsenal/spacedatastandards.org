@@ -275,10 +275,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfMemberKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_VARIABLE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_VARIABLE: i8 = 29;
+pub const ENUM_MAX_WXF_VARIABLE: i8 = 30;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 30] = [
+pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 31] = [
   wxfVariable::Unspecified,
   wxfVariable::Temperature2m,
   wxfVariable::DewpointTemperature2m,
@@ -309,6 +309,7 @@ pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 30] = [
   wxfVariable::RelativeHumidity,
   wxfVariable::TotalColumnWaterVapour,
   wxfVariable::SurfacePressure,
+  wxfVariable::GeopotentialHeight,
 ];
 
 /// Meteorological variable carried by the field. Append new values only;
@@ -385,9 +386,13 @@ impl wxfVariable {
   pub const TotalColumnWaterVapour: Self = Self(28);
   /// Surface pressure, pascal.
   pub const SurfacePressure: Self = Self(29);
+  /// Geopotential height, geopotential metres (gpm): the height a producer
+  /// such as GFS publishes on pressure levels and at the tropopause. Distinct
+  /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+  pub const GeopotentialHeight: Self = Self(30);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 29;
+  pub const ENUM_MAX: i8 = 30;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Unspecified,
     Self::Temperature2m,
@@ -419,6 +424,7 @@ impl wxfVariable {
     Self::RelativeHumidity,
     Self::TotalColumnWaterVapour,
     Self::SurfacePressure,
+    Self::GeopotentialHeight,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -453,6 +459,7 @@ impl wxfVariable {
       Self::RelativeHumidity => Some("RelativeHumidity"),
       Self::TotalColumnWaterVapour => Some("TotalColumnWaterVapour"),
       Self::SurfacePressure => Some("SurfacePressure"),
+      Self::GeopotentialHeight => Some("GeopotentialHeight"),
       _ => None,
     }
   }
@@ -510,16 +517,17 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfVariable {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_LEVEL_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 5;
+pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 6;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 6] = [
+pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 7] = [
   wxfLevelKind::Surface,
   wxfLevelKind::HeightAboveGround,
   wxfLevelKind::PressureLevel,
   wxfLevelKind::MeanSeaLevel,
   wxfLevelKind::EntireAtmosphere,
   wxfLevelKind::TopOfAtmosphere,
+  wxfLevelKind::Tropopause,
 ];
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -541,9 +549,12 @@ impl wxfLevelKind {
   pub const EntireAtmosphere: Self = Self(4);
   /// Top of atmosphere; LEVEL_VALUE is unused.
   pub const TopOfAtmosphere: Self = Self(5);
+  /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+  /// a GeopotentialHeight field at this level, never implied by a pressure.
+  pub const Tropopause: Self = Self(6);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_MAX: i8 = 6;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Surface,
     Self::HeightAboveGround,
@@ -551,6 +562,7 @@ impl wxfLevelKind {
     Self::MeanSeaLevel,
     Self::EntireAtmosphere,
     Self::TopOfAtmosphere,
+    Self::Tropopause,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -561,6 +573,7 @@ impl wxfLevelKind {
       Self::MeanSeaLevel => Some("MeanSeaLevel"),
       Self::EntireAtmosphere => Some("EntireAtmosphere"),
       Self::TopOfAtmosphere => Some("TopOfAtmosphere"),
+      Self::Tropopause => Some("Tropopause"),
       _ => None,
     }
   }

@@ -1,5 +1,5 @@
-// Hash: c2d6d170c1ae3da153dd06d48efa54c95fb0d727b7a6365111220103cff480b0
-// Version: 1.208.2
+// Hash: dc5dcbc0675859c122fef5ec28a0a2dbee87a7c5a164d494ff42604fd57948d8
+// Version: 1.208.3
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -134,7 +134,11 @@ enum wxfVariable : byte {
   /// Total column water vapour, kg/m^2.
   TotalColumnWaterVapour,
   /// Surface pressure, pascal.
-  SurfacePressure
+  SurfacePressure,
+  /// Geopotential height, geopotential metres (gpm): the height a producer
+  /// such as GFS publishes on pressure levels and at the tropopause. Distinct
+  /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+  GeopotentialHeight
 }
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -151,7 +155,10 @@ enum wxfLevelKind : byte {
   /// Whole atmospheric column; LEVEL_VALUE is unused.
   EntireAtmosphere,
   /// Top of atmosphere; LEVEL_VALUE is unused.
-  TopOfAtmosphere
+  TopOfAtmosphere,
+  /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
+  /// a GeopotentialHeight field at this level, never implied by a pressure.
+  Tropopause
 }
 
 /// Temporal character of the value in each cell. Append new values only;

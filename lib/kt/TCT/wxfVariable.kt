@@ -134,5 +134,11 @@ class wxfVariable private constructor() {
          * Surface pressure, pascal.
          */
         const val SurfacePressure: Byte = 29
+        /**
+         * Geopotential height, geopotential metres (gpm): the height a producer
+         * such as GFS publishes on pressure levels and at the tropopause. Distinct
+         * from Geopotential (m^2/s^2); a consumer never relabels one as the other.
+         */
+        const val GeopotentialHeight: Byte = 30
     }
 }
