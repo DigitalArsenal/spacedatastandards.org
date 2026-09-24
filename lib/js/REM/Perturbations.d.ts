@@ -96,6 +96,11 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
      * Fixed mean F10.7 solar flux value used.
      */
     FIXED_F10P7_MEAN(): number;
+    /**
+     * Fixed (time-invariant) geomagnetic index ap used in place of the normal
+     * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+     */
+    FIXED_GEOMAG_AP(): number;
     static startPerturbations(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -120,6 +125,7 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
     static addFixedGeomagKp(builder: flatbuffers.Builder, FIXED_GEOMAG_KP: number): void;
     static addFixedF10P7(builder: flatbuffers.Builder, FIXED_F10P7: number): void;
     static addFixedF10P7Mean(builder: flatbuffers.Builder, FIXED_F10P7_MEAN: number): void;
+    static addFixedGeomagAp(builder: flatbuffers.Builder, FIXED_GEOMAG_AP: number): void;
     static endPerturbations(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PerturbationsT;
     unpackTo(_o: PerturbationsT): void;
@@ -144,7 +150,8 @@ export declare class PerturbationsT implements flatbuffers.IGeneratedObject {
     FIXED_GEOMAG_KP: number;
     FIXED_F10P7: number;
     FIXED_F10P7_MEAN: number;
-    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number);
+    FIXED_GEOMAG_AP: number;
+    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number, FIXED_GEOMAG_AP?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Perturbations.d.ts.map

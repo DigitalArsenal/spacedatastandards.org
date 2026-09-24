@@ -274,8 +274,25 @@ OD_BATCH_BASELINE_RMS():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Specific energy dissipation rate in W/kg: energy removed from the orbit
+ * by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+ */
+SEDR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+ */
+WEIGHTED_RMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startOrbitDetermination(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(25);
 }
 
 static addOdId(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset) {
@@ -428,12 +445,20 @@ static addOdBatchBaselineRms(builder:flatbuffers.Builder, OD_BATCH_BASELINE_RMS:
   builder.addFieldFloat64(22, OD_BATCH_BASELINE_RMS, 0.0);
 }
 
+static addSedr(builder:flatbuffers.Builder, SEDR:number) {
+  builder.addFieldFloat64(23, SEDR, 0.0);
+}
+
+static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
+  builder.addFieldFloat64(24, WEIGHTED_RMS, 0.0);
+}
+
 static endOrbitDetermination(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number):flatbuffers.Offset {
+static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number):flatbuffers.Offset {
   OrbitDetermination.startOrbitDetermination(builder);
   OrbitDetermination.addOdId(builder, OD_IDOffset);
   OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
@@ -458,6 +483,8 @@ static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuf
   OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
   OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
   OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
+  OrbitDetermination.addSedr(builder, SEDR);
+  OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
   return OrbitDetermination.endOrbitDetermination(builder);
 }
 
@@ -485,7 +512,9 @@ unpack(): OrbitDeterminationT {
     this.bb!.createScalarList<number>(this.OD_RESIDUALS_SERIES.bind(this), this.odResidualsSeriesLength()),
     this.bb!.createScalarList<number>(this.OD_RESIDUAL_EPOCHS.bind(this), this.odResidualEpochsLength()),
     this.OD_BATCH_BASELINE_ID(),
-    this.OD_BATCH_BASELINE_RMS()
+    this.OD_BATCH_BASELINE_RMS(),
+    this.SEDR(),
+    this.WEIGHTED_RMS()
   );
 }
 
@@ -514,6 +543,8 @@ unpackTo(_o: OrbitDeterminationT): void {
   _o.OD_RESIDUAL_EPOCHS = this.bb!.createScalarList<number>(this.OD_RESIDUAL_EPOCHS.bind(this), this.odResidualEpochsLength());
   _o.OD_BATCH_BASELINE_ID = this.OD_BATCH_BASELINE_ID();
   _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS();
+  _o.SEDR = this.SEDR();
+  _o.WEIGHTED_RMS = this.WEIGHTED_RMS();
 }
 }
 
@@ -541,7 +572,9 @@ constructor(
   public OD_RESIDUALS_SERIES: (number)[] = [],
   public OD_RESIDUAL_EPOCHS: (number)[] = [],
   public OD_BATCH_BASELINE_ID: string|Uint8Array|null = null,
-  public OD_BATCH_BASELINE_RMS: number = 0.0
+  public OD_BATCH_BASELINE_RMS: number = 0.0,
+  public SEDR: number = 0.0,
+  public WEIGHTED_RMS: number = 0.0
 ){}
 
 
@@ -588,7 +621,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     OD_RESIDUALS_SERIES,
     OD_RESIDUAL_EPOCHS,
     OD_BATCH_BASELINE_ID,
-    this.OD_BATCH_BASELINE_RMS
+    this.OD_BATCH_BASELINE_RMS,
+    this.SEDR,
+    this.WEIGHTED_RMS
   );
 }
 }

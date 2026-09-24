@@ -34,5 +34,32 @@ class trajectoryType private constructor() {
          * Lagrange interpolating polynomial representation.
          */
         const val LAGRANGE: Byte = 5
+        /**
+         * Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+         * [km], eccentricity, inclination, right ascension of the ascending node,
+         * argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+         * KEPLERIAN (OID 1.3.112.4.57.5.11).
+         */
+        const val KEPLERIAN: Byte = 6
+        /**
+         * As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+         * Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+         */
+        const val KEPLERIAN_MEAN: Byte = 7
+        /**
+         * Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+         * af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+         * L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+         * psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+         * SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+         */
+        const val EQUINOCTIAL: Byte = 8
+        /**
+         * Modified equinoctial set, 7 values per row: semi-latus rectum
+         * p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+         * [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+         * (OID 1.3.112.4.57.5.9).
+         */
+        const val EQUINOCTIAL_MOD: Byte = 9
     }
 }

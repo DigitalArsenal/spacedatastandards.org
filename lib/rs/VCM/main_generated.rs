@@ -3714,14 +3714,26 @@ pub unsafe fn root_as_vcm_unchecked(buf: &[u8]) -> VCM<'_> {
 pub unsafe fn size_prefixed_root_as_vcm_unchecked(buf: &[u8]) -> VCM<'_> {
   unsafe { ::flatbuffers::size_prefixed_root_unchecked::<VCM>(buf) }
 }
+pub const VCM_IDENTIFIER: &str = "$VCM";
+
+#[inline]
+pub fn vcm_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, VCM_IDENTIFIER, false)
+}
+
+#[inline]
+pub fn vcm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, VCM_IDENTIFIER, true)
+}
+
 #[inline]
 pub fn finish_vcm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
     root: ::flatbuffers::WIPOffset<VCM<'a>>) {
-  fbb.finish(root, None);
+  fbb.finish(root, Some(VCM_IDENTIFIER));
 }
 
 #[inline]
 pub fn finish_size_prefixed_vcm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<VCM<'a>>) {
-  fbb.finish_size_prefixed(root, None);
+  fbb.finish_size_prefixed(root, Some(VCM_IDENTIFIER));
 }

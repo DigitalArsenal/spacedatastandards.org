@@ -127,6 +127,11 @@ public final class Perturbations extends com.google.flatbuffers.Table {
    * Fixed mean F10.7 solar flux value used.
    */
   public double FIXED_F10P7_MEAN() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Fixed (time-invariant) geomagnetic index ap used in place of the normal
+   * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+   */
+  public double FIXED_GEOMAG_AP() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createPerturbations(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -147,8 +152,10 @@ public final class Perturbations extends com.google.flatbuffers.Table {
       int ATMOSPHERIC_DRAGOffset,
       double FIXED_GEOMAG_KP,
       double FIXED_F10P7,
-      double FIXED_F10P7_MEAN) {
-    builder.startTable(19);
+      double FIXED_F10P7_MEAN,
+      double FIXED_GEOMAG_AP) {
+    builder.startTable(20);
+    Perturbations.addFixedGeomagAp(builder, FIXED_GEOMAG_AP);
     Perturbations.addFixedF10P7Mean(builder, FIXED_F10P7_MEAN);
     Perturbations.addFixedF10P7(builder, FIXED_F10P7);
     Perturbations.addFixedGeomagKp(builder, FIXED_GEOMAG_KP);
@@ -171,7 +178,7 @@ public final class Perturbations extends com.google.flatbuffers.Table {
     return Perturbations.endPerturbations(builder);
   }
 
-  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -195,6 +202,7 @@ public final class Perturbations extends com.google.flatbuffers.Table {
   public static void addFixedGeomagKp(FlatBufferBuilder builder, double FIXED_GEOMAG_KP) { builder.addDouble(16, FIXED_GEOMAG_KP, 0.0); }
   public static void addFixedF10P7(FlatBufferBuilder builder, double FIXED_F10P7) { builder.addDouble(17, FIXED_F10P7, 0.0); }
   public static void addFixedF10P7Mean(FlatBufferBuilder builder, double FIXED_F10P7_MEAN) { builder.addDouble(18, FIXED_F10P7_MEAN, 0.0); }
+  public static void addFixedGeomagAp(FlatBufferBuilder builder, double FIXED_GEOMAG_AP) { builder.addDouble(19, FIXED_GEOMAG_AP, 0.0); }
   public static int endPerturbations(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

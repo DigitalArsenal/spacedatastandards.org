@@ -60,6 +60,7 @@ public final class OCM extends com.google.flatbuffers.Table {
    * Number of components per state vector.
    * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
    * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+   * 6 or 7 for the element sets named by TRAJ_TYPE.
    */
   public int STATE_VECTOR_SIZE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
   /**
@@ -67,6 +68,7 @@ public final class OCM extends com.google.flatbuffers.Table {
    * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
    * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
    * Length must be divisible by STATE_VECTOR_SIZE.
+   * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
    */
   public double STATE_DATA(int j) { int o = __offset(16); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int STATE_DATALength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
@@ -137,6 +139,41 @@ public final class OCM extends com.google.flatbuffers.Table {
   public int USER_DEFINED_PARAMETERSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public UserDefinedParameters.Vector userDefinedParametersVector() { return userDefinedParametersVector(new UserDefinedParameters.Vector()); }
   public UserDefinedParameters.Vector userDefinedParametersVector(UserDefinedParameters.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+   */
+  public String CENTER_NAME() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Reference frame of STATE_DATA and the polynomial records
+   * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+   */
+  public RFM TRAJ_REF_FRAME() { return TRAJ_REF_FRAME(new RFM()); }
+  public RFM TRAJ_REF_FRAME(RFM obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+   * (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+   */
+  public String TRAJ_FRAME_EPOCH() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRAJ_FRAME_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer TRAJ_FRAME_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+   */
+  public RFM COV_REF_FRAME() { return COV_REF_FRAME(new RFM()); }
+  public RFM COV_REF_FRAME(RFM obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+   */
+  public long ORB_REVNUM() { int o = __offset(42); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+   * KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+   */
+  public String ORB_AVERAGING() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORB_AVERAGINGAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer ORB_AVERAGINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -153,9 +190,21 @@ public final class OCM extends com.google.flatbuffers.Table {
       int MANEUVER_DATAOffset,
       int PERTURBATIONSOffset,
       int ORBIT_DETERMINATIONOffset,
-      int USER_DEFINED_PARAMETERSOffset) {
-    builder.startTable(15);
+      int USER_DEFINED_PARAMETERSOffset,
+      int CENTER_NAMEOffset,
+      int TRAJ_REF_FRAMEOffset,
+      int TRAJ_FRAME_EPOCHOffset,
+      int COV_REF_FRAMEOffset,
+      long ORB_REVNUM,
+      int ORB_AVERAGINGOffset) {
+    builder.startTable(21);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addOrbAveraging(builder, ORB_AVERAGINGOffset);
+    OCM.addOrbRevnum(builder, ORB_REVNUM);
+    OCM.addCovRefFrame(builder, COV_REF_FRAMEOffset);
+    OCM.addTrajFrameEpoch(builder, TRAJ_FRAME_EPOCHOffset);
+    OCM.addTrajRefFrame(builder, TRAJ_REF_FRAMEOffset);
+    OCM.addCenterName(builder, CENTER_NAMEOffset);
     OCM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
     OCM.addOrbitDetermination(builder, ORBIT_DETERMINATIONOffset);
     OCM.addPerturbations(builder, PERTURBATIONSOffset);
@@ -173,7 +222,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -201,6 +250,12 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(14, USER_DEFINED_PARAMETERSOffset, 0); }
   public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(15, CENTER_NAMEOffset, 0); }
+  public static void addTrajRefFrame(FlatBufferBuilder builder, int TRAJ_REF_FRAMEOffset) { builder.addOffset(16, TRAJ_REF_FRAMEOffset, 0); }
+  public static void addTrajFrameEpoch(FlatBufferBuilder builder, int TRAJ_FRAME_EPOCHOffset) { builder.addOffset(17, TRAJ_FRAME_EPOCHOffset, 0); }
+  public static void addCovRefFrame(FlatBufferBuilder builder, int COV_REF_FRAMEOffset) { builder.addOffset(18, COV_REF_FRAMEOffset, 0); }
+  public static void addOrbRevnum(FlatBufferBuilder builder, long ORB_REVNUM) { builder.addInt(19, (int) ORB_REVNUM, (int) 0L); }
+  public static void addOrbAveraging(FlatBufferBuilder builder, int ORB_AVERAGINGOffset) { builder.addOffset(20, ORB_AVERAGINGOffset, 0); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

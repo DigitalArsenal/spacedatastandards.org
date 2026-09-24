@@ -84,6 +84,7 @@ class OCM(object):
     # Number of components per state vector.
     # 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
     # 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    # 6 or 7 for the element sets named by TRAJ_TYPE.
     # OCM
     def STATE_VECTOR_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -95,6 +96,7 @@ class OCM(object):
     # Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
     # Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
     # Length must be divisible by STATE_VECTOR_SIZE.
+    # Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     # OCM
     def STATE_DATA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -297,8 +299,67 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+    # OCM
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference frame of STATE_DATA and the polynomial records
+    # (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    # OCM
+    def TRAJ_REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+    # (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+    # OCM
+    def TRAJ_FRAME_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+    # OCM
+    def COV_REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+    # OCM
+    def ORB_REVNUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+    # KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+    # OCM
+    def ORB_AVERAGING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def OCMStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(21)
 
 def Start(builder):
     OCMStart(builder)
@@ -473,6 +534,42 @@ def OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
 def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
     OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
 
+def OCMAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    OCMAddCENTER_NAME(builder, CENTER_NAME)
+
+def OCMAddTRAJ_REF_FRAME(builder, TRAJ_REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJ_REF_FRAME), 0)
+
+def AddTRAJ_REF_FRAME(builder, TRAJ_REF_FRAME):
+    OCMAddTRAJ_REF_FRAME(builder, TRAJ_REF_FRAME)
+
+def OCMAddTRAJ_FRAME_EPOCH(builder, TRAJ_FRAME_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJ_FRAME_EPOCH), 0)
+
+def AddTRAJ_FRAME_EPOCH(builder, TRAJ_FRAME_EPOCH):
+    OCMAddTRAJ_FRAME_EPOCH(builder, TRAJ_FRAME_EPOCH)
+
+def OCMAddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REF_FRAME), 0)
+
+def AddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    OCMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+
+def OCMAddORB_REVNUM(builder, ORB_REVNUM):
+    builder.PrependUint32Slot(19, ORB_REVNUM, 0)
+
+def AddORB_REVNUM(builder, ORB_REVNUM):
+    OCMAddORB_REVNUM(builder, ORB_REVNUM)
+
+def OCMAddORB_AVERAGING(builder, ORB_AVERAGING):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ORB_AVERAGING), 0)
+
+def AddORB_AVERAGING(builder, ORB_AVERAGING):
+    OCMAddORB_AVERAGING(builder, ORB_AVERAGING)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -487,6 +584,7 @@ import PPEOrbitalElementRecord
 import PPEPositionRecord
 import Perturbations
 import PhysicalProperties
+import RFM
 import UserDefinedParameters
 try:
     from typing import List, Optional
@@ -513,6 +611,12 @@ class OCMT(object):
         PERTURBATIONS = None,
         ORBIT_DETERMINATION = None,
         USER_DEFINED_PARAMETERS = None,
+        CENTER_NAME = None,
+        TRAJ_REF_FRAME = None,
+        TRAJ_FRAME_EPOCH = None,
+        COV_REF_FRAME = None,
+        ORB_REVNUM = 0,
+        ORB_AVERAGING = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -529,6 +633,12 @@ class OCMT(object):
         self.PERTURBATIONS = PERTURBATIONS  # type: Optional[Perturbations.PerturbationsT]
         self.ORBIT_DETERMINATION = ORBIT_DETERMINATION  # type: Optional[OrbitDetermination.OrbitDeterminationT]
         self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[UserDefinedParameters.UserDefinedParametersT]]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.TRAJ_REF_FRAME = TRAJ_REF_FRAME  # type: Optional[RFM.RFMT]
+        self.TRAJ_FRAME_EPOCH = TRAJ_FRAME_EPOCH  # type: Optional[str]
+        self.COV_REF_FRAME = COV_REF_FRAME  # type: Optional[RFM.RFMT]
+        self.ORB_REVNUM = ORB_REVNUM  # type: int
+        self.ORB_AVERAGING = ORB_AVERAGING  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -611,6 +721,14 @@ class OCMT(object):
                 else:
                     userDefinedParameters_ = UserDefinedParameters.UserDefinedParametersT.InitFromObj(OCM.USER_DEFINED_PARAMETERS(i))
                     self.USER_DEFINED_PARAMETERS.append(userDefinedParameters_)
+        self.CENTER_NAME = OCM.CENTER_NAME()
+        if OCM.TRAJ_REF_FRAME() is not None:
+            self.TRAJ_REF_FRAME = RFM.RFMT.InitFromObj(OCM.TRAJ_REF_FRAME())
+        self.TRAJ_FRAME_EPOCH = OCM.TRAJ_FRAME_EPOCH()
+        if OCM.COV_REF_FRAME() is not None:
+            self.COV_REF_FRAME = RFM.RFMT.InitFromObj(OCM.COV_REF_FRAME())
+        self.ORB_REVNUM = OCM.ORB_REVNUM()
+        self.ORB_AVERAGING = OCM.ORB_AVERAGING()
 
     # OCMT
     def Pack(self, builder):
@@ -674,6 +792,16 @@ class OCMT(object):
             for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
                 builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
             USER_DEFINED_PARAMETERS = builder.EndVector()
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.TRAJ_REF_FRAME is not None:
+            TRAJ_REF_FRAME = self.TRAJ_REF_FRAME.Pack(builder)
+        if self.TRAJ_FRAME_EPOCH is not None:
+            TRAJ_FRAME_EPOCH = builder.CreateString(self.TRAJ_FRAME_EPOCH)
+        if self.COV_REF_FRAME is not None:
+            COV_REF_FRAME = self.COV_REF_FRAME.Pack(builder)
+        if self.ORB_AVERAGING is not None:
+            ORB_AVERAGING = builder.CreateString(self.ORB_AVERAGING)
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -702,5 +830,16 @@ class OCMT(object):
             OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
         if self.USER_DEFINED_PARAMETERS is not None:
             OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+        if self.CENTER_NAME is not None:
+            OCMAddCENTER_NAME(builder, CENTER_NAME)
+        if self.TRAJ_REF_FRAME is not None:
+            OCMAddTRAJ_REF_FRAME(builder, TRAJ_REF_FRAME)
+        if self.TRAJ_FRAME_EPOCH is not None:
+            OCMAddTRAJ_FRAME_EPOCH(builder, TRAJ_FRAME_EPOCH)
+        if self.COV_REF_FRAME is not None:
+            OCMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+        OCMAddORB_REVNUM(builder, self.ORB_REVNUM)
+        if self.ORB_AVERAGING is not None:
+            OCMAddORB_AVERAGING(builder, ORB_AVERAGING)
         OCM = OCMEnd(builder)
         return OCM

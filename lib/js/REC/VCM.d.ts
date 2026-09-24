@@ -15,6 +15,7 @@ export declare class VCM implements flatbuffers.IUnpackableObject<VCMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): VCM;
     static getRootAsVCM(bb: flatbuffers.ByteBuffer, obj?: VCM): VCM;
     static getSizePrefixedRootAsVCM(bb: flatbuffers.ByteBuffer, obj?: VCM): VCM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     CCSDS_OMM_VERS(): number;
     CREATION_DATE(): string | null;
     CREATION_DATE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

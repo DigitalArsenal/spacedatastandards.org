@@ -14,7 +14,8 @@ public struct VCM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static VCM GetRootAsVCM(ByteBuffer _bb) { return GetRootAsVCM(_bb, new VCM()); }
   public static VCM GetRootAsVCM(ByteBuffer _bb, VCM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool VerifyVCM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("", false, VCMVerify.Verify); }
+  public static bool VCMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$VCM"); }
+  public static bool VerifyVCM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$VCM", false, VCMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VCM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -253,8 +254,8 @@ public struct VCM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<VCM>(o);
   }
-  public static void FinishVCMBuffer(FlatBufferBuilder builder, Offset<VCM> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedVCMBuffer(FlatBufferBuilder builder, Offset<VCM> offset) { builder.FinishSizePrefixed(offset.Value); }
+  public static void FinishVCMBuffer(FlatBufferBuilder builder, Offset<VCM> offset) { builder.Finish(offset.Value, "$VCM"); }
+  public static void FinishSizePrefixedVCMBuffer(FlatBufferBuilder builder, Offset<VCM> offset) { builder.FinishSizePrefixed(offset.Value, "$VCM"); }
   public VCMT UnPack() {
     var _o = new VCMT();
     this.UnPackTo(_o);

@@ -211,8 +211,17 @@ FIXED_F10P7_MEAN():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Fixed (time-invariant) geomagnetic index ap used in place of the normal
+ * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+ */
+FIXED_GEOMAG_AP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startPerturbations(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(20);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -315,6 +324,10 @@ static addFixedF10P7Mean(builder:flatbuffers.Builder, FIXED_F10P7_MEAN:number) {
   builder.addFieldFloat64(18, FIXED_F10P7_MEAN, 0.0);
 }
 
+static addFixedGeomagAp(builder:flatbuffers.Builder, FIXED_GEOMAG_AP:number) {
+  builder.addFieldFloat64(19, FIXED_GEOMAG_AP, 0.0);
+}
+
 static endPerturbations(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -341,7 +354,8 @@ unpack(): PerturbationsT {
     this.ATMOSPHERIC_DRAG(),
     this.FIXED_GEOMAG_KP(),
     this.FIXED_F10P7(),
-    this.FIXED_F10P7_MEAN()
+    this.FIXED_F10P7_MEAN(),
+    this.FIXED_GEOMAG_AP()
   );
 }
 
@@ -366,6 +380,7 @@ unpackTo(_o: PerturbationsT): void {
   _o.FIXED_GEOMAG_KP = this.FIXED_GEOMAG_KP();
   _o.FIXED_F10P7 = this.FIXED_F10P7();
   _o.FIXED_F10P7_MEAN = this.FIXED_F10P7_MEAN();
+  _o.FIXED_GEOMAG_AP = this.FIXED_GEOMAG_AP();
 }
 }
 
@@ -389,7 +404,8 @@ constructor(
   public ATMOSPHERIC_DRAG: string|Uint8Array|null = null,
   public FIXED_GEOMAG_KP: number = 0.0,
   public FIXED_F10P7: number = 0.0,
-  public FIXED_F10P7_MEAN: number = 0.0
+  public FIXED_F10P7_MEAN: number = 0.0,
+  public FIXED_GEOMAG_AP: number = 0.0
 ){}
 
 
@@ -428,6 +444,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   Perturbations.addFixedGeomagKp(builder, this.FIXED_GEOMAG_KP);
   Perturbations.addFixedF10P7(builder, this.FIXED_F10P7);
   Perturbations.addFixedF10P7Mean(builder, this.FIXED_F10P7_MEAN);
+  Perturbations.addFixedGeomagAp(builder, this.FIXED_GEOMAG_AP);
 
   return Perturbations.endPerturbations(builder);
 }

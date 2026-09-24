@@ -16,7 +16,11 @@ enum trajectoryType {
   POLYNOMIAL_POS(2),
   POLYNOMIAL_OE(3),
   HERMITE(4),
-  LAGRANGE(5);
+  LAGRANGE(5),
+  KEPLERIAN(6),
+  KEPLERIAN_MEAN(7),
+  EQUINOCTIAL(8),
+  EQUINOCTIAL_MOD(9);
 
   final int value;
   const trajectoryType(this.value);
@@ -29,6 +33,10 @@ enum trajectoryType {
       case 3: return trajectoryType.POLYNOMIAL_OE;
       case 4: return trajectoryType.HERMITE;
       case 5: return trajectoryType.LAGRANGE;
+      case 6: return trajectoryType.KEPLERIAN;
+      case 7: return trajectoryType.KEPLERIAN_MEAN;
+      case 8: return trajectoryType.EQUINOCTIAL;
+      case 9: return trajectoryType.EQUINOCTIAL_MOD;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -37,7 +45,7 @@ enum trajectoryType {
       value == null ? null : trajectoryType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 9;
   static const fb.Reader<trajectoryType> reader = _trajectoryTypeReader();
 }
 
@@ -1504,10 +1512,14 @@ class Perturbations {
   ///  Fixed mean F10.7 solar flux value used.
   double get FIXED_F10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
   double get fixedF10p7Mean => FIXED_F10P7_MEAN;
+  ///  Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  ///  time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  double get FIXED_GEOMAG_AP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get fixedGeomagAp => FIXED_GEOMAG_AP;
 
   @override
   String toString() {
-    return 'Perturbations{COMMENT: ${COMMENT}, atmosphericModel: ${atmosphericModel}, gravityModel: ${gravityModel}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, GM: ${GM}, nBodyPerturbations: ${nBodyPerturbations}, oceanTidesModel: ${oceanTidesModel}, solidTidesModel: ${solidTidesModel}, atmosphericTidesModel: ${atmosphericTidesModel}, geopotentialModel: ${geopotentialModel}, solarRadPressure: ${solarRadPressure}, ALBEDO: ${ALBEDO}, THERMAL: ${THERMAL}, RELATIVITY: ${RELATIVITY}, atmosphericDrag: ${atmosphericDrag}, fixedGeomagKp: ${fixedGeomagKp}, fixedF10p7: ${fixedF10p7}, fixedF10p7Mean: ${fixedF10p7Mean}}';
+    return 'Perturbations{COMMENT: ${COMMENT}, atmosphericModel: ${atmosphericModel}, gravityModel: ${gravityModel}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, GM: ${GM}, nBodyPerturbations: ${nBodyPerturbations}, oceanTidesModel: ${oceanTidesModel}, solidTidesModel: ${solidTidesModel}, atmosphericTidesModel: ${atmosphericTidesModel}, geopotentialModel: ${geopotentialModel}, solarRadPressure: ${solarRadPressure}, ALBEDO: ${ALBEDO}, THERMAL: ${THERMAL}, RELATIVITY: ${RELATIVITY}, atmosphericDrag: ${atmosphericDrag}, fixedGeomagKp: ${fixedGeomagKp}, fixedF10p7: ${fixedF10p7}, fixedF10p7Mean: ${fixedF10p7Mean}, fixedGeomagAp: ${fixedGeomagAp}}';
   }
 }
 
@@ -1525,7 +1537,7 @@ class PerturbationsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(20);
   }
 
   int addCommentOffset(int? offset) {
@@ -1604,6 +1616,10 @@ class PerturbationsBuilder {
     fbBuilder.addFloat64(18, FIXED_F10P7_MEAN);
     return fbBuilder.offset;
   }
+  int addFixedGeomagAp(double? FIXED_GEOMAG_AP) {
+    fbBuilder.addFloat64(19, FIXED_GEOMAG_AP);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1630,6 +1646,7 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
   final double? _FIXED_GEOMAG_KP;
   final double? _FIXED_F10P7;
   final double? _FIXED_F10P7_MEAN;
+  final double? _FIXED_GEOMAG_AP;
 
   PerturbationsObjectBuilder({
     List<String>? COMMENT,
@@ -1665,6 +1682,8 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
     double? fixedF10p7,
     double? FIXED_F10P7_MEAN,
     double? fixedF10p7Mean,
+    double? FIXED_GEOMAG_AP,
+    double? fixedGeomagAp,
   })
       : _COMMENT = COMMENT,
         _ATMOSPHERIC_MODEL = atmosphericModel ?? ATMOSPHERIC_MODEL,
@@ -1684,7 +1703,8 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
         _ATMOSPHERIC_DRAG = atmosphericDrag ?? ATMOSPHERIC_DRAG,
         _FIXED_GEOMAG_KP = fixedGeomagKp ?? FIXED_GEOMAG_KP,
         _FIXED_F10P7 = fixedF10p7 ?? FIXED_F10P7,
-        _FIXED_F10P7_MEAN = fixedF10p7Mean ?? FIXED_F10P7_MEAN;
+        _FIXED_F10P7_MEAN = fixedF10p7Mean ?? FIXED_F10P7_MEAN,
+        _FIXED_GEOMAG_AP = fixedGeomagAp ?? FIXED_GEOMAG_AP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1714,7 +1734,7 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_RELATIVITY!);
     final int? ATMOSPHERIC_DRAGOffset = _ATMOSPHERIC_DRAG == null ? null
         : fbBuilder.writeString(_ATMOSPHERIC_DRAG!);
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, ATMOSPHERIC_MODELOffset);
     fbBuilder.addOffset(2, GRAVITY_MODELOffset);
@@ -1734,6 +1754,7 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(16, _FIXED_GEOMAG_KP);
     fbBuilder.addFloat64(17, _FIXED_F10P7);
     fbBuilder.addFloat64(18, _FIXED_F10P7_MEAN);
+    fbBuilder.addFloat64(19, _FIXED_GEOMAG_AP);
     return fbBuilder.endTable();
   }
 
@@ -2069,10 +2090,16 @@ class OrbitDetermination {
   ///  comparison.
   double get OD_BATCH_BASELINE_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
   double get odBatchBaselineRms => OD_BATCH_BASELINE_RMS;
+  ///  Specific energy dissipation rate in W/kg: energy removed from the orbit
+  ///  by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  double get SEDR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get weightedRms => WEIGHTED_RMS;
 
   @override
   String toString() {
-    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}}';
+    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}}';
   }
 }
 
@@ -2090,7 +2117,7 @@ class OrbitDeterminationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(25);
   }
 
   int addOdIdOffset(int? offset) {
@@ -2185,6 +2212,14 @@ class OrbitDeterminationBuilder {
     fbBuilder.addFloat64(22, OD_BATCH_BASELINE_RMS);
     return fbBuilder.offset;
   }
+  int addSedr(double? SEDR) {
+    fbBuilder.addFloat64(23, SEDR);
+    return fbBuilder.offset;
+  }
+  int addWeightedRms(double? WEIGHTED_RMS) {
+    fbBuilder.addFloat64(24, WEIGHTED_RMS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2215,6 +2250,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _OD_RESIDUAL_EPOCHS;
   final String? _OD_BATCH_BASELINE_ID;
   final double? _OD_BATCH_BASELINE_RMS;
+  final double? _SEDR;
+  final double? _WEIGHTED_RMS;
 
   OrbitDeterminationObjectBuilder({
     String? OD_ID,
@@ -2263,6 +2300,9 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     String? odBatchBaselineId,
     double? OD_BATCH_BASELINE_RMS,
     double? odBatchBaselineRms,
+    double? SEDR,
+    double? WEIGHTED_RMS,
+    double? weightedRms,
   })
       : _OD_ID = odId ?? OD_ID,
         _OD_PREV_ID = odPrevId ?? OD_PREV_ID,
@@ -2286,7 +2326,9 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         _OD_RESIDUALS_SERIES = odResidualsSeries ?? OD_RESIDUALS_SERIES,
         _OD_RESIDUAL_EPOCHS = odResidualEpochs ?? OD_RESIDUAL_EPOCHS,
         _OD_BATCH_BASELINE_ID = odBatchBaselineId ?? OD_BATCH_BASELINE_ID,
-        _OD_BATCH_BASELINE_RMS = odBatchBaselineRms ?? OD_BATCH_BASELINE_RMS;
+        _OD_BATCH_BASELINE_RMS = odBatchBaselineRms ?? OD_BATCH_BASELINE_RMS,
+        _SEDR = SEDR,
+        _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2327,7 +2369,7 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_OD_RESIDUAL_EPOCHS!);
     final int? OD_BATCH_BASELINE_IDOffset = _OD_BATCH_BASELINE_ID == null ? null
         : fbBuilder.writeString(_OD_BATCH_BASELINE_ID!);
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(25);
     fbBuilder.addOffset(0, OD_IDOffset);
     fbBuilder.addOffset(1, OD_PREV_IDOffset);
     fbBuilder.addOffset(2, OD_ALGORITHMOffset);
@@ -2351,6 +2393,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, OD_RESIDUAL_EPOCHSOffset);
     fbBuilder.addOffset(21, OD_BATCH_BASELINE_IDOffset);
     fbBuilder.addFloat64(22, _OD_BATCH_BASELINE_RMS);
+    fbBuilder.addFloat64(23, _SEDR);
+    fbBuilder.addFloat64(24, _WEIGHTED_RMS);
     return fbBuilder.endTable();
   }
 
@@ -2485,12 +2529,14 @@ class OCM {
   ///  Number of components per state vector.
   ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
   ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  6 or 7 for the element sets named by TRAJ_TYPE.
   int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 6);
   int get stateVectorSize => STATE_VECTOR_SIZE;
   ///  State data as row-major array of doubles.
   ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
   ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
   ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
   List<double>? get stateData => STATE_DATA;
   ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
@@ -2523,10 +2569,31 @@ class OCM {
   ///  User-defined parameters and supplemental comments.
   List<UserDefinedParameters>? get USER_DEFINED_PARAMETERS => const fb.ListReader<UserDefinedParameters>(UserDefinedParameters.reader).vTableGetNullable(_bc, _bcOffset, 32);
   List<UserDefinedParameters>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
+  ///  Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get centerName => CENTER_NAME;
+  ///  Reference frame of STATE_DATA and the polynomial records
+  ///  (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  RFM? get TRAJ_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  RFM? get trajRefFrame => TRAJ_REF_FRAME;
+  ///  Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  String? get TRAJ_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get trajFrameEpoch => TRAJ_FRAME_EPOCH;
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  RFM? get COV_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  RFM? get covRefFrame => COV_REF_FRAME;
+  ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  int get ORB_REVNUM => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get orbRevnum => ORB_REVNUM;
+  ///  For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  String? get ORB_AVERAGING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get orbAveraging => ORB_AVERAGING;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}}';
   }
 }
 
@@ -2544,7 +2611,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(21);
   }
 
   int addHeaderOffset(int? offset) {
@@ -2607,6 +2674,30 @@ class OCMBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbRevnum(int? ORB_REVNUM) {
+    fbBuilder.addUint32(19, ORB_REVNUM);
+    return fbBuilder.offset;
+  }
+  int addOrbAveragingOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2629,6 +2720,12 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final PerturbationsObjectBuilder? _PERTURBATIONS;
   final OrbitDeterminationObjectBuilder? _ORBIT_DETERMINATION;
   final List<UserDefinedParametersObjectBuilder>? _USER_DEFINED_PARAMETERS;
+  final String? _CENTER_NAME;
+  final RFMObjectBuilder? _TRAJ_REF_FRAME;
+  final String? _TRAJ_FRAME_EPOCH;
+  final RFMObjectBuilder? _COV_REF_FRAME;
+  final int? _ORB_REVNUM;
+  final String? _ORB_AVERAGING;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -2658,6 +2755,18 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     OrbitDeterminationObjectBuilder? orbitDetermination,
     List<UserDefinedParametersObjectBuilder>? USER_DEFINED_PARAMETERS,
     List<UserDefinedParametersObjectBuilder>? userDefinedParameters,
+    String? CENTER_NAME,
+    String? centerName,
+    RFMObjectBuilder? TRAJ_REF_FRAME,
+    RFMObjectBuilder? trajRefFrame,
+    String? TRAJ_FRAME_EPOCH,
+    String? trajFrameEpoch,
+    RFMObjectBuilder? COV_REF_FRAME,
+    RFMObjectBuilder? covRefFrame,
+    int? ORB_REVNUM,
+    int? orbRevnum,
+    String? ORB_AVERAGING,
+    String? orbAveraging,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -2673,7 +2782,13 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _MANEUVER_DATA = maneuverData ?? MANEUVER_DATA,
         _PERTURBATIONS = PERTURBATIONS,
         _ORBIT_DETERMINATION = orbitDetermination ?? ORBIT_DETERMINATION,
-        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS;
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _TRAJ_REF_FRAME = trajRefFrame ?? TRAJ_REF_FRAME,
+        _TRAJ_FRAME_EPOCH = trajFrameEpoch ?? TRAJ_FRAME_EPOCH,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _ORB_REVNUM = orbRevnum ?? ORB_REVNUM,
+        _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2697,7 +2812,15 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     final int? ORBIT_DETERMINATIONOffset = _ORBIT_DETERMINATION?.getOrCreateOffset(fbBuilder);
     final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
         : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(15);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? TRAJ_REF_FRAMEOffset = _TRAJ_REF_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? TRAJ_FRAME_EPOCHOffset = _TRAJ_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_TRAJ_FRAME_EPOCH!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? ORB_AVERAGINGOffset = _ORB_AVERAGING == null ? null
+        : fbBuilder.writeString(_ORB_AVERAGING!);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -2713,6 +2836,12 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(12, PERTURBATIONSOffset);
     fbBuilder.addOffset(13, ORBIT_DETERMINATIONOffset);
     fbBuilder.addOffset(14, USER_DEFINED_PARAMETERSOffset);
+    fbBuilder.addOffset(15, CENTER_NAMEOffset);
+    fbBuilder.addOffset(16, TRAJ_REF_FRAMEOffset);
+    fbBuilder.addOffset(17, TRAJ_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(18, COV_REF_FRAMEOffset);
+    fbBuilder.addUint32(19, _ORB_REVNUM);
+    fbBuilder.addOffset(20, ORB_AVERAGINGOffset);
     return fbBuilder.endTable();
   }
 

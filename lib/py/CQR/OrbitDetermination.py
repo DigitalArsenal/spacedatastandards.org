@@ -281,8 +281,25 @@ class OrbitDetermination(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Specific energy dissipation rate in W/kg: energy removed from the orbit
+    # by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+    # OrbitDetermination
+    def SEDR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+    # OrbitDetermination
+    def WEIGHTED_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def OrbitDeterminationStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(25)
 
 def Start(builder):
     OrbitDeterminationStart(builder)
@@ -481,6 +498,18 @@ def OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS):
 def AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS):
     OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS)
 
+def OrbitDeterminationAddSEDR(builder, SEDR):
+    builder.PrependFloat64Slot(23, SEDR, 0.0)
+
+def AddSEDR(builder, SEDR):
+    OrbitDeterminationAddSEDR(builder, SEDR)
+
+def OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    builder.PrependFloat64Slot(24, WEIGHTED_RMS, 0.0)
+
+def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+
 def OrbitDeterminationEnd(builder):
     return builder.EndObject()
 
@@ -520,6 +549,8 @@ class OrbitDeterminationT(object):
         OD_RESIDUAL_EPOCHS = None,
         OD_BATCH_BASELINE_ID = None,
         OD_BATCH_BASELINE_RMS = 0.0,
+        SEDR = 0.0,
+        WEIGHTED_RMS = 0.0,
     ):
         self.OD_ID = OD_ID  # type: Optional[str]
         self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
@@ -544,6 +575,8 @@ class OrbitDeterminationT(object):
         self.OD_RESIDUAL_EPOCHS = OD_RESIDUAL_EPOCHS  # type: Optional[List[float]]
         self.OD_BATCH_BASELINE_ID = OD_BATCH_BASELINE_ID  # type: Optional[str]
         self.OD_BATCH_BASELINE_RMS = OD_BATCH_BASELINE_RMS  # type: float
+        self.SEDR = SEDR  # type: float
+        self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -607,6 +640,8 @@ class OrbitDeterminationT(object):
                 self.OD_RESIDUAL_EPOCHS = OrbitDetermination.OD_RESIDUAL_EPOCHSAsNumpy()
         self.OD_BATCH_BASELINE_ID = OrbitDetermination.OD_BATCH_BASELINE_ID()
         self.OD_BATCH_BASELINE_RMS = OrbitDetermination.OD_BATCH_BASELINE_RMS()
+        self.SEDR = OrbitDetermination.SEDR()
+        self.WEIGHTED_RMS = OrbitDetermination.WEIGHTED_RMS()
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -712,5 +747,7 @@ class OrbitDeterminationT(object):
         if self.OD_BATCH_BASELINE_ID is not None:
             OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID)
         OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, self.OD_BATCH_BASELINE_RMS)
+        OrbitDeterminationAddSEDR(builder, self.SEDR)
+        OrbitDeterminationAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
         OrbitDetermination = OrbitDeterminationEnd(builder)
         return OrbitDetermination

@@ -318,6 +318,7 @@ class VCM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun VCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VCM")
         fun createVCM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, refFrameOffset: Int, timeSystemOffset: Int, stateVectorOffset: Int, keplerianElementsOffset: Int, equinoctialElementsOffset: Int, gm: Double, atmosphericModelDataOffset: Int, propagatorSettingsOffset: Int, uvwSigmasOffset: Int, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, srp: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double) : Int {
             builder.startTable(35)
             addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
@@ -405,7 +406,7 @@ class VCM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishVCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset)
-        fun finishSizePrefixedVCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset)
+        fun finishVCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$VCM")
+        fun finishSizePrefixedVCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$VCM")
     }
 }

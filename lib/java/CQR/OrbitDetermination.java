@@ -163,6 +163,15 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
    * comparison.
    */
   public double OD_BATCH_BASELINE_RMS() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Specific energy dissipation rate in W/kg: energy removed from the orbit
+   * by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+   */
+  public double SEDR() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+   */
+  public double WEIGHTED_RMS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createOrbitDetermination(FlatBufferBuilder builder,
       int OD_IDOffset,
@@ -187,8 +196,12 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
       int OD_RESIDUALS_SERIESOffset,
       int OD_RESIDUAL_EPOCHSOffset,
       int OD_BATCH_BASELINE_IDOffset,
-      double OD_BATCH_BASELINE_RMS) {
-    builder.startTable(23);
+      double OD_BATCH_BASELINE_RMS,
+      double SEDR,
+      double WEIGHTED_RMS) {
+    builder.startTable(25);
+    OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
+    OrbitDetermination.addSedr(builder, SEDR);
     OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
     OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
@@ -215,7 +228,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     return OrbitDetermination.endOrbitDetermination(builder);
   }
 
-  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(25); }
   public static void addOdId(FlatBufferBuilder builder, int OD_IDOffset) { builder.addOffset(0, OD_IDOffset, 0); }
   public static void addOdPrevId(FlatBufferBuilder builder, int OD_PREV_IDOffset) { builder.addOffset(1, OD_PREV_IDOffset, 0); }
   public static void addOdAlgorithm(FlatBufferBuilder builder, int OD_ALGORITHMOffset) { builder.addOffset(2, OD_ALGORITHMOffset, 0); }
@@ -247,6 +260,8 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public static void startOdResidualEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addOdBatchBaselineId(FlatBufferBuilder builder, int OD_BATCH_BASELINE_IDOffset) { builder.addOffset(21, OD_BATCH_BASELINE_IDOffset, 0); }
   public static void addOdBatchBaselineRms(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.addDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
+  public static void addSedr(FlatBufferBuilder builder, double SEDR) { builder.addDouble(23, SEDR, 0.0); }
+  public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(24, WEIGHTED_RMS, 0.0); }
   public static int endOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

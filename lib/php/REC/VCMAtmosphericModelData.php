@@ -19,6 +19,16 @@ class VCMAtmosphericModelData extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function VCMAtmosphericModelDataIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function VCMAtmosphericModelDataBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::VCMAtmosphericModelDataIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb

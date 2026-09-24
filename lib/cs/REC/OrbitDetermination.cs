@@ -165,6 +165,11 @@ public struct OrbitDetermination : IFlatbufferObject
   /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
   /// comparison.
   public double OD_BATCH_BASELINE_RMS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+  /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  public double SEDR { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  public double WEIGHTED_RMS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<OrbitDetermination> CreateOrbitDetermination(FlatBufferBuilder builder,
       StringOffset OD_IDOffset = default(StringOffset),
@@ -189,8 +194,12 @@ public struct OrbitDetermination : IFlatbufferObject
       VectorOffset OD_RESIDUALS_SERIESOffset = default(VectorOffset),
       VectorOffset OD_RESIDUAL_EPOCHSOffset = default(VectorOffset),
       StringOffset OD_BATCH_BASELINE_IDOffset = default(StringOffset),
-      double OD_BATCH_BASELINE_RMS = 0.0) {
-    builder.StartTable(23);
+      double OD_BATCH_BASELINE_RMS = 0.0,
+      double SEDR = 0.0,
+      double WEIGHTED_RMS = 0.0) {
+    builder.StartTable(25);
+    OrbitDetermination.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
+    OrbitDetermination.AddSEDR(builder, SEDR);
     OrbitDetermination.AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS);
     OrbitDetermination.AddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_IDOffset);
@@ -217,7 +226,7 @@ public struct OrbitDetermination : IFlatbufferObject
     return OrbitDetermination.EndOrbitDetermination(builder);
   }
 
-  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(25); }
   public static void AddOD_ID(FlatBufferBuilder builder, StringOffset OD_IDOffset) { builder.AddOffset(0, OD_IDOffset.Value, 0); }
   public static void AddOD_PREV_ID(FlatBufferBuilder builder, StringOffset OD_PREV_IDOffset) { builder.AddOffset(1, OD_PREV_IDOffset.Value, 0); }
   public static void AddOD_ALGORITHM(FlatBufferBuilder builder, StringOffset OD_ALGORITHMOffset) { builder.AddOffset(2, OD_ALGORITHMOffset.Value, 0); }
@@ -261,6 +270,8 @@ public struct OrbitDetermination : IFlatbufferObject
   public static void StartOD_RESIDUAL_EPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddOD_BATCH_BASELINE_ID(FlatBufferBuilder builder, StringOffset OD_BATCH_BASELINE_IDOffset) { builder.AddOffset(21, OD_BATCH_BASELINE_IDOffset.Value, 0); }
   public static void AddOD_BATCH_BASELINE_RMS(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.AddDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
+  public static void AddSEDR(FlatBufferBuilder builder, double SEDR) { builder.AddDouble(23, SEDR, 0.0); }
+  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(24, WEIGHTED_RMS, 0.0); }
   public static Offset<OrbitDetermination> EndOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitDetermination>(o);
@@ -298,6 +309,8 @@ public struct OrbitDetermination : IFlatbufferObject
     for (var _j = 0; _j < this.OD_RESIDUAL_EPOCHSLength; ++_j) {_o.OD_RESIDUAL_EPOCHS.Add(this.OD_RESIDUAL_EPOCHS(_j));}
     _o.OD_BATCH_BASELINE_ID = this.OD_BATCH_BASELINE_ID;
     _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS;
+    _o.SEDR = this.SEDR;
+    _o.WEIGHTED_RMS = this.WEIGHTED_RMS;
   }
   public static Offset<OrbitDetermination> Pack(FlatBufferBuilder builder, OrbitDeterminationT _o) {
     if (_o == null) return default(Offset<OrbitDetermination>);
@@ -361,7 +374,9 @@ public struct OrbitDetermination : IFlatbufferObject
       _OD_RESIDUALS_SERIES,
       _OD_RESIDUAL_EPOCHS,
       _OD_BATCH_BASELINE_ID,
-      _o.OD_BATCH_BASELINE_RMS);
+      _o.OD_BATCH_BASELINE_RMS,
+      _o.SEDR,
+      _o.WEIGHTED_RMS);
   }
 }
 
@@ -390,6 +405,8 @@ public class OrbitDeterminationT
   public List<double> OD_RESIDUAL_EPOCHS { get; set; }
   public string OD_BATCH_BASELINE_ID { get; set; }
   public double OD_BATCH_BASELINE_RMS { get; set; }
+  public double SEDR { get; set; }
+  public double WEIGHTED_RMS { get; set; }
 
   public OrbitDeterminationT() {
     this.OD_ID = null;
@@ -415,6 +432,8 @@ public class OrbitDeterminationT
     this.OD_RESIDUAL_EPOCHS = null;
     this.OD_BATCH_BASELINE_ID = null;
     this.OD_BATCH_BASELINE_RMS = 0.0;
+    this.SEDR = 0.0;
+    this.WEIGHTED_RMS = 0.0;
   }
 }
 
@@ -447,6 +466,8 @@ static public class OrbitDeterminationVerify
       && verifier.VerifyVectorOfData(tablePos, 44 /*OD_RESIDUAL_EPOCHS*/, 8 /*double*/, false)
       && verifier.VerifyString(tablePos, 46 /*OD_BATCH_BASELINE_ID*/, false)
       && verifier.VerifyField(tablePos, 48 /*OD_BATCH_BASELINE_RMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*SEDR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

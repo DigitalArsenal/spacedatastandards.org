@@ -3375,5 +3375,6 @@
     }
   },
   "$ref": "#/definitions/VCM",
-  "x-flatbuffer-root-type": "VCM"
+  "x-flatbuffer-root-type": "VCM",
+  "x-flatbuffer-file-identifier": "$VCM"
 }

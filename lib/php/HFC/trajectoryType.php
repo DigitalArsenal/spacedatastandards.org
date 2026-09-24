@@ -20,6 +20,25 @@ class trajectoryType
     const HERMITE = 4;
     /// Lagrange interpolating polynomial representation.
     const LAGRANGE = 5;
+    /// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+    /// [km], eccentricity, inclination, right ascension of the ascending node,
+    /// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+    /// KEPLERIAN (OID 1.3.112.4.57.5.11).
+    const KEPLERIAN = 6;
+    /// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+    /// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+    const KEPLERIAN_MEAN = 7;
+    /// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+    /// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+    /// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+    /// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+    /// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+    const EQUINOCTIAL = 8;
+    /// Modified equinoctial set, 7 values per row: semi-latus rectum
+    /// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+    /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+    /// (OID 1.3.112.4.57.5.9).
+    const EQUINOCTIAL_MOD = 9;
 
     private static $names = array(
         trajectoryType::CARTESIAN_PV=>"CARTESIAN_PV",
@@ -28,6 +47,10 @@ class trajectoryType
         trajectoryType::POLYNOMIAL_OE=>"POLYNOMIAL_OE",
         trajectoryType::HERMITE=>"HERMITE",
         trajectoryType::LAGRANGE=>"LAGRANGE",
+        trajectoryType::KEPLERIAN=>"KEPLERIAN",
+        trajectoryType::KEPLERIAN_MEAN=>"KEPLERIAN_MEAN",
+        trajectoryType::EQUINOCTIAL=>"EQUINOCTIAL",
+        trajectoryType::EQUINOCTIAL_MOD=>"EQUINOCTIAL_MOD",
     );
 
     public static function Name($e)

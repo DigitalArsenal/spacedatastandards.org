@@ -1,8 +1,9 @@
-// Hash: 868bfe4c8ac76ed3ff10850c86260230a6c311626596ae10fbf3581d665763d4
-// Version: 2.1.2
+// Hash: 24ec38c3ed840882b727de08f291c8abc7d14b1e721e47350906cd3f7a929722
+// Version: 2.1.3
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
+include "../RFM/main.fbs";
 
 // Orbit Comprehensive Message (OCM)
 // Description
@@ -45,7 +46,30 @@ enum trajectoryType : byte {
   HERMITE,
 
   /// Lagrange interpolating polynomial representation.
-  LAGRANGE
+  LAGRANGE,
+
+  /// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+  /// [km], eccentricity, inclination, right ascension of the ascending node,
+  /// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+  /// KEPLERIAN (OID 1.3.112.4.57.5.11).
+  KEPLERIAN,
+
+  /// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+  /// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+  KEPLERIAN_MEAN,
+
+  /// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+  /// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+  /// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+  /// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+  /// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+  EQUINOCTIAL,
+
+  /// Modified equinoctial set, 7 values per row: semi-latus rectum
+  /// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+  /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+  /// (OID 1.3.112.4.57.5.9).
+  EQUINOCTIAL_MOD
 }
 
 table Header {
@@ -269,6 +293,9 @@ table Perturbations {
   FIXED_F10P7: double;
   /// Fixed mean F10.7 solar flux value used.
   FIXED_F10P7_MEAN: double;
+  /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  FIXED_GEOMAG_AP: double;
 }
 
 table Maneuver {
@@ -365,6 +392,11 @@ table OrbitDetermination {
   /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
   /// comparison.
   OD_BATCH_BASELINE_RMS: double;
+  /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+  /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  SEDR: double;
+  /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  WEIGHTED_RMS: double;
 }
 
 table UserDefinedParameters {
@@ -396,12 +428,14 @@ table OCM {
   /// Number of components per state vector.
   /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
   /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// 6 or 7 for the element sets named by TRAJ_TYPE.
   STATE_VECTOR_SIZE:uint8 = 6;
 
   /// State data as row-major array of doubles.
   /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
   /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
   /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   STATE_DATA:[double];
 
   /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
@@ -430,6 +464,21 @@ table OCM {
   ORBIT_DETERMINATION: OrbitDetermination;
   /// User-defined parameters and supplemental comments.
   USER_DEFINED_PARAMETERS: [UserDefinedParameters];
+  /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  CENTER_NAME: string;
+  /// Reference frame of STATE_DATA and the polynomial records
+  /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  TRAJ_REF_FRAME: RFM;
+  /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  TRAJ_FRAME_EPOCH: string;
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  COV_REF_FRAME: RFM;
+  /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  ORB_REVNUM: uint;
+  /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  ORB_AVERAGING: string;
 }
 
 root_type OCM;

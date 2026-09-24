@@ -19,6 +19,16 @@ class VCM extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function VCMIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function VCMBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::VCMIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb
@@ -758,6 +768,6 @@ class VCM extends Table
 
     public static function finishVCMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset);
+        $builder->finish($offset, "$VCM");
     }
 }

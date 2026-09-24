@@ -29,8 +29,27 @@ public enum trajectoryType: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
   case hermite = 4
   ///  Lagrange interpolating polynomial representation.
   case lagrange = 5
+  ///  Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+  ///  [km], eccentricity, inclination, right ascension of the ascending node,
+  ///  argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+  ///  KEPLERIAN (OID 1.3.112.4.57.5.11).
+  case keplerian = 6
+  ///  As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+  ///  Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+  case keplerianMean = 7
+  ///  Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+  ///  af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+  ///  L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+  ///  psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+  ///  SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+  case equinoctial = 8
+  ///  Modified equinoctial set, 7 values per row: semi-latus rectum
+  ///  p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+  ///  [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+  ///  (OID 1.3.112.4.57.5.9).
+  case equinoctialMod = 9
 
-  public static var max: trajectoryType { return .lagrange }
+  public static var max: trajectoryType { return .equinoctialMod }
   public static var min: trajectoryType { return .cartesianPv }
 }
 
@@ -845,6 +864,7 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     static let FIXED_GEOMAG_KP: VOffset = 36
     static let FIXED_F10P7: VOffset = 38
     static let FIXED_F10P7_MEAN: VOffset = 40
+    static let FIXED_GEOMAG_AP: VOffset = 42
   }
 
   ///  Comments in the Perturbations section.
@@ -895,7 +915,10 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public var FIXED_F10P7: Double { let o = _accessor.offset(VT.FIXED_F10P7); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fixed mean F10.7 solar flux value used.
   public var FIXED_F10P7_MEAN: Double { let o = _accessor.offset(VT.FIXED_F10P7_MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPerturbations(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  ///  time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  public var FIXED_GEOMAG_AP: Double { let o = _accessor.offset(VT.FIXED_GEOMAG_AP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPerturbations(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VT.ATMOSPHERIC_MODEL) }
   public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VT.GRAVITY_MODEL) }
@@ -915,6 +938,7 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public static func add(FIXED_GEOMAG_KP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_GEOMAG_KP, def: 0.0, at: VT.FIXED_GEOMAG_KP) }
   public static func add(FIXED_F10P7: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_F10P7, def: 0.0, at: VT.FIXED_F10P7) }
   public static func add(FIXED_F10P7_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_F10P7_MEAN, def: 0.0, at: VT.FIXED_F10P7_MEAN) }
+  public static func add(FIXED_GEOMAG_AP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_GEOMAG_AP, def: 0.0, at: VT.FIXED_GEOMAG_AP) }
   public static func endPerturbations(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPerturbations(
     _ fbb: inout FlatBufferBuilder,
@@ -936,7 +960,8 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     ATMOSPHERIC_DRAGOffset ATMOSPHERIC_DRAG: Offset = Offset(),
     FIXED_GEOMAG_KP: Double = 0.0,
     FIXED_F10P7: Double = 0.0,
-    FIXED_F10P7_MEAN: Double = 0.0
+    FIXED_F10P7_MEAN: Double = 0.0,
+    FIXED_GEOMAG_AP: Double = 0.0
   ) -> Offset {
     let __start = Perturbations.startPerturbations(&fbb)
     Perturbations.addVectorOf(COMMENT: COMMENT, &fbb)
@@ -958,6 +983,7 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     Perturbations.add(FIXED_GEOMAG_KP: FIXED_GEOMAG_KP, &fbb)
     Perturbations.add(FIXED_F10P7: FIXED_F10P7, &fbb)
     Perturbations.add(FIXED_F10P7_MEAN: FIXED_F10P7_MEAN, &fbb)
+    Perturbations.add(FIXED_GEOMAG_AP: FIXED_GEOMAG_AP, &fbb)
     return Perturbations.endPerturbations(&fbb, start: __start)
   }
 
@@ -982,6 +1008,7 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     try _v.visit(field: VT.FIXED_GEOMAG_KP, fieldName: "FIXED_GEOMAG_KP", required: false, type: Double.self)
     try _v.visit(field: VT.FIXED_F10P7, fieldName: "FIXED_F10P7", required: false, type: Double.self)
     try _v.visit(field: VT.FIXED_F10P7_MEAN, fieldName: "FIXED_F10P7_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_GEOMAG_AP, fieldName: "FIXED_GEOMAG_AP", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1150,6 +1177,8 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     static let OD_RESIDUAL_EPOCHS: VOffset = 44
     static let OD_BATCH_BASELINE_ID: VOffset = 46
     static let OD_BATCH_BASELINE_RMS: VOffset = 48
+    static let SEDR: VOffset = 50
+    static let WEIGHTED_RMS: VOffset = 52
   }
 
   ///  Unique identifier for the orbit determination.
@@ -1217,7 +1246,12 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
   ///  Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
   ///  comparison.
   public var OD_BATCH_BASELINE_RMS: Double { let o = _accessor.offset(VT.OD_BATCH_BASELINE_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  ///  Specific energy dissipation rate in W/kg: energy removed from the orbit
+  ///  by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  public var SEDR: Double { let o = _accessor.offset(VT.SEDR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
   public static func add(OD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ID, at: VT.OD_ID) }
   public static func add(OD_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_PREV_ID, at: VT.OD_PREV_ID) }
   public static func add(OD_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ALGORITHM, at: VT.OD_ALGORITHM) }
@@ -1241,6 +1275,8 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
   public static func addVectorOf(OD_RESIDUAL_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUAL_EPOCHS, at: VT.OD_RESIDUAL_EPOCHS) }
   public static func add(OD_BATCH_BASELINE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_BATCH_BASELINE_ID, at: VT.OD_BATCH_BASELINE_ID) }
   public static func add(OD_BATCH_BASELINE_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_BATCH_BASELINE_RMS, def: 0.0, at: VT.OD_BATCH_BASELINE_RMS) }
+  public static func add(SEDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEDR, def: 0.0, at: VT.SEDR) }
+  public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: 0.0, at: VT.WEIGHTED_RMS) }
   public static func endOrbitDetermination(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOrbitDetermination(
     _ fbb: inout FlatBufferBuilder,
@@ -1266,7 +1302,9 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     OD_RESIDUALS_SERIESVectorOffset OD_RESIDUALS_SERIES: Offset = Offset(),
     OD_RESIDUAL_EPOCHSVectorOffset OD_RESIDUAL_EPOCHS: Offset = Offset(),
     OD_BATCH_BASELINE_IDOffset OD_BATCH_BASELINE_ID: Offset = Offset(),
-    OD_BATCH_BASELINE_RMS: Double = 0.0
+    OD_BATCH_BASELINE_RMS: Double = 0.0,
+    SEDR: Double = 0.0,
+    WEIGHTED_RMS: Double = 0.0
   ) -> Offset {
     let __start = OrbitDetermination.startOrbitDetermination(&fbb)
     OrbitDetermination.add(OD_ID: OD_ID, &fbb)
@@ -1292,6 +1330,8 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     OrbitDetermination.addVectorOf(OD_RESIDUAL_EPOCHS: OD_RESIDUAL_EPOCHS, &fbb)
     OrbitDetermination.add(OD_BATCH_BASELINE_ID: OD_BATCH_BASELINE_ID, &fbb)
     OrbitDetermination.add(OD_BATCH_BASELINE_RMS: OD_BATCH_BASELINE_RMS, &fbb)
+    OrbitDetermination.add(SEDR: SEDR, &fbb)
+    OrbitDetermination.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
     return OrbitDetermination.endOrbitDetermination(&fbb, start: __start)
   }
 
@@ -1320,6 +1360,8 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.OD_RESIDUAL_EPOCHS, fieldName: "OD_RESIDUAL_EPOCHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.OD_BATCH_BASELINE_ID, fieldName: "OD_BATCH_BASELINE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.OD_BATCH_BASELINE_RMS, fieldName: "OD_BATCH_BASELINE_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEDR, fieldName: "SEDR", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1397,6 +1439,12 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let PERTURBATIONS: VOffset = 28
     static let ORBIT_DETERMINATION: VOffset = 30
     static let USER_DEFINED_PARAMETERS: VOffset = 32
+    static let CENTER_NAME: VOffset = 34
+    static let TRAJ_REF_FRAME: VOffset = 36
+    static let TRAJ_FRAME_EPOCH: VOffset = 38
+    static let COV_REF_FRAME: VOffset = 40
+    static let ORB_REVNUM: VOffset = 42
+    static let ORB_AVERAGING: VOffset = 44
   }
 
   ///  Header section of the OCM.
@@ -1417,11 +1465,13 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Number of components per state vector.
   ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
   ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  6 or 7 for the element sets named by TRAJ_TYPE.
   public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VT.STATE_VECTOR_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  State data as row-major array of doubles.
   ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
   ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
   ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   public var STATE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.STATE_DATA, byteSize: 8) }
   public func withUnsafePointerToStateData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.STATE_DATA, body: body) }
   ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
@@ -1448,7 +1498,25 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var ORBIT_DETERMINATION: OrbitDetermination? { let o = _accessor.offset(VT.ORBIT_DETERMINATION); return o == 0 ? nil : OrbitDetermination(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  User-defined parameters and supplemental comments.
   public var USER_DEFINED_PARAMETERS: FlatbufferVector<UserDefinedParameters> { return _accessor.vector(at: VT.USER_DEFINED_PARAMETERS, byteSize: 4) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  Reference frame of STATE_DATA and the polynomial records
+  ///  (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  public var TRAJ_REF_FRAME: RFM? { let o = _accessor.offset(VT.TRAJ_REF_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  public var TRAJ_FRAME_EPOCH: String? { let o = _accessor.offset(VT.TRAJ_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_FRAME_EPOCH) }
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  public var COV_REF_FRAME: RFM? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  public var ORB_REVNUM: UInt32 { let o = _accessor.offset(VT.ORB_REVNUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  public var ORB_AVERAGING: String? { let o = _accessor.offset(VT.ORB_AVERAGING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORB_AVERAGINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORB_AVERAGING) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
   public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
@@ -1464,6 +1532,12 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PERTURBATIONS, at: VT.PERTURBATIONS) }
   public static func add(ORBIT_DETERMINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_DETERMINATION, at: VT.ORBIT_DETERMINATION) }
   public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(TRAJ_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_REF_FRAME, at: VT.TRAJ_REF_FRAME) }
+  public static func add(TRAJ_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_FRAME_EPOCH, at: VT.TRAJ_FRAME_EPOCH) }
+  public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
+  public static func add(ORB_REVNUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORB_REVNUM, def: 0, at: VT.ORB_REVNUM) }
+  public static func add(ORB_AVERAGING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORB_AVERAGING, at: VT.ORB_AVERAGING) }
   public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCM(
     _ fbb: inout FlatBufferBuilder,
@@ -1481,7 +1555,13 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     MANEUVER_DATAVectorOffset MANEUVER_DATA: Offset = Offset(),
     PERTURBATIONSOffset PERTURBATIONS: Offset = Offset(),
     ORBIT_DETERMINATIONOffset ORBIT_DETERMINATION: Offset = Offset(),
-    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset()
+    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    TRAJ_REF_FRAMEOffset TRAJ_REF_FRAME: Offset = Offset(),
+    TRAJ_FRAME_EPOCHOffset TRAJ_FRAME_EPOCH: Offset = Offset(),
+    COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
+    ORB_REVNUM: UInt32 = 0,
+    ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset()
   ) -> Offset {
     let __start = OCM.startOCM(&fbb)
     OCM.add(HEADER: HEADER, &fbb)
@@ -1499,6 +1579,12 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     OCM.add(PERTURBATIONS: PERTURBATIONS, &fbb)
     OCM.add(ORBIT_DETERMINATION: ORBIT_DETERMINATION, &fbb)
     OCM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
+    OCM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    OCM.add(TRAJ_REF_FRAME: TRAJ_REF_FRAME, &fbb)
+    OCM.add(TRAJ_FRAME_EPOCH: TRAJ_FRAME_EPOCH, &fbb)
+    OCM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    OCM.add(ORB_REVNUM: ORB_REVNUM, &fbb)
+    OCM.add(ORB_AVERAGING: ORB_AVERAGING, &fbb)
     return OCM.endOCM(&fbb, start: __start)
   }
 
@@ -1519,6 +1605,12 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.PERTURBATIONS, fieldName: "PERTURBATIONS", required: false, type: ForwardOffset<Perturbations>.self)
     try _v.visit(field: VT.ORBIT_DETERMINATION, fieldName: "ORBIT_DETERMINATION", required: false, type: ForwardOffset<OrbitDetermination>.self)
     try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<UserDefinedParameters>, UserDefinedParameters>>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_REF_FRAME, fieldName: "TRAJ_REF_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.TRAJ_FRAME_EPOCH, fieldName: "TRAJ_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.ORB_REVNUM, fieldName: "ORB_REVNUM", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORB_AVERAGING, fieldName: "ORB_AVERAGING", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

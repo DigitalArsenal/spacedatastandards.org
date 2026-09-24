@@ -91,6 +91,7 @@ class OCM : Table() {
      * Number of components per state vector.
      * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
      * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+     * 6 or 7 for the element sets named by TRAJ_TYPE.
      */
     val stateVectorSize : UByte
         get() {
@@ -102,6 +103,7 @@ class OCM : Table() {
      * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
      * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
      * Length must be divisible by STATE_VECTOR_SIZE.
+     * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
      */
     fun stateData(j: Int) : Double {
         val o = __offset(16)
@@ -241,6 +243,83 @@ class OCM : Table() {
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Reference frame of STATE_DATA and the polynomial records
+     * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+     */
+    val trajRefFrame : RFM? get() = trajRefFrame(RFM())
+    fun trajRefFrame(obj: RFM) : RFM? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+     * (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+     */
+    val trajFrameEpoch : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val trajFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun trajFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+     */
+    val covRefFrame : RFM? get() = covRefFrame(RFM())
+    fun covRefFrame(obj: RFM) : RFM? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+     */
+    val orbRevnum : UInt
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+     * KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+     */
+    val orbAveraging : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val orbAveragingAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun orbAveragingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -249,9 +328,15 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int) : Int {
-            builder.startTable(15)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int) : Int {
+            builder.startTable(21)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addORBAVERAGING(builder, orbAveragingOffset)
+            addORBREVNUM(builder, orbRevnum)
+            addCOVREFFRAME(builder, covRefFrameOffset)
+            addTRAJFRAMEEPOCH(builder, trajFrameEpochOffset)
+            addTRAJREFFRAME(builder, trajRefFrameOffset)
+            addCENTERNAME(builder, centerNameOffset)
             addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
             addORBITDETERMINATION(builder, orbitDeterminationOffset)
             addPERTURBATIONS(builder, perturbationsOffset)
@@ -268,7 +353,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -332,6 +417,12 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(15, centerName, 0)
+        fun addTRAJREFFRAME(builder: FlatBufferBuilder, trajRefFrame: Int) = builder.addOffset(16, trajRefFrame, 0)
+        fun addTRAJFRAMEEPOCH(builder: FlatBufferBuilder, trajFrameEpoch: Int) = builder.addOffset(17, trajFrameEpoch, 0)
+        fun addCOVREFFRAME(builder: FlatBufferBuilder, covRefFrame: Int) = builder.addOffset(18, covRefFrame, 0)
+        fun addORBREVNUM(builder: FlatBufferBuilder, orbRevnum: UInt) = builder.addInt(19, orbRevnum.toInt(), 0)
+        fun addORBAVERAGING(builder: FlatBufferBuilder, orbAveraging: Int) = builder.addOffset(20, orbAveraging, 0)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

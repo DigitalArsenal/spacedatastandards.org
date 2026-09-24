@@ -487,8 +487,54 @@ func (rcv *OrbitDetermination) MutateOdBatchBaselineRms(n float64) bool {
 	return rcv.MutateOD_BATCH_BASELINE_RMS(n)
 }
 
+/// Specific energy dissipation rate in W/kg: energy removed from the orbit
+/// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+func (rcv *OrbitDetermination) SEDR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OrbitDetermination) Sedr() float64 {
+	return rcv.SEDR()
+}
+
+/// Specific energy dissipation rate in W/kg: energy removed from the orbit
+/// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+func (rcv *OrbitDetermination) MutateSEDR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OrbitDetermination) MutateSedr(n float64) bool {
+	return rcv.MutateSEDR(n)
+}
+
+/// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+func (rcv *OrbitDetermination) WEIGHTED_RMS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OrbitDetermination) WeightedRms() float64 {
+	return rcv.WEIGHTED_RMS()
+}
+
+/// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+func (rcv *OrbitDetermination) MutateWEIGHTED_RMS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OrbitDetermination) MutateWeightedRms(n float64) bool {
+	return rcv.MutateWEIGHTED_RMS(n)
+}
+
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(25)
 }
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
@@ -651,6 +697,18 @@ func OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder *flatbuffers.Builder, OD
 }
 func OrbitDeterminationAddOdBatchBaselineRms(builder *flatbuffers.Builder, OD_BATCH_BASELINE_RMS float64) {
 	OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS)
+}
+func OrbitDeterminationAddSEDR(builder *flatbuffers.Builder, SEDR float64) {
+	builder.PrependFloat64Slot(23, SEDR, 0.0)
+}
+func OrbitDeterminationAddSedr(builder *flatbuffers.Builder, SEDR float64) {
+	OrbitDeterminationAddSEDR(builder, SEDR)
+}
+func OrbitDeterminationAddWEIGHTED_RMS(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
+	builder.PrependFloat64Slot(24, WEIGHTED_RMS, 0.0)
+}
+func OrbitDeterminationAddWeightedRms(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
+	OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

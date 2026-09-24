@@ -386,8 +386,32 @@ func (rcv *Perturbations) MutateFixedF10p7Mean(n float64) bool {
 	return rcv.MutateFIXED_F10P7_MEAN(n)
 }
 
+/// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+/// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+func (rcv *Perturbations) FIXED_GEOMAG_AP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *Perturbations) FixedGeomagAp() float64 {
+	return rcv.FIXED_GEOMAG_AP()
+}
+
+/// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+/// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+func (rcv *Perturbations) MutateFIXED_GEOMAG_AP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *Perturbations) MutateFixedGeomagAp(n float64) bool {
+	return rcv.MutateFIXED_GEOMAG_AP(n)
+}
+
 func PerturbationsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(20)
 }
 func PerturbationsAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -514,6 +538,12 @@ func PerturbationsAddFIXED_F10P7_MEAN(builder *flatbuffers.Builder, FIXED_F10P7_
 }
 func PerturbationsAddFixedF10p7Mean(builder *flatbuffers.Builder, FIXED_F10P7_MEAN float64) {
 	PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN)
+}
+func PerturbationsAddFIXED_GEOMAG_AP(builder *flatbuffers.Builder, FIXED_GEOMAG_AP float64) {
+	builder.PrependFloat64Slot(19, FIXED_GEOMAG_AP, 0.0)
+}
+func PerturbationsAddFixedGeomagAp(builder *flatbuffers.Builder, FIXED_GEOMAG_AP float64) {
+	PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP)
 }
 func PerturbationsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

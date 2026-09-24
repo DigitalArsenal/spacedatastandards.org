@@ -116,6 +116,9 @@ public struct Perturbations : IFlatbufferObject
   public double FIXED_F10P7 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Fixed mean F10.7 solar flux value used.
   public double FIXED_F10P7_MEAN { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  public double FIXED_GEOMAG_AP { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<Perturbations> CreatePerturbations(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -136,8 +139,10 @@ public struct Perturbations : IFlatbufferObject
       StringOffset ATMOSPHERIC_DRAGOffset = default(StringOffset),
       double FIXED_GEOMAG_KP = 0.0,
       double FIXED_F10P7 = 0.0,
-      double FIXED_F10P7_MEAN = 0.0) {
-    builder.StartTable(19);
+      double FIXED_F10P7_MEAN = 0.0,
+      double FIXED_GEOMAG_AP = 0.0) {
+    builder.StartTable(20);
+    Perturbations.AddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP);
     Perturbations.AddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN);
     Perturbations.AddFIXED_F10P7(builder, FIXED_F10P7);
     Perturbations.AddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP);
@@ -160,7 +165,7 @@ public struct Perturbations : IFlatbufferObject
     return Perturbations.EndPerturbations(builder);
   }
 
-  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -190,6 +195,7 @@ public struct Perturbations : IFlatbufferObject
   public static void AddFIXED_GEOMAG_KP(FlatBufferBuilder builder, double FIXED_GEOMAG_KP) { builder.AddDouble(16, FIXED_GEOMAG_KP, 0.0); }
   public static void AddFIXED_F10P7(FlatBufferBuilder builder, double FIXED_F10P7) { builder.AddDouble(17, FIXED_F10P7, 0.0); }
   public static void AddFIXED_F10P7_MEAN(FlatBufferBuilder builder, double FIXED_F10P7_MEAN) { builder.AddDouble(18, FIXED_F10P7_MEAN, 0.0); }
+  public static void AddFIXED_GEOMAG_AP(FlatBufferBuilder builder, double FIXED_GEOMAG_AP) { builder.AddDouble(19, FIXED_GEOMAG_AP, 0.0); }
   public static Offset<Perturbations> EndPerturbations(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Perturbations>(o);
@@ -221,6 +227,7 @@ public struct Perturbations : IFlatbufferObject
     _o.FIXED_GEOMAG_KP = this.FIXED_GEOMAG_KP;
     _o.FIXED_F10P7 = this.FIXED_F10P7;
     _o.FIXED_F10P7_MEAN = this.FIXED_F10P7_MEAN;
+    _o.FIXED_GEOMAG_AP = this.FIXED_GEOMAG_AP;
   }
   public static Offset<Perturbations> Pack(FlatBufferBuilder builder, PerturbationsT _o) {
     if (_o == null) return default(Offset<Perturbations>);
@@ -267,7 +274,8 @@ public struct Perturbations : IFlatbufferObject
       _ATMOSPHERIC_DRAG,
       _o.FIXED_GEOMAG_KP,
       _o.FIXED_F10P7,
-      _o.FIXED_F10P7_MEAN);
+      _o.FIXED_F10P7_MEAN,
+      _o.FIXED_GEOMAG_AP);
   }
 }
 
@@ -292,6 +300,7 @@ public class PerturbationsT
   public double FIXED_GEOMAG_KP { get; set; }
   public double FIXED_F10P7 { get; set; }
   public double FIXED_F10P7_MEAN { get; set; }
+  public double FIXED_GEOMAG_AP { get; set; }
 
   public PerturbationsT() {
     this.COMMENT = null;
@@ -313,6 +322,7 @@ public class PerturbationsT
     this.FIXED_GEOMAG_KP = 0.0;
     this.FIXED_F10P7 = 0.0;
     this.FIXED_F10P7_MEAN = 0.0;
+    this.FIXED_GEOMAG_AP = 0.0;
   }
 }
 
@@ -341,6 +351,7 @@ static public class PerturbationsVerify
       && verifier.VerifyField(tablePos, 36 /*FIXED_GEOMAG_KP*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 38 /*FIXED_F10P7*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*FIXED_F10P7_MEAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*FIXED_GEOMAG_AP*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

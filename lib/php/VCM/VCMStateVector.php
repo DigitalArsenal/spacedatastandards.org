@@ -19,6 +19,16 @@ class VCMStateVector extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function VCMStateVectorIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function VCMStateVectorBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::VCMStateVectorIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb

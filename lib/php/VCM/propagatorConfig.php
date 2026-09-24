@@ -19,6 +19,16 @@ class propagatorConfig extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function propagatorConfigIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function propagatorConfigBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::propagatorConfigIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb

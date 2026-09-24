@@ -34,8 +34,35 @@ public final class trajectoryType {
    * Lagrange interpolating polynomial representation.
    */
   public static final byte LAGRANGE = 5;
+  /**
+   * Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+   * [km], eccentricity, inclination, right ascension of the ascending node,
+   * argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+   * KEPLERIAN (OID 1.3.112.4.57.5.11).
+   */
+  public static final byte KEPLERIAN = 6;
+  /**
+   * As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+   * Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+   */
+  public static final byte KEPLERIAN_MEAN = 7;
+  /**
+   * Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+   * af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+   * L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+   * psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+   * SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+   */
+  public static final byte EQUINOCTIAL = 8;
+  /**
+   * Modified equinoctial set, 7 values per row: semi-latus rectum
+   * p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+   * [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+   * (OID 1.3.112.4.57.5.9).
+   */
+  public static final byte EQUINOCTIAL_MOD = 9;
 
-  public static final String[] names = { "CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE", };
+  public static final String[] names = { "CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE", "KEPLERIAN", "KEPLERIAN_MEAN", "EQUINOCTIAL", "EQUINOCTIAL_MOD", };
 
   public static String name(int e) { return names[e]; }
 }

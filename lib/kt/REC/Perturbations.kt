@@ -256,6 +256,15 @@ class Perturbations : Table() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Fixed (time-invariant) geomagnetic index ap used in place of the normal
+     * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+     */
+    val fixedGeomagAp : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPerturbations(_bb: ByteBuffer): Perturbations = getRootAsPerturbations(_bb, Perturbations())
@@ -263,8 +272,9 @@ class Perturbations : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double) : Int {
-            builder.startTable(19)
+        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double, fixedGeomagAp: Double) : Int {
+            builder.startTable(20)
+            addFIXEDGEOMAGAP(builder, fixedGeomagAp)
             addFIXEDF10P7MEAN(builder, fixedF10P7Mean)
             addFIXEDF10P7(builder, fixedF10P7)
             addFIXEDGEOMAGKP(builder, fixedGeomagKp)
@@ -286,7 +296,7 @@ class Perturbations : Table() {
             addCOMMENT(builder, commentOffset)
             return endPerturbations(builder)
         }
-        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -322,6 +332,7 @@ class Perturbations : Table() {
         fun addFIXEDGEOMAGKP(builder: FlatBufferBuilder, fixedGeomagKp: Double) = builder.addDouble(16, fixedGeomagKp, 0.0)
         fun addFIXEDF10P7(builder: FlatBufferBuilder, fixedF10P7: Double) = builder.addDouble(17, fixedF10P7, 0.0)
         fun addFIXEDF10P7MEAN(builder: FlatBufferBuilder, fixedF10P7Mean: Double) = builder.addDouble(18, fixedF10P7Mean, 0.0)
+        fun addFIXEDGEOMAGAP(builder: FlatBufferBuilder, fixedGeomagAp: Double) = builder.addDouble(19, fixedGeomagAp, 0.0)
         fun endPerturbations(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

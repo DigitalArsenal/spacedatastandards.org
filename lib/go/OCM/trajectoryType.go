@@ -11,37 +11,64 @@ type trajectoryType int8
 
 const (
 	/// Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
-	trajectoryTypeCARTESIAN_PV   trajectoryType = 0
+	trajectoryTypeCARTESIAN_PV    trajectoryType = 0
 	/// Cartesian position, velocity, and acceleration (9 components).
-	trajectoryTypeCARTESIAN_PVA  trajectoryType = 1
+	trajectoryTypeCARTESIAN_PVA   trajectoryType = 1
 	/// Polynomial coefficients for Cartesian position (and optionally velocity).
 	/// Associated data in POLYNOMIAL_POSITION_RECORDS.
-	trajectoryTypePOLYNOMIAL_POS trajectoryType = 2
+	trajectoryTypePOLYNOMIAL_POS  trajectoryType = 2
 	/// Polynomial coefficients for classical orbital elements.
 	/// Associated data in POLYNOMIAL_OE_RECORDS.
-	trajectoryTypePOLYNOMIAL_OE  trajectoryType = 3
+	trajectoryTypePOLYNOMIAL_OE   trajectoryType = 3
 	/// Hermite interpolating polynomial representation.
-	trajectoryTypeHERMITE        trajectoryType = 4
+	trajectoryTypeHERMITE         trajectoryType = 4
 	/// Lagrange interpolating polynomial representation.
-	trajectoryTypeLAGRANGE       trajectoryType = 5
+	trajectoryTypeLAGRANGE        trajectoryType = 5
+	/// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+	/// [km], eccentricity, inclination, right ascension of the ascending node,
+	/// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+	/// KEPLERIAN (OID 1.3.112.4.57.5.11).
+	trajectoryTypeKEPLERIAN       trajectoryType = 6
+	/// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+	/// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+	trajectoryTypeKEPLERIAN_MEAN  trajectoryType = 7
+	/// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+	/// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+	/// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+	/// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+	/// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+	trajectoryTypeEQUINOCTIAL     trajectoryType = 8
+	/// Modified equinoctial set, 7 values per row: semi-latus rectum
+	/// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+	/// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+	/// (OID 1.3.112.4.57.5.9).
+	trajectoryTypeEQUINOCTIAL_MOD trajectoryType = 9
 )
 
 var EnumNamestrajectoryType = map[trajectoryType]string{
-	trajectoryTypeCARTESIAN_PV:   "CARTESIAN_PV",
-	trajectoryTypeCARTESIAN_PVA:  "CARTESIAN_PVA",
-	trajectoryTypePOLYNOMIAL_POS: "POLYNOMIAL_POS",
-	trajectoryTypePOLYNOMIAL_OE:  "POLYNOMIAL_OE",
-	trajectoryTypeHERMITE:        "HERMITE",
-	trajectoryTypeLAGRANGE:       "LAGRANGE",
+	trajectoryTypeCARTESIAN_PV:    "CARTESIAN_PV",
+	trajectoryTypeCARTESIAN_PVA:   "CARTESIAN_PVA",
+	trajectoryTypePOLYNOMIAL_POS:  "POLYNOMIAL_POS",
+	trajectoryTypePOLYNOMIAL_OE:   "POLYNOMIAL_OE",
+	trajectoryTypeHERMITE:         "HERMITE",
+	trajectoryTypeLAGRANGE:        "LAGRANGE",
+	trajectoryTypeKEPLERIAN:       "KEPLERIAN",
+	trajectoryTypeKEPLERIAN_MEAN:  "KEPLERIAN_MEAN",
+	trajectoryTypeEQUINOCTIAL:     "EQUINOCTIAL",
+	trajectoryTypeEQUINOCTIAL_MOD: "EQUINOCTIAL_MOD",
 }
 
 var EnumValuestrajectoryType = map[string]trajectoryType{
-	"CARTESIAN_PV":   trajectoryTypeCARTESIAN_PV,
-	"CARTESIAN_PVA":  trajectoryTypeCARTESIAN_PVA,
-	"POLYNOMIAL_POS": trajectoryTypePOLYNOMIAL_POS,
-	"POLYNOMIAL_OE":  trajectoryTypePOLYNOMIAL_OE,
-	"HERMITE":        trajectoryTypeHERMITE,
-	"LAGRANGE":       trajectoryTypeLAGRANGE,
+	"CARTESIAN_PV":    trajectoryTypeCARTESIAN_PV,
+	"CARTESIAN_PVA":   trajectoryTypeCARTESIAN_PVA,
+	"POLYNOMIAL_POS":  trajectoryTypePOLYNOMIAL_POS,
+	"POLYNOMIAL_OE":   trajectoryTypePOLYNOMIAL_OE,
+	"HERMITE":         trajectoryTypeHERMITE,
+	"LAGRANGE":        trajectoryTypeLAGRANGE,
+	"KEPLERIAN":       trajectoryTypeKEPLERIAN,
+	"KEPLERIAN_MEAN":  trajectoryTypeKEPLERIAN_MEAN,
+	"EQUINOCTIAL":     trajectoryTypeEQUINOCTIAL,
+	"EQUINOCTIAL_MOD": trajectoryTypeEQUINOCTIAL_MOD,
 }
 
 func (v trajectoryType) String() string {

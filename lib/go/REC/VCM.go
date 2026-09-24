@@ -11,6 +11,8 @@ type VCM struct {
 	_tab flatbuffers.Table
 }
 
+const VCMIdentifier = "$VCM"
+
 func GetRootAsVCM(buf []byte, offset flatbuffers.UOffsetT) *VCM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &VCM{}
@@ -19,7 +21,12 @@ func GetRootAsVCM(buf []byte, offset flatbuffers.UOffsetT) *VCM {
 }
 
 func FinishVCMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	builder.Finish(offset)
+	identifierBytes := []byte(VCMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func VCMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, VCMIdentifier)
 }
 
 func GetSizePrefixedRootAsVCM(buf []byte, offset flatbuffers.UOffsetT) *VCM {
@@ -30,7 +37,12 @@ func GetSizePrefixedRootAsVCM(buf []byte, offset flatbuffers.UOffsetT) *VCM {
 }
 
 func FinishSizePrefixedVCMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	builder.FinishSizePrefixed(offset)
+	identifierBytes := []byte(VCMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedVCMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, VCMIdentifier)
 }
 
 func (rcv *VCM) Init(buf []byte, i flatbuffers.UOffsetT) {

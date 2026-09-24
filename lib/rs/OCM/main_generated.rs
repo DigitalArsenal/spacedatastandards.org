@@ -14,16 +14,20 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TRAJECTORY_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TRAJECTORY_TYPE: i8 = 5;
+pub const ENUM_MAX_TRAJECTORY_TYPE: i8 = 9;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TRAJECTORY_TYPE: [trajectoryType; 6] = [
+pub const ENUM_VALUES_TRAJECTORY_TYPE: [trajectoryType; 10] = [
   trajectoryType::CARTESIAN_PV,
   trajectoryType::CARTESIAN_PVA,
   trajectoryType::POLYNOMIAL_POS,
   trajectoryType::POLYNOMIAL_OE,
   trajectoryType::HERMITE,
   trajectoryType::LAGRANGE,
+  trajectoryType::KEPLERIAN,
+  trajectoryType::KEPLERIAN_MEAN,
+  trajectoryType::EQUINOCTIAL,
+  trajectoryType::EQUINOCTIAL_MOD,
 ];
 
 /// Trajectory state representation type.
@@ -48,9 +52,28 @@ impl trajectoryType {
   pub const HERMITE: Self = Self(4);
   /// Lagrange interpolating polynomial representation.
   pub const LAGRANGE: Self = Self(5);
+  /// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+  /// [km], eccentricity, inclination, right ascension of the ascending node,
+  /// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+  /// KEPLERIAN (OID 1.3.112.4.57.5.11).
+  pub const KEPLERIAN: Self = Self(6);
+  /// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+  /// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+  pub const KEPLERIAN_MEAN: Self = Self(7);
+  /// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+  /// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+  /// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+  /// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+  /// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+  pub const EQUINOCTIAL: Self = Self(8);
+  /// Modified equinoctial set, 7 values per row: semi-latus rectum
+  /// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+  /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+  /// (OID 1.3.112.4.57.5.9).
+  pub const EQUINOCTIAL_MOD: Self = Self(9);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_MAX: i8 = 9;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::CARTESIAN_PV,
     Self::CARTESIAN_PVA,
@@ -58,6 +81,10 @@ impl trajectoryType {
     Self::POLYNOMIAL_OE,
     Self::HERMITE,
     Self::LAGRANGE,
+    Self::KEPLERIAN,
+    Self::KEPLERIAN_MEAN,
+    Self::EQUINOCTIAL,
+    Self::EQUINOCTIAL_MOD,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -68,6 +95,10 @@ impl trajectoryType {
       Self::POLYNOMIAL_OE => Some("POLYNOMIAL_OE"),
       Self::HERMITE => Some("HERMITE"),
       Self::LAGRANGE => Some("LAGRANGE"),
+      Self::KEPLERIAN => Some("KEPLERIAN"),
+      Self::KEPLERIAN_MEAN => Some("KEPLERIAN_MEAN"),
+      Self::EQUINOCTIAL => Some("EQUINOCTIAL"),
+      Self::EQUINOCTIAL_MOD => Some("EQUINOCTIAL_MOD"),
       _ => None,
     }
   }
@@ -2916,6 +2947,7 @@ impl<'a> Perturbations<'a> {
   pub const VT_FIXED_GEOMAG_KP: ::flatbuffers::VOffsetT = 36;
   pub const VT_FIXED_F10P7: ::flatbuffers::VOffsetT = 38;
   pub const VT_FIXED_F10P7_MEAN: ::flatbuffers::VOffsetT = 40;
+  pub const VT_FIXED_GEOMAG_AP: ::flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2927,6 +2959,7 @@ impl<'a> Perturbations<'a> {
     args: &'args PerturbationsArgs<'args>
   ) -> ::flatbuffers::WIPOffset<Perturbations<'bldr>> {
     let mut builder = PerturbationsBuilder::new(_fbb);
+    builder.add_FIXED_GEOMAG_AP(args.FIXED_GEOMAG_AP);
     builder.add_FIXED_F10P7_MEAN(args.FIXED_F10P7_MEAN);
     builder.add_FIXED_F10P7(args.FIXED_F10P7);
     builder.add_FIXED_GEOMAG_KP(args.FIXED_GEOMAG_KP);
@@ -2995,6 +3028,7 @@ impl<'a> Perturbations<'a> {
     let FIXED_GEOMAG_KP = self.FIXED_GEOMAG_KP();
     let FIXED_F10P7 = self.FIXED_F10P7();
     let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN();
+    let FIXED_GEOMAG_AP = self.FIXED_GEOMAG_AP();
     PerturbationsT {
       COMMENT,
       ATMOSPHERIC_MODEL,
@@ -3015,6 +3049,7 @@ impl<'a> Perturbations<'a> {
       FIXED_GEOMAG_KP,
       FIXED_F10P7,
       FIXED_F10P7_MEAN,
+      FIXED_GEOMAG_AP,
     }
   }
 
@@ -3170,6 +3205,15 @@ impl<'a> Perturbations<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_F10P7_MEAN, Some(0.0)).unwrap()}
   }
+  /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  #[inline]
+  pub fn FIXED_GEOMAG_AP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_GEOMAG_AP, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for Perturbations<'_> {
@@ -3197,6 +3241,7 @@ impl ::flatbuffers::Verifiable for Perturbations<'_> {
      .visit_field::<f64>("FIXED_GEOMAG_KP", Self::VT_FIXED_GEOMAG_KP, false)?
      .visit_field::<f64>("FIXED_F10P7", Self::VT_FIXED_F10P7, false)?
      .visit_field::<f64>("FIXED_F10P7_MEAN", Self::VT_FIXED_F10P7_MEAN, false)?
+     .visit_field::<f64>("FIXED_GEOMAG_AP", Self::VT_FIXED_GEOMAG_AP, false)?
      .finish();
     Ok(())
   }
@@ -3221,6 +3266,7 @@ pub struct PerturbationsArgs<'a> {
     pub FIXED_GEOMAG_KP: f64,
     pub FIXED_F10P7: f64,
     pub FIXED_F10P7_MEAN: f64,
+    pub FIXED_GEOMAG_AP: f64,
 }
 impl<'a> Default for PerturbationsArgs<'a> {
   #[inline]
@@ -3245,6 +3291,7 @@ impl<'a> Default for PerturbationsArgs<'a> {
       FIXED_GEOMAG_KP: 0.0,
       FIXED_F10P7: 0.0,
       FIXED_F10P7_MEAN: 0.0,
+      FIXED_GEOMAG_AP: 0.0,
     }
   }
 }
@@ -3331,6 +3378,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PerturbationsBuilder<'a, 'b, 
     self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_F10P7_MEAN, FIXED_F10P7_MEAN, 0.0);
   }
   #[inline]
+  pub fn add_FIXED_GEOMAG_AP(&mut self, FIXED_GEOMAG_AP: f64) {
+    self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_GEOMAG_AP, FIXED_GEOMAG_AP, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PerturbationsBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PerturbationsBuilder {
@@ -3367,6 +3418,7 @@ impl ::core::fmt::Debug for Perturbations<'_> {
       ds.field("FIXED_GEOMAG_KP", &self.FIXED_GEOMAG_KP());
       ds.field("FIXED_F10P7", &self.FIXED_F10P7());
       ds.field("FIXED_F10P7_MEAN", &self.FIXED_F10P7_MEAN());
+      ds.field("FIXED_GEOMAG_AP", &self.FIXED_GEOMAG_AP());
       ds.finish()
   }
 }
@@ -3392,6 +3444,7 @@ pub struct PerturbationsT {
   pub FIXED_GEOMAG_KP: f64,
   pub FIXED_F10P7: f64,
   pub FIXED_F10P7_MEAN: f64,
+  pub FIXED_GEOMAG_AP: f64,
 }
 impl Default for PerturbationsT {
   fn default() -> Self {
@@ -3415,6 +3468,7 @@ impl Default for PerturbationsT {
       FIXED_GEOMAG_KP: 0.0,
       FIXED_F10P7: 0.0,
       FIXED_F10P7_MEAN: 0.0,
+      FIXED_GEOMAG_AP: 0.0,
     }
   }
 }
@@ -3468,6 +3522,7 @@ impl PerturbationsT {
     let FIXED_GEOMAG_KP = self.FIXED_GEOMAG_KP;
     let FIXED_F10P7 = self.FIXED_F10P7;
     let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN;
+    let FIXED_GEOMAG_AP = self.FIXED_GEOMAG_AP;
     Perturbations::create(_fbb, &PerturbationsArgs{
       COMMENT,
       ATMOSPHERIC_MODEL,
@@ -3488,6 +3543,7 @@ impl PerturbationsT {
       FIXED_GEOMAG_KP,
       FIXED_F10P7,
       FIXED_F10P7_MEAN,
+      FIXED_GEOMAG_AP,
     })
   }
 }
@@ -3992,6 +4048,8 @@ impl<'a> OrbitDetermination<'a> {
   pub const VT_OD_RESIDUAL_EPOCHS: ::flatbuffers::VOffsetT = 44;
   pub const VT_OD_BATCH_BASELINE_ID: ::flatbuffers::VOffsetT = 46;
   pub const VT_OD_BATCH_BASELINE_RMS: ::flatbuffers::VOffsetT = 48;
+  pub const VT_SEDR: ::flatbuffers::VOffsetT = 50;
+  pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 52;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4003,6 +4061,8 @@ impl<'a> OrbitDetermination<'a> {
     args: &'args OrbitDeterminationArgs<'args>
   ) -> ::flatbuffers::WIPOffset<OrbitDetermination<'bldr>> {
     let mut builder = OrbitDeterminationBuilder::new(_fbb);
+    builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
+    builder.add_SEDR(args.SEDR);
     builder.add_OD_BATCH_BASELINE_RMS(args.OD_BATCH_BASELINE_RMS);
     builder.add_OD_RESIDUAL_RMS(args.OD_RESIDUAL_RMS);
     if let Some(x) = args.OD_BATCH_BASELINE_ID { builder.add_OD_BATCH_BASELINE_ID(x); }
@@ -4089,6 +4149,8 @@ impl<'a> OrbitDetermination<'a> {
       alloc::string::ToString::to_string(x)
     });
     let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS();
+    let SEDR = self.SEDR();
+    let WEIGHTED_RMS = self.WEIGHTED_RMS();
     OrbitDeterminationT {
       OD_ID,
       OD_PREV_ID,
@@ -4113,6 +4175,8 @@ impl<'a> OrbitDetermination<'a> {
       OD_RESIDUAL_EPOCHS,
       OD_BATCH_BASELINE_ID,
       OD_BATCH_BASELINE_RMS,
+      SEDR,
+      WEIGHTED_RMS,
     }
   }
 
@@ -4303,6 +4367,23 @@ impl<'a> OrbitDetermination<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_BATCH_BASELINE_RMS, Some(0.0)).unwrap()}
   }
+  /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+  /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  #[inline]
+  pub fn SEDR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OrbitDetermination::VT_SEDR, Some(0.0)).unwrap()}
+  }
+  /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  #[inline]
+  pub fn WEIGHTED_RMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OrbitDetermination::VT_WEIGHTED_RMS, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
@@ -4334,6 +4415,8 @@ impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("OD_RESIDUAL_EPOCHS", Self::VT_OD_RESIDUAL_EPOCHS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_BATCH_BASELINE_ID", Self::VT_OD_BATCH_BASELINE_ID, false)?
      .visit_field::<f64>("OD_BATCH_BASELINE_RMS", Self::VT_OD_BATCH_BASELINE_RMS, false)?
+     .visit_field::<f64>("SEDR", Self::VT_SEDR, false)?
+     .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
      .finish();
     Ok(())
   }
@@ -4362,6 +4445,8 @@ pub struct OrbitDeterminationArgs<'a> {
     pub OD_RESIDUAL_EPOCHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub OD_BATCH_BASELINE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub OD_BATCH_BASELINE_RMS: f64,
+    pub SEDR: f64,
+    pub WEIGHTED_RMS: f64,
 }
 impl<'a> Default for OrbitDeterminationArgs<'a> {
   #[inline]
@@ -4390,6 +4475,8 @@ impl<'a> Default for OrbitDeterminationArgs<'a> {
       OD_RESIDUAL_EPOCHS: None,
       OD_BATCH_BASELINE_ID: None,
       OD_BATCH_BASELINE_RMS: 0.0,
+      SEDR: 0.0,
+      WEIGHTED_RMS: 0.0,
     }
   }
 }
@@ -4492,6 +4579,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a,
     self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_BATCH_BASELINE_RMS, OD_BATCH_BASELINE_RMS, 0.0);
   }
   #[inline]
+  pub fn add_SEDR(&mut self, SEDR: f64) {
+    self.fbb_.push_slot::<f64>(OrbitDetermination::VT_SEDR, SEDR, 0.0);
+  }
+  #[inline]
+  pub fn add_WEIGHTED_RMS(&mut self, WEIGHTED_RMS: f64) {
+    self.fbb_.push_slot::<f64>(OrbitDetermination::VT_WEIGHTED_RMS, WEIGHTED_RMS, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OrbitDeterminationBuilder {
@@ -4532,6 +4627,8 @@ impl ::core::fmt::Debug for OrbitDetermination<'_> {
       ds.field("OD_RESIDUAL_EPOCHS", &self.OD_RESIDUAL_EPOCHS());
       ds.field("OD_BATCH_BASELINE_ID", &self.OD_BATCH_BASELINE_ID());
       ds.field("OD_BATCH_BASELINE_RMS", &self.OD_BATCH_BASELINE_RMS());
+      ds.field("SEDR", &self.SEDR());
+      ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
       ds.finish()
   }
 }
@@ -4561,6 +4658,8 @@ pub struct OrbitDeterminationT {
   pub OD_RESIDUAL_EPOCHS: Option<alloc::vec::Vec<f64>>,
   pub OD_BATCH_BASELINE_ID: Option<alloc::string::String>,
   pub OD_BATCH_BASELINE_RMS: f64,
+  pub SEDR: f64,
+  pub WEIGHTED_RMS: f64,
 }
 impl Default for OrbitDeterminationT {
   fn default() -> Self {
@@ -4588,6 +4687,8 @@ impl Default for OrbitDeterminationT {
       OD_RESIDUAL_EPOCHS: None,
       OD_BATCH_BASELINE_ID: None,
       OD_BATCH_BASELINE_RMS: 0.0,
+      SEDR: 0.0,
+      WEIGHTED_RMS: 0.0,
     }
   }
 }
@@ -4655,6 +4756,8 @@ impl OrbitDeterminationT {
       _fbb.create_string(x)
     });
     let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS;
+    let SEDR = self.SEDR;
+    let WEIGHTED_RMS = self.WEIGHTED_RMS;
     OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
       OD_ID,
       OD_PREV_ID,
@@ -4679,6 +4782,8 @@ impl OrbitDeterminationT {
       OD_RESIDUAL_EPOCHS,
       OD_BATCH_BASELINE_ID,
       OD_BATCH_BASELINE_RMS,
+      SEDR,
+      WEIGHTED_RMS,
     })
   }
 }
@@ -4872,6 +4977,12 @@ impl<'a> OCM<'a> {
   pub const VT_PERTURBATIONS: ::flatbuffers::VOffsetT = 28;
   pub const VT_ORBIT_DETERMINATION: ::flatbuffers::VOffsetT = 30;
   pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 34;
+  pub const VT_TRAJ_REF_FRAME: ::flatbuffers::VOffsetT = 36;
+  pub const VT_TRAJ_FRAME_EPOCH: ::flatbuffers::VOffsetT = 38;
+  pub const VT_COV_REF_FRAME: ::flatbuffers::VOffsetT = 40;
+  pub const VT_ORB_REVNUM: ::flatbuffers::VOffsetT = 42;
+  pub const VT_ORB_AVERAGING: ::flatbuffers::VOffsetT = 44;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4884,6 +4995,12 @@ impl<'a> OCM<'a> {
   ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
     let mut builder = OCMBuilder::new(_fbb);
     builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+    if let Some(x) = args.ORB_AVERAGING { builder.add_ORB_AVERAGING(x); }
+    builder.add_ORB_REVNUM(args.ORB_REVNUM);
+    if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
+    if let Some(x) = args.TRAJ_FRAME_EPOCH { builder.add_TRAJ_FRAME_EPOCH(x); }
+    if let Some(x) = args.TRAJ_REF_FRAME { builder.add_TRAJ_REF_FRAME(x); }
+    if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
     if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
     if let Some(x) = args.ORBIT_DETERMINATION { builder.add_ORBIT_DETERMINATION(x); }
     if let Some(x) = args.PERTURBATIONS { builder.add_PERTURBATIONS(x); }
@@ -4941,6 +5058,22 @@ impl<'a> OCM<'a> {
     let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let CENTER_NAME = self.CENTER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRAJ_REF_FRAME = self.TRAJ_REF_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TRAJ_FRAME_EPOCH = self.TRAJ_FRAME_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COV_REF_FRAME = self.COV_REF_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let ORB_REVNUM = self.ORB_REVNUM();
+    let ORB_AVERAGING = self.ORB_AVERAGING().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     OCMT {
       HEADER,
       METADATA,
@@ -4957,6 +5090,12 @@ impl<'a> OCM<'a> {
       PERTURBATIONS,
       ORBIT_DETERMINATION,
       USER_DEFINED_PARAMETERS,
+      CENTER_NAME,
+      TRAJ_REF_FRAME,
+      TRAJ_FRAME_EPOCH,
+      COV_REF_FRAME,
+      ORB_REVNUM,
+      ORB_AVERAGING,
     }
   }
 
@@ -5007,6 +5146,7 @@ impl<'a> OCM<'a> {
   /// Number of components per state vector.
   /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
   /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// 6 or 7 for the element sets named by TRAJ_TYPE.
   #[inline]
   pub fn STATE_VECTOR_SIZE(&self) -> u8 {
     // Safety:
@@ -5018,6 +5158,7 @@ impl<'a> OCM<'a> {
   /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
   /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
   /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   #[inline]
   pub fn STATE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
     // Safety:
@@ -5096,6 +5237,57 @@ impl<'a> OCM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters>>>>(OCM::VT_USER_DEFINED_PARAMETERS, None)}
   }
+  /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  #[inline]
+  pub fn CENTER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_CENTER_NAME, None)}
+  }
+  /// Reference frame of STATE_DATA and the polynomial records
+  /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  #[inline]
+  pub fn TRAJ_REF_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(OCM::VT_TRAJ_REF_FRAME, None)}
+  }
+  /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  #[inline]
+  pub fn TRAJ_FRAME_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_TRAJ_FRAME_EPOCH, None)}
+  }
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  #[inline]
+  pub fn COV_REF_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(OCM::VT_COV_REF_FRAME, None)}
+  }
+  /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  #[inline]
+  pub fn ORB_REVNUM(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OCM::VT_ORB_REVNUM, Some(0)).unwrap()}
+  }
+  /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  #[inline]
+  pub fn ORB_AVERAGING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_ORB_AVERAGING, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -5119,6 +5311,12 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<Perturbations>>("PERTURBATIONS", Self::VT_PERTURBATIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<OrbitDetermination>>("ORBIT_DETERMINATION", Self::VT_ORBIT_DETERMINATION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<UserDefinedParameters>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("TRAJ_REF_FRAME", Self::VT_TRAJ_REF_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_FRAME_EPOCH", Self::VT_TRAJ_FRAME_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+     .visit_field::<u32>("ORB_REVNUM", Self::VT_ORB_REVNUM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORB_AVERAGING", Self::VT_ORB_AVERAGING, false)?
      .finish();
     Ok(())
   }
@@ -5139,6 +5337,12 @@ pub struct OCMArgs<'a> {
     pub PERTURBATIONS: Option<::flatbuffers::WIPOffset<Perturbations<'a>>>,
     pub ORBIT_DETERMINATION: Option<::flatbuffers::WIPOffset<OrbitDetermination<'a>>>,
     pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters<'a>>>>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_REF_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub TRAJ_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REF_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub ORB_REVNUM: u32,
+    pub ORB_AVERAGING: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for OCMArgs<'a> {
   #[inline]
@@ -5159,6 +5363,12 @@ impl<'a> Default for OCMArgs<'a> {
       PERTURBATIONS: None,
       ORBIT_DETERMINATION: None,
       USER_DEFINED_PARAMETERS: None,
+      CENTER_NAME: None,
+      TRAJ_REF_FRAME: None,
+      TRAJ_FRAME_EPOCH: None,
+      COV_REF_FRAME: None,
+      ORB_REVNUM: 0,
+      ORB_AVERAGING: None,
     }
   }
 }
@@ -5229,6 +5439,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
   }
   #[inline]
+  pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_CENTER_NAME, CENTER_NAME);
+  }
+  #[inline]
+  pub fn add_TRAJ_REF_FRAME(&mut self, TRAJ_REF_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(OCM::VT_TRAJ_REF_FRAME, TRAJ_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_TRAJ_FRAME_EPOCH(&mut self, TRAJ_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_TRAJ_FRAME_EPOCH, TRAJ_FRAME_EPOCH);
+  }
+  #[inline]
+  pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(OCM::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_ORB_REVNUM(&mut self, ORB_REVNUM: u32) {
+    self.fbb_.push_slot::<u32>(OCM::VT_ORB_REVNUM, ORB_REVNUM, 0);
+  }
+  #[inline]
+  pub fn add_ORB_AVERAGING(&mut self, ORB_AVERAGING: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_ORB_AVERAGING, ORB_AVERAGING);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OCMBuilder {
@@ -5261,6 +5495,12 @@ impl ::core::fmt::Debug for OCM<'_> {
       ds.field("PERTURBATIONS", &self.PERTURBATIONS());
       ds.field("ORBIT_DETERMINATION", &self.ORBIT_DETERMINATION());
       ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
+      ds.field("CENTER_NAME", &self.CENTER_NAME());
+      ds.field("TRAJ_REF_FRAME", &self.TRAJ_REF_FRAME());
+      ds.field("TRAJ_FRAME_EPOCH", &self.TRAJ_FRAME_EPOCH());
+      ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+      ds.field("ORB_REVNUM", &self.ORB_REVNUM());
+      ds.field("ORB_AVERAGING", &self.ORB_AVERAGING());
       ds.finish()
   }
 }
@@ -5282,6 +5522,12 @@ pub struct OCMT {
   pub PERTURBATIONS: Option<alloc::boxed::Box<PerturbationsT>>,
   pub ORBIT_DETERMINATION: Option<alloc::boxed::Box<OrbitDeterminationT>>,
   pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<UserDefinedParametersT>>,
+  pub CENTER_NAME: Option<alloc::string::String>,
+  pub TRAJ_REF_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub TRAJ_FRAME_EPOCH: Option<alloc::string::String>,
+  pub COV_REF_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub ORB_REVNUM: u32,
+  pub ORB_AVERAGING: Option<alloc::string::String>,
 }
 impl Default for OCMT {
   fn default() -> Self {
@@ -5301,6 +5547,12 @@ impl Default for OCMT {
       PERTURBATIONS: None,
       ORBIT_DETERMINATION: None,
       USER_DEFINED_PARAMETERS: None,
+      CENTER_NAME: None,
+      TRAJ_REF_FRAME: None,
+      TRAJ_FRAME_EPOCH: None,
+      COV_REF_FRAME: None,
+      ORB_REVNUM: 0,
+      ORB_AVERAGING: None,
     }
   }
 }
@@ -5348,6 +5600,22 @@ impl OCMT {
     let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRAJ_REF_FRAME = self.TRAJ_REF_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TRAJ_FRAME_EPOCH = self.TRAJ_FRAME_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COV_REF_FRAME = self.COV_REF_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ORB_REVNUM = self.ORB_REVNUM;
+    let ORB_AVERAGING = self.ORB_AVERAGING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     OCM::create(_fbb, &OCMArgs{
       HEADER,
       METADATA,
@@ -5364,6 +5632,12 @@ impl OCMT {
       PERTURBATIONS,
       ORBIT_DETERMINATION,
       USER_DEFINED_PARAMETERS,
+      CENTER_NAME,
+      TRAJ_REF_FRAME,
+      TRAJ_FRAME_EPOCH,
+      COV_REF_FRAME,
+      ORB_REVNUM,
+      ORB_AVERAGING,
     })
   }
 }

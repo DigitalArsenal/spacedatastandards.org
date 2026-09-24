@@ -12,6 +12,7 @@ import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalE
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
+import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 import { trajectoryType } from './trajectoryType.js';
 
@@ -91,6 +92,7 @@ STATE_STEP_SIZE():number {
  * Number of components per state vector.
  * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
  * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+ * 6 or 7 for the element sets named by TRAJ_TYPE.
  */
 STATE_VECTOR_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -102,6 +104,7 @@ STATE_VECTOR_SIZE():number {
  * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
  * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
  * Length must be divisible by STATE_VECTOR_SIZE.
+ * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
  */
 STATE_DATA(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -219,8 +222,65 @@ userDefinedParametersLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference frame of STATE_DATA and the polynomial records
+ * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+ */
+TRAJ_REF_FRAME(obj?:RFM):RFM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+ * (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+ */
+TRAJ_FRAME_EPOCH():string|null
+TRAJ_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRAJ_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+ */
+COV_REF_FRAME(obj?:RFM):RFM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+ */
+ORB_REVNUM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+ * KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+ */
+ORB_AVERAGING():string|null
+ORB_AVERAGING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORB_AVERAGING(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(21);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -365,6 +425,30 @@ static startUserDefinedParametersVector(builder:flatbuffers.Builder, numElems:nu
   builder.startVector(4, numElems, 4);
 }
 
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, CENTER_NAMEOffset, 0);
+}
+
+static addTrajRefFrame(builder:flatbuffers.Builder, TRAJ_REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, TRAJ_REF_FRAMEOffset, 0);
+}
+
+static addTrajFrameEpoch(builder:flatbuffers.Builder, TRAJ_FRAME_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, TRAJ_FRAME_EPOCHOffset, 0);
+}
+
+static addCovRefFrame(builder:flatbuffers.Builder, COV_REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, COV_REF_FRAMEOffset, 0);
+}
+
+static addOrbRevnum(builder:flatbuffers.Builder, ORB_REVNUM:number) {
+  builder.addFieldInt32(19, ORB_REVNUM, 0);
+}
+
+static addOrbAveraging(builder:flatbuffers.Builder, ORB_AVERAGINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, ORB_AVERAGINGOffset, 0);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -395,7 +479,13 @@ unpack(): OCMT {
     this.bb!.createObjList<Maneuver, ManeuverT>(this.MANEUVER_DATA.bind(this), this.maneuverDataLength()),
     (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null),
     (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null),
-    this.bb!.createObjList<UserDefinedParameters, UserDefinedParametersT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength())
+    this.bb!.createObjList<UserDefinedParameters, UserDefinedParametersT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength()),
+    this.CENTER_NAME(),
+    (this.TRAJ_REF_FRAME() !== null ? this.TRAJ_REF_FRAME()!.unpack() : null),
+    this.TRAJ_FRAME_EPOCH(),
+    (this.COV_REF_FRAME() !== null ? this.COV_REF_FRAME()!.unpack() : null),
+    this.ORB_REVNUM(),
+    this.ORB_AVERAGING()
   );
 }
 
@@ -416,6 +506,12 @@ unpackTo(_o: OCMT): void {
   _o.PERTURBATIONS = (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null);
   _o.ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null);
   _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<UserDefinedParameters, UserDefinedParametersT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.TRAJ_REF_FRAME = (this.TRAJ_REF_FRAME() !== null ? this.TRAJ_REF_FRAME()!.unpack() : null);
+  _o.TRAJ_FRAME_EPOCH = this.TRAJ_FRAME_EPOCH();
+  _o.COV_REF_FRAME = (this.COV_REF_FRAME() !== null ? this.COV_REF_FRAME()!.unpack() : null);
+  _o.ORB_REVNUM = this.ORB_REVNUM();
+  _o.ORB_AVERAGING = this.ORB_AVERAGING();
 }
 }
 
@@ -435,7 +531,13 @@ constructor(
   public MANEUVER_DATA: (ManeuverT)[] = [],
   public PERTURBATIONS: PerturbationsT|null = null,
   public ORBIT_DETERMINATION: OrbitDeterminationT|null = null,
-  public USER_DEFINED_PARAMETERS: (UserDefinedParametersT)[] = []
+  public USER_DEFINED_PARAMETERS: (UserDefinedParametersT)[] = [],
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public TRAJ_REF_FRAME: RFMT|null = null,
+  public TRAJ_FRAME_EPOCH: string|Uint8Array|null = null,
+  public COV_REF_FRAME: RFMT|null = null,
+  public ORB_REVNUM: number = 0,
+  public ORB_AVERAGING: string|Uint8Array|null = null
 ){}
 
 
@@ -452,6 +554,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PERTURBATIONS = (this.PERTURBATIONS !== null ? this.PERTURBATIONS!.pack(builder) : 0);
   const ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION !== null ? this.ORBIT_DETERMINATION!.pack(builder) : 0);
   const USER_DEFINED_PARAMETERS = OCM.createUserDefinedParametersVector(builder, builder.createObjectOffsetList(this.USER_DEFINED_PARAMETERS));
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const TRAJ_REF_FRAME = (this.TRAJ_REF_FRAME !== null ? this.TRAJ_REF_FRAME!.pack(builder) : 0);
+  const TRAJ_FRAME_EPOCH = (this.TRAJ_FRAME_EPOCH !== null ? builder.createString(this.TRAJ_FRAME_EPOCH!) : 0);
+  const COV_REF_FRAME = (this.COV_REF_FRAME !== null ? this.COV_REF_FRAME!.pack(builder) : 0);
+  const ORB_AVERAGING = (this.ORB_AVERAGING !== null ? builder.createString(this.ORB_AVERAGING!) : 0);
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -469,6 +576,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addPerturbations(builder, PERTURBATIONS);
   OCM.addOrbitDetermination(builder, ORBIT_DETERMINATION);
   OCM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERS);
+  OCM.addCenterName(builder, CENTER_NAME);
+  OCM.addTrajRefFrame(builder, TRAJ_REF_FRAME);
+  OCM.addTrajFrameEpoch(builder, TRAJ_FRAME_EPOCH);
+  OCM.addCovRefFrame(builder, COV_REF_FRAME);
+  OCM.addOrbRevnum(builder, this.ORB_REVNUM);
+  OCM.addOrbAveraging(builder, ORB_AVERAGING);
 
   return OCM.endOCM(builder);
 }

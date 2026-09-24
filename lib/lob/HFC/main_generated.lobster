@@ -19,6 +19,25 @@ enum trajectoryType:
     trajectoryType_HERMITE = 4
     /// Lagrange interpolating polynomial representation.
     trajectoryType_LAGRANGE = 5
+    /// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+    /// [km], eccentricity, inclination, right ascension of the ascending node,
+    /// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+    /// KEPLERIAN (OID 1.3.112.4.57.5.11).
+    trajectoryType_KEPLERIAN = 6
+    /// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+    /// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+    trajectoryType_KEPLERIAN_MEAN = 7
+    /// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+    /// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+    /// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+    /// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+    /// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+    trajectoryType_EQUINOCTIAL = 8
+    /// Modified equinoctial set, 7 values per row: semi-latus rectum
+    /// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+    /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+    /// (OID 1.3.112.4.57.5.9).
+    trajectoryType_EQUINOCTIAL_MOD = 9
 
 /// Estimator class that produced an orbit-determination solution
 /// (batch-vs-filter provenance).
@@ -727,13 +746,17 @@ class Perturbations : flatbuffers.handle
     /// Fixed mean F10.7 solar flux value used.
     def FIXED_F10P7_MEAN() -> float:
         return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+    /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+    def FIXED_GEOMAG_AP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
 
 def GetRootAsPerturbations(buf:string): return Perturbations { buf, flatbuffers.indirect(buf, 0) }
 
 struct PerturbationsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(19)
+        b_.StartObject(20)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -791,6 +814,9 @@ struct PerturbationsBuilder:
         return this
     def add_FIXED_F10P7_MEAN(FIXED_F10P7_MEAN:float):
         b_.PrependFloat64Slot(18, FIXED_F10P7_MEAN, 0.0)
+        return this
+    def add_FIXED_GEOMAG_AP(FIXED_GEOMAG_AP:float):
+        b_.PrependFloat64Slot(19, FIXED_GEOMAG_AP, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -1007,13 +1033,20 @@ class OrbitDetermination : flatbuffers.handle
     /// comparison.
     def OD_BATCH_BASELINE_RMS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
+    /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+    /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+    def SEDR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+    def WEIGHTED_RMS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
 
 def GetRootAsOrbitDetermination(buf:string): return OrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
 
 struct OrbitDeterminationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(25)
         return this
     def add_OD_ID(OD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OD_ID)
@@ -1083,6 +1116,12 @@ struct OrbitDeterminationBuilder:
         return this
     def add_OD_BATCH_BASELINE_RMS(OD_BATCH_BASELINE_RMS:float):
         b_.PrependFloat64Slot(22, OD_BATCH_BASELINE_RMS, 0.0)
+        return this
+    def add_SEDR(SEDR:float):
+        b_.PrependFloat64Slot(23, SEDR, 0.0)
+        return this
+    def add_WEIGHTED_RMS(WEIGHTED_RMS:float):
+        b_.PrependFloat64Slot(24, WEIGHTED_RMS, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -1165,12 +1204,14 @@ class OCM : flatbuffers.handle
     /// Number of components per state vector.
     /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
     /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    /// 6 or 7 for the element sets named by TRAJ_TYPE.
     def STATE_VECTOR_SIZE() -> int:
         return flatbuffers.field_uint8(buf_, pos_, 14, 6)
     /// State data as row-major array of doubles.
     /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
     /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
     /// Length must be divisible by STATE_VECTOR_SIZE.
+    /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     def STATE_DATA(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
     def STATE_DATA_length() -> int:
@@ -1219,13 +1260,36 @@ class OCM : flatbuffers.handle
         return UserDefinedParameters { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def USER_DEFINED_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Reference frame of STATE_DATA and the polynomial records
+    /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    def TRAJ_REF_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: RFM { buf_, o } else: nil
+    /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+    /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+    def TRAJ_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+    def COV_REF_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: RFM { buf_, o } else: nil
+    /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+    def ORB_REVNUM() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 42, 0)
+    /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+    /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+    def ORB_AVERAGING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(21)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1271,6 +1335,24 @@ struct OCMBuilder:
         return this
     def add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, USER_DEFINED_PARAMETERS)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, CENTER_NAME)
+        return this
+    def add_TRAJ_REF_FRAME(TRAJ_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, TRAJ_REF_FRAME)
+        return this
+    def add_TRAJ_FRAME_EPOCH(TRAJ_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, TRAJ_FRAME_EPOCH)
+        return this
+    def add_COV_REF_FRAME(COV_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, COV_REF_FRAME)
+        return this
+    def add_ORB_REVNUM(ORB_REVNUM:int):
+        b_.PrependUint32Slot(19, ORB_REVNUM, 0)
+        return this
+    def add_ORB_AVERAGING(ORB_AVERAGING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, ORB_AVERAGING)
         return this
     def end():
         return b_.EndObject()

@@ -7,6 +7,7 @@ import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalE
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
+import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 import { trajectoryType } from './trajectoryType.js';
 /**
@@ -48,6 +49,7 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      * Number of components per state vector.
      * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
      * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+     * 6 or 7 for the element sets named by TRAJ_TYPE.
      */
     STATE_VECTOR_SIZE(): number;
     /**
@@ -55,6 +57,7 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
      * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
      * Length must be divisible by STATE_VECTOR_SIZE.
+     * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
      */
     STATE_DATA(index: number): number | null;
     stateDataLength(): number;
@@ -104,6 +107,36 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      */
     USER_DEFINED_PARAMETERS(index: number, obj?: UserDefinedParameters): UserDefinedParameters | null;
     userDefinedParametersLength(): number;
+    /**
+     * Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+     */
+    CENTER_NAME(): string | null;
+    CENTER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Reference frame of STATE_DATA and the polynomial records
+     * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+     */
+    TRAJ_REF_FRAME(obj?: RFM): RFM | null;
+    /**
+     * Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+     * (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+     */
+    TRAJ_FRAME_EPOCH(): string | null;
+    TRAJ_FRAME_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+     */
+    COV_REF_FRAME(obj?: RFM): RFM | null;
+    /**
+     * Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+     */
+    ORB_REVNUM(): number;
+    /**
+     * For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+     * KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+     */
+    ORB_AVERAGING(): string | null;
+    ORB_AVERAGING(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
@@ -140,6 +173,12 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static addUserDefinedParameters(builder: flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset: flatbuffers.Offset): void;
     static createUserDefinedParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startUserDefinedParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
+    static addTrajRefFrame(builder: flatbuffers.Builder, TRAJ_REF_FRAMEOffset: flatbuffers.Offset): void;
+    static addTrajFrameEpoch(builder: flatbuffers.Builder, TRAJ_FRAME_EPOCHOffset: flatbuffers.Offset): void;
+    static addCovRefFrame(builder: flatbuffers.Builder, COV_REF_FRAMEOffset: flatbuffers.Offset): void;
+    static addOrbRevnum(builder: flatbuffers.Builder, ORB_REVNUM: number): void;
+    static addOrbAveraging(builder: flatbuffers.Builder, ORB_AVERAGINGOffset: flatbuffers.Offset): void;
     static endOCM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -162,7 +201,13 @@ export declare class OCMT implements flatbuffers.IGeneratedObject {
     PERTURBATIONS: PerturbationsT | null;
     ORBIT_DETERMINATION: OrbitDeterminationT | null;
     USER_DEFINED_PARAMETERS: (UserDefinedParametersT)[];
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[]);
+    CENTER_NAME: string | Uint8Array | null;
+    TRAJ_REF_FRAME: RFMT | null;
+    TRAJ_FRAME_EPOCH: string | Uint8Array | null;
+    COV_REF_FRAME: RFMT | null;
+    ORB_REVNUM: number;
+    ORB_AVERAGING: string | Uint8Array | null;
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

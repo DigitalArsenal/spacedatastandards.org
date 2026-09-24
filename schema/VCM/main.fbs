@@ -1,11 +1,14 @@
-// Hash: b9d8f974244eef5d1c4af81d1e06588b06722ee494c055c210e65e5c8bd7c183
-// Version: 2.0.4
+// Hash: 8f8a4c82d798e18c86b95d3e9189157e850d27a7925ca8b5ced5648549b80641
+// Version: 2.0.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../MET/main.fbs";
 
 // Vector Covariance Message (VCM)
+//
+// SUPERSEDED by the Orbit Comprehensive Message ($OCM). New producers emit
+// $OCM; $VCM stays readable for records already published.
 //
 // The Vector Covariance Message (VCM) is used to exchange detailed orbit information, which
 // includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant
@@ -249,3 +252,4 @@ table VCM {
 }
 
 root_type VCM;
+file_identifier "$VCM";

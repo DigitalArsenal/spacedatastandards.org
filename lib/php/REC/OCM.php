@@ -91,6 +91,7 @@ class OCM extends Table
     /// Number of components per state vector.
     /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
     /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    /// 6 or 7 for the element sets named by TRAJ_TYPE.
     /**
      * @return byte
      */
@@ -104,6 +105,7 @@ class OCM extends Table
     /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
     /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
     /// Length must be divisible by STATE_VECTOR_SIZE.
+    /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     /**
      * @param int offset
      * @return double
@@ -254,22 +256,72 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference frame of STATE_DATA and the polynomial records
+    /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    public function getTRAJ_REF_FRAME()
+    {
+        $obj = new RFM();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+    /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+    public function getTRAJ_FRAME_EPOCH()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+    public function getCOV_REF_FRAME()
+    {
+        $obj = new RFM();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+    /**
+     * @return uint
+     */
+    public function getORB_REVNUM()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+    /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+    public function getORB_AVERAGING()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING)
     {
-        $builder->startObject(15);
+        $builder->startObject(21);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -285,6 +337,12 @@ class OCM extends Table
         self::addPERTURBATIONS($builder, $PERTURBATIONS);
         self::addORBIT_DETERMINATION($builder, $ORBIT_DETERMINATION);
         self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addTRAJ_REF_FRAME($builder, $TRAJ_REF_FRAME);
+        self::addTRAJ_FRAME_EPOCH($builder, $TRAJ_FRAME_EPOCH);
+        self::addCOV_REF_FRAME($builder, $COV_REF_FRAME);
+        self::addORB_REVNUM($builder, $ORB_REVNUM);
+        self::addORB_AVERAGING($builder, $ORB_AVERAGING);
         $o = $builder->endObject();
         return $o;
     }
@@ -581,6 +639,66 @@ class OCM extends Table
     public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(15, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRAJ_REF_FRAME(FlatBufferBuilder $builder, $TRAJ_REF_FRAME)
+    {
+        $builder->addOffsetX(16, $TRAJ_REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRAJ_FRAME_EPOCH(FlatBufferBuilder $builder, $TRAJ_FRAME_EPOCH)
+    {
+        $builder->addOffsetX(17, $TRAJ_FRAME_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REF_FRAME(FlatBufferBuilder $builder, $COV_REF_FRAME)
+    {
+        $builder->addOffsetX(18, $COV_REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addORB_REVNUM(FlatBufferBuilder $builder, $ORB_REVNUM)
+    {
+        $builder->addUintX(19, $ORB_REVNUM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORB_AVERAGING(FlatBufferBuilder $builder, $ORB_AVERAGING)
+    {
+        $builder->addOffsetX(20, $ORB_AVERAGING, 0);
     }
 
     /**

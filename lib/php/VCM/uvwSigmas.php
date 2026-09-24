@@ -19,6 +19,16 @@ class uvwSigmas extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function uvwSigmasIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function uvwSigmasBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::uvwSigmasIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb

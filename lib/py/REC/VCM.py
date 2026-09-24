@@ -21,6 +21,10 @@ class VCM(object):
     def GetRootAsVCM(cls, buf, offset=0):
         """This method is deprecated. Please switch to GetRootAs."""
         return cls.GetRootAs(buf, offset)
+    @classmethod
+    def VCMBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x56\x43\x4D", size_prefixed=size_prefixed)
+
     # VCM
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)

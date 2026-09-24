@@ -2240,7 +2240,11 @@
         "POLYNOMIAL_POS",
         "POLYNOMIAL_OE",
         "HERMITE",
-        "LAGRANGE"
+        "LAGRANGE",
+        "KEPLERIAN",
+        "KEPLERIAN_MEAN",
+        "EQUINOCTIAL",
+        "EQUINOCTIAL_MOD"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -2268,6 +2272,22 @@
         "LAGRANGE": {
           "value": 5,
           "description": "Lagrange interpolating polynomial representation."
+        },
+        "KEPLERIAN": {
+          "value": 6,
+          "description": "Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis [km], eccentricity, inclination, right ascension of the ascending node, argument of periapsis and true anomaly [deg]. SANA Orbital Elements KEPLERIAN (OID 1.3.112.4.57.5.11)."
+        },
+        "KEPLERIAN_MEAN": {
+          "value": 7,
+          "description": "As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12)."
+        },
+        "EQUINOCTIAL": {
+          "value": 8,
+          "description": "Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km], af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN), psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1). SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8)."
+        },
+        "EQUINOCTIAL_MOD": {
+          "value": 9,
+          "description": "Modified equinoctial set, 7 values per row: semi-latus rectum p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD (OID 1.3.112.4.57.5.9)."
         }
       }
     },
@@ -7671,6 +7691,11 @@
           "type": "number",
           "description": "Fixed mean F10.7 solar flux value used.",
           "x-flatbuffer-type": "double"
+        },
+        "FIXED_GEOMAG_AP": {
+          "type": "number",
+          "description": "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
@@ -7911,6 +7936,16 @@
           "type": "number",
           "description": "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison.",
           "x-flatbuffer-type": "double"
+        },
+        "SEDR": {
+          "type": "number",
+          "description": "Specific energy dissipation rate in W/kg: energy removed from the orbit\nby non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHTED_RMS": {
+          "type": "number",
+          "description": "Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
@@ -7974,6 +8009,22 @@
             "LAGRANGE": {
               "value": 5,
               "description": "Lagrange interpolating polynomial representation."
+            },
+            "KEPLERIAN": {
+              "value": 6,
+              "description": "Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis [km], eccentricity, inclination, right ascension of the ascending node, argument of periapsis and true anomaly [deg]. SANA Orbital Elements KEPLERIAN (OID 1.3.112.4.57.5.11)."
+            },
+            "KEPLERIAN_MEAN": {
+              "value": 7,
+              "description": "As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12)."
+            },
+            "EQUINOCTIAL": {
+              "value": 8,
+              "description": "Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km], af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN), psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1). SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8)."
+            },
+            "EQUINOCTIAL_MOD": {
+              "value": 9,
+              "description": "Modified equinoctial set, 7 values per row: semi-latus rectum p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD (OID 1.3.112.4.57.5.9)."
             }
           },
           "x-flatbuffer-default": "CARTESIAN_PV"
@@ -7992,7 +8043,7 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 255,
-          "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
+          "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\n6 or 7 for the element sets named by TRAJ_TYPE.",
           "x-flatbuffer-type": "uint8",
           "x-flatbuffer-default": "6"
         },
@@ -8001,7 +8052,7 @@
           "items": {
             "type": "number"
           },
-          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
+          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.\nUnits: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.",
           "x-flatbuffer-type": "[double]"
         },
         "COVARIANCE_DATA": {
@@ -8058,6 +8109,38 @@
           },
           "description": "User-defined parameters and supplemental comments.",
           "x-flatbuffer-type": "[UserDefinedParameters]"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).",
+          "x-flatbuffer-type": "string"
+        },
+        "TRAJ_REF_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Reference frame of STATE_DATA and the polynomial records\n(CCSDS 502.0-B-3 TRAJ_REF_FRAME).",
+          "x-flatbuffer-type": "RFM"
+        },
+        "TRAJ_FRAME_EPOCH": {
+          "type": "string",
+          "description": "Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame\n(CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).",
+          "x-flatbuffer-type": "string"
+        },
+        "COV_REF_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+          "x-flatbuffer-type": "RFM"
+        },
+        "ORB_REVNUM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).",
+          "x-flatbuffer-type": "uint"
+        },
+        "ORB_AVERAGING": {
+          "type": "string",
+          "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

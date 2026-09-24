@@ -271,22 +271,43 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+    /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+    /**
+     * @return double
+     */
+    public function getSEDR()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+    /**
+     * @return double
+     */
+    public function getWEIGHTED_RMS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOrbitDetermination(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(25);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OrbitDetermination
      */
-    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS)
+    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS)
     {
-        $builder->startObject(23);
+        $builder->startObject(25);
         self::addOD_ID($builder, $OD_ID);
         self::addOD_PREV_ID($builder, $OD_PREV_ID);
         self::addOD_ALGORITHM($builder, $OD_ALGORITHM);
@@ -310,6 +331,8 @@ class OrbitDetermination extends Table
         self::addOD_RESIDUAL_EPOCHS($builder, $OD_RESIDUAL_EPOCHS);
         self::addOD_BATCH_BASELINE_ID($builder, $OD_BATCH_BASELINE_ID);
         self::addOD_BATCH_BASELINE_RMS($builder, $OD_BATCH_BASELINE_RMS);
+        self::addSEDR($builder, $SEDR);
+        self::addWEIGHTED_RMS($builder, $WEIGHTED_RMS);
         $o = $builder->endObject();
         return $o;
     }
@@ -638,6 +661,26 @@ class OrbitDetermination extends Table
     public static function addOD_BATCH_BASELINE_RMS(FlatBufferBuilder $builder, $OD_BATCH_BASELINE_RMS)
     {
         $builder->addDoubleX(22, $OD_BATCH_BASELINE_RMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSEDR(FlatBufferBuilder $builder, $SEDR)
+    {
+        $builder->addDoubleX(23, $SEDR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWEIGHTED_RMS(FlatBufferBuilder $builder, $WEIGHTED_RMS)
+    {
+        $builder->addDoubleX(24, $WEIGHTED_RMS, 0.0);
     }
 
     /**

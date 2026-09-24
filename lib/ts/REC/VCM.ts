@@ -34,6 +34,10 @@ static getSizePrefixedRootAsVCM(bb:flatbuffers.ByteBuffer, obj?:VCM):VCM {
   return (obj || new VCM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$VCM');
+}
+
 CCSDS_OMM_VERS():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
@@ -416,11 +420,11 @@ static endVCM(builder:flatbuffers.Builder):flatbuffers.Offset {
 }
 
 static finishVCMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset);
+  builder.finish(offset, '$VCM');
 }
 
 static finishSizePrefixedVCMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, undefined, true);
+  builder.finish(offset, '$VCM', true);
 }
 
 

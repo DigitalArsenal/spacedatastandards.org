@@ -42,11 +42,13 @@ public struct OCM : IFlatbufferObject
   /// Number of components per state vector.
   /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
   /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// 6 or 7 for the element sets named by TRAJ_TYPE.
   public byte STATE_VECTOR_SIZE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
   /// State data as row-major array of doubles.
   /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
   /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
   /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   public double STATE_DATA(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int STATE_DATALength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -89,6 +91,39 @@ public struct OCM : IFlatbufferObject
   /// User-defined parameters and supplemental comments.
   public UserDefinedParameters? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(32); return o != 0 ? (UserDefinedParameters?)(new UserDefinedParameters()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  public string CENTER_NAME { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(34); }
+  /// Reference frame of STATE_DATA and the polynomial records
+  /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  public RFM? TRAJ_REF_FRAME { get { int o = __p.__offset(36); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  public string TRAJ_FRAME_EPOCH { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTRAJ_FRAME_EPOCHBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetTRAJ_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetTRAJ_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(38); }
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  public RFM? COV_REF_FRAME { get { int o = __p.__offset(40); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  public uint ORB_REVNUM { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  public string ORB_AVERAGING { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORB_AVERAGINGBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetORB_AVERAGINGBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetORB_AVERAGINGArray() { return __p.__vector_as_array<byte>(44); }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -105,9 +140,21 @@ public struct OCM : IFlatbufferObject
       VectorOffset MANEUVER_DATAOffset = default(VectorOffset),
       Offset<Perturbations> PERTURBATIONSOffset = default(Offset<Perturbations>),
       Offset<OrbitDetermination> ORBIT_DETERMINATIONOffset = default(Offset<OrbitDetermination>),
-      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      Offset<RFM> TRAJ_REF_FRAMEOffset = default(Offset<RFM>),
+      StringOffset TRAJ_FRAME_EPOCHOffset = default(StringOffset),
+      Offset<RFM> COV_REF_FRAMEOffset = default(Offset<RFM>),
+      uint ORB_REVNUM = 0,
+      StringOffset ORB_AVERAGINGOffset = default(StringOffset)) {
+    builder.StartTable(21);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddORB_AVERAGING(builder, ORB_AVERAGINGOffset);
+    OCM.AddORB_REVNUM(builder, ORB_REVNUM);
+    OCM.AddCOV_REF_FRAME(builder, COV_REF_FRAMEOffset);
+    OCM.AddTRAJ_FRAME_EPOCH(builder, TRAJ_FRAME_EPOCHOffset);
+    OCM.AddTRAJ_REF_FRAME(builder, TRAJ_REF_FRAMEOffset);
+    OCM.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     OCM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
     OCM.AddORBIT_DETERMINATION(builder, ORBIT_DETERMINATIONOffset);
     OCM.AddPERTURBATIONS(builder, PERTURBATIONSOffset);
@@ -125,7 +172,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -171,6 +218,12 @@ public struct OCM : IFlatbufferObject
   public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<UserDefinedParameters>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<UserDefinedParameters>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(15, CENTER_NAMEOffset.Value, 0); }
+  public static void AddTRAJ_REF_FRAME(FlatBufferBuilder builder, Offset<RFM> TRAJ_REF_FRAMEOffset) { builder.AddOffset(16, TRAJ_REF_FRAMEOffset.Value, 0); }
+  public static void AddTRAJ_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset TRAJ_FRAME_EPOCHOffset) { builder.AddOffset(17, TRAJ_FRAME_EPOCHOffset.Value, 0); }
+  public static void AddCOV_REF_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REF_FRAMEOffset) { builder.AddOffset(18, COV_REF_FRAMEOffset.Value, 0); }
+  public static void AddORB_REVNUM(FlatBufferBuilder builder, uint ORB_REVNUM) { builder.AddUint(19, ORB_REVNUM, 0); }
+  public static void AddORB_AVERAGING(FlatBufferBuilder builder, StringOffset ORB_AVERAGINGOffset) { builder.AddOffset(20, ORB_AVERAGINGOffset.Value, 0); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -204,6 +257,12 @@ public struct OCM : IFlatbufferObject
     _o.ORBIT_DETERMINATION = this.ORBIT_DETERMINATION.HasValue ? this.ORBIT_DETERMINATION.Value.UnPack() : null;
     _o.USER_DEFINED_PARAMETERS = new List<UserDefinedParametersT>();
     for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.TRAJ_REF_FRAME = this.TRAJ_REF_FRAME.HasValue ? this.TRAJ_REF_FRAME.Value.UnPack() : null;
+    _o.TRAJ_FRAME_EPOCH = this.TRAJ_FRAME_EPOCH;
+    _o.COV_REF_FRAME = this.COV_REF_FRAME.HasValue ? this.COV_REF_FRAME.Value.UnPack() : null;
+    _o.ORB_REVNUM = this.ORB_REVNUM;
+    _o.ORB_AVERAGING = this.ORB_AVERAGING;
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -247,6 +306,11 @@ public struct OCM : IFlatbufferObject
       for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = UserDefinedParameters.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
       _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
     }
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _TRAJ_REF_FRAME = _o.TRAJ_REF_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.TRAJ_REF_FRAME);
+    var _TRAJ_FRAME_EPOCH = _o.TRAJ_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.TRAJ_FRAME_EPOCH);
+    var _COV_REF_FRAME = _o.COV_REF_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REF_FRAME);
+    var _ORB_AVERAGING = _o.ORB_AVERAGING == null ? default(StringOffset) : builder.CreateString(_o.ORB_AVERAGING);
     return CreateOCM(
       builder,
       _HEADER,
@@ -263,7 +327,13 @@ public struct OCM : IFlatbufferObject
       _MANEUVER_DATA,
       _PERTURBATIONS,
       _ORBIT_DETERMINATION,
-      _USER_DEFINED_PARAMETERS);
+      _USER_DEFINED_PARAMETERS,
+      _CENTER_NAME,
+      _TRAJ_REF_FRAME,
+      _TRAJ_FRAME_EPOCH,
+      _COV_REF_FRAME,
+      _o.ORB_REVNUM,
+      _ORB_AVERAGING);
   }
 }
 
@@ -284,6 +354,12 @@ public class OCMT
   public PerturbationsT PERTURBATIONS { get; set; }
   public OrbitDeterminationT ORBIT_DETERMINATION { get; set; }
   public List<UserDefinedParametersT> USER_DEFINED_PARAMETERS { get; set; }
+  public string CENTER_NAME { get; set; }
+  public RFMT TRAJ_REF_FRAME { get; set; }
+  public string TRAJ_FRAME_EPOCH { get; set; }
+  public RFMT COV_REF_FRAME { get; set; }
+  public uint ORB_REVNUM { get; set; }
+  public string ORB_AVERAGING { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -301,6 +377,12 @@ public class OCMT
     this.PERTURBATIONS = null;
     this.ORBIT_DETERMINATION = null;
     this.USER_DEFINED_PARAMETERS = null;
+    this.CENTER_NAME = null;
+    this.TRAJ_REF_FRAME = null;
+    this.TRAJ_FRAME_EPOCH = null;
+    this.COV_REF_FRAME = null;
+    this.ORB_REVNUM = 0;
+    this.ORB_AVERAGING = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -333,6 +415,12 @@ static public class OCMVerify
       && verifier.VerifyTable(tablePos, 28 /*PERTURBATIONS*/, PerturbationsVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 30 /*ORBIT_DETERMINATION*/, OrbitDeterminationVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 32 /*USER_DEFINED_PARAMETERS*/, UserDefinedParametersVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 34 /*CENTER_NAME*/, false)
+      && verifier.VerifyTable(tablePos, 36 /*TRAJ_REF_FRAME*/, RFMVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 38 /*TRAJ_FRAME_EPOCH*/, false)
+      && verifier.VerifyTable(tablePos, 40 /*COV_REF_FRAME*/, RFMVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*ORB_REVNUM*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 44 /*ORB_AVERAGING*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

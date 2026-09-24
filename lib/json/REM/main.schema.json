@@ -111,7 +111,7 @@
     },
     "trajectoryType" : {
       "type" : "string",
-      "enum": ["CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE"]
+      "enum": ["CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE", "KEPLERIAN", "KEPLERIAN_MEAN", "EQUINOCTIAL", "EQUINOCTIAL_MOD"]
     },
     "estimatorCategory" : {
       "type" : "string",
@@ -1817,6 +1817,10 @@
         "FIXED_F10P7_MEAN" : {
                 "type" : "number",
                 "description" : "Fixed mean F10.7 solar flux value used."
+              },
+        "FIXED_GEOMAG_AP" : {
+                "type" : "number",
+                "description" : "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
               }
       },
       "additionalProperties" : false
@@ -1973,6 +1977,14 @@
         "OD_BATCH_BASELINE_RMS" : {
                 "type" : "number",
                 "description" : "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison."
+              },
+        "SEDR" : {
+                "type" : "number",
+                "description" : "Specific energy dissipation rate in W/kg: energy removed from the orbit\nby non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR)."
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS)."
               }
       },
       "additionalProperties" : false
@@ -2017,11 +2029,11 @@
               },
         "STATE_VECTOR_SIZE" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)"
+                "description" : "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\n6 or 7 for the element sets named by TRAJ_TYPE."
               },
         "STATE_DATA" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE."
+                "description" : "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.\nUnits: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME."
               },
         "COVARIANCE_DATA" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -2054,6 +2066,30 @@
         "USER_DEFINED_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/UserDefinedParameters"},
                 "description" : "User-defined parameters and supplemental comments."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME)."
+              },
+        "TRAJ_REF_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame of STATE_DATA and the polynomial records\n(CCSDS 502.0-B-3 TRAJ_REF_FRAME)."
+              },
+        "TRAJ_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame\n(CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH)."
+              },
+        "COV_REF_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              },
+        "ORB_REVNUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM)."
+              },
+        "ORB_AVERAGING" : {
+                "type" : "string",
+                "description" : "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
               }
       },
       "additionalProperties" : false

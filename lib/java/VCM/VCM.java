@@ -24,6 +24,7 @@ public final class VCM extends com.google.flatbuffers.Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static VCM getRootAsVCM(ByteBuffer _bb) { return getRootAsVCM(_bb, new VCM()); }
   public static VCM getRootAsVCM(ByteBuffer _bb, VCM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean VCMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$VCM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VCM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -221,8 +222,8 @@ public final class VCM extends com.google.flatbuffers.Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishVCMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedVCMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
+  public static void finishVCMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$VCM"); }
+  public static void finishSizePrefixedVCMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$VCM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

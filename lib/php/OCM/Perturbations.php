@@ -218,22 +218,33 @@ class Perturbations extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+    /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+    /**
+     * @return double
+     */
+    public function getFIXED_GEOMAG_AP()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPerturbations(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Perturbations
      */
-    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN)
+    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN, $FIXED_GEOMAG_AP)
     {
-        $builder->startObject(19);
+        $builder->startObject(20);
         self::addCOMMENT($builder, $COMMENT);
         self::addATMOSPHERIC_MODEL($builder, $ATMOSPHERIC_MODEL);
         self::addGRAVITY_MODEL($builder, $GRAVITY_MODEL);
@@ -253,6 +264,7 @@ class Perturbations extends Table
         self::addFIXED_GEOMAG_KP($builder, $FIXED_GEOMAG_KP);
         self::addFIXED_F10P7($builder, $FIXED_F10P7);
         self::addFIXED_F10P7_MEAN($builder, $FIXED_F10P7_MEAN);
+        self::addFIXED_GEOMAG_AP($builder, $FIXED_GEOMAG_AP);
         $o = $builder->endObject();
         return $o;
     }
@@ -493,6 +505,16 @@ class Perturbations extends Table
     public static function addFIXED_F10P7_MEAN(FlatBufferBuilder $builder, $FIXED_F10P7_MEAN)
     {
         $builder->addDoubleX(18, $FIXED_F10P7_MEAN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_GEOMAG_AP(FlatBufferBuilder $builder, $FIXED_GEOMAG_AP)
+    {
+        $builder->addDoubleX(19, $FIXED_GEOMAG_AP, 0.0);
     }
 
     /**

@@ -19,6 +19,16 @@ class keplerianElements extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    public static function keplerianElementsIdentifier()
+    {
+        return "$VCM";
+    }
+
+    public static function keplerianElementsBufferHasIdentifier(ByteBuffer $buf)
+    {
+        return self::__has_identifier($buf, self::keplerianElementsIdentifier());
+    }
+
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb

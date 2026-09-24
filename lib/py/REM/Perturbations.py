@@ -210,8 +210,17 @@ class Perturbations(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Fixed (time-invariant) geomagnetic index ap used in place of the normal
+    # time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+    # Perturbations
+    def FIXED_GEOMAG_AP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def PerturbationsStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(20)
 
 def Start(builder):
     PerturbationsStart(builder)
@@ -354,6 +363,12 @@ def PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN):
 def AddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN):
     PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN)
 
+def PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP):
+    builder.PrependFloat64Slot(19, FIXED_GEOMAG_AP, 0.0)
+
+def AddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP):
+    PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP)
+
 def PerturbationsEnd(builder):
     return builder.EndObject()
 
@@ -390,6 +405,7 @@ class PerturbationsT(object):
         FIXED_GEOMAG_KP = 0.0,
         FIXED_F10P7 = 0.0,
         FIXED_F10P7_MEAN = 0.0,
+        FIXED_GEOMAG_AP = 0.0,
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[ATM.ATMT]
@@ -410,6 +426,7 @@ class PerturbationsT(object):
         self.FIXED_GEOMAG_KP = FIXED_GEOMAG_KP  # type: float
         self.FIXED_F10P7 = FIXED_F10P7  # type: float
         self.FIXED_F10P7_MEAN = FIXED_F10P7_MEAN  # type: float
+        self.FIXED_GEOMAG_AP = FIXED_GEOMAG_AP  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -458,6 +475,7 @@ class PerturbationsT(object):
         self.FIXED_GEOMAG_KP = Perturbations.FIXED_GEOMAG_KP()
         self.FIXED_F10P7 = Perturbations.FIXED_F10P7()
         self.FIXED_F10P7_MEAN = Perturbations.FIXED_F10P7_MEAN()
+        self.FIXED_GEOMAG_AP = Perturbations.FIXED_GEOMAG_AP()
 
     # PerturbationsT
     def Pack(self, builder):
@@ -532,5 +550,6 @@ class PerturbationsT(object):
         PerturbationsAddFIXED_GEOMAG_KP(builder, self.FIXED_GEOMAG_KP)
         PerturbationsAddFIXED_F10P7(builder, self.FIXED_F10P7)
         PerturbationsAddFIXED_F10P7_MEAN(builder, self.FIXED_F10P7_MEAN)
+        PerturbationsAddFIXED_GEOMAG_AP(builder, self.FIXED_GEOMAG_AP)
         Perturbations = PerturbationsEnd(builder)
         return Perturbations
