@@ -36,8 +36,14 @@ public final class wxfLevelKind {
    * a GeopotentialHeight field at this level, never implied by a pressure.
    */
   public static final byte Tropopause = 6;
+  /**
+   * Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+   * For fields defined at altitude rather than on pressure levels (for
+   * example the upper atmosphere).
+   */
+  public static final byte HeightAboveEllipsoid = 7;
 
-  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", };
+  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", "HeightAboveEllipsoid", };
 
   public static String name(int e) { return names[e]; }
 }

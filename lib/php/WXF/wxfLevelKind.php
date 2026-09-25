@@ -20,6 +20,10 @@ class wxfLevelKind
     /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
     /// a GeopotentialHeight field at this level, never implied by a pressure.
     const Tropopause = 6;
+    /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+    /// For fields defined at altitude rather than on pressure levels (for
+    /// example the upper atmosphere).
+    const HeightAboveEllipsoid = 7;
 
     private static $names = array(
         wxfLevelKind::Surface=>"Surface",
@@ -29,6 +33,7 @@ class wxfLevelKind
         wxfLevelKind::EntireAtmosphere=>"EntireAtmosphere",
         wxfLevelKind::TopOfAtmosphere=>"TopOfAtmosphere",
         wxfLevelKind::Tropopause=>"Tropopause",
+        wxfLevelKind::HeightAboveEllipsoid=>"HeightAboveEllipsoid",
     );
 
     public static function Name($e)

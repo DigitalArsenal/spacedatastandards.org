@@ -33,6 +33,10 @@ class wxfModelClass
     const Analysis = 6;
     /// A class not covered above; MODEL_ID identifies the producer's model.
     const Other = 7;
+    /// Empirical climatological model evaluated at VALID_TIME_MS from
+    /// geophysical indices, with no forecast run (pair with TIME_BASIS
+    /// ValidTimeOnly).
+    const EmpiricalClimatology = 8;
 
     private static $names = array(
         wxfModelClass::Unspecified=>"Unspecified",
@@ -43,6 +47,7 @@ class wxfModelClass
         wxfModelClass::Reanalysis=>"Reanalysis",
         wxfModelClass::Analysis=>"Analysis",
         wxfModelClass::Other=>"Other",
+        wxfModelClass::EmpiricalClimatology=>"EmpiricalClimatology",
     );
 
     public static function Name($e)

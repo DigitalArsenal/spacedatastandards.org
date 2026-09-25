@@ -351,6 +351,35 @@ public final class HFC extends com.google.flatbuffers.Table {
   public String COMMENT() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
+  /**
+   * Northward horizontal neutral-wind samples in meters per second, in the
+   * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+   */
+  public double WIND_NORTH_M_PER_S(int j) { int o = __offset(98); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int WIND_NORTH_M_PER_SLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector windNorthMPerSVector() { return windNorthMPerSVector(new DoubleVector()); }
+  public DoubleVector windNorthMPerSVector(DoubleVector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WIND_NORTH_M_PER_SAsByteBuffer() { return __vector_as_bytebuffer(98, 8); }
+  public ByteBuffer WIND_NORTH_M_PER_SInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 8); }
+  /**
+   * Eastward horizontal neutral-wind samples in meters per second, in the
+   * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+   */
+  public double WIND_EAST_M_PER_S(int j) { int o = __offset(100); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int WIND_EAST_M_PER_SLength() { int o = __offset(100); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector windEastMPerSVector() { return windEastMPerSVector(new DoubleVector()); }
+  public DoubleVector windEastMPerSVector(DoubleVector obj) { int o = __offset(100); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WIND_EAST_M_PER_SAsByteBuffer() { return __vector_as_bytebuffer(100, 8); }
+  public ByteBuffer WIND_EAST_M_PER_SInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 8); }
+  /**
+   * Wind model and release that produced the wind samples, including whether
+   * storm-time (disturbance) winds were added. Absent when no winds were
+   * evaluated; the wind arrays are then absent as well. Speed-derived samples
+   * (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+   */
+  public String WIND_MODEL() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WIND_MODELAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
+  public ByteBuffer WIND_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
 
   public static int createHFC(FlatBufferBuilder builder,
       int MESSAGE_IDOffset,
@@ -399,14 +428,20 @@ public final class HFC extends com.google.flatbuffers.Table {
       double MASS_KG,
       double SURFACE_TEMPERATURE_K,
       int ASSUMPTIONSOffset,
-      int COMMENTOffset) {
-    builder.startTable(47);
+      int COMMENTOffset,
+      int WIND_NORTH_M_PER_SOffset,
+      int WIND_EAST_M_PER_SOffset,
+      int WIND_MODELOffset) {
+    builder.startTable(50);
     HFC.addSurfaceTemperatureK(builder, SURFACE_TEMPERATURE_K);
     HFC.addMassKg(builder, MASS_KG);
     HFC.addNoseRadiusM(builder, NOSE_RADIUS_M);
     HFC.addReferenceLengthM(builder, REFERENCE_LENGTH_M);
     HFC.addReferenceAreaM2(builder, REFERENCE_AREA_M2);
     HFC.addStepSize(builder, STEP_SIZE);
+    HFC.addWindModel(builder, WIND_MODELOffset);
+    HFC.addWindEastMPerS(builder, WIND_EAST_M_PER_SOffset);
+    HFC.addWindNorthMPerS(builder, WIND_NORTH_M_PER_SOffset);
     HFC.addComment(builder, COMMENTOffset);
     HFC.addAssumptions(builder, ASSUMPTIONSOffset);
     HFC.addBankAngleDeg(builder, BANK_ANGLE_DEGOffset);
@@ -451,7 +486,7 @@ public final class HFC extends com.google.flatbuffers.Table {
     return HFC.endHFC(builder);
   }
 
-  public static void startHFC(FlatBufferBuilder builder) { builder.startTable(47); }
+  public static void startHFC(FlatBufferBuilder builder) { builder.startTable(50); }
   public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(0, MESSAGE_IDOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -543,6 +578,13 @@ public final class HFC extends com.google.flatbuffers.Table {
   public static int createAssumptionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAssumptionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(46, COMMENTOffset, 0); }
+  public static void addWindNorthMPerS(FlatBufferBuilder builder, int WIND_NORTH_M_PER_SOffset) { builder.addOffset(47, WIND_NORTH_M_PER_SOffset, 0); }
+  public static int createWindNorthMPerSVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startWindNorthMPerSVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addWindEastMPerS(FlatBufferBuilder builder, int WIND_EAST_M_PER_SOffset) { builder.addOffset(48, WIND_EAST_M_PER_SOffset, 0); }
+  public static int createWindEastMPerSVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startWindEastMPerSVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addWindModel(FlatBufferBuilder builder, int WIND_MODELOffset) { builder.addOffset(49, WIND_MODELOffset, 0); }
   public static int endHFC(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -29,7 +29,8 @@ enum wxfModelClass {
   NumericalRegional(4),
   Reanalysis(5),
   Analysis(6),
-  Other(7);
+  Other(7),
+  EmpiricalClimatology(8);
 
   final int value;
   const wxfModelClass(this.value);
@@ -44,6 +45,7 @@ enum wxfModelClass {
       case 5: return wxfModelClass.Reanalysis;
       case 6: return wxfModelClass.Analysis;
       case 7: return wxfModelClass.Other;
+      case 8: return wxfModelClass.EmpiricalClimatology;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -52,7 +54,7 @@ enum wxfModelClass {
       value == null ? null : wxfModelClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 8;
   static const fb.Reader<wxfModelClass> reader = _wxfModelClassReader();
 }
 
@@ -227,7 +229,8 @@ enum wxfLevelKind {
   MeanSeaLevel(3),
   EntireAtmosphere(4),
   TopOfAtmosphere(5),
-  Tropopause(6);
+  Tropopause(6),
+  HeightAboveEllipsoid(7);
 
   final int value;
   const wxfLevelKind(this.value);
@@ -241,6 +244,7 @@ enum wxfLevelKind {
       case 4: return wxfLevelKind.EntireAtmosphere;
       case 5: return wxfLevelKind.TopOfAtmosphere;
       case 6: return wxfLevelKind.Tropopause;
+      case 7: return wxfLevelKind.HeightAboveEllipsoid;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -249,7 +253,7 @@ enum wxfLevelKind {
       value == null ? null : wxfLevelKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<wxfLevelKind> reader = _wxfLevelKindReader();
 }
 

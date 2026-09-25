@@ -12244,7 +12244,8 @@
         "NumericalRegional",
         "Reanalysis",
         "Analysis",
-        "Other"
+        "Other",
+        "EmpiricalClimatology"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -12279,6 +12280,10 @@
         "Other": {
           "value": 7,
           "description": "A class not covered above; MODEL_ID identifies the producer's model."
+        },
+        "EmpiricalClimatology": {
+          "value": 8,
+          "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
         }
       }
     },
@@ -12524,7 +12529,8 @@
         "MeanSeaLevel",
         "EntireAtmosphere",
         "TopOfAtmosphere",
-        "Tropopause"
+        "Tropopause",
+        "HeightAboveEllipsoid"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -12556,6 +12562,10 @@
         "Tropopause": {
           "value": 6,
           "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
+        },
+        "HeightAboveEllipsoid": {
+          "value": 7,
+          "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
         }
       }
     },
@@ -65294,6 +65304,10 @@
             "Other": {
               "value": 7,
               "description": "A class not covered above; MODEL_ID identifies the producer's model."
+            },
+            "EmpiricalClimatology": {
+              "value": 8,
+              "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -65591,6 +65605,10 @@
             "Tropopause": {
               "value": 6,
               "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
+            },
+            "HeightAboveEllipsoid": {
+              "value": 7,
+              "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
             }
           },
           "x-flatbuffer-default": "Surface"
@@ -66621,6 +66639,10 @@
             "Other": {
               "value": 7,
               "description": "A class not covered above; MODEL_ID identifies the producer's model."
+            },
+            "EmpiricalClimatology": {
+              "value": 8,
+              "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -69657,6 +69679,27 @@
         "COMMENT": {
           "type": "string",
           "description": "Additional comments.",
+          "x-flatbuffer-type": "string"
+        },
+        "WIND_NORTH_M_PER_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Northward horizontal neutral-wind samples in meters per second, in the\nlocal geodetic frame at each sample position. Parallel to LATITUDE_DEG.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "WIND_EAST_M_PER_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Eastward horizontal neutral-wind samples in meters per second, in the\nlocal geodetic frame at each sample position. Parallel to LATITUDE_DEG.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "WIND_MODEL": {
+          "type": "string",
+          "description": "Wind model and release that produced the wind samples, including whether\nstorm-time (disturbance) winds were added. Absent when no winds were\nevaluated; the wind arrays are then absent as well. Speed-derived samples\n(MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -103645,6 +103688,10 @@
             "Other": {
               "value": 7,
               "description": "A class not covered above; MODEL_ID identifies the producer's model."
+            },
+            "EmpiricalClimatology": {
+              "value": 8,
+              "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
             }
           },
           "x-flatbuffer-default": "Unspecified"

@@ -1,5 +1,5 @@
-// Hash: 813497646bfa599d98019350ba0f9d2d4c7f78a8dc9c7f72179efe45f3c6e1b4
-// Version: 1.100.0
+// Hash: 0bacbe5b93e039de2f806583c150555c1036d3b0e38038b701f9561e0d2ba35f
+// Version: 1.100.1
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../OEM/main.fbs";
@@ -120,6 +120,17 @@ table HFC {
   ASSUMPTIONS:[string];
   /// Additional comments.
   COMMENT:string;
+  /// Northward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  WIND_NORTH_M_PER_S:[double];
+  /// Eastward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  WIND_EAST_M_PER_S:[double];
+  /// Wind model and release that produced the wind samples, including whether
+  /// storm-time (disturbance) winds were added. Absent when no winds were
+  /// evaluated; the wind arrays are then absent as well. Speed-derived samples
+  /// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+  WIND_MODEL:string;
 }
 
 root_type HFC;

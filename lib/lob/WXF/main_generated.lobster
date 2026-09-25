@@ -32,6 +32,10 @@ enum wxfModelClass:
     wxfModelClass_Analysis = 6
     /// A class not covered above; MODEL_ID identifies the producer's model.
     wxfModelClass_Other = 7
+    /// Empirical climatological model evaluated at VALID_TIME_MS from
+    /// geophysical indices, with no forecast run (pair with TIME_BASIS
+    /// ValidTimeOnly).
+    wxfModelClass_EmpiricalClimatology = 8
 
 /// Which realisation of an ensemble the field represents. Append new values
 /// only; never reorder or reuse existing values.
@@ -155,6 +159,10 @@ enum wxfLevelKind:
     /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
     /// a GeopotentialHeight field at this level, never implied by a pressure.
     wxfLevelKind_Tropopause = 6
+    /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+    /// For fields defined at altitude rather than on pressure levels (for
+    /// example the upper atmosphere).
+    wxfLevelKind_HeightAboveEllipsoid = 7
 
 /// Temporal character of the value in each cell. Append new values only;
 /// never reorder or reuse existing values.

@@ -259,6 +259,28 @@ export declare class HFC implements flatbuffers.IUnpackableObject<HFCT> {
      */
     COMMENT(): string | null;
     COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Northward horizontal neutral-wind samples in meters per second, in the
+     * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+     */
+    WIND_NORTH_M_PER_S(index: number): number | null;
+    windNorthMPerSLength(): number;
+    windNorthMPerSArray(): Float64Array | null;
+    /**
+     * Eastward horizontal neutral-wind samples in meters per second, in the
+     * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+     */
+    WIND_EAST_M_PER_S(index: number): number | null;
+    windEastMPerSLength(): number;
+    windEastMPerSArray(): Float64Array | null;
+    /**
+     * Wind model and release that produced the wind samples, including whether
+     * storm-time (disturbance) winds were added. Absent when no winds were
+     * evaluated; the wind arrays are then absent as well. Speed-derived samples
+     * (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+     */
+    WIND_MODEL(): string | null;
+    WIND_MODEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startHFC(builder: flatbuffers.Builder): void;
     static addMessageId(builder: flatbuffers.Builder, MESSAGE_IDOffset: flatbuffers.Offset): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -431,6 +453,21 @@ export declare class HFC implements flatbuffers.IUnpackableObject<HFCT> {
     static createAssumptionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startAssumptionsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
+    static addWindNorthMPerS(builder: flatbuffers.Builder, WIND_NORTH_M_PER_SOffset: flatbuffers.Offset): void;
+    static createWindNorthMPerSVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createWindNorthMPerSVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startWindNorthMPerSVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addWindEastMPerS(builder: flatbuffers.Builder, WIND_EAST_M_PER_SOffset: flatbuffers.Offset): void;
+    static createWindEastMPerSVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createWindEastMPerSVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startWindEastMPerSVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addWindModel(builder: flatbuffers.Builder, WIND_MODELOffset: flatbuffers.Offset): void;
     static endHFC(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishHFCBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedHFCBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -485,7 +522,10 @@ export declare class HFCT implements flatbuffers.IGeneratedObject {
     SURFACE_TEMPERATURE_K: number;
     ASSUMPTIONS: (string)[];
     COMMENT: string | Uint8Array | null;
-    constructor(MESSAGE_ID?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, REF_FRAME?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, SOURCE_OEM?: OEMT | null, SOURCE_OCM?: OCMT | null, ATMOSPHERE?: ATMT | null, ATMOSPHERE_PROVIDER?: string | Uint8Array | null, ATMOSPHERE_MODEL_REVISION?: string | Uint8Array | null, ATMOSPHERE_COUPLING?: hfcAtmosphereCouplingMode, AEROTHERMAL_MODEL?: string | Uint8Array | null, GAS_MODEL?: string | Uint8Array | null, FLOW_REGIME?: hfcFlowRegime, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], SAMPLE_EPOCHS?: (string)[], LATITUDE_DEG?: (number)[], LONGITUDE_DEG?: (number)[], ALTITUDE_M?: (number)[], SPEED_M_PER_S?: (number)[], MACH?: (number)[], DYNAMIC_PRESSURE_PA?: (number)[], DENSITY_KG_PER_M3?: (number)[], TEMPERATURE_K?: (number)[], PRESSURE_PA?: (number)[], SPEED_OF_SOUND_M_PER_S?: (number)[], KNUDSEN_NUMBER?: (number)[], REYNOLDS_NUMBER?: (number)[], CONVECTIVE_HEAT_FLUX_W_PER_M2?: (number)[], RADIATIVE_HEAT_FLUX_W_PER_M2?: (number)[], STAGNATION_HEAT_FLUX_W_PER_M2?: (number)[], LOAD_FACTOR_G?: (number)[], ANGLE_OF_ATTACK_DEG?: (number)[], SIDESLIP_DEG?: (number)[], BANK_ANGLE_DEG?: (number)[], REFERENCE_AREA_M2?: number, REFERENCE_LENGTH_M?: number, NOSE_RADIUS_M?: number, MASS_KG?: number, SURFACE_TEMPERATURE_K?: number, ASSUMPTIONS?: (string)[], COMMENT?: string | Uint8Array | null);
+    WIND_NORTH_M_PER_S: (number)[];
+    WIND_EAST_M_PER_S: (number)[];
+    WIND_MODEL: string | Uint8Array | null;
+    constructor(MESSAGE_ID?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, REF_FRAME?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, SOURCE_OEM?: OEMT | null, SOURCE_OCM?: OCMT | null, ATMOSPHERE?: ATMT | null, ATMOSPHERE_PROVIDER?: string | Uint8Array | null, ATMOSPHERE_MODEL_REVISION?: string | Uint8Array | null, ATMOSPHERE_COUPLING?: hfcAtmosphereCouplingMode, AEROTHERMAL_MODEL?: string | Uint8Array | null, GAS_MODEL?: string | Uint8Array | null, FLOW_REGIME?: hfcFlowRegime, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], SAMPLE_EPOCHS?: (string)[], LATITUDE_DEG?: (number)[], LONGITUDE_DEG?: (number)[], ALTITUDE_M?: (number)[], SPEED_M_PER_S?: (number)[], MACH?: (number)[], DYNAMIC_PRESSURE_PA?: (number)[], DENSITY_KG_PER_M3?: (number)[], TEMPERATURE_K?: (number)[], PRESSURE_PA?: (number)[], SPEED_OF_SOUND_M_PER_S?: (number)[], KNUDSEN_NUMBER?: (number)[], REYNOLDS_NUMBER?: (number)[], CONVECTIVE_HEAT_FLUX_W_PER_M2?: (number)[], RADIATIVE_HEAT_FLUX_W_PER_M2?: (number)[], STAGNATION_HEAT_FLUX_W_PER_M2?: (number)[], LOAD_FACTOR_G?: (number)[], ANGLE_OF_ATTACK_DEG?: (number)[], SIDESLIP_DEG?: (number)[], BANK_ANGLE_DEG?: (number)[], REFERENCE_AREA_M2?: number, REFERENCE_LENGTH_M?: number, NOSE_RADIUS_M?: number, MASS_KG?: number, SURFACE_TEMPERATURE_K?: number, ASSUMPTIONS?: (string)[], COMMENT?: string | Uint8Array | null, WIND_NORTH_M_PER_S?: (number)[], WIND_EAST_M_PER_S?: (number)[], WIND_MODEL?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=HFC.d.ts.map

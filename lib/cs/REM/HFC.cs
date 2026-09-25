@@ -333,6 +333,37 @@ public struct HFC : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(96); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(96); }
+  /// Northward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  public double WIND_NORTH_M_PER_S(int j) { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int WIND_NORTH_M_PER_SLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetWIND_NORTH_M_PER_SBytes() { return __p.__vector_as_span<double>(98, 8); }
+#else
+  public ArraySegment<byte>? GetWIND_NORTH_M_PER_SBytes() { return __p.__vector_as_arraysegment(98); }
+#endif
+  public double[] GetWIND_NORTH_M_PER_SArray() { return __p.__vector_as_array<double>(98); }
+  /// Eastward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  public double WIND_EAST_M_PER_S(int j) { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int WIND_EAST_M_PER_SLength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetWIND_EAST_M_PER_SBytes() { return __p.__vector_as_span<double>(100, 8); }
+#else
+  public ArraySegment<byte>? GetWIND_EAST_M_PER_SBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public double[] GetWIND_EAST_M_PER_SArray() { return __p.__vector_as_array<double>(100); }
+  /// Wind model and release that produced the wind samples, including whether
+  /// storm-time (disturbance) winds were added. Absent when no winds were
+  /// evaluated; the wind arrays are then absent as well. Speed-derived samples
+  /// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+  public string WIND_MODEL { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetWIND_MODELBytes() { return __p.__vector_as_span<byte>(102, 1); }
+#else
+  public ArraySegment<byte>? GetWIND_MODELBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public byte[] GetWIND_MODELArray() { return __p.__vector_as_array<byte>(102); }
 
   public static Offset<HFC> CreateHFC(FlatBufferBuilder builder,
       StringOffset MESSAGE_IDOffset = default(StringOffset),
@@ -381,14 +412,20 @@ public struct HFC : IFlatbufferObject
       double MASS_KG = 0.0,
       double SURFACE_TEMPERATURE_K = 0.0,
       VectorOffset ASSUMPTIONSOffset = default(VectorOffset),
-      StringOffset COMMENTOffset = default(StringOffset)) {
-    builder.StartTable(47);
+      StringOffset COMMENTOffset = default(StringOffset),
+      VectorOffset WIND_NORTH_M_PER_SOffset = default(VectorOffset),
+      VectorOffset WIND_EAST_M_PER_SOffset = default(VectorOffset),
+      StringOffset WIND_MODELOffset = default(StringOffset)) {
+    builder.StartTable(50);
     HFC.AddSURFACE_TEMPERATURE_K(builder, SURFACE_TEMPERATURE_K);
     HFC.AddMASS_KG(builder, MASS_KG);
     HFC.AddNOSE_RADIUS_M(builder, NOSE_RADIUS_M);
     HFC.AddREFERENCE_LENGTH_M(builder, REFERENCE_LENGTH_M);
     HFC.AddREFERENCE_AREA_M2(builder, REFERENCE_AREA_M2);
     HFC.AddSTEP_SIZE(builder, STEP_SIZE);
+    HFC.AddWIND_MODEL(builder, WIND_MODELOffset);
+    HFC.AddWIND_EAST_M_PER_S(builder, WIND_EAST_M_PER_SOffset);
+    HFC.AddWIND_NORTH_M_PER_S(builder, WIND_NORTH_M_PER_SOffset);
     HFC.AddCOMMENT(builder, COMMENTOffset);
     HFC.AddASSUMPTIONS(builder, ASSUMPTIONSOffset);
     HFC.AddBANK_ANGLE_DEG(builder, BANK_ANGLE_DEGOffset);
@@ -433,7 +470,7 @@ public struct HFC : IFlatbufferObject
     return HFC.EndHFC(builder);
   }
 
-  public static void StartHFC(FlatBufferBuilder builder) { builder.StartTable(47); }
+  public static void StartHFC(FlatBufferBuilder builder) { builder.StartTable(50); }
   public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(0, MESSAGE_IDOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -591,6 +628,19 @@ public struct HFC : IFlatbufferObject
   public static VectorOffset CreateASSUMPTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartASSUMPTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(46, COMMENTOffset.Value, 0); }
+  public static void AddWIND_NORTH_M_PER_S(FlatBufferBuilder builder, VectorOffset WIND_NORTH_M_PER_SOffset) { builder.AddOffset(47, WIND_NORTH_M_PER_SOffset.Value, 0); }
+  public static VectorOffset CreateWIND_NORTH_M_PER_SVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_NORTH_M_PER_SVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_NORTH_M_PER_SVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_NORTH_M_PER_SVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartWIND_NORTH_M_PER_SVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddWIND_EAST_M_PER_S(FlatBufferBuilder builder, VectorOffset WIND_EAST_M_PER_SOffset) { builder.AddOffset(48, WIND_EAST_M_PER_SOffset.Value, 0); }
+  public static VectorOffset CreateWIND_EAST_M_PER_SVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_EAST_M_PER_SVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_EAST_M_PER_SVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWIND_EAST_M_PER_SVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartWIND_EAST_M_PER_SVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddWIND_MODEL(FlatBufferBuilder builder, StringOffset WIND_MODELOffset) { builder.AddOffset(49, WIND_MODELOffset.Value, 0); }
   public static Offset<HFC> EndHFC(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<HFC>(o);
@@ -672,6 +722,11 @@ public struct HFC : IFlatbufferObject
     _o.ASSUMPTIONS = new List<string>();
     for (var _j = 0; _j < this.ASSUMPTIONSLength; ++_j) {_o.ASSUMPTIONS.Add(this.ASSUMPTIONS(_j));}
     _o.COMMENT = this.COMMENT;
+    _o.WIND_NORTH_M_PER_S = new List<double>();
+    for (var _j = 0; _j < this.WIND_NORTH_M_PER_SLength; ++_j) {_o.WIND_NORTH_M_PER_S.Add(this.WIND_NORTH_M_PER_S(_j));}
+    _o.WIND_EAST_M_PER_S = new List<double>();
+    for (var _j = 0; _j < this.WIND_EAST_M_PER_SLength; ++_j) {_o.WIND_EAST_M_PER_S.Add(this.WIND_EAST_M_PER_S(_j));}
+    _o.WIND_MODEL = this.WIND_MODEL;
   }
   public static Offset<HFC> Pack(FlatBufferBuilder builder, HFCT _o) {
     if (_o == null) return default(Offset<HFC>);
@@ -803,6 +858,17 @@ public struct HFC : IFlatbufferObject
       _ASSUMPTIONS = CreateASSUMPTIONSVector(builder, __ASSUMPTIONS);
     }
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _WIND_NORTH_M_PER_S = default(VectorOffset);
+    if (_o.WIND_NORTH_M_PER_S != null) {
+      var __WIND_NORTH_M_PER_S = _o.WIND_NORTH_M_PER_S.ToArray();
+      _WIND_NORTH_M_PER_S = CreateWIND_NORTH_M_PER_SVector(builder, __WIND_NORTH_M_PER_S);
+    }
+    var _WIND_EAST_M_PER_S = default(VectorOffset);
+    if (_o.WIND_EAST_M_PER_S != null) {
+      var __WIND_EAST_M_PER_S = _o.WIND_EAST_M_PER_S.ToArray();
+      _WIND_EAST_M_PER_S = CreateWIND_EAST_M_PER_SVector(builder, __WIND_EAST_M_PER_S);
+    }
+    var _WIND_MODEL = _o.WIND_MODEL == null ? default(StringOffset) : builder.CreateString(_o.WIND_MODEL);
     return CreateHFC(
       builder,
       _MESSAGE_ID,
@@ -851,7 +917,10 @@ public struct HFC : IFlatbufferObject
       _o.MASS_KG,
       _o.SURFACE_TEMPERATURE_K,
       _ASSUMPTIONS,
-      _COMMENT);
+      _COMMENT,
+      _WIND_NORTH_M_PER_S,
+      _WIND_EAST_M_PER_S,
+      _WIND_MODEL);
   }
 }
 
@@ -904,6 +973,9 @@ public class HFCT
   public double SURFACE_TEMPERATURE_K { get; set; }
   public List<string> ASSUMPTIONS { get; set; }
   public string COMMENT { get; set; }
+  public List<double> WIND_NORTH_M_PER_S { get; set; }
+  public List<double> WIND_EAST_M_PER_S { get; set; }
+  public string WIND_MODEL { get; set; }
 
   public HFCT() {
     this.MESSAGE_ID = null;
@@ -953,6 +1025,9 @@ public class HFCT
     this.SURFACE_TEMPERATURE_K = 0.0;
     this.ASSUMPTIONS = null;
     this.COMMENT = null;
+    this.WIND_NORTH_M_PER_S = null;
+    this.WIND_EAST_M_PER_S = null;
+    this.WIND_MODEL = null;
   }
   public static HFCT DeserializeFromBinary(byte[] fbBuffer) {
     return HFC.GetRootAsHFC(new ByteBuffer(fbBuffer)).UnPack();
@@ -1017,6 +1092,9 @@ static public class HFCVerify
       && verifier.VerifyField(tablePos, 92 /*SURFACE_TEMPERATURE_K*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfStrings(tablePos, 94 /*ASSUMPTIONS*/, false)
       && verifier.VerifyString(tablePos, 96 /*COMMENT*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 98 /*WIND_NORTH_M_PER_S*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 100 /*WIND_EAST_M_PER_S*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 102 /*WIND_MODEL*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

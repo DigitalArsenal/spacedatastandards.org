@@ -49,8 +49,14 @@ public final class wxfModelClass {
    * A class not covered above; MODEL_ID identifies the producer's model.
    */
   public static final byte Other = 7;
+  /**
+   * Empirical climatological model evaluated at VALID_TIME_MS from
+   * geophysical indices, with no forecast run (pair with TIME_BASIS
+   * ValidTimeOnly).
+   */
+  public static final byte EmpiricalClimatology = 8;
 
-  public static final String[] names = { "Unspecified", "MachineLearnedGlobalEnsemble", "NumericalGlobalEnsemble", "NumericalGlobalDeterministic", "NumericalRegional", "Reanalysis", "Analysis", "Other", };
+  public static final String[] names = { "Unspecified", "MachineLearnedGlobalEnsemble", "NumericalGlobalEnsemble", "NumericalGlobalDeterministic", "NumericalRegional", "Reanalysis", "Analysis", "Other", "EmpiricalClimatology", };
 
   public static String name(int e) { return names[e]; }
 }

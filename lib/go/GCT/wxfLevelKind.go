@@ -10,40 +10,46 @@ type wxfLevelKind int8
 
 const (
 	/// Earth's surface; LEVEL_VALUE is unused.
-	wxfLevelKindSurface           wxfLevelKind = 0
+	wxfLevelKindSurface              wxfLevelKind = 0
 	/// Fixed height above ground; LEVEL_VALUE in metres.
-	wxfLevelKindHeightAboveGround wxfLevelKind = 1
+	wxfLevelKindHeightAboveGround    wxfLevelKind = 1
 	/// Isobaric level; LEVEL_VALUE in pascal.
-	wxfLevelKindPressureLevel     wxfLevelKind = 2
+	wxfLevelKindPressureLevel        wxfLevelKind = 2
 	/// Mean sea level; LEVEL_VALUE is unused.
-	wxfLevelKindMeanSeaLevel      wxfLevelKind = 3
+	wxfLevelKindMeanSeaLevel         wxfLevelKind = 3
 	/// Whole atmospheric column; LEVEL_VALUE is unused.
-	wxfLevelKindEntireAtmosphere  wxfLevelKind = 4
+	wxfLevelKindEntireAtmosphere     wxfLevelKind = 4
 	/// Top of atmosphere; LEVEL_VALUE is unused.
-	wxfLevelKindTopOfAtmosphere   wxfLevelKind = 5
+	wxfLevelKindTopOfAtmosphere      wxfLevelKind = 5
 	/// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
 	/// a GeopotentialHeight field at this level, never implied by a pressure.
-	wxfLevelKindTropopause        wxfLevelKind = 6
+	wxfLevelKindTropopause           wxfLevelKind = 6
+	/// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+	/// For fields defined at altitude rather than on pressure levels (for
+	/// example the upper atmosphere).
+	wxfLevelKindHeightAboveEllipsoid wxfLevelKind = 7
 )
 
 var EnumNameswxfLevelKind = map[wxfLevelKind]string{
-	wxfLevelKindSurface:           "Surface",
-	wxfLevelKindHeightAboveGround: "HeightAboveGround",
-	wxfLevelKindPressureLevel:     "PressureLevel",
-	wxfLevelKindMeanSeaLevel:      "MeanSeaLevel",
-	wxfLevelKindEntireAtmosphere:  "EntireAtmosphere",
-	wxfLevelKindTopOfAtmosphere:   "TopOfAtmosphere",
-	wxfLevelKindTropopause:        "Tropopause",
+	wxfLevelKindSurface:              "Surface",
+	wxfLevelKindHeightAboveGround:    "HeightAboveGround",
+	wxfLevelKindPressureLevel:        "PressureLevel",
+	wxfLevelKindMeanSeaLevel:         "MeanSeaLevel",
+	wxfLevelKindEntireAtmosphere:     "EntireAtmosphere",
+	wxfLevelKindTopOfAtmosphere:      "TopOfAtmosphere",
+	wxfLevelKindTropopause:           "Tropopause",
+	wxfLevelKindHeightAboveEllipsoid: "HeightAboveEllipsoid",
 }
 
 var EnumValueswxfLevelKind = map[string]wxfLevelKind{
-	"Surface":           wxfLevelKindSurface,
-	"HeightAboveGround": wxfLevelKindHeightAboveGround,
-	"PressureLevel":     wxfLevelKindPressureLevel,
-	"MeanSeaLevel":      wxfLevelKindMeanSeaLevel,
-	"EntireAtmosphere":  wxfLevelKindEntireAtmosphere,
-	"TopOfAtmosphere":   wxfLevelKindTopOfAtmosphere,
-	"Tropopause":        wxfLevelKindTropopause,
+	"Surface":              wxfLevelKindSurface,
+	"HeightAboveGround":    wxfLevelKindHeightAboveGround,
+	"PressureLevel":        wxfLevelKindPressureLevel,
+	"MeanSeaLevel":         wxfLevelKindMeanSeaLevel,
+	"EntireAtmosphere":     wxfLevelKindEntireAtmosphere,
+	"TopOfAtmosphere":      wxfLevelKindTopOfAtmosphere,
+	"Tropopause":           wxfLevelKindTropopause,
+	"HeightAboveEllipsoid": wxfLevelKindHeightAboveEllipsoid,
 }
 
 func (v wxfLevelKind) String() string {

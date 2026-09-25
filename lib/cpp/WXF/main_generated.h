@@ -50,11 +50,15 @@ enum wxfModelClass : int8_t {
   wxfModelClass_Analysis = 6,
   /// A class not covered above; MODEL_ID identifies the producer's model.
   wxfModelClass_Other = 7,
+  /// Empirical climatological model evaluated at VALID_TIME_MS from
+  /// geophysical indices, with no forecast run (pair with TIME_BASIS
+  /// ValidTimeOnly).
+  wxfModelClass_EmpiricalClimatology = 8,
   wxfModelClass_MIN = wxfModelClass_Unspecified,
-  wxfModelClass_MAX = wxfModelClass_Other
+  wxfModelClass_MAX = wxfModelClass_EmpiricalClimatology
 };
 
-inline const wxfModelClass (&EnumValueswxfModelClass())[8] {
+inline const wxfModelClass (&EnumValueswxfModelClass())[9] {
   static const wxfModelClass values[] = {
     wxfModelClass_Unspecified,
     wxfModelClass_MachineLearnedGlobalEnsemble,
@@ -63,13 +67,14 @@ inline const wxfModelClass (&EnumValueswxfModelClass())[8] {
     wxfModelClass_NumericalRegional,
     wxfModelClass_Reanalysis,
     wxfModelClass_Analysis,
-    wxfModelClass_Other
+    wxfModelClass_Other,
+    wxfModelClass_EmpiricalClimatology
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfModelClass() {
-  static const char * const names[9] = {
+  static const char * const names[10] = {
     "Unspecified",
     "MachineLearnedGlobalEnsemble",
     "NumericalGlobalEnsemble",
@@ -78,13 +83,14 @@ inline const char * const *EnumNameswxfModelClass() {
     "Reanalysis",
     "Analysis",
     "Other",
+    "EmpiricalClimatology",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfModelClass(wxfModelClass e) {
-  if (::flatbuffers::IsOutRange(e, wxfModelClass_Unspecified, wxfModelClass_Other)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfModelClass_Unspecified, wxfModelClass_EmpiricalClimatology)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfModelClass()[index];
 }
@@ -341,11 +347,15 @@ enum wxfLevelKind : int8_t {
   /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
   /// a GeopotentialHeight field at this level, never implied by a pressure.
   wxfLevelKind_Tropopause = 6,
+  /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+  /// For fields defined at altitude rather than on pressure levels (for
+  /// example the upper atmosphere).
+  wxfLevelKind_HeightAboveEllipsoid = 7,
   wxfLevelKind_MIN = wxfLevelKind_Surface,
-  wxfLevelKind_MAX = wxfLevelKind_Tropopause
+  wxfLevelKind_MAX = wxfLevelKind_HeightAboveEllipsoid
 };
 
-inline const wxfLevelKind (&EnumValueswxfLevelKind())[7] {
+inline const wxfLevelKind (&EnumValueswxfLevelKind())[8] {
   static const wxfLevelKind values[] = {
     wxfLevelKind_Surface,
     wxfLevelKind_HeightAboveGround,
@@ -353,13 +363,14 @@ inline const wxfLevelKind (&EnumValueswxfLevelKind())[7] {
     wxfLevelKind_MeanSeaLevel,
     wxfLevelKind_EntireAtmosphere,
     wxfLevelKind_TopOfAtmosphere,
-    wxfLevelKind_Tropopause
+    wxfLevelKind_Tropopause,
+    wxfLevelKind_HeightAboveEllipsoid
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfLevelKind() {
-  static const char * const names[8] = {
+  static const char * const names[9] = {
     "Surface",
     "HeightAboveGround",
     "PressureLevel",
@@ -367,13 +378,14 @@ inline const char * const *EnumNameswxfLevelKind() {
     "EntireAtmosphere",
     "TopOfAtmosphere",
     "Tropopause",
+    "HeightAboveEllipsoid",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfLevelKind(wxfLevelKind e) {
-  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_Tropopause)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_HeightAboveEllipsoid)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfLevelKind()[index];
 }

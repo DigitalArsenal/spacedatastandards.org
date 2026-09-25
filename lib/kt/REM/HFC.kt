@@ -689,6 +689,59 @@ class HFC : Table() {
         }
     val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(96, 1)
     fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 96, 1)
+    /**
+     * Northward horizontal neutral-wind samples in meters per second, in the
+     * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+     */
+    fun windNorthMPerS(j: Int) : Double {
+        val o = __offset(98)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val windNorthMPerSLength : Int
+        get() {
+            val o = __offset(98); return if (o != 0) __vector_len(o) else 0
+        }
+    val windNorthMPerSAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 8)
+    fun windNorthMPerSInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 8)
+    /**
+     * Eastward horizontal neutral-wind samples in meters per second, in the
+     * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+     */
+    fun windEastMPerS(j: Int) : Double {
+        val o = __offset(100)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val windEastMPerSLength : Int
+        get() {
+            val o = __offset(100); return if (o != 0) __vector_len(o) else 0
+        }
+    val windEastMPerSAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 8)
+    fun windEastMPerSInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 8)
+    /**
+     * Wind model and release that produced the wind samples, including whether
+     * storm-time (disturbance) winds were added. Absent when no winds were
+     * evaluated; the wind arrays are then absent as well. Speed-derived samples
+     * (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+     */
+    val windModel : String?
+        get() {
+            val o = __offset(102)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val windModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
+    fun windModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsHFC(_bb: ByteBuffer): HFC = getRootAsHFC(_bb, HFC())
@@ -697,14 +750,17 @@ class HFC : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun HFCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HFC")
-        fun createHFC(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, sourceOemOffset: Int, sourceOcmOffset: Int, atmosphereOffset: Int, atmosphereProviderOffset: Int, atmosphereModelRevisionOffset: Int, atmosphereCoupling: Byte, aerothermalModelOffset: Int, gasModelOffset: Int, flowRegime: Byte, stateVectorSize: UInt, stateDataOffset: Int, sampleEpochsOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, densityKgPerM3Offset: Int, temperatureKOffset: Int, pressurePaOffset: Int, speedOfSoundMPerSOffset: Int, knudsenNumberOffset: Int, reynoldsNumberOffset: Int, convectiveHeatFluxWPerM2Offset: Int, radiativeHeatFluxWPerM2Offset: Int, stagnationHeatFluxWPerM2Offset: Int, loadFactorGOffset: Int, angleOfAttackDegOffset: Int, sideslipDegOffset: Int, bankAngleDegOffset: Int, referenceAreaM2: Double, referenceLengthM: Double, noseRadiusM: Double, massKg: Double, surfaceTemperatureK: Double, assumptionsOffset: Int, commentOffset: Int) : Int {
-            builder.startTable(47)
+        fun createHFC(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, sourceOemOffset: Int, sourceOcmOffset: Int, atmosphereOffset: Int, atmosphereProviderOffset: Int, atmosphereModelRevisionOffset: Int, atmosphereCoupling: Byte, aerothermalModelOffset: Int, gasModelOffset: Int, flowRegime: Byte, stateVectorSize: UInt, stateDataOffset: Int, sampleEpochsOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, densityKgPerM3Offset: Int, temperatureKOffset: Int, pressurePaOffset: Int, speedOfSoundMPerSOffset: Int, knudsenNumberOffset: Int, reynoldsNumberOffset: Int, convectiveHeatFluxWPerM2Offset: Int, radiativeHeatFluxWPerM2Offset: Int, stagnationHeatFluxWPerM2Offset: Int, loadFactorGOffset: Int, angleOfAttackDegOffset: Int, sideslipDegOffset: Int, bankAngleDegOffset: Int, referenceAreaM2: Double, referenceLengthM: Double, noseRadiusM: Double, massKg: Double, surfaceTemperatureK: Double, assumptionsOffset: Int, commentOffset: Int, windNorthMPerSOffset: Int, windEastMPerSOffset: Int, windModelOffset: Int) : Int {
+            builder.startTable(50)
             addSURFACETEMPERATUREK(builder, surfaceTemperatureK)
             addMASSKG(builder, massKg)
             addNOSERADIUSM(builder, noseRadiusM)
             addREFERENCELENGTHM(builder, referenceLengthM)
             addREFERENCEAREAM2(builder, referenceAreaM2)
             addSTEPSIZE(builder, stepSize)
+            addWINDMODEL(builder, windModelOffset)
+            addWINDEASTMPERS(builder, windEastMPerSOffset)
+            addWINDNORTHMPERS(builder, windNorthMPerSOffset)
             addCOMMENT(builder, commentOffset)
             addASSUMPTIONS(builder, assumptionsOffset)
             addBANKANGLEDEG(builder, bankAngleDegOffset)
@@ -748,7 +804,7 @@ class HFC : Table() {
             addATMOSPHERECOUPLING(builder, atmosphereCoupling)
             return endHFC(builder)
         }
-        fun startHFC(builder: FlatBufferBuilder) = builder.startTable(47)
+        fun startHFC(builder: FlatBufferBuilder) = builder.startTable(50)
         fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(0, messageId, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -972,6 +1028,25 @@ class HFC : Table() {
         }
         fun startAssumptionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(46, comment, 0)
+        fun addWINDNORTHMPERS(builder: FlatBufferBuilder, windNorthMPerS: Int) = builder.addOffset(47, windNorthMPerS, 0)
+        fun createWindNorthMPerSVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startWindNorthMPerSVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addWINDEASTMPERS(builder: FlatBufferBuilder, windEastMPerS: Int) = builder.addOffset(48, windEastMPerS, 0)
+        fun createWindEastMPerSVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startWindEastMPerSVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addWINDMODEL(builder: FlatBufferBuilder, windModel: Int) = builder.addOffset(49, windModel, 0)
         fun endHFC(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

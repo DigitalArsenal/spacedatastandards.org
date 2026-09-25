@@ -49,5 +49,11 @@ class wxfModelClass private constructor() {
          * A class not covered above; MODEL_ID identifies the producer's model.
          */
         const val Other: Byte = 7
+        /**
+         * Empirical climatological model evaluated at VALID_TIME_MS from
+         * geophysical indices, with no forecast run (pair with TIME_BASIS
+         * ValidTimeOnly).
+         */
+        const val EmpiricalClimatology: Byte = 8
     }
 }

@@ -42,8 +42,12 @@ public enum wxfModelClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case analysis = 6
   ///  A class not covered above; MODEL_ID identifies the producer's model.
   case other = 7
+  ///  Empirical climatological model evaluated at VALID_TIME_MS from
+  ///  geophysical indices, with no forecast run (pair with TIME_BASIS
+  ///  ValidTimeOnly).
+  case empiricalclimatology = 8
 
-  public static var max: wxfModelClass { return .other }
+  public static var max: wxfModelClass { return .empiricalclimatology }
   public static var min: wxfModelClass { return .unspecified }
 }
 
@@ -189,8 +193,12 @@ public enum wxfLevelKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   ///  The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
   ///  a GeopotentialHeight field at this level, never implied by a pressure.
   case tropopause = 6
+  ///  Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+  ///  For fields defined at altitude rather than on pressure levels (for
+  ///  example the upper atmosphere).
+  case heightaboveellipsoid = 7
 
-  public static var max: wxfLevelKind { return .tropopause }
+  public static var max: wxfLevelKind { return .heightaboveellipsoid }
   public static var min: wxfLevelKind { return .surface }
 }
 

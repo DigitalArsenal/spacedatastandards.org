@@ -686,22 +686,74 @@ class HFC extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Northward horizontal neutral-wind samples in meters per second, in the
+    /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getWIND_NORTH_M_PER_S($j)
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWIND_NORTH_M_PER_SLength()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Eastward horizontal neutral-wind samples in meters per second, in the
+    /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getWIND_EAST_M_PER_S($j)
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWIND_EAST_M_PER_SLength()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Wind model and release that produced the wind samples, including whether
+    /// storm-time (disturbance) winds were added. Absent when no winds were
+    /// evaluated; the wind arrays are then absent as well. Speed-derived samples
+    /// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+    public function getWIND_MODEL()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startHFC(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(47);
+        $builder->StartObject(50);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return HFC
      */
-    public static function createHFC(FlatBufferBuilder $builder, $MESSAGE_ID, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $TIME_SYSTEM, $REF_FRAME, $START_TIME, $STOP_TIME, $STEP_SIZE, $SOURCE_OEM, $SOURCE_OCM, $ATMOSPHERE, $ATMOSPHERE_PROVIDER, $ATMOSPHERE_MODEL_REVISION, $ATMOSPHERE_COUPLING, $AEROTHERMAL_MODEL, $GAS_MODEL, $FLOW_REGIME, $STATE_VECTOR_SIZE, $STATE_DATA, $SAMPLE_EPOCHS, $LATITUDE_DEG, $LONGITUDE_DEG, $ALTITUDE_M, $SPEED_M_PER_S, $MACH, $DYNAMIC_PRESSURE_PA, $DENSITY_KG_PER_M3, $TEMPERATURE_K, $PRESSURE_PA, $SPEED_OF_SOUND_M_PER_S, $KNUDSEN_NUMBER, $REYNOLDS_NUMBER, $CONVECTIVE_HEAT_FLUX_W_PER_M2, $RADIATIVE_HEAT_FLUX_W_PER_M2, $STAGNATION_HEAT_FLUX_W_PER_M2, $LOAD_FACTOR_G, $ANGLE_OF_ATTACK_DEG, $SIDESLIP_DEG, $BANK_ANGLE_DEG, $REFERENCE_AREA_M2, $REFERENCE_LENGTH_M, $NOSE_RADIUS_M, $MASS_KG, $SURFACE_TEMPERATURE_K, $ASSUMPTIONS, $COMMENT)
+    public static function createHFC(FlatBufferBuilder $builder, $MESSAGE_ID, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $TIME_SYSTEM, $REF_FRAME, $START_TIME, $STOP_TIME, $STEP_SIZE, $SOURCE_OEM, $SOURCE_OCM, $ATMOSPHERE, $ATMOSPHERE_PROVIDER, $ATMOSPHERE_MODEL_REVISION, $ATMOSPHERE_COUPLING, $AEROTHERMAL_MODEL, $GAS_MODEL, $FLOW_REGIME, $STATE_VECTOR_SIZE, $STATE_DATA, $SAMPLE_EPOCHS, $LATITUDE_DEG, $LONGITUDE_DEG, $ALTITUDE_M, $SPEED_M_PER_S, $MACH, $DYNAMIC_PRESSURE_PA, $DENSITY_KG_PER_M3, $TEMPERATURE_K, $PRESSURE_PA, $SPEED_OF_SOUND_M_PER_S, $KNUDSEN_NUMBER, $REYNOLDS_NUMBER, $CONVECTIVE_HEAT_FLUX_W_PER_M2, $RADIATIVE_HEAT_FLUX_W_PER_M2, $STAGNATION_HEAT_FLUX_W_PER_M2, $LOAD_FACTOR_G, $ANGLE_OF_ATTACK_DEG, $SIDESLIP_DEG, $BANK_ANGLE_DEG, $REFERENCE_AREA_M2, $REFERENCE_LENGTH_M, $NOSE_RADIUS_M, $MASS_KG, $SURFACE_TEMPERATURE_K, $ASSUMPTIONS, $COMMENT, $WIND_NORTH_M_PER_S, $WIND_EAST_M_PER_S, $WIND_MODEL)
     {
-        $builder->startObject(47);
+        $builder->startObject(50);
         self::addMESSAGE_ID($builder, $MESSAGE_ID);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -749,6 +801,9 @@ class HFC extends Table
         self::addSURFACE_TEMPERATURE_K($builder, $SURFACE_TEMPERATURE_K);
         self::addASSUMPTIONS($builder, $ASSUMPTIONS);
         self::addCOMMENT($builder, $COMMENT);
+        self::addWIND_NORTH_M_PER_S($builder, $WIND_NORTH_M_PER_S);
+        self::addWIND_EAST_M_PER_S($builder, $WIND_EAST_M_PER_S);
+        self::addWIND_MODEL($builder, $WIND_MODEL);
         $o = $builder->endObject();
         return $o;
     }
@@ -1749,6 +1804,84 @@ class HFC extends Table
     public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
     {
         $builder->addOffsetX(46, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWIND_NORTH_M_PER_S(FlatBufferBuilder $builder, $WIND_NORTH_M_PER_S)
+    {
+        $builder->addOffsetX(47, $WIND_NORTH_M_PER_S, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createWIND_NORTH_M_PER_SVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startWIND_NORTH_M_PER_SVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWIND_EAST_M_PER_S(FlatBufferBuilder $builder, $WIND_EAST_M_PER_S)
+    {
+        $builder->addOffsetX(48, $WIND_EAST_M_PER_S, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createWIND_EAST_M_PER_SVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startWIND_EAST_M_PER_SVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addWIND_MODEL(FlatBufferBuilder $builder, $WIND_MODEL)
+    {
+        $builder->addOffsetX(49, $WIND_MODEL, 0);
     }
 
     /**

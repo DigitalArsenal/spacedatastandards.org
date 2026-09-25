@@ -44,6 +44,12 @@ export declare enum wxfModelClass {
     /**
      * A class not covered above; MODEL_ID identifies the producer's model.
      */
-    Other = 7
+    Other = 7,
+    /**
+     * Empirical climatological model evaluated at VALID_TIME_MS from
+     * geophysical indices, with no forecast run (pair with TIME_BASIS
+     * ValidTimeOnly).
+     */
+    EmpiricalClimatology = 8
 }
 //# sourceMappingURL=wxfModelClass.d.ts.map

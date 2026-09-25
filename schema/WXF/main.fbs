@@ -1,5 +1,5 @@
-// Hash: dc5dcbc0675859c122fef5ec28a0a2dbee87a7c5a164d494ff42604fd57948d8
-// Version: 1.208.3
+// Hash: ddc1e3e0a40da220c6a47f09199083e221b31601fcb90d05473d71db2eb80821
+// Version: 1.208.4
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -32,7 +32,11 @@ enum wxfModelClass : byte {
   /// Objective analysis at the initialisation time (lead 0).
   Analysis,
   /// A class not covered above; MODEL_ID identifies the producer's model.
-  Other
+  Other,
+  /// Empirical climatological model evaluated at VALID_TIME_MS from
+  /// geophysical indices, with no forecast run (pair with TIME_BASIS
+  /// ValidTimeOnly).
+  EmpiricalClimatology
 }
 
 /// Which realisation of an ensemble the field represents. Append new values
@@ -158,7 +162,11 @@ enum wxfLevelKind : byte {
   TopOfAtmosphere,
   /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
   /// a GeopotentialHeight field at this level, never implied by a pressure.
-  Tropopause
+  Tropopause,
+  /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+  /// For fields defined at altitude rather than on pressure levels (for
+  /// example the upper atmosphere).
+  HeightAboveEllipsoid
 }
 
 /// Temporal character of the value in each cell. Append new values only;

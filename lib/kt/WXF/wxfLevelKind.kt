@@ -36,5 +36,11 @@ class wxfLevelKind private constructor() {
          * a GeopotentialHeight field at this level, never implied by a pressure.
          */
         const val Tropopause: Byte = 6
+        /**
+         * Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+         * For fields defined at altitude rather than on pressure levels (for
+         * example the upper atmosphere).
+         */
+        const val HeightAboveEllipsoid: Byte = 7
     }
 }

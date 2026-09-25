@@ -652,8 +652,59 @@ COMMENT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Northward horizontal neutral-wind samples in meters per second, in the
+ * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+ */
+WIND_NORTH_M_PER_S(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+windNorthMPerSLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+windNorthMPerSArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Eastward horizontal neutral-wind samples in meters per second, in the
+ * local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+ */
+WIND_EAST_M_PER_S(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+windEastMPerSLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+windEastMPerSArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Wind model and release that produced the wind samples, including whether
+ * storm-time (disturbance) winds were added. Absent when no winds were
+ * evaluated; the wind arrays are then absent as well. Speed-derived samples
+ * (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+ */
+WIND_MODEL():string|null
+WIND_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+WIND_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startHFC(builder:flatbuffers.Builder) {
-  builder.startObject(47);
+  builder.startObject(50);
 }
 
 static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
@@ -1208,6 +1259,52 @@ static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset)
   builder.addFieldOffset(46, COMMENTOffset, 0);
 }
 
+static addWindNorthMPerS(builder:flatbuffers.Builder, WIND_NORTH_M_PER_SOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, WIND_NORTH_M_PER_SOffset, 0);
+}
+
+static createWindNorthMPerSVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createWindNorthMPerSVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createWindNorthMPerSVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startWindNorthMPerSVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addWindEastMPerS(builder:flatbuffers.Builder, WIND_EAST_M_PER_SOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, WIND_EAST_M_PER_SOffset, 0);
+}
+
+static createWindEastMPerSVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createWindEastMPerSVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createWindEastMPerSVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startWindEastMPerSVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addWindModel(builder:flatbuffers.Builder, WIND_MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(49, WIND_MODELOffset, 0);
+}
+
 static endHFC(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1270,7 +1367,10 @@ unpack(): HFCT {
     this.MASS_KG(),
     this.SURFACE_TEMPERATURE_K(),
     this.bb!.createScalarList<string>(this.ASSUMPTIONS.bind(this), this.assumptionsLength()),
-    this.COMMENT()
+    this.COMMENT(),
+    this.bb!.createScalarList<number>(this.WIND_NORTH_M_PER_S.bind(this), this.windNorthMPerSLength()),
+    this.bb!.createScalarList<number>(this.WIND_EAST_M_PER_S.bind(this), this.windEastMPerSLength()),
+    this.WIND_MODEL()
   );
 }
 
@@ -1323,6 +1423,9 @@ unpackTo(_o: HFCT): void {
   _o.SURFACE_TEMPERATURE_K = this.SURFACE_TEMPERATURE_K();
   _o.ASSUMPTIONS = this.bb!.createScalarList<string>(this.ASSUMPTIONS.bind(this), this.assumptionsLength());
   _o.COMMENT = this.COMMENT();
+  _o.WIND_NORTH_M_PER_S = this.bb!.createScalarList<number>(this.WIND_NORTH_M_PER_S.bind(this), this.windNorthMPerSLength());
+  _o.WIND_EAST_M_PER_S = this.bb!.createScalarList<number>(this.WIND_EAST_M_PER_S.bind(this), this.windEastMPerSLength());
+  _o.WIND_MODEL = this.WIND_MODEL();
 }
 }
 
@@ -1374,7 +1477,10 @@ constructor(
   public MASS_KG: number = 0.0,
   public SURFACE_TEMPERATURE_K: number = 0.0,
   public ASSUMPTIONS: (string)[] = [],
-  public COMMENT: string|Uint8Array|null = null
+  public COMMENT: string|Uint8Array|null = null,
+  public WIND_NORTH_M_PER_S: (number)[] = [],
+  public WIND_EAST_M_PER_S: (number)[] = [],
+  public WIND_MODEL: string|Uint8Array|null = null
 ){}
 
 
@@ -1417,6 +1523,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const BANK_ANGLE_DEG = HFC.createBankAngleDegVector(builder, this.BANK_ANGLE_DEG);
   const ASSUMPTIONS = HFC.createAssumptionsVector(builder, builder.createObjectOffsetList(this.ASSUMPTIONS));
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const WIND_NORTH_M_PER_S = HFC.createWindNorthMPerSVector(builder, this.WIND_NORTH_M_PER_S);
+  const WIND_EAST_M_PER_S = HFC.createWindEastMPerSVector(builder, this.WIND_EAST_M_PER_S);
+  const WIND_MODEL = (this.WIND_MODEL !== null ? builder.createString(this.WIND_MODEL!) : 0);
 
   HFC.startHFC(builder);
   HFC.addMessageId(builder, MESSAGE_ID);
@@ -1466,6 +1575,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   HFC.addSurfaceTemperatureK(builder, this.SURFACE_TEMPERATURE_K);
   HFC.addAssumptions(builder, ASSUMPTIONS);
   HFC.addComment(builder, COMMENT);
+  HFC.addWindNorthMPerS(builder, WIND_NORTH_M_PER_S);
+  HFC.addWindEastMPerS(builder, WIND_EAST_M_PER_S);
+  HFC.addWindModel(builder, WIND_MODEL);
 
   return HFC.endHFC(builder);
 }

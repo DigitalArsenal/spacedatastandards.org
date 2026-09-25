@@ -3,7 +3,7 @@
   "definitions": {
     "wxfModelClass" : {
       "type" : "string",
-      "enum": ["Unspecified", "MachineLearnedGlobalEnsemble", "NumericalGlobalEnsemble", "NumericalGlobalDeterministic", "NumericalRegional", "Reanalysis", "Analysis", "Other"]
+      "enum": ["Unspecified", "MachineLearnedGlobalEnsemble", "NumericalGlobalEnsemble", "NumericalGlobalDeterministic", "NumericalRegional", "Reanalysis", "Analysis", "Other", "EmpiricalClimatology"]
     },
     "wxfMemberKind" : {
       "type" : "string",
@@ -15,7 +15,7 @@
     },
     "wxfLevelKind" : {
       "type" : "string",
-      "enum": ["Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause"]
+      "enum": ["Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", "HeightAboveEllipsoid"]
     },
     "wxfTemporalKind" : {
       "type" : "string",

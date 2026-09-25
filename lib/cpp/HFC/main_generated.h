@@ -153,7 +153,10 @@ struct HFC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MASS_KG = 90,
     VT_SURFACE_TEMPERATURE_K = 92,
     VT_ASSUMPTIONS = 94,
-    VT_COMMENT = 96
+    VT_COMMENT = 96,
+    VT_WIND_NORTH_M_PER_S = 98,
+    VT_WIND_EAST_M_PER_S = 100,
+    VT_WIND_MODEL = 102
   };
   /// Producer-defined message identifier.
   const ::flatbuffers::String *MESSAGE_ID() const {
@@ -343,6 +346,23 @@ struct HFC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
+  /// Northward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  const ::flatbuffers::Vector<double> *WIND_NORTH_M_PER_S() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WIND_NORTH_M_PER_S);
+  }
+  /// Eastward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  const ::flatbuffers::Vector<double> *WIND_EAST_M_PER_S() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WIND_EAST_M_PER_S);
+  }
+  /// Wind model and release that produced the wind samples, including whether
+  /// storm-time (disturbance) winds were added. Absent when no winds were
+  /// evaluated; the wind arrays are then absent as well. Speed-derived samples
+  /// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+  const ::flatbuffers::String *WIND_MODEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_WIND_MODEL);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -433,6 +453,12 @@ struct HFC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfStrings(ASSUMPTIONS()) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_WIND_NORTH_M_PER_S) &&
+           verifier.VerifyVector(WIND_NORTH_M_PER_S()) &&
+           VerifyOffset(verifier, VT_WIND_EAST_M_PER_S) &&
+           verifier.VerifyVector(WIND_EAST_M_PER_S()) &&
+           VerifyOffset(verifier, VT_WIND_MODEL) &&
+           verifier.VerifyString(WIND_MODEL()) &&
            verifier.EndTable();
   }
 };
@@ -582,6 +608,15 @@ struct HFCBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(HFC::VT_COMMENT, COMMENT);
   }
+  void add_WIND_NORTH_M_PER_S(::flatbuffers::Offset<::flatbuffers::Vector<double>> WIND_NORTH_M_PER_S) {
+    fbb_.AddOffset(HFC::VT_WIND_NORTH_M_PER_S, WIND_NORTH_M_PER_S);
+  }
+  void add_WIND_EAST_M_PER_S(::flatbuffers::Offset<::flatbuffers::Vector<double>> WIND_EAST_M_PER_S) {
+    fbb_.AddOffset(HFC::VT_WIND_EAST_M_PER_S, WIND_EAST_M_PER_S);
+  }
+  void add_WIND_MODEL(::flatbuffers::Offset<::flatbuffers::String> WIND_MODEL) {
+    fbb_.AddOffset(HFC::VT_WIND_MODEL, WIND_MODEL);
+  }
   explicit HFCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -641,7 +676,10 @@ inline ::flatbuffers::Offset<HFC> CreateHFC(
     double MASS_KG = 0.0,
     double SURFACE_TEMPERATURE_K = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ASSUMPTIONS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WIND_NORTH_M_PER_S = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WIND_EAST_M_PER_S = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> WIND_MODEL = 0) {
   HFCBuilder builder_(_fbb);
   builder_.add_SURFACE_TEMPERATURE_K(SURFACE_TEMPERATURE_K);
   builder_.add_MASS_KG(MASS_KG);
@@ -649,6 +687,9 @@ inline ::flatbuffers::Offset<HFC> CreateHFC(
   builder_.add_REFERENCE_LENGTH_M(REFERENCE_LENGTH_M);
   builder_.add_REFERENCE_AREA_M2(REFERENCE_AREA_M2);
   builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_WIND_MODEL(WIND_MODEL);
+  builder_.add_WIND_EAST_M_PER_S(WIND_EAST_M_PER_S);
+  builder_.add_WIND_NORTH_M_PER_S(WIND_NORTH_M_PER_S);
   builder_.add_COMMENT(COMMENT);
   builder_.add_ASSUMPTIONS(ASSUMPTIONS);
   builder_.add_BANK_ANGLE_DEG(BANK_ANGLE_DEG);
@@ -741,7 +782,10 @@ inline ::flatbuffers::Offset<HFC> CreateHFCDirect(
     double MASS_KG = 0.0,
     double SURFACE_TEMPERATURE_K = 0.0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ASSUMPTIONS = nullptr,
-    const char *COMMENT = nullptr) {
+    const char *COMMENT = nullptr,
+    const std::vector<double> *WIND_NORTH_M_PER_S = nullptr,
+    const std::vector<double> *WIND_EAST_M_PER_S = nullptr,
+    const char *WIND_MODEL = nullptr) {
   auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -777,6 +821,9 @@ inline ::flatbuffers::Offset<HFC> CreateHFCDirect(
   auto BANK_ANGLE_DEG__ = BANK_ANGLE_DEG ? _fbb.CreateVector<double>(*BANK_ANGLE_DEG) : 0;
   auto ASSUMPTIONS__ = ASSUMPTIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ASSUMPTIONS) : 0;
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto WIND_NORTH_M_PER_S__ = WIND_NORTH_M_PER_S ? _fbb.CreateVector<double>(*WIND_NORTH_M_PER_S) : 0;
+  auto WIND_EAST_M_PER_S__ = WIND_EAST_M_PER_S ? _fbb.CreateVector<double>(*WIND_EAST_M_PER_S) : 0;
+  auto WIND_MODEL__ = WIND_MODEL ? _fbb.CreateString(WIND_MODEL) : 0;
   return CreateHFC(
       _fbb,
       MESSAGE_ID__,
@@ -825,7 +872,10 @@ inline ::flatbuffers::Offset<HFC> CreateHFCDirect(
       MASS_KG,
       SURFACE_TEMPERATURE_K,
       ASSUMPTIONS__,
-      COMMENT__);
+      COMMENT__,
+      WIND_NORTH_M_PER_S__,
+      WIND_EAST_M_PER_S__,
+      WIND_MODEL__);
 }
 
 inline const HFC *GetHFC(const void *buf) {

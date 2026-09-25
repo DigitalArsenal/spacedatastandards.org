@@ -11,7 +11,8 @@
         "NumericalRegional",
         "Reanalysis",
         "Analysis",
-        "Other"
+        "Other",
+        "EmpiricalClimatology"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -46,6 +47,10 @@
         "Other": {
           "value": 7,
           "description": "A class not covered above; MODEL_ID identifies the producer's model."
+        },
+        "EmpiricalClimatology": {
+          "value": 8,
+          "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
         }
       }
     },
@@ -291,7 +296,8 @@
         "MeanSeaLevel",
         "EntireAtmosphere",
         "TopOfAtmosphere",
-        "Tropopause"
+        "Tropopause",
+        "HeightAboveEllipsoid"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -323,6 +329,10 @@
         "Tropopause": {
           "value": 6,
           "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
+        },
+        "HeightAboveEllipsoid": {
+          "value": 7,
+          "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
         }
       }
     },
@@ -541,6 +551,10 @@
             "Other": {
               "value": 7,
               "description": "A class not covered above; MODEL_ID identifies the producer's model."
+            },
+            "EmpiricalClimatology": {
+              "value": 8,
+              "description": "Empirical climatological model evaluated at VALID_TIME_MS from geophysical indices, with no forecast run (pair with TIME_BASIS ValidTimeOnly)."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -838,6 +852,10 @@
             "Tropopause": {
               "value": 6,
               "description": "The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is a GeopotentialHeight field at this level, never implied by a pressure."
+            },
+            "HeightAboveEllipsoid": {
+              "value": 7,
+              "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
             }
           },
           "x-flatbuffer-default": "Surface"

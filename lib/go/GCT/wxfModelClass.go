@@ -37,6 +37,10 @@ const (
 	wxfModelClassAnalysis                     wxfModelClass = 6
 	/// A class not covered above; MODEL_ID identifies the producer's model.
 	wxfModelClassOther                        wxfModelClass = 7
+	/// Empirical climatological model evaluated at VALID_TIME_MS from
+	/// geophysical indices, with no forecast run (pair with TIME_BASIS
+	/// ValidTimeOnly).
+	wxfModelClassEmpiricalClimatology         wxfModelClass = 8
 )
 
 var EnumNameswxfModelClass = map[wxfModelClass]string{
@@ -48,6 +52,7 @@ var EnumNameswxfModelClass = map[wxfModelClass]string{
 	wxfModelClassReanalysis:                   "Reanalysis",
 	wxfModelClassAnalysis:                     "Analysis",
 	wxfModelClassOther:                        "Other",
+	wxfModelClassEmpiricalClimatology:         "EmpiricalClimatology",
 }
 
 var EnumValueswxfModelClass = map[string]wxfModelClass{
@@ -59,6 +64,7 @@ var EnumValueswxfModelClass = map[string]wxfModelClass{
 	"Reanalysis":                   wxfModelClassReanalysis,
 	"Analysis":                     wxfModelClassAnalysis,
 	"Other":                        wxfModelClassOther,
+	"EmpiricalClimatology":         wxfModelClassEmpiricalClimatology,
 }
 
 func (v wxfModelClass) String() string {

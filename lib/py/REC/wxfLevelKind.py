@@ -20,3 +20,7 @@ class wxfLevelKind(object):
     # The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
     # a GeopotentialHeight field at this level, never implied by a pressure.
     Tropopause = 6
+    # Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+    # For fields defined at altitude rather than on pressure levels (for
+    # example the upper atmosphere).
+    HeightAboveEllipsoid = 7

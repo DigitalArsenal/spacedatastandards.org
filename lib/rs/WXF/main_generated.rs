@@ -6,10 +6,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_MODEL_CLASS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_MODEL_CLASS: i8 = 7;
+pub const ENUM_MAX_WXF_MODEL_CLASS: i8 = 8;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_MODEL_CLASS: [wxfModelClass; 8] = [
+pub const ENUM_VALUES_WXF_MODEL_CLASS: [wxfModelClass; 9] = [
   wxfModelClass::Unspecified,
   wxfModelClass::MachineLearnedGlobalEnsemble,
   wxfModelClass::NumericalGlobalEnsemble,
@@ -18,6 +18,7 @@ pub const ENUM_VALUES_WXF_MODEL_CLASS: [wxfModelClass; 8] = [
   wxfModelClass::Reanalysis,
   wxfModelClass::Analysis,
   wxfModelClass::Other,
+  wxfModelClass::EmpiricalClimatology,
 ];
 
 /// Weather Forecast Field (WXF)
@@ -55,9 +56,13 @@ impl wxfModelClass {
   pub const Analysis: Self = Self(6);
   /// A class not covered above; MODEL_ID identifies the producer's model.
   pub const Other: Self = Self(7);
+  /// Empirical climatological model evaluated at VALID_TIME_MS from
+  /// geophysical indices, with no forecast run (pair with TIME_BASIS
+  /// ValidTimeOnly).
+  pub const EmpiricalClimatology: Self = Self(8);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_MAX: i8 = 8;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Unspecified,
     Self::MachineLearnedGlobalEnsemble,
@@ -67,6 +72,7 @@ impl wxfModelClass {
     Self::Reanalysis,
     Self::Analysis,
     Self::Other,
+    Self::EmpiricalClimatology,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -79,6 +85,7 @@ impl wxfModelClass {
       Self::Reanalysis => Some("Reanalysis"),
       Self::Analysis => Some("Analysis"),
       Self::Other => Some("Other"),
+      Self::EmpiricalClimatology => Some("EmpiricalClimatology"),
       _ => None,
     }
   }
@@ -517,10 +524,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfVariable {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_WXF_LEVEL_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 6;
+pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 7;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 7] = [
+pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 8] = [
   wxfLevelKind::Surface,
   wxfLevelKind::HeightAboveGround,
   wxfLevelKind::PressureLevel,
@@ -528,6 +535,7 @@ pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 7] = [
   wxfLevelKind::EntireAtmosphere,
   wxfLevelKind::TopOfAtmosphere,
   wxfLevelKind::Tropopause,
+  wxfLevelKind::HeightAboveEllipsoid,
 ];
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -552,9 +560,13 @@ impl wxfLevelKind {
   /// The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
   /// a GeopotentialHeight field at this level, never implied by a pressure.
   pub const Tropopause: Self = Self(6);
+  /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
+  /// For fields defined at altitude rather than on pressure levels (for
+  /// example the upper atmosphere).
+  pub const HeightAboveEllipsoid: Self = Self(7);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_MAX: i8 = 7;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Surface,
     Self::HeightAboveGround,
@@ -563,6 +575,7 @@ impl wxfLevelKind {
     Self::EntireAtmosphere,
     Self::TopOfAtmosphere,
     Self::Tropopause,
+    Self::HeightAboveEllipsoid,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -574,6 +587,7 @@ impl wxfLevelKind {
       Self::EntireAtmosphere => Some("EntireAtmosphere"),
       Self::TopOfAtmosphere => Some("TopOfAtmosphere"),
       Self::Tropopause => Some("Tropopause"),
+      Self::HeightAboveEllipsoid => Some("HeightAboveEllipsoid"),
       _ => None,
     }
   }

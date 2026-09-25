@@ -275,6 +275,9 @@ impl<'a> HFC<'a> {
   pub const VT_SURFACE_TEMPERATURE_K: ::flatbuffers::VOffsetT = 92;
   pub const VT_ASSUMPTIONS: ::flatbuffers::VOffsetT = 94;
   pub const VT_COMMENT: ::flatbuffers::VOffsetT = 96;
+  pub const VT_WIND_NORTH_M_PER_S: ::flatbuffers::VOffsetT = 98;
+  pub const VT_WIND_EAST_M_PER_S: ::flatbuffers::VOffsetT = 100;
+  pub const VT_WIND_MODEL: ::flatbuffers::VOffsetT = 102;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -292,6 +295,9 @@ impl<'a> HFC<'a> {
     builder.add_REFERENCE_LENGTH_M(args.REFERENCE_LENGTH_M);
     builder.add_REFERENCE_AREA_M2(args.REFERENCE_AREA_M2);
     builder.add_STEP_SIZE(args.STEP_SIZE);
+    if let Some(x) = args.WIND_MODEL { builder.add_WIND_MODEL(x); }
+    if let Some(x) = args.WIND_EAST_M_PER_S { builder.add_WIND_EAST_M_PER_S(x); }
+    if let Some(x) = args.WIND_NORTH_M_PER_S { builder.add_WIND_NORTH_M_PER_S(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     if let Some(x) = args.ASSUMPTIONS { builder.add_ASSUMPTIONS(x); }
     if let Some(x) = args.BANK_ANGLE_DEG { builder.add_BANK_ANGLE_DEG(x); }
@@ -460,6 +466,15 @@ impl<'a> HFC<'a> {
     let COMMENT = self.COMMENT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let WIND_NORTH_M_PER_S = self.WIND_NORTH_M_PER_S().map(|x| {
+      x.into_iter().collect()
+    });
+    let WIND_EAST_M_PER_S = self.WIND_EAST_M_PER_S().map(|x| {
+      x.into_iter().collect()
+    });
+    let WIND_MODEL = self.WIND_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     HFCT {
       MESSAGE_ID,
       CREATION_DATE,
@@ -508,6 +523,9 @@ impl<'a> HFC<'a> {
       SURFACE_TEMPERATURE_K,
       ASSUMPTIONS,
       COMMENT,
+      WIND_NORTH_M_PER_S,
+      WIND_EAST_M_PER_S,
+      WIND_MODEL,
     }
   }
 
@@ -887,6 +905,35 @@ impl<'a> HFC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(HFC::VT_COMMENT, None)}
   }
+  /// Northward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  #[inline]
+  pub fn WIND_NORTH_M_PER_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(HFC::VT_WIND_NORTH_M_PER_S, None)}
+  }
+  /// Eastward horizontal neutral-wind samples in meters per second, in the
+  /// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+  #[inline]
+  pub fn WIND_EAST_M_PER_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(HFC::VT_WIND_EAST_M_PER_S, None)}
+  }
+  /// Wind model and release that produced the wind samples, including whether
+  /// storm-time (disturbance) winds were added. Absent when no winds were
+  /// evaluated; the wind arrays are then absent as well. Speed-derived samples
+  /// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+  #[inline]
+  pub fn WIND_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(HFC::VT_WIND_MODEL, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for HFC<'_> {
@@ -942,6 +989,9 @@ impl ::flatbuffers::Verifiable for HFC<'_> {
      .visit_field::<f64>("SURFACE_TEMPERATURE_K", Self::VT_SURFACE_TEMPERATURE_K, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ASSUMPTIONS", Self::VT_ASSUMPTIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WIND_NORTH_M_PER_S", Self::VT_WIND_NORTH_M_PER_S, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WIND_EAST_M_PER_S", Self::VT_WIND_EAST_M_PER_S, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WIND_MODEL", Self::VT_WIND_MODEL, false)?
      .finish();
     Ok(())
   }
@@ -994,6 +1044,9 @@ pub struct HFCArgs<'a> {
     pub SURFACE_TEMPERATURE_K: f64,
     pub ASSUMPTIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WIND_NORTH_M_PER_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub WIND_EAST_M_PER_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub WIND_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for HFCArgs<'a> {
   #[inline]
@@ -1046,6 +1099,9 @@ impl<'a> Default for HFCArgs<'a> {
       SURFACE_TEMPERATURE_K: 0.0,
       ASSUMPTIONS: None,
       COMMENT: None,
+      WIND_NORTH_M_PER_S: None,
+      WIND_EAST_M_PER_S: None,
+      WIND_MODEL: None,
     }
   }
 }
@@ -1244,6 +1300,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> HFCBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(HFC::VT_COMMENT, COMMENT);
   }
   #[inline]
+  pub fn add_WIND_NORTH_M_PER_S(&mut self, WIND_NORTH_M_PER_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(HFC::VT_WIND_NORTH_M_PER_S, WIND_NORTH_M_PER_S);
+  }
+  #[inline]
+  pub fn add_WIND_EAST_M_PER_S(&mut self, WIND_EAST_M_PER_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(HFC::VT_WIND_EAST_M_PER_S, WIND_EAST_M_PER_S);
+  }
+  #[inline]
+  pub fn add_WIND_MODEL(&mut self, WIND_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(HFC::VT_WIND_MODEL, WIND_MODEL);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> HFCBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     HFCBuilder {
@@ -1308,6 +1376,9 @@ impl ::core::fmt::Debug for HFC<'_> {
       ds.field("SURFACE_TEMPERATURE_K", &self.SURFACE_TEMPERATURE_K());
       ds.field("ASSUMPTIONS", &self.ASSUMPTIONS());
       ds.field("COMMENT", &self.COMMENT());
+      ds.field("WIND_NORTH_M_PER_S", &self.WIND_NORTH_M_PER_S());
+      ds.field("WIND_EAST_M_PER_S", &self.WIND_EAST_M_PER_S());
+      ds.field("WIND_MODEL", &self.WIND_MODEL());
       ds.finish()
   }
 }
@@ -1361,6 +1432,9 @@ pub struct HFCT {
   pub SURFACE_TEMPERATURE_K: f64,
   pub ASSUMPTIONS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub COMMENT: Option<alloc::string::String>,
+  pub WIND_NORTH_M_PER_S: Option<alloc::vec::Vec<f64>>,
+  pub WIND_EAST_M_PER_S: Option<alloc::vec::Vec<f64>>,
+  pub WIND_MODEL: Option<alloc::string::String>,
 }
 impl Default for HFCT {
   fn default() -> Self {
@@ -1412,6 +1486,9 @@ impl Default for HFCT {
       SURFACE_TEMPERATURE_K: 0.0,
       ASSUMPTIONS: None,
       COMMENT: None,
+      WIND_NORTH_M_PER_S: None,
+      WIND_EAST_M_PER_S: None,
+      WIND_MODEL: None,
     }
   }
 }
@@ -1543,6 +1620,15 @@ impl HFCT {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let WIND_NORTH_M_PER_S = self.WIND_NORTH_M_PER_S.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let WIND_EAST_M_PER_S = self.WIND_EAST_M_PER_S.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let WIND_MODEL = self.WIND_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     HFC::create(_fbb, &HFCArgs{
       MESSAGE_ID,
       CREATION_DATE,
@@ -1591,6 +1677,9 @@ impl HFCT {
       SURFACE_TEMPERATURE_K,
       ASSUMPTIONS,
       COMMENT,
+      WIND_NORTH_M_PER_S,
+      WIND_EAST_M_PER_S,
+      WIND_MODEL,
     })
   }
 }

@@ -1345,8 +1345,112 @@ func (rcv *HFC) Comment() []byte {
 }
 
 /// Additional comments.
+/// Northward horizontal neutral-wind samples in meters per second, in the
+/// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+func (rcv *HFC) WIND_NORTH_M_PER_S(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *HFC) WindNorthMPerS(j int) float64 {
+	return rcv.WIND_NORTH_M_PER_S(j)
+}
+
+func (rcv *HFC) WIND_NORTH_M_PER_SLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *HFC) WindNorthMPerSLength() int {
+	return rcv.WIND_NORTH_M_PER_SLength()
+}
+
+/// Northward horizontal neutral-wind samples in meters per second, in the
+/// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+func (rcv *HFC) MutateWIND_NORTH_M_PER_S(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *HFC) MutateWindNorthMPerS(j int, n float64) bool {
+	return rcv.MutateWIND_NORTH_M_PER_S(j, n)
+}
+
+/// Eastward horizontal neutral-wind samples in meters per second, in the
+/// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+func (rcv *HFC) WIND_EAST_M_PER_S(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *HFC) WindEastMPerS(j int) float64 {
+	return rcv.WIND_EAST_M_PER_S(j)
+}
+
+func (rcv *HFC) WIND_EAST_M_PER_SLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *HFC) WindEastMPerSLength() int {
+	return rcv.WIND_EAST_M_PER_SLength()
+}
+
+/// Eastward horizontal neutral-wind samples in meters per second, in the
+/// local geodetic frame at each sample position. Parallel to LATITUDE_DEG.
+func (rcv *HFC) MutateWIND_EAST_M_PER_S(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *HFC) MutateWindEastMPerS(j int, n float64) bool {
+	return rcv.MutateWIND_EAST_M_PER_S(j, n)
+}
+
+/// Wind model and release that produced the wind samples, including whether
+/// storm-time (disturbance) winds were added. Absent when no winds were
+/// evaluated; the wind arrays are then absent as well. Speed-derived samples
+/// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
+func (rcv *HFC) WIND_MODEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *HFC) WindModel() []byte {
+	return rcv.WIND_MODEL()
+}
+
+/// Wind model and release that produced the wind samples, including whether
+/// storm-time (disturbance) winds were added. Absent when no winds were
+/// evaluated; the wind arrays are then absent as well. Speed-derived samples
+/// (MACH, DYNAMIC_PRESSURE_PA) are unchanged by the wind samples.
 func HFCStart(builder *flatbuffers.Builder) {
-	builder.StartObject(47)
+	builder.StartObject(50)
 }
 func HFCAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MESSAGE_ID), 0)
@@ -1761,6 +1865,36 @@ func HFCAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 }
 func HFCAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	HFCAddCOMMENT(builder, COMMENT)
+}
+func HFCAddWIND_NORTH_M_PER_S(builder *flatbuffers.Builder, WIND_NORTH_M_PER_S flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(WIND_NORTH_M_PER_S), 0)
+}
+func HFCAddWindNorthMPerS(builder *flatbuffers.Builder, WIND_NORTH_M_PER_S flatbuffers.UOffsetT) {
+	HFCAddWIND_NORTH_M_PER_S(builder, WIND_NORTH_M_PER_S)
+}
+func HFCStartWIND_NORTH_M_PER_SVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func HFCStartWindNorthMPerSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HFCStartWIND_NORTH_M_PER_SVector(builder, numElems)
+}
+func HFCAddWIND_EAST_M_PER_S(builder *flatbuffers.Builder, WIND_EAST_M_PER_S flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(WIND_EAST_M_PER_S), 0)
+}
+func HFCAddWindEastMPerS(builder *flatbuffers.Builder, WIND_EAST_M_PER_S flatbuffers.UOffsetT) {
+	HFCAddWIND_EAST_M_PER_S(builder, WIND_EAST_M_PER_S)
+}
+func HFCStartWIND_EAST_M_PER_SVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func HFCStartWindEastMPerSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HFCStartWIND_EAST_M_PER_SVector(builder, numElems)
+}
+func HFCAddWIND_MODEL(builder *flatbuffers.Builder, WIND_MODEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(WIND_MODEL), 0)
+}
+func HFCAddWindModel(builder *flatbuffers.Builder, WIND_MODEL flatbuffers.UOffsetT) {
+	HFCAddWIND_MODEL(builder, WIND_MODEL)
 }
 func HFCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
