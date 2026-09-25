@@ -872,7 +872,7 @@ CN_N           = 6.789e-3`
         const manifest = await response.json();
         schemaCount = Object.keys(manifest.STANDARDS || {}).length;
       } catch (e) {
-        schemaCount = 166; // Fallback count
+        schemaCount = 250; // Fallback count
       }
     })();
 
@@ -1607,6 +1607,7 @@ CN_N           = 6.789e-3`
         <a href="/download" use:link class="btn btn-primary">Download All</a>
         <a href="/docs" use:link class="btn btn-primary">Documentation</a>
       </div>
+      <p class="cta-subtitle">Contact <a href="mailto:tj@edgesource.com">tj@edgesource.com</a></p>
     </div>
   </div>
 </section>

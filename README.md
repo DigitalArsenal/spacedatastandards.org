@@ -243,7 +243,7 @@ Space Data Standards supports 13 programming languages, each with its own packag
 
 Contributions are welcome. To propose changes or improvements to the existing FlatBuffer IDLs, please submit a pull request or open an issue for discussion.
 
-For more detailed discussions or to request new features, reach out via email at [spacestandards@digitalarsenal.io](mailto:spacestandards@digitalarsenal.io), or by [opening an issue](https://github.com/DigitalArsenal/spacedatastandards.org/issues) on this repository.
+For more detailed discussions or to request new features, reach out via email at [tj@edgesource.com](mailto:tj@edgesource.com), or by [opening an issue](https://github.com/DigitalArsenal/spacedatastandards.org/issues) on this repository.
 
 ## Documentation
 
