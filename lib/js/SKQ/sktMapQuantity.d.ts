@@ -1,0 +1,41 @@
+/**
+ * Physical quantity a map pixel states.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum sktMapQuantity {
+    UNSPECIFIED = 0,
+    /**
+     * Surface brightness, MAP_UNITS per steradian or per square arcsecond as
+     * MAP_UNITS states.
+     */
+    SURFACE_BRIGHTNESS = 1,
+    /**
+     * Brightness temperature, kelvin.
+     */
+    BRIGHTNESS_TEMPERATURE = 2,
+    /**
+     * Detected counts per pixel.
+     */
+    COUNTS = 3,
+    /**
+     * Counts per unit exposure (a rate map).
+     */
+    COUNT_RATE = 4,
+    /**
+     * Exposure per pixel.
+     */
+    EXPOSURE = 5,
+    /**
+     * Probability per pixel.
+     */
+    PROBABILITY = 6,
+    /**
+     * Surface density of sources per pixel.
+     */
+    SOURCE_DENSITY = 7,
+    /**
+     * Quantity named in MAP_QUANTITY_NAME.
+     */
+    OTHER = 8
+}
+//# sourceMappingURL=sktMapQuantity.d.ts.map

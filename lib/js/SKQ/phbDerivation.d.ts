@@ -1,0 +1,22 @@
+/**
+ * How a measurement was obtained.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum phbDerivation {
+    UNSPECIFIED = 0,
+    /**
+     * Observed in this band.
+     */
+    MEASURED = 1,
+    /**
+     * Converted from a measurement in another band or system by a stated
+     * transformation.
+     */
+    TRANSFORMED = 2,
+    /**
+     * Synthesised from a spectral energy distribution or a model atmosphere;
+     * never observed in this band.
+     */
+    MODELLED = 3
+}
+//# sourceMappingURL=phbDerivation.d.ts.map

@@ -2009,6 +2009,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "LINEAR", "SQUARE_ROOT", "LOGARITHMIC", "ASINH", "HISTOGRAM_EQUALIZED"]
     },
+    "skqQueryKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "APPARENT_PLACES", "SYNTHETIC_PHOTOMETRY", "CONE", "FIELD_OF_VIEW", "IDENTIFY", "OCCULTATION", "BRIGHT_STAR_EXCLUSION", "INGEST"]
+    },
+    "skrStatus" : {
+      "type" : "string",
+      "enum": ["OK", "UNSOLVED", "TOO_FEW_DETECTIONS", "NO_CATALOG", "BAD_REQUEST"]
+    },
     "slpProblemKind" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "TARGET", "OPTIMIZE"]
@@ -2447,7 +2455,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS", "ICN", "TRP", "TRV", "ACT", "AGR", "NDS", "NST", "QRP", "TCT", "WXF", "CLM", "GCT", "CQR", "RPC", "CSO", "PHB", "SKT"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP", "CMR", "TBS", "CCT", "ACI", "CVP", "RFL", "RFS", "TRS", "GNP", "DTT", "AVL", "TFN", "TMS", "VEP", "EGP", "APL", "EMC", "EPF", "GEL", "PAP", "RSD", "IRM", "VCF", "STX", "TXS", "BPF", "EVL", "PCE", "NCD", "MEM", "ODR", "TRH", "SLP", "PSS", "ICN", "TRP", "TRV", "ACT", "AGR", "NDS", "NST", "QRP", "TCT", "WXF", "CLM", "GCT", "CQR", "RPC", "CSO", "PHB", "SKT", "SKQ", "SKR"]
     },
     "LKS" : {
       "type" : "object",
@@ -40043,6 +40051,403 @@
       "required" : ["LAYER_ID"],
       "additionalProperties" : false
     },
+    "SKQDetection" : {
+      "type" : "object",
+      "description" : "A star detected by a camera: a direction in the camera frame.",
+      "properties" : {
+        "X" : {
+                "type" : "number",
+                "description" : "Direction in the camera frame; any non-zero length."
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "BRIGHTNESS" : {
+                "type" : "number",
+                "description" : "Relative brightness; larger is brighter. Orders the detections."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKQTrack" : {
+      "type" : "object",
+      "description" : "A body's apparent path across the sky over an interval, and its disc.",
+      "properties" : {
+        "START_RA_DEG" : {
+                "type" : "number",
+                "description" : "Direction of the body's centre at the start of the interval."
+              },
+        "START_DEC_DEG" : {
+                "type" : "number"
+              },
+        "END_RA_DEG" : {
+                "type" : "number",
+                "description" : "Direction at the end; equal to the start for an instant."
+              },
+        "END_DEC_DEG" : {
+                "type" : "number"
+              },
+        "RADIUS_DEG" : {
+                "type" : "number",
+                "description" : "Angular radius of the body's disc."
+              },
+        "BODY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Caller's identifier for the body, echoed in the result."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKQPointing" : {
+      "type" : "object",
+      "description" : "A sensor pointing to check for bright stars.",
+      "properties" : {
+        "RA_DEG" : {
+                "type" : "number"
+              },
+        "DEC_DEG" : {
+                "type" : "number"
+              },
+        "POINTING_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Caller's identifier for the pointing, echoed in the result."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKQ" : {
+      "type" : "object",
+      "description" : "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+      "properties" : {
+        "QUERY_ID" : {
+                "type" : "string",
+                "description" : "Caller's identifier, echoed in the result."
+              },
+        "QUERY_KIND" : {
+                "$ref" : "#/definitions/skqQueryKind",
+                "description" : "What is asked."
+              },
+        "EPOCH_JD_TT" : {
+                "type" : "number",
+                "description" : "Whole part of the epoch, Julian Date (TT)."
+              },
+        "EPOCH_JD_TT_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction added to EPOCH_JD_TT, days."
+              },
+        "OBSERVER_ID" : {
+                "type" : "string",
+                "description" : "Name of the observer, carried into tiles and results."
+              },
+        "OBSERVER_POSITION_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Observer's geocentric position on GCRS axes, metres; three entries."
+              },
+        "OBSERVER_VELOCITY_M_PER_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries."
+              },
+        "PLACE" : {
+                "$ref" : "#/definitions/sktPlaceKind",
+                "description" : "How far the reduction goes."
+              },
+        "BAND_ID" : {
+                "type" : "string",
+                "description" : "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID."
+              },
+        "MAG_LIMIT" : {
+                "type" : "number",
+                "description" : "Faintest magnitude reported. Absent: no limit."
+              },
+        "MAX_RESULTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Largest number of rows reported; 0 for no cap."
+              },
+        "TILE_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "APPARENT_PLACES: HEALPix order of the output tiles."
+              },
+        "COLOR_ENCODING" : {
+                "$ref" : "#/definitions/sktColorEncoding",
+                "description" : "APPARENT_PLACES: what each point's COLOR holds."
+              },
+        "COLOR_BLUE_BAND_ID" : {
+                "type" : "string",
+                "description" : "APPARENT_PLACES: bands of a COLOR_INDEX colour."
+              },
+        "COLOR_RED_BAND_ID" : {
+                "type" : "string"
+              },
+        "LAYER_ID" : {
+                "type" : "string",
+                "description" : "APPARENT_PLACES: LAYER_ID of the output tiles."
+              },
+        "BAND_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SYNTHETIC_PHOTOMETRY: bands to report."
+              },
+        "RA_DEG" : {
+                "type" : "number",
+                "description" : "CONE and FIELD_OF_VIEW: centre or boresight."
+              },
+        "DEC_DEG" : {
+                "type" : "number"
+              },
+        "RADIUS_DEG" : {
+                "type" : "number",
+                "description" : "CONE: radius."
+              },
+        "HALF_WIDTH_DEG" : {
+                "type" : "number",
+                "description" : "FIELD_OF_VIEW: half-extent along the field's x axis."
+              },
+        "HALF_HEIGHT_DEG" : {
+                "type" : "number",
+                "description" : "FIELD_OF_VIEW: half-extent along the field's y axis."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "FIELD_OF_VIEW: position angle of the field's +y axis, east of north."
+              },
+        "DETECTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKQDetection"},
+                "description" : "IDENTIFY: detected stars."
+              },
+        "TOLERANCE_ARCSEC" : {
+                "type" : "number",
+                "description" : "IDENTIFY: largest angle between a detection and its catalogue star."
+              },
+        "MAX_FIELD_DEG" : {
+                "type" : "number",
+                "description" : "IDENTIFY: largest angle between two detections (the field diagonal)."
+              },
+        "TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKQTrack"},
+                "description" : "OCCULTATION: bodies and their tracks."
+              },
+        "POINTINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKQPointing"},
+                "description" : "BRIGHT_STAR_EXCLUSION: pointings to check."
+              },
+        "EXCLUSION_RADIUS_DEG" : {
+                "type" : "number",
+                "description" : "BRIGHT_STAR_EXCLUSION: radius around each pointing."
+              },
+        "MAG_THRESHOLD" : {
+                "type" : "number",
+                "description" : "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKRHit" : {
+      "type" : "object",
+      "description" : "A row that answers a CONE or FIELD_OF_VIEW query.",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SKTPoint FLAGS bits for the row."
+              },
+        "RA_DEG" : {
+                "type" : "number"
+              },
+        "DEC_DEG" : {
+                "type" : "number"
+              },
+        "SEPARATION_DEG" : {
+                "type" : "number",
+                "description" : "Angle from the centre or boresight."
+              },
+        "FIELD_X_DEG" : {
+                "type" : "number",
+                "description" : "Field coordinates: angles along the field's x and y axes (the\nstandard coordinates of a cone query). NaN behind the tangent plane."
+              },
+        "FIELD_Y_DEG" : {
+                "type" : "number"
+              },
+        "MAG" : {
+                "type" : "number",
+                "description" : "Magnitude in the query's band; NaN when unknown."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKROccultation" : {
+      "type" : "object",
+      "description" : "A row a body's disc passes over.",
+      "properties" : {
+        "BODY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MIN_SEPARATION_DEG" : {
+                "type" : "number",
+                "description" : "Closest approach of the body's centre to the row."
+              },
+        "TRACK_FRACTION" : {
+                "type" : "number",
+                "description" : "Where along the track the closest approach falls, from 0 (start) to 1\n(end)."
+              },
+        "MAG" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKRExclusion" : {
+      "type" : "object",
+      "description" : "Bright rows near one pointing.",
+      "properties" : {
+        "POINTING_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "VIOLATING_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Rows within the radius at least as bright as the threshold."
+              },
+        "BRIGHTEST_ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The brightest of them; 4294967295 when there are none."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BRIGHTEST_SEPARATION_DEG" : {
+                "type" : "number"
+              },
+        "BRIGHTEST_MAG" : {
+                "type" : "number"
+              },
+        "RESERVED2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKR" : {
+      "type" : "object",
+      "description" : "Sky Query Result: the answer to one `$SKQ`.",
+      "properties" : {
+        "QUERY_ID" : {
+                "type" : "string",
+                "description" : "QUERY_ID of the query answered."
+              },
+        "QUERY_KIND" : {
+                "$ref" : "#/definitions/skqQueryKind"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/skrStatus"
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "Why a query failed."
+              },
+        "EPOCH_JD_TT" : {
+                "type" : "number",
+                "description" : "Epoch and reduction the answer is for, copied from the query."
+              },
+        "EPOCH_JD_TT_FRACTION" : {
+                "type" : "number"
+              },
+        "PLACE" : {
+                "$ref" : "#/definitions/sktPlaceKind"
+              },
+        "ROW_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Catalogue rows held."
+              },
+        "ROWS_ADDED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "INGEST: rows added by the ingest answered."
+              },
+        "REJECTED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "INGEST: records refused by verification."
+              },
+        "BAND_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Band descriptors held."
+              },
+        "MATCHED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied."
+              },
+        "HITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKRHit"}
+              },
+        "BAND_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SYNTHETIC_PHOTOMETRY: bands of the table's columns."
+              },
+        "MAGNITUDES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major."
+              },
+        "DERIVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/phbDerivation"},
+                "description" : "SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout."
+              },
+        "MATCHED_DETECTIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "IDENTIFY: detections matched."
+              },
+        "ROTATION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "IDENTIFY: camera-to-GCRS rotation, nine entries, row-major."
+              },
+        "QUATERNION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "IDENTIFY: the same rotation as (w, x, y, z)."
+              },
+        "RESIDUAL_RMS_ARCSEC" : {
+                "type" : "number",
+                "description" : "IDENTIFY: RMS angle between matched detections and their rows."
+              },
+        "BORESIGHT_RA_DEG" : {
+                "type" : "number",
+                "description" : "IDENTIFY: direction of the camera's +z axis."
+              },
+        "BORESIGHT_DEC_DEG" : {
+                "type" : "number"
+              },
+        "MATCHED_ROWS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "IDENTIFY: row matched to each detection, in detection order;\n4294967295 when unmatched."
+              },
+        "OCCULTATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKROccultation"},
+                "description" : "OCCULTATION: rows passed over."
+              },
+        "EXCLUSIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKRExclusion"},
+                "description" : "BRIGHT_STAR_EXCLUSION: one verdict per pointing."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SLPVariable" : {
       "type" : "object",
       "properties" : {
@@ -48375,7 +48780,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" },{ "$ref" : "#/definitions/ICN" },{ "$ref" : "#/definitions/TRP" },{ "$ref" : "#/definitions/TRV" },{ "$ref" : "#/definitions/ACT" },{ "$ref" : "#/definitions/AGR" },{ "$ref" : "#/definitions/NDS" },{ "$ref" : "#/definitions/NST" },{ "$ref" : "#/definitions/QRP" },{ "$ref" : "#/definitions/TCT" },{ "$ref" : "#/definitions/WXF" },{ "$ref" : "#/definitions/CLM" },{ "$ref" : "#/definitions/GCT" },{ "$ref" : "#/definitions/CQR" },{ "$ref" : "#/definitions/RPC" },{ "$ref" : "#/definitions/CSO" },{ "$ref" : "#/definitions/PHB" },{ "$ref" : "#/definitions/SKT" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" },{ "$ref" : "#/definitions/CMR" },{ "$ref" : "#/definitions/TBS" },{ "$ref" : "#/definitions/CCT" },{ "$ref" : "#/definitions/ACI" },{ "$ref" : "#/definitions/CVP" },{ "$ref" : "#/definitions/RFL" },{ "$ref" : "#/definitions/RFS" },{ "$ref" : "#/definitions/TRS" },{ "$ref" : "#/definitions/GNP" },{ "$ref" : "#/definitions/DTT" },{ "$ref" : "#/definitions/AVL" },{ "$ref" : "#/definitions/TFN" },{ "$ref" : "#/definitions/TMS" },{ "$ref" : "#/definitions/VEP" },{ "$ref" : "#/definitions/EGP" },{ "$ref" : "#/definitions/APL" },{ "$ref" : "#/definitions/EMC" },{ "$ref" : "#/definitions/EPF" },{ "$ref" : "#/definitions/GEL" },{ "$ref" : "#/definitions/PAP" },{ "$ref" : "#/definitions/RSD" },{ "$ref" : "#/definitions/IRM" },{ "$ref" : "#/definitions/VCF" },{ "$ref" : "#/definitions/STX" },{ "$ref" : "#/definitions/TXS" },{ "$ref" : "#/definitions/BPF" },{ "$ref" : "#/definitions/EVL" },{ "$ref" : "#/definitions/PCE" },{ "$ref" : "#/definitions/NCD" },{ "$ref" : "#/definitions/MEM" },{ "$ref" : "#/definitions/ODR" },{ "$ref" : "#/definitions/TRH" },{ "$ref" : "#/definitions/SLP" },{ "$ref" : "#/definitions/PSS" },{ "$ref" : "#/definitions/ICN" },{ "$ref" : "#/definitions/TRP" },{ "$ref" : "#/definitions/TRV" },{ "$ref" : "#/definitions/ACT" },{ "$ref" : "#/definitions/AGR" },{ "$ref" : "#/definitions/NDS" },{ "$ref" : "#/definitions/NST" },{ "$ref" : "#/definitions/QRP" },{ "$ref" : "#/definitions/TCT" },{ "$ref" : "#/definitions/WXF" },{ "$ref" : "#/definitions/CLM" },{ "$ref" : "#/definitions/GCT" },{ "$ref" : "#/definitions/CQR" },{ "$ref" : "#/definitions/RPC" },{ "$ref" : "#/definitions/CSO" },{ "$ref" : "#/definitions/PHB" },{ "$ref" : "#/definitions/SKT" },{ "$ref" : "#/definitions/SKQ" },{ "$ref" : "#/definitions/SKR" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

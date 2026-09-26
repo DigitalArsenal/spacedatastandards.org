@@ -1,0 +1,41 @@
+/**
+ * What a sky query asks.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum skqQueryKind {
+    UNSPECIFIED = 0,
+    /**
+     * Place every row for the observer; answered with `$SKT` tiles.
+     */
+    APPARENT_PLACES = 1,
+    /**
+     * Brightness of every row in each of BAND_IDS.
+     */
+    SYNTHETIC_PHOTOMETRY = 2,
+    /**
+     * Rows within RADIUS_DEG of RA_DEG / DEC_DEG.
+     */
+    CONE = 3,
+    /**
+     * Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the
+     * boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG.
+     */
+    FIELD_OF_VIEW = 4,
+    /**
+     * Identify DETECTIONS with no prior pointing and solve the camera attitude.
+     */
+    IDENTIFY = 5,
+    /**
+     * Rows each of TRACKS passes over.
+     */
+    OCCULTATION = 6,
+    /**
+     * Bright rows near each of POINTINGS.
+     */
+    BRIGHT_STAR_EXCLUSION = 7,
+    /**
+     * Counts after catalogue records were ingested.
+     */
+    INGEST = 8
+}
+//# sourceMappingURL=skqQueryKind.d.ts.map

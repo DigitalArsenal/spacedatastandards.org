@@ -271,6 +271,8 @@ public enum RecordType : byte
   CSO = 250,
   PHB = 251,
   SKT = 252,
+  SKQ = 253,
+  SKR = 254,
 };
 
 public class RecordTypeUnion {
@@ -787,6 +789,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPHB(PHBT _phb) { return new RecordTypeUnion{ Type = RecordType.PHB, Value = _phb }; }
   public SKTT AsSKT() { return this.As<SKTT>(); }
   public static RecordTypeUnion FromSKT(SKTT _skt) { return new RecordTypeUnion{ Type = RecordType.SKT, Value = _skt }; }
+  public SKQT AsSKQ() { return this.As<SKQT>(); }
+  public static RecordTypeUnion FromSKQ(SKQT _skq) { return new RecordTypeUnion{ Type = RecordType.SKQ, Value = _skq }; }
+  public SKRT AsSKR() { return this.As<SKRT>(); }
+  public static RecordTypeUnion FromSKR(SKRT _skr) { return new RecordTypeUnion{ Type = RecordType.SKR, Value = _skr }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1043,6 +1049,8 @@ public class RecordTypeUnion {
       case RecordType.CSO: return CSO.Pack(builder, _o.AsCSO()).Value;
       case RecordType.PHB: return PHB.Pack(builder, _o.AsPHB()).Value;
       case RecordType.SKT: return SKT.Pack(builder, _o.AsSKT()).Value;
+      case RecordType.SKQ: return SKQ.Pack(builder, _o.AsSKQ()).Value;
+      case RecordType.SKR: return SKR.Pack(builder, _o.AsSKR()).Value;
     }
   }
 }
@@ -1811,6 +1819,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.SKT:
         result = SKTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SKQ:
+        result = SKQVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SKR:
+        result = SKRVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

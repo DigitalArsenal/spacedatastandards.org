@@ -272,5 +272,7 @@ class RecordType private constructor() {
         const val CSO: UByte = 250u
         const val PHB: UByte = 251u
         const val SKT: UByte = 252u
+        const val SKQ: UByte = 253u
+        const val SKR: UByte = 254u
     }
 }

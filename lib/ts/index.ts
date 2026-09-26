@@ -204,6 +204,8 @@ export * as SHC from './SHC/main.js';
 export * as SHW from './SHW/main.js';
 export * as SIT from './SIT/main.js';
 export * as SKI from './SKI/main.js';
+export * as SKQ from './SKQ/main.js';
+export * as SKR from './SKR/main.js';
 export * as SKT from './SKT/main.js';
 export * as SLP from './SLP/main.js';
 export * as SNR from './SNR/main.js';

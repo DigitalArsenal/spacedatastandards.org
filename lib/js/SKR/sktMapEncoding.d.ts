@@ -1,0 +1,26 @@
+/**
+ * Numeric encoding of MAP_VALUES.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum sktMapEncoding {
+    UNSPECIFIED = 0,
+    /**
+     * IEEE 754 binary32, little-endian. NaN marks a pixel with no data.
+     */
+    FLOAT32 = 1,
+    /**
+     * IEEE 754 binary16, little-endian. NaN marks a pixel with no data.
+     */
+    FLOAT16 = 2,
+    /**
+     * Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE +
+     * MAP_OFFSET. MAP_BLANK marks a pixel with no data.
+     */
+    UINT16_SCALED = 3,
+    /**
+     * Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK
+     * marks a pixel with no data.
+     */
+    UINT8_SCALED = 4
+}
+//# sourceMappingURL=sktMapEncoding.d.ts.map

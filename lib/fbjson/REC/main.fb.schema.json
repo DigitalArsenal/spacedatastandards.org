@@ -20821,6 +20821,92 @@
         }
       }
     },
+    "skqQueryKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "APPARENT_PLACES",
+        "SYNTHETIC_PHOTOMETRY",
+        "CONE",
+        "FIELD_OF_VIEW",
+        "IDENTIFY",
+        "OCCULTATION",
+        "BRIGHT_STAR_EXCLUSION",
+        "INGEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "APPARENT_PLACES": {
+          "value": 1,
+          "description": "Place every row for the observer; answered with `$SKT` tiles."
+        },
+        "SYNTHETIC_PHOTOMETRY": {
+          "value": 2,
+          "description": "Brightness of every row in each of BAND_IDS."
+        },
+        "CONE": {
+          "value": 3,
+          "description": "Rows within RADIUS_DEG of RA_DEG / DEC_DEG."
+        },
+        "FIELD_OF_VIEW": {
+          "value": 4,
+          "description": "Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG."
+        },
+        "IDENTIFY": {
+          "value": 5,
+          "description": "Identify DETECTIONS with no prior pointing and solve the camera attitude."
+        },
+        "OCCULTATION": {
+          "value": 6,
+          "description": "Rows each of TRACKS passes over."
+        },
+        "BRIGHT_STAR_EXCLUSION": {
+          "value": 7,
+          "description": "Bright rows near each of POINTINGS."
+        },
+        "INGEST": {
+          "value": 8,
+          "description": "Counts after catalogue records were ingested."
+        }
+      }
+    },
+    "skrStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "UNSOLVED",
+        "TOO_FEW_DETECTIONS",
+        "NO_CATALOG",
+        "BAD_REQUEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "UNSOLVED": {
+          "value": 1,
+          "description": "IDENTIFY found no consistent match."
+        },
+        "TOO_FEW_DETECTIONS": {
+          "value": 2,
+          "description": "IDENTIFY was given fewer than three detections."
+        },
+        "NO_CATALOG": {
+          "value": 3,
+          "description": "Fewer than three catalogue rows pass the magnitude limit."
+        },
+        "BAD_REQUEST": {
+          "value": 4,
+          "description": "The query was malformed; MESSAGE says how."
+        }
+      }
+    },
     "slpProblemKind": {
       "type": "string",
       "enum": [
@@ -25105,7 +25191,9 @@
         "RPC",
         "CSO",
         "PHB",
-        "SKT"
+        "SKT",
+        "SKQ",
+        "SKR"
       ]
     },
     "LKS": {
@@ -98611,6 +98699,727 @@
       ],
       "additionalProperties": false
     },
+    "SKQDetection": {
+      "type": "object",
+      "description": "A star detected by a camera: a direction in the camera frame.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "description": "Direction in the camera frame; any non-zero length."
+        },
+        "Y": {
+          "type": "number"
+        },
+        "Z": {
+          "type": "number"
+        },
+        "BRIGHTNESS": {
+          "type": "number",
+          "description": "Relative brightness; larger is brighter. Orders the detections."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQTrack": {
+      "type": "object",
+      "description": "A body's apparent path across the sky over an interval, and its disc.",
+      "properties": {
+        "START_RA_DEG": {
+          "type": "number",
+          "description": "Direction of the body's centre at the start of the interval."
+        },
+        "START_DEC_DEG": {
+          "type": "number"
+        },
+        "END_RA_DEG": {
+          "type": "number",
+          "description": "Direction at the end; equal to the start for an instant."
+        },
+        "END_DEC_DEG": {
+          "type": "number"
+        },
+        "RADIUS_DEG": {
+          "type": "number",
+          "description": "Angular radius of the body's disc."
+        },
+        "BODY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Caller's identifier for the body, echoed in the result."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQPointing": {
+      "type": "object",
+      "description": "A sensor pointing to check for bright stars.",
+      "properties": {
+        "RA_DEG": {
+          "type": "number"
+        },
+        "DEC_DEG": {
+          "type": "number"
+        },
+        "POINTING_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Caller's identifier for the pointing, echoed in the result."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQ": {
+      "type": "object",
+      "description": "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+      "properties": {
+        "QUERY_ID": {
+          "type": "string",
+          "description": "Caller's identifier, echoed in the result.",
+          "x-flatbuffer-type": "string"
+        },
+        "QUERY_KIND": {
+          "$ref": "#/definitions/skqQueryKind",
+          "description": "What is asked.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "APPARENT_PLACES": {
+              "value": 1,
+              "description": "Place every row for the observer; answered with `$SKT` tiles."
+            },
+            "SYNTHETIC_PHOTOMETRY": {
+              "value": 2,
+              "description": "Brightness of every row in each of BAND_IDS."
+            },
+            "CONE": {
+              "value": 3,
+              "description": "Rows within RADIUS_DEG of RA_DEG / DEC_DEG."
+            },
+            "FIELD_OF_VIEW": {
+              "value": 4,
+              "description": "Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG."
+            },
+            "IDENTIFY": {
+              "value": 5,
+              "description": "Identify DETECTIONS with no prior pointing and solve the camera attitude."
+            },
+            "OCCULTATION": {
+              "value": 6,
+              "description": "Rows each of TRACKS passes over."
+            },
+            "BRIGHT_STAR_EXCLUSION": {
+              "value": 7,
+              "description": "Bright rows near each of POINTINGS."
+            },
+            "INGEST": {
+              "value": 8,
+              "description": "Counts after catalogue records were ingested."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EPOCH_JD_TT": {
+          "type": "number",
+          "description": "Whole part of the epoch, Julian Date (TT).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EPOCH_JD_TT_FRACTION": {
+          "type": "number",
+          "description": "Fraction added to EPOCH_JD_TT, days.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "OBSERVER_ID": {
+          "type": "string",
+          "description": "Name of the observer, carried into tiles and results.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVER_POSITION_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Observer's geocentric position on GCRS axes, metres; three entries.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OBSERVER_VELOCITY_M_PER_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PLACE": {
+          "$ref": "#/definitions/sktPlaceKind",
+          "description": "How far the reduction goes.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CATALOG": {
+              "value": 1,
+              "description": "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+            },
+            "ASTROMETRIC": {
+              "value": 2,
+              "description": "Astrometric place for the observer named by OBSERVER_ID at EPOCH: space motion and parallax applied, no aberration or deflection."
+            },
+            "APPARENT": {
+              "value": 3,
+              "description": "Apparent place for the observer named by OBSERVER_ID at EPOCH: space motion, parallax, light deflection and aberration applied, in FRAME axes."
+            }
+          },
+          "x-flatbuffer-default": "APPARENT"
+        },
+        "BAND_ID": {
+          "type": "string",
+          "description": "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAG_LIMIT": {
+          "type": "number",
+          "description": "Faintest magnitude reported. Absent: no limit.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_RESULTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Largest number of rows reported; 0 for no cap.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TILE_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "APPARENT_PLACES: HEALPix order of the output tiles.",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "3"
+        },
+        "COLOR_ENCODING": {
+          "$ref": "#/definitions/sktColorEncoding",
+          "description": "APPARENT_PLACES: what each point's COLOR holds.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No colour; COLOR is 0."
+            },
+            "COLOR_INDEX": {
+              "value": 1,
+              "description": "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+            },
+            "EFFECTIVE_TEMPERATURE": {
+              "value": 2,
+              "description": "Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded. 0 means unknown."
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "COLOR_BLUE_BAND_ID": {
+          "type": "string",
+          "description": "APPARENT_PLACES: bands of a COLOR_INDEX colour.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_RED_BAND_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAYER_ID": {
+          "type": "string",
+          "description": "APPARENT_PLACES: LAYER_ID of the output tiles.",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SYNTHETIC_PHOTOMETRY: bands to report.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "RA_DEG": {
+          "type": "number",
+          "description": "CONE and FIELD_OF_VIEW: centre or boresight.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DEC_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RADIUS_DEG": {
+          "type": "number",
+          "description": "CONE: radius.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HALF_WIDTH_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: half-extent along the field's x axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HALF_HEIGHT_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: half-extent along the field's y axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: position angle of the field's +y axis, east of north.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "DETECTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQDetection"
+          },
+          "description": "IDENTIFY: detected stars.",
+          "x-flatbuffer-type": "[SKQDetection]"
+        },
+        "TOLERANCE_ARCSEC": {
+          "type": "number",
+          "description": "IDENTIFY: largest angle between a detection and its catalogue star.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_FIELD_DEG": {
+          "type": "number",
+          "description": "IDENTIFY: largest angle between two detections (the field diagonal).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TRACKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQTrack"
+          },
+          "description": "OCCULTATION: bodies and their tracks.",
+          "x-flatbuffer-type": "[SKQTrack]"
+        },
+        "POINTINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQPointing"
+          },
+          "description": "BRIGHT_STAR_EXCLUSION: pointings to check.",
+          "x-flatbuffer-type": "[SKQPointing]"
+        },
+        "EXCLUSION_RADIUS_DEG": {
+          "type": "number",
+          "description": "BRIGHT_STAR_EXCLUSION: radius around each pointing.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAG_THRESHOLD": {
+          "type": "number",
+          "description": "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKRHit": {
+      "type": "object",
+      "description": "A row that answers a CONE or FIELD_OF_VIEW query.",
+      "properties": {
+        "ROW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "SKTPoint FLAGS bits for the row."
+        },
+        "RA_DEG": {
+          "type": "number"
+        },
+        "DEC_DEG": {
+          "type": "number"
+        },
+        "SEPARATION_DEG": {
+          "type": "number",
+          "description": "Angle from the centre or boresight."
+        },
+        "FIELD_X_DEG": {
+          "type": "number",
+          "description": "Field coordinates: angles along the field's x and y axes (the\nstandard coordinates of a cone query). NaN behind the tangent plane."
+        },
+        "FIELD_Y_DEG": {
+          "type": "number"
+        },
+        "MAG": {
+          "type": "number",
+          "description": "Magnitude in the query's band; NaN when unknown."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKROccultation": {
+      "type": "object",
+      "description": "A row a body's disc passes over.",
+      "properties": {
+        "BODY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "ROW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "MIN_SEPARATION_DEG": {
+          "type": "number",
+          "description": "Closest approach of the body's centre to the row."
+        },
+        "TRACK_FRACTION": {
+          "type": "number",
+          "description": "Where along the track the closest approach falls, from 0 (start) to 1\n(end)."
+        },
+        "MAG": {
+          "type": "number"
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKRExclusion": {
+      "type": "object",
+      "description": "Bright rows near one pointing.",
+      "properties": {
+        "POINTING_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "VIOLATING_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Rows within the radius at least as bright as the threshold."
+        },
+        "BRIGHTEST_ROW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "The brightest of them; 4294967295 when there are none."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "BRIGHTEST_SEPARATION_DEG": {
+          "type": "number"
+        },
+        "BRIGHTEST_MAG": {
+          "type": "number"
+        },
+        "RESERVED2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKR": {
+      "type": "object",
+      "description": "Sky Query Result: the answer to one `$SKQ`.",
+      "properties": {
+        "QUERY_ID": {
+          "type": "string",
+          "description": "QUERY_ID of the query answered.",
+          "x-flatbuffer-type": "string"
+        },
+        "QUERY_KIND": {
+          "$ref": "#/definitions/skqQueryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "APPARENT_PLACES": {
+              "value": 1,
+              "description": "Place every row for the observer; answered with `$SKT` tiles."
+            },
+            "SYNTHETIC_PHOTOMETRY": {
+              "value": 2,
+              "description": "Brightness of every row in each of BAND_IDS."
+            },
+            "CONE": {
+              "value": 3,
+              "description": "Rows within RADIUS_DEG of RA_DEG / DEC_DEG."
+            },
+            "FIELD_OF_VIEW": {
+              "value": 4,
+              "description": "Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG."
+            },
+            "IDENTIFY": {
+              "value": 5,
+              "description": "Identify DETECTIONS with no prior pointing and solve the camera attitude."
+            },
+            "OCCULTATION": {
+              "value": 6,
+              "description": "Rows each of TRACKS passes over."
+            },
+            "BRIGHT_STAR_EXCLUSION": {
+              "value": 7,
+              "description": "Bright rows near each of POINTINGS."
+            },
+            "INGEST": {
+              "value": 8,
+              "description": "Counts after catalogue records were ingested."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/skrStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "UNSOLVED": {
+              "value": 1,
+              "description": "IDENTIFY found no consistent match."
+            },
+            "TOO_FEW_DETECTIONS": {
+              "value": 2,
+              "description": "IDENTIFY was given fewer than three detections."
+            },
+            "NO_CATALOG": {
+              "value": 3,
+              "description": "Fewer than three catalogue rows pass the magnitude limit."
+            },
+            "BAD_REQUEST": {
+              "value": 4,
+              "description": "The query was malformed; MESSAGE says how."
+            }
+          },
+          "x-flatbuffer-default": "OK"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "description": "Why a query failed.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_JD_TT": {
+          "type": "number",
+          "description": "Epoch and reduction the answer is for, copied from the query.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EPOCH_JD_TT_FRACTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "PLACE": {
+          "$ref": "#/definitions/sktPlaceKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CATALOG": {
+              "value": 1,
+              "description": "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+            },
+            "ASTROMETRIC": {
+              "value": 2,
+              "description": "Astrometric place for the observer named by OBSERVER_ID at EPOCH: space motion and parallax applied, no aberration or deflection."
+            },
+            "APPARENT": {
+              "value": 3,
+              "description": "Apparent place for the observer named by OBSERVER_ID at EPOCH: space motion, parallax, light deflection and aberration applied, in FRAME axes."
+            }
+          },
+          "x-flatbuffer-default": "APPARENT"
+        },
+        "ROW_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Catalogue rows held.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROWS_ADDED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "INGEST: rows added by the ingest answered.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REJECTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "INGEST: records refused by verification.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "BAND_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Band descriptors held.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MATCHED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKRHit"
+          },
+          "x-flatbuffer-type": "[SKRHit]"
+        },
+        "BAND_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SYNTHETIC_PHOTOMETRY: bands of the table's columns.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MAGNITUDES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major.",
+          "x-flatbuffer-type": "[float]"
+        },
+        "DERIVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/phbDerivation"
+          },
+          "description": "SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout.",
+          "x-flatbuffer-type": "[phbDerivation]"
+        },
+        "MATCHED_DETECTIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "IDENTIFY: detections matched.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROTATION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "IDENTIFY: camera-to-GCRS rotation, nine entries, row-major.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "QUATERNION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "IDENTIFY: the same rotation as (w, x, y, z).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESIDUAL_RMS_ARCSEC": {
+          "type": "number",
+          "description": "IDENTIFY: RMS angle between matched detections and their rows.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BORESIGHT_RA_DEG": {
+          "type": "number",
+          "description": "IDENTIFY: direction of the camera's +z axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BORESIGHT_DEC_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MATCHED_ROWS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "IDENTIFY: row matched to each detection, in detection order;\n4294967295 when unmatched.",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "OCCULTATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKROccultation"
+          },
+          "description": "OCCULTATION: rows passed over.",
+          "x-flatbuffer-type": "[SKROccultation]"
+        },
+        "EXCLUSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKRExclusion"
+          },
+          "description": "BRIGHT_STAR_EXCLUSION: one verdict per pointing.",
+          "x-flatbuffer-type": "[SKRExclusion]"
+        }
+      },
+      "additionalProperties": false
+    },
     "SLPVariable": {
       "type": "object",
       "properties": {
@@ -116631,6 +117440,12 @@
             },
             {
               "$ref": "#/definitions/SKT"
+            },
+            {
+              "$ref": "#/definitions/SKQ"
+            },
+            {
+              "$ref": "#/definitions/SKR"
             }
           ],
           "description": "The record data (union of all supported standards)",

@@ -17606,6 +17606,824 @@
             },
             "$ref": "#/definitions/OPP"
         },
+        "SKQ": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "phbSpectralRegime": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GAMMA_RAY",
+                        "HARD_X_RAY",
+                        "SOFT_X_RAY",
+                        "EXTREME_ULTRAVIOLET",
+                        "FAR_ULTRAVIOLET",
+                        "NEAR_ULTRAVIOLET",
+                        "VISIBLE",
+                        "NEAR_INFRARED",
+                        "MID_INFRARED",
+                        "FAR_INFRARED",
+                        "SUBMILLIMETRE",
+                        "MICROWAVE",
+                        "RADIO"
+                    ]
+                },
+                "phbMagnitudeSystem": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "VEGA",
+                        "AB",
+                        "ST",
+                        "INSTRUMENTAL",
+                        "NOT_A_MAGNITUDE"
+                    ]
+                },
+                "phbQuantity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MAGNITUDE",
+                        "FLUX_DENSITY_JY",
+                        "ENERGY_FLUX_W_PER_M2",
+                        "PHOTON_FLUX_PER_M2_S",
+                        "COUNT_RATE_PER_S",
+                        "BRIGHTNESS_TEMPERATURE_K"
+                    ]
+                },
+                "phbDerivation": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "TRANSFORMED",
+                        "MODELLED"
+                    ]
+                },
+                "phbBoundKind": {
+                    "type": "string",
+                    "enum": [
+                        "DETECTION",
+                        "UPPER_LIMIT",
+                        "LOWER_LIMIT"
+                    ]
+                },
+                "sktCelestialFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ICRS",
+                        "GALACTIC",
+                        "ECLIPTIC_J2000"
+                    ]
+                },
+                "sktPayloadKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "POINT_SOURCES",
+                        "DIFFUSE_MAP",
+                        "PROBABILITY_MAP"
+                    ]
+                },
+                "sktRefinement": {
+                    "type": "string",
+                    "enum": [
+                        "ADD",
+                        "REPLACE"
+                    ]
+                },
+                "sktPlaceKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CATALOG",
+                        "ASTROMETRIC",
+                        "APPARENT"
+                    ]
+                },
+                "sktColorEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "COLOR_INDEX",
+                        "EFFECTIVE_TEMPERATURE"
+                    ]
+                },
+                "sktMapEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "FLOAT32",
+                        "FLOAT16",
+                        "UINT16_SCALED",
+                        "UINT8_SCALED"
+                    ]
+                },
+                "sktMapQuantity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SURFACE_BRIGHTNESS",
+                        "BRIGHTNESS_TEMPERATURE",
+                        "COUNTS",
+                        "COUNT_RATE",
+                        "EXPOSURE",
+                        "PROBABILITY",
+                        "SOURCE_DENSITY",
+                        "OTHER"
+                    ]
+                },
+                "sktStretchFunction": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LINEAR",
+                        "SQUARE_ROOT",
+                        "LOGARITHMIC",
+                        "ASINH",
+                        "HISTOGRAM_EQUALIZED"
+                    ]
+                },
+                "skqQueryKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "APPARENT_PLACES",
+                        "SYNTHETIC_PHOTOMETRY",
+                        "CONE",
+                        "FIELD_OF_VIEW",
+                        "IDENTIFY",
+                        "OCCULTATION",
+                        "BRIGHT_STAR_EXCLUSION",
+                        "INGEST"
+                    ]
+                },
+                "PHBMeasurement": {
+                    "type": "object",
+                    "description": "One source's brightness in one band.",
+                    "properties": {
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band identifier; resolves to a `$PHB` BAND_ID."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse region of the band, copied from its descriptor so a consumer\ncan select a mode without resolving the band."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective wavelength of the band, nanometres (vacuum). Copied from the\ndescriptor; required for synthesis when the descriptor is not at hand."
+                        },
+                        "QUANTITY": {
+                            "$ref": "#/definitions/phbQuantity",
+                            "description": "Quantity VALUE states."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system when QUANTITY is MAGNITUDE."
+                        },
+                        "VALUE": {
+                            "type": "number",
+                            "description": "The measurement, in QUANTITY's units."
+                        },
+                        "UNCERTAINTY": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of VALUE, same units."
+                        },
+                        "BOUND": {
+                            "$ref": "#/definitions/phbBoundKind",
+                            "description": "Detection or bound."
+                        },
+                        "DERIVATION": {
+                            "$ref": "#/definitions/phbDerivation",
+                            "description": "How the value was obtained."
+                        },
+                        "EPOCH_MJD": {
+                            "type": "number",
+                            "description": "Mid-time of the observation, Modified Julian Date (TT), for sources\nwhose brightness varies. Absent for a catalogue mean."
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of observations averaged into VALUE; 0 when unstated."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PHB": {
+                    "type": "object",
+                    "description": "Photometric Band: one passband's place on the spectrum and its calibration.",
+                    "properties": {
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Stable band identifier, unique within the publishing catalogue, e.g.\n\"V\", \"Ks\", \"0.5-2keV\", \"1.4GHz\". Measurements refer to it."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable name."
+                        },
+                        "SYSTEM_NAME": {
+                            "type": "string",
+                            "description": "Name of the photometric system the band belongs to, as the defining\npublication states it."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse spectral region, by WAVELENGTH_EFF_NM."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective (pivot) wavelength, nanometres, vacuum."
+                        },
+                        "WAVELENGTH_MIN_NM": {
+                            "type": "number",
+                            "description": "Short edge of the band at half maximum response, nanometres."
+                        },
+                        "WAVELENGTH_MAX_NM": {
+                            "type": "number",
+                            "description": "Long edge of the band at half maximum response, nanometres."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system of magnitudes stated in the band."
+                        },
+                        "ZERO_POINT_JY": {
+                            "type": "number",
+                            "description": "Flux density at the effective wavelength of a zero-magnitude source,\njanskys."
+                        },
+                        "RESPONSE_WAVELENGTH_NM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Wavelengths the response curve is sampled at, nanometres, ascending."
+                        },
+                        "RESPONSE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Relative system response at each RESPONSE_WAVELENGTH_NM sample,\npeak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY."
+                        },
+                        "RESPONSE_IS_ENERGY": {
+                            "type": "boolean",
+                            "description": "True when RESPONSE is an energy-counting response."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Reference to the publication that defines the band."
+                        },
+                        "DEFINITION_URL": {
+                            "type": "string",
+                            "description": "URL of the band's defining document or response table."
+                        }
+                    },
+                    "required": [
+                        "BAND_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "SKTPoint": {
+                    "type": "object",
+                    "description": "One point source packed for drawing (24 bytes).",
+                    "properties": {
+                        "RA_FIXED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Right ascension (or longitude in FRAME) as a fraction of a full turn:\ndegrees = RA_FIXED * 360 / 2^32."
+                        },
+                        "DEC_FIXED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31."
+                        },
+                        "PMRA": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Proper motion in RA times cos(DEC), milliarcseconds per year. -32768\nwhen unknown or out of range (FLAGS bit 2)."
+                        },
+                        "PMDEC": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Proper motion in DEC, milliarcseconds per year. -32768 when unknown or\nout of range (FLAGS bit 2)."
+                        },
+                        "PARALLAX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Parallax in units of 0.02 milliarcseconds. 0 when unknown, not\npositive or out of range (FLAGS bit 3)."
+                        },
+                        "MAG": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Magnitude in the tile's band, millimagnitudes. -32768 when unknown."
+                        },
+                        "COLOR": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Colour, encoded as the tile's COLOR_ENCODING states."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+                        },
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKT": {
+                    "type": "object",
+                    "description": "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+                    "properties": {
+                        "LAYER_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/sktCelestialFrame",
+                            "description": "Frame the HEALPix grid and the point positions are stated in."
+                        },
+                        "ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "HEALPix order; NSIDE = 2^ORDER."
+                        },
+                        "PIXEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Nested pixel index at ORDER."
+                        },
+                        "MAX_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+                        },
+                        "CHILD_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+                        },
+                        "PAYLOAD_KIND": {
+                            "$ref": "#/definitions/sktPayloadKind",
+                            "description": "Payload the tile carries."
+                        },
+                        "REFINE": {
+                            "$ref": "#/definitions/sktRefinement",
+                            "description": "How the tile relates to its ancestors and children."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse spectral region of the band."
+                        },
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are\nin this band."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective wavelength of the band, nanometres (vacuum)."
+                        },
+                        "WAVELENGTH_MIN_NM": {
+                            "type": "number",
+                            "description": "Short edge of a band-integrated map, nanometres."
+                        },
+                        "WAVELENGTH_MAX_NM": {
+                            "type": "number",
+                            "description": "Long edge of a band-integrated map, nanometres."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system of MAG."
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind",
+                            "description": "Which place point positions are."
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Epoch of point positions, Julian years (TT)."
+                        },
+                        "OBSERVER_ID": {
+                            "type": "string",
+                            "description": "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+                        },
+                        "POINT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points in the payload."
+                        },
+                        "MAG_BRIGHTEST": {
+                            "type": "number",
+                            "description": "Brightest magnitude in the tile."
+                        },
+                        "MAG_LIMIT": {
+                            "type": "number",
+                            "description": "Faintest magnitude in the tile; with the ancestors, the layer is\ncomplete to this limit inside the pixel."
+                        },
+                        "COLOR_ENCODING": {
+                            "$ref": "#/definitions/sktColorEncoding",
+                            "description": "What each point's COLOR holds."
+                        },
+                        "COLOR_BLUE_BAND_ID": {
+                            "type": "string",
+                            "description": "Bluer band of a COLOR_INDEX colour."
+                        },
+                        "COLOR_RED_BAND_ID": {
+                            "type": "string",
+                            "description": "Redder band of a COLOR_INDEX colour."
+                        },
+                        "POINTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKTPoint"
+                            },
+                            "description": "Packed points, brightest first."
+                        },
+                        "ROW_COLLECTION_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the full `$STR` / `$CSO` records of the points,\na size-prefixed record sequence in ROW order."
+                        },
+                        "MAP_DEPTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Order offset of the map pixels: the tile holds 4^MAP_DEPTH values."
+                        },
+                        "MAP_ENCODING": {
+                            "$ref": "#/definitions/sktMapEncoding",
+                            "description": "Numeric encoding of MAP_VALUES."
+                        },
+                        "MAP_QUANTITY": {
+                            "$ref": "#/definitions/sktMapQuantity",
+                            "description": "Physical quantity of the map."
+                        },
+                        "MAP_QUANTITY_NAME": {
+                            "type": "string",
+                            "description": "Producer's name for the quantity when MAP_QUANTITY is OTHER."
+                        },
+                        "MAP_UNITS": {
+                            "type": "string",
+                            "description": "Units of the physical map values, UCUM style (e.g. \"K\", \"MJy/sr\",\n\"count/s/sr\")."
+                        },
+                        "MAP_SCALE": {
+                            "type": "number",
+                            "description": "Scale of a scaled integer encoding."
+                        },
+                        "MAP_OFFSET": {
+                            "type": "number",
+                            "description": "Offset of a scaled integer encoding."
+                        },
+                        "MAP_BLANK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Raw value marking a pixel with no data in a scaled integer encoding."
+                        },
+                        "MAP_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Raw map bytes, 4^MAP_DEPTH values in nested order."
+                        },
+                        "STRETCH": {
+                            "$ref": "#/definitions/sktStretchFunction",
+                            "description": "Recommended stretch."
+                        },
+                        "BLACK_POINT": {
+                            "type": "number",
+                            "description": "Physical value drawn black."
+                        },
+                        "WHITE_POINT": {
+                            "type": "number",
+                            "description": "Physical value drawn white."
+                        },
+                        "STRETCH_SOFTENING": {
+                            "type": "number",
+                            "description": "Softening of an ASINH stretch, in physical units."
+                        },
+                        "PERCENTILE_LEVELS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Percentile levels of the layer's value distribution, in [0, 100],\nascending."
+                        },
+                        "PERCENTILE_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Physical value at each PERCENTILE_LEVELS entry. Computed over the whole\nlayer, so every tile stretches alike."
+                        },
+                        "PAYLOAD_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the payload when POINTS and MAP_VALUES are absent."
+                        },
+                        "PAYLOAD_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Length of the payload at PAYLOAD_CID, bytes."
+                        },
+                        "OBSERVATION_START": {
+                            "type": "string",
+                            "description": "Start of the observations the tile summarises, ISO 8601 UTC."
+                        },
+                        "OBSERVATION_END": {
+                            "type": "string",
+                            "description": "End of the observations the tile summarises, ISO 8601 UTC."
+                        },
+                        "SOURCE_NAMES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Verbatim names of the catalogues or surveys the tile was derived from."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that produced the tile."
+                        },
+                        "PRODUCER_VERSION": {
+                            "type": "string",
+                            "description": "Producer software and version."
+                        },
+                        "PRODUCED_AT": {
+                            "type": "string",
+                            "description": "Time the tile was produced, ISO 8601 UTC."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publishers ask for."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms of the source data."
+                        }
+                    },
+                    "required": [
+                        "LAYER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "SKQDetection": {
+                    "type": "object",
+                    "description": "A star detected by a camera: a direction in the camera frame.",
+                    "properties": {
+                        "X": {
+                            "type": "number",
+                            "description": "Direction in the camera frame; any non-zero length."
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        },
+                        "BRIGHTNESS": {
+                            "type": "number",
+                            "description": "Relative brightness; larger is brighter. Orders the detections."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQTrack": {
+                    "type": "object",
+                    "description": "A body's apparent path across the sky over an interval, and its disc.",
+                    "properties": {
+                        "START_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction of the body's centre at the start of the interval."
+                        },
+                        "START_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "END_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction at the end; equal to the start for an instant."
+                        },
+                        "END_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "Angular radius of the body's disc."
+                        },
+                        "BODY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the body, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQPointing": {
+                    "type": "object",
+                    "description": "A sensor pointing to check for bright stars.",
+                    "properties": {
+                        "RA_DEG": {
+                            "type": "number"
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "POINTING_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the pointing, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQ": {
+                    "type": "object",
+                    "description": "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+                    "properties": {
+                        "QUERY_ID": {
+                            "type": "string",
+                            "description": "Caller's identifier, echoed in the result."
+                        },
+                        "QUERY_KIND": {
+                            "$ref": "#/definitions/skqQueryKind",
+                            "description": "What is asked."
+                        },
+                        "EPOCH_JD_TT": {
+                            "type": "number",
+                            "description": "Whole part of the epoch, Julian Date (TT)."
+                        },
+                        "EPOCH_JD_TT_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction added to EPOCH_JD_TT, days."
+                        },
+                        "OBSERVER_ID": {
+                            "type": "string",
+                            "description": "Name of the observer, carried into tiles and results."
+                        },
+                        "OBSERVER_POSITION_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric position on GCRS axes, metres; three entries."
+                        },
+                        "OBSERVER_VELOCITY_M_PER_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries."
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind",
+                            "description": "How far the reduction goes."
+                        },
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID."
+                        },
+                        "MAG_LIMIT": {
+                            "type": "number",
+                            "description": "Faintest magnitude reported. Absent: no limit."
+                        },
+                        "MAX_RESULTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Largest number of rows reported; 0 for no cap."
+                        },
+                        "TILE_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "APPARENT_PLACES: HEALPix order of the output tiles."
+                        },
+                        "COLOR_ENCODING": {
+                            "$ref": "#/definitions/sktColorEncoding",
+                            "description": "APPARENT_PLACES: what each point's COLOR holds."
+                        },
+                        "COLOR_BLUE_BAND_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: bands of a COLOR_INDEX colour."
+                        },
+                        "COLOR_RED_BAND_ID": {
+                            "type": "string"
+                        },
+                        "LAYER_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: LAYER_ID of the output tiles."
+                        },
+                        "BAND_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: bands to report."
+                        },
+                        "RA_DEG": {
+                            "type": "number",
+                            "description": "CONE and FIELD_OF_VIEW: centre or boresight."
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "CONE: radius."
+                        },
+                        "HALF_WIDTH_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's x axis."
+                        },
+                        "HALF_HEIGHT_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's y axis."
+                        },
+                        "ROLL_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: position angle of the field's +y axis, east of north."
+                        },
+                        "DETECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQDetection"
+                            },
+                            "description": "IDENTIFY: detected stars."
+                        },
+                        "TOLERANCE_ARCSEC": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between a detection and its catalogue star."
+                        },
+                        "MAX_FIELD_DEG": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between two detections (the field diagonal)."
+                        },
+                        "TRACKS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQTrack"
+                            },
+                            "description": "OCCULTATION: bodies and their tracks."
+                        },
+                        "POINTINGS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQPointing"
+                            },
+                            "description": "BRIGHT_STAR_EXCLUSION: pointings to check."
+                        },
+                        "EXCLUSION_RADIUS_DEG": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: radius around each pointing."
+                        },
+                        "MAG_THRESHOLD": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SKQ"
+        },
         "HFC": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -67892,6 +68710,30 @@
                         "HISTOGRAM_EQUALIZED"
                     ]
                 },
+                "skqQueryKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "APPARENT_PLACES",
+                        "SYNTHETIC_PHOTOMETRY",
+                        "CONE",
+                        "FIELD_OF_VIEW",
+                        "IDENTIFY",
+                        "OCCULTATION",
+                        "BRIGHT_STAR_EXCLUSION",
+                        "INGEST"
+                    ]
+                },
+                "skrStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNSOLVED",
+                        "TOO_FEW_DETECTIONS",
+                        "NO_CATALOG",
+                        "BAD_REQUEST"
+                    ]
+                },
                 "slpProblemKind": {
                     "type": "string",
                     "enum": [
@@ -69404,7 +70246,9 @@
                         "RPC",
                         "CSO",
                         "PHB",
-                        "SKT"
+                        "SKT",
+                        "SKQ",
+                        "SKR"
                     ]
                 },
                 "LKS": {
@@ -113001,6 +113845,498 @@
                     ],
                     "additionalProperties": false
                 },
+                "SKQDetection": {
+                    "type": "object",
+                    "description": "A star detected by a camera: a direction in the camera frame.",
+                    "properties": {
+                        "X": {
+                            "type": "number",
+                            "description": "Direction in the camera frame; any non-zero length."
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        },
+                        "BRIGHTNESS": {
+                            "type": "number",
+                            "description": "Relative brightness; larger is brighter. Orders the detections."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQTrack": {
+                    "type": "object",
+                    "description": "A body's apparent path across the sky over an interval, and its disc.",
+                    "properties": {
+                        "START_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction of the body's centre at the start of the interval."
+                        },
+                        "START_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "END_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction at the end; equal to the start for an instant."
+                        },
+                        "END_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "Angular radius of the body's disc."
+                        },
+                        "BODY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the body, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQPointing": {
+                    "type": "object",
+                    "description": "A sensor pointing to check for bright stars.",
+                    "properties": {
+                        "RA_DEG": {
+                            "type": "number"
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "POINTING_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the pointing, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQ": {
+                    "type": "object",
+                    "description": "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+                    "properties": {
+                        "QUERY_ID": {
+                            "type": "string",
+                            "description": "Caller's identifier, echoed in the result."
+                        },
+                        "QUERY_KIND": {
+                            "$ref": "#/definitions/skqQueryKind",
+                            "description": "What is asked."
+                        },
+                        "EPOCH_JD_TT": {
+                            "type": "number",
+                            "description": "Whole part of the epoch, Julian Date (TT)."
+                        },
+                        "EPOCH_JD_TT_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction added to EPOCH_JD_TT, days."
+                        },
+                        "OBSERVER_ID": {
+                            "type": "string",
+                            "description": "Name of the observer, carried into tiles and results."
+                        },
+                        "OBSERVER_POSITION_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric position on GCRS axes, metres; three entries."
+                        },
+                        "OBSERVER_VELOCITY_M_PER_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries."
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind",
+                            "description": "How far the reduction goes."
+                        },
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID."
+                        },
+                        "MAG_LIMIT": {
+                            "type": "number",
+                            "description": "Faintest magnitude reported. Absent: no limit."
+                        },
+                        "MAX_RESULTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Largest number of rows reported; 0 for no cap."
+                        },
+                        "TILE_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "APPARENT_PLACES: HEALPix order of the output tiles."
+                        },
+                        "COLOR_ENCODING": {
+                            "$ref": "#/definitions/sktColorEncoding",
+                            "description": "APPARENT_PLACES: what each point's COLOR holds."
+                        },
+                        "COLOR_BLUE_BAND_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: bands of a COLOR_INDEX colour."
+                        },
+                        "COLOR_RED_BAND_ID": {
+                            "type": "string"
+                        },
+                        "LAYER_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: LAYER_ID of the output tiles."
+                        },
+                        "BAND_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: bands to report."
+                        },
+                        "RA_DEG": {
+                            "type": "number",
+                            "description": "CONE and FIELD_OF_VIEW: centre or boresight."
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "CONE: radius."
+                        },
+                        "HALF_WIDTH_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's x axis."
+                        },
+                        "HALF_HEIGHT_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's y axis."
+                        },
+                        "ROLL_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: position angle of the field's +y axis, east of north."
+                        },
+                        "DETECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQDetection"
+                            },
+                            "description": "IDENTIFY: detected stars."
+                        },
+                        "TOLERANCE_ARCSEC": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between a detection and its catalogue star."
+                        },
+                        "MAX_FIELD_DEG": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between two detections (the field diagonal)."
+                        },
+                        "TRACKS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQTrack"
+                            },
+                            "description": "OCCULTATION: bodies and their tracks."
+                        },
+                        "POINTINGS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQPointing"
+                            },
+                            "description": "BRIGHT_STAR_EXCLUSION: pointings to check."
+                        },
+                        "EXCLUSION_RADIUS_DEG": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: radius around each pointing."
+                        },
+                        "MAG_THRESHOLD": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKRHit": {
+                    "type": "object",
+                    "description": "A row that answers a CONE or FIELD_OF_VIEW query.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "SKTPoint FLAGS bits for the row."
+                        },
+                        "RA_DEG": {
+                            "type": "number"
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "SEPARATION_DEG": {
+                            "type": "number",
+                            "description": "Angle from the centre or boresight."
+                        },
+                        "FIELD_X_DEG": {
+                            "type": "number",
+                            "description": "Field coordinates: angles along the field's x and y axes (the\nstandard coordinates of a cone query). NaN behind the tangent plane."
+                        },
+                        "FIELD_Y_DEG": {
+                            "type": "number"
+                        },
+                        "MAG": {
+                            "type": "number",
+                            "description": "Magnitude in the query's band; NaN when unknown."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKROccultation": {
+                    "type": "object",
+                    "description": "A row a body's disc passes over.",
+                    "properties": {
+                        "BODY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MIN_SEPARATION_DEG": {
+                            "type": "number",
+                            "description": "Closest approach of the body's centre to the row."
+                        },
+                        "TRACK_FRACTION": {
+                            "type": "number",
+                            "description": "Where along the track the closest approach falls, from 0 (start) to 1\n(end)."
+                        },
+                        "MAG": {
+                            "type": "number"
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKRExclusion": {
+                    "type": "object",
+                    "description": "Bright rows near one pointing.",
+                    "properties": {
+                        "POINTING_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VIOLATING_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Rows within the radius at least as bright as the threshold."
+                        },
+                        "BRIGHTEST_ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The brightest of them; 4294967295 when there are none."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BRIGHTEST_SEPARATION_DEG": {
+                            "type": "number"
+                        },
+                        "BRIGHTEST_MAG": {
+                            "type": "number"
+                        },
+                        "RESERVED2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKR": {
+                    "type": "object",
+                    "description": "Sky Query Result: the answer to one `$SKQ`.",
+                    "properties": {
+                        "QUERY_ID": {
+                            "type": "string",
+                            "description": "QUERY_ID of the query answered."
+                        },
+                        "QUERY_KIND": {
+                            "$ref": "#/definitions/skqQueryKind"
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/skrStatus"
+                        },
+                        "MESSAGE": {
+                            "type": "string",
+                            "description": "Why a query failed."
+                        },
+                        "EPOCH_JD_TT": {
+                            "type": "number",
+                            "description": "Epoch and reduction the answer is for, copied from the query."
+                        },
+                        "EPOCH_JD_TT_FRACTION": {
+                            "type": "number"
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind"
+                        },
+                        "ROW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Catalogue rows held."
+                        },
+                        "ROWS_ADDED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "INGEST: rows added by the ingest answered."
+                        },
+                        "REJECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "INGEST: records refused by verification."
+                        },
+                        "BAND_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Band descriptors held."
+                        },
+                        "MATCHED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied."
+                        },
+                        "HITS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKRHit"
+                            }
+                        },
+                        "BAND_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: bands of the table's columns."
+                        },
+                        "MAGNITUDES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major."
+                        },
+                        "DERIVATIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/phbDerivation"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout."
+                        },
+                        "MATCHED_DETECTIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "IDENTIFY: detections matched."
+                        },
+                        "ROTATION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "IDENTIFY: camera-to-GCRS rotation, nine entries, row-major."
+                        },
+                        "QUATERNION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "IDENTIFY: the same rotation as (w, x, y, z)."
+                        },
+                        "RESIDUAL_RMS_ARCSEC": {
+                            "type": "number",
+                            "description": "IDENTIFY: RMS angle between matched detections and their rows."
+                        },
+                        "BORESIGHT_RA_DEG": {
+                            "type": "number",
+                            "description": "IDENTIFY: direction of the camera's +z axis."
+                        },
+                        "BORESIGHT_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "MATCHED_ROWS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "IDENTIFY: row matched to each detection, in detection order;\n4294967295 when unmatched."
+                        },
+                        "OCCULTATIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKROccultation"
+                            },
+                            "description": "OCCULTATION: rows passed over."
+                        },
+                        "EXCLUSIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKRExclusion"
+                            },
+                            "description": "BRIGHT_STAR_EXCLUSION: one verdict per pointing."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SLPVariable": {
                     "type": "object",
                     "properties": {
@@ -123401,6 +124737,12 @@
                                 },
                                 {
                                     "$ref": "#/definitions/SKT"
+                                },
+                                {
+                                    "$ref": "#/definitions/SKQ"
+                                },
+                                {
+                                    "$ref": "#/definitions/SKR"
                                 }
                             ],
                             "description": "The record data (union of all supported standards)"
@@ -156661,6 +158003,1093 @@
                 }
             },
             "$ref": "#/definitions/TRE"
+        },
+        "SKR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "phbSpectralRegime": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GAMMA_RAY",
+                        "HARD_X_RAY",
+                        "SOFT_X_RAY",
+                        "EXTREME_ULTRAVIOLET",
+                        "FAR_ULTRAVIOLET",
+                        "NEAR_ULTRAVIOLET",
+                        "VISIBLE",
+                        "NEAR_INFRARED",
+                        "MID_INFRARED",
+                        "FAR_INFRARED",
+                        "SUBMILLIMETRE",
+                        "MICROWAVE",
+                        "RADIO"
+                    ]
+                },
+                "phbMagnitudeSystem": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "VEGA",
+                        "AB",
+                        "ST",
+                        "INSTRUMENTAL",
+                        "NOT_A_MAGNITUDE"
+                    ]
+                },
+                "phbQuantity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MAGNITUDE",
+                        "FLUX_DENSITY_JY",
+                        "ENERGY_FLUX_W_PER_M2",
+                        "PHOTON_FLUX_PER_M2_S",
+                        "COUNT_RATE_PER_S",
+                        "BRIGHTNESS_TEMPERATURE_K"
+                    ]
+                },
+                "phbDerivation": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "TRANSFORMED",
+                        "MODELLED"
+                    ]
+                },
+                "phbBoundKind": {
+                    "type": "string",
+                    "enum": [
+                        "DETECTION",
+                        "UPPER_LIMIT",
+                        "LOWER_LIMIT"
+                    ]
+                },
+                "sktCelestialFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ICRS",
+                        "GALACTIC",
+                        "ECLIPTIC_J2000"
+                    ]
+                },
+                "sktPayloadKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "POINT_SOURCES",
+                        "DIFFUSE_MAP",
+                        "PROBABILITY_MAP"
+                    ]
+                },
+                "sktRefinement": {
+                    "type": "string",
+                    "enum": [
+                        "ADD",
+                        "REPLACE"
+                    ]
+                },
+                "sktPlaceKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CATALOG",
+                        "ASTROMETRIC",
+                        "APPARENT"
+                    ]
+                },
+                "sktColorEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "COLOR_INDEX",
+                        "EFFECTIVE_TEMPERATURE"
+                    ]
+                },
+                "sktMapEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "FLOAT32",
+                        "FLOAT16",
+                        "UINT16_SCALED",
+                        "UINT8_SCALED"
+                    ]
+                },
+                "sktMapQuantity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SURFACE_BRIGHTNESS",
+                        "BRIGHTNESS_TEMPERATURE",
+                        "COUNTS",
+                        "COUNT_RATE",
+                        "EXPOSURE",
+                        "PROBABILITY",
+                        "SOURCE_DENSITY",
+                        "OTHER"
+                    ]
+                },
+                "sktStretchFunction": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LINEAR",
+                        "SQUARE_ROOT",
+                        "LOGARITHMIC",
+                        "ASINH",
+                        "HISTOGRAM_EQUALIZED"
+                    ]
+                },
+                "skqQueryKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "APPARENT_PLACES",
+                        "SYNTHETIC_PHOTOMETRY",
+                        "CONE",
+                        "FIELD_OF_VIEW",
+                        "IDENTIFY",
+                        "OCCULTATION",
+                        "BRIGHT_STAR_EXCLUSION",
+                        "INGEST"
+                    ]
+                },
+                "skrStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNSOLVED",
+                        "TOO_FEW_DETECTIONS",
+                        "NO_CATALOG",
+                        "BAD_REQUEST"
+                    ]
+                },
+                "PHBMeasurement": {
+                    "type": "object",
+                    "description": "One source's brightness in one band.",
+                    "properties": {
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band identifier; resolves to a `$PHB` BAND_ID."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse region of the band, copied from its descriptor so a consumer\ncan select a mode without resolving the band."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective wavelength of the band, nanometres (vacuum). Copied from the\ndescriptor; required for synthesis when the descriptor is not at hand."
+                        },
+                        "QUANTITY": {
+                            "$ref": "#/definitions/phbQuantity",
+                            "description": "Quantity VALUE states."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system when QUANTITY is MAGNITUDE."
+                        },
+                        "VALUE": {
+                            "type": "number",
+                            "description": "The measurement, in QUANTITY's units."
+                        },
+                        "UNCERTAINTY": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of VALUE, same units."
+                        },
+                        "BOUND": {
+                            "$ref": "#/definitions/phbBoundKind",
+                            "description": "Detection or bound."
+                        },
+                        "DERIVATION": {
+                            "$ref": "#/definitions/phbDerivation",
+                            "description": "How the value was obtained."
+                        },
+                        "EPOCH_MJD": {
+                            "type": "number",
+                            "description": "Mid-time of the observation, Modified Julian Date (TT), for sources\nwhose brightness varies. Absent for a catalogue mean."
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of observations averaged into VALUE; 0 when unstated."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PHB": {
+                    "type": "object",
+                    "description": "Photometric Band: one passband's place on the spectrum and its calibration.",
+                    "properties": {
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Stable band identifier, unique within the publishing catalogue, e.g.\n\"V\", \"Ks\", \"0.5-2keV\", \"1.4GHz\". Measurements refer to it."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable name."
+                        },
+                        "SYSTEM_NAME": {
+                            "type": "string",
+                            "description": "Name of the photometric system the band belongs to, as the defining\npublication states it."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse spectral region, by WAVELENGTH_EFF_NM."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective (pivot) wavelength, nanometres, vacuum."
+                        },
+                        "WAVELENGTH_MIN_NM": {
+                            "type": "number",
+                            "description": "Short edge of the band at half maximum response, nanometres."
+                        },
+                        "WAVELENGTH_MAX_NM": {
+                            "type": "number",
+                            "description": "Long edge of the band at half maximum response, nanometres."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system of magnitudes stated in the band."
+                        },
+                        "ZERO_POINT_JY": {
+                            "type": "number",
+                            "description": "Flux density at the effective wavelength of a zero-magnitude source,\njanskys."
+                        },
+                        "RESPONSE_WAVELENGTH_NM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Wavelengths the response curve is sampled at, nanometres, ascending."
+                        },
+                        "RESPONSE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Relative system response at each RESPONSE_WAVELENGTH_NM sample,\npeak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY."
+                        },
+                        "RESPONSE_IS_ENERGY": {
+                            "type": "boolean",
+                            "description": "True when RESPONSE is an energy-counting response."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Reference to the publication that defines the band."
+                        },
+                        "DEFINITION_URL": {
+                            "type": "string",
+                            "description": "URL of the band's defining document or response table."
+                        }
+                    },
+                    "required": [
+                        "BAND_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "SKTPoint": {
+                    "type": "object",
+                    "description": "One point source packed for drawing (24 bytes).",
+                    "properties": {
+                        "RA_FIXED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Right ascension (or longitude in FRAME) as a fraction of a full turn:\ndegrees = RA_FIXED * 360 / 2^32."
+                        },
+                        "DEC_FIXED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31."
+                        },
+                        "PMRA": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Proper motion in RA times cos(DEC), milliarcseconds per year. -32768\nwhen unknown or out of range (FLAGS bit 2)."
+                        },
+                        "PMDEC": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Proper motion in DEC, milliarcseconds per year. -32768 when unknown or\nout of range (FLAGS bit 2)."
+                        },
+                        "PARALLAX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Parallax in units of 0.02 milliarcseconds. 0 when unknown, not\npositive or out of range (FLAGS bit 3)."
+                        },
+                        "MAG": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767,
+                            "description": "Magnitude in the tile's band, millimagnitudes. -32768 when unknown."
+                        },
+                        "COLOR": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Colour, encoded as the tile's COLOR_ENCODING states."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+                        },
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKT": {
+                    "type": "object",
+                    "description": "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+                    "properties": {
+                        "LAYER_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/sktCelestialFrame",
+                            "description": "Frame the HEALPix grid and the point positions are stated in."
+                        },
+                        "ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "HEALPix order; NSIDE = 2^ORDER."
+                        },
+                        "PIXEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Nested pixel index at ORDER."
+                        },
+                        "MAX_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+                        },
+                        "CHILD_MASK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+                        },
+                        "PAYLOAD_KIND": {
+                            "$ref": "#/definitions/sktPayloadKind",
+                            "description": "Payload the tile carries."
+                        },
+                        "REFINE": {
+                            "$ref": "#/definitions/sktRefinement",
+                            "description": "How the tile relates to its ancestors and children."
+                        },
+                        "SPECTRAL_REGIME": {
+                            "$ref": "#/definitions/phbSpectralRegime",
+                            "description": "Coarse spectral region of the band."
+                        },
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are\nin this band."
+                        },
+                        "WAVELENGTH_EFF_NM": {
+                            "type": "number",
+                            "description": "Effective wavelength of the band, nanometres (vacuum)."
+                        },
+                        "WAVELENGTH_MIN_NM": {
+                            "type": "number",
+                            "description": "Short edge of a band-integrated map, nanometres."
+                        },
+                        "WAVELENGTH_MAX_NM": {
+                            "type": "number",
+                            "description": "Long edge of a band-integrated map, nanometres."
+                        },
+                        "MAGNITUDE_SYSTEM": {
+                            "$ref": "#/definitions/phbMagnitudeSystem",
+                            "description": "Calibration system of MAG."
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind",
+                            "description": "Which place point positions are."
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Epoch of point positions, Julian years (TT)."
+                        },
+                        "OBSERVER_ID": {
+                            "type": "string",
+                            "description": "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+                        },
+                        "POINT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points in the payload."
+                        },
+                        "MAG_BRIGHTEST": {
+                            "type": "number",
+                            "description": "Brightest magnitude in the tile."
+                        },
+                        "MAG_LIMIT": {
+                            "type": "number",
+                            "description": "Faintest magnitude in the tile; with the ancestors, the layer is\ncomplete to this limit inside the pixel."
+                        },
+                        "COLOR_ENCODING": {
+                            "$ref": "#/definitions/sktColorEncoding",
+                            "description": "What each point's COLOR holds."
+                        },
+                        "COLOR_BLUE_BAND_ID": {
+                            "type": "string",
+                            "description": "Bluer band of a COLOR_INDEX colour."
+                        },
+                        "COLOR_RED_BAND_ID": {
+                            "type": "string",
+                            "description": "Redder band of a COLOR_INDEX colour."
+                        },
+                        "POINTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKTPoint"
+                            },
+                            "description": "Packed points, brightest first."
+                        },
+                        "ROW_COLLECTION_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the full `$STR` / `$CSO` records of the points,\na size-prefixed record sequence in ROW order."
+                        },
+                        "MAP_DEPTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Order offset of the map pixels: the tile holds 4^MAP_DEPTH values."
+                        },
+                        "MAP_ENCODING": {
+                            "$ref": "#/definitions/sktMapEncoding",
+                            "description": "Numeric encoding of MAP_VALUES."
+                        },
+                        "MAP_QUANTITY": {
+                            "$ref": "#/definitions/sktMapQuantity",
+                            "description": "Physical quantity of the map."
+                        },
+                        "MAP_QUANTITY_NAME": {
+                            "type": "string",
+                            "description": "Producer's name for the quantity when MAP_QUANTITY is OTHER."
+                        },
+                        "MAP_UNITS": {
+                            "type": "string",
+                            "description": "Units of the physical map values, UCUM style (e.g. \"K\", \"MJy/sr\",\n\"count/s/sr\")."
+                        },
+                        "MAP_SCALE": {
+                            "type": "number",
+                            "description": "Scale of a scaled integer encoding."
+                        },
+                        "MAP_OFFSET": {
+                            "type": "number",
+                            "description": "Offset of a scaled integer encoding."
+                        },
+                        "MAP_BLANK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Raw value marking a pixel with no data in a scaled integer encoding."
+                        },
+                        "MAP_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Raw map bytes, 4^MAP_DEPTH values in nested order."
+                        },
+                        "STRETCH": {
+                            "$ref": "#/definitions/sktStretchFunction",
+                            "description": "Recommended stretch."
+                        },
+                        "BLACK_POINT": {
+                            "type": "number",
+                            "description": "Physical value drawn black."
+                        },
+                        "WHITE_POINT": {
+                            "type": "number",
+                            "description": "Physical value drawn white."
+                        },
+                        "STRETCH_SOFTENING": {
+                            "type": "number",
+                            "description": "Softening of an ASINH stretch, in physical units."
+                        },
+                        "PERCENTILE_LEVELS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Percentile levels of the layer's value distribution, in [0, 100],\nascending."
+                        },
+                        "PERCENTILE_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Physical value at each PERCENTILE_LEVELS entry. Computed over the whole\nlayer, so every tile stretches alike."
+                        },
+                        "PAYLOAD_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the payload when POINTS and MAP_VALUES are absent."
+                        },
+                        "PAYLOAD_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Length of the payload at PAYLOAD_CID, bytes."
+                        },
+                        "OBSERVATION_START": {
+                            "type": "string",
+                            "description": "Start of the observations the tile summarises, ISO 8601 UTC."
+                        },
+                        "OBSERVATION_END": {
+                            "type": "string",
+                            "description": "End of the observations the tile summarises, ISO 8601 UTC."
+                        },
+                        "SOURCE_NAMES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Verbatim names of the catalogues or surveys the tile was derived from."
+                        },
+                        "PRODUCER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer identifier of the node that produced the tile."
+                        },
+                        "PRODUCER_VERSION": {
+                            "type": "string",
+                            "description": "Producer software and version."
+                        },
+                        "PRODUCED_AT": {
+                            "type": "string",
+                            "description": "Time the tile was produced, ISO 8601 UTC."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Citation the upstream publishers ask for."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "URL of the licence or terms of the source data."
+                        }
+                    },
+                    "required": [
+                        "LAYER_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "SKQDetection": {
+                    "type": "object",
+                    "description": "A star detected by a camera: a direction in the camera frame.",
+                    "properties": {
+                        "X": {
+                            "type": "number",
+                            "description": "Direction in the camera frame; any non-zero length."
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        },
+                        "BRIGHTNESS": {
+                            "type": "number",
+                            "description": "Relative brightness; larger is brighter. Orders the detections."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQTrack": {
+                    "type": "object",
+                    "description": "A body's apparent path across the sky over an interval, and its disc.",
+                    "properties": {
+                        "START_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction of the body's centre at the start of the interval."
+                        },
+                        "START_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "END_RA_DEG": {
+                            "type": "number",
+                            "description": "Direction at the end; equal to the start for an instant."
+                        },
+                        "END_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "Angular radius of the body's disc."
+                        },
+                        "BODY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the body, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQPointing": {
+                    "type": "object",
+                    "description": "A sensor pointing to check for bright stars.",
+                    "properties": {
+                        "RA_DEG": {
+                            "type": "number"
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "POINTING_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Caller's identifier for the pointing, echoed in the result."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKQ": {
+                    "type": "object",
+                    "description": "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+                    "properties": {
+                        "QUERY_ID": {
+                            "type": "string",
+                            "description": "Caller's identifier, echoed in the result."
+                        },
+                        "QUERY_KIND": {
+                            "$ref": "#/definitions/skqQueryKind",
+                            "description": "What is asked."
+                        },
+                        "EPOCH_JD_TT": {
+                            "type": "number",
+                            "description": "Whole part of the epoch, Julian Date (TT)."
+                        },
+                        "EPOCH_JD_TT_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction added to EPOCH_JD_TT, days."
+                        },
+                        "OBSERVER_ID": {
+                            "type": "string",
+                            "description": "Name of the observer, carried into tiles and results."
+                        },
+                        "OBSERVER_POSITION_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric position on GCRS axes, metres; three entries."
+                        },
+                        "OBSERVER_VELOCITY_M_PER_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries."
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind",
+                            "description": "How far the reduction goes."
+                        },
+                        "BAND_ID": {
+                            "type": "string",
+                            "description": "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID."
+                        },
+                        "MAG_LIMIT": {
+                            "type": "number",
+                            "description": "Faintest magnitude reported. Absent: no limit."
+                        },
+                        "MAX_RESULTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Largest number of rows reported; 0 for no cap."
+                        },
+                        "TILE_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "APPARENT_PLACES: HEALPix order of the output tiles."
+                        },
+                        "COLOR_ENCODING": {
+                            "$ref": "#/definitions/sktColorEncoding",
+                            "description": "APPARENT_PLACES: what each point's COLOR holds."
+                        },
+                        "COLOR_BLUE_BAND_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: bands of a COLOR_INDEX colour."
+                        },
+                        "COLOR_RED_BAND_ID": {
+                            "type": "string"
+                        },
+                        "LAYER_ID": {
+                            "type": "string",
+                            "description": "APPARENT_PLACES: LAYER_ID of the output tiles."
+                        },
+                        "BAND_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: bands to report."
+                        },
+                        "RA_DEG": {
+                            "type": "number",
+                            "description": "CONE and FIELD_OF_VIEW: centre or boresight."
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "RADIUS_DEG": {
+                            "type": "number",
+                            "description": "CONE: radius."
+                        },
+                        "HALF_WIDTH_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's x axis."
+                        },
+                        "HALF_HEIGHT_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: half-extent along the field's y axis."
+                        },
+                        "ROLL_DEG": {
+                            "type": "number",
+                            "description": "FIELD_OF_VIEW: position angle of the field's +y axis, east of north."
+                        },
+                        "DETECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQDetection"
+                            },
+                            "description": "IDENTIFY: detected stars."
+                        },
+                        "TOLERANCE_ARCSEC": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between a detection and its catalogue star."
+                        },
+                        "MAX_FIELD_DEG": {
+                            "type": "number",
+                            "description": "IDENTIFY: largest angle between two detections (the field diagonal)."
+                        },
+                        "TRACKS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQTrack"
+                            },
+                            "description": "OCCULTATION: bodies and their tracks."
+                        },
+                        "POINTINGS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKQPointing"
+                            },
+                            "description": "BRIGHT_STAR_EXCLUSION: pointings to check."
+                        },
+                        "EXCLUSION_RADIUS_DEG": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: radius around each pointing."
+                        },
+                        "MAG_THRESHOLD": {
+                            "type": "number",
+                            "description": "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKRHit": {
+                    "type": "object",
+                    "description": "A row that answers a CONE or FIELD_OF_VIEW query.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "SKTPoint FLAGS bits for the row."
+                        },
+                        "RA_DEG": {
+                            "type": "number"
+                        },
+                        "DEC_DEG": {
+                            "type": "number"
+                        },
+                        "SEPARATION_DEG": {
+                            "type": "number",
+                            "description": "Angle from the centre or boresight."
+                        },
+                        "FIELD_X_DEG": {
+                            "type": "number",
+                            "description": "Field coordinates: angles along the field's x and y axes (the\nstandard coordinates of a cone query). NaN behind the tangent plane."
+                        },
+                        "FIELD_Y_DEG": {
+                            "type": "number"
+                        },
+                        "MAG": {
+                            "type": "number",
+                            "description": "Magnitude in the query's band; NaN when unknown."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKROccultation": {
+                    "type": "object",
+                    "description": "A row a body's disc passes over.",
+                    "properties": {
+                        "BODY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MIN_SEPARATION_DEG": {
+                            "type": "number",
+                            "description": "Closest approach of the body's centre to the row."
+                        },
+                        "TRACK_FRACTION": {
+                            "type": "number",
+                            "description": "Where along the track the closest approach falls, from 0 (start) to 1\n(end)."
+                        },
+                        "MAG": {
+                            "type": "number"
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKRExclusion": {
+                    "type": "object",
+                    "description": "Bright rows near one pointing.",
+                    "properties": {
+                        "POINTING_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VIOLATING_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Rows within the radius at least as bright as the threshold."
+                        },
+                        "BRIGHTEST_ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The brightest of them; 4294967295 when there are none."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BRIGHTEST_SEPARATION_DEG": {
+                            "type": "number"
+                        },
+                        "BRIGHTEST_MAG": {
+                            "type": "number"
+                        },
+                        "RESERVED2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SKR": {
+                    "type": "object",
+                    "description": "Sky Query Result: the answer to one `$SKQ`.",
+                    "properties": {
+                        "QUERY_ID": {
+                            "type": "string",
+                            "description": "QUERY_ID of the query answered."
+                        },
+                        "QUERY_KIND": {
+                            "$ref": "#/definitions/skqQueryKind"
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/skrStatus"
+                        },
+                        "MESSAGE": {
+                            "type": "string",
+                            "description": "Why a query failed."
+                        },
+                        "EPOCH_JD_TT": {
+                            "type": "number",
+                            "description": "Epoch and reduction the answer is for, copied from the query."
+                        },
+                        "EPOCH_JD_TT_FRACTION": {
+                            "type": "number"
+                        },
+                        "PLACE": {
+                            "$ref": "#/definitions/sktPlaceKind"
+                        },
+                        "ROW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Catalogue rows held."
+                        },
+                        "ROWS_ADDED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "INGEST: rows added by the ingest answered."
+                        },
+                        "REJECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "INGEST: records refused by verification."
+                        },
+                        "BAND_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Band descriptors held."
+                        },
+                        "MATCHED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied."
+                        },
+                        "HITS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKRHit"
+                            }
+                        },
+                        "BAND_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: bands of the table's columns."
+                        },
+                        "MAGNITUDES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major."
+                        },
+                        "DERIVATIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/phbDerivation"
+                            },
+                            "description": "SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout."
+                        },
+                        "MATCHED_DETECTIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "IDENTIFY: detections matched."
+                        },
+                        "ROTATION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "IDENTIFY: camera-to-GCRS rotation, nine entries, row-major."
+                        },
+                        "QUATERNION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "IDENTIFY: the same rotation as (w, x, y, z)."
+                        },
+                        "RESIDUAL_RMS_ARCSEC": {
+                            "type": "number",
+                            "description": "IDENTIFY: RMS angle between matched detections and their rows."
+                        },
+                        "BORESIGHT_RA_DEG": {
+                            "type": "number",
+                            "description": "IDENTIFY: direction of the camera's +z axis."
+                        },
+                        "BORESIGHT_DEC_DEG": {
+                            "type": "number"
+                        },
+                        "MATCHED_ROWS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "IDENTIFY: row matched to each detection, in detection order;\n4294967295 when unmatched."
+                        },
+                        "OCCULTATIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKROccultation"
+                            },
+                            "description": "OCCULTATION: rows passed over."
+                        },
+                        "EXCLUSIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SKRExclusion"
+                            },
+                            "description": "BRIGHT_STAR_EXCLUSION: one verdict per pointing."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SKR"
         },
         "SOI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

@@ -1,0 +1,1893 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "phbSpectralRegime": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GAMMA_RAY",
+        "HARD_X_RAY",
+        "SOFT_X_RAY",
+        "EXTREME_ULTRAVIOLET",
+        "FAR_ULTRAVIOLET",
+        "NEAR_ULTRAVIOLET",
+        "VISIBLE",
+        "NEAR_INFRARED",
+        "MID_INFRARED",
+        "FAR_INFRARED",
+        "SUBMILLIMETRE",
+        "MICROWAVE",
+        "RADIO"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "GAMMA_RAY": {
+          "value": 1,
+          "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+        },
+        "HARD_X_RAY": {
+          "value": 2,
+          "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+        },
+        "SOFT_X_RAY": {
+          "value": 3,
+          "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+        },
+        "EXTREME_ULTRAVIOLET": {
+          "value": 4,
+          "description": "12.4 nm to 91.2 nm."
+        },
+        "FAR_ULTRAVIOLET": {
+          "value": 5,
+          "description": "91.2 nm to 200 nm."
+        },
+        "NEAR_ULTRAVIOLET": {
+          "value": 6,
+          "description": "200 nm to 380 nm."
+        },
+        "VISIBLE": {
+          "value": 7,
+          "description": "380 nm to 750 nm."
+        },
+        "NEAR_INFRARED": {
+          "value": 8,
+          "description": "0.75 um to 5 um."
+        },
+        "MID_INFRARED": {
+          "value": 9,
+          "description": "5 um to 40 um."
+        },
+        "FAR_INFRARED": {
+          "value": 10,
+          "description": "40 um to 350 um."
+        },
+        "SUBMILLIMETRE": {
+          "value": 11,
+          "description": "350 um to 1 mm."
+        },
+        "MICROWAVE": {
+          "value": 12,
+          "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+        },
+        "RADIO": {
+          "value": 13,
+          "description": "Longer than 10 cm (below 3 GHz)."
+        }
+      }
+    },
+    "phbMagnitudeSystem": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "VEGA",
+        "AB",
+        "ST",
+        "INSTRUMENTAL",
+        "NOT_A_MAGNITUDE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "VEGA": {
+          "value": 1,
+          "description": "Zero magnitude is the flux of the standard A0 V reference star."
+        },
+        "AB": {
+          "value": 2,
+          "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+        },
+        "ST": {
+          "value": 3,
+          "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+        },
+        "INSTRUMENTAL": {
+          "value": 4,
+          "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+        },
+        "NOT_A_MAGNITUDE": {
+          "value": 5,
+          "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+        }
+      }
+    },
+    "phbQuantity": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MAGNITUDE",
+        "FLUX_DENSITY_JY",
+        "ENERGY_FLUX_W_PER_M2",
+        "PHOTON_FLUX_PER_M2_S",
+        "COUNT_RATE_PER_S",
+        "BRIGHTNESS_TEMPERATURE_K"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MAGNITUDE": {
+          "value": 1,
+          "description": "Magnitude in the band's SYSTEM."
+        },
+        "FLUX_DENSITY_JY": {
+          "value": 2,
+          "description": "Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1)."
+        },
+        "ENERGY_FLUX_W_PER_M2": {
+          "value": 3,
+          "description": "Band-integrated energy flux, W m-2."
+        },
+        "PHOTON_FLUX_PER_M2_S": {
+          "value": 4,
+          "description": "Band-integrated photon flux, photons m-2 s-1."
+        },
+        "COUNT_RATE_PER_S": {
+          "value": 5,
+          "description": "Detected count rate of the stated instrument, counts s-1."
+        },
+        "BRIGHTNESS_TEMPERATURE_K": {
+          "value": 6,
+          "description": "Brightness temperature, kelvin."
+        }
+      }
+    },
+    "phbDerivation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEASURED",
+        "TRANSFORMED",
+        "MODELLED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MEASURED": {
+          "value": 1,
+          "description": "Observed in this band."
+        },
+        "TRANSFORMED": {
+          "value": 2,
+          "description": "Converted from a measurement in another band or system by a stated transformation."
+        },
+        "MODELLED": {
+          "value": 3,
+          "description": "Synthesised from a spectral energy distribution or a model atmosphere; never observed in this band."
+        }
+      }
+    },
+    "phbBoundKind": {
+      "type": "string",
+      "enum": [
+        "DETECTION",
+        "UPPER_LIMIT",
+        "LOWER_LIMIT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "DETECTION": {
+          "value": 0,
+          "description": "A detection: VALUE is the measured brightness."
+        },
+        "UPPER_LIMIT": {
+          "value": 1,
+          "description": "Not detected: the source is fainter than VALUE (a flux upper limit, a magnitude lower bound)."
+        },
+        "LOWER_LIMIT": {
+          "value": 2,
+          "description": "Saturated or confused: the source is at least as bright as VALUE."
+        }
+      }
+    },
+    "sktCelestialFrame": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ICRS",
+        "GALACTIC",
+        "ECLIPTIC_J2000"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ICRS": {
+          "value": 1,
+          "description": "International Celestial Reference System."
+        },
+        "GALACTIC": {
+          "value": 2,
+          "description": "Galactic coordinates (l, b)."
+        },
+        "ECLIPTIC_J2000": {
+          "value": 3,
+          "description": "Ecliptic coordinates of J2000.0."
+        }
+      }
+    },
+    "sktPayloadKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "POINT_SOURCES",
+        "DIFFUSE_MAP",
+        "PROBABILITY_MAP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "POINT_SOURCES": {
+          "value": 1,
+          "description": "Packed SKTPoint sources."
+        },
+        "DIFFUSE_MAP": {
+          "value": 2,
+          "description": "Pixel map of a diffuse quantity."
+        },
+        "PROBABILITY_MAP": {
+          "value": 3,
+          "description": "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+        }
+      }
+    },
+    "sktRefinement": {
+      "type": "string",
+      "enum": [
+        "ADD",
+        "REPLACE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "ADD": {
+          "value": 0,
+          "description": "The tile adds to its ancestors (point layers)."
+        },
+        "REPLACE": {
+          "value": 1,
+          "description": "The tile replaces its parent (map layers)."
+        }
+      }
+    },
+    "sktPlaceKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CATALOG",
+        "ASTROMETRIC",
+        "APPARENT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CATALOG": {
+          "value": 1,
+          "description": "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+        },
+        "ASTROMETRIC": {
+          "value": 2,
+          "description": "Astrometric place for the observer named by OBSERVER_ID at EPOCH: space motion and parallax applied, no aberration or deflection."
+        },
+        "APPARENT": {
+          "value": 3,
+          "description": "Apparent place for the observer named by OBSERVER_ID at EPOCH: space motion, parallax, light deflection and aberration applied, in FRAME axes."
+        }
+      }
+    },
+    "sktColorEncoding": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "COLOR_INDEX",
+        "EFFECTIVE_TEMPERATURE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No colour; COLOR is 0."
+        },
+        "COLOR_INDEX": {
+          "value": 1,
+          "description": "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+        },
+        "EFFECTIVE_TEMPERATURE": {
+          "value": 2,
+          "description": "Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded. 0 means unknown."
+        }
+      }
+    },
+    "sktMapEncoding": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FLOAT32",
+        "FLOAT16",
+        "UINT16_SCALED",
+        "UINT8_SCALED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FLOAT32": {
+          "value": 1,
+          "description": "IEEE 754 binary32, little-endian. NaN marks a pixel with no data."
+        },
+        "FLOAT16": {
+          "value": 2,
+          "description": "IEEE 754 binary16, little-endian. NaN marks a pixel with no data."
+        },
+        "UINT16_SCALED": {
+          "value": 3,
+          "description": "Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK marks a pixel with no data."
+        },
+        "UINT8_SCALED": {
+          "value": 4,
+          "description": "Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK marks a pixel with no data."
+        }
+      }
+    },
+    "sktMapQuantity": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SURFACE_BRIGHTNESS",
+        "BRIGHTNESS_TEMPERATURE",
+        "COUNTS",
+        "COUNT_RATE",
+        "EXPOSURE",
+        "PROBABILITY",
+        "SOURCE_DENSITY",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SURFACE_BRIGHTNESS": {
+          "value": 1,
+          "description": "Surface brightness, MAP_UNITS per steradian or per square arcsecond as MAP_UNITS states."
+        },
+        "BRIGHTNESS_TEMPERATURE": {
+          "value": 2,
+          "description": "Brightness temperature, kelvin."
+        },
+        "COUNTS": {
+          "value": 3,
+          "description": "Detected counts per pixel."
+        },
+        "COUNT_RATE": {
+          "value": 4,
+          "description": "Counts per unit exposure (a rate map)."
+        },
+        "EXPOSURE": {
+          "value": 5,
+          "description": "Exposure per pixel."
+        },
+        "PROBABILITY": {
+          "value": 6,
+          "description": "Probability per pixel."
+        },
+        "SOURCE_DENSITY": {
+          "value": 7,
+          "description": "Surface density of sources per pixel."
+        },
+        "OTHER": {
+          "value": 8,
+          "description": "Quantity named in MAP_QUANTITY_NAME."
+        }
+      }
+    },
+    "sktStretchFunction": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "LINEAR",
+        "SQUARE_ROOT",
+        "LOGARITHMIC",
+        "ASINH",
+        "HISTOGRAM_EQUALIZED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "LINEAR": {
+          "value": 1
+        },
+        "SQUARE_ROOT": {
+          "value": 2
+        },
+        "LOGARITHMIC": {
+          "value": 3
+        },
+        "ASINH": {
+          "value": 4,
+          "description": "Inverse hyperbolic sine with softening STRETCH_SOFTENING."
+        },
+        "HISTOGRAM_EQUALIZED": {
+          "value": 5,
+          "description": "Histogram equalisation over PERCENTILE_VALUES."
+        }
+      }
+    },
+    "skqQueryKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "APPARENT_PLACES",
+        "SYNTHETIC_PHOTOMETRY",
+        "CONE",
+        "FIELD_OF_VIEW",
+        "IDENTIFY",
+        "OCCULTATION",
+        "BRIGHT_STAR_EXCLUSION",
+        "INGEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "APPARENT_PLACES": {
+          "value": 1,
+          "description": "Place every row for the observer; answered with `$SKT` tiles."
+        },
+        "SYNTHETIC_PHOTOMETRY": {
+          "value": 2,
+          "description": "Brightness of every row in each of BAND_IDS."
+        },
+        "CONE": {
+          "value": 3,
+          "description": "Rows within RADIUS_DEG of RA_DEG / DEC_DEG."
+        },
+        "FIELD_OF_VIEW": {
+          "value": 4,
+          "description": "Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG."
+        },
+        "IDENTIFY": {
+          "value": 5,
+          "description": "Identify DETECTIONS with no prior pointing and solve the camera attitude."
+        },
+        "OCCULTATION": {
+          "value": 6,
+          "description": "Rows each of TRACKS passes over."
+        },
+        "BRIGHT_STAR_EXCLUSION": {
+          "value": 7,
+          "description": "Bright rows near each of POINTINGS."
+        },
+        "INGEST": {
+          "value": 8,
+          "description": "Counts after catalogue records were ingested."
+        }
+      }
+    },
+    "PHBMeasurement": {
+      "type": "object",
+      "description": "One source's brightness in one band.",
+      "properties": {
+        "BAND_ID": {
+          "type": "string",
+          "description": "Band identifier; resolves to a `$PHB` BAND_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "SPECTRAL_REGIME": {
+          "$ref": "#/definitions/phbSpectralRegime",
+          "description": "Coarse region of the band, copied from its descriptor so a consumer\ncan select a mode without resolving the band.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GAMMA_RAY": {
+              "value": 1,
+              "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+            },
+            "HARD_X_RAY": {
+              "value": 2,
+              "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+            },
+            "SOFT_X_RAY": {
+              "value": 3,
+              "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+            },
+            "EXTREME_ULTRAVIOLET": {
+              "value": 4,
+              "description": "12.4 nm to 91.2 nm."
+            },
+            "FAR_ULTRAVIOLET": {
+              "value": 5,
+              "description": "91.2 nm to 200 nm."
+            },
+            "NEAR_ULTRAVIOLET": {
+              "value": 6,
+              "description": "200 nm to 380 nm."
+            },
+            "VISIBLE": {
+              "value": 7,
+              "description": "380 nm to 750 nm."
+            },
+            "NEAR_INFRARED": {
+              "value": 8,
+              "description": "0.75 um to 5 um."
+            },
+            "MID_INFRARED": {
+              "value": 9,
+              "description": "5 um to 40 um."
+            },
+            "FAR_INFRARED": {
+              "value": 10,
+              "description": "40 um to 350 um."
+            },
+            "SUBMILLIMETRE": {
+              "value": 11,
+              "description": "350 um to 1 mm."
+            },
+            "MICROWAVE": {
+              "value": 12,
+              "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+            },
+            "RADIO": {
+              "value": 13,
+              "description": "Longer than 10 cm (below 3 GHz)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WAVELENGTH_EFF_NM": {
+          "type": "number",
+          "description": "Effective wavelength of the band, nanometres (vacuum). Copied from the\ndescriptor; required for synthesis when the descriptor is not at hand.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "QUANTITY": {
+          "$ref": "#/definitions/phbQuantity",
+          "description": "Quantity VALUE states.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MAGNITUDE": {
+              "value": 1,
+              "description": "Magnitude in the band's SYSTEM."
+            },
+            "FLUX_DENSITY_JY": {
+              "value": 2,
+              "description": "Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1)."
+            },
+            "ENERGY_FLUX_W_PER_M2": {
+              "value": 3,
+              "description": "Band-integrated energy flux, W m-2."
+            },
+            "PHOTON_FLUX_PER_M2_S": {
+              "value": 4,
+              "description": "Band-integrated photon flux, photons m-2 s-1."
+            },
+            "COUNT_RATE_PER_S": {
+              "value": 5,
+              "description": "Detected count rate of the stated instrument, counts s-1."
+            },
+            "BRIGHTNESS_TEMPERATURE_K": {
+              "value": 6,
+              "description": "Brightness temperature, kelvin."
+            }
+          },
+          "x-flatbuffer-default": "MAGNITUDE"
+        },
+        "MAGNITUDE_SYSTEM": {
+          "$ref": "#/definitions/phbMagnitudeSystem",
+          "description": "Calibration system when QUANTITY is MAGNITUDE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VEGA": {
+              "value": 1,
+              "description": "Zero magnitude is the flux of the standard A0 V reference star."
+            },
+            "AB": {
+              "value": 2,
+              "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+            },
+            "ST": {
+              "value": 3,
+              "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+            },
+            "INSTRUMENTAL": {
+              "value": 4,
+              "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+            },
+            "NOT_A_MAGNITUDE": {
+              "value": 5,
+              "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "The measurement, in QUANTITY's units.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "UNCERTAINTY": {
+          "type": "number",
+          "description": "One-sigma uncertainty of VALUE, same units.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BOUND": {
+          "$ref": "#/definitions/phbBoundKind",
+          "description": "Detection or bound.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "DETECTION": {
+              "value": 0,
+              "description": "A detection: VALUE is the measured brightness."
+            },
+            "UPPER_LIMIT": {
+              "value": 1,
+              "description": "Not detected: the source is fainter than VALUE (a flux upper limit, a magnitude lower bound)."
+            },
+            "LOWER_LIMIT": {
+              "value": 2,
+              "description": "Saturated or confused: the source is at least as bright as VALUE."
+            }
+          },
+          "x-flatbuffer-default": "DETECTION"
+        },
+        "DERIVATION": {
+          "$ref": "#/definitions/phbDerivation",
+          "description": "How the value was obtained.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MEASURED": {
+              "value": 1,
+              "description": "Observed in this band."
+            },
+            "TRANSFORMED": {
+              "value": 2,
+              "description": "Converted from a measurement in another band or system by a stated transformation."
+            },
+            "MODELLED": {
+              "value": 3,
+              "description": "Synthesised from a spectral energy distribution or a model atmosphere; never observed in this band."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EPOCH_MJD": {
+          "type": "number",
+          "description": "Mid-time of the observation, Modified Julian Date (TT), for sources\nwhose brightness varies. Absent for a catalogue mean.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of observations averaged into VALUE; 0 when unstated.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PHB": {
+      "type": "object",
+      "description": "Photometric Band: one passband's place on the spectrum and its calibration.",
+      "properties": {
+        "BAND_ID": {
+          "type": "string",
+          "description": "Stable band identifier, unique within the publishing catalogue, e.g.\n\"V\", \"Ks\", \"0.5-2keV\", \"1.4GHz\". Measurements refer to it.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable name.",
+          "x-flatbuffer-type": "string"
+        },
+        "SYSTEM_NAME": {
+          "type": "string",
+          "description": "Name of the photometric system the band belongs to, as the defining\npublication states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SPECTRAL_REGIME": {
+          "$ref": "#/definitions/phbSpectralRegime",
+          "description": "Coarse spectral region, by WAVELENGTH_EFF_NM.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GAMMA_RAY": {
+              "value": 1,
+              "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+            },
+            "HARD_X_RAY": {
+              "value": 2,
+              "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+            },
+            "SOFT_X_RAY": {
+              "value": 3,
+              "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+            },
+            "EXTREME_ULTRAVIOLET": {
+              "value": 4,
+              "description": "12.4 nm to 91.2 nm."
+            },
+            "FAR_ULTRAVIOLET": {
+              "value": 5,
+              "description": "91.2 nm to 200 nm."
+            },
+            "NEAR_ULTRAVIOLET": {
+              "value": 6,
+              "description": "200 nm to 380 nm."
+            },
+            "VISIBLE": {
+              "value": 7,
+              "description": "380 nm to 750 nm."
+            },
+            "NEAR_INFRARED": {
+              "value": 8,
+              "description": "0.75 um to 5 um."
+            },
+            "MID_INFRARED": {
+              "value": 9,
+              "description": "5 um to 40 um."
+            },
+            "FAR_INFRARED": {
+              "value": 10,
+              "description": "40 um to 350 um."
+            },
+            "SUBMILLIMETRE": {
+              "value": 11,
+              "description": "350 um to 1 mm."
+            },
+            "MICROWAVE": {
+              "value": 12,
+              "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+            },
+            "RADIO": {
+              "value": 13,
+              "description": "Longer than 10 cm (below 3 GHz)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WAVELENGTH_EFF_NM": {
+          "type": "number",
+          "description": "Effective (pivot) wavelength, nanometres, vacuum.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MIN_NM": {
+          "type": "number",
+          "description": "Short edge of the band at half maximum response, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MAX_NM": {
+          "type": "number",
+          "description": "Long edge of the band at half maximum response, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAGNITUDE_SYSTEM": {
+          "$ref": "#/definitions/phbMagnitudeSystem",
+          "description": "Calibration system of magnitudes stated in the band.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VEGA": {
+              "value": 1,
+              "description": "Zero magnitude is the flux of the standard A0 V reference star."
+            },
+            "AB": {
+              "value": 2,
+              "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+            },
+            "ST": {
+              "value": 3,
+              "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+            },
+            "INSTRUMENTAL": {
+              "value": 4,
+              "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+            },
+            "NOT_A_MAGNITUDE": {
+              "value": 5,
+              "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ZERO_POINT_JY": {
+          "type": "number",
+          "description": "Flux density at the effective wavelength of a zero-magnitude source,\njanskys.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RESPONSE_WAVELENGTH_NM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Wavelengths the response curve is sampled at, nanometres, ascending.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Relative system response at each RESPONSE_WAVELENGTH_NM sample,\npeak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.",
+          "x-flatbuffer-type": "[float]"
+        },
+        "RESPONSE_IS_ENERGY": {
+          "type": "boolean",
+          "description": "True when RESPONSE is an energy-counting response.",
+          "x-flatbuffer-type": "bool"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Reference to the publication that defines the band.",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFINITION_URL": {
+          "type": "string",
+          "description": "URL of the band's defining document or response table.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "BAND_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SKTPoint": {
+      "type": "object",
+      "description": "One point source packed for drawing (24 bytes).",
+      "properties": {
+        "RA_FIXED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Right ascension (or longitude in FRAME) as a fraction of a full turn:\ndegrees = RA_FIXED * 360 / 2^32."
+        },
+        "DEC_FIXED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31."
+        },
+        "PMRA": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767,
+          "description": "Proper motion in RA times cos(DEC), milliarcseconds per year. -32768\nwhen unknown or out of range (FLAGS bit 2)."
+        },
+        "PMDEC": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767,
+          "description": "Proper motion in DEC, milliarcseconds per year. -32768 when unknown or\nout of range (FLAGS bit 2)."
+        },
+        "PARALLAX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Parallax in units of 0.02 milliarcseconds. 0 when unknown, not\npositive or out of range (FLAGS bit 3)."
+        },
+        "MAG": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767,
+          "description": "Magnitude in the tile's band, millimagnitudes. -32768 when unknown."
+        },
+        "COLOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Colour, encoded as the tile's COLOR_ENCODING states."
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+        },
+        "ROW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKT": {
+      "type": "object",
+      "description": "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+      "properties": {
+        "LAYER_ID": {
+          "type": "string",
+          "description": "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FRAME": {
+          "$ref": "#/definitions/sktCelestialFrame",
+          "description": "Frame the HEALPix grid and the point positions are stated in.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ICRS": {
+              "value": 1,
+              "description": "International Celestial Reference System."
+            },
+            "GALACTIC": {
+              "value": 2,
+              "description": "Galactic coordinates (l, b)."
+            },
+            "ECLIPTIC_J2000": {
+              "value": 3,
+              "description": "Ecliptic coordinates of J2000.0."
+            }
+          },
+          "x-flatbuffer-default": "ICRS"
+        },
+        "ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "HEALPix order; NSIDE = 2^ORDER.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "PIXEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Nested pixel index at ORDER.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Deepest order of the layer, when the producer knows it; 255 when\nunstated.",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "255"
+        },
+        "CHILD_MASK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "PAYLOAD_KIND": {
+          "$ref": "#/definitions/sktPayloadKind",
+          "description": "Payload the tile carries.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POINT_SOURCES": {
+              "value": 1,
+              "description": "Packed SKTPoint sources."
+            },
+            "DIFFUSE_MAP": {
+              "value": 2,
+              "description": "Pixel map of a diffuse quantity."
+            },
+            "PROBABILITY_MAP": {
+              "value": 3,
+              "description": "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REFINE": {
+          "$ref": "#/definitions/sktRefinement",
+          "description": "How the tile relates to its ancestors and children.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ADD": {
+              "value": 0,
+              "description": "The tile adds to its ancestors (point layers)."
+            },
+            "REPLACE": {
+              "value": 1,
+              "description": "The tile replaces its parent (map layers)."
+            }
+          },
+          "x-flatbuffer-default": "ADD"
+        },
+        "SPECTRAL_REGIME": {
+          "$ref": "#/definitions/phbSpectralRegime",
+          "description": "Coarse spectral region of the band.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GAMMA_RAY": {
+              "value": 1,
+              "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+            },
+            "HARD_X_RAY": {
+              "value": 2,
+              "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+            },
+            "SOFT_X_RAY": {
+              "value": 3,
+              "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+            },
+            "EXTREME_ULTRAVIOLET": {
+              "value": 4,
+              "description": "12.4 nm to 91.2 nm."
+            },
+            "FAR_ULTRAVIOLET": {
+              "value": 5,
+              "description": "91.2 nm to 200 nm."
+            },
+            "NEAR_ULTRAVIOLET": {
+              "value": 6,
+              "description": "200 nm to 380 nm."
+            },
+            "VISIBLE": {
+              "value": 7,
+              "description": "380 nm to 750 nm."
+            },
+            "NEAR_INFRARED": {
+              "value": 8,
+              "description": "0.75 um to 5 um."
+            },
+            "MID_INFRARED": {
+              "value": 9,
+              "description": "5 um to 40 um."
+            },
+            "FAR_INFRARED": {
+              "value": 10,
+              "description": "40 um to 350 um."
+            },
+            "SUBMILLIMETRE": {
+              "value": 11,
+              "description": "350 um to 1 mm."
+            },
+            "MICROWAVE": {
+              "value": 12,
+              "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+            },
+            "RADIO": {
+              "value": 13,
+              "description": "Longer than 10 cm (below 3 GHz)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "BAND_ID": {
+          "type": "string",
+          "description": "Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are\nin this band.",
+          "x-flatbuffer-type": "string"
+        },
+        "WAVELENGTH_EFF_NM": {
+          "type": "number",
+          "description": "Effective wavelength of the band, nanometres (vacuum).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MIN_NM": {
+          "type": "number",
+          "description": "Short edge of a band-integrated map, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MAX_NM": {
+          "type": "number",
+          "description": "Long edge of a band-integrated map, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAGNITUDE_SYSTEM": {
+          "$ref": "#/definitions/phbMagnitudeSystem",
+          "description": "Calibration system of MAG.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VEGA": {
+              "value": 1,
+              "description": "Zero magnitude is the flux of the standard A0 V reference star."
+            },
+            "AB": {
+              "value": 2,
+              "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+            },
+            "ST": {
+              "value": 3,
+              "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+            },
+            "INSTRUMENTAL": {
+              "value": 4,
+              "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+            },
+            "NOT_A_MAGNITUDE": {
+              "value": 5,
+              "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PLACE": {
+          "$ref": "#/definitions/sktPlaceKind",
+          "description": "Which place point positions are.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CATALOG": {
+              "value": 1,
+              "description": "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+            },
+            "ASTROMETRIC": {
+              "value": 2,
+              "description": "Astrometric place for the observer named by OBSERVER_ID at EPOCH: space motion and parallax applied, no aberration or deflection."
+            },
+            "APPARENT": {
+              "value": 3,
+              "description": "Apparent place for the observer named by OBSERVER_ID at EPOCH: space motion, parallax, light deflection and aberration applied, in FRAME axes."
+            }
+          },
+          "x-flatbuffer-default": "CATALOG"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Epoch of point positions, Julian years (TT).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "OBSERVER_ID": {
+          "type": "string",
+          "description": "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it.",
+          "x-flatbuffer-type": "string"
+        },
+        "POINT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of points in the payload.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAG_BRIGHTEST": {
+          "type": "number",
+          "description": "Brightest magnitude in the tile.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAG_LIMIT": {
+          "type": "number",
+          "description": "Faintest magnitude in the tile; with the ancestors, the layer is\ncomplete to this limit inside the pixel.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "COLOR_ENCODING": {
+          "$ref": "#/definitions/sktColorEncoding",
+          "description": "What each point's COLOR holds.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No colour; COLOR is 0."
+            },
+            "COLOR_INDEX": {
+              "value": 1,
+              "description": "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+            },
+            "EFFECTIVE_TEMPERATURE": {
+              "value": 2,
+              "description": "Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded. 0 means unknown."
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "COLOR_BLUE_BAND_ID": {
+          "type": "string",
+          "description": "Bluer band of a COLOR_INDEX colour.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_RED_BAND_ID": {
+          "type": "string",
+          "description": "Redder band of a COLOR_INDEX colour.",
+          "x-flatbuffer-type": "string"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKTPoint"
+          },
+          "description": "Packed points, brightest first.",
+          "x-flatbuffer-type": "[SKTPoint]"
+        },
+        "ROW_COLLECTION_CID": {
+          "type": "string",
+          "description": "Content identifier of the full `$STR` / `$CSO` records of the points,\na size-prefixed record sequence in ROW order.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAP_DEPTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Order offset of the map pixels: the tile holds 4^MAP_DEPTH values.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "MAP_ENCODING": {
+          "$ref": "#/definitions/sktMapEncoding",
+          "description": "Numeric encoding of MAP_VALUES.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FLOAT32": {
+              "value": 1,
+              "description": "IEEE 754 binary32, little-endian. NaN marks a pixel with no data."
+            },
+            "FLOAT16": {
+              "value": 2,
+              "description": "IEEE 754 binary16, little-endian. NaN marks a pixel with no data."
+            },
+            "UINT16_SCALED": {
+              "value": 3,
+              "description": "Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK marks a pixel with no data."
+            },
+            "UINT8_SCALED": {
+              "value": 4,
+              "description": "Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK marks a pixel with no data."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MAP_QUANTITY": {
+          "$ref": "#/definitions/sktMapQuantity",
+          "description": "Physical quantity of the map.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SURFACE_BRIGHTNESS": {
+              "value": 1,
+              "description": "Surface brightness, MAP_UNITS per steradian or per square arcsecond as MAP_UNITS states."
+            },
+            "BRIGHTNESS_TEMPERATURE": {
+              "value": 2,
+              "description": "Brightness temperature, kelvin."
+            },
+            "COUNTS": {
+              "value": 3,
+              "description": "Detected counts per pixel."
+            },
+            "COUNT_RATE": {
+              "value": 4,
+              "description": "Counts per unit exposure (a rate map)."
+            },
+            "EXPOSURE": {
+              "value": 5,
+              "description": "Exposure per pixel."
+            },
+            "PROBABILITY": {
+              "value": 6,
+              "description": "Probability per pixel."
+            },
+            "SOURCE_DENSITY": {
+              "value": 7,
+              "description": "Surface density of sources per pixel."
+            },
+            "OTHER": {
+              "value": 8,
+              "description": "Quantity named in MAP_QUANTITY_NAME."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MAP_QUANTITY_NAME": {
+          "type": "string",
+          "description": "Producer's name for the quantity when MAP_QUANTITY is OTHER.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAP_UNITS": {
+          "type": "string",
+          "description": "Units of the physical map values, UCUM style (e.g. \"K\", \"MJy/sr\",\n\"count/s/sr\").",
+          "x-flatbuffer-type": "string"
+        },
+        "MAP_SCALE": {
+          "type": "number",
+          "description": "Scale of a scaled integer encoding.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "MAP_OFFSET": {
+          "type": "number",
+          "description": "Offset of a scaled integer encoding.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "MAP_BLANK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Raw value marking a pixel with no data in a scaled integer encoding.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "4294967295"
+        },
+        "MAP_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Raw map bytes, 4^MAP_DEPTH values in nested order.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "STRETCH": {
+          "$ref": "#/definitions/sktStretchFunction",
+          "description": "Recommended stretch.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "LINEAR": {
+              "value": 1
+            },
+            "SQUARE_ROOT": {
+              "value": 2
+            },
+            "LOGARITHMIC": {
+              "value": 3
+            },
+            "ASINH": {
+              "value": 4,
+              "description": "Inverse hyperbolic sine with softening STRETCH_SOFTENING."
+            },
+            "HISTOGRAM_EQUALIZED": {
+              "value": 5,
+              "description": "Histogram equalisation over PERCENTILE_VALUES."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "BLACK_POINT": {
+          "type": "number",
+          "description": "Physical value drawn black.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WHITE_POINT": {
+          "type": "number",
+          "description": "Physical value drawn white.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STRETCH_SOFTENING": {
+          "type": "number",
+          "description": "Softening of an ASINH stretch, in physical units.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PERCENTILE_LEVELS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Percentile levels of the layer's value distribution, in [0, 100],\nascending.",
+          "x-flatbuffer-type": "[float]"
+        },
+        "PERCENTILE_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Physical value at each PERCENTILE_LEVELS entry. Computed over the whole\nlayer, so every tile stretches alike.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PAYLOAD_CID": {
+          "type": "string",
+          "description": "Content identifier of the payload when POINTS and MAP_VALUES are absent.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAYLOAD_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Length of the payload at PAYLOAD_CID, bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBSERVATION_START": {
+          "type": "string",
+          "description": "Start of the observations the tile summarises, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATION_END": {
+          "type": "string",
+          "description": "End of the observations the tile summarises, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Verbatim names of the catalogues or surveys the tile was derived from.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "PRODUCER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the node that produced the tile.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER_VERSION": {
+          "type": "string",
+          "description": "Producer software and version.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCED_AT": {
+          "type": "string",
+          "description": "Time the tile was produced, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Citation the upstream publishers ask for.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the licence or terms of the source data.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "LAYER_ID"
+      ],
+      "additionalProperties": false
+    },
+    "SKQDetection": {
+      "type": "object",
+      "description": "A star detected by a camera: a direction in the camera frame.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "description": "Direction in the camera frame; any non-zero length."
+        },
+        "Y": {
+          "type": "number"
+        },
+        "Z": {
+          "type": "number"
+        },
+        "BRIGHTNESS": {
+          "type": "number",
+          "description": "Relative brightness; larger is brighter. Orders the detections."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQTrack": {
+      "type": "object",
+      "description": "A body's apparent path across the sky over an interval, and its disc.",
+      "properties": {
+        "START_RA_DEG": {
+          "type": "number",
+          "description": "Direction of the body's centre at the start of the interval."
+        },
+        "START_DEC_DEG": {
+          "type": "number"
+        },
+        "END_RA_DEG": {
+          "type": "number",
+          "description": "Direction at the end; equal to the start for an instant."
+        },
+        "END_DEC_DEG": {
+          "type": "number"
+        },
+        "RADIUS_DEG": {
+          "type": "number",
+          "description": "Angular radius of the body's disc."
+        },
+        "BODY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Caller's identifier for the body, echoed in the result."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQPointing": {
+      "type": "object",
+      "description": "A sensor pointing to check for bright stars.",
+      "properties": {
+        "RA_DEG": {
+          "type": "number"
+        },
+        "DEC_DEG": {
+          "type": "number"
+        },
+        "POINTING_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Caller's identifier for the pointing, echoed in the result."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "additionalProperties": false
+    },
+    "SKQ": {
+      "type": "object",
+      "description": "Sky Query: one question to a star and compact-source catalogue for an observer and epoch.",
+      "properties": {
+        "QUERY_ID": {
+          "type": "string",
+          "description": "Caller's identifier, echoed in the result.",
+          "x-flatbuffer-type": "string"
+        },
+        "QUERY_KIND": {
+          "$ref": "#/definitions/skqQueryKind",
+          "description": "What is asked.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "APPARENT_PLACES": {
+              "value": 1,
+              "description": "Place every row for the observer; answered with `$SKT` tiles."
+            },
+            "SYNTHETIC_PHOTOMETRY": {
+              "value": 2,
+              "description": "Brightness of every row in each of BAND_IDS."
+            },
+            "CONE": {
+              "value": 3,
+              "description": "Rows within RADIUS_DEG of RA_DEG / DEC_DEG."
+            },
+            "FIELD_OF_VIEW": {
+              "value": 4,
+              "description": "Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG."
+            },
+            "IDENTIFY": {
+              "value": 5,
+              "description": "Identify DETECTIONS with no prior pointing and solve the camera attitude."
+            },
+            "OCCULTATION": {
+              "value": 6,
+              "description": "Rows each of TRACKS passes over."
+            },
+            "BRIGHT_STAR_EXCLUSION": {
+              "value": 7,
+              "description": "Bright rows near each of POINTINGS."
+            },
+            "INGEST": {
+              "value": 8,
+              "description": "Counts after catalogue records were ingested."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EPOCH_JD_TT": {
+          "type": "number",
+          "description": "Whole part of the epoch, Julian Date (TT).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EPOCH_JD_TT_FRACTION": {
+          "type": "number",
+          "description": "Fraction added to EPOCH_JD_TT, days.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "OBSERVER_ID": {
+          "type": "string",
+          "description": "Name of the observer, carried into tiles and results.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVER_POSITION_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Observer's geocentric position on GCRS axes, metres; three entries.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OBSERVER_VELOCITY_M_PER_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Observer's geocentric velocity on GCRS axes, metres per second; three\nentries.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PLACE": {
+          "$ref": "#/definitions/sktPlaceKind",
+          "description": "How far the reduction goes.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CATALOG": {
+              "value": 1,
+              "description": "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+            },
+            "ASTROMETRIC": {
+              "value": 2,
+              "description": "Astrometric place for the observer named by OBSERVER_ID at EPOCH: space motion and parallax applied, no aberration or deflection."
+            },
+            "APPARENT": {
+              "value": 3,
+              "description": "Apparent place for the observer named by OBSERVER_ID at EPOCH: space motion, parallax, light deflection and aberration applied, in FRAME axes."
+            }
+          },
+          "x-flatbuffer-default": "APPARENT"
+        },
+        "BAND_ID": {
+          "type": "string",
+          "description": "Band magnitudes are stated in and limited by; resolves to a `$PHB`\nBAND_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAG_LIMIT": {
+          "type": "number",
+          "description": "Faintest magnitude reported. Absent: no limit.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_RESULTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Largest number of rows reported; 0 for no cap.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TILE_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "APPARENT_PLACES: HEALPix order of the output tiles.",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "3"
+        },
+        "COLOR_ENCODING": {
+          "$ref": "#/definitions/sktColorEncoding",
+          "description": "APPARENT_PLACES: what each point's COLOR holds.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No colour; COLOR is 0."
+            },
+            "COLOR_INDEX": {
+              "value": 1,
+              "description": "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+            },
+            "EFFECTIVE_TEMPERATURE": {
+              "value": 2,
+              "description": "Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded. 0 means unknown."
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "COLOR_BLUE_BAND_ID": {
+          "type": "string",
+          "description": "APPARENT_PLACES: bands of a COLOR_INDEX colour.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_RED_BAND_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAYER_ID": {
+          "type": "string",
+          "description": "APPARENT_PLACES: LAYER_ID of the output tiles.",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SYNTHETIC_PHOTOMETRY: bands to report.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "RA_DEG": {
+          "type": "number",
+          "description": "CONE and FIELD_OF_VIEW: centre or boresight.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DEC_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RADIUS_DEG": {
+          "type": "number",
+          "description": "CONE: radius.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HALF_WIDTH_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: half-extent along the field's x axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HALF_HEIGHT_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: half-extent along the field's y axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "description": "FIELD_OF_VIEW: position angle of the field's +y axis, east of north.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "DETECTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQDetection"
+          },
+          "description": "IDENTIFY: detected stars.",
+          "x-flatbuffer-type": "[SKQDetection]"
+        },
+        "TOLERANCE_ARCSEC": {
+          "type": "number",
+          "description": "IDENTIFY: largest angle between a detection and its catalogue star.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_FIELD_DEG": {
+          "type": "number",
+          "description": "IDENTIFY: largest angle between two detections (the field diagonal).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TRACKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQTrack"
+          },
+          "description": "OCCULTATION: bodies and their tracks.",
+          "x-flatbuffer-type": "[SKQTrack]"
+        },
+        "POINTINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SKQPointing"
+          },
+          "description": "BRIGHT_STAR_EXCLUSION: pointings to check.",
+          "x-flatbuffer-type": "[SKQPointing]"
+        },
+        "EXCLUSION_RADIUS_DEG": {
+          "type": "number",
+          "description": "BRIGHT_STAR_EXCLUSION: radius around each pointing.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAG_THRESHOLD": {
+          "type": "number",
+          "description": "BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SKQ",
+  "x-flatbuffer-root-type": "SKQ",
+  "x-flatbuffer-file-identifier": "$SKQ"
+}

@@ -253,6 +253,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -387,10 +389,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 252;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 254;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 253] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 255] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -644,6 +646,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 253] = [
   RecordType::CSO,
   RecordType::PHB,
   RecordType::SKT,
+  RecordType::SKQ,
+  RecordType::SKR,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -918,9 +922,11 @@ impl RecordType {
   pub const CSO: Self = Self(250);
   pub const PHB: Self = Self(251);
   pub const SKT: Self = Self(252);
+  pub const SKQ: Self = Self(253);
+  pub const SKR: Self = Self(254);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 252;
+  pub const ENUM_MAX: u8 = 254;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1175,6 +1181,8 @@ impl RecordType {
     Self::CSO,
     Self::PHB,
     Self::SKT,
+    Self::SKQ,
+    Self::SKR,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1432,6 +1440,8 @@ impl RecordType {
       Self::CSO => Some("CSO"),
       Self::PHB => Some("PHB"),
       Self::SKT => Some("SKT"),
+      Self::SKQ => Some("SKQ"),
+      Self::SKR => Some("SKR"),
       _ => None,
     }
   }
@@ -1745,6 +1755,8 @@ pub enum RecordTypeT {
   CSO(alloc::boxed::Box<CSOT>),
   PHB(alloc::boxed::Box<PHBT>),
   SKT(alloc::boxed::Box<SKTT>),
+  SKQ(alloc::boxed::Box<SKQT>),
+  SKR(alloc::boxed::Box<SKRT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -2007,6 +2019,8 @@ impl RecordTypeT {
       Self::CSO(_) => RecordType::CSO,
       Self::PHB(_) => RecordType::PHB,
       Self::SKT(_) => RecordType::SKT,
+      Self::SKQ(_) => RecordType::SKQ,
+      Self::SKR(_) => RecordType::SKR,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2264,6 +2278,8 @@ impl RecordTypeT {
       Self::CSO(v) => Some(v.pack(fbb).as_union_value()),
       Self::PHB(v) => Some(v.pack(fbb).as_union_value()),
       Self::SKT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SKQ(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SKR(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7558,6 +7574,48 @@ impl RecordTypeT {
   pub fn as_skt_mut(&mut self) -> Option<&mut SKTT> {
     if let Self::SKT(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned SKQT, setting the union to NONE.
+  pub fn take_skq(&mut self) -> Option<alloc::boxed::Box<SKQT>> {
+    if let Self::SKQ(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::SKQ(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SKQT.
+  pub fn as_skq(&self) -> Option<&SKQT> {
+    if let Self::SKQ(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SKQT.
+  pub fn as_skq_mut(&mut self) -> Option<&mut SKQT> {
+    if let Self::SKQ(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SKRT, setting the union to NONE.
+  pub fn take_skr(&mut self) -> Option<alloc::boxed::Box<SKRT>> {
+    if let Self::SKR(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::SKR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SKRT.
+  pub fn as_skr(&self) -> Option<&SKRT> {
+    if let Self::SKR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SKRT.
+  pub fn as_skr_mut(&mut self) -> Option<&mut SKRT> {
+    if let Self::SKR(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8857,6 +8915,16 @@ impl<'a> Record<'a> {
       RecordType::SKT => RecordTypeT::SKT(alloc::boxed::Box::new(
         self.value_as_skt()
             .expect("Invalid union table, expected `RecordType::SKT`.")
+            .unpack()
+      )),
+      RecordType::SKQ => RecordTypeT::SKQ(alloc::boxed::Box::new(
+        self.value_as_skq()
+            .expect("Invalid union table, expected `RecordType::SKQ`.")
+            .unpack()
+      )),
+      RecordType::SKR => RecordTypeT::SKR(alloc::boxed::Box::new(
+        self.value_as_skr()
+            .expect("Invalid union table, expected `RecordType::SKR`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -12673,6 +12741,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_skq(&self) -> Option<SKQ<'a>> {
+    if self.value_type() == RecordType::SKQ {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SKQ::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_skr(&self) -> Option<SKR<'a>> {
+    if self.value_type() == RecordType::SKR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SKR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12935,6 +13033,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::CSO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CSO>>("RecordType::CSO", pos),
           RecordType::PHB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PHB>>("RecordType::PHB", pos),
           RecordType::SKT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKT>>("RecordType::SKT", pos),
+          RecordType::SKQ => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKQ>>("RecordType::SKQ", pos),
+          RecordType::SKR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKR>>("RecordType::SKR", pos),
           _ => Ok(()),
         }
      })?
@@ -14755,6 +14855,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::SKT => {
           if let Some(x) = self.value_as_skt() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SKQ => {
+          if let Some(x) = self.value_as_skq() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SKR => {
+          if let Some(x) = self.value_as_skr() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
