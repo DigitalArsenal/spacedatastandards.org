@@ -267,6 +267,9 @@ class RecordType
     const GCT = 247;
     const CQR = 248;
     const RPC = 249;
+    const CSO = 250;
+    const PHB = 251;
+    const SKT = 252;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -519,6 +522,9 @@ class RecordType
         RecordType::GCT=>"GCT",
         RecordType::CQR=>"CQR",
         RecordType::RPC=>"RPC",
+        RecordType::CSO=>"CSO",
+        RecordType::PHB=>"PHB",
+        RecordType::SKT=>"SKT",
     );
 
     public static function Name($e)

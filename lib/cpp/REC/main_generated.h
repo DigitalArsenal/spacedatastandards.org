@@ -262,6 +262,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -534,11 +537,14 @@ enum RecordType : uint8_t {
   RecordType_GCT = 247,
   RecordType_CQR = 248,
   RecordType_RPC = 249,
+  RecordType_CSO = 250,
+  RecordType_PHB = 251,
+  RecordType_SKT = 252,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_RPC
+  RecordType_MAX = RecordType_SKT
 };
 
-inline const RecordType (&EnumValuesRecordType())[250] {
+inline const RecordType (&EnumValuesRecordType())[253] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -789,13 +795,16 @@ inline const RecordType (&EnumValuesRecordType())[250] {
     RecordType_CLM,
     RecordType_GCT,
     RecordType_CQR,
-    RecordType_RPC
+    RecordType_RPC,
+    RecordType_CSO,
+    RecordType_PHB,
+    RecordType_SKT
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[251] = {
+  static const char * const names[254] = {
     "NONE",
     "ACL",
     "ACM",
@@ -1046,13 +1055,16 @@ inline const char * const *EnumNamesRecordType() {
     "GCT",
     "CQR",
     "RPC",
+    "CSO",
+    "PHB",
+    "SKT",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_RPC)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_SKT)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -2057,6 +2069,18 @@ template<> struct RecordTypeTraits<RPC> {
   static const RecordType enum_value = RecordType_RPC;
 };
 
+template<> struct RecordTypeTraits<CSO> {
+  static const RecordType enum_value = RecordType_CSO;
+};
+
+template<> struct RecordTypeTraits<PHB> {
+  static const RecordType enum_value = RecordType_PHB;
+};
+
+template<> struct RecordTypeTraits<SKT> {
+  static const RecordType enum_value = RecordType_SKT;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2824,6 +2848,15 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const RPC *value_as_RPC() const {
     return value_type() == RecordType_RPC ? static_cast<const RPC *>(value()) : nullptr;
+  }
+  const CSO *value_as_CSO() const {
+    return value_type() == RecordType_CSO ? static_cast<const CSO *>(value()) : nullptr;
+  }
+  const PHB *value_as_PHB() const {
+    return value_type() == RecordType_PHB ? static_cast<const PHB *>(value()) : nullptr;
+  }
+  const SKT *value_as_SKT() const {
+    return value_type() == RecordType_SKT ? static_cast<const SKT *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3835,6 +3868,18 @@ template<> inline const CQR *Record::value_as<CQR>() const {
 
 template<> inline const RPC *Record::value_as<RPC>() const {
   return value_as_RPC();
+}
+
+template<> inline const CSO *Record::value_as<CSO>() const {
+  return value_as_CSO();
+}
+
+template<> inline const PHB *Record::value_as<PHB>() const {
+  return value_as_PHB();
+}
+
+template<> inline const SKT *Record::value_as<SKT>() const {
+  return value_as_SKT();
 }
 
 struct RecordBuilder {
@@ -4956,6 +5001,18 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_RPC: {
       auto ptr = reinterpret_cast<const RPC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_CSO: {
+      auto ptr = reinterpret_cast<const CSO *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PHB: {
+      auto ptr = reinterpret_cast<const PHB *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SKT: {
+      auto ptr = reinterpret_cast<const SKT *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

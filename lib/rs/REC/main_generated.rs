@@ -250,6 +250,9 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -384,10 +387,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 249;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 252;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 250] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 253] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -638,6 +641,9 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 250] = [
   RecordType::GCT,
   RecordType::CQR,
   RecordType::RPC,
+  RecordType::CSO,
+  RecordType::PHB,
+  RecordType::SKT,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -909,9 +915,12 @@ impl RecordType {
   pub const GCT: Self = Self(247);
   pub const CQR: Self = Self(248);
   pub const RPC: Self = Self(249);
+  pub const CSO: Self = Self(250);
+  pub const PHB: Self = Self(251);
+  pub const SKT: Self = Self(252);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 249;
+  pub const ENUM_MAX: u8 = 252;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -1163,6 +1172,9 @@ impl RecordType {
     Self::GCT,
     Self::CQR,
     Self::RPC,
+    Self::CSO,
+    Self::PHB,
+    Self::SKT,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1417,6 +1429,9 @@ impl RecordType {
       Self::GCT => Some("GCT"),
       Self::CQR => Some("CQR"),
       Self::RPC => Some("RPC"),
+      Self::CSO => Some("CSO"),
+      Self::PHB => Some("PHB"),
+      Self::SKT => Some("SKT"),
       _ => None,
     }
   }
@@ -1727,6 +1742,9 @@ pub enum RecordTypeT {
   GCT(alloc::boxed::Box<GCTT>),
   CQR(alloc::boxed::Box<CQRT>),
   RPC(alloc::boxed::Box<RPCT>),
+  CSO(alloc::boxed::Box<CSOT>),
+  PHB(alloc::boxed::Box<PHBT>),
+  SKT(alloc::boxed::Box<SKTT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1986,6 +2004,9 @@ impl RecordTypeT {
       Self::GCT(_) => RecordType::GCT,
       Self::CQR(_) => RecordType::CQR,
       Self::RPC(_) => RecordType::RPC,
+      Self::CSO(_) => RecordType::CSO,
+      Self::PHB(_) => RecordType::PHB,
+      Self::SKT(_) => RecordType::SKT,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -2240,6 +2261,9 @@ impl RecordTypeT {
       Self::GCT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CQR(v) => Some(v.pack(fbb).as_union_value()),
       Self::RPC(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CSO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PHB(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SKT(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -7471,6 +7495,69 @@ impl RecordTypeT {
   pub fn as_rpc_mut(&mut self) -> Option<&mut RPCT> {
     if let Self::RPC(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CSOT, setting the union to NONE.
+  pub fn take_cso(&mut self) -> Option<alloc::boxed::Box<CSOT>> {
+    if let Self::CSO(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CSO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CSOT.
+  pub fn as_cso(&self) -> Option<&CSOT> {
+    if let Self::CSO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CSOT.
+  pub fn as_cso_mut(&mut self) -> Option<&mut CSOT> {
+    if let Self::CSO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PHBT, setting the union to NONE.
+  pub fn take_phb(&mut self) -> Option<alloc::boxed::Box<PHBT>> {
+    if let Self::PHB(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PHB(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PHBT.
+  pub fn as_phb(&self) -> Option<&PHBT> {
+    if let Self::PHB(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PHBT.
+  pub fn as_phb_mut(&mut self) -> Option<&mut PHBT> {
+    if let Self::PHB(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SKTT, setting the union to NONE.
+  pub fn take_skt(&mut self) -> Option<alloc::boxed::Box<SKTT>> {
+    if let Self::SKT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::SKT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SKTT.
+  pub fn as_skt(&self) -> Option<&SKTT> {
+    if let Self::SKT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SKTT.
+  pub fn as_skt_mut(&mut self) -> Option<&mut SKTT> {
+    if let Self::SKT(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -8755,6 +8842,21 @@ impl<'a> Record<'a> {
       RecordType::RPC => RecordTypeT::RPC(alloc::boxed::Box::new(
         self.value_as_rpc()
             .expect("Invalid union table, expected `RecordType::RPC`.")
+            .unpack()
+      )),
+      RecordType::CSO => RecordTypeT::CSO(alloc::boxed::Box::new(
+        self.value_as_cso()
+            .expect("Invalid union table, expected `RecordType::CSO`.")
+            .unpack()
+      )),
+      RecordType::PHB => RecordTypeT::PHB(alloc::boxed::Box::new(
+        self.value_as_phb()
+            .expect("Invalid union table, expected `RecordType::PHB`.")
+            .unpack()
+      )),
+      RecordType::SKT => RecordTypeT::SKT(alloc::boxed::Box::new(
+        self.value_as_skt()
+            .expect("Invalid union table, expected `RecordType::SKT`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -12526,6 +12628,51 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_cso(&self) -> Option<CSO<'a>> {
+    if self.value_type() == RecordType::CSO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CSO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_phb(&self) -> Option<PHB<'a>> {
+    if self.value_type() == RecordType::PHB {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PHB::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_skt(&self) -> Option<SKT<'a>> {
+    if self.value_type() == RecordType::SKT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SKT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -12785,6 +12932,9 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::GCT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GCT>>("RecordType::GCT", pos),
           RecordType::CQR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CQR>>("RecordType::CQR", pos),
           RecordType::RPC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RPC>>("RecordType::RPC", pos),
+          RecordType::CSO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CSO>>("RecordType::CSO", pos),
+          RecordType::PHB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PHB>>("RecordType::PHB", pos),
+          RecordType::SKT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKT>>("RecordType::SKT", pos),
           _ => Ok(()),
         }
      })?
@@ -14584,6 +14734,27 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::RPC => {
           if let Some(x) = self.value_as_rpc() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CSO => {
+          if let Some(x) = self.value_as_cso() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PHB => {
+          if let Some(x) = self.value_as_phb() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SKT => {
+          if let Some(x) = self.value_as_skt() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

@@ -68,7 +68,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Gaia DR3 source identifier
+    /// Source identifier in the third data release of the all-sky space astrometry survey
     /**
      * @return long
      */
@@ -78,7 +78,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
-    /// Hipparcos catalog identifier
+    /// Identifier in the first space astrometry mission's main catalog
     /**
      * @return uint
      */
@@ -232,7 +232,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Gaia G-band magnitude
+    /// Broad-band G magnitude of the space astrometry photometric system
     /**
      * @return double
      */
@@ -242,7 +242,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gaia G-band magnitude uncertainty
+    /// G-band magnitude uncertainty
     /**
      * @return double
      */
@@ -252,7 +252,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gaia BP-band magnitude (blue photometer)
+    /// BP-band magnitude (blue prism photometer of the space astrometry system)
     /**
      * @return double
      */
@@ -262,7 +262,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gaia BP-band magnitude uncertainty
+    /// BP-band magnitude uncertainty
     /**
      * @return double
      */
@@ -272,7 +272,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gaia RP-band magnitude (red photometer)
+    /// RP-band magnitude (red prism photometer of the space astrometry system)
     /**
      * @return double
      */
@@ -282,7 +282,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gaia RP-band magnitude uncertainty
+    /// RP-band magnitude uncertainty
     /**
      * @return double
      */
@@ -292,7 +292,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// 2MASS J-band magnitude (1.25 um)
+    /// Near-infrared J-band magnitude (1.25 um)
     /**
      * @return double
      */
@@ -312,7 +312,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// 2MASS K-band magnitude (2.17 um)
+    /// Near-infrared Ks-band magnitude (2.17 um)
     /**
      * @return double
      */
@@ -332,7 +332,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// 2MASS H-band magnitude (1.65 um)
+    /// Near-infrared H-band magnitude (1.65 um)
     /**
      * @return double
      */
@@ -422,22 +422,227 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Effective temperature (kelvin)
+    /**
+     * @return double
+     */
+    public function getTEFF()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Effective temperature uncertainty (kelvin)
+    /**
+     * @return double
+     */
+    public function getTEFF_UNC()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Surface gravity, log10 of g in cm s^-2
+    /**
+     * @return double
+     */
+    public function getLOGG()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Surface gravity uncertainty (dex)
+    /**
+     * @return double
+     */
+    public function getLOGG_UNC()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Metallicity [M/H] (dex)
+    /**
+     * @return double
+     */
+    public function getMETALLICITY()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+    /**
+     * @return double
+     */
+    public function getEXTINCTION_A0()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Radial velocity, positive receding (km/s)
+    /**
+     * @return double
+     */
+    public function getRADIAL_VELOCITY()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Radial velocity uncertainty (km/s)
+    /**
+     * @return double
+     */
+    public function getRADIAL_VELOCITY_UNC()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Spectral type in the MK system, e.g. "A1 V"
+    public function getSPECTRAL_TYPE()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Proper name as recognised by the astronomical naming authority
+    public function getPROPER_NAME()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+    public function getBAYER_FLAMSTEED()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Constellation containing the star, three-letter abbreviation
+    public function getCONSTELLATION()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Bright-star catalog number (HR); 0 when not in that catalog
+    /**
+     * @return uint
+     */
+    public function getHR_CAT_ID()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Spectral-type catalog number (HD); 0 when not in that catalog
+    /**
+     * @return uint
+     */
+    public function getHD_CAT_ID()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Other designations, each in the form its catalog uses
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getDESIGNATIONS($j)
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDESIGNATIONSLength()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+    public function getVARIABILITY_CLASS()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Period of variability (days)
+    /**
+     * @return double
+     */
+    public function getVARIABILITY_PERIOD()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Peak-to-peak variability amplitude (magnitudes)
+    /**
+     * @return double
+     */
+    public function getVARIABILITY_AMPLITUDE()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+    /**
+     * @return double
+     */
+    public function getVARIABILITY_EPOCH()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Brightness in every band the star was measured or modelled in
+    /**
+     * @returnVectorOffset
+     */
+    public function getPHOTOMETRY($j)
+    {
+        $o = $this->__offset(120);
+        $obj = new PHBMeasurement();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPHOTOMETRYLength()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSTR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(39);
+        $builder->StartObject(59);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return STR
      */
-    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIADR3_CAT_ID, $HIP_CAT_ID, $CAT_VERSION, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT)
+    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIADR3_CAT_ID, $HIP_CAT_ID, $CAT_VERSION, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT, $TEFF, $TEFF_UNC, $LOGG, $LOGG_UNC, $METALLICITY, $EXTINCTION_A0, $RADIAL_VELOCITY, $RADIAL_VELOCITY_UNC, $SPECTRAL_TYPE, $PROPER_NAME, $BAYER_FLAMSTEED, $CONSTELLATION, $HR_CAT_ID, $HD_CAT_ID, $DESIGNATIONS, $VARIABILITY_CLASS, $VARIABILITY_PERIOD, $VARIABILITY_AMPLITUDE, $VARIABILITY_EPOCH, $PHOTOMETRY)
     {
-        $builder->startObject(39);
+        $builder->startObject(59);
         self::addID($builder, $ID);
         self::addCS_ID($builder, $CS_ID);
         self::addGNC_CAT_ID($builder, $GNC_CAT_ID);
@@ -477,6 +682,26 @@ class STR extends Table
         self::addNEIGHBOR_DISTANCE($builder, $NEIGHBOR_DISTANCE);
         self::addSHIFT_FLAG($builder, $SHIFT_FLAG);
         self::addSHIFT($builder, $SHIFT);
+        self::addTEFF($builder, $TEFF);
+        self::addTEFF_UNC($builder, $TEFF_UNC);
+        self::addLOGG($builder, $LOGG);
+        self::addLOGG_UNC($builder, $LOGG_UNC);
+        self::addMETALLICITY($builder, $METALLICITY);
+        self::addEXTINCTION_A0($builder, $EXTINCTION_A0);
+        self::addRADIAL_VELOCITY($builder, $RADIAL_VELOCITY);
+        self::addRADIAL_VELOCITY_UNC($builder, $RADIAL_VELOCITY_UNC);
+        self::addSPECTRAL_TYPE($builder, $SPECTRAL_TYPE);
+        self::addPROPER_NAME($builder, $PROPER_NAME);
+        self::addBAYER_FLAMSTEED($builder, $BAYER_FLAMSTEED);
+        self::addCONSTELLATION($builder, $CONSTELLATION);
+        self::addHR_CAT_ID($builder, $HR_CAT_ID);
+        self::addHD_CAT_ID($builder, $HD_CAT_ID);
+        self::addDESIGNATIONS($builder, $DESIGNATIONS);
+        self::addVARIABILITY_CLASS($builder, $VARIABILITY_CLASS);
+        self::addVARIABILITY_PERIOD($builder, $VARIABILITY_PERIOD);
+        self::addVARIABILITY_AMPLITUDE($builder, $VARIABILITY_AMPLITUDE);
+        self::addVARIABILITY_EPOCH($builder, $VARIABILITY_EPOCH);
+        self::addPHOTOMETRY($builder, $PHOTOMETRY);
         $o = $builder->endObject();
         return $o;
     }
@@ -869,6 +1094,254 @@ class STR extends Table
     public static function addSHIFT(FlatBufferBuilder $builder, $SHIFT)
     {
         $builder->addDoubleX(38, $SHIFT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTEFF(FlatBufferBuilder $builder, $TEFF)
+    {
+        $builder->addDoubleX(39, $TEFF, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTEFF_UNC(FlatBufferBuilder $builder, $TEFF_UNC)
+    {
+        $builder->addDoubleX(40, $TEFF_UNC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLOGG(FlatBufferBuilder $builder, $LOGG)
+    {
+        $builder->addDoubleX(41, $LOGG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLOGG_UNC(FlatBufferBuilder $builder, $LOGG_UNC)
+    {
+        $builder->addDoubleX(42, $LOGG_UNC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMETALLICITY(FlatBufferBuilder $builder, $METALLICITY)
+    {
+        $builder->addDoubleX(43, $METALLICITY, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEXTINCTION_A0(FlatBufferBuilder $builder, $EXTINCTION_A0)
+    {
+        $builder->addDoubleX(44, $EXTINCTION_A0, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRADIAL_VELOCITY(FlatBufferBuilder $builder, $RADIAL_VELOCITY)
+    {
+        $builder->addDoubleX(45, $RADIAL_VELOCITY, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRADIAL_VELOCITY_UNC(FlatBufferBuilder $builder, $RADIAL_VELOCITY_UNC)
+    {
+        $builder->addDoubleX(46, $RADIAL_VELOCITY_UNC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSPECTRAL_TYPE(FlatBufferBuilder $builder, $SPECTRAL_TYPE)
+    {
+        $builder->addOffsetX(47, $SPECTRAL_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROPER_NAME(FlatBufferBuilder $builder, $PROPER_NAME)
+    {
+        $builder->addOffsetX(48, $PROPER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBAYER_FLAMSTEED(FlatBufferBuilder $builder, $BAYER_FLAMSTEED)
+    {
+        $builder->addOffsetX(49, $BAYER_FLAMSTEED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCONSTELLATION(FlatBufferBuilder $builder, $CONSTELLATION)
+    {
+        $builder->addOffsetX(50, $CONSTELLATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addHR_CAT_ID(FlatBufferBuilder $builder, $HR_CAT_ID)
+    {
+        $builder->addUintX(51, $HR_CAT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addHD_CAT_ID(FlatBufferBuilder $builder, $HD_CAT_ID)
+    {
+        $builder->addUintX(52, $HD_CAT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDESIGNATIONS(FlatBufferBuilder $builder, $DESIGNATIONS)
+    {
+        $builder->addOffsetX(53, $DESIGNATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDESIGNATIONSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDESIGNATIONSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addVARIABILITY_CLASS(FlatBufferBuilder $builder, $VARIABILITY_CLASS)
+    {
+        $builder->addOffsetX(54, $VARIABILITY_CLASS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVARIABILITY_PERIOD(FlatBufferBuilder $builder, $VARIABILITY_PERIOD)
+    {
+        $builder->addDoubleX(55, $VARIABILITY_PERIOD, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVARIABILITY_AMPLITUDE(FlatBufferBuilder $builder, $VARIABILITY_AMPLITUDE)
+    {
+        $builder->addDoubleX(56, $VARIABILITY_AMPLITUDE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVARIABILITY_EPOCH(FlatBufferBuilder $builder, $VARIABILITY_EPOCH)
+    {
+        $builder->addDoubleX(57, $VARIABILITY_EPOCH, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPHOTOMETRY(FlatBufferBuilder $builder, $PHOTOMETRY)
+    {
+        $builder->addOffsetX(58, $PHOTOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPHOTOMETRYVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPHOTOMETRYVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

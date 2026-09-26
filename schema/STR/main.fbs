@@ -1,6 +1,8 @@
-// Hash: 56de8cd0ac994478ca06eba4aad2b0e259f564799238f9e1c28c569a1e2c2f35
-// Version: 0.0.4
+// Hash: a91bc7e3dfc7de45ddd363f255af99d395bf9104ea0febddc2ce05e0d480ea4c
+// Version: 0.0.5
 // -----------------------------------END_HEADER
+include "../PHB/main.fbs";
+
 /// Star Catalog Entry
 table STR {
   /// Unique internal identifier
@@ -9,9 +11,9 @@ table STR {
   CS_ID:long;
   /// GNC star catalog identifier
   GNC_CAT_ID:uint32;
-  /// Gaia DR3 source identifier
+  /// Source identifier in the third data release of the all-sky space astrometry survey
   GAIADR3_CAT_ID:long;
-  /// Hipparcos catalog identifier
+  /// Identifier in the first space astrometry mission's main catalog
   HIP_CAT_ID:uint32;
   /// Catalog version string
   CAT_VERSION:string;
@@ -43,27 +45,27 @@ table STR {
   PMDEC_UNC:double;
   /// True if proper motion uncertainty is flagged
   PM_UNC_FLAG:bool;
-  /// Gaia G-band magnitude
+  /// Broad-band G magnitude of the space astrometry photometric system
   GMAG:double;
-  /// Gaia G-band magnitude uncertainty
+  /// G-band magnitude uncertainty
   GMAG_UNC:double;
-  /// Gaia BP-band magnitude (blue photometer)
+  /// BP-band magnitude (blue prism photometer of the space astrometry system)
   BPMAG:double;
-  /// Gaia BP-band magnitude uncertainty
+  /// BP-band magnitude uncertainty
   BPMAG_UNC:double;
-  /// Gaia RP-band magnitude (red photometer)
+  /// RP-band magnitude (red prism photometer of the space astrometry system)
   RPMAG:double;
-  /// Gaia RP-band magnitude uncertainty
+  /// RP-band magnitude uncertainty
   RPMAG_UNC:double;
-  /// 2MASS J-band magnitude (1.25 um)
+  /// Near-infrared J-band magnitude (1.25 um)
   JMAG:double;
   /// J-band magnitude uncertainty
   JMAG_UNC:double;
-  /// 2MASS K-band magnitude (2.17 um)
+  /// Near-infrared Ks-band magnitude (2.17 um)
   KMAG:double;
   /// K-band magnitude uncertainty
   KMAG_UNC:double;
-  /// 2MASS H-band magnitude (1.65 um)
+  /// Near-infrared H-band magnitude (1.65 um)
   HMAG:double;
   /// H-band magnitude uncertainty
   HMAG_UNC:double;
@@ -81,6 +83,50 @@ table STR {
   SHIFT_FLAG:bool;
   /// Position shift magnitude (arcseconds)
   SHIFT:double;
+
+  // Appended 2026-09-25: physical parameters, names and multi-band photometry.
+  // Every scalar below defaults to NaN: absent means unknown, never zero.
+
+  /// Effective temperature (kelvin)
+  TEFF:double = nan;
+  /// Effective temperature uncertainty (kelvin)
+  TEFF_UNC:double = nan;
+  /// Surface gravity, log10 of g in cm s^-2
+  LOGG:double = nan;
+  /// Surface gravity uncertainty (dex)
+  LOGG_UNC:double = nan;
+  /// Metallicity [M/H] (dex)
+  METALLICITY:double = nan;
+  /// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+  EXTINCTION_A0:double = nan;
+  /// Radial velocity, positive receding (km/s)
+  RADIAL_VELOCITY:double = nan;
+  /// Radial velocity uncertainty (km/s)
+  RADIAL_VELOCITY_UNC:double = nan;
+  /// Spectral type in the MK system, e.g. "A1 V"
+  SPECTRAL_TYPE:string;
+  /// Proper name as recognised by the astronomical naming authority
+  PROPER_NAME:string;
+  /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+  BAYER_FLAMSTEED:string;
+  /// Constellation containing the star, three-letter abbreviation
+  CONSTELLATION:string;
+  /// Bright-star catalog number (HR); 0 when not in that catalog
+  HR_CAT_ID:uint32;
+  /// Spectral-type catalog number (HD); 0 when not in that catalog
+  HD_CAT_ID:uint32;
+  /// Other designations, each in the form its catalog uses
+  DESIGNATIONS:[string];
+  /// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+  VARIABILITY_CLASS:string;
+  /// Period of variability (days)
+  VARIABILITY_PERIOD:double = nan;
+  /// Peak-to-peak variability amplitude (magnitudes)
+  VARIABILITY_AMPLITUDE:double = nan;
+  /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+  VARIABILITY_EPOCH:double = nan;
+  /// Brightness in every band the star was measured or modelled in
+  PHOTOMETRY:[PHBMeasurement];
 }
 
 root_type STR;

@@ -43,11 +43,11 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public long GNC_CAT_ID() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Gaia DR3 source identifier
+   * Source identifier in the third data release of the all-sky space astrometry survey
    */
   public long GAIADR3_CAT_ID() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
-   * Hipparcos catalog identifier
+   * Identifier in the first space astrometry mission's main catalog
    */
   public long HIP_CAT_ID() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
@@ -115,31 +115,31 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public boolean PM_UNC_FLAG() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Gaia G-band magnitude
+   * Broad-band G magnitude of the space astrometry photometric system
    */
   public double GMAG() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gaia G-band magnitude uncertainty
+   * G-band magnitude uncertainty
    */
   public double GMAG_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gaia BP-band magnitude (blue photometer)
+   * BP-band magnitude (blue prism photometer of the space astrometry system)
    */
   public double BPMAG() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gaia BP-band magnitude uncertainty
+   * BP-band magnitude uncertainty
    */
   public double BPMAG_UNC() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gaia RP-band magnitude (red photometer)
+   * RP-band magnitude (red prism photometer of the space astrometry system)
    */
   public double RPMAG() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gaia RP-band magnitude uncertainty
+   * RP-band magnitude uncertainty
    */
   public double RPMAG_UNC() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * 2MASS J-band magnitude (1.25 um)
+   * Near-infrared J-band magnitude (1.25 um)
    */
   public double JMAG() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -147,7 +147,7 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public double JMAG_UNC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * 2MASS K-band magnitude (2.17 um)
+   * Near-infrared Ks-band magnitude (2.17 um)
    */
   public double KMAG() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -155,7 +155,7 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public double KMAG_UNC() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * 2MASS H-band magnitude (1.65 um)
+   * Near-infrared H-band magnitude (1.65 um)
    */
   public double HMAG() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -190,6 +190,103 @@ public final class STR extends com.google.flatbuffers.Table {
    * Position shift magnitude (arcseconds)
    */
   public double SHIFT() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Effective temperature (kelvin)
+   */
+  public double TEFF() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Effective temperature uncertainty (kelvin)
+   */
+  public double TEFF_UNC() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Surface gravity, log10 of g in cm s^-2
+   */
+  public double LOGG() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Surface gravity uncertainty (dex)
+   */
+  public double LOGG_UNC() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Metallicity [M/H] (dex)
+   */
+  public double METALLICITY() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Interstellar extinction at 541.4 nm, A0 (magnitudes)
+   */
+  public double EXTINCTION_A0() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Radial velocity, positive receding (km/s)
+   */
+  public double RADIAL_VELOCITY() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Radial velocity uncertainty (km/s)
+   */
+  public double RADIAL_VELOCITY_UNC() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Spectral type in the MK system, e.g. "A1 V"
+   */
+  public String SPECTRAL_TYPE() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SPECTRAL_TYPEAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
+  public ByteBuffer SPECTRAL_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  /**
+   * Proper name as recognised by the astronomical naming authority
+   */
+  public String PROPER_NAME() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROPER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
+  public ByteBuffer PROPER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  /**
+   * Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+   */
+  public String BAYER_FLAMSTEED() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BAYER_FLAMSTEEDAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
+  public ByteBuffer BAYER_FLAMSTEEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * Constellation containing the star, three-letter abbreviation
+   */
+  public String CONSTELLATION() { int o = __offset(104); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONSTELLATIONAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
+  public ByteBuffer CONSTELLATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
+  /**
+   * Bright-star catalog number (HR); 0 when not in that catalog
+   */
+  public long HR_CAT_ID() { int o = __offset(106); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Spectral-type catalog number (HD); 0 when not in that catalog
+   */
+  public long HD_CAT_ID() { int o = __offset(108); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Other designations, each in the form its catalog uses
+   */
+  public String DESIGNATIONS(int j) { int o = __offset(110); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int DESIGNATIONSLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector designationsVector() { return designationsVector(new StringVector()); }
+  public StringVector designationsVector(StringVector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+   */
+  public String VARIABILITY_CLASS() { int o = __offset(112); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VARIABILITY_CLASSAsByteBuffer() { return __vector_as_bytebuffer(112, 1); }
+  public ByteBuffer VARIABILITY_CLASSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 1); }
+  /**
+   * Period of variability (days)
+   */
+  public double VARIABILITY_PERIOD() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Peak-to-peak variability amplitude (magnitudes)
+   */
+  public double VARIABILITY_AMPLITUDE() { int o = __offset(116); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+   */
+  public double VARIABILITY_EPOCH() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Brightness in every band the star was measured or modelled in
+   */
+  public PHBMeasurement PHOTOMETRY(int j) { return PHOTOMETRY(new PHBMeasurement(), j); }
+  public PHBMeasurement PHOTOMETRY(PHBMeasurement obj, int j) { int o = __offset(120); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PHOTOMETRYLength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
+  public PHBMeasurement.Vector photometryVector() { return photometryVector(new PHBMeasurement.Vector()); }
+  public PHBMeasurement.Vector photometryVector(PHBMeasurement.Vector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSTR(FlatBufferBuilder builder,
       int IDOffset,
@@ -230,8 +327,39 @@ public final class STR extends com.google.flatbuffers.Table {
       boolean NEIGHBOR_FLAG,
       double NEIGHBOR_DISTANCE,
       boolean SHIFT_FLAG,
-      double SHIFT) {
-    builder.startTable(39);
+      double SHIFT,
+      double TEFF,
+      double TEFF_UNC,
+      double LOGG,
+      double LOGG_UNC,
+      double METALLICITY,
+      double EXTINCTION_A0,
+      double RADIAL_VELOCITY,
+      double RADIAL_VELOCITY_UNC,
+      int SPECTRAL_TYPEOffset,
+      int PROPER_NAMEOffset,
+      int BAYER_FLAMSTEEDOffset,
+      int CONSTELLATIONOffset,
+      long HR_CAT_ID,
+      long HD_CAT_ID,
+      int DESIGNATIONSOffset,
+      int VARIABILITY_CLASSOffset,
+      double VARIABILITY_PERIOD,
+      double VARIABILITY_AMPLITUDE,
+      double VARIABILITY_EPOCH,
+      int PHOTOMETRYOffset) {
+    builder.startTable(59);
+    STR.addVariabilityEpoch(builder, VARIABILITY_EPOCH);
+    STR.addVariabilityAmplitude(builder, VARIABILITY_AMPLITUDE);
+    STR.addVariabilityPeriod(builder, VARIABILITY_PERIOD);
+    STR.addRadialVelocityUnc(builder, RADIAL_VELOCITY_UNC);
+    STR.addRadialVelocity(builder, RADIAL_VELOCITY);
+    STR.addExtinctionA0(builder, EXTINCTION_A0);
+    STR.addMetallicity(builder, METALLICITY);
+    STR.addLoggUnc(builder, LOGG_UNC);
+    STR.addLogg(builder, LOGG);
+    STR.addTeffUnc(builder, TEFF_UNC);
+    STR.addTeff(builder, TEFF);
     STR.addShift(builder, SHIFT);
     STR.addNeighborDistance(builder, NEIGHBOR_DISTANCE);
     STR.addHmagUnc(builder, HMAG_UNC);
@@ -259,6 +387,15 @@ public final class STR extends com.google.flatbuffers.Table {
     STR.addStarEpoch(builder, STAR_EPOCH);
     STR.addGaiadr3CatId(builder, GAIADR3_CAT_ID);
     STR.addCsId(builder, CS_ID);
+    STR.addPhotometry(builder, PHOTOMETRYOffset);
+    STR.addVariabilityClass(builder, VARIABILITY_CLASSOffset);
+    STR.addDesignations(builder, DESIGNATIONSOffset);
+    STR.addHdCatId(builder, HD_CAT_ID);
+    STR.addHrCatId(builder, HR_CAT_ID);
+    STR.addConstellation(builder, CONSTELLATIONOffset);
+    STR.addBayerFlamsteed(builder, BAYER_FLAMSTEEDOffset);
+    STR.addProperName(builder, PROPER_NAMEOffset);
+    STR.addSpectralType(builder, SPECTRAL_TYPEOffset);
     STR.addNeighborId(builder, NEIGHBOR_ID);
     STR.addAstrometryOrigin(builder, ASTROMETRY_ORIGINOffset);
     STR.addCatVersion(builder, CAT_VERSIONOffset);
@@ -274,7 +411,7 @@ public final class STR extends com.google.flatbuffers.Table {
     return STR.endSTR(builder);
   }
 
-  public static void startSTR(FlatBufferBuilder builder) { builder.startTable(39); }
+  public static void startSTR(FlatBufferBuilder builder) { builder.startTable(59); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCsId(FlatBufferBuilder builder, long CS_ID) { builder.addLong(1, CS_ID, 0L); }
   public static void addGncCatId(FlatBufferBuilder builder, long GNC_CAT_ID) { builder.addInt(2, (int) GNC_CAT_ID, (int) 0L); }
@@ -314,6 +451,30 @@ public final class STR extends com.google.flatbuffers.Table {
   public static void addNeighborDistance(FlatBufferBuilder builder, double NEIGHBOR_DISTANCE) { builder.addDouble(36, NEIGHBOR_DISTANCE, 0.0); }
   public static void addShiftFlag(FlatBufferBuilder builder, boolean SHIFT_FLAG) { builder.addBoolean(37, SHIFT_FLAG, false); }
   public static void addShift(FlatBufferBuilder builder, double SHIFT) { builder.addDouble(38, SHIFT, 0.0); }
+  public static void addTeff(FlatBufferBuilder builder, double TEFF) { builder.addDouble(39, TEFF, Double.NaN); }
+  public static void addTeffUnc(FlatBufferBuilder builder, double TEFF_UNC) { builder.addDouble(40, TEFF_UNC, Double.NaN); }
+  public static void addLogg(FlatBufferBuilder builder, double LOGG) { builder.addDouble(41, LOGG, Double.NaN); }
+  public static void addLoggUnc(FlatBufferBuilder builder, double LOGG_UNC) { builder.addDouble(42, LOGG_UNC, Double.NaN); }
+  public static void addMetallicity(FlatBufferBuilder builder, double METALLICITY) { builder.addDouble(43, METALLICITY, Double.NaN); }
+  public static void addExtinctionA0(FlatBufferBuilder builder, double EXTINCTION_A0) { builder.addDouble(44, EXTINCTION_A0, Double.NaN); }
+  public static void addRadialVelocity(FlatBufferBuilder builder, double RADIAL_VELOCITY) { builder.addDouble(45, RADIAL_VELOCITY, Double.NaN); }
+  public static void addRadialVelocityUnc(FlatBufferBuilder builder, double RADIAL_VELOCITY_UNC) { builder.addDouble(46, RADIAL_VELOCITY_UNC, Double.NaN); }
+  public static void addSpectralType(FlatBufferBuilder builder, int SPECTRAL_TYPEOffset) { builder.addOffset(47, SPECTRAL_TYPEOffset, 0); }
+  public static void addProperName(FlatBufferBuilder builder, int PROPER_NAMEOffset) { builder.addOffset(48, PROPER_NAMEOffset, 0); }
+  public static void addBayerFlamsteed(FlatBufferBuilder builder, int BAYER_FLAMSTEEDOffset) { builder.addOffset(49, BAYER_FLAMSTEEDOffset, 0); }
+  public static void addConstellation(FlatBufferBuilder builder, int CONSTELLATIONOffset) { builder.addOffset(50, CONSTELLATIONOffset, 0); }
+  public static void addHrCatId(FlatBufferBuilder builder, long HR_CAT_ID) { builder.addInt(51, (int) HR_CAT_ID, (int) 0L); }
+  public static void addHdCatId(FlatBufferBuilder builder, long HD_CAT_ID) { builder.addInt(52, (int) HD_CAT_ID, (int) 0L); }
+  public static void addDesignations(FlatBufferBuilder builder, int DESIGNATIONSOffset) { builder.addOffset(53, DESIGNATIONSOffset, 0); }
+  public static int createDesignationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDesignationsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addVariabilityClass(FlatBufferBuilder builder, int VARIABILITY_CLASSOffset) { builder.addOffset(54, VARIABILITY_CLASSOffset, 0); }
+  public static void addVariabilityPeriod(FlatBufferBuilder builder, double VARIABILITY_PERIOD) { builder.addDouble(55, VARIABILITY_PERIOD, Double.NaN); }
+  public static void addVariabilityAmplitude(FlatBufferBuilder builder, double VARIABILITY_AMPLITUDE) { builder.addDouble(56, VARIABILITY_AMPLITUDE, Double.NaN); }
+  public static void addVariabilityEpoch(FlatBufferBuilder builder, double VARIABILITY_EPOCH) { builder.addDouble(57, VARIABILITY_EPOCH, Double.NaN); }
+  public static void addPhotometry(FlatBufferBuilder builder, int PHOTOMETRYOffset) { builder.addOffset(58, PHOTOMETRYOffset, 0); }
+  public static int createPhotometryVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPhotometryVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endSTR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

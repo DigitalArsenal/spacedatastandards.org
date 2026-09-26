@@ -262,6 +262,17 @@ function dedupeSwiftEnumStatics(source) {
   });
 }
 
+// flatc's PHP generator writes a NaN or infinite default as the bare IDL token
+// (`: nan;`, `addDoubleX(2, $x, nan)`), but PHP constants are case-sensitive
+// and only NAN / INF exist, so every accessor with such a default throws
+// "Undefined constant". Rewrite the code-position tokens; comments are left.
+function fixPhpFloatConstants(source) {
+  return source.replace(
+    /([:,(]\s*)(-?)(nan|inf|infinity)(?=\s*[;),])/g,
+    (_, lead, sign, token) => `${lead}${sign}${token === "nan" ? "NAN" : "INF"}`,
+  );
+}
+
 async function writeOutputs(baseDir, outputs, datatype) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
@@ -276,6 +287,9 @@ async function writeOutputs(baseDir, outputs, datatype) {
     }
     if (datatype?.ext === "sw" && relativePath.endsWith(".swift")) {
       normalizedSource = dedupeSwiftEnumStatics(normalizedSource);
+    }
+    if (datatype?.ext === "php" && relativePath.endsWith(".php")) {
+      normalizedSource = fixPhpFloatConstants(normalizedSource);
     }
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, normalizedSource, "utf8");

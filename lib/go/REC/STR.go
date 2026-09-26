@@ -4,6 +4,7 @@ package REC
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 /// Star Catalog Entry
@@ -112,7 +113,7 @@ func (rcv *STR) MutateGncCatId(n uint32) bool {
 	return rcv.MutateGNC_CAT_ID(n)
 }
 
-/// Gaia DR3 source identifier
+/// Source identifier in the third data release of the all-sky space astrometry survey
 func (rcv *STR) GAIADR3_CAT_ID() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -125,7 +126,7 @@ func (rcv *STR) Gaiadr3CatId() int64 {
 	return rcv.GAIADR3_CAT_ID()
 }
 
-/// Gaia DR3 source identifier
+/// Source identifier in the third data release of the all-sky space astrometry survey
 func (rcv *STR) MutateGAIADR3_CAT_ID(n int64) bool {
 	return rcv._tab.MutateInt64Slot(10, n)
 }
@@ -134,7 +135,7 @@ func (rcv *STR) MutateGaiadr3CatId(n int64) bool {
 	return rcv.MutateGAIADR3_CAT_ID(n)
 }
 
-/// Hipparcos catalog identifier
+/// Identifier in the first space astrometry mission's main catalog
 func (rcv *STR) HIP_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -147,7 +148,7 @@ func (rcv *STR) HipCatId() uint32 {
 	return rcv.HIP_CAT_ID()
 }
 
-/// Hipparcos catalog identifier
+/// Identifier in the first space astrometry mission's main catalog
 func (rcv *STR) MutateHIP_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
 }
@@ -470,7 +471,7 @@ func (rcv *STR) MutatePmUncFlag(n bool) bool {
 	return rcv.MutatePM_UNC_FLAG(n)
 }
 
-/// Gaia G-band magnitude
+/// Broad-band G magnitude of the space astrometry photometric system
 func (rcv *STR) GMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -483,7 +484,7 @@ func (rcv *STR) Gmag() float64 {
 	return rcv.GMAG()
 }
 
-/// Gaia G-band magnitude
+/// Broad-band G magnitude of the space astrometry photometric system
 func (rcv *STR) MutateGMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
@@ -492,7 +493,7 @@ func (rcv *STR) MutateGmag(n float64) bool {
 	return rcv.MutateGMAG(n)
 }
 
-/// Gaia G-band magnitude uncertainty
+/// G-band magnitude uncertainty
 func (rcv *STR) GMAG_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -505,7 +506,7 @@ func (rcv *STR) GmagUnc() float64 {
 	return rcv.GMAG_UNC()
 }
 
-/// Gaia G-band magnitude uncertainty
+/// G-band magnitude uncertainty
 func (rcv *STR) MutateGMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
@@ -514,7 +515,7 @@ func (rcv *STR) MutateGmagUnc(n float64) bool {
 	return rcv.MutateGMAG_UNC(n)
 }
 
-/// Gaia BP-band magnitude (blue photometer)
+/// BP-band magnitude (blue prism photometer of the space astrometry system)
 func (rcv *STR) BPMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -527,7 +528,7 @@ func (rcv *STR) Bpmag() float64 {
 	return rcv.BPMAG()
 }
 
-/// Gaia BP-band magnitude (blue photometer)
+/// BP-band magnitude (blue prism photometer of the space astrometry system)
 func (rcv *STR) MutateBPMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
@@ -536,7 +537,7 @@ func (rcv *STR) MutateBpmag(n float64) bool {
 	return rcv.MutateBPMAG(n)
 }
 
-/// Gaia BP-band magnitude uncertainty
+/// BP-band magnitude uncertainty
 func (rcv *STR) BPMAG_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -549,7 +550,7 @@ func (rcv *STR) BpmagUnc() float64 {
 	return rcv.BPMAG_UNC()
 }
 
-/// Gaia BP-band magnitude uncertainty
+/// BP-band magnitude uncertainty
 func (rcv *STR) MutateBPMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
@@ -558,7 +559,7 @@ func (rcv *STR) MutateBpmagUnc(n float64) bool {
 	return rcv.MutateBPMAG_UNC(n)
 }
 
-/// Gaia RP-band magnitude (red photometer)
+/// RP-band magnitude (red prism photometer of the space astrometry system)
 func (rcv *STR) RPMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -571,7 +572,7 @@ func (rcv *STR) Rpmag() float64 {
 	return rcv.RPMAG()
 }
 
-/// Gaia RP-band magnitude (red photometer)
+/// RP-band magnitude (red prism photometer of the space astrometry system)
 func (rcv *STR) MutateRPMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
@@ -580,7 +581,7 @@ func (rcv *STR) MutateRpmag(n float64) bool {
 	return rcv.MutateRPMAG(n)
 }
 
-/// Gaia RP-band magnitude uncertainty
+/// RP-band magnitude uncertainty
 func (rcv *STR) RPMAG_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -593,7 +594,7 @@ func (rcv *STR) RpmagUnc() float64 {
 	return rcv.RPMAG_UNC()
 }
 
-/// Gaia RP-band magnitude uncertainty
+/// RP-band magnitude uncertainty
 func (rcv *STR) MutateRPMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
@@ -602,7 +603,7 @@ func (rcv *STR) MutateRpmagUnc(n float64) bool {
 	return rcv.MutateRPMAG_UNC(n)
 }
 
-/// 2MASS J-band magnitude (1.25 um)
+/// Near-infrared J-band magnitude (1.25 um)
 func (rcv *STR) JMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -615,7 +616,7 @@ func (rcv *STR) Jmag() float64 {
 	return rcv.JMAG()
 }
 
-/// 2MASS J-band magnitude (1.25 um)
+/// Near-infrared J-band magnitude (1.25 um)
 func (rcv *STR) MutateJMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
@@ -646,7 +647,7 @@ func (rcv *STR) MutateJmagUnc(n float64) bool {
 	return rcv.MutateJMAG_UNC(n)
 }
 
-/// 2MASS K-band magnitude (2.17 um)
+/// Near-infrared Ks-band magnitude (2.17 um)
 func (rcv *STR) KMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -659,7 +660,7 @@ func (rcv *STR) Kmag() float64 {
 	return rcv.KMAG()
 }
 
-/// 2MASS K-band magnitude (2.17 um)
+/// Near-infrared Ks-band magnitude (2.17 um)
 func (rcv *STR) MutateKMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
@@ -690,7 +691,7 @@ func (rcv *STR) MutateKmagUnc(n float64) bool {
 	return rcv.MutateKMAG_UNC(n)
 }
 
-/// 2MASS H-band magnitude (1.65 um)
+/// Near-infrared H-band magnitude (1.65 um)
 func (rcv *STR) HMAG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -703,7 +704,7 @@ func (rcv *STR) Hmag() float64 {
 	return rcv.HMAG()
 }
 
-/// 2MASS H-band magnitude (1.65 um)
+/// Near-infrared H-band magnitude (1.65 um)
 func (rcv *STR) MutateHMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
@@ -888,8 +889,424 @@ func (rcv *STR) MutateShift(n float64) bool {
 	return rcv.MutateSHIFT(n)
 }
 
+/// Effective temperature (kelvin)
+func (rcv *STR) TEFF() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) Teff() float64 {
+	return rcv.TEFF()
+}
+
+/// Effective temperature (kelvin)
+func (rcv *STR) MutateTEFF(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(82, n)
+}
+
+func (rcv *STR) MutateTeff(n float64) bool {
+	return rcv.MutateTEFF(n)
+}
+
+/// Effective temperature uncertainty (kelvin)
+func (rcv *STR) TEFF_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) TeffUnc() float64 {
+	return rcv.TEFF_UNC()
+}
+
+/// Effective temperature uncertainty (kelvin)
+func (rcv *STR) MutateTEFF_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *STR) MutateTeffUnc(n float64) bool {
+	return rcv.MutateTEFF_UNC(n)
+}
+
+/// Surface gravity, log10 of g in cm s^-2
+func (rcv *STR) LOGG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) Logg() float64 {
+	return rcv.LOGG()
+}
+
+/// Surface gravity, log10 of g in cm s^-2
+func (rcv *STR) MutateLOGG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(86, n)
+}
+
+func (rcv *STR) MutateLogg(n float64) bool {
+	return rcv.MutateLOGG(n)
+}
+
+/// Surface gravity uncertainty (dex)
+func (rcv *STR) LOGG_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) LoggUnc() float64 {
+	return rcv.LOGG_UNC()
+}
+
+/// Surface gravity uncertainty (dex)
+func (rcv *STR) MutateLOGG_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(88, n)
+}
+
+func (rcv *STR) MutateLoggUnc(n float64) bool {
+	return rcv.MutateLOGG_UNC(n)
+}
+
+/// Metallicity [M/H] (dex)
+func (rcv *STR) METALLICITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) Metallicity() float64 {
+	return rcv.METALLICITY()
+}
+
+/// Metallicity [M/H] (dex)
+func (rcv *STR) MutateMETALLICITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *STR) MutateMetallicity(n float64) bool {
+	return rcv.MutateMETALLICITY(n)
+}
+
+/// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+func (rcv *STR) EXTINCTION_A0() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) ExtinctionA0() float64 {
+	return rcv.EXTINCTION_A0()
+}
+
+/// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+func (rcv *STR) MutateEXTINCTION_A0(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *STR) MutateExtinctionA0(n float64) bool {
+	return rcv.MutateEXTINCTION_A0(n)
+}
+
+/// Radial velocity, positive receding (km/s)
+func (rcv *STR) RADIAL_VELOCITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) RadialVelocity() float64 {
+	return rcv.RADIAL_VELOCITY()
+}
+
+/// Radial velocity, positive receding (km/s)
+func (rcv *STR) MutateRADIAL_VELOCITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *STR) MutateRadialVelocity(n float64) bool {
+	return rcv.MutateRADIAL_VELOCITY(n)
+}
+
+/// Radial velocity uncertainty (km/s)
+func (rcv *STR) RADIAL_VELOCITY_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) RadialVelocityUnc() float64 {
+	return rcv.RADIAL_VELOCITY_UNC()
+}
+
+/// Radial velocity uncertainty (km/s)
+func (rcv *STR) MutateRADIAL_VELOCITY_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+func (rcv *STR) MutateRadialVelocityUnc(n float64) bool {
+	return rcv.MutateRADIAL_VELOCITY_UNC(n)
+}
+
+/// Spectral type in the MK system, e.g. "A1 V"
+func (rcv *STR) SPECTRAL_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) SpectralType() []byte {
+	return rcv.SPECTRAL_TYPE()
+}
+
+/// Spectral type in the MK system, e.g. "A1 V"
+/// Proper name as recognised by the astronomical naming authority
+func (rcv *STR) PROPER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) ProperName() []byte {
+	return rcv.PROPER_NAME()
+}
+
+/// Proper name as recognised by the astronomical naming authority
+/// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+func (rcv *STR) BAYER_FLAMSTEED() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) BayerFlamsteed() []byte {
+	return rcv.BAYER_FLAMSTEED()
+}
+
+/// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+/// Constellation containing the star, three-letter abbreviation
+func (rcv *STR) CONSTELLATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) Constellation() []byte {
+	return rcv.CONSTELLATION()
+}
+
+/// Constellation containing the star, three-letter abbreviation
+/// Bright-star catalog number (HR); 0 when not in that catalog
+func (rcv *STR) HR_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *STR) HrCatId() uint32 {
+	return rcv.HR_CAT_ID()
+}
+
+/// Bright-star catalog number (HR); 0 when not in that catalog
+func (rcv *STR) MutateHR_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(106, n)
+}
+
+func (rcv *STR) MutateHrCatId(n uint32) bool {
+	return rcv.MutateHR_CAT_ID(n)
+}
+
+/// Spectral-type catalog number (HD); 0 when not in that catalog
+func (rcv *STR) HD_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *STR) HdCatId() uint32 {
+	return rcv.HD_CAT_ID()
+}
+
+/// Spectral-type catalog number (HD); 0 when not in that catalog
+func (rcv *STR) MutateHD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(108, n)
+}
+
+func (rcv *STR) MutateHdCatId(n uint32) bool {
+	return rcv.MutateHD_CAT_ID(n)
+}
+
+/// Other designations, each in the form its catalog uses
+func (rcv *STR) DESIGNATIONS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *STR) Designations(j int) []byte {
+	return rcv.DESIGNATIONS(j)
+}
+
+func (rcv *STR) DESIGNATIONSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *STR) DesignationsLength() int {
+	return rcv.DESIGNATIONSLength()
+}
+
+/// Other designations, each in the form its catalog uses
+/// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+func (rcv *STR) VARIABILITY_CLASS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) VariabilityClass() []byte {
+	return rcv.VARIABILITY_CLASS()
+}
+
+/// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+/// Period of variability (days)
+func (rcv *STR) VARIABILITY_PERIOD() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) VariabilityPeriod() float64 {
+	return rcv.VARIABILITY_PERIOD()
+}
+
+/// Period of variability (days)
+func (rcv *STR) MutateVARIABILITY_PERIOD(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(114, n)
+}
+
+func (rcv *STR) MutateVariabilityPeriod(n float64) bool {
+	return rcv.MutateVARIABILITY_PERIOD(n)
+}
+
+/// Peak-to-peak variability amplitude (magnitudes)
+func (rcv *STR) VARIABILITY_AMPLITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) VariabilityAmplitude() float64 {
+	return rcv.VARIABILITY_AMPLITUDE()
+}
+
+/// Peak-to-peak variability amplitude (magnitudes)
+func (rcv *STR) MutateVARIABILITY_AMPLITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(116, n)
+}
+
+func (rcv *STR) MutateVariabilityAmplitude(n float64) bool {
+	return rcv.MutateVARIABILITY_AMPLITUDE(n)
+}
+
+/// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+func (rcv *STR) VARIABILITY_EPOCH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) VariabilityEpoch() float64 {
+	return rcv.VARIABILITY_EPOCH()
+}
+
+/// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+func (rcv *STR) MutateVARIABILITY_EPOCH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(118, n)
+}
+
+func (rcv *STR) MutateVariabilityEpoch(n float64) bool {
+	return rcv.MutateVARIABILITY_EPOCH(n)
+}
+
+/// Brightness in every band the star was measured or modelled in
+func (rcv *STR) PHOTOMETRY(obj *PHBMeasurement, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PHBMeasurement)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *STR) Photometry(obj *PHBMeasurement, j int) bool {
+	return rcv.PHOTOMETRY(obj, j)
+}
+
+func (rcv *STR) PHOTOMETRYLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *STR) PhotometryLength() int {
+	return rcv.PHOTOMETRYLength()
+}
+
+/// Brightness in every band the star was measured or modelled in
 func STRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(39)
+	builder.StartObject(59)
 }
 func STRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -1124,6 +1541,138 @@ func STRAddSHIFT(builder *flatbuffers.Builder, SHIFT float64) {
 }
 func STRAddShift(builder *flatbuffers.Builder, SHIFT float64) {
 	STRAddSHIFT(builder, SHIFT)
+}
+func STRAddTEFF(builder *flatbuffers.Builder, TEFF float64) {
+	builder.PrependFloat64Slot(39, TEFF, float64(math.NaN()))
+}
+func STRAddTeff(builder *flatbuffers.Builder, TEFF float64) {
+	STRAddTEFF(builder, TEFF)
+}
+func STRAddTEFF_UNC(builder *flatbuffers.Builder, TEFF_UNC float64) {
+	builder.PrependFloat64Slot(40, TEFF_UNC, float64(math.NaN()))
+}
+func STRAddTeffUnc(builder *flatbuffers.Builder, TEFF_UNC float64) {
+	STRAddTEFF_UNC(builder, TEFF_UNC)
+}
+func STRAddLOGG(builder *flatbuffers.Builder, LOGG float64) {
+	builder.PrependFloat64Slot(41, LOGG, float64(math.NaN()))
+}
+func STRAddLogg(builder *flatbuffers.Builder, LOGG float64) {
+	STRAddLOGG(builder, LOGG)
+}
+func STRAddLOGG_UNC(builder *flatbuffers.Builder, LOGG_UNC float64) {
+	builder.PrependFloat64Slot(42, LOGG_UNC, float64(math.NaN()))
+}
+func STRAddLoggUnc(builder *flatbuffers.Builder, LOGG_UNC float64) {
+	STRAddLOGG_UNC(builder, LOGG_UNC)
+}
+func STRAddMETALLICITY(builder *flatbuffers.Builder, METALLICITY float64) {
+	builder.PrependFloat64Slot(43, METALLICITY, float64(math.NaN()))
+}
+func STRAddMetallicity(builder *flatbuffers.Builder, METALLICITY float64) {
+	STRAddMETALLICITY(builder, METALLICITY)
+}
+func STRAddEXTINCTION_A0(builder *flatbuffers.Builder, EXTINCTION_A0 float64) {
+	builder.PrependFloat64Slot(44, EXTINCTION_A0, float64(math.NaN()))
+}
+func STRAddExtinctionA0(builder *flatbuffers.Builder, EXTINCTION_A0 float64) {
+	STRAddEXTINCTION_A0(builder, EXTINCTION_A0)
+}
+func STRAddRADIAL_VELOCITY(builder *flatbuffers.Builder, RADIAL_VELOCITY float64) {
+	builder.PrependFloat64Slot(45, RADIAL_VELOCITY, float64(math.NaN()))
+}
+func STRAddRadialVelocity(builder *flatbuffers.Builder, RADIAL_VELOCITY float64) {
+	STRAddRADIAL_VELOCITY(builder, RADIAL_VELOCITY)
+}
+func STRAddRADIAL_VELOCITY_UNC(builder *flatbuffers.Builder, RADIAL_VELOCITY_UNC float64) {
+	builder.PrependFloat64Slot(46, RADIAL_VELOCITY_UNC, float64(math.NaN()))
+}
+func STRAddRadialVelocityUnc(builder *flatbuffers.Builder, RADIAL_VELOCITY_UNC float64) {
+	STRAddRADIAL_VELOCITY_UNC(builder, RADIAL_VELOCITY_UNC)
+}
+func STRAddSPECTRAL_TYPE(builder *flatbuffers.Builder, SPECTRAL_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(SPECTRAL_TYPE), 0)
+}
+func STRAddSpectralType(builder *flatbuffers.Builder, SPECTRAL_TYPE flatbuffers.UOffsetT) {
+	STRAddSPECTRAL_TYPE(builder, SPECTRAL_TYPE)
+}
+func STRAddPROPER_NAME(builder *flatbuffers.Builder, PROPER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(PROPER_NAME), 0)
+}
+func STRAddProperName(builder *flatbuffers.Builder, PROPER_NAME flatbuffers.UOffsetT) {
+	STRAddPROPER_NAME(builder, PROPER_NAME)
+}
+func STRAddBAYER_FLAMSTEED(builder *flatbuffers.Builder, BAYER_FLAMSTEED flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(BAYER_FLAMSTEED), 0)
+}
+func STRAddBayerFlamsteed(builder *flatbuffers.Builder, BAYER_FLAMSTEED flatbuffers.UOffsetT) {
+	STRAddBAYER_FLAMSTEED(builder, BAYER_FLAMSTEED)
+}
+func STRAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(CONSTELLATION), 0)
+}
+func STRAddConstellation(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	STRAddCONSTELLATION(builder, CONSTELLATION)
+}
+func STRAddHR_CAT_ID(builder *flatbuffers.Builder, HR_CAT_ID uint32) {
+	builder.PrependUint32Slot(51, HR_CAT_ID, 0)
+}
+func STRAddHrCatId(builder *flatbuffers.Builder, HR_CAT_ID uint32) {
+	STRAddHR_CAT_ID(builder, HR_CAT_ID)
+}
+func STRAddHD_CAT_ID(builder *flatbuffers.Builder, HD_CAT_ID uint32) {
+	builder.PrependUint32Slot(52, HD_CAT_ID, 0)
+}
+func STRAddHdCatId(builder *flatbuffers.Builder, HD_CAT_ID uint32) {
+	STRAddHD_CAT_ID(builder, HD_CAT_ID)
+}
+func STRAddDESIGNATIONS(builder *flatbuffers.Builder, DESIGNATIONS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(DESIGNATIONS), 0)
+}
+func STRAddDesignations(builder *flatbuffers.Builder, DESIGNATIONS flatbuffers.UOffsetT) {
+	STRAddDESIGNATIONS(builder, DESIGNATIONS)
+}
+func STRStartDESIGNATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func STRStartDesignationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STRStartDESIGNATIONSVector(builder, numElems)
+}
+func STRAddVARIABILITY_CLASS(builder *flatbuffers.Builder, VARIABILITY_CLASS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(VARIABILITY_CLASS), 0)
+}
+func STRAddVariabilityClass(builder *flatbuffers.Builder, VARIABILITY_CLASS flatbuffers.UOffsetT) {
+	STRAddVARIABILITY_CLASS(builder, VARIABILITY_CLASS)
+}
+func STRAddVARIABILITY_PERIOD(builder *flatbuffers.Builder, VARIABILITY_PERIOD float64) {
+	builder.PrependFloat64Slot(55, VARIABILITY_PERIOD, float64(math.NaN()))
+}
+func STRAddVariabilityPeriod(builder *flatbuffers.Builder, VARIABILITY_PERIOD float64) {
+	STRAddVARIABILITY_PERIOD(builder, VARIABILITY_PERIOD)
+}
+func STRAddVARIABILITY_AMPLITUDE(builder *flatbuffers.Builder, VARIABILITY_AMPLITUDE float64) {
+	builder.PrependFloat64Slot(56, VARIABILITY_AMPLITUDE, float64(math.NaN()))
+}
+func STRAddVariabilityAmplitude(builder *flatbuffers.Builder, VARIABILITY_AMPLITUDE float64) {
+	STRAddVARIABILITY_AMPLITUDE(builder, VARIABILITY_AMPLITUDE)
+}
+func STRAddVARIABILITY_EPOCH(builder *flatbuffers.Builder, VARIABILITY_EPOCH float64) {
+	builder.PrependFloat64Slot(57, VARIABILITY_EPOCH, float64(math.NaN()))
+}
+func STRAddVariabilityEpoch(builder *flatbuffers.Builder, VARIABILITY_EPOCH float64) {
+	STRAddVARIABILITY_EPOCH(builder, VARIABILITY_EPOCH)
+}
+func STRAddPHOTOMETRY(builder *flatbuffers.Builder, PHOTOMETRY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(PHOTOMETRY), 0)
+}
+func STRAddPhotometry(builder *flatbuffers.Builder, PHOTOMETRY flatbuffers.UOffsetT) {
+	STRAddPHOTOMETRY(builder, PHOTOMETRY)
+}
+func STRStartPHOTOMETRYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func STRStartPhotometryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STRStartPHOTOMETRYVector(builder, numElems)
 }
 func STREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

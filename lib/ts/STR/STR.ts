@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PHBMeasurement, PHBMeasurementT } from './PHBMeasurement.js';
 
 
 /**
@@ -58,7 +59,7 @@ GNC_CAT_ID():number {
 }
 
 /**
- * Gaia DR3 source identifier
+ * Source identifier in the third data release of the all-sky space astrometry survey
  */
 GAIADR3_CAT_ID():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -66,7 +67,7 @@ GAIADR3_CAT_ID():bigint {
 }
 
 /**
- * Hipparcos catalog identifier
+ * Identifier in the first space astrometry mission's main catalog
  */
 HIP_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -198,7 +199,7 @@ PM_UNC_FLAG():boolean {
 }
 
 /**
- * Gaia G-band magnitude
+ * Broad-band G magnitude of the space astrometry photometric system
  */
 GMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
@@ -206,7 +207,7 @@ GMAG():number {
 }
 
 /**
- * Gaia G-band magnitude uncertainty
+ * G-band magnitude uncertainty
  */
 GMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
@@ -214,7 +215,7 @@ GMAG_UNC():number {
 }
 
 /**
- * Gaia BP-band magnitude (blue photometer)
+ * BP-band magnitude (blue prism photometer of the space astrometry system)
  */
 BPMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -222,7 +223,7 @@ BPMAG():number {
 }
 
 /**
- * Gaia BP-band magnitude uncertainty
+ * BP-band magnitude uncertainty
  */
 BPMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
@@ -230,7 +231,7 @@ BPMAG_UNC():number {
 }
 
 /**
- * Gaia RP-band magnitude (red photometer)
+ * RP-band magnitude (red prism photometer of the space astrometry system)
  */
 RPMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
@@ -238,7 +239,7 @@ RPMAG():number {
 }
 
 /**
- * Gaia RP-band magnitude uncertainty
+ * RP-band magnitude uncertainty
  */
 RPMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
@@ -246,7 +247,7 @@ RPMAG_UNC():number {
 }
 
 /**
- * 2MASS J-band magnitude (1.25 um)
+ * Near-infrared J-band magnitude (1.25 um)
  */
 JMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
@@ -262,7 +263,7 @@ JMAG_UNC():number {
 }
 
 /**
- * 2MASS K-band magnitude (2.17 um)
+ * Near-infrared Ks-band magnitude (2.17 um)
  */
 KMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
@@ -278,7 +279,7 @@ KMAG_UNC():number {
 }
 
 /**
- * 2MASS H-band magnitude (1.65 um)
+ * Near-infrared H-band magnitude (1.65 um)
  */
 HMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -349,8 +350,190 @@ SHIFT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Effective temperature (kelvin)
+ */
+TEFF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Effective temperature uncertainty (kelvin)
+ */
+TEFF_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Surface gravity, log10 of g in cm s^-2
+ */
+LOGG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Surface gravity uncertainty (dex)
+ */
+LOGG_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Metallicity [M/H] (dex)
+ */
+METALLICITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Interstellar extinction at 541.4 nm, A0 (magnitudes)
+ */
+EXTINCTION_A0():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Radial velocity, positive receding (km/s)
+ */
+RADIAL_VELOCITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Radial velocity uncertainty (km/s)
+ */
+RADIAL_VELOCITY_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Spectral type in the MK system, e.g. "A1 V"
+ */
+SPECTRAL_TYPE():string|null
+SPECTRAL_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SPECTRAL_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Proper name as recognised by the astronomical naming authority
+ */
+PROPER_NAME():string|null
+PROPER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROPER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+ */
+BAYER_FLAMSTEED():string|null
+BAYER_FLAMSTEED(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BAYER_FLAMSTEED(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Constellation containing the star, three-letter abbreviation
+ */
+CONSTELLATION():string|null
+CONSTELLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONSTELLATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Bright-star catalog number (HR); 0 when not in that catalog
+ */
+HR_CAT_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Spectral-type catalog number (HD); 0 when not in that catalog
+ */
+HD_CAT_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Other designations, each in the form its catalog uses
+ */
+DESIGNATIONS(index: number):string
+DESIGNATIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+DESIGNATIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+designationsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+ */
+VARIABILITY_CLASS():string|null
+VARIABILITY_CLASS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VARIABILITY_CLASS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Period of variability (days)
+ */
+VARIABILITY_PERIOD():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Peak-to-peak variability amplitude (magnitudes)
+ */
+VARIABILITY_AMPLITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+ */
+VARIABILITY_EPOCH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Brightness in every band the star was measured or modelled in
+ */
+PHOTOMETRY(index: number, obj?:PHBMeasurement):PHBMeasurement|null {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? (obj || new PHBMeasurement()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+photometryLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startSTR(builder:flatbuffers.Builder) {
-  builder.startObject(39);
+  builder.startObject(59);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -509,6 +692,110 @@ static addShift(builder:flatbuffers.Builder, SHIFT:number) {
   builder.addFieldFloat64(38, SHIFT, 0.0);
 }
 
+static addTeff(builder:flatbuffers.Builder, TEFF:number) {
+  builder.addFieldFloat64(39, TEFF, NaN);
+}
+
+static addTeffUnc(builder:flatbuffers.Builder, TEFF_UNC:number) {
+  builder.addFieldFloat64(40, TEFF_UNC, NaN);
+}
+
+static addLogg(builder:flatbuffers.Builder, LOGG:number) {
+  builder.addFieldFloat64(41, LOGG, NaN);
+}
+
+static addLoggUnc(builder:flatbuffers.Builder, LOGG_UNC:number) {
+  builder.addFieldFloat64(42, LOGG_UNC, NaN);
+}
+
+static addMetallicity(builder:flatbuffers.Builder, METALLICITY:number) {
+  builder.addFieldFloat64(43, METALLICITY, NaN);
+}
+
+static addExtinctionA0(builder:flatbuffers.Builder, EXTINCTION_A0:number) {
+  builder.addFieldFloat64(44, EXTINCTION_A0, NaN);
+}
+
+static addRadialVelocity(builder:flatbuffers.Builder, RADIAL_VELOCITY:number) {
+  builder.addFieldFloat64(45, RADIAL_VELOCITY, NaN);
+}
+
+static addRadialVelocityUnc(builder:flatbuffers.Builder, RADIAL_VELOCITY_UNC:number) {
+  builder.addFieldFloat64(46, RADIAL_VELOCITY_UNC, NaN);
+}
+
+static addSpectralType(builder:flatbuffers.Builder, SPECTRAL_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, SPECTRAL_TYPEOffset, 0);
+}
+
+static addProperName(builder:flatbuffers.Builder, PROPER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, PROPER_NAMEOffset, 0);
+}
+
+static addBayerFlamsteed(builder:flatbuffers.Builder, BAYER_FLAMSTEEDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(49, BAYER_FLAMSTEEDOffset, 0);
+}
+
+static addConstellation(builder:flatbuffers.Builder, CONSTELLATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, CONSTELLATIONOffset, 0);
+}
+
+static addHrCatId(builder:flatbuffers.Builder, HR_CAT_ID:number) {
+  builder.addFieldInt32(51, HR_CAT_ID, 0);
+}
+
+static addHdCatId(builder:flatbuffers.Builder, HD_CAT_ID:number) {
+  builder.addFieldInt32(52, HD_CAT_ID, 0);
+}
+
+static addDesignations(builder:flatbuffers.Builder, DESIGNATIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(53, DESIGNATIONSOffset, 0);
+}
+
+static createDesignationsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDesignationsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addVariabilityClass(builder:flatbuffers.Builder, VARIABILITY_CLASSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(54, VARIABILITY_CLASSOffset, 0);
+}
+
+static addVariabilityPeriod(builder:flatbuffers.Builder, VARIABILITY_PERIOD:number) {
+  builder.addFieldFloat64(55, VARIABILITY_PERIOD, NaN);
+}
+
+static addVariabilityAmplitude(builder:flatbuffers.Builder, VARIABILITY_AMPLITUDE:number) {
+  builder.addFieldFloat64(56, VARIABILITY_AMPLITUDE, NaN);
+}
+
+static addVariabilityEpoch(builder:flatbuffers.Builder, VARIABILITY_EPOCH:number) {
+  builder.addFieldFloat64(57, VARIABILITY_EPOCH, NaN);
+}
+
+static addPhotometry(builder:flatbuffers.Builder, PHOTOMETRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(58, PHOTOMETRYOffset, 0);
+}
+
+static createPhotometryVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPhotometryVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endSTR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -522,7 +809,7 @@ static finishSizePrefixedSTRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$STR', true);
 }
 
-static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIADR3_CAT_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number):flatbuffers.Offset {
+static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIADR3_CAT_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number, TEFF:number, TEFF_UNC:number, LOGG:number, LOGG_UNC:number, METALLICITY:number, EXTINCTION_A0:number, RADIAL_VELOCITY:number, RADIAL_VELOCITY_UNC:number, SPECTRAL_TYPEOffset:flatbuffers.Offset, PROPER_NAMEOffset:flatbuffers.Offset, BAYER_FLAMSTEEDOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, HR_CAT_ID:number, HD_CAT_ID:number, DESIGNATIONSOffset:flatbuffers.Offset, VARIABILITY_CLASSOffset:flatbuffers.Offset, VARIABILITY_PERIOD:number, VARIABILITY_AMPLITUDE:number, VARIABILITY_EPOCH:number, PHOTOMETRYOffset:flatbuffers.Offset):flatbuffers.Offset {
   STR.startSTR(builder);
   STR.addId(builder, IDOffset);
   STR.addCsId(builder, CS_ID);
@@ -563,6 +850,26 @@ static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID
   STR.addNeighborDistance(builder, NEIGHBOR_DISTANCE);
   STR.addShiftFlag(builder, SHIFT_FLAG);
   STR.addShift(builder, SHIFT);
+  STR.addTeff(builder, TEFF);
+  STR.addTeffUnc(builder, TEFF_UNC);
+  STR.addLogg(builder, LOGG);
+  STR.addLoggUnc(builder, LOGG_UNC);
+  STR.addMetallicity(builder, METALLICITY);
+  STR.addExtinctionA0(builder, EXTINCTION_A0);
+  STR.addRadialVelocity(builder, RADIAL_VELOCITY);
+  STR.addRadialVelocityUnc(builder, RADIAL_VELOCITY_UNC);
+  STR.addSpectralType(builder, SPECTRAL_TYPEOffset);
+  STR.addProperName(builder, PROPER_NAMEOffset);
+  STR.addBayerFlamsteed(builder, BAYER_FLAMSTEEDOffset);
+  STR.addConstellation(builder, CONSTELLATIONOffset);
+  STR.addHrCatId(builder, HR_CAT_ID);
+  STR.addHdCatId(builder, HD_CAT_ID);
+  STR.addDesignations(builder, DESIGNATIONSOffset);
+  STR.addVariabilityClass(builder, VARIABILITY_CLASSOffset);
+  STR.addVariabilityPeriod(builder, VARIABILITY_PERIOD);
+  STR.addVariabilityAmplitude(builder, VARIABILITY_AMPLITUDE);
+  STR.addVariabilityEpoch(builder, VARIABILITY_EPOCH);
+  STR.addPhotometry(builder, PHOTOMETRYOffset);
   return STR.endSTR(builder);
 }
 
@@ -606,7 +913,27 @@ unpack(): STRT {
     this.NEIGHBOR_FLAG(),
     this.NEIGHBOR_DISTANCE(),
     this.SHIFT_FLAG(),
-    this.SHIFT()
+    this.SHIFT(),
+    this.TEFF(),
+    this.TEFF_UNC(),
+    this.LOGG(),
+    this.LOGG_UNC(),
+    this.METALLICITY(),
+    this.EXTINCTION_A0(),
+    this.RADIAL_VELOCITY(),
+    this.RADIAL_VELOCITY_UNC(),
+    this.SPECTRAL_TYPE(),
+    this.PROPER_NAME(),
+    this.BAYER_FLAMSTEED(),
+    this.CONSTELLATION(),
+    this.HR_CAT_ID(),
+    this.HD_CAT_ID(),
+    this.bb!.createScalarList<string>(this.DESIGNATIONS.bind(this), this.designationsLength()),
+    this.VARIABILITY_CLASS(),
+    this.VARIABILITY_PERIOD(),
+    this.VARIABILITY_AMPLITUDE(),
+    this.VARIABILITY_EPOCH(),
+    this.bb!.createObjList<PHBMeasurement, PHBMeasurementT>(this.PHOTOMETRY.bind(this), this.photometryLength())
   );
 }
 
@@ -651,6 +978,26 @@ unpackTo(_o: STRT): void {
   _o.NEIGHBOR_DISTANCE = this.NEIGHBOR_DISTANCE();
   _o.SHIFT_FLAG = this.SHIFT_FLAG();
   _o.SHIFT = this.SHIFT();
+  _o.TEFF = this.TEFF();
+  _o.TEFF_UNC = this.TEFF_UNC();
+  _o.LOGG = this.LOGG();
+  _o.LOGG_UNC = this.LOGG_UNC();
+  _o.METALLICITY = this.METALLICITY();
+  _o.EXTINCTION_A0 = this.EXTINCTION_A0();
+  _o.RADIAL_VELOCITY = this.RADIAL_VELOCITY();
+  _o.RADIAL_VELOCITY_UNC = this.RADIAL_VELOCITY_UNC();
+  _o.SPECTRAL_TYPE = this.SPECTRAL_TYPE();
+  _o.PROPER_NAME = this.PROPER_NAME();
+  _o.BAYER_FLAMSTEED = this.BAYER_FLAMSTEED();
+  _o.CONSTELLATION = this.CONSTELLATION();
+  _o.HR_CAT_ID = this.HR_CAT_ID();
+  _o.HD_CAT_ID = this.HD_CAT_ID();
+  _o.DESIGNATIONS = this.bb!.createScalarList<string>(this.DESIGNATIONS.bind(this), this.designationsLength());
+  _o.VARIABILITY_CLASS = this.VARIABILITY_CLASS();
+  _o.VARIABILITY_PERIOD = this.VARIABILITY_PERIOD();
+  _o.VARIABILITY_AMPLITUDE = this.VARIABILITY_AMPLITUDE();
+  _o.VARIABILITY_EPOCH = this.VARIABILITY_EPOCH();
+  _o.PHOTOMETRY = this.bb!.createObjList<PHBMeasurement, PHBMeasurementT>(this.PHOTOMETRY.bind(this), this.photometryLength());
 }
 }
 
@@ -694,7 +1041,27 @@ constructor(
   public NEIGHBOR_FLAG: boolean = false,
   public NEIGHBOR_DISTANCE: number = 0.0,
   public SHIFT_FLAG: boolean = false,
-  public SHIFT: number = 0.0
+  public SHIFT: number = 0.0,
+  public TEFF: number = NaN,
+  public TEFF_UNC: number = NaN,
+  public LOGG: number = NaN,
+  public LOGG_UNC: number = NaN,
+  public METALLICITY: number = NaN,
+  public EXTINCTION_A0: number = NaN,
+  public RADIAL_VELOCITY: number = NaN,
+  public RADIAL_VELOCITY_UNC: number = NaN,
+  public SPECTRAL_TYPE: string|Uint8Array|null = null,
+  public PROPER_NAME: string|Uint8Array|null = null,
+  public BAYER_FLAMSTEED: string|Uint8Array|null = null,
+  public CONSTELLATION: string|Uint8Array|null = null,
+  public HR_CAT_ID: number = 0,
+  public HD_CAT_ID: number = 0,
+  public DESIGNATIONS: (string)[] = [],
+  public VARIABILITY_CLASS: string|Uint8Array|null = null,
+  public VARIABILITY_PERIOD: number = NaN,
+  public VARIABILITY_AMPLITUDE: number = NaN,
+  public VARIABILITY_EPOCH: number = NaN,
+  public PHOTOMETRY: (PHBMeasurementT)[] = []
 ){}
 
 
@@ -702,6 +1069,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const CAT_VERSION = (this.CAT_VERSION !== null ? builder.createString(this.CAT_VERSION!) : 0);
   const ASTROMETRY_ORIGIN = (this.ASTROMETRY_ORIGIN !== null ? builder.createString(this.ASTROMETRY_ORIGIN!) : 0);
+  const SPECTRAL_TYPE = (this.SPECTRAL_TYPE !== null ? builder.createString(this.SPECTRAL_TYPE!) : 0);
+  const PROPER_NAME = (this.PROPER_NAME !== null ? builder.createString(this.PROPER_NAME!) : 0);
+  const BAYER_FLAMSTEED = (this.BAYER_FLAMSTEED !== null ? builder.createString(this.BAYER_FLAMSTEED!) : 0);
+  const CONSTELLATION = (this.CONSTELLATION !== null ? builder.createString(this.CONSTELLATION!) : 0);
+  const DESIGNATIONS = STR.createDesignationsVector(builder, builder.createObjectOffsetList(this.DESIGNATIONS));
+  const VARIABILITY_CLASS = (this.VARIABILITY_CLASS !== null ? builder.createString(this.VARIABILITY_CLASS!) : 0);
+  const PHOTOMETRY = STR.createPhotometryVector(builder, builder.createObjectOffsetList(this.PHOTOMETRY));
 
   return STR.createSTR(builder,
     ID,
@@ -742,7 +1116,27 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.NEIGHBOR_FLAG,
     this.NEIGHBOR_DISTANCE,
     this.SHIFT_FLAG,
-    this.SHIFT
+    this.SHIFT,
+    this.TEFF,
+    this.TEFF_UNC,
+    this.LOGG,
+    this.LOGG_UNC,
+    this.METALLICITY,
+    this.EXTINCTION_A0,
+    this.RADIAL_VELOCITY,
+    this.RADIAL_VELOCITY_UNC,
+    SPECTRAL_TYPE,
+    PROPER_NAME,
+    BAYER_FLAMSTEED,
+    CONSTELLATION,
+    this.HR_CAT_ID,
+    this.HD_CAT_ID,
+    DESIGNATIONS,
+    VARIABILITY_CLASS,
+    this.VARIABILITY_PERIOD,
+    this.VARIABILITY_AMPLITUDE,
+    this.VARIABILITY_EPOCH,
+    PHOTOMETRY
   );
 }
 }

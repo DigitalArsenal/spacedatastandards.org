@@ -268,6 +268,9 @@ public enum RecordType : byte
   GCT = 247,
   CQR = 248,
   RPC = 249,
+  CSO = 250,
+  PHB = 251,
+  SKT = 252,
 };
 
 public class RecordTypeUnion {
@@ -778,6 +781,12 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromCQR(CQRT _cqr) { return new RecordTypeUnion{ Type = RecordType.CQR, Value = _cqr }; }
   public RPCT AsRPC() { return this.As<RPCT>(); }
   public static RecordTypeUnion FromRPC(RPCT _rpc) { return new RecordTypeUnion{ Type = RecordType.RPC, Value = _rpc }; }
+  public CSOT AsCSO() { return this.As<CSOT>(); }
+  public static RecordTypeUnion FromCSO(CSOT _cso) { return new RecordTypeUnion{ Type = RecordType.CSO, Value = _cso }; }
+  public PHBT AsPHB() { return this.As<PHBT>(); }
+  public static RecordTypeUnion FromPHB(PHBT _phb) { return new RecordTypeUnion{ Type = RecordType.PHB, Value = _phb }; }
+  public SKTT AsSKT() { return this.As<SKTT>(); }
+  public static RecordTypeUnion FromSKT(SKTT _skt) { return new RecordTypeUnion{ Type = RecordType.SKT, Value = _skt }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1031,6 +1040,9 @@ public class RecordTypeUnion {
       case RecordType.GCT: return GCT.Pack(builder, _o.AsGCT()).Value;
       case RecordType.CQR: return CQR.Pack(builder, _o.AsCQR()).Value;
       case RecordType.RPC: return RPC.Pack(builder, _o.AsRPC()).Value;
+      case RecordType.CSO: return CSO.Pack(builder, _o.AsCSO()).Value;
+      case RecordType.PHB: return PHB.Pack(builder, _o.AsPHB()).Value;
+      case RecordType.SKT: return SKT.Pack(builder, _o.AsSKT()).Value;
     }
   }
 }
@@ -1790,6 +1802,15 @@ static public class RecordTypeVerify
         break;
       case RecordType.RPC:
         result = RPCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CSO:
+        result = CSOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PHB:
+        result = PHBVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SKT:
+        result = SKTVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

@@ -1,6 +1,614 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "phbSpectralRegime": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GAMMA_RAY",
+        "HARD_X_RAY",
+        "SOFT_X_RAY",
+        "EXTREME_ULTRAVIOLET",
+        "FAR_ULTRAVIOLET",
+        "NEAR_ULTRAVIOLET",
+        "VISIBLE",
+        "NEAR_INFRARED",
+        "MID_INFRARED",
+        "FAR_INFRARED",
+        "SUBMILLIMETRE",
+        "MICROWAVE",
+        "RADIO"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "GAMMA_RAY": {
+          "value": 1,
+          "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+        },
+        "HARD_X_RAY": {
+          "value": 2,
+          "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+        },
+        "SOFT_X_RAY": {
+          "value": 3,
+          "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+        },
+        "EXTREME_ULTRAVIOLET": {
+          "value": 4,
+          "description": "12.4 nm to 91.2 nm."
+        },
+        "FAR_ULTRAVIOLET": {
+          "value": 5,
+          "description": "91.2 nm to 200 nm."
+        },
+        "NEAR_ULTRAVIOLET": {
+          "value": 6,
+          "description": "200 nm to 380 nm."
+        },
+        "VISIBLE": {
+          "value": 7,
+          "description": "380 nm to 750 nm."
+        },
+        "NEAR_INFRARED": {
+          "value": 8,
+          "description": "0.75 um to 5 um."
+        },
+        "MID_INFRARED": {
+          "value": 9,
+          "description": "5 um to 40 um."
+        },
+        "FAR_INFRARED": {
+          "value": 10,
+          "description": "40 um to 350 um."
+        },
+        "SUBMILLIMETRE": {
+          "value": 11,
+          "description": "350 um to 1 mm."
+        },
+        "MICROWAVE": {
+          "value": 12,
+          "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+        },
+        "RADIO": {
+          "value": 13,
+          "description": "Longer than 10 cm (below 3 GHz)."
+        }
+      }
+    },
+    "phbMagnitudeSystem": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "VEGA",
+        "AB",
+        "ST",
+        "INSTRUMENTAL",
+        "NOT_A_MAGNITUDE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "VEGA": {
+          "value": 1,
+          "description": "Zero magnitude is the flux of the standard A0 V reference star."
+        },
+        "AB": {
+          "value": 2,
+          "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+        },
+        "ST": {
+          "value": 3,
+          "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+        },
+        "INSTRUMENTAL": {
+          "value": 4,
+          "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+        },
+        "NOT_A_MAGNITUDE": {
+          "value": 5,
+          "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+        }
+      }
+    },
+    "phbQuantity": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MAGNITUDE",
+        "FLUX_DENSITY_JY",
+        "ENERGY_FLUX_W_PER_M2",
+        "PHOTON_FLUX_PER_M2_S",
+        "COUNT_RATE_PER_S",
+        "BRIGHTNESS_TEMPERATURE_K"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MAGNITUDE": {
+          "value": 1,
+          "description": "Magnitude in the band's SYSTEM."
+        },
+        "FLUX_DENSITY_JY": {
+          "value": 2,
+          "description": "Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1)."
+        },
+        "ENERGY_FLUX_W_PER_M2": {
+          "value": 3,
+          "description": "Band-integrated energy flux, W m-2."
+        },
+        "PHOTON_FLUX_PER_M2_S": {
+          "value": 4,
+          "description": "Band-integrated photon flux, photons m-2 s-1."
+        },
+        "COUNT_RATE_PER_S": {
+          "value": 5,
+          "description": "Detected count rate of the stated instrument, counts s-1."
+        },
+        "BRIGHTNESS_TEMPERATURE_K": {
+          "value": 6,
+          "description": "Brightness temperature, kelvin."
+        }
+      }
+    },
+    "phbDerivation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEASURED",
+        "TRANSFORMED",
+        "MODELLED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MEASURED": {
+          "value": 1,
+          "description": "Observed in this band."
+        },
+        "TRANSFORMED": {
+          "value": 2,
+          "description": "Converted from a measurement in another band or system by a stated transformation."
+        },
+        "MODELLED": {
+          "value": 3,
+          "description": "Synthesised from a spectral energy distribution or a model atmosphere; never observed in this band."
+        }
+      }
+    },
+    "phbBoundKind": {
+      "type": "string",
+      "enum": [
+        "DETECTION",
+        "UPPER_LIMIT",
+        "LOWER_LIMIT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "DETECTION": {
+          "value": 0,
+          "description": "A detection: VALUE is the measured brightness."
+        },
+        "UPPER_LIMIT": {
+          "value": 1,
+          "description": "Not detected: the source is fainter than VALUE (a flux upper limit, a magnitude lower bound)."
+        },
+        "LOWER_LIMIT": {
+          "value": 2,
+          "description": "Saturated or confused: the source is at least as bright as VALUE."
+        }
+      }
+    },
+    "PHBMeasurement": {
+      "type": "object",
+      "description": "One source's brightness in one band.",
+      "properties": {
+        "BAND_ID": {
+          "type": "string",
+          "description": "Band identifier; resolves to a `$PHB` BAND_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "SPECTRAL_REGIME": {
+          "$ref": "#/definitions/phbSpectralRegime",
+          "description": "Coarse region of the band, copied from its descriptor so a consumer\ncan select a mode without resolving the band.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GAMMA_RAY": {
+              "value": 1,
+              "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+            },
+            "HARD_X_RAY": {
+              "value": 2,
+              "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+            },
+            "SOFT_X_RAY": {
+              "value": 3,
+              "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+            },
+            "EXTREME_ULTRAVIOLET": {
+              "value": 4,
+              "description": "12.4 nm to 91.2 nm."
+            },
+            "FAR_ULTRAVIOLET": {
+              "value": 5,
+              "description": "91.2 nm to 200 nm."
+            },
+            "NEAR_ULTRAVIOLET": {
+              "value": 6,
+              "description": "200 nm to 380 nm."
+            },
+            "VISIBLE": {
+              "value": 7,
+              "description": "380 nm to 750 nm."
+            },
+            "NEAR_INFRARED": {
+              "value": 8,
+              "description": "0.75 um to 5 um."
+            },
+            "MID_INFRARED": {
+              "value": 9,
+              "description": "5 um to 40 um."
+            },
+            "FAR_INFRARED": {
+              "value": 10,
+              "description": "40 um to 350 um."
+            },
+            "SUBMILLIMETRE": {
+              "value": 11,
+              "description": "350 um to 1 mm."
+            },
+            "MICROWAVE": {
+              "value": 12,
+              "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+            },
+            "RADIO": {
+              "value": 13,
+              "description": "Longer than 10 cm (below 3 GHz)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WAVELENGTH_EFF_NM": {
+          "type": "number",
+          "description": "Effective wavelength of the band, nanometres (vacuum). Copied from the\ndescriptor; required for synthesis when the descriptor is not at hand.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "QUANTITY": {
+          "$ref": "#/definitions/phbQuantity",
+          "description": "Quantity VALUE states.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MAGNITUDE": {
+              "value": 1,
+              "description": "Magnitude in the band's SYSTEM."
+            },
+            "FLUX_DENSITY_JY": {
+              "value": 2,
+              "description": "Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1)."
+            },
+            "ENERGY_FLUX_W_PER_M2": {
+              "value": 3,
+              "description": "Band-integrated energy flux, W m-2."
+            },
+            "PHOTON_FLUX_PER_M2_S": {
+              "value": 4,
+              "description": "Band-integrated photon flux, photons m-2 s-1."
+            },
+            "COUNT_RATE_PER_S": {
+              "value": 5,
+              "description": "Detected count rate of the stated instrument, counts s-1."
+            },
+            "BRIGHTNESS_TEMPERATURE_K": {
+              "value": 6,
+              "description": "Brightness temperature, kelvin."
+            }
+          },
+          "x-flatbuffer-default": "MAGNITUDE"
+        },
+        "MAGNITUDE_SYSTEM": {
+          "$ref": "#/definitions/phbMagnitudeSystem",
+          "description": "Calibration system when QUANTITY is MAGNITUDE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VEGA": {
+              "value": 1,
+              "description": "Zero magnitude is the flux of the standard A0 V reference star."
+            },
+            "AB": {
+              "value": 2,
+              "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+            },
+            "ST": {
+              "value": 3,
+              "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+            },
+            "INSTRUMENTAL": {
+              "value": 4,
+              "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+            },
+            "NOT_A_MAGNITUDE": {
+              "value": 5,
+              "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "The measurement, in QUANTITY's units.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "UNCERTAINTY": {
+          "type": "number",
+          "description": "One-sigma uncertainty of VALUE, same units.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BOUND": {
+          "$ref": "#/definitions/phbBoundKind",
+          "description": "Detection or bound.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "DETECTION": {
+              "value": 0,
+              "description": "A detection: VALUE is the measured brightness."
+            },
+            "UPPER_LIMIT": {
+              "value": 1,
+              "description": "Not detected: the source is fainter than VALUE (a flux upper limit, a magnitude lower bound)."
+            },
+            "LOWER_LIMIT": {
+              "value": 2,
+              "description": "Saturated or confused: the source is at least as bright as VALUE."
+            }
+          },
+          "x-flatbuffer-default": "DETECTION"
+        },
+        "DERIVATION": {
+          "$ref": "#/definitions/phbDerivation",
+          "description": "How the value was obtained.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MEASURED": {
+              "value": 1,
+              "description": "Observed in this band."
+            },
+            "TRANSFORMED": {
+              "value": 2,
+              "description": "Converted from a measurement in another band or system by a stated transformation."
+            },
+            "MODELLED": {
+              "value": 3,
+              "description": "Synthesised from a spectral energy distribution or a model atmosphere; never observed in this band."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EPOCH_MJD": {
+          "type": "number",
+          "description": "Mid-time of the observation, Modified Julian Date (TT), for sources\nwhose brightness varies. Absent for a catalogue mean.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of observations averaged into VALUE; 0 when unstated.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PHB": {
+      "type": "object",
+      "description": "Photometric Band: one passband's place on the spectrum and its calibration.",
+      "properties": {
+        "BAND_ID": {
+          "type": "string",
+          "description": "Stable band identifier, unique within the publishing catalogue, e.g.\n\"V\", \"Ks\", \"0.5-2keV\", \"1.4GHz\". Measurements refer to it.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable name.",
+          "x-flatbuffer-type": "string"
+        },
+        "SYSTEM_NAME": {
+          "type": "string",
+          "description": "Name of the photometric system the band belongs to, as the defining\npublication states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SPECTRAL_REGIME": {
+          "$ref": "#/definitions/phbSpectralRegime",
+          "description": "Coarse spectral region, by WAVELENGTH_EFF_NM.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "GAMMA_RAY": {
+              "value": 1,
+              "description": "Photon energy above 100 keV (wavelength below 0.0124 nm)."
+            },
+            "HARD_X_RAY": {
+              "value": 2,
+              "description": "10 keV to 100 keV (0.0124 nm to 0.124 nm)."
+            },
+            "SOFT_X_RAY": {
+              "value": 3,
+              "description": "0.1 keV to 10 keV (0.124 nm to 12.4 nm)."
+            },
+            "EXTREME_ULTRAVIOLET": {
+              "value": 4,
+              "description": "12.4 nm to 91.2 nm."
+            },
+            "FAR_ULTRAVIOLET": {
+              "value": 5,
+              "description": "91.2 nm to 200 nm."
+            },
+            "NEAR_ULTRAVIOLET": {
+              "value": 6,
+              "description": "200 nm to 380 nm."
+            },
+            "VISIBLE": {
+              "value": 7,
+              "description": "380 nm to 750 nm."
+            },
+            "NEAR_INFRARED": {
+              "value": 8,
+              "description": "0.75 um to 5 um."
+            },
+            "MID_INFRARED": {
+              "value": 9,
+              "description": "5 um to 40 um."
+            },
+            "FAR_INFRARED": {
+              "value": 10,
+              "description": "40 um to 350 um."
+            },
+            "SUBMILLIMETRE": {
+              "value": 11,
+              "description": "350 um to 1 mm."
+            },
+            "MICROWAVE": {
+              "value": 12,
+              "description": "1 mm to 10 cm (3 GHz to 300 GHz)."
+            },
+            "RADIO": {
+              "value": 13,
+              "description": "Longer than 10 cm (below 3 GHz)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WAVELENGTH_EFF_NM": {
+          "type": "number",
+          "description": "Effective (pivot) wavelength, nanometres, vacuum.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MIN_NM": {
+          "type": "number",
+          "description": "Short edge of the band at half maximum response, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WAVELENGTH_MAX_NM": {
+          "type": "number",
+          "description": "Long edge of the band at half maximum response, nanometres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAGNITUDE_SYSTEM": {
+          "$ref": "#/definitions/phbMagnitudeSystem",
+          "description": "Calibration system of magnitudes stated in the band.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "VEGA": {
+              "value": 1,
+              "description": "Zero magnitude is the flux of the standard A0 V reference star."
+            },
+            "AB": {
+              "value": 2,
+              "description": "Zero magnitude is a flux density of 3631 Jy per unit frequency."
+            },
+            "ST": {
+              "value": 3,
+              "description": "Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit wavelength."
+            },
+            "INSTRUMENTAL": {
+              "value": 4,
+              "description": "Instrument-specific system; ZERO_POINT_JY states the calibration."
+            },
+            "NOT_A_MAGNITUDE": {
+              "value": 5,
+              "description": "The value is not a magnitude (a flux, a count rate, a temperature)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ZERO_POINT_JY": {
+          "type": "number",
+          "description": "Flux density at the effective wavelength of a zero-magnitude source,\njanskys.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RESPONSE_WAVELENGTH_NM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Wavelengths the response curve is sampled at, nanometres, ascending.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Relative system response at each RESPONSE_WAVELENGTH_NM sample,\npeak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.",
+          "x-flatbuffer-type": "[float]"
+        },
+        "RESPONSE_IS_ENERGY": {
+          "type": "boolean",
+          "description": "True when RESPONSE is an energy-counting response.",
+          "x-flatbuffer-type": "bool"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Reference to the publication that defines the band.",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFINITION_URL": {
+          "type": "string",
+          "description": "URL of the band's defining document or response table.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "BAND_ID"
+      ],
+      "additionalProperties": false
+    },
     "STR": {
       "type": "object",
       "description": "Star Catalog Entry",
@@ -28,14 +636,14 @@
           "type": "integer",
           "minimum": -9223372036854775808,
           "maximum": 9223372036854775807,
-          "description": "Gaia DR3 source identifier",
+          "description": "Source identifier in the third data release of the all-sky space astrometry survey",
           "x-flatbuffer-type": "long"
         },
         "HIP_CAT_ID": {
           "type": "integer",
           "minimum": 0,
           "maximum": 4294967295,
-          "description": "Hipparcos catalog identifier",
+          "description": "Identifier in the first space astrometry mission's main catalog",
           "x-flatbuffer-type": "uint32"
         },
         "CAT_VERSION": {
@@ -115,37 +723,37 @@
         },
         "GMAG": {
           "type": "number",
-          "description": "Gaia G-band magnitude",
+          "description": "Broad-band G magnitude of the space astrometry photometric system",
           "x-flatbuffer-type": "double"
         },
         "GMAG_UNC": {
           "type": "number",
-          "description": "Gaia G-band magnitude uncertainty",
+          "description": "G-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "BPMAG": {
           "type": "number",
-          "description": "Gaia BP-band magnitude (blue photometer)",
+          "description": "BP-band magnitude (blue prism photometer of the space astrometry system)",
           "x-flatbuffer-type": "double"
         },
         "BPMAG_UNC": {
           "type": "number",
-          "description": "Gaia BP-band magnitude uncertainty",
+          "description": "BP-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "RPMAG": {
           "type": "number",
-          "description": "Gaia RP-band magnitude (red photometer)",
+          "description": "RP-band magnitude (red prism photometer of the space astrometry system)",
           "x-flatbuffer-type": "double"
         },
         "RPMAG_UNC": {
           "type": "number",
-          "description": "Gaia RP-band magnitude uncertainty",
+          "description": "RP-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "JMAG": {
           "type": "number",
-          "description": "2MASS J-band magnitude (1.25 um)",
+          "description": "Near-infrared J-band magnitude (1.25 um)",
           "x-flatbuffer-type": "double"
         },
         "JMAG_UNC": {
@@ -155,7 +763,7 @@
         },
         "KMAG": {
           "type": "number",
-          "description": "2MASS K-band magnitude (2.17 um)",
+          "description": "Near-infrared Ks-band magnitude (2.17 um)",
           "x-flatbuffer-type": "double"
         },
         "KMAG_UNC": {
@@ -165,7 +773,7 @@
         },
         "HMAG": {
           "type": "number",
-          "description": "2MASS H-band magnitude (1.65 um)",
+          "description": "Near-infrared H-band magnitude (1.65 um)",
           "x-flatbuffer-type": "double"
         },
         "HMAG_UNC": {
@@ -209,6 +817,127 @@
           "type": "number",
           "description": "Position shift magnitude (arcseconds)",
           "x-flatbuffer-type": "double"
+        },
+        "TEFF": {
+          "type": "number",
+          "description": "Effective temperature (kelvin)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TEFF_UNC": {
+          "type": "number",
+          "description": "Effective temperature uncertainty (kelvin)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LOGG": {
+          "type": "number",
+          "description": "Surface gravity, log10 of g in cm s^-2",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LOGG_UNC": {
+          "type": "number",
+          "description": "Surface gravity uncertainty (dex)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "METALLICITY": {
+          "type": "number",
+          "description": "Metallicity [M/H] (dex)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXTINCTION_A0": {
+          "type": "number",
+          "description": "Interstellar extinction at 541.4 nm, A0 (magnitudes)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RADIAL_VELOCITY": {
+          "type": "number",
+          "description": "Radial velocity, positive receding (km/s)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RADIAL_VELOCITY_UNC": {
+          "type": "number",
+          "description": "Radial velocity uncertainty (km/s)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPECTRAL_TYPE": {
+          "type": "string",
+          "description": "Spectral type in the MK system, e.g. \"A1 V\"",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPER_NAME": {
+          "type": "string",
+          "description": "Proper name as recognised by the astronomical naming authority",
+          "x-flatbuffer-type": "string"
+        },
+        "BAYER_FLAMSTEED": {
+          "type": "string",
+          "description": "Bayer or Flamsteed designation with its constellation, e.g. \"alf CMa\" or \"9 CMa\"",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "description": "Constellation containing the star, three-letter abbreviation",
+          "x-flatbuffer-type": "string"
+        },
+        "HR_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Bright-star catalog number (HR); 0 when not in that catalog",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Spectral-type catalog number (HD); 0 when not in that catalog",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DESIGNATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other designations, each in the form its catalog uses",
+          "x-flatbuffer-type": "[string]"
+        },
+        "VARIABILITY_CLASS": {
+          "type": "string",
+          "description": "Variability type in the standard variable-star classification, e.g. \"DSCT\" or \"EA\"",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIABILITY_PERIOD": {
+          "type": "number",
+          "description": "Period of variability (days)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "VARIABILITY_AMPLITUDE": {
+          "type": "number",
+          "description": "Peak-to-peak variability amplitude (magnitudes)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "VARIABILITY_EPOCH": {
+          "type": "number",
+          "description": "Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PHOTOMETRY": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PHBMeasurement"
+          },
+          "description": "Brightness in every band the star was measured or modelled in",
+          "x-flatbuffer-type": "[PHBMeasurement]"
         }
       },
       "additionalProperties": false

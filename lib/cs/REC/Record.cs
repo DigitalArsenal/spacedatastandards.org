@@ -269,6 +269,9 @@ public struct Record : IFlatbufferObject
   public GCT valueAsGCT() { return value<GCT>().Value; }
   public CQR valueAsCQR() { return value<CQR>().Value; }
   public RPC valueAsRPC() { return value<RPC>().Value; }
+  public CSO valueAsCSO() { return value<CSO>().Value; }
+  public PHB valueAsPHB() { return value<PHB>().Value; }
+  public SKT valueAsSKT() { return value<SKT>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -1053,6 +1056,15 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.RPC:
         _o.value.Value = this.value<RPC>().HasValue ? this.value<RPC>().Value.UnPack() : null;
+        break;
+      case RecordType.CSO:
+        _o.value.Value = this.value<CSO>().HasValue ? this.value<CSO>().Value.UnPack() : null;
+        break;
+      case RecordType.PHB:
+        _o.value.Value = this.value<PHB>().HasValue ? this.value<PHB>().Value.UnPack() : null;
+        break;
+      case RecordType.SKT:
+        _o.value.Value = this.value<SKT>().HasValue ? this.value<SKT>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

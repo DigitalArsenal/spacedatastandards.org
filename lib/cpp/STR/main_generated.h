@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct STR;
 struct STRBuilder;
 
@@ -58,7 +60,27 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NEIGHBOR_FLAG = 74,
     VT_NEIGHBOR_DISTANCE = 76,
     VT_SHIFT_FLAG = 78,
-    VT_SHIFT = 80
+    VT_SHIFT = 80,
+    VT_TEFF = 82,
+    VT_TEFF_UNC = 84,
+    VT_LOGG = 86,
+    VT_LOGG_UNC = 88,
+    VT_METALLICITY = 90,
+    VT_EXTINCTION_A0 = 92,
+    VT_RADIAL_VELOCITY = 94,
+    VT_RADIAL_VELOCITY_UNC = 96,
+    VT_SPECTRAL_TYPE = 98,
+    VT_PROPER_NAME = 100,
+    VT_BAYER_FLAMSTEED = 102,
+    VT_CONSTELLATION = 104,
+    VT_HR_CAT_ID = 106,
+    VT_HD_CAT_ID = 108,
+    VT_DESIGNATIONS = 110,
+    VT_VARIABILITY_CLASS = 112,
+    VT_VARIABILITY_PERIOD = 114,
+    VT_VARIABILITY_AMPLITUDE = 116,
+    VT_VARIABILITY_EPOCH = 118,
+    VT_PHOTOMETRY = 120
   };
   /// Unique internal identifier
   const ::flatbuffers::String *ID() const {
@@ -72,11 +94,11 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t GNC_CAT_ID() const {
     return GetField<uint32_t>(VT_GNC_CAT_ID, 0);
   }
-  /// Gaia DR3 source identifier
+  /// Source identifier in the third data release of the all-sky space astrometry survey
   int64_t GAIADR3_CAT_ID() const {
     return GetField<int64_t>(VT_GAIADR3_CAT_ID, 0);
   }
-  /// Hipparcos catalog identifier
+  /// Identifier in the first space astrometry mission's main catalog
   uint32_t HIP_CAT_ID() const {
     return GetField<uint32_t>(VT_HIP_CAT_ID, 0);
   }
@@ -140,31 +162,31 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool PM_UNC_FLAG() const {
     return GetField<uint8_t>(VT_PM_UNC_FLAG, 0) != 0;
   }
-  /// Gaia G-band magnitude
+  /// Broad-band G magnitude of the space astrometry photometric system
   double GMAG() const {
     return GetField<double>(VT_GMAG, 0.0);
   }
-  /// Gaia G-band magnitude uncertainty
+  /// G-band magnitude uncertainty
   double GMAG_UNC() const {
     return GetField<double>(VT_GMAG_UNC, 0.0);
   }
-  /// Gaia BP-band magnitude (blue photometer)
+  /// BP-band magnitude (blue prism photometer of the space astrometry system)
   double BPMAG() const {
     return GetField<double>(VT_BPMAG, 0.0);
   }
-  /// Gaia BP-band magnitude uncertainty
+  /// BP-band magnitude uncertainty
   double BPMAG_UNC() const {
     return GetField<double>(VT_BPMAG_UNC, 0.0);
   }
-  /// Gaia RP-band magnitude (red photometer)
+  /// RP-band magnitude (red prism photometer of the space astrometry system)
   double RPMAG() const {
     return GetField<double>(VT_RPMAG, 0.0);
   }
-  /// Gaia RP-band magnitude uncertainty
+  /// RP-band magnitude uncertainty
   double RPMAG_UNC() const {
     return GetField<double>(VT_RPMAG_UNC, 0.0);
   }
-  /// 2MASS J-band magnitude (1.25 um)
+  /// Near-infrared J-band magnitude (1.25 um)
   double JMAG() const {
     return GetField<double>(VT_JMAG, 0.0);
   }
@@ -172,7 +194,7 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double JMAG_UNC() const {
     return GetField<double>(VT_JMAG_UNC, 0.0);
   }
-  /// 2MASS K-band magnitude (2.17 um)
+  /// Near-infrared Ks-band magnitude (2.17 um)
   double KMAG() const {
     return GetField<double>(VT_KMAG, 0.0);
   }
@@ -180,7 +202,7 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double KMAG_UNC() const {
     return GetField<double>(VT_KMAG_UNC, 0.0);
   }
-  /// 2MASS H-band magnitude (1.65 um)
+  /// Near-infrared H-band magnitude (1.65 um)
   double HMAG() const {
     return GetField<double>(VT_HMAG, 0.0);
   }
@@ -215,6 +237,86 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Position shift magnitude (arcseconds)
   double SHIFT() const {
     return GetField<double>(VT_SHIFT, 0.0);
+  }
+  /// Effective temperature (kelvin)
+  double TEFF() const {
+    return GetField<double>(VT_TEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Effective temperature uncertainty (kelvin)
+  double TEFF_UNC() const {
+    return GetField<double>(VT_TEFF_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Surface gravity, log10 of g in cm s^-2
+  double LOGG() const {
+    return GetField<double>(VT_LOGG, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Surface gravity uncertainty (dex)
+  double LOGG_UNC() const {
+    return GetField<double>(VT_LOGG_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Metallicity [M/H] (dex)
+  double METALLICITY() const {
+    return GetField<double>(VT_METALLICITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+  double EXTINCTION_A0() const {
+    return GetField<double>(VT_EXTINCTION_A0, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Radial velocity, positive receding (km/s)
+  double RADIAL_VELOCITY() const {
+    return GetField<double>(VT_RADIAL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Radial velocity uncertainty (km/s)
+  double RADIAL_VELOCITY_UNC() const {
+    return GetField<double>(VT_RADIAL_VELOCITY_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Spectral type in the MK system, e.g. "A1 V"
+  const ::flatbuffers::String *SPECTRAL_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SPECTRAL_TYPE);
+  }
+  /// Proper name as recognised by the astronomical naming authority
+  const ::flatbuffers::String *PROPER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROPER_NAME);
+  }
+  /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+  const ::flatbuffers::String *BAYER_FLAMSTEED() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BAYER_FLAMSTEED);
+  }
+  /// Constellation containing the star, three-letter abbreviation
+  const ::flatbuffers::String *CONSTELLATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONSTELLATION);
+  }
+  /// Bright-star catalog number (HR); 0 when not in that catalog
+  uint32_t HR_CAT_ID() const {
+    return GetField<uint32_t>(VT_HR_CAT_ID, 0);
+  }
+  /// Spectral-type catalog number (HD); 0 when not in that catalog
+  uint32_t HD_CAT_ID() const {
+    return GetField<uint32_t>(VT_HD_CAT_ID, 0);
+  }
+  /// Other designations, each in the form its catalog uses
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *DESIGNATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_DESIGNATIONS);
+  }
+  /// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+  const ::flatbuffers::String *VARIABILITY_CLASS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VARIABILITY_CLASS);
+  }
+  /// Period of variability (days)
+  double VARIABILITY_PERIOD() const {
+    return GetField<double>(VT_VARIABILITY_PERIOD, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Peak-to-peak variability amplitude (magnitudes)
+  double VARIABILITY_AMPLITUDE() const {
+    return GetField<double>(VT_VARIABILITY_AMPLITUDE, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+  double VARIABILITY_EPOCH() const {
+    return GetField<double>(VT_VARIABILITY_EPOCH, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Brightness in every band the star was measured or modelled in
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PHBMeasurement>> *PHOTOMETRY() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PHBMeasurement>> *>(VT_PHOTOMETRY);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -261,6 +363,35 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_NEIGHBOR_DISTANCE, 8) &&
            VerifyField<uint8_t>(verifier, VT_SHIFT_FLAG, 1) &&
            VerifyField<double>(verifier, VT_SHIFT, 8) &&
+           VerifyField<double>(verifier, VT_TEFF, 8) &&
+           VerifyField<double>(verifier, VT_TEFF_UNC, 8) &&
+           VerifyField<double>(verifier, VT_LOGG, 8) &&
+           VerifyField<double>(verifier, VT_LOGG_UNC, 8) &&
+           VerifyField<double>(verifier, VT_METALLICITY, 8) &&
+           VerifyField<double>(verifier, VT_EXTINCTION_A0, 8) &&
+           VerifyField<double>(verifier, VT_RADIAL_VELOCITY, 8) &&
+           VerifyField<double>(verifier, VT_RADIAL_VELOCITY_UNC, 8) &&
+           VerifyOffset(verifier, VT_SPECTRAL_TYPE) &&
+           verifier.VerifyString(SPECTRAL_TYPE()) &&
+           VerifyOffset(verifier, VT_PROPER_NAME) &&
+           verifier.VerifyString(PROPER_NAME()) &&
+           VerifyOffset(verifier, VT_BAYER_FLAMSTEED) &&
+           verifier.VerifyString(BAYER_FLAMSTEED()) &&
+           VerifyOffset(verifier, VT_CONSTELLATION) &&
+           verifier.VerifyString(CONSTELLATION()) &&
+           VerifyField<uint32_t>(verifier, VT_HR_CAT_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_HD_CAT_ID, 4) &&
+           VerifyOffset(verifier, VT_DESIGNATIONS) &&
+           verifier.VerifyVector(DESIGNATIONS()) &&
+           verifier.VerifyVectorOfStrings(DESIGNATIONS()) &&
+           VerifyOffset(verifier, VT_VARIABILITY_CLASS) &&
+           verifier.VerifyString(VARIABILITY_CLASS()) &&
+           VerifyField<double>(verifier, VT_VARIABILITY_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_VARIABILITY_AMPLITUDE, 8) &&
+           VerifyField<double>(verifier, VT_VARIABILITY_EPOCH, 8) &&
+           VerifyOffset(verifier, VT_PHOTOMETRY) &&
+           verifier.VerifyVector(PHOTOMETRY()) &&
+           verifier.VerifyVectorOfTables(PHOTOMETRY()) &&
            verifier.EndTable();
   }
 };
@@ -386,6 +517,66 @@ struct STRBuilder {
   void add_SHIFT(double SHIFT) {
     fbb_.AddElement<double>(STR::VT_SHIFT, SHIFT, 0.0);
   }
+  void add_TEFF(double TEFF) {
+    fbb_.AddElement<double>(STR::VT_TEFF, TEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_TEFF_UNC(double TEFF_UNC) {
+    fbb_.AddElement<double>(STR::VT_TEFF_UNC, TEFF_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_LOGG(double LOGG) {
+    fbb_.AddElement<double>(STR::VT_LOGG, LOGG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_LOGG_UNC(double LOGG_UNC) {
+    fbb_.AddElement<double>(STR::VT_LOGG_UNC, LOGG_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_METALLICITY(double METALLICITY) {
+    fbb_.AddElement<double>(STR::VT_METALLICITY, METALLICITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_EXTINCTION_A0(double EXTINCTION_A0) {
+    fbb_.AddElement<double>(STR::VT_EXTINCTION_A0, EXTINCTION_A0, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_RADIAL_VELOCITY(double RADIAL_VELOCITY) {
+    fbb_.AddElement<double>(STR::VT_RADIAL_VELOCITY, RADIAL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_RADIAL_VELOCITY_UNC(double RADIAL_VELOCITY_UNC) {
+    fbb_.AddElement<double>(STR::VT_RADIAL_VELOCITY_UNC, RADIAL_VELOCITY_UNC, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SPECTRAL_TYPE(::flatbuffers::Offset<::flatbuffers::String> SPECTRAL_TYPE) {
+    fbb_.AddOffset(STR::VT_SPECTRAL_TYPE, SPECTRAL_TYPE);
+  }
+  void add_PROPER_NAME(::flatbuffers::Offset<::flatbuffers::String> PROPER_NAME) {
+    fbb_.AddOffset(STR::VT_PROPER_NAME, PROPER_NAME);
+  }
+  void add_BAYER_FLAMSTEED(::flatbuffers::Offset<::flatbuffers::String> BAYER_FLAMSTEED) {
+    fbb_.AddOffset(STR::VT_BAYER_FLAMSTEED, BAYER_FLAMSTEED);
+  }
+  void add_CONSTELLATION(::flatbuffers::Offset<::flatbuffers::String> CONSTELLATION) {
+    fbb_.AddOffset(STR::VT_CONSTELLATION, CONSTELLATION);
+  }
+  void add_HR_CAT_ID(uint32_t HR_CAT_ID) {
+    fbb_.AddElement<uint32_t>(STR::VT_HR_CAT_ID, HR_CAT_ID, 0);
+  }
+  void add_HD_CAT_ID(uint32_t HD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(STR::VT_HD_CAT_ID, HD_CAT_ID, 0);
+  }
+  void add_DESIGNATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DESIGNATIONS) {
+    fbb_.AddOffset(STR::VT_DESIGNATIONS, DESIGNATIONS);
+  }
+  void add_VARIABILITY_CLASS(::flatbuffers::Offset<::flatbuffers::String> VARIABILITY_CLASS) {
+    fbb_.AddOffset(STR::VT_VARIABILITY_CLASS, VARIABILITY_CLASS);
+  }
+  void add_VARIABILITY_PERIOD(double VARIABILITY_PERIOD) {
+    fbb_.AddElement<double>(STR::VT_VARIABILITY_PERIOD, VARIABILITY_PERIOD, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_VARIABILITY_AMPLITUDE(double VARIABILITY_AMPLITUDE) {
+    fbb_.AddElement<double>(STR::VT_VARIABILITY_AMPLITUDE, VARIABILITY_AMPLITUDE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_VARIABILITY_EPOCH(double VARIABILITY_EPOCH) {
+    fbb_.AddElement<double>(STR::VT_VARIABILITY_EPOCH, VARIABILITY_EPOCH, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PHOTOMETRY(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PHBMeasurement>>> PHOTOMETRY) {
+    fbb_.AddOffset(STR::VT_PHOTOMETRY, PHOTOMETRY);
+  }
   explicit STRBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -437,8 +628,39 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
     bool NEIGHBOR_FLAG = false,
     double NEIGHBOR_DISTANCE = 0.0,
     bool SHIFT_FLAG = false,
-    double SHIFT = 0.0) {
+    double SHIFT = 0.0,
+    double TEFF = std::numeric_limits<double>::quiet_NaN(),
+    double TEFF_UNC = std::numeric_limits<double>::quiet_NaN(),
+    double LOGG = std::numeric_limits<double>::quiet_NaN(),
+    double LOGG_UNC = std::numeric_limits<double>::quiet_NaN(),
+    double METALLICITY = std::numeric_limits<double>::quiet_NaN(),
+    double EXTINCTION_A0 = std::numeric_limits<double>::quiet_NaN(),
+    double RADIAL_VELOCITY = std::numeric_limits<double>::quiet_NaN(),
+    double RADIAL_VELOCITY_UNC = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> SPECTRAL_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PROPER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BAYER_FLAMSTEED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CONSTELLATION = 0,
+    uint32_t HR_CAT_ID = 0,
+    uint32_t HD_CAT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DESIGNATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VARIABILITY_CLASS = 0,
+    double VARIABILITY_PERIOD = std::numeric_limits<double>::quiet_NaN(),
+    double VARIABILITY_AMPLITUDE = std::numeric_limits<double>::quiet_NaN(),
+    double VARIABILITY_EPOCH = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PHBMeasurement>>> PHOTOMETRY = 0) {
   STRBuilder builder_(_fbb);
+  builder_.add_VARIABILITY_EPOCH(VARIABILITY_EPOCH);
+  builder_.add_VARIABILITY_AMPLITUDE(VARIABILITY_AMPLITUDE);
+  builder_.add_VARIABILITY_PERIOD(VARIABILITY_PERIOD);
+  builder_.add_RADIAL_VELOCITY_UNC(RADIAL_VELOCITY_UNC);
+  builder_.add_RADIAL_VELOCITY(RADIAL_VELOCITY);
+  builder_.add_EXTINCTION_A0(EXTINCTION_A0);
+  builder_.add_METALLICITY(METALLICITY);
+  builder_.add_LOGG_UNC(LOGG_UNC);
+  builder_.add_LOGG(LOGG);
+  builder_.add_TEFF_UNC(TEFF_UNC);
+  builder_.add_TEFF(TEFF);
   builder_.add_SHIFT(SHIFT);
   builder_.add_NEIGHBOR_DISTANCE(NEIGHBOR_DISTANCE);
   builder_.add_HMAG_UNC(HMAG_UNC);
@@ -466,6 +688,15 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
   builder_.add_STAR_EPOCH(STAR_EPOCH);
   builder_.add_GAIADR3_CAT_ID(GAIADR3_CAT_ID);
   builder_.add_CS_ID(CS_ID);
+  builder_.add_PHOTOMETRY(PHOTOMETRY);
+  builder_.add_VARIABILITY_CLASS(VARIABILITY_CLASS);
+  builder_.add_DESIGNATIONS(DESIGNATIONS);
+  builder_.add_HD_CAT_ID(HD_CAT_ID);
+  builder_.add_HR_CAT_ID(HR_CAT_ID);
+  builder_.add_CONSTELLATION(CONSTELLATION);
+  builder_.add_BAYER_FLAMSTEED(BAYER_FLAMSTEED);
+  builder_.add_PROPER_NAME(PROPER_NAME);
+  builder_.add_SPECTRAL_TYPE(SPECTRAL_TYPE);
   builder_.add_NEIGHBOR_ID(NEIGHBOR_ID);
   builder_.add_ASTROMETRY_ORIGIN(ASTROMETRY_ORIGIN);
   builder_.add_CAT_VERSION(CAT_VERSION);
@@ -521,10 +752,37 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
     bool NEIGHBOR_FLAG = false,
     double NEIGHBOR_DISTANCE = 0.0,
     bool SHIFT_FLAG = false,
-    double SHIFT = 0.0) {
+    double SHIFT = 0.0,
+    double TEFF = std::numeric_limits<double>::quiet_NaN(),
+    double TEFF_UNC = std::numeric_limits<double>::quiet_NaN(),
+    double LOGG = std::numeric_limits<double>::quiet_NaN(),
+    double LOGG_UNC = std::numeric_limits<double>::quiet_NaN(),
+    double METALLICITY = std::numeric_limits<double>::quiet_NaN(),
+    double EXTINCTION_A0 = std::numeric_limits<double>::quiet_NaN(),
+    double RADIAL_VELOCITY = std::numeric_limits<double>::quiet_NaN(),
+    double RADIAL_VELOCITY_UNC = std::numeric_limits<double>::quiet_NaN(),
+    const char *SPECTRAL_TYPE = nullptr,
+    const char *PROPER_NAME = nullptr,
+    const char *BAYER_FLAMSTEED = nullptr,
+    const char *CONSTELLATION = nullptr,
+    uint32_t HR_CAT_ID = 0,
+    uint32_t HD_CAT_ID = 0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DESIGNATIONS = nullptr,
+    const char *VARIABILITY_CLASS = nullptr,
+    double VARIABILITY_PERIOD = std::numeric_limits<double>::quiet_NaN(),
+    double VARIABILITY_AMPLITUDE = std::numeric_limits<double>::quiet_NaN(),
+    double VARIABILITY_EPOCH = std::numeric_limits<double>::quiet_NaN(),
+    const std::vector<::flatbuffers::Offset<PHBMeasurement>> *PHOTOMETRY = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto CAT_VERSION__ = CAT_VERSION ? _fbb.CreateString(CAT_VERSION) : 0;
   auto ASTROMETRY_ORIGIN__ = ASTROMETRY_ORIGIN ? _fbb.CreateString(ASTROMETRY_ORIGIN) : 0;
+  auto SPECTRAL_TYPE__ = SPECTRAL_TYPE ? _fbb.CreateString(SPECTRAL_TYPE) : 0;
+  auto PROPER_NAME__ = PROPER_NAME ? _fbb.CreateString(PROPER_NAME) : 0;
+  auto BAYER_FLAMSTEED__ = BAYER_FLAMSTEED ? _fbb.CreateString(BAYER_FLAMSTEED) : 0;
+  auto CONSTELLATION__ = CONSTELLATION ? _fbb.CreateString(CONSTELLATION) : 0;
+  auto DESIGNATIONS__ = DESIGNATIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*DESIGNATIONS) : 0;
+  auto VARIABILITY_CLASS__ = VARIABILITY_CLASS ? _fbb.CreateString(VARIABILITY_CLASS) : 0;
+  auto PHOTOMETRY__ = PHOTOMETRY ? _fbb.CreateVector<::flatbuffers::Offset<PHBMeasurement>>(*PHOTOMETRY) : 0;
   return CreateSTR(
       _fbb,
       ID__,
@@ -565,7 +823,27 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
       NEIGHBOR_FLAG,
       NEIGHBOR_DISTANCE,
       SHIFT_FLAG,
-      SHIFT);
+      SHIFT,
+      TEFF,
+      TEFF_UNC,
+      LOGG,
+      LOGG_UNC,
+      METALLICITY,
+      EXTINCTION_A0,
+      RADIAL_VELOCITY,
+      RADIAL_VELOCITY_UNC,
+      SPECTRAL_TYPE__,
+      PROPER_NAME__,
+      BAYER_FLAMSTEED__,
+      CONSTELLATION__,
+      HR_CAT_ID,
+      HD_CAT_ID,
+      DESIGNATIONS__,
+      VARIABILITY_CLASS__,
+      VARIABILITY_PERIOD,
+      VARIABILITY_AMPLITUDE,
+      VARIABILITY_EPOCH,
+      PHOTOMETRY__);
 }
 
 inline const STR *GetSTR(const void *buf) {

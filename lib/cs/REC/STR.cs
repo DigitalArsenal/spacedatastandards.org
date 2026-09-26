@@ -31,9 +31,9 @@ public struct STR : IFlatbufferObject
   public long CS_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   /// GNC star catalog identifier
   public uint GNC_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Gaia DR3 source identifier
+  /// Source identifier in the third data release of the all-sky space astrometry survey
   public long GAIADR3_CAT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  /// Hipparcos catalog identifier
+  /// Identifier in the first space astrometry mission's main catalog
   public uint HIP_CAT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Catalog version string
   public string CAT_VERSION { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -77,27 +77,27 @@ public struct STR : IFlatbufferObject
   public double PMDEC_UNC { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True if proper motion uncertainty is flagged
   public bool PM_UNC_FLAG { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Gaia G-band magnitude
+  /// Broad-band G magnitude of the space astrometry photometric system
   public double GMAG { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gaia G-band magnitude uncertainty
+  /// G-band magnitude uncertainty
   public double GMAG_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gaia BP-band magnitude (blue photometer)
+  /// BP-band magnitude (blue prism photometer of the space astrometry system)
   public double BPMAG { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gaia BP-band magnitude uncertainty
+  /// BP-band magnitude uncertainty
   public double BPMAG_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gaia RP-band magnitude (red photometer)
+  /// RP-band magnitude (red prism photometer of the space astrometry system)
   public double RPMAG { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gaia RP-band magnitude uncertainty
+  /// RP-band magnitude uncertainty
   public double RPMAG_UNC { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// 2MASS J-band magnitude (1.25 um)
+  /// Near-infrared J-band magnitude (1.25 um)
   public double JMAG { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// J-band magnitude uncertainty
   public double JMAG_UNC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// 2MASS K-band magnitude (2.17 um)
+  /// Near-infrared Ks-band magnitude (2.17 um)
   public double KMAG { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// K-band magnitude uncertainty
   public double KMAG_UNC { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// 2MASS H-band magnitude (1.65 um)
+  /// Near-infrared H-band magnitude (1.65 um)
   public double HMAG { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// H-band magnitude uncertainty
   public double HMAG_UNC { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -115,6 +115,78 @@ public struct STR : IFlatbufferObject
   public bool SHIFT_FLAG { get { int o = __p.__offset(78); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Position shift magnitude (arcseconds)
   public double SHIFT { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Effective temperature (kelvin)
+  public double TEFF { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Effective temperature uncertainty (kelvin)
+  public double TEFF_UNC { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Surface gravity, log10 of g in cm s^-2
+  public double LOGG { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Surface gravity uncertainty (dex)
+  public double LOGG_UNC { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Metallicity [M/H] (dex)
+  public double METALLICITY { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Interstellar extinction at 541.4 nm, A0 (magnitudes)
+  public double EXTINCTION_A0 { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Radial velocity, positive receding (km/s)
+  public double RADIAL_VELOCITY { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Radial velocity uncertainty (km/s)
+  public double RADIAL_VELOCITY_UNC { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Spectral type in the MK system, e.g. "A1 V"
+  public string SPECTRAL_TYPE { get { int o = __p.__offset(98); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSPECTRAL_TYPEBytes() { return __p.__vector_as_span<byte>(98, 1); }
+#else
+  public ArraySegment<byte>? GetSPECTRAL_TYPEBytes() { return __p.__vector_as_arraysegment(98); }
+#endif
+  public byte[] GetSPECTRAL_TYPEArray() { return __p.__vector_as_array<byte>(98); }
+  /// Proper name as recognised by the astronomical naming authority
+  public string PROPER_NAME { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROPER_NAMEBytes() { return __p.__vector_as_span<byte>(100, 1); }
+#else
+  public ArraySegment<byte>? GetPROPER_NAMEBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public byte[] GetPROPER_NAMEArray() { return __p.__vector_as_array<byte>(100); }
+  /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+  public string BAYER_FLAMSTEED { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBAYER_FLAMSTEEDBytes() { return __p.__vector_as_span<byte>(102, 1); }
+#else
+  public ArraySegment<byte>? GetBAYER_FLAMSTEEDBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public byte[] GetBAYER_FLAMSTEEDArray() { return __p.__vector_as_array<byte>(102); }
+  /// Constellation containing the star, three-letter abbreviation
+  public string CONSTELLATION { get { int o = __p.__offset(104); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCONSTELLATIONBytes() { return __p.__vector_as_span<byte>(104, 1); }
+#else
+  public ArraySegment<byte>? GetCONSTELLATIONBytes() { return __p.__vector_as_arraysegment(104); }
+#endif
+  public byte[] GetCONSTELLATIONArray() { return __p.__vector_as_array<byte>(104); }
+  /// Bright-star catalog number (HR); 0 when not in that catalog
+  public uint HR_CAT_ID { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Spectral-type catalog number (HD); 0 when not in that catalog
+  public uint HD_CAT_ID { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Other designations, each in the form its catalog uses
+  public string DESIGNATIONS(int j) { int o = __p.__offset(110); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int DESIGNATIONSLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+  public string VARIABILITY_CLASS { get { int o = __p.__offset(112); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetVARIABILITY_CLASSBytes() { return __p.__vector_as_span<byte>(112, 1); }
+#else
+  public ArraySegment<byte>? GetVARIABILITY_CLASSBytes() { return __p.__vector_as_arraysegment(112); }
+#endif
+  public byte[] GetVARIABILITY_CLASSArray() { return __p.__vector_as_array<byte>(112); }
+  /// Period of variability (days)
+  public double VARIABILITY_PERIOD { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Peak-to-peak variability amplitude (magnitudes)
+  public double VARIABILITY_AMPLITUDE { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+  public double VARIABILITY_EPOCH { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Brightness in every band the star was measured or modelled in
+  public PHBMeasurement? PHOTOMETRY(int j) { int o = __p.__offset(120); return o != 0 ? (PHBMeasurement?)(new PHBMeasurement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PHOTOMETRYLength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<STR> CreateSTR(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -155,8 +227,39 @@ public struct STR : IFlatbufferObject
       bool NEIGHBOR_FLAG = false,
       double NEIGHBOR_DISTANCE = 0.0,
       bool SHIFT_FLAG = false,
-      double SHIFT = 0.0) {
-    builder.StartTable(39);
+      double SHIFT = 0.0,
+      double TEFF = Double.NaN,
+      double TEFF_UNC = Double.NaN,
+      double LOGG = Double.NaN,
+      double LOGG_UNC = Double.NaN,
+      double METALLICITY = Double.NaN,
+      double EXTINCTION_A0 = Double.NaN,
+      double RADIAL_VELOCITY = Double.NaN,
+      double RADIAL_VELOCITY_UNC = Double.NaN,
+      StringOffset SPECTRAL_TYPEOffset = default(StringOffset),
+      StringOffset PROPER_NAMEOffset = default(StringOffset),
+      StringOffset BAYER_FLAMSTEEDOffset = default(StringOffset),
+      StringOffset CONSTELLATIONOffset = default(StringOffset),
+      uint HR_CAT_ID = 0,
+      uint HD_CAT_ID = 0,
+      VectorOffset DESIGNATIONSOffset = default(VectorOffset),
+      StringOffset VARIABILITY_CLASSOffset = default(StringOffset),
+      double VARIABILITY_PERIOD = Double.NaN,
+      double VARIABILITY_AMPLITUDE = Double.NaN,
+      double VARIABILITY_EPOCH = Double.NaN,
+      VectorOffset PHOTOMETRYOffset = default(VectorOffset)) {
+    builder.StartTable(59);
+    STR.AddVARIABILITY_EPOCH(builder, VARIABILITY_EPOCH);
+    STR.AddVARIABILITY_AMPLITUDE(builder, VARIABILITY_AMPLITUDE);
+    STR.AddVARIABILITY_PERIOD(builder, VARIABILITY_PERIOD);
+    STR.AddRADIAL_VELOCITY_UNC(builder, RADIAL_VELOCITY_UNC);
+    STR.AddRADIAL_VELOCITY(builder, RADIAL_VELOCITY);
+    STR.AddEXTINCTION_A0(builder, EXTINCTION_A0);
+    STR.AddMETALLICITY(builder, METALLICITY);
+    STR.AddLOGG_UNC(builder, LOGG_UNC);
+    STR.AddLOGG(builder, LOGG);
+    STR.AddTEFF_UNC(builder, TEFF_UNC);
+    STR.AddTEFF(builder, TEFF);
     STR.AddSHIFT(builder, SHIFT);
     STR.AddNEIGHBOR_DISTANCE(builder, NEIGHBOR_DISTANCE);
     STR.AddHMAG_UNC(builder, HMAG_UNC);
@@ -184,6 +287,15 @@ public struct STR : IFlatbufferObject
     STR.AddSTAR_EPOCH(builder, STAR_EPOCH);
     STR.AddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID);
     STR.AddCS_ID(builder, CS_ID);
+    STR.AddPHOTOMETRY(builder, PHOTOMETRYOffset);
+    STR.AddVARIABILITY_CLASS(builder, VARIABILITY_CLASSOffset);
+    STR.AddDESIGNATIONS(builder, DESIGNATIONSOffset);
+    STR.AddHD_CAT_ID(builder, HD_CAT_ID);
+    STR.AddHR_CAT_ID(builder, HR_CAT_ID);
+    STR.AddCONSTELLATION(builder, CONSTELLATIONOffset);
+    STR.AddBAYER_FLAMSTEED(builder, BAYER_FLAMSTEEDOffset);
+    STR.AddPROPER_NAME(builder, PROPER_NAMEOffset);
+    STR.AddSPECTRAL_TYPE(builder, SPECTRAL_TYPEOffset);
     STR.AddNEIGHBOR_ID(builder, NEIGHBOR_ID);
     STR.AddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGINOffset);
     STR.AddCAT_VERSION(builder, CAT_VERSIONOffset);
@@ -199,7 +311,7 @@ public struct STR : IFlatbufferObject
     return STR.EndSTR(builder);
   }
 
-  public static void StartSTR(FlatBufferBuilder builder) { builder.StartTable(39); }
+  public static void StartSTR(FlatBufferBuilder builder) { builder.StartTable(59); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCS_ID(FlatBufferBuilder builder, long CS_ID) { builder.AddLong(1, CS_ID, 0); }
   public static void AddGNC_CAT_ID(FlatBufferBuilder builder, uint GNC_CAT_ID) { builder.AddUint(2, GNC_CAT_ID, 0); }
@@ -239,6 +351,36 @@ public struct STR : IFlatbufferObject
   public static void AddNEIGHBOR_DISTANCE(FlatBufferBuilder builder, double NEIGHBOR_DISTANCE) { builder.AddDouble(36, NEIGHBOR_DISTANCE, 0.0); }
   public static void AddSHIFT_FLAG(FlatBufferBuilder builder, bool SHIFT_FLAG) { builder.AddBool(37, SHIFT_FLAG, false); }
   public static void AddSHIFT(FlatBufferBuilder builder, double SHIFT) { builder.AddDouble(38, SHIFT, 0.0); }
+  public static void AddTEFF(FlatBufferBuilder builder, double TEFF) { builder.AddDouble(39, TEFF, Double.NaN); }
+  public static void AddTEFF_UNC(FlatBufferBuilder builder, double TEFF_UNC) { builder.AddDouble(40, TEFF_UNC, Double.NaN); }
+  public static void AddLOGG(FlatBufferBuilder builder, double LOGG) { builder.AddDouble(41, LOGG, Double.NaN); }
+  public static void AddLOGG_UNC(FlatBufferBuilder builder, double LOGG_UNC) { builder.AddDouble(42, LOGG_UNC, Double.NaN); }
+  public static void AddMETALLICITY(FlatBufferBuilder builder, double METALLICITY) { builder.AddDouble(43, METALLICITY, Double.NaN); }
+  public static void AddEXTINCTION_A0(FlatBufferBuilder builder, double EXTINCTION_A0) { builder.AddDouble(44, EXTINCTION_A0, Double.NaN); }
+  public static void AddRADIAL_VELOCITY(FlatBufferBuilder builder, double RADIAL_VELOCITY) { builder.AddDouble(45, RADIAL_VELOCITY, Double.NaN); }
+  public static void AddRADIAL_VELOCITY_UNC(FlatBufferBuilder builder, double RADIAL_VELOCITY_UNC) { builder.AddDouble(46, RADIAL_VELOCITY_UNC, Double.NaN); }
+  public static void AddSPECTRAL_TYPE(FlatBufferBuilder builder, StringOffset SPECTRAL_TYPEOffset) { builder.AddOffset(47, SPECTRAL_TYPEOffset.Value, 0); }
+  public static void AddPROPER_NAME(FlatBufferBuilder builder, StringOffset PROPER_NAMEOffset) { builder.AddOffset(48, PROPER_NAMEOffset.Value, 0); }
+  public static void AddBAYER_FLAMSTEED(FlatBufferBuilder builder, StringOffset BAYER_FLAMSTEEDOffset) { builder.AddOffset(49, BAYER_FLAMSTEEDOffset.Value, 0); }
+  public static void AddCONSTELLATION(FlatBufferBuilder builder, StringOffset CONSTELLATIONOffset) { builder.AddOffset(50, CONSTELLATIONOffset.Value, 0); }
+  public static void AddHR_CAT_ID(FlatBufferBuilder builder, uint HR_CAT_ID) { builder.AddUint(51, HR_CAT_ID, 0); }
+  public static void AddHD_CAT_ID(FlatBufferBuilder builder, uint HD_CAT_ID) { builder.AddUint(52, HD_CAT_ID, 0); }
+  public static void AddDESIGNATIONS(FlatBufferBuilder builder, VectorOffset DESIGNATIONSOffset) { builder.AddOffset(53, DESIGNATIONSOffset.Value, 0); }
+  public static VectorOffset CreateDESIGNATIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDESIGNATIONSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDESIGNATIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDESIGNATIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDESIGNATIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddVARIABILITY_CLASS(FlatBufferBuilder builder, StringOffset VARIABILITY_CLASSOffset) { builder.AddOffset(54, VARIABILITY_CLASSOffset.Value, 0); }
+  public static void AddVARIABILITY_PERIOD(FlatBufferBuilder builder, double VARIABILITY_PERIOD) { builder.AddDouble(55, VARIABILITY_PERIOD, Double.NaN); }
+  public static void AddVARIABILITY_AMPLITUDE(FlatBufferBuilder builder, double VARIABILITY_AMPLITUDE) { builder.AddDouble(56, VARIABILITY_AMPLITUDE, Double.NaN); }
+  public static void AddVARIABILITY_EPOCH(FlatBufferBuilder builder, double VARIABILITY_EPOCH) { builder.AddDouble(57, VARIABILITY_EPOCH, Double.NaN); }
+  public static void AddPHOTOMETRY(FlatBufferBuilder builder, VectorOffset PHOTOMETRYOffset) { builder.AddOffset(58, PHOTOMETRYOffset.Value, 0); }
+  public static VectorOffset CreatePHOTOMETRYVector(FlatBufferBuilder builder, Offset<PHBMeasurement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTOMETRYVectorBlock(FlatBufferBuilder builder, Offset<PHBMeasurement>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTOMETRYVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PHBMeasurement>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTOMETRYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PHBMeasurement>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPHOTOMETRYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<STR> EndSTR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<STR>(o);
@@ -290,12 +432,51 @@ public struct STR : IFlatbufferObject
     _o.NEIGHBOR_DISTANCE = this.NEIGHBOR_DISTANCE;
     _o.SHIFT_FLAG = this.SHIFT_FLAG;
     _o.SHIFT = this.SHIFT;
+    _o.TEFF = this.TEFF;
+    _o.TEFF_UNC = this.TEFF_UNC;
+    _o.LOGG = this.LOGG;
+    _o.LOGG_UNC = this.LOGG_UNC;
+    _o.METALLICITY = this.METALLICITY;
+    _o.EXTINCTION_A0 = this.EXTINCTION_A0;
+    _o.RADIAL_VELOCITY = this.RADIAL_VELOCITY;
+    _o.RADIAL_VELOCITY_UNC = this.RADIAL_VELOCITY_UNC;
+    _o.SPECTRAL_TYPE = this.SPECTRAL_TYPE;
+    _o.PROPER_NAME = this.PROPER_NAME;
+    _o.BAYER_FLAMSTEED = this.BAYER_FLAMSTEED;
+    _o.CONSTELLATION = this.CONSTELLATION;
+    _o.HR_CAT_ID = this.HR_CAT_ID;
+    _o.HD_CAT_ID = this.HD_CAT_ID;
+    _o.DESIGNATIONS = new List<string>();
+    for (var _j = 0; _j < this.DESIGNATIONSLength; ++_j) {_o.DESIGNATIONS.Add(this.DESIGNATIONS(_j));}
+    _o.VARIABILITY_CLASS = this.VARIABILITY_CLASS;
+    _o.VARIABILITY_PERIOD = this.VARIABILITY_PERIOD;
+    _o.VARIABILITY_AMPLITUDE = this.VARIABILITY_AMPLITUDE;
+    _o.VARIABILITY_EPOCH = this.VARIABILITY_EPOCH;
+    _o.PHOTOMETRY = new List<PHBMeasurementT>();
+    for (var _j = 0; _j < this.PHOTOMETRYLength; ++_j) {_o.PHOTOMETRY.Add(this.PHOTOMETRY(_j).HasValue ? this.PHOTOMETRY(_j).Value.UnPack() : null);}
   }
   public static Offset<STR> Pack(FlatBufferBuilder builder, STRT _o) {
     if (_o == null) return default(Offset<STR>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _CAT_VERSION = _o.CAT_VERSION == null ? default(StringOffset) : builder.CreateString(_o.CAT_VERSION);
     var _ASTROMETRY_ORIGIN = _o.ASTROMETRY_ORIGIN == null ? default(StringOffset) : builder.CreateString(_o.ASTROMETRY_ORIGIN);
+    var _SPECTRAL_TYPE = _o.SPECTRAL_TYPE == null ? default(StringOffset) : builder.CreateString(_o.SPECTRAL_TYPE);
+    var _PROPER_NAME = _o.PROPER_NAME == null ? default(StringOffset) : builder.CreateString(_o.PROPER_NAME);
+    var _BAYER_FLAMSTEED = _o.BAYER_FLAMSTEED == null ? default(StringOffset) : builder.CreateString(_o.BAYER_FLAMSTEED);
+    var _CONSTELLATION = _o.CONSTELLATION == null ? default(StringOffset) : builder.CreateString(_o.CONSTELLATION);
+    var _DESIGNATIONS = default(VectorOffset);
+    if (_o.DESIGNATIONS != null) {
+      var __DESIGNATIONS = new StringOffset[_o.DESIGNATIONS.Count];
+      for (var _j = 0; _j < __DESIGNATIONS.Length; ++_j) { __DESIGNATIONS[_j] = builder.CreateString(_o.DESIGNATIONS[_j]); }
+      _DESIGNATIONS = CreateDESIGNATIONSVector(builder, __DESIGNATIONS);
+    }
+    var _VARIABILITY_CLASS = _o.VARIABILITY_CLASS == null ? default(StringOffset) : builder.CreateString(_o.VARIABILITY_CLASS);
+    var _PHOTOMETRY = default(VectorOffset);
+    if (_o.PHOTOMETRY != null) {
+      var __PHOTOMETRY = new Offset<PHBMeasurement>[_o.PHOTOMETRY.Count];
+      for (var _j = 0; _j < __PHOTOMETRY.Length; ++_j) { __PHOTOMETRY[_j] = PHBMeasurement.Pack(builder, _o.PHOTOMETRY[_j]); }
+      _PHOTOMETRY = CreatePHOTOMETRYVector(builder, __PHOTOMETRY);
+    }
     return CreateSTR(
       builder,
       _ID,
@@ -336,7 +517,27 @@ public struct STR : IFlatbufferObject
       _o.NEIGHBOR_FLAG,
       _o.NEIGHBOR_DISTANCE,
       _o.SHIFT_FLAG,
-      _o.SHIFT);
+      _o.SHIFT,
+      _o.TEFF,
+      _o.TEFF_UNC,
+      _o.LOGG,
+      _o.LOGG_UNC,
+      _o.METALLICITY,
+      _o.EXTINCTION_A0,
+      _o.RADIAL_VELOCITY,
+      _o.RADIAL_VELOCITY_UNC,
+      _SPECTRAL_TYPE,
+      _PROPER_NAME,
+      _BAYER_FLAMSTEED,
+      _CONSTELLATION,
+      _o.HR_CAT_ID,
+      _o.HD_CAT_ID,
+      _DESIGNATIONS,
+      _VARIABILITY_CLASS,
+      _o.VARIABILITY_PERIOD,
+      _o.VARIABILITY_AMPLITUDE,
+      _o.VARIABILITY_EPOCH,
+      _PHOTOMETRY);
   }
 }
 
@@ -381,6 +582,26 @@ public class STRT
   public double NEIGHBOR_DISTANCE { get; set; }
   public bool SHIFT_FLAG { get; set; }
   public double SHIFT { get; set; }
+  public double TEFF { get; set; }
+  public double TEFF_UNC { get; set; }
+  public double LOGG { get; set; }
+  public double LOGG_UNC { get; set; }
+  public double METALLICITY { get; set; }
+  public double EXTINCTION_A0 { get; set; }
+  public double RADIAL_VELOCITY { get; set; }
+  public double RADIAL_VELOCITY_UNC { get; set; }
+  public string SPECTRAL_TYPE { get; set; }
+  public string PROPER_NAME { get; set; }
+  public string BAYER_FLAMSTEED { get; set; }
+  public string CONSTELLATION { get; set; }
+  public uint HR_CAT_ID { get; set; }
+  public uint HD_CAT_ID { get; set; }
+  public List<string> DESIGNATIONS { get; set; }
+  public string VARIABILITY_CLASS { get; set; }
+  public double VARIABILITY_PERIOD { get; set; }
+  public double VARIABILITY_AMPLITUDE { get; set; }
+  public double VARIABILITY_EPOCH { get; set; }
+  public List<PHBMeasurementT> PHOTOMETRY { get; set; }
 
   public STRT() {
     this.ID = null;
@@ -422,6 +643,26 @@ public class STRT
     this.NEIGHBOR_DISTANCE = 0.0;
     this.SHIFT_FLAG = false;
     this.SHIFT = 0.0;
+    this.TEFF = Double.NaN;
+    this.TEFF_UNC = Double.NaN;
+    this.LOGG = Double.NaN;
+    this.LOGG_UNC = Double.NaN;
+    this.METALLICITY = Double.NaN;
+    this.EXTINCTION_A0 = Double.NaN;
+    this.RADIAL_VELOCITY = Double.NaN;
+    this.RADIAL_VELOCITY_UNC = Double.NaN;
+    this.SPECTRAL_TYPE = null;
+    this.PROPER_NAME = null;
+    this.BAYER_FLAMSTEED = null;
+    this.CONSTELLATION = null;
+    this.HR_CAT_ID = 0;
+    this.HD_CAT_ID = 0;
+    this.DESIGNATIONS = null;
+    this.VARIABILITY_CLASS = null;
+    this.VARIABILITY_PERIOD = Double.NaN;
+    this.VARIABILITY_AMPLITUDE = Double.NaN;
+    this.VARIABILITY_EPOCH = Double.NaN;
+    this.PHOTOMETRY = null;
   }
   public static STRT DeserializeFromBinary(byte[] fbBuffer) {
     return STR.GetRootAsSTR(new ByteBuffer(fbBuffer)).UnPack();
@@ -478,6 +719,26 @@ static public class STRVerify
       && verifier.VerifyField(tablePos, 76 /*NEIGHBOR_DISTANCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 78 /*SHIFT_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 80 /*SHIFT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*TEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 84 /*TEFF_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 86 /*LOGG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 88 /*LOGG_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 90 /*METALLICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*EXTINCTION_A0*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*RADIAL_VELOCITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*RADIAL_VELOCITY_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 98 /*SPECTRAL_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 100 /*PROPER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 102 /*BAYER_FLAMSTEED*/, false)
+      && verifier.VerifyString(tablePos, 104 /*CONSTELLATION*/, false)
+      && verifier.VerifyField(tablePos, 106 /*HR_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 108 /*HD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 110 /*DESIGNATIONS*/, false)
+      && verifier.VerifyString(tablePos, 112 /*VARIABILITY_CLASS*/, false)
+      && verifier.VerifyField(tablePos, 114 /*VARIABILITY_PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 116 /*VARIABILITY_AMPLITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 118 /*VARIABILITY_EPOCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 120 /*PHOTOMETRY*/, PHBMeasurementVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

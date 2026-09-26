@@ -267,6 +267,9 @@ class RecordType(object):
     GCT = 247
     CQR = 248
     RPC = 249
+    CSO = 250
+    PHB = 251
+    SKT = 252
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -1019,4 +1022,13 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.RPC:
         import RPC
         return RPC.RPCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CSO:
+        import CSO
+        return CSO.CSOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PHB:
+        import PHB
+        return PHB.PHBT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SKT:
+        import SKT
+        return SKT.SKTT.InitFromBuf(table.Bytes, table.Pos)
     return None

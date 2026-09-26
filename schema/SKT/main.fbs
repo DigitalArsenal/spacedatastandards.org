@@ -1,0 +1,315 @@
+// Hash: 6c60553b98a9605da33d281e8a932168949443fae7e9cc6cbbf73a4f8dbb80c1
+// Version: 1.224.0
+// -----------------------------------END_HEADER
+include "../PHB/main.fbs";
+
+// Sky Tile (SKT)
+// Description
+// One tile of an all-sky layer on the HEALPix sphere: either a packed set of
+// point sources (stars, compact sources) ready to draw, or a pixel map of a
+// diffuse quantity (surface brightness in one band, a count map, a
+// localisation probability). A layer is every tile that shares LAYER_ID; a
+// consumer streams the tiles its view needs and never the whole sky. Tiles
+// are durable derived products published over the network by content
+// identifier; the full records behind a point tile are `$STR` and `$CSO`.
+//
+// THE SPHERE. Tiles are HEALPix pixels in the NESTED scheme, in the frame
+// named by FRAME. A tile at ORDER k has NSIDE = 2^k and is one of
+// 12 * 4^k pixels, numbered 0 .. 12 * 4^k - 1 by PIXEL. The four children of
+// (k, p) are (k + 1, 4p + i) for i = 0..3. Every pixel has the same solid
+// angle, 4 pi / (12 * 4^k) steradians.
+//
+// POINT LAYERS REFINE BY ADDITION. In a POINT_SOURCES layer a tile holds the
+// sources inside its pixel that no ancestor tile holds, brightest first, and
+// MAG_LIMIT is the faintest magnitude it holds. Drawing a tile and all of its
+// ancestors draws every source of that pixel down to the tile's MAG_LIMIT;
+// a consumer descends while the view needs fainter sources. REFINE is ADD.
+//
+// MAP LAYERS REFINE BY REPLACEMENT. A DIFFUSE_MAP or PROBABILITY_MAP tile at
+// ORDER k with MAP_DEPTH d holds 4^d values, one for each pixel at order
+// k + d inside it, in nested order: value i belongs to pixel
+// PIXEL * 4^d + i at order k + d. Its children hold the same field at the
+// next order. REFINE is REPLACE: when the children draw, the parent does not.
+//
+// THE PACKED POINT. SKTPoint is 24 bytes, little-endian, 4-byte aligned, so a
+// point tile is uploaded to a GPU without a parse. Fixed-point positions
+// resolve 0.3 milliarcseconds, well below a pixel at any field of view a
+// renderer draws; an analysis that needs full precision follows ROW back to
+// the record. Out-of-range or unknown values use the sentinels documented on
+// each field and set the matching FLAGS bit.
+//
+// WHERE THE BYTES LIVE. POINTS and MAP_VALUES carry the payload inline. A
+// large tile instead leaves them absent and names PAYLOAD_CID: the bytes at
+// that identifier are exactly the POINTS array (POINT_COUNT * 24 bytes of
+// SKTPoint) or exactly the MAP_VALUES bytes.
+//
+// ABSENT IS NOT ZERO. Every scalar that can be unknown defaults to NaN.
+
+/// Celestial frame a tile's HEALPix grid is laid on.
+/// Append new values only; never reorder or reuse existing values.
+enum sktCelestialFrame : ubyte {
+  UNSPECIFIED = 0,
+  /// International Celestial Reference System.
+  ICRS = 1,
+  /// Galactic coordinates (l, b).
+  GALACTIC = 2,
+  /// Ecliptic coordinates of J2000.0.
+  ECLIPTIC_J2000 = 3
+}
+
+/// What a tile's payload is.
+/// Append new values only; never reorder or reuse existing values.
+enum sktPayloadKind : ubyte {
+  UNSPECIFIED = 0,
+  /// Packed SKTPoint sources.
+  POINT_SOURCES = 1,
+  /// Pixel map of a diffuse quantity.
+  DIFFUSE_MAP = 2,
+  /// Pixel map of localisation probability per pixel; the values of a
+  /// complete layer at one order sum to 1.
+  PROBABILITY_MAP = 3
+}
+
+/// How a tile relates to its ancestors and children.
+/// Append new values only; never reorder or reuse existing values.
+enum sktRefinement : ubyte {
+  /// The tile adds to its ancestors (point layers).
+  ADD = 0,
+  /// The tile replaces its parent (map layers).
+  REPLACE = 1
+}
+
+/// Which place the positions of a point tile are.
+/// Append new values only; never reorder or reuse existing values.
+enum sktPlaceKind : ubyte {
+  UNSPECIFIED = 0,
+  /// Barycentric catalogue place at EPOCH: proper motion applied from the
+  /// catalogue epoch, nothing else.
+  CATALOG = 1,
+  /// Astrometric place for the observer named by OBSERVER_ID at EPOCH:
+  /// space motion and parallax applied, no aberration or deflection.
+  ASTROMETRIC = 2,
+  /// Apparent place for the observer named by OBSERVER_ID at EPOCH: space
+  /// motion, parallax, light deflection and aberration applied, in FRAME
+  /// axes.
+  APPARENT = 3
+}
+
+/// What the COLOR slot of every point in a tile holds.
+/// Append new values only; never reorder or reuse existing values.
+enum sktColorEncoding : ubyte {
+  /// No colour; COLOR is 0.
+  NONE = 0,
+  /// Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
+  /// millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means
+  /// unknown.
+  COLOR_INDEX = 1,
+  /// Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded.
+  /// 0 means unknown.
+  EFFECTIVE_TEMPERATURE = 2
+}
+
+/// Numeric encoding of MAP_VALUES.
+/// Append new values only; never reorder or reuse existing values.
+enum sktMapEncoding : ubyte {
+  UNSPECIFIED = 0,
+  /// IEEE 754 binary32, little-endian. NaN marks a pixel with no data.
+  FLOAT32 = 1,
+  /// IEEE 754 binary16, little-endian. NaN marks a pixel with no data.
+  FLOAT16 = 2,
+  /// Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE +
+  /// MAP_OFFSET. MAP_BLANK marks a pixel with no data.
+  UINT16_SCALED = 3,
+  /// Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK
+  /// marks a pixel with no data.
+  UINT8_SCALED = 4
+}
+
+/// Physical quantity a map pixel states.
+/// Append new values only; never reorder or reuse existing values.
+enum sktMapQuantity : ubyte {
+  UNSPECIFIED = 0,
+  /// Surface brightness, MAP_UNITS per steradian or per square arcsecond as
+  /// MAP_UNITS states.
+  SURFACE_BRIGHTNESS = 1,
+  /// Brightness temperature, kelvin.
+  BRIGHTNESS_TEMPERATURE = 2,
+  /// Detected counts per pixel.
+  COUNTS = 3,
+  /// Counts per unit exposure (a rate map).
+  COUNT_RATE = 4,
+  /// Exposure per pixel.
+  EXPOSURE = 5,
+  /// Probability per pixel.
+  PROBABILITY = 6,
+  /// Surface density of sources per pixel.
+  SOURCE_DENSITY = 7,
+  /// Quantity named in MAP_QUANTITY_NAME.
+  OTHER = 8
+}
+
+/// Intensity stretch a producer recommends for display.
+/// Append new values only; never reorder or reuse existing values.
+enum sktStretchFunction : ubyte {
+  UNSPECIFIED = 0,
+  LINEAR = 1,
+  SQUARE_ROOT = 2,
+  LOGARITHMIC = 3,
+  /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.
+  ASINH = 4,
+  /// Histogram equalisation over PERCENTILE_VALUES.
+  HISTOGRAM_EQUALIZED = 5
+}
+
+/// One point source packed for drawing (24 bytes).
+struct SKTPoint {
+  /// Right ascension (or longitude in FRAME) as a fraction of a full turn:
+  /// degrees = RA_FIXED * 360 / 2^32.
+  RA_FIXED: uint32;
+  /// Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31.
+  DEC_FIXED: int32;
+  /// Proper motion in RA times cos(DEC), milliarcseconds per year. -32768
+  /// when unknown or out of range (FLAGS bit 2).
+  PMRA: int16;
+  /// Proper motion in DEC, milliarcseconds per year. -32768 when unknown or
+  /// out of range (FLAGS bit 2).
+  PMDEC: int16;
+  /// Parallax in units of 0.02 milliarcseconds. 0 when unknown, not
+  /// positive or out of range (FLAGS bit 3).
+  PARALLAX: uint16;
+  /// Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
+  MAG: int16;
+  /// Colour, encoded as the tile's COLOR_ENCODING states.
+  COLOR: uint16;
+  /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
+  /// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
+  /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+  /// within the confusion radius. 7: extended source. 8-15: reserved, 0.
+  FLAGS: uint16;
+  /// Index of the source's full record in the tile's row collection
+  /// (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.
+  ROW: uint32;
+}
+
+/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+table SKT {
+  /// Stable identifier of the layer: equal across every tile of one
+  /// (producer, source catalogue or survey, band, place, epoch).
+  LAYER_ID: string (required);
+  /// Frame the HEALPix grid and the point positions are stated in.
+  FRAME: sktCelestialFrame = ICRS;
+  /// HEALPix order; NSIDE = 2^ORDER.
+  ORDER: uint8;
+  /// Nested pixel index at ORDER.
+  PIXEL: uint64;
+  /// Deepest order of the layer, when the producer knows it; 255 when
+  /// unstated.
+  MAX_ORDER: uint8 = 255;
+  /// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
+  /// a leaf.
+  CHILD_MASK: uint8;
+  /// Payload the tile carries.
+  PAYLOAD_KIND: sktPayloadKind = UNSPECIFIED;
+  /// How the tile relates to its ancestors and children.
+  REFINE: sktRefinement = ADD;
+
+  /// Coarse spectral region of the band.
+  SPECTRAL_REGIME: phbSpectralRegime = UNSPECIFIED;
+  /// Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are
+  /// in this band.
+  BAND_ID: string;
+  /// Effective wavelength of the band, nanometres (vacuum).
+  WAVELENGTH_EFF_NM: double = nan;
+  /// Short edge of a band-integrated map, nanometres.
+  WAVELENGTH_MIN_NM: double = nan;
+  /// Long edge of a band-integrated map, nanometres.
+  WAVELENGTH_MAX_NM: double = nan;
+  /// Calibration system of MAG.
+  MAGNITUDE_SYSTEM: phbMagnitudeSystem = UNSPECIFIED;
+
+  /// Which place point positions are.
+  PLACE: sktPlaceKind = CATALOG;
+  /// Epoch of point positions, Julian years (TT).
+  EPOCH: double = nan;
+  /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
+  /// spacecraft or the geocentre), as the producer names it.
+  OBSERVER_ID: string;
+  /// Number of points in the payload.
+  POINT_COUNT: uint32;
+  /// Brightest magnitude in the tile.
+  MAG_BRIGHTEST: float = nan;
+  /// Faintest magnitude in the tile; with the ancestors, the layer is
+  /// complete to this limit inside the pixel.
+  MAG_LIMIT: float = nan;
+  /// What each point's COLOR holds.
+  COLOR_ENCODING: sktColorEncoding = NONE;
+  /// Bluer band of a COLOR_INDEX colour.
+  COLOR_BLUE_BAND_ID: string;
+  /// Redder band of a COLOR_INDEX colour.
+  COLOR_RED_BAND_ID: string;
+  /// Packed points, brightest first.
+  POINTS: [SKTPoint];
+  /// Content identifier of the full `$STR` / `$CSO` records of the points,
+  /// a size-prefixed record sequence in ROW order.
+  ROW_COLLECTION_CID: string;
+
+  /// Order offset of the map pixels: the tile holds 4^MAP_DEPTH values.
+  MAP_DEPTH: uint8;
+  /// Numeric encoding of MAP_VALUES.
+  MAP_ENCODING: sktMapEncoding = UNSPECIFIED;
+  /// Physical quantity of the map.
+  MAP_QUANTITY: sktMapQuantity = UNSPECIFIED;
+  /// Producer's name for the quantity when MAP_QUANTITY is OTHER.
+  MAP_QUANTITY_NAME: string;
+  /// Units of the physical map values, UCUM style (e.g. "K", "MJy/sr",
+  /// "count/s/sr").
+  MAP_UNITS: string;
+  /// Scale of a scaled integer encoding.
+  MAP_SCALE: double = 1;
+  /// Offset of a scaled integer encoding.
+  MAP_OFFSET: double = 0;
+  /// Raw value marking a pixel with no data in a scaled integer encoding.
+  MAP_BLANK: uint32 = 4294967295;
+  /// Raw map bytes, 4^MAP_DEPTH values in nested order.
+  MAP_VALUES: [ubyte];
+
+  /// Recommended stretch.
+  STRETCH: sktStretchFunction = UNSPECIFIED;
+  /// Physical value drawn black.
+  BLACK_POINT: double = nan;
+  /// Physical value drawn white.
+  WHITE_POINT: double = nan;
+  /// Softening of an ASINH stretch, in physical units.
+  STRETCH_SOFTENING: double = nan;
+  /// Percentile levels of the layer's value distribution, in [0, 100],
+  /// ascending.
+  PERCENTILE_LEVELS: [float];
+  /// Physical value at each PERCENTILE_LEVELS entry. Computed over the whole
+  /// layer, so every tile stretches alike.
+  PERCENTILE_VALUES: [double];
+
+  /// Content identifier of the payload when POINTS and MAP_VALUES are absent.
+  PAYLOAD_CID: string;
+  /// Length of the payload at PAYLOAD_CID, bytes.
+  PAYLOAD_BYTES: uint64;
+
+  /// Start of the observations the tile summarises, ISO 8601 UTC.
+  OBSERVATION_START: string;
+  /// End of the observations the tile summarises, ISO 8601 UTC.
+  OBSERVATION_END: string;
+  /// Verbatim names of the catalogues or surveys the tile was derived from.
+  SOURCE_NAMES: [string];
+  /// Peer identifier of the node that produced the tile.
+  PRODUCER_PEER_ID: string;
+  /// Producer software and version.
+  PRODUCER_VERSION: string;
+  /// Time the tile was produced, ISO 8601 UTC.
+  PRODUCED_AT: string;
+  /// Citation the upstream publishers ask for.
+  CITATION: string;
+  /// URL of the licence or terms of the source data.
+  LICENSE_URL: string;
+}
+
+root_type SKT;
+file_identifier "$SKT";

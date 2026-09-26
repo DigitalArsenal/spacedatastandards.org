@@ -60,7 +60,7 @@ class STR : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Gaia DR3 source identifier
+     * Source identifier in the third data release of the all-sky space astrometry survey
      */
     val gaiadr3CatId : Long
         get() {
@@ -68,7 +68,7 @@ class STR : Table() {
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     /**
-     * Hipparcos catalog identifier
+     * Identifier in the first space astrometry mission's main catalog
      */
     val hipCatId : UInt
         get() {
@@ -208,7 +208,7 @@ class STR : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Gaia G-band magnitude
+     * Broad-band G magnitude of the space astrometry photometric system
      */
     val gmag : Double
         get() {
@@ -216,7 +216,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gaia G-band magnitude uncertainty
+     * G-band magnitude uncertainty
      */
     val gmagUnc : Double
         get() {
@@ -224,7 +224,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gaia BP-band magnitude (blue photometer)
+     * BP-band magnitude (blue prism photometer of the space astrometry system)
      */
     val bpmag : Double
         get() {
@@ -232,7 +232,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gaia BP-band magnitude uncertainty
+     * BP-band magnitude uncertainty
      */
     val bpmagUnc : Double
         get() {
@@ -240,7 +240,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gaia RP-band magnitude (red photometer)
+     * RP-band magnitude (red prism photometer of the space astrometry system)
      */
     val rpmag : Double
         get() {
@@ -248,7 +248,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gaia RP-band magnitude uncertainty
+     * RP-band magnitude uncertainty
      */
     val rpmagUnc : Double
         get() {
@@ -256,7 +256,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * 2MASS J-band magnitude (1.25 um)
+     * Near-infrared J-band magnitude (1.25 um)
      */
     val jmag : Double
         get() {
@@ -272,7 +272,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * 2MASS K-band magnitude (2.17 um)
+     * Near-infrared Ks-band magnitude (2.17 um)
      */
     val kmag : Double
         get() {
@@ -288,7 +288,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * 2MASS H-band magnitude (1.65 um)
+     * Near-infrared H-band magnitude (1.65 um)
      */
     val hmag : Double
         get() {
@@ -359,6 +359,211 @@ class STR : Table() {
             val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Effective temperature (kelvin)
+     */
+    val teff : Double
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Effective temperature uncertainty (kelvin)
+     */
+    val teffUnc : Double
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Surface gravity, log10 of g in cm s^-2
+     */
+    val logg : Double
+        get() {
+            val o = __offset(86)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Surface gravity uncertainty (dex)
+     */
+    val loggUnc : Double
+        get() {
+            val o = __offset(88)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Metallicity [M/H] (dex)
+     */
+    val metallicity : Double
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Interstellar extinction at 541.4 nm, A0 (magnitudes)
+     */
+    val extinctionA0 : Double
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Radial velocity, positive receding (km/s)
+     */
+    val radialVelocity : Double
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Radial velocity uncertainty (km/s)
+     */
+    val radialVelocityUnc : Double
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Spectral type in the MK system, e.g. "A1 V"
+     */
+    val spectralType : String?
+        get() {
+            val o = __offset(98)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val spectralTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
+    fun spectralTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
+    /**
+     * Proper name as recognised by the astronomical naming authority
+     */
+    val properName : String?
+        get() {
+            val o = __offset(100)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val properNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
+    fun properNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
+    /**
+     * Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+     */
+    val bayerFlamsteed : String?
+        get() {
+            val o = __offset(102)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val bayerFlamsteedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
+    fun bayerFlamsteedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
+    /**
+     * Constellation containing the star, three-letter abbreviation
+     */
+    val constellation : String?
+        get() {
+            val o = __offset(104)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val constellationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(104, 1)
+    fun constellationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 104, 1)
+    /**
+     * Bright-star catalog number (HR); 0 when not in that catalog
+     */
+    val hrCatId : UInt
+        get() {
+            val o = __offset(106)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Spectral-type catalog number (HD); 0 when not in that catalog
+     */
+    val hdCatId : UInt
+        get() {
+            val o = __offset(108)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Other designations, each in the form its catalog uses
+     */
+    fun designations(j: Int) : String? {
+        val o = __offset(110)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val designationsLength : Int
+        get() {
+            val o = __offset(110); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+     */
+    val variabilityClass : String?
+        get() {
+            val o = __offset(112)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val variabilityClassAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(112, 1)
+    fun variabilityClassInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 112, 1)
+    /**
+     * Period of variability (days)
+     */
+    val variabilityPeriod : Double
+        get() {
+            val o = __offset(114)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Peak-to-peak variability amplitude (magnitudes)
+     */
+    val variabilityAmplitude : Double
+        get() {
+            val o = __offset(116)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+     */
+    val variabilityEpoch : Double
+        get() {
+            val o = __offset(118)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Brightness in every band the star was measured or modelled in
+     */
+    fun photometry(j: Int) : PHBMeasurement? = photometry(PHBMeasurement(), j)
+    fun photometry(obj: PHBMeasurement, j: Int) : PHBMeasurement? {
+        val o = __offset(120)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val photometryLength : Int
+        get() {
+            val o = __offset(120); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTR(_bb: ByteBuffer): STR = getRootAsSTR(_bb, STR())
@@ -367,8 +572,19 @@ class STR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STR")
-        fun createSTR(builder: FlatBufferBuilder, idOffset: Int, csId: Long, gncCatId: UInt, gaiadr3CatId: Long, hipCatId: UInt, catVersionOffset: Int, astrometryOriginOffset: Int, starEpoch: Double, ra: Double, raUnc: Double, dec: Double, decUnc: Double, posUncFlag: Boolean, parallax: Double, parallaxUnc: Double, pmra: Double, pmraUnc: Double, pmdec: Double, pmdecUnc: Double, pmUncFlag: Boolean, gmag: Double, gmagUnc: Double, bpmag: Double, bpmagUnc: Double, rpmag: Double, rpmagUnc: Double, jmag: Double, jmagUnc: Double, kmag: Double, kmagUnc: Double, hmag: Double, hmagUnc: Double, varFlag: Boolean, multFlag: Boolean, neighborId: UInt, neighborFlag: Boolean, neighborDistance: Double, shiftFlag: Boolean, shift: Double) : Int {
-            builder.startTable(39)
+        fun createSTR(builder: FlatBufferBuilder, idOffset: Int, csId: Long, gncCatId: UInt, gaiadr3CatId: Long, hipCatId: UInt, catVersionOffset: Int, astrometryOriginOffset: Int, starEpoch: Double, ra: Double, raUnc: Double, dec: Double, decUnc: Double, posUncFlag: Boolean, parallax: Double, parallaxUnc: Double, pmra: Double, pmraUnc: Double, pmdec: Double, pmdecUnc: Double, pmUncFlag: Boolean, gmag: Double, gmagUnc: Double, bpmag: Double, bpmagUnc: Double, rpmag: Double, rpmagUnc: Double, jmag: Double, jmagUnc: Double, kmag: Double, kmagUnc: Double, hmag: Double, hmagUnc: Double, varFlag: Boolean, multFlag: Boolean, neighborId: UInt, neighborFlag: Boolean, neighborDistance: Double, shiftFlag: Boolean, shift: Double, teff: Double, teffUnc: Double, logg: Double, loggUnc: Double, metallicity: Double, extinctionA0: Double, radialVelocity: Double, radialVelocityUnc: Double, spectralTypeOffset: Int, properNameOffset: Int, bayerFlamsteedOffset: Int, constellationOffset: Int, hrCatId: UInt, hdCatId: UInt, designationsOffset: Int, variabilityClassOffset: Int, variabilityPeriod: Double, variabilityAmplitude: Double, variabilityEpoch: Double, photometryOffset: Int) : Int {
+            builder.startTable(59)
+            addVARIABILITYEPOCH(builder, variabilityEpoch)
+            addVARIABILITYAMPLITUDE(builder, variabilityAmplitude)
+            addVARIABILITYPERIOD(builder, variabilityPeriod)
+            addRADIALVELOCITYUNC(builder, radialVelocityUnc)
+            addRADIALVELOCITY(builder, radialVelocity)
+            addEXTINCTIONA0(builder, extinctionA0)
+            addMETALLICITY(builder, metallicity)
+            addLOGGUNC(builder, loggUnc)
+            addLOGG(builder, logg)
+            addTEFFUNC(builder, teffUnc)
+            addTEFF(builder, teff)
             addSHIFT(builder, shift)
             addNEIGHBORDISTANCE(builder, neighborDistance)
             addHMAGUNC(builder, hmagUnc)
@@ -396,6 +612,15 @@ class STR : Table() {
             addSTAREPOCH(builder, starEpoch)
             addGAIADR3CATID(builder, gaiadr3CatId)
             addCSID(builder, csId)
+            addPHOTOMETRY(builder, photometryOffset)
+            addVARIABILITYCLASS(builder, variabilityClassOffset)
+            addDESIGNATIONS(builder, designationsOffset)
+            addHDCATID(builder, hdCatId)
+            addHRCATID(builder, hrCatId)
+            addCONSTELLATION(builder, constellationOffset)
+            addBAYERFLAMSTEED(builder, bayerFlamsteedOffset)
+            addPROPERNAME(builder, properNameOffset)
+            addSPECTRALTYPE(builder, spectralTypeOffset)
             addNEIGHBORID(builder, neighborId)
             addASTROMETRYORIGIN(builder, astrometryOriginOffset)
             addCATVERSION(builder, catVersionOffset)
@@ -410,7 +635,7 @@ class STR : Table() {
             addPOSUNCFLAG(builder, posUncFlag)
             return endSTR(builder)
         }
-        fun startSTR(builder: FlatBufferBuilder) = builder.startTable(39)
+        fun startSTR(builder: FlatBufferBuilder) = builder.startTable(59)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCSID(builder: FlatBufferBuilder, csId: Long) = builder.addLong(1, csId, 0L)
         fun addGNCCATID(builder: FlatBufferBuilder, gncCatId: UInt) = builder.addInt(2, gncCatId.toInt(), 0)
@@ -450,6 +675,42 @@ class STR : Table() {
         fun addNEIGHBORDISTANCE(builder: FlatBufferBuilder, neighborDistance: Double) = builder.addDouble(36, neighborDistance, 0.0)
         fun addSHIFTFLAG(builder: FlatBufferBuilder, shiftFlag: Boolean) = builder.addBoolean(37, shiftFlag, false)
         fun addSHIFT(builder: FlatBufferBuilder, shift: Double) = builder.addDouble(38, shift, 0.0)
+        fun addTEFF(builder: FlatBufferBuilder, teff: Double) = builder.addDouble(39, teff, Double.NaN)
+        fun addTEFFUNC(builder: FlatBufferBuilder, teffUnc: Double) = builder.addDouble(40, teffUnc, Double.NaN)
+        fun addLOGG(builder: FlatBufferBuilder, logg: Double) = builder.addDouble(41, logg, Double.NaN)
+        fun addLOGGUNC(builder: FlatBufferBuilder, loggUnc: Double) = builder.addDouble(42, loggUnc, Double.NaN)
+        fun addMETALLICITY(builder: FlatBufferBuilder, metallicity: Double) = builder.addDouble(43, metallicity, Double.NaN)
+        fun addEXTINCTIONA0(builder: FlatBufferBuilder, extinctionA0: Double) = builder.addDouble(44, extinctionA0, Double.NaN)
+        fun addRADIALVELOCITY(builder: FlatBufferBuilder, radialVelocity: Double) = builder.addDouble(45, radialVelocity, Double.NaN)
+        fun addRADIALVELOCITYUNC(builder: FlatBufferBuilder, radialVelocityUnc: Double) = builder.addDouble(46, radialVelocityUnc, Double.NaN)
+        fun addSPECTRALTYPE(builder: FlatBufferBuilder, spectralType: Int) = builder.addOffset(47, spectralType, 0)
+        fun addPROPERNAME(builder: FlatBufferBuilder, properName: Int) = builder.addOffset(48, properName, 0)
+        fun addBAYERFLAMSTEED(builder: FlatBufferBuilder, bayerFlamsteed: Int) = builder.addOffset(49, bayerFlamsteed, 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(50, constellation, 0)
+        fun addHRCATID(builder: FlatBufferBuilder, hrCatId: UInt) = builder.addInt(51, hrCatId.toInt(), 0)
+        fun addHDCATID(builder: FlatBufferBuilder, hdCatId: UInt) = builder.addInt(52, hdCatId.toInt(), 0)
+        fun addDESIGNATIONS(builder: FlatBufferBuilder, designations: Int) = builder.addOffset(53, designations, 0)
+        fun createDesignationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDesignationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addVARIABILITYCLASS(builder: FlatBufferBuilder, variabilityClass: Int) = builder.addOffset(54, variabilityClass, 0)
+        fun addVARIABILITYPERIOD(builder: FlatBufferBuilder, variabilityPeriod: Double) = builder.addDouble(55, variabilityPeriod, Double.NaN)
+        fun addVARIABILITYAMPLITUDE(builder: FlatBufferBuilder, variabilityAmplitude: Double) = builder.addDouble(56, variabilityAmplitude, Double.NaN)
+        fun addVARIABILITYEPOCH(builder: FlatBufferBuilder, variabilityEpoch: Double) = builder.addDouble(57, variabilityEpoch, Double.NaN)
+        fun addPHOTOMETRY(builder: FlatBufferBuilder, photometry: Int) = builder.addOffset(58, photometry, 0)
+        fun createPhotometryVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPhotometryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endSTR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
