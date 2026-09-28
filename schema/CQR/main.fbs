@@ -1,5 +1,5 @@
-// Hash: 7772b663d09600c33e5e16fcc0eae709e8b143bbe7bd7a90a97c9ef6417fa3db
-// Version: 1.219.0
+// Hash: e11a3d2bc2d48736346a3682ef4417a1445e0828a1a1fd8016537b7afba146b9
+// Version: 1.219.1
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -306,8 +306,170 @@ table CQRVersionResult {
   VERSION:string (required);
 }
 
+/// Launch and reentry screening (normative). A launch window is screened by
+/// sweeping liftoff times; each launched object (stage, payload or jettisoned
+/// component) is one segment whose trajectory is fixed relative to liftoff.
+///
+/// Every segment trajectory and every orbiting-object ephemeris is expressed
+/// in EVALUATION_FRAME, which must be Earth-fixed: a fixed-azimuth ascent has
+/// the same Earth-fixed state at liftoff + τ for every liftoff time. Segment
+/// epochs are absolute times for a liftoff at NOMINAL_LIFTOFF; a provider
+/// evaluates another liftoff time by shifting them. Orbiting objects are
+/// screened at absolute times. A provider never selects a propagator: mean
+/// elements reach it only as ephemerides produced by a host-selected
+/// propagator.
+///
+/// Distances are SI metres, times TIMInstant, probabilities unitless.
+/// Unsupported screening kinds fail explicitly; they are never approximated.
+
+/// Orbiting-object class used to choose a screening criterion.
+enum cqrLaunchObjectClass : ubyte {
+  UNSPECIFIED = 0,
+  /// Crewed or crew-capable object.
+  INHABITABLE = 1,
+  /// Any object that is neither inhabitable nor orbital debris.
+  NON_DEBRIS = 2,
+  /// Catalogued orbital debris.
+  DEBRIS = 3
+}
+
+/// How one criterion decides a violation.
+enum cqrLaunchScreening : ubyte {
+  UNSPECIFIED = 0,
+  /// Separation below RADIUS_M.
+  SPHERICAL = 1,
+  /// Separation inside the RADIAL_M / IN_TRACK_M / CROSS_TRACK_M ellipsoid,
+  /// centred on the orbiting object in its radial/in-track/cross-track frame.
+  ELLIPSOIDAL = 2,
+  /// Probability of collision above MAX_PROBABILITY.
+  PROBABILITY = 3
+}
+
+/// Screening criterion for one object class. Exactly one kind per entry;
+/// SCREENING selects which fields apply.
+table CQRLaunchCriterion {
+  OBJECT_CLASS:cqrLaunchObjectClass = UNSPECIFIED;
+  SCREENING:cqrLaunchScreening = UNSPECIFIED;
+  /// Sphere radius, metres (SPHERICAL).
+  RADIUS_M:double;
+  /// Ellipsoid semi-axes, metres (ELLIPSOIDAL).
+  RADIAL_M:double;
+  IN_TRACK_M:double;
+  CROSS_TRACK_M:double;
+  /// Largest acceptable probability of collision (PROBABILITY).
+  MAX_PROBABILITY:double;
+  ALGORITHM:cqrProbabilityAlgorithm = UNSPECIFIED;
+}
+
+/// One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.
+table CQRLaunchSegment {
+  SEGMENT_ID:string (required);
+  SEGMENT_NAME:string;
+  /// Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines.
+  TRAJECTORY:OEM (required);
+  /// Hard-body radius, metres.
+  RADIUS_M:double = 5;
+  /// Radar cross section, square metres.
+  RADAR_CROSS_SECTION_M2:double;
+  /// True when RADAR_CROSS_SECTION_M2 carries a value; false means absent.
+  HAS_RADAR_CROSS_SECTION_M2:bool = false;
+  /// Liftoff times this trajectory applies to, half-open [VALID_FROM,
+  /// VALID_UNTIL). Absent bounds select the whole window. Windows whose
+  /// trajectory changes (for example a varying azimuth) supply one segment
+  /// per span.
+  VALID_FROM:TIMInstant;
+  VALID_UNTIL:TIMInstant;
+}
+
+/// One orbiting object to screen against.
+table CQRLaunchObject {
+  /// Ephemeris in EVALUATION_FRAME covering the screened absolute times.
+  SOURCE:CQRObjectSource (required);
+  OBJECT_CLASS:cqrLaunchObjectClass = UNSPECIFIED;
+  /// A pre-coordinated rendezvous or close approach: reported, never a
+  /// window closure.
+  RENDEZVOUS_COORDINATED:bool = false;
+}
+
+table CQRLaunchRequest {
+  MISSION_NAME:string;
+  /// Liftoff time the segment trajectories were produced for.
+  NOMINAL_LIFTOFF:TIMInstant (required);
+  /// Liftoff window, inclusive of both ends.
+  WINDOW_OPEN:TIMInstant (required);
+  WINDOW_CLOSE:TIMInstant (required);
+  /// Spacing of evaluated liftoff times, seconds.
+  LIFTOFF_STEP_SECONDS:double = 1;
+  SEGMENTS:[CQRLaunchSegment] (required);
+  OBJECTS:[CQRLaunchObject] (required);
+  /// One criterion per object class present in OBJECTS.
+  CRITERIA:[CQRLaunchCriterion] (required);
+  /// Segment states below this height above the reference ellipsoid are not
+  /// screened, metres.
+  MINIMUM_ALTITUDE_M:double = 150000;
+  /// Screening ends this long after liftoff, seconds, or earlier where a
+  /// trajectory ends.
+  SCREEN_SECONDS_AFTER_LIFTOFF:double = 10800;
+  /// Time added before and after every closure for vehicle performance and
+  /// timing uncertainty, seconds.
+  CLOSURE_PAD_SECONDS:double = 0;
+  /// Report approaches whose criterion ratio is below this value; 1 reports
+  /// violations only.
+  REPORT_RATIO:double = 1;
+  /// Earth-fixed frame shared by every trajectory and ephemeris.
+  EVALUATION_FRAME:RFMCoordinateSystem (required);
+}
+
+/// Liftoff times that violate at least one criterion, half-open [START, END),
+/// widened by the liftoff step and CLOSURE_PAD_SECONDS and merged.
+table CQRLaunchClosure {
+  START:TIMInstant (required);
+  END:TIMInstant (required);
+  /// Orbiting objects that cause this closure.
+  OBJECT_IDS:[string];
+  /// Segments involved.
+  SEGMENT_IDS:[string];
+}
+
+/// Closest approach of one segment to one orbiting object for one liftoff
+/// time: the worst liftoff time of each contiguous run below REPORT_RATIO.
+table CQRLaunchApproach {
+  SEGMENT_ID:string (required);
+  OBJECT_ID:string (required);
+  OBJECT_CLASS:cqrLaunchObjectClass = UNSPECIFIED;
+  LIFTOFF:TIMInstant (required);
+  TCA:TIMInstant (required);
+  MISS_DISTANCE_M:double;
+  RELATIVE_SPEED_M_S:double;
+  /// Segment position relative to the orbiting object in the object's
+  /// radial/in-track/cross-track frame, metres.
+  RELATIVE_POSITION_RTN:FRMVector3;
+  /// Normalised separation: distance over radius (SPHERICAL) or ellipsoid
+  /// radius (ELLIPSOIDAL). Below 1 violates.
+  CRITERION_RATIO:double;
+  VIOLATES:bool = false;
+  RENDEZVOUS_COORDINATED:bool = false;
+  /// First and last liftoff times of the run this approach represents.
+  RUN_START:TIMInstant;
+  RUN_END:TIMInstant;
+}
+
+table CQRLaunchResult {
+  MISSION_NAME:string;
+  WINDOW_OPEN:TIMInstant;
+  WINDOW_CLOSE:TIMInstant;
+  LIFTOFF_STEP_SECONDS:double;
+  LIFTOFF_TIMES_EVALUATED:ulong;
+  /// Ordered by START.
+  CLOSURES:[CQRLaunchClosure];
+  /// Ordered by LIFTOFF, then segment and object identity.
+  APPROACHES:[CQRLaunchApproach];
+  STATISTICS:CQRScreeningStatistics;
+}
+
 /// Conjunction Query and Result — pair/catalog screening, encounter-plane
-/// probability, typed native documents and resident screening-index control.
+/// probability, typed native documents, resident screening-index control and
+/// launch-window screening.
 /// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 table CQR {
   PAIR_REQUEST:CQRPairRequest;
@@ -326,6 +488,9 @@ table CQR {
   DESTROY_REQUEST:CQRDestroyRequest;
   VERSION_QUERY:bool = false;
   VERSION_RESULT:CQRVersionResult;
+  /// APPENDED. Launch-window screening request and result.
+  LAUNCH_REQUEST:CQRLaunchRequest;
+  LAUNCH_RESULT:CQRLaunchResult;
 }
 root_type CQR;
 file_identifier "$CQR";

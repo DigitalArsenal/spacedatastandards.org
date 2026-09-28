@@ -61,11 +61,15 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
         return fakerValue;
     }
 
-    const buildObject = (classProperties, tableName, jsonSchema, depth = 0) => {
-        if (depth > 5) return createTableInstance(tableName);
+    // Past the depth limit only required fields are filled: a required
+    // nested table left empty would make the whole record unserializable.
+    const buildObject = (classProperties, tableName, jsonSchema, depth = 0, required = null) => {
         let newObject = createTableInstance(tableName);
+        const onlyRequired = depth > 5;
+        if (onlyRequired && !required?.length) return newObject;
 
         for (let x in classProperties) {
+            if (onlyRequired && !required.includes(x)) continue;
             let resolvedProp = resolver(classProperties[x]?.items || classProperties[x], jsonSchema);
             if (!fTCheck(resolvedProp?.type)) {
                 newObject[x] = buildProp(resolvedProp, x);
@@ -75,6 +79,7 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
                     refRootName(resolvedProp.$$ref),
                     jsonSchema,
                     depth + 1,
+                    resolvedProp.required,
                 );
             } else if (classProperties[x]?.type === "array") {
                 newObject[x] = [];
@@ -85,7 +90,8 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
                             resolvedProp?.items || resolvedProp.properties,
                             refRootName(resolvedProp.$$ref),
                             jsonSchema,
-                            depth + 1);
+                            depth + 1,
+                            resolvedProp.required);
                     newObject[x].push(aObject);
                 }
             }

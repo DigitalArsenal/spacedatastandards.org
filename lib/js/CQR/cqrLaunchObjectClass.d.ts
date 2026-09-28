@@ -1,0 +1,34 @@
+/**
+ * Launch and reentry screening (normative). A launch window is screened by
+ * sweeping liftoff times; each launched object (stage, payload or jettisoned
+ * component) is one segment whose trajectory is fixed relative to liftoff.
+ *
+ * Every segment trajectory and every orbiting-object ephemeris is expressed
+ * in EVALUATION_FRAME, which must be Earth-fixed: a fixed-azimuth ascent has
+ * the same Earth-fixed state at liftoff + τ for every liftoff time. Segment
+ * epochs are absolute times for a liftoff at NOMINAL_LIFTOFF; a provider
+ * evaluates another liftoff time by shifting them. Orbiting objects are
+ * screened at absolute times. A provider never selects a propagator: mean
+ * elements reach it only as ephemerides produced by a host-selected
+ * propagator.
+ *
+ * Distances are SI metres, times TIMInstant, probabilities unitless.
+ * Unsupported screening kinds fail explicitly; they are never approximated.
+ * Orbiting-object class used to choose a screening criterion.
+ */
+export declare enum cqrLaunchObjectClass {
+    UNSPECIFIED = 0,
+    /**
+     * Crewed or crew-capable object.
+     */
+    INHABITABLE = 1,
+    /**
+     * Any object that is neither inhabitable nor orbital debris.
+     */
+    NON_DEBRIS = 2,
+    /**
+     * Catalogued orbital debris.
+     */
+    DEBRIS = 3
+}
+//# sourceMappingURL=cqrLaunchObjectClass.d.ts.map

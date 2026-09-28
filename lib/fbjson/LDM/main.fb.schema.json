@@ -3945,6 +3945,11 @@
           },
           "description": "Burn Out Vectors for the Launch",
           "x-flatbuffer-type": "[BOV]"
+        },
+        "ID": {
+          "type": "string",
+          "description": "APPENDED. Stable identifier of this launch in the registry that\npublished it; unchanged when the launch time or status changes.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

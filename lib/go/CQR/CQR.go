@@ -7,7 +7,8 @@ import (
 )
 
 /// Conjunction Query and Result — pair/catalog screening, encounter-plane
-/// probability, typed native documents and resident screening-index control.
+/// probability, typed native documents, resident screening-index control and
+/// launch-window screening.
 /// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 type CQR struct {
 	_tab flatbuffers.Table
@@ -331,8 +332,44 @@ func (rcv *CQR) VersionResult(obj *CQRVersionResult) *CQRVersionResult {
 	return rcv.VERSION_RESULT(obj)
 }
 
+/// APPENDED. Launch-window screening request and result.
+func (rcv *CQR) LAUNCH_REQUEST(obj *CQRLaunchRequest) *CQRLaunchRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CQRLaunchRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *CQR) LaunchRequest(obj *CQRLaunchRequest) *CQRLaunchRequest {
+	return rcv.LAUNCH_REQUEST(obj)
+}
+
+/// APPENDED. Launch-window screening request and result.
+func (rcv *CQR) LAUNCH_RESULT(obj *CQRLaunchResult) *CQRLaunchResult {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CQRLaunchResult)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *CQR) LaunchResult(obj *CQRLaunchResult) *CQRLaunchResult {
+	return rcv.LAUNCH_RESULT(obj)
+}
+
 func CQRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(18)
 }
 func CQRAddPAIR_REQUEST(builder *flatbuffers.Builder, PAIR_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PAIR_REQUEST), 0)
@@ -429,6 +466,18 @@ func CQRAddVERSION_RESULT(builder *flatbuffers.Builder, VERSION_RESULT flatbuffe
 }
 func CQRAddVersionResult(builder *flatbuffers.Builder, VERSION_RESULT flatbuffers.UOffsetT) {
 	CQRAddVERSION_RESULT(builder, VERSION_RESULT)
+}
+func CQRAddLAUNCH_REQUEST(builder *flatbuffers.Builder, LAUNCH_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LAUNCH_REQUEST), 0)
+}
+func CQRAddLaunchRequest(builder *flatbuffers.Builder, LAUNCH_REQUEST flatbuffers.UOffsetT) {
+	CQRAddLAUNCH_REQUEST(builder, LAUNCH_REQUEST)
+}
+func CQRAddLAUNCH_RESULT(builder *flatbuffers.Builder, LAUNCH_RESULT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LAUNCH_RESULT), 0)
+}
+func CQRAddLaunchResult(builder *flatbuffers.Builder, LAUNCH_RESULT flatbuffers.UOffsetT) {
+	CQRAddLAUNCH_RESULT(builder, LAUNCH_RESULT)
 }
 func CQREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

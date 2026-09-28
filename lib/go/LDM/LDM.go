@@ -623,8 +623,24 @@ func (rcv *LDM) BurnOutVectorsLength() int {
 }
 
 /// Burn Out Vectors for the Launch
+/// APPENDED. Stable identifier of this launch in the registry that
+/// published it; unchanged when the launch time or status changes.
+func (rcv *LDM) ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LDM) Id() []byte {
+	return rcv.ID()
+}
+
+/// APPENDED. Stable identifier of this launch in the registry that
+/// published it; unchanged when the launch time or status changes.
 func LDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(28)
 }
 func LDMAddSITE(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SITE), 0)
@@ -853,6 +869,12 @@ func LDMStartBURN_OUT_VECTORSVector(builder *flatbuffers.Builder, numElems int) 
 }
 func LDMStartBurnOutVectorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return LDMStartBURN_OUT_VECTORSVector(builder, numElems)
+}
+func LDMAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(ID), 0)
+}
+func LDMAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	LDMAddID(builder, ID)
 }
 func LDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

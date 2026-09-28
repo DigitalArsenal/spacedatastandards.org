@@ -627,6 +627,214 @@ impl<'a> ::flatbuffers::Verifiable for cqrDataOrigin {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for cqrDataOrigin {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_LAUNCH_OBJECT_CLASS: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_LAUNCH_OBJECT_CLASS: u8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_LAUNCH_OBJECT_CLASS: [cqrLaunchObjectClass; 4] = [
+  cqrLaunchObjectClass::UNSPECIFIED,
+  cqrLaunchObjectClass::INHABITABLE,
+  cqrLaunchObjectClass::NON_DEBRIS,
+  cqrLaunchObjectClass::DEBRIS,
+];
+
+/// Launch and reentry screening (normative). A launch window is screened by
+/// sweeping liftoff times; each launched object (stage, payload or jettisoned
+/// component) is one segment whose trajectory is fixed relative to liftoff.
+///
+/// Every segment trajectory and every orbiting-object ephemeris is expressed
+/// in EVALUATION_FRAME, which must be Earth-fixed: a fixed-azimuth ascent has
+/// the same Earth-fixed state at liftoff + τ for every liftoff time. Segment
+/// epochs are absolute times for a liftoff at NOMINAL_LIFTOFF; a provider
+/// evaluates another liftoff time by shifting them. Orbiting objects are
+/// screened at absolute times. A provider never selects a propagator: mean
+/// elements reach it only as ephemerides produced by a host-selected
+/// propagator.
+///
+/// Distances are SI metres, times TIMInstant, probabilities unitless.
+/// Unsupported screening kinds fail explicitly; they are never approximated.
+/// Orbiting-object class used to choose a screening criterion.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrLaunchObjectClass(pub u8);
+#[allow(non_upper_case_globals)]
+impl cqrLaunchObjectClass {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// Crewed or crew-capable object.
+  pub const INHABITABLE: Self = Self(1);
+  /// Any object that is neither inhabitable nor orbital debris.
+  pub const NON_DEBRIS: Self = Self(2);
+  /// Catalogued orbital debris.
+  pub const DEBRIS: Self = Self(3);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::INHABITABLE,
+    Self::NON_DEBRIS,
+    Self::DEBRIS,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::INHABITABLE => Some("INHABITABLE"),
+      Self::NON_DEBRIS => Some("NON_DEBRIS"),
+      Self::DEBRIS => Some("DEBRIS"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for cqrLaunchObjectClass {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for cqrLaunchObjectClass {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for cqrLaunchObjectClass {
+    type Output = cqrLaunchObjectClass;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrLaunchObjectClass {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrLaunchObjectClass {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrLaunchObjectClass {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_LAUNCH_SCREENING: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_LAUNCH_SCREENING: u8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_LAUNCH_SCREENING: [cqrLaunchScreening; 4] = [
+  cqrLaunchScreening::UNSPECIFIED,
+  cqrLaunchScreening::SPHERICAL,
+  cqrLaunchScreening::ELLIPSOIDAL,
+  cqrLaunchScreening::PROBABILITY,
+];
+
+/// How one criterion decides a violation.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrLaunchScreening(pub u8);
+#[allow(non_upper_case_globals)]
+impl cqrLaunchScreening {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// Separation below RADIUS_M.
+  pub const SPHERICAL: Self = Self(1);
+  /// Separation inside the RADIAL_M / IN_TRACK_M / CROSS_TRACK_M ellipsoid,
+  /// centred on the orbiting object in its radial/in-track/cross-track frame.
+  pub const ELLIPSOIDAL: Self = Self(2);
+  /// Probability of collision above MAX_PROBABILITY.
+  pub const PROBABILITY: Self = Self(3);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::SPHERICAL,
+    Self::ELLIPSOIDAL,
+    Self::PROBABILITY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::SPHERICAL => Some("SPHERICAL"),
+      Self::ELLIPSOIDAL => Some("ELLIPSOIDAL"),
+      Self::PROBABILITY => Some("PROBABILITY"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for cqrLaunchScreening {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for cqrLaunchScreening {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for cqrLaunchScreening {
+    type Output = cqrLaunchScreening;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrLaunchScreening {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrLaunchScreening {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrLaunchScreening {}
 pub enum CQRSourceProvenanceOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -6250,11 +6458,2253 @@ impl CQRVersionResultT {
     })
   }
 }
+pub enum CQRLaunchCriterionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Screening criterion for one object class. Exactly one kind per entry;
+/// SCREENING selects which fields apply.
+pub struct CQRLaunchCriterion<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchCriterion<'a> {
+  type Inner = CQRLaunchCriterion<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchCriterion<'a> {
+  pub const VT_OBJECT_CLASS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SCREENING: ::flatbuffers::VOffsetT = 6;
+  pub const VT_RADIUS_M: ::flatbuffers::VOffsetT = 8;
+  pub const VT_RADIAL_M: ::flatbuffers::VOffsetT = 10;
+  pub const VT_IN_TRACK_M: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CROSS_TRACK_M: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAX_PROBABILITY: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchCriterion { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchCriterionArgs
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchCriterion<'bldr>> {
+    let mut builder = CQRLaunchCriterionBuilder::new(_fbb);
+    builder.add_MAX_PROBABILITY(args.MAX_PROBABILITY);
+    builder.add_CROSS_TRACK_M(args.CROSS_TRACK_M);
+    builder.add_IN_TRACK_M(args.IN_TRACK_M);
+    builder.add_RADIAL_M(args.RADIAL_M);
+    builder.add_RADIUS_M(args.RADIUS_M);
+    builder.add_ALGORITHM(args.ALGORITHM);
+    builder.add_SCREENING(args.SCREENING);
+    builder.add_OBJECT_CLASS(args.OBJECT_CLASS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchCriterionT {
+    let OBJECT_CLASS = self.OBJECT_CLASS();
+    let SCREENING = self.SCREENING();
+    let RADIUS_M = self.RADIUS_M();
+    let RADIAL_M = self.RADIAL_M();
+    let IN_TRACK_M = self.IN_TRACK_M();
+    let CROSS_TRACK_M = self.CROSS_TRACK_M();
+    let MAX_PROBABILITY = self.MAX_PROBABILITY();
+    let ALGORITHM = self.ALGORITHM();
+    CQRLaunchCriterionT {
+      OBJECT_CLASS,
+      SCREENING,
+      RADIUS_M,
+      RADIAL_M,
+      IN_TRACK_M,
+      CROSS_TRACK_M,
+      MAX_PROBABILITY,
+      ALGORITHM,
+    }
+  }
+
+  #[inline]
+  pub fn OBJECT_CLASS(&self) -> cqrLaunchObjectClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<cqrLaunchObjectClass>(CQRLaunchCriterion::VT_OBJECT_CLASS, Some(cqrLaunchObjectClass::UNSPECIFIED)).unwrap()}
+  }
+  #[inline]
+  pub fn SCREENING(&self) -> cqrLaunchScreening {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<cqrLaunchScreening>(CQRLaunchCriterion::VT_SCREENING, Some(cqrLaunchScreening::UNSPECIFIED)).unwrap()}
+  }
+  /// Sphere radius, metres (SPHERICAL).
+  #[inline]
+  pub fn RADIUS_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchCriterion::VT_RADIUS_M, Some(0.0)).unwrap()}
+  }
+  /// Ellipsoid semi-axes, metres (ELLIPSOIDAL).
+  #[inline]
+  pub fn RADIAL_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchCriterion::VT_RADIAL_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn IN_TRACK_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchCriterion::VT_IN_TRACK_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn CROSS_TRACK_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchCriterion::VT_CROSS_TRACK_M, Some(0.0)).unwrap()}
+  }
+  /// Largest acceptable probability of collision (PROBABILITY).
+  #[inline]
+  pub fn MAX_PROBABILITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchCriterion::VT_MAX_PROBABILITY, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn ALGORITHM(&self) -> cqrProbabilityAlgorithm {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<cqrProbabilityAlgorithm>(CQRLaunchCriterion::VT_ALGORITHM, Some(cqrProbabilityAlgorithm::UNSPECIFIED)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchCriterion<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<cqrLaunchObjectClass>("OBJECT_CLASS", Self::VT_OBJECT_CLASS, false)?
+     .visit_field::<cqrLaunchScreening>("SCREENING", Self::VT_SCREENING, false)?
+     .visit_field::<f64>("RADIUS_M", Self::VT_RADIUS_M, false)?
+     .visit_field::<f64>("RADIAL_M", Self::VT_RADIAL_M, false)?
+     .visit_field::<f64>("IN_TRACK_M", Self::VT_IN_TRACK_M, false)?
+     .visit_field::<f64>("CROSS_TRACK_M", Self::VT_CROSS_TRACK_M, false)?
+     .visit_field::<f64>("MAX_PROBABILITY", Self::VT_MAX_PROBABILITY, false)?
+     .visit_field::<cqrProbabilityAlgorithm>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchCriterionArgs {
+    pub OBJECT_CLASS: cqrLaunchObjectClass,
+    pub SCREENING: cqrLaunchScreening,
+    pub RADIUS_M: f64,
+    pub RADIAL_M: f64,
+    pub IN_TRACK_M: f64,
+    pub CROSS_TRACK_M: f64,
+    pub MAX_PROBABILITY: f64,
+    pub ALGORITHM: cqrProbabilityAlgorithm,
+}
+impl<'a> Default for CQRLaunchCriterionArgs {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchCriterionArgs {
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      SCREENING: cqrLaunchScreening::UNSPECIFIED,
+      RADIUS_M: 0.0,
+      RADIAL_M: 0.0,
+      IN_TRACK_M: 0.0,
+      CROSS_TRACK_M: 0.0,
+      MAX_PROBABILITY: 0.0,
+      ALGORITHM: cqrProbabilityAlgorithm::UNSPECIFIED,
+    }
+  }
+}
+
+pub struct CQRLaunchCriterionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchCriterionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_OBJECT_CLASS(&mut self, OBJECT_CLASS: cqrLaunchObjectClass) {
+    self.fbb_.push_slot::<cqrLaunchObjectClass>(CQRLaunchCriterion::VT_OBJECT_CLASS, OBJECT_CLASS, cqrLaunchObjectClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_SCREENING(&mut self, SCREENING: cqrLaunchScreening) {
+    self.fbb_.push_slot::<cqrLaunchScreening>(CQRLaunchCriterion::VT_SCREENING, SCREENING, cqrLaunchScreening::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_RADIUS_M(&mut self, RADIUS_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchCriterion::VT_RADIUS_M, RADIUS_M, 0.0);
+  }
+  #[inline]
+  pub fn add_RADIAL_M(&mut self, RADIAL_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchCriterion::VT_RADIAL_M, RADIAL_M, 0.0);
+  }
+  #[inline]
+  pub fn add_IN_TRACK_M(&mut self, IN_TRACK_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchCriterion::VT_IN_TRACK_M, IN_TRACK_M, 0.0);
+  }
+  #[inline]
+  pub fn add_CROSS_TRACK_M(&mut self, CROSS_TRACK_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchCriterion::VT_CROSS_TRACK_M, CROSS_TRACK_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_PROBABILITY(&mut self, MAX_PROBABILITY: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchCriterion::VT_MAX_PROBABILITY, MAX_PROBABILITY, 0.0);
+  }
+  #[inline]
+  pub fn add_ALGORITHM(&mut self, ALGORITHM: cqrProbabilityAlgorithm) {
+    self.fbb_.push_slot::<cqrProbabilityAlgorithm>(CQRLaunchCriterion::VT_ALGORITHM, ALGORITHM, cqrProbabilityAlgorithm::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchCriterionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchCriterionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchCriterion<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchCriterion<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchCriterion");
+      ds.field("OBJECT_CLASS", &self.OBJECT_CLASS());
+      ds.field("SCREENING", &self.SCREENING());
+      ds.field("RADIUS_M", &self.RADIUS_M());
+      ds.field("RADIAL_M", &self.RADIAL_M());
+      ds.field("IN_TRACK_M", &self.IN_TRACK_M());
+      ds.field("CROSS_TRACK_M", &self.CROSS_TRACK_M());
+      ds.field("MAX_PROBABILITY", &self.MAX_PROBABILITY());
+      ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchCriterionT {
+  pub OBJECT_CLASS: cqrLaunchObjectClass,
+  pub SCREENING: cqrLaunchScreening,
+  pub RADIUS_M: f64,
+  pub RADIAL_M: f64,
+  pub IN_TRACK_M: f64,
+  pub CROSS_TRACK_M: f64,
+  pub MAX_PROBABILITY: f64,
+  pub ALGORITHM: cqrProbabilityAlgorithm,
+}
+impl Default for CQRLaunchCriterionT {
+  fn default() -> Self {
+    Self {
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      SCREENING: cqrLaunchScreening::UNSPECIFIED,
+      RADIUS_M: 0.0,
+      RADIAL_M: 0.0,
+      IN_TRACK_M: 0.0,
+      CROSS_TRACK_M: 0.0,
+      MAX_PROBABILITY: 0.0,
+      ALGORITHM: cqrProbabilityAlgorithm::UNSPECIFIED,
+    }
+  }
+}
+impl CQRLaunchCriterionT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchCriterion<'b>> {
+    let OBJECT_CLASS = self.OBJECT_CLASS;
+    let SCREENING = self.SCREENING;
+    let RADIUS_M = self.RADIUS_M;
+    let RADIAL_M = self.RADIAL_M;
+    let IN_TRACK_M = self.IN_TRACK_M;
+    let CROSS_TRACK_M = self.CROSS_TRACK_M;
+    let MAX_PROBABILITY = self.MAX_PROBABILITY;
+    let ALGORITHM = self.ALGORITHM;
+    CQRLaunchCriterion::create(_fbb, &CQRLaunchCriterionArgs{
+      OBJECT_CLASS,
+      SCREENING,
+      RADIUS_M,
+      RADIAL_M,
+      IN_TRACK_M,
+      CROSS_TRACK_M,
+      MAX_PROBABILITY,
+      ALGORITHM,
+    })
+  }
+}
+pub enum CQRLaunchSegmentOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.
+pub struct CQRLaunchSegment<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchSegment<'a> {
+  type Inner = CQRLaunchSegment<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchSegment<'a> {
+  pub const VT_SEGMENT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SEGMENT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TRAJECTORY: ::flatbuffers::VOffsetT = 8;
+  pub const VT_RADIUS_M: ::flatbuffers::VOffsetT = 10;
+  pub const VT_RADAR_CROSS_SECTION_M2: ::flatbuffers::VOffsetT = 12;
+  pub const VT_HAS_RADAR_CROSS_SECTION_M2: ::flatbuffers::VOffsetT = 14;
+  pub const VT_VALID_FROM: ::flatbuffers::VOffsetT = 16;
+  pub const VT_VALID_UNTIL: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchSegment { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchSegmentArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchSegment<'bldr>> {
+    let mut builder = CQRLaunchSegmentBuilder::new(_fbb);
+    builder.add_RADAR_CROSS_SECTION_M2(args.RADAR_CROSS_SECTION_M2);
+    builder.add_RADIUS_M(args.RADIUS_M);
+    if let Some(x) = args.VALID_UNTIL { builder.add_VALID_UNTIL(x); }
+    if let Some(x) = args.VALID_FROM { builder.add_VALID_FROM(x); }
+    if let Some(x) = args.TRAJECTORY { builder.add_TRAJECTORY(x); }
+    if let Some(x) = args.SEGMENT_NAME { builder.add_SEGMENT_NAME(x); }
+    if let Some(x) = args.SEGMENT_ID { builder.add_SEGMENT_ID(x); }
+    builder.add_HAS_RADAR_CROSS_SECTION_M2(args.HAS_RADAR_CROSS_SECTION_M2);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchSegmentT {
+    let SEGMENT_ID = {
+      let x = self.SEGMENT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let SEGMENT_NAME = self.SEGMENT_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRAJECTORY = {
+      let x = self.TRAJECTORY();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let RADIUS_M = self.RADIUS_M();
+    let RADAR_CROSS_SECTION_M2 = self.RADAR_CROSS_SECTION_M2();
+    let HAS_RADAR_CROSS_SECTION_M2 = self.HAS_RADAR_CROSS_SECTION_M2();
+    let VALID_FROM = self.VALID_FROM().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let VALID_UNTIL = self.VALID_UNTIL().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    CQRLaunchSegmentT {
+      SEGMENT_ID,
+      SEGMENT_NAME,
+      TRAJECTORY,
+      RADIUS_M,
+      RADAR_CROSS_SECTION_M2,
+      HAS_RADAR_CROSS_SECTION_M2,
+      VALID_FROM,
+      VALID_UNTIL,
+    }
+  }
+
+  #[inline]
+  pub fn SEGMENT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchSegment::VT_SEGMENT_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn SEGMENT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchSegment::VT_SEGMENT_NAME, None)}
+  }
+  /// Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines.
+  #[inline]
+  pub fn TRAJECTORY(&self) -> OEM<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OEM>>(CQRLaunchSegment::VT_TRAJECTORY, None).unwrap()}
+  }
+  /// Hard-body radius, metres.
+  #[inline]
+  pub fn RADIUS_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchSegment::VT_RADIUS_M, Some(5.0)).unwrap()}
+  }
+  /// Radar cross section, square metres.
+  #[inline]
+  pub fn RADAR_CROSS_SECTION_M2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchSegment::VT_RADAR_CROSS_SECTION_M2, Some(0.0)).unwrap()}
+  }
+  /// True when RADAR_CROSS_SECTION_M2 carries a value; false means absent.
+  #[inline]
+  pub fn HAS_RADAR_CROSS_SECTION_M2(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CQRLaunchSegment::VT_HAS_RADAR_CROSS_SECTION_M2, Some(false)).unwrap()}
+  }
+  /// Liftoff times this trajectory applies to, half-open [VALID_FROM,
+  /// VALID_UNTIL). Absent bounds select the whole window. Windows whose
+  /// trajectory changes (for example a varying azimuth) supply one segment
+  /// per span.
+  #[inline]
+  pub fn VALID_FROM(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchSegment::VT_VALID_FROM, None)}
+  }
+  #[inline]
+  pub fn VALID_UNTIL(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchSegment::VT_VALID_UNTIL, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchSegment<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SEGMENT_ID", Self::VT_SEGMENT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SEGMENT_NAME", Self::VT_SEGMENT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<OEM>>("TRAJECTORY", Self::VT_TRAJECTORY, true)?
+     .visit_field::<f64>("RADIUS_M", Self::VT_RADIUS_M, false)?
+     .visit_field::<f64>("RADAR_CROSS_SECTION_M2", Self::VT_RADAR_CROSS_SECTION_M2, false)?
+     .visit_field::<bool>("HAS_RADAR_CROSS_SECTION_M2", Self::VT_HAS_RADAR_CROSS_SECTION_M2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("VALID_FROM", Self::VT_VALID_FROM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("VALID_UNTIL", Self::VT_VALID_UNTIL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchSegmentArgs<'a> {
+    pub SEGMENT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SEGMENT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJECTORY: Option<::flatbuffers::WIPOffset<OEM<'a>>>,
+    pub RADIUS_M: f64,
+    pub RADAR_CROSS_SECTION_M2: f64,
+    pub HAS_RADAR_CROSS_SECTION_M2: bool,
+    pub VALID_FROM: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub VALID_UNTIL: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+}
+impl<'a> Default for CQRLaunchSegmentArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchSegmentArgs {
+      SEGMENT_ID: None, // required field
+      SEGMENT_NAME: None,
+      TRAJECTORY: None, // required field
+      RADIUS_M: 5.0,
+      RADAR_CROSS_SECTION_M2: 0.0,
+      HAS_RADAR_CROSS_SECTION_M2: false,
+      VALID_FROM: None,
+      VALID_UNTIL: None,
+    }
+  }
+}
+
+pub struct CQRLaunchSegmentBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchSegmentBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SEGMENT_ID(&mut self, SEGMENT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchSegment::VT_SEGMENT_ID, SEGMENT_ID);
+  }
+  #[inline]
+  pub fn add_SEGMENT_NAME(&mut self, SEGMENT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchSegment::VT_SEGMENT_NAME, SEGMENT_NAME);
+  }
+  #[inline]
+  pub fn add_TRAJECTORY(&mut self, TRAJECTORY: ::flatbuffers::WIPOffset<OEM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OEM>>(CQRLaunchSegment::VT_TRAJECTORY, TRAJECTORY);
+  }
+  #[inline]
+  pub fn add_RADIUS_M(&mut self, RADIUS_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchSegment::VT_RADIUS_M, RADIUS_M, 5.0);
+  }
+  #[inline]
+  pub fn add_RADAR_CROSS_SECTION_M2(&mut self, RADAR_CROSS_SECTION_M2: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchSegment::VT_RADAR_CROSS_SECTION_M2, RADAR_CROSS_SECTION_M2, 0.0);
+  }
+  #[inline]
+  pub fn add_HAS_RADAR_CROSS_SECTION_M2(&mut self, HAS_RADAR_CROSS_SECTION_M2: bool) {
+    self.fbb_.push_slot::<bool>(CQRLaunchSegment::VT_HAS_RADAR_CROSS_SECTION_M2, HAS_RADAR_CROSS_SECTION_M2, false);
+  }
+  #[inline]
+  pub fn add_VALID_FROM(&mut self, VALID_FROM: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchSegment::VT_VALID_FROM, VALID_FROM);
+  }
+  #[inline]
+  pub fn add_VALID_UNTIL(&mut self, VALID_UNTIL: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchSegment::VT_VALID_UNTIL, VALID_UNTIL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchSegmentBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchSegmentBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchSegment<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, CQRLaunchSegment::VT_SEGMENT_ID,"SEGMENT_ID");
+    self.fbb_.required(o, CQRLaunchSegment::VT_TRAJECTORY,"TRAJECTORY");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchSegment<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchSegment");
+      ds.field("SEGMENT_ID", &self.SEGMENT_ID());
+      ds.field("SEGMENT_NAME", &self.SEGMENT_NAME());
+      ds.field("TRAJECTORY", &self.TRAJECTORY());
+      ds.field("RADIUS_M", &self.RADIUS_M());
+      ds.field("RADAR_CROSS_SECTION_M2", &self.RADAR_CROSS_SECTION_M2());
+      ds.field("HAS_RADAR_CROSS_SECTION_M2", &self.HAS_RADAR_CROSS_SECTION_M2());
+      ds.field("VALID_FROM", &self.VALID_FROM());
+      ds.field("VALID_UNTIL", &self.VALID_UNTIL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchSegmentT {
+  pub SEGMENT_ID: alloc::string::String,
+  pub SEGMENT_NAME: Option<alloc::string::String>,
+  pub TRAJECTORY: alloc::boxed::Box<OEMT>,
+  pub RADIUS_M: f64,
+  pub RADAR_CROSS_SECTION_M2: f64,
+  pub HAS_RADAR_CROSS_SECTION_M2: bool,
+  pub VALID_FROM: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub VALID_UNTIL: Option<alloc::boxed::Box<TIMInstantT>>,
+}
+impl Default for CQRLaunchSegmentT {
+  fn default() -> Self {
+    Self {
+      SEGMENT_ID: alloc::string::ToString::to_string(""),
+      SEGMENT_NAME: None,
+      TRAJECTORY: Default::default(),
+      RADIUS_M: 5.0,
+      RADAR_CROSS_SECTION_M2: 0.0,
+      HAS_RADAR_CROSS_SECTION_M2: false,
+      VALID_FROM: None,
+      VALID_UNTIL: None,
+    }
+  }
+}
+impl CQRLaunchSegmentT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchSegment<'b>> {
+    let SEGMENT_ID = Some({
+      let x = &self.SEGMENT_ID;
+      _fbb.create_string(x)
+    });
+    let SEGMENT_NAME = self.SEGMENT_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRAJECTORY = Some({
+      let x = &self.TRAJECTORY;
+      x.pack(_fbb)
+    });
+    let RADIUS_M = self.RADIUS_M;
+    let RADAR_CROSS_SECTION_M2 = self.RADAR_CROSS_SECTION_M2;
+    let HAS_RADAR_CROSS_SECTION_M2 = self.HAS_RADAR_CROSS_SECTION_M2;
+    let VALID_FROM = self.VALID_FROM.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let VALID_UNTIL = self.VALID_UNTIL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CQRLaunchSegment::create(_fbb, &CQRLaunchSegmentArgs{
+      SEGMENT_ID,
+      SEGMENT_NAME,
+      TRAJECTORY,
+      RADIUS_M,
+      RADAR_CROSS_SECTION_M2,
+      HAS_RADAR_CROSS_SECTION_M2,
+      VALID_FROM,
+      VALID_UNTIL,
+    })
+  }
+}
+pub enum CQRLaunchObjectOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One orbiting object to screen against.
+pub struct CQRLaunchObject<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchObject<'a> {
+  type Inner = CQRLaunchObject<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchObject<'a> {
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT_CLASS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_RENDEZVOUS_COORDINATED: ::flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchObject { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchObjectArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchObject<'bldr>> {
+    let mut builder = CQRLaunchObjectBuilder::new(_fbb);
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    builder.add_RENDEZVOUS_COORDINATED(args.RENDEZVOUS_COORDINATED);
+    builder.add_OBJECT_CLASS(args.OBJECT_CLASS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchObjectT {
+    let SOURCE = {
+      let x = self.SOURCE();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let OBJECT_CLASS = self.OBJECT_CLASS();
+    let RENDEZVOUS_COORDINATED = self.RENDEZVOUS_COORDINATED();
+    CQRLaunchObjectT {
+      SOURCE,
+      OBJECT_CLASS,
+      RENDEZVOUS_COORDINATED,
+    }
+  }
+
+  /// Ephemeris in EVALUATION_FRAME covering the screened absolute times.
+  #[inline]
+  pub fn SOURCE(&self) -> CQRObjectSource<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CQRObjectSource>>(CQRLaunchObject::VT_SOURCE, None).unwrap()}
+  }
+  #[inline]
+  pub fn OBJECT_CLASS(&self) -> cqrLaunchObjectClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<cqrLaunchObjectClass>(CQRLaunchObject::VT_OBJECT_CLASS, Some(cqrLaunchObjectClass::UNSPECIFIED)).unwrap()}
+  }
+  /// A pre-coordinated rendezvous or close approach: reported, never a
+  /// window closure.
+  #[inline]
+  pub fn RENDEZVOUS_COORDINATED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CQRLaunchObject::VT_RENDEZVOUS_COORDINATED, Some(false)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchObject<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CQRObjectSource>>("SOURCE", Self::VT_SOURCE, true)?
+     .visit_field::<cqrLaunchObjectClass>("OBJECT_CLASS", Self::VT_OBJECT_CLASS, false)?
+     .visit_field::<bool>("RENDEZVOUS_COORDINATED", Self::VT_RENDEZVOUS_COORDINATED, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchObjectArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<CQRObjectSource<'a>>>,
+    pub OBJECT_CLASS: cqrLaunchObjectClass,
+    pub RENDEZVOUS_COORDINATED: bool,
+}
+impl<'a> Default for CQRLaunchObjectArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchObjectArgs {
+      SOURCE: None, // required field
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      RENDEZVOUS_COORDINATED: false,
+    }
+  }
+}
+
+pub struct CQRLaunchObjectBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchObjectBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<CQRObjectSource<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CQRObjectSource>>(CQRLaunchObject::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_OBJECT_CLASS(&mut self, OBJECT_CLASS: cqrLaunchObjectClass) {
+    self.fbb_.push_slot::<cqrLaunchObjectClass>(CQRLaunchObject::VT_OBJECT_CLASS, OBJECT_CLASS, cqrLaunchObjectClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_RENDEZVOUS_COORDINATED(&mut self, RENDEZVOUS_COORDINATED: bool) {
+    self.fbb_.push_slot::<bool>(CQRLaunchObject::VT_RENDEZVOUS_COORDINATED, RENDEZVOUS_COORDINATED, false);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchObjectBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchObjectBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchObject<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, CQRLaunchObject::VT_SOURCE,"SOURCE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchObject<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchObject");
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("OBJECT_CLASS", &self.OBJECT_CLASS());
+      ds.field("RENDEZVOUS_COORDINATED", &self.RENDEZVOUS_COORDINATED());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchObjectT {
+  pub SOURCE: alloc::boxed::Box<CQRObjectSourceT>,
+  pub OBJECT_CLASS: cqrLaunchObjectClass,
+  pub RENDEZVOUS_COORDINATED: bool,
+}
+impl Default for CQRLaunchObjectT {
+  fn default() -> Self {
+    Self {
+      SOURCE: Default::default(),
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      RENDEZVOUS_COORDINATED: false,
+    }
+  }
+}
+impl CQRLaunchObjectT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchObject<'b>> {
+    let SOURCE = Some({
+      let x = &self.SOURCE;
+      x.pack(_fbb)
+    });
+    let OBJECT_CLASS = self.OBJECT_CLASS;
+    let RENDEZVOUS_COORDINATED = self.RENDEZVOUS_COORDINATED;
+    CQRLaunchObject::create(_fbb, &CQRLaunchObjectArgs{
+      SOURCE,
+      OBJECT_CLASS,
+      RENDEZVOUS_COORDINATED,
+    })
+  }
+}
+pub enum CQRLaunchRequestOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct CQRLaunchRequest<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchRequest<'a> {
+  type Inner = CQRLaunchRequest<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchRequest<'a> {
+  pub const VT_MISSION_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NOMINAL_LIFTOFF: ::flatbuffers::VOffsetT = 6;
+  pub const VT_WINDOW_OPEN: ::flatbuffers::VOffsetT = 8;
+  pub const VT_WINDOW_CLOSE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LIFTOFF_STEP_SECONDS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_SEGMENTS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_OBJECTS: ::flatbuffers::VOffsetT = 16;
+  pub const VT_CRITERIA: ::flatbuffers::VOffsetT = 18;
+  pub const VT_MINIMUM_ALTITUDE_M: ::flatbuffers::VOffsetT = 20;
+  pub const VT_SCREEN_SECONDS_AFTER_LIFTOFF: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CLOSURE_PAD_SECONDS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_REPORT_RATIO: ::flatbuffers::VOffsetT = 26;
+  pub const VT_EVALUATION_FRAME: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchRequest { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchRequestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchRequest<'bldr>> {
+    let mut builder = CQRLaunchRequestBuilder::new(_fbb);
+    builder.add_REPORT_RATIO(args.REPORT_RATIO);
+    builder.add_CLOSURE_PAD_SECONDS(args.CLOSURE_PAD_SECONDS);
+    builder.add_SCREEN_SECONDS_AFTER_LIFTOFF(args.SCREEN_SECONDS_AFTER_LIFTOFF);
+    builder.add_MINIMUM_ALTITUDE_M(args.MINIMUM_ALTITUDE_M);
+    builder.add_LIFTOFF_STEP_SECONDS(args.LIFTOFF_STEP_SECONDS);
+    if let Some(x) = args.EVALUATION_FRAME { builder.add_EVALUATION_FRAME(x); }
+    if let Some(x) = args.CRITERIA { builder.add_CRITERIA(x); }
+    if let Some(x) = args.OBJECTS { builder.add_OBJECTS(x); }
+    if let Some(x) = args.SEGMENTS { builder.add_SEGMENTS(x); }
+    if let Some(x) = args.WINDOW_CLOSE { builder.add_WINDOW_CLOSE(x); }
+    if let Some(x) = args.WINDOW_OPEN { builder.add_WINDOW_OPEN(x); }
+    if let Some(x) = args.NOMINAL_LIFTOFF { builder.add_NOMINAL_LIFTOFF(x); }
+    if let Some(x) = args.MISSION_NAME { builder.add_MISSION_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchRequestT {
+    let MISSION_NAME = self.MISSION_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NOMINAL_LIFTOFF = {
+      let x = self.NOMINAL_LIFTOFF();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let WINDOW_OPEN = {
+      let x = self.WINDOW_OPEN();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let WINDOW_CLOSE = {
+      let x = self.WINDOW_CLOSE();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let LIFTOFF_STEP_SECONDS = self.LIFTOFF_STEP_SECONDS();
+    let SEGMENTS = {
+      let x = self.SEGMENTS();
+      x.iter().map(|t| t.unpack()).collect()
+    };
+    let OBJECTS = {
+      let x = self.OBJECTS();
+      x.iter().map(|t| t.unpack()).collect()
+    };
+    let CRITERIA = {
+      let x = self.CRITERIA();
+      x.iter().map(|t| t.unpack()).collect()
+    };
+    let MINIMUM_ALTITUDE_M = self.MINIMUM_ALTITUDE_M();
+    let SCREEN_SECONDS_AFTER_LIFTOFF = self.SCREEN_SECONDS_AFTER_LIFTOFF();
+    let CLOSURE_PAD_SECONDS = self.CLOSURE_PAD_SECONDS();
+    let REPORT_RATIO = self.REPORT_RATIO();
+    let EVALUATION_FRAME = {
+      let x = self.EVALUATION_FRAME();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    CQRLaunchRequestT {
+      MISSION_NAME,
+      NOMINAL_LIFTOFF,
+      WINDOW_OPEN,
+      WINDOW_CLOSE,
+      LIFTOFF_STEP_SECONDS,
+      SEGMENTS,
+      OBJECTS,
+      CRITERIA,
+      MINIMUM_ALTITUDE_M,
+      SCREEN_SECONDS_AFTER_LIFTOFF,
+      CLOSURE_PAD_SECONDS,
+      REPORT_RATIO,
+      EVALUATION_FRAME,
+    }
+  }
+
+  #[inline]
+  pub fn MISSION_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchRequest::VT_MISSION_NAME, None)}
+  }
+  /// Liftoff time the segment trajectories were produced for.
+  #[inline]
+  pub fn NOMINAL_LIFTOFF(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchRequest::VT_NOMINAL_LIFTOFF, None).unwrap()}
+  }
+  /// Liftoff window, inclusive of both ends.
+  #[inline]
+  pub fn WINDOW_OPEN(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchRequest::VT_WINDOW_OPEN, None).unwrap()}
+  }
+  #[inline]
+  pub fn WINDOW_CLOSE(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchRequest::VT_WINDOW_CLOSE, None).unwrap()}
+  }
+  /// Spacing of evaluated liftoff times, seconds.
+  #[inline]
+  pub fn LIFTOFF_STEP_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchRequest::VT_LIFTOFF_STEP_SECONDS, Some(1.0)).unwrap()}
+  }
+  #[inline]
+  pub fn SEGMENTS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchSegment<'a>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchSegment>>>>(CQRLaunchRequest::VT_SEGMENTS, None).unwrap()}
+  }
+  #[inline]
+  pub fn OBJECTS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchObject<'a>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchObject>>>>(CQRLaunchRequest::VT_OBJECTS, None).unwrap()}
+  }
+  /// One criterion per object class present in OBJECTS.
+  #[inline]
+  pub fn CRITERIA(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchCriterion<'a>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchCriterion>>>>(CQRLaunchRequest::VT_CRITERIA, None).unwrap()}
+  }
+  /// Segment states below this height above the reference ellipsoid are not
+  /// screened, metres.
+  #[inline]
+  pub fn MINIMUM_ALTITUDE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchRequest::VT_MINIMUM_ALTITUDE_M, Some(150000.0)).unwrap()}
+  }
+  /// Screening ends this long after liftoff, seconds, or earlier where a
+  /// trajectory ends.
+  #[inline]
+  pub fn SCREEN_SECONDS_AFTER_LIFTOFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchRequest::VT_SCREEN_SECONDS_AFTER_LIFTOFF, Some(10800.0)).unwrap()}
+  }
+  /// Time added before and after every closure for vehicle performance and
+  /// timing uncertainty, seconds.
+  #[inline]
+  pub fn CLOSURE_PAD_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchRequest::VT_CLOSURE_PAD_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// Report approaches whose criterion ratio is below this value; 1 reports
+  /// violations only.
+  #[inline]
+  pub fn REPORT_RATIO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchRequest::VT_REPORT_RATIO, Some(1.0)).unwrap()}
+  }
+  /// Earth-fixed frame shared by every trajectory and ephemeris.
+  #[inline]
+  pub fn EVALUATION_FRAME(&self) -> RFMCoordinateSystem<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>(CQRLaunchRequest::VT_EVALUATION_FRAME, None).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchRequest<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MISSION_NAME", Self::VT_MISSION_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("NOMINAL_LIFTOFF", Self::VT_NOMINAL_LIFTOFF, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("WINDOW_OPEN", Self::VT_WINDOW_OPEN, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("WINDOW_CLOSE", Self::VT_WINDOW_CLOSE, true)?
+     .visit_field::<f64>("LIFTOFF_STEP_SECONDS", Self::VT_LIFTOFF_STEP_SECONDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRLaunchSegment>>>>("SEGMENTS", Self::VT_SEGMENTS, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRLaunchObject>>>>("OBJECTS", Self::VT_OBJECTS, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRLaunchCriterion>>>>("CRITERIA", Self::VT_CRITERIA, true)?
+     .visit_field::<f64>("MINIMUM_ALTITUDE_M", Self::VT_MINIMUM_ALTITUDE_M, false)?
+     .visit_field::<f64>("SCREEN_SECONDS_AFTER_LIFTOFF", Self::VT_SCREEN_SECONDS_AFTER_LIFTOFF, false)?
+     .visit_field::<f64>("CLOSURE_PAD_SECONDS", Self::VT_CLOSURE_PAD_SECONDS, false)?
+     .visit_field::<f64>("REPORT_RATIO", Self::VT_REPORT_RATIO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>("EVALUATION_FRAME", Self::VT_EVALUATION_FRAME, true)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchRequestArgs<'a> {
+    pub MISSION_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NOMINAL_LIFTOFF: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub WINDOW_OPEN: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub WINDOW_CLOSE: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub LIFTOFF_STEP_SECONDS: f64,
+    pub SEGMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchSegment<'a>>>>>,
+    pub OBJECTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchObject<'a>>>>>,
+    pub CRITERIA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchCriterion<'a>>>>>,
+    pub MINIMUM_ALTITUDE_M: f64,
+    pub SCREEN_SECONDS_AFTER_LIFTOFF: f64,
+    pub CLOSURE_PAD_SECONDS: f64,
+    pub REPORT_RATIO: f64,
+    pub EVALUATION_FRAME: Option<::flatbuffers::WIPOffset<RFMCoordinateSystem<'a>>>,
+}
+impl<'a> Default for CQRLaunchRequestArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchRequestArgs {
+      MISSION_NAME: None,
+      NOMINAL_LIFTOFF: None, // required field
+      WINDOW_OPEN: None, // required field
+      WINDOW_CLOSE: None, // required field
+      LIFTOFF_STEP_SECONDS: 1.0,
+      SEGMENTS: None, // required field
+      OBJECTS: None, // required field
+      CRITERIA: None, // required field
+      MINIMUM_ALTITUDE_M: 150000.0,
+      SCREEN_SECONDS_AFTER_LIFTOFF: 10800.0,
+      CLOSURE_PAD_SECONDS: 0.0,
+      REPORT_RATIO: 1.0,
+      EVALUATION_FRAME: None, // required field
+    }
+  }
+}
+
+pub struct CQRLaunchRequestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchRequestBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MISSION_NAME(&mut self, MISSION_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchRequest::VT_MISSION_NAME, MISSION_NAME);
+  }
+  #[inline]
+  pub fn add_NOMINAL_LIFTOFF(&mut self, NOMINAL_LIFTOFF: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchRequest::VT_NOMINAL_LIFTOFF, NOMINAL_LIFTOFF);
+  }
+  #[inline]
+  pub fn add_WINDOW_OPEN(&mut self, WINDOW_OPEN: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchRequest::VT_WINDOW_OPEN, WINDOW_OPEN);
+  }
+  #[inline]
+  pub fn add_WINDOW_CLOSE(&mut self, WINDOW_CLOSE: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchRequest::VT_WINDOW_CLOSE, WINDOW_CLOSE);
+  }
+  #[inline]
+  pub fn add_LIFTOFF_STEP_SECONDS(&mut self, LIFTOFF_STEP_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchRequest::VT_LIFTOFF_STEP_SECONDS, LIFTOFF_STEP_SECONDS, 1.0);
+  }
+  #[inline]
+  pub fn add_SEGMENTS(&mut self, SEGMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRLaunchSegment<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchRequest::VT_SEGMENTS, SEGMENTS);
+  }
+  #[inline]
+  pub fn add_OBJECTS(&mut self, OBJECTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRLaunchObject<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchRequest::VT_OBJECTS, OBJECTS);
+  }
+  #[inline]
+  pub fn add_CRITERIA(&mut self, CRITERIA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRLaunchCriterion<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchRequest::VT_CRITERIA, CRITERIA);
+  }
+  #[inline]
+  pub fn add_MINIMUM_ALTITUDE_M(&mut self, MINIMUM_ALTITUDE_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchRequest::VT_MINIMUM_ALTITUDE_M, MINIMUM_ALTITUDE_M, 150000.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_SECONDS_AFTER_LIFTOFF(&mut self, SCREEN_SECONDS_AFTER_LIFTOFF: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchRequest::VT_SCREEN_SECONDS_AFTER_LIFTOFF, SCREEN_SECONDS_AFTER_LIFTOFF, 10800.0);
+  }
+  #[inline]
+  pub fn add_CLOSURE_PAD_SECONDS(&mut self, CLOSURE_PAD_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchRequest::VT_CLOSURE_PAD_SECONDS, CLOSURE_PAD_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_REPORT_RATIO(&mut self, REPORT_RATIO: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchRequest::VT_REPORT_RATIO, REPORT_RATIO, 1.0);
+  }
+  #[inline]
+  pub fn add_EVALUATION_FRAME(&mut self, EVALUATION_FRAME: ::flatbuffers::WIPOffset<RFMCoordinateSystem<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMCoordinateSystem>>(CQRLaunchRequest::VT_EVALUATION_FRAME, EVALUATION_FRAME);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchRequestBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchRequestBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchRequest<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, CQRLaunchRequest::VT_NOMINAL_LIFTOFF,"NOMINAL_LIFTOFF");
+    self.fbb_.required(o, CQRLaunchRequest::VT_WINDOW_OPEN,"WINDOW_OPEN");
+    self.fbb_.required(o, CQRLaunchRequest::VT_WINDOW_CLOSE,"WINDOW_CLOSE");
+    self.fbb_.required(o, CQRLaunchRequest::VT_SEGMENTS,"SEGMENTS");
+    self.fbb_.required(o, CQRLaunchRequest::VT_OBJECTS,"OBJECTS");
+    self.fbb_.required(o, CQRLaunchRequest::VT_CRITERIA,"CRITERIA");
+    self.fbb_.required(o, CQRLaunchRequest::VT_EVALUATION_FRAME,"EVALUATION_FRAME");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchRequest<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchRequest");
+      ds.field("MISSION_NAME", &self.MISSION_NAME());
+      ds.field("NOMINAL_LIFTOFF", &self.NOMINAL_LIFTOFF());
+      ds.field("WINDOW_OPEN", &self.WINDOW_OPEN());
+      ds.field("WINDOW_CLOSE", &self.WINDOW_CLOSE());
+      ds.field("LIFTOFF_STEP_SECONDS", &self.LIFTOFF_STEP_SECONDS());
+      ds.field("SEGMENTS", &self.SEGMENTS());
+      ds.field("OBJECTS", &self.OBJECTS());
+      ds.field("CRITERIA", &self.CRITERIA());
+      ds.field("MINIMUM_ALTITUDE_M", &self.MINIMUM_ALTITUDE_M());
+      ds.field("SCREEN_SECONDS_AFTER_LIFTOFF", &self.SCREEN_SECONDS_AFTER_LIFTOFF());
+      ds.field("CLOSURE_PAD_SECONDS", &self.CLOSURE_PAD_SECONDS());
+      ds.field("REPORT_RATIO", &self.REPORT_RATIO());
+      ds.field("EVALUATION_FRAME", &self.EVALUATION_FRAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchRequestT {
+  pub MISSION_NAME: Option<alloc::string::String>,
+  pub NOMINAL_LIFTOFF: alloc::boxed::Box<TIMInstantT>,
+  pub WINDOW_OPEN: alloc::boxed::Box<TIMInstantT>,
+  pub WINDOW_CLOSE: alloc::boxed::Box<TIMInstantT>,
+  pub LIFTOFF_STEP_SECONDS: f64,
+  pub SEGMENTS: alloc::vec::Vec<CQRLaunchSegmentT>,
+  pub OBJECTS: alloc::vec::Vec<CQRLaunchObjectT>,
+  pub CRITERIA: alloc::vec::Vec<CQRLaunchCriterionT>,
+  pub MINIMUM_ALTITUDE_M: f64,
+  pub SCREEN_SECONDS_AFTER_LIFTOFF: f64,
+  pub CLOSURE_PAD_SECONDS: f64,
+  pub REPORT_RATIO: f64,
+  pub EVALUATION_FRAME: alloc::boxed::Box<RFMCoordinateSystemT>,
+}
+impl Default for CQRLaunchRequestT {
+  fn default() -> Self {
+    Self {
+      MISSION_NAME: None,
+      NOMINAL_LIFTOFF: Default::default(),
+      WINDOW_OPEN: Default::default(),
+      WINDOW_CLOSE: Default::default(),
+      LIFTOFF_STEP_SECONDS: 1.0,
+      SEGMENTS: Default::default(),
+      OBJECTS: Default::default(),
+      CRITERIA: Default::default(),
+      MINIMUM_ALTITUDE_M: 150000.0,
+      SCREEN_SECONDS_AFTER_LIFTOFF: 10800.0,
+      CLOSURE_PAD_SECONDS: 0.0,
+      REPORT_RATIO: 1.0,
+      EVALUATION_FRAME: Default::default(),
+    }
+  }
+}
+impl CQRLaunchRequestT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchRequest<'b>> {
+    let MISSION_NAME = self.MISSION_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NOMINAL_LIFTOFF = Some({
+      let x = &self.NOMINAL_LIFTOFF;
+      x.pack(_fbb)
+    });
+    let WINDOW_OPEN = Some({
+      let x = &self.WINDOW_OPEN;
+      x.pack(_fbb)
+    });
+    let WINDOW_CLOSE = Some({
+      let x = &self.WINDOW_CLOSE;
+      x.pack(_fbb)
+    });
+    let LIFTOFF_STEP_SECONDS = self.LIFTOFF_STEP_SECONDS;
+    let SEGMENTS = Some({
+      let x = &self.SEGMENTS;
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let OBJECTS = Some({
+      let x = &self.OBJECTS;
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let CRITERIA = Some({
+      let x = &self.CRITERIA;
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MINIMUM_ALTITUDE_M = self.MINIMUM_ALTITUDE_M;
+    let SCREEN_SECONDS_AFTER_LIFTOFF = self.SCREEN_SECONDS_AFTER_LIFTOFF;
+    let CLOSURE_PAD_SECONDS = self.CLOSURE_PAD_SECONDS;
+    let REPORT_RATIO = self.REPORT_RATIO;
+    let EVALUATION_FRAME = Some({
+      let x = &self.EVALUATION_FRAME;
+      x.pack(_fbb)
+    });
+    CQRLaunchRequest::create(_fbb, &CQRLaunchRequestArgs{
+      MISSION_NAME,
+      NOMINAL_LIFTOFF,
+      WINDOW_OPEN,
+      WINDOW_CLOSE,
+      LIFTOFF_STEP_SECONDS,
+      SEGMENTS,
+      OBJECTS,
+      CRITERIA,
+      MINIMUM_ALTITUDE_M,
+      SCREEN_SECONDS_AFTER_LIFTOFF,
+      CLOSURE_PAD_SECONDS,
+      REPORT_RATIO,
+      EVALUATION_FRAME,
+    })
+  }
+}
+pub enum CQRLaunchClosureOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Liftoff times that violate at least one criterion, half-open [START, END),
+/// widened by the liftoff step and CLOSURE_PAD_SECONDS and merged.
+pub struct CQRLaunchClosure<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchClosure<'a> {
+  type Inner = CQRLaunchClosure<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchClosure<'a> {
+  pub const VT_START: ::flatbuffers::VOffsetT = 4;
+  pub const VT_END: ::flatbuffers::VOffsetT = 6;
+  pub const VT_OBJECT_IDS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_SEGMENT_IDS: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchClosure { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchClosureArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchClosure<'bldr>> {
+    let mut builder = CQRLaunchClosureBuilder::new(_fbb);
+    if let Some(x) = args.SEGMENT_IDS { builder.add_SEGMENT_IDS(x); }
+    if let Some(x) = args.OBJECT_IDS { builder.add_OBJECT_IDS(x); }
+    if let Some(x) = args.END { builder.add_END(x); }
+    if let Some(x) = args.START { builder.add_START(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchClosureT {
+    let START = {
+      let x = self.START();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let END = {
+      let x = self.END();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let OBJECT_IDS = self.OBJECT_IDS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let SEGMENT_IDS = self.SEGMENT_IDS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    CQRLaunchClosureT {
+      START,
+      END,
+      OBJECT_IDS,
+      SEGMENT_IDS,
+    }
+  }
+
+  #[inline]
+  pub fn START(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchClosure::VT_START, None).unwrap()}
+  }
+  #[inline]
+  pub fn END(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchClosure::VT_END, None).unwrap()}
+  }
+  /// Orbiting objects that cause this closure.
+  #[inline]
+  pub fn OBJECT_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(CQRLaunchClosure::VT_OBJECT_IDS, None)}
+  }
+  /// Segments involved.
+  #[inline]
+  pub fn SEGMENT_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(CQRLaunchClosure::VT_SEGMENT_IDS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchClosure<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("START", Self::VT_START, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("END", Self::VT_END, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OBJECT_IDS", Self::VT_OBJECT_IDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SEGMENT_IDS", Self::VT_SEGMENT_IDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchClosureArgs<'a> {
+    pub START: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub END: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub OBJECT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SEGMENT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+impl<'a> Default for CQRLaunchClosureArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchClosureArgs {
+      START: None, // required field
+      END: None, // required field
+      OBJECT_IDS: None,
+      SEGMENT_IDS: None,
+    }
+  }
+}
+
+pub struct CQRLaunchClosureBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchClosureBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_START(&mut self, START: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchClosure::VT_START, START);
+  }
+  #[inline]
+  pub fn add_END(&mut self, END: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchClosure::VT_END, END);
+  }
+  #[inline]
+  pub fn add_OBJECT_IDS(&mut self, OBJECT_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchClosure::VT_OBJECT_IDS, OBJECT_IDS);
+  }
+  #[inline]
+  pub fn add_SEGMENT_IDS(&mut self, SEGMENT_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchClosure::VT_SEGMENT_IDS, SEGMENT_IDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchClosureBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchClosureBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchClosure<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, CQRLaunchClosure::VT_START,"START");
+    self.fbb_.required(o, CQRLaunchClosure::VT_END,"END");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchClosure<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchClosure");
+      ds.field("START", &self.START());
+      ds.field("END", &self.END());
+      ds.field("OBJECT_IDS", &self.OBJECT_IDS());
+      ds.field("SEGMENT_IDS", &self.SEGMENT_IDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchClosureT {
+  pub START: alloc::boxed::Box<TIMInstantT>,
+  pub END: alloc::boxed::Box<TIMInstantT>,
+  pub OBJECT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub SEGMENT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+impl Default for CQRLaunchClosureT {
+  fn default() -> Self {
+    Self {
+      START: Default::default(),
+      END: Default::default(),
+      OBJECT_IDS: None,
+      SEGMENT_IDS: None,
+    }
+  }
+}
+impl CQRLaunchClosureT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchClosure<'b>> {
+    let START = Some({
+      let x = &self.START;
+      x.pack(_fbb)
+    });
+    let END = Some({
+      let x = &self.END;
+      x.pack(_fbb)
+    });
+    let OBJECT_IDS = self.OBJECT_IDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let SEGMENT_IDS = self.SEGMENT_IDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    CQRLaunchClosure::create(_fbb, &CQRLaunchClosureArgs{
+      START,
+      END,
+      OBJECT_IDS,
+      SEGMENT_IDS,
+    })
+  }
+}
+pub enum CQRLaunchApproachOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Closest approach of one segment to one orbiting object for one liftoff
+/// time: the worst liftoff time of each contiguous run below REPORT_RATIO.
+pub struct CQRLaunchApproach<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchApproach<'a> {
+  type Inner = CQRLaunchApproach<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchApproach<'a> {
+  pub const VT_SEGMENT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_OBJECT_CLASS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_LIFTOFF: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TCA: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MISS_DISTANCE_M: ::flatbuffers::VOffsetT = 14;
+  pub const VT_RELATIVE_SPEED_M_S: ::flatbuffers::VOffsetT = 16;
+  pub const VT_RELATIVE_POSITION_RTN: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CRITERION_RATIO: ::flatbuffers::VOffsetT = 20;
+  pub const VT_VIOLATES: ::flatbuffers::VOffsetT = 22;
+  pub const VT_RENDEZVOUS_COORDINATED: ::flatbuffers::VOffsetT = 24;
+  pub const VT_RUN_START: ::flatbuffers::VOffsetT = 26;
+  pub const VT_RUN_END: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchApproach { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchApproachArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchApproach<'bldr>> {
+    let mut builder = CQRLaunchApproachBuilder::new(_fbb);
+    builder.add_CRITERION_RATIO(args.CRITERION_RATIO);
+    builder.add_RELATIVE_SPEED_M_S(args.RELATIVE_SPEED_M_S);
+    builder.add_MISS_DISTANCE_M(args.MISS_DISTANCE_M);
+    if let Some(x) = args.RUN_END { builder.add_RUN_END(x); }
+    if let Some(x) = args.RUN_START { builder.add_RUN_START(x); }
+    if let Some(x) = args.RELATIVE_POSITION_RTN { builder.add_RELATIVE_POSITION_RTN(x); }
+    if let Some(x) = args.TCA { builder.add_TCA(x); }
+    if let Some(x) = args.LIFTOFF { builder.add_LIFTOFF(x); }
+    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
+    if let Some(x) = args.SEGMENT_ID { builder.add_SEGMENT_ID(x); }
+    builder.add_RENDEZVOUS_COORDINATED(args.RENDEZVOUS_COORDINATED);
+    builder.add_VIOLATES(args.VIOLATES);
+    builder.add_OBJECT_CLASS(args.OBJECT_CLASS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchApproachT {
+    let SEGMENT_ID = {
+      let x = self.SEGMENT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let OBJECT_ID = {
+      let x = self.OBJECT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let OBJECT_CLASS = self.OBJECT_CLASS();
+    let LIFTOFF = {
+      let x = self.LIFTOFF();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let TCA = {
+      let x = self.TCA();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let MISS_DISTANCE_M = self.MISS_DISTANCE_M();
+    let RELATIVE_SPEED_M_S = self.RELATIVE_SPEED_M_S();
+    let RELATIVE_POSITION_RTN = self.RELATIVE_POSITION_RTN().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CRITERION_RATIO = self.CRITERION_RATIO();
+    let VIOLATES = self.VIOLATES();
+    let RENDEZVOUS_COORDINATED = self.RENDEZVOUS_COORDINATED();
+    let RUN_START = self.RUN_START().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let RUN_END = self.RUN_END().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    CQRLaunchApproachT {
+      SEGMENT_ID,
+      OBJECT_ID,
+      OBJECT_CLASS,
+      LIFTOFF,
+      TCA,
+      MISS_DISTANCE_M,
+      RELATIVE_SPEED_M_S,
+      RELATIVE_POSITION_RTN,
+      CRITERION_RATIO,
+      VIOLATES,
+      RENDEZVOUS_COORDINATED,
+      RUN_START,
+      RUN_END,
+    }
+  }
+
+  #[inline]
+  pub fn SEGMENT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchApproach::VT_SEGMENT_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn OBJECT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchApproach::VT_OBJECT_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn OBJECT_CLASS(&self) -> cqrLaunchObjectClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<cqrLaunchObjectClass>(CQRLaunchApproach::VT_OBJECT_CLASS, Some(cqrLaunchObjectClass::UNSPECIFIED)).unwrap()}
+  }
+  #[inline]
+  pub fn LIFTOFF(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchApproach::VT_LIFTOFF, None).unwrap()}
+  }
+  #[inline]
+  pub fn TCA(&self) -> TIMInstant<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchApproach::VT_TCA, None).unwrap()}
+  }
+  #[inline]
+  pub fn MISS_DISTANCE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchApproach::VT_MISS_DISTANCE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn RELATIVE_SPEED_M_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchApproach::VT_RELATIVE_SPEED_M_S, Some(0.0)).unwrap()}
+  }
+  /// Segment position relative to the orbiting object in the object's
+  /// radial/in-track/cross-track frame, metres.
+  #[inline]
+  pub fn RELATIVE_POSITION_RTN(&self) -> Option<FRMVector3<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FRMVector3>>(CQRLaunchApproach::VT_RELATIVE_POSITION_RTN, None)}
+  }
+  /// Normalised separation: distance over radius (SPHERICAL) or ellipsoid
+  /// radius (ELLIPSOIDAL). Below 1 violates.
+  #[inline]
+  pub fn CRITERION_RATIO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchApproach::VT_CRITERION_RATIO, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn VIOLATES(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CQRLaunchApproach::VT_VIOLATES, Some(false)).unwrap()}
+  }
+  #[inline]
+  pub fn RENDEZVOUS_COORDINATED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CQRLaunchApproach::VT_RENDEZVOUS_COORDINATED, Some(false)).unwrap()}
+  }
+  /// First and last liftoff times of the run this approach represents.
+  #[inline]
+  pub fn RUN_START(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchApproach::VT_RUN_START, None)}
+  }
+  #[inline]
+  pub fn RUN_END(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchApproach::VT_RUN_END, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchApproach<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SEGMENT_ID", Self::VT_SEGMENT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, true)?
+     .visit_field::<cqrLaunchObjectClass>("OBJECT_CLASS", Self::VT_OBJECT_CLASS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("LIFTOFF", Self::VT_LIFTOFF, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("TCA", Self::VT_TCA, true)?
+     .visit_field::<f64>("MISS_DISTANCE_M", Self::VT_MISS_DISTANCE_M, false)?
+     .visit_field::<f64>("RELATIVE_SPEED_M_S", Self::VT_RELATIVE_SPEED_M_S, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<FRMVector3>>("RELATIVE_POSITION_RTN", Self::VT_RELATIVE_POSITION_RTN, false)?
+     .visit_field::<f64>("CRITERION_RATIO", Self::VT_CRITERION_RATIO, false)?
+     .visit_field::<bool>("VIOLATES", Self::VT_VIOLATES, false)?
+     .visit_field::<bool>("RENDEZVOUS_COORDINATED", Self::VT_RENDEZVOUS_COORDINATED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("RUN_START", Self::VT_RUN_START, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("RUN_END", Self::VT_RUN_END, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchApproachArgs<'a> {
+    pub SEGMENT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_CLASS: cqrLaunchObjectClass,
+    pub LIFTOFF: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub TCA: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub MISS_DISTANCE_M: f64,
+    pub RELATIVE_SPEED_M_S: f64,
+    pub RELATIVE_POSITION_RTN: Option<::flatbuffers::WIPOffset<FRMVector3<'a>>>,
+    pub CRITERION_RATIO: f64,
+    pub VIOLATES: bool,
+    pub RENDEZVOUS_COORDINATED: bool,
+    pub RUN_START: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub RUN_END: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+}
+impl<'a> Default for CQRLaunchApproachArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchApproachArgs {
+      SEGMENT_ID: None, // required field
+      OBJECT_ID: None, // required field
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      LIFTOFF: None, // required field
+      TCA: None, // required field
+      MISS_DISTANCE_M: 0.0,
+      RELATIVE_SPEED_M_S: 0.0,
+      RELATIVE_POSITION_RTN: None,
+      CRITERION_RATIO: 0.0,
+      VIOLATES: false,
+      RENDEZVOUS_COORDINATED: false,
+      RUN_START: None,
+      RUN_END: None,
+    }
+  }
+}
+
+pub struct CQRLaunchApproachBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchApproachBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SEGMENT_ID(&mut self, SEGMENT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchApproach::VT_SEGMENT_ID, SEGMENT_ID);
+  }
+  #[inline]
+  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchApproach::VT_OBJECT_ID, OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_OBJECT_CLASS(&mut self, OBJECT_CLASS: cqrLaunchObjectClass) {
+    self.fbb_.push_slot::<cqrLaunchObjectClass>(CQRLaunchApproach::VT_OBJECT_CLASS, OBJECT_CLASS, cqrLaunchObjectClass::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_LIFTOFF(&mut self, LIFTOFF: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchApproach::VT_LIFTOFF, LIFTOFF);
+  }
+  #[inline]
+  pub fn add_TCA(&mut self, TCA: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchApproach::VT_TCA, TCA);
+  }
+  #[inline]
+  pub fn add_MISS_DISTANCE_M(&mut self, MISS_DISTANCE_M: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchApproach::VT_MISS_DISTANCE_M, MISS_DISTANCE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_SPEED_M_S(&mut self, RELATIVE_SPEED_M_S: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchApproach::VT_RELATIVE_SPEED_M_S, RELATIVE_SPEED_M_S, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_POSITION_RTN(&mut self, RELATIVE_POSITION_RTN: ::flatbuffers::WIPOffset<FRMVector3<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FRMVector3>>(CQRLaunchApproach::VT_RELATIVE_POSITION_RTN, RELATIVE_POSITION_RTN);
+  }
+  #[inline]
+  pub fn add_CRITERION_RATIO(&mut self, CRITERION_RATIO: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchApproach::VT_CRITERION_RATIO, CRITERION_RATIO, 0.0);
+  }
+  #[inline]
+  pub fn add_VIOLATES(&mut self, VIOLATES: bool) {
+    self.fbb_.push_slot::<bool>(CQRLaunchApproach::VT_VIOLATES, VIOLATES, false);
+  }
+  #[inline]
+  pub fn add_RENDEZVOUS_COORDINATED(&mut self, RENDEZVOUS_COORDINATED: bool) {
+    self.fbb_.push_slot::<bool>(CQRLaunchApproach::VT_RENDEZVOUS_COORDINATED, RENDEZVOUS_COORDINATED, false);
+  }
+  #[inline]
+  pub fn add_RUN_START(&mut self, RUN_START: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchApproach::VT_RUN_START, RUN_START);
+  }
+  #[inline]
+  pub fn add_RUN_END(&mut self, RUN_END: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchApproach::VT_RUN_END, RUN_END);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchApproachBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchApproachBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchApproach<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, CQRLaunchApproach::VT_SEGMENT_ID,"SEGMENT_ID");
+    self.fbb_.required(o, CQRLaunchApproach::VT_OBJECT_ID,"OBJECT_ID");
+    self.fbb_.required(o, CQRLaunchApproach::VT_LIFTOFF,"LIFTOFF");
+    self.fbb_.required(o, CQRLaunchApproach::VT_TCA,"TCA");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchApproach<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchApproach");
+      ds.field("SEGMENT_ID", &self.SEGMENT_ID());
+      ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("OBJECT_CLASS", &self.OBJECT_CLASS());
+      ds.field("LIFTOFF", &self.LIFTOFF());
+      ds.field("TCA", &self.TCA());
+      ds.field("MISS_DISTANCE_M", &self.MISS_DISTANCE_M());
+      ds.field("RELATIVE_SPEED_M_S", &self.RELATIVE_SPEED_M_S());
+      ds.field("RELATIVE_POSITION_RTN", &self.RELATIVE_POSITION_RTN());
+      ds.field("CRITERION_RATIO", &self.CRITERION_RATIO());
+      ds.field("VIOLATES", &self.VIOLATES());
+      ds.field("RENDEZVOUS_COORDINATED", &self.RENDEZVOUS_COORDINATED());
+      ds.field("RUN_START", &self.RUN_START());
+      ds.field("RUN_END", &self.RUN_END());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchApproachT {
+  pub SEGMENT_ID: alloc::string::String,
+  pub OBJECT_ID: alloc::string::String,
+  pub OBJECT_CLASS: cqrLaunchObjectClass,
+  pub LIFTOFF: alloc::boxed::Box<TIMInstantT>,
+  pub TCA: alloc::boxed::Box<TIMInstantT>,
+  pub MISS_DISTANCE_M: f64,
+  pub RELATIVE_SPEED_M_S: f64,
+  pub RELATIVE_POSITION_RTN: Option<alloc::boxed::Box<FRMVector3T>>,
+  pub CRITERION_RATIO: f64,
+  pub VIOLATES: bool,
+  pub RENDEZVOUS_COORDINATED: bool,
+  pub RUN_START: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub RUN_END: Option<alloc::boxed::Box<TIMInstantT>>,
+}
+impl Default for CQRLaunchApproachT {
+  fn default() -> Self {
+    Self {
+      SEGMENT_ID: alloc::string::ToString::to_string(""),
+      OBJECT_ID: alloc::string::ToString::to_string(""),
+      OBJECT_CLASS: cqrLaunchObjectClass::UNSPECIFIED,
+      LIFTOFF: Default::default(),
+      TCA: Default::default(),
+      MISS_DISTANCE_M: 0.0,
+      RELATIVE_SPEED_M_S: 0.0,
+      RELATIVE_POSITION_RTN: None,
+      CRITERION_RATIO: 0.0,
+      VIOLATES: false,
+      RENDEZVOUS_COORDINATED: false,
+      RUN_START: None,
+      RUN_END: None,
+    }
+  }
+}
+impl CQRLaunchApproachT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchApproach<'b>> {
+    let SEGMENT_ID = Some({
+      let x = &self.SEGMENT_ID;
+      _fbb.create_string(x)
+    });
+    let OBJECT_ID = Some({
+      let x = &self.OBJECT_ID;
+      _fbb.create_string(x)
+    });
+    let OBJECT_CLASS = self.OBJECT_CLASS;
+    let LIFTOFF = Some({
+      let x = &self.LIFTOFF;
+      x.pack(_fbb)
+    });
+    let TCA = Some({
+      let x = &self.TCA;
+      x.pack(_fbb)
+    });
+    let MISS_DISTANCE_M = self.MISS_DISTANCE_M;
+    let RELATIVE_SPEED_M_S = self.RELATIVE_SPEED_M_S;
+    let RELATIVE_POSITION_RTN = self.RELATIVE_POSITION_RTN.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CRITERION_RATIO = self.CRITERION_RATIO;
+    let VIOLATES = self.VIOLATES;
+    let RENDEZVOUS_COORDINATED = self.RENDEZVOUS_COORDINATED;
+    let RUN_START = self.RUN_START.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let RUN_END = self.RUN_END.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CQRLaunchApproach::create(_fbb, &CQRLaunchApproachArgs{
+      SEGMENT_ID,
+      OBJECT_ID,
+      OBJECT_CLASS,
+      LIFTOFF,
+      TCA,
+      MISS_DISTANCE_M,
+      RELATIVE_SPEED_M_S,
+      RELATIVE_POSITION_RTN,
+      CRITERION_RATIO,
+      VIOLATES,
+      RENDEZVOUS_COORDINATED,
+      RUN_START,
+      RUN_END,
+    })
+  }
+}
+pub enum CQRLaunchResultOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct CQRLaunchResult<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRLaunchResult<'a> {
+  type Inner = CQRLaunchResult<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CQRLaunchResult<'a> {
+  pub const VT_MISSION_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_WINDOW_OPEN: ::flatbuffers::VOffsetT = 6;
+  pub const VT_WINDOW_CLOSE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_LIFTOFF_STEP_SECONDS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LIFTOFF_TIMES_EVALUATED: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CLOSURES: ::flatbuffers::VOffsetT = 14;
+  pub const VT_APPROACHES: ::flatbuffers::VOffsetT = 16;
+  pub const VT_STATISTICS: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CQRLaunchResult { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CQRLaunchResultArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchResult<'bldr>> {
+    let mut builder = CQRLaunchResultBuilder::new(_fbb);
+    builder.add_LIFTOFF_TIMES_EVALUATED(args.LIFTOFF_TIMES_EVALUATED);
+    builder.add_LIFTOFF_STEP_SECONDS(args.LIFTOFF_STEP_SECONDS);
+    if let Some(x) = args.STATISTICS { builder.add_STATISTICS(x); }
+    if let Some(x) = args.APPROACHES { builder.add_APPROACHES(x); }
+    if let Some(x) = args.CLOSURES { builder.add_CLOSURES(x); }
+    if let Some(x) = args.WINDOW_CLOSE { builder.add_WINDOW_CLOSE(x); }
+    if let Some(x) = args.WINDOW_OPEN { builder.add_WINDOW_OPEN(x); }
+    if let Some(x) = args.MISSION_NAME { builder.add_MISSION_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CQRLaunchResultT {
+    let MISSION_NAME = self.MISSION_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let WINDOW_OPEN = self.WINDOW_OPEN().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let WINDOW_CLOSE = self.WINDOW_CLOSE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let LIFTOFF_STEP_SECONDS = self.LIFTOFF_STEP_SECONDS();
+    let LIFTOFF_TIMES_EVALUATED = self.LIFTOFF_TIMES_EVALUATED();
+    let CLOSURES = self.CLOSURES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let APPROACHES = self.APPROACHES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let STATISTICS = self.STATISTICS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    CQRLaunchResultT {
+      MISSION_NAME,
+      WINDOW_OPEN,
+      WINDOW_CLOSE,
+      LIFTOFF_STEP_SECONDS,
+      LIFTOFF_TIMES_EVALUATED,
+      CLOSURES,
+      APPROACHES,
+      STATISTICS,
+    }
+  }
+
+  #[inline]
+  pub fn MISSION_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRLaunchResult::VT_MISSION_NAME, None)}
+  }
+  #[inline]
+  pub fn WINDOW_OPEN(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchResult::VT_WINDOW_OPEN, None)}
+  }
+  #[inline]
+  pub fn WINDOW_CLOSE(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(CQRLaunchResult::VT_WINDOW_CLOSE, None)}
+  }
+  #[inline]
+  pub fn LIFTOFF_STEP_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CQRLaunchResult::VT_LIFTOFF_STEP_SECONDS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn LIFTOFF_TIMES_EVALUATED(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(CQRLaunchResult::VT_LIFTOFF_TIMES_EVALUATED, Some(0)).unwrap()}
+  }
+  /// Ordered by START.
+  #[inline]
+  pub fn CLOSURES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchClosure<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchClosure>>>>(CQRLaunchResult::VT_CLOSURES, None)}
+  }
+  /// Ordered by LIFTOFF, then segment and object identity.
+  #[inline]
+  pub fn APPROACHES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchApproach<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchApproach>>>>(CQRLaunchResult::VT_APPROACHES, None)}
+  }
+  #[inline]
+  pub fn STATISTICS(&self) -> Option<CQRScreeningStatistics<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CQRScreeningStatistics>>(CQRLaunchResult::VT_STATISTICS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CQRLaunchResult<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MISSION_NAME", Self::VT_MISSION_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("WINDOW_OPEN", Self::VT_WINDOW_OPEN, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("WINDOW_CLOSE", Self::VT_WINDOW_CLOSE, false)?
+     .visit_field::<f64>("LIFTOFF_STEP_SECONDS", Self::VT_LIFTOFF_STEP_SECONDS, false)?
+     .visit_field::<u64>("LIFTOFF_TIMES_EVALUATED", Self::VT_LIFTOFF_TIMES_EVALUATED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRLaunchClosure>>>>("CLOSURES", Self::VT_CLOSURES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRLaunchApproach>>>>("APPROACHES", Self::VT_APPROACHES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CQRScreeningStatistics>>("STATISTICS", Self::VT_STATISTICS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CQRLaunchResultArgs<'a> {
+    pub MISSION_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WINDOW_OPEN: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub WINDOW_CLOSE: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub LIFTOFF_STEP_SECONDS: f64,
+    pub LIFTOFF_TIMES_EVALUATED: u64,
+    pub CLOSURES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchClosure<'a>>>>>,
+    pub APPROACHES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRLaunchApproach<'a>>>>>,
+    pub STATISTICS: Option<::flatbuffers::WIPOffset<CQRScreeningStatistics<'a>>>,
+}
+impl<'a> Default for CQRLaunchResultArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CQRLaunchResultArgs {
+      MISSION_NAME: None,
+      WINDOW_OPEN: None,
+      WINDOW_CLOSE: None,
+      LIFTOFF_STEP_SECONDS: 0.0,
+      LIFTOFF_TIMES_EVALUATED: 0,
+      CLOSURES: None,
+      APPROACHES: None,
+      STATISTICS: None,
+    }
+  }
+}
+
+pub struct CQRLaunchResultBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRLaunchResultBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MISSION_NAME(&mut self, MISSION_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchResult::VT_MISSION_NAME, MISSION_NAME);
+  }
+  #[inline]
+  pub fn add_WINDOW_OPEN(&mut self, WINDOW_OPEN: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchResult::VT_WINDOW_OPEN, WINDOW_OPEN);
+  }
+  #[inline]
+  pub fn add_WINDOW_CLOSE(&mut self, WINDOW_CLOSE: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(CQRLaunchResult::VT_WINDOW_CLOSE, WINDOW_CLOSE);
+  }
+  #[inline]
+  pub fn add_LIFTOFF_STEP_SECONDS(&mut self, LIFTOFF_STEP_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(CQRLaunchResult::VT_LIFTOFF_STEP_SECONDS, LIFTOFF_STEP_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_LIFTOFF_TIMES_EVALUATED(&mut self, LIFTOFF_TIMES_EVALUATED: u64) {
+    self.fbb_.push_slot::<u64>(CQRLaunchResult::VT_LIFTOFF_TIMES_EVALUATED, LIFTOFF_TIMES_EVALUATED, 0);
+  }
+  #[inline]
+  pub fn add_CLOSURES(&mut self, CLOSURES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRLaunchClosure<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchResult::VT_CLOSURES, CLOSURES);
+  }
+  #[inline]
+  pub fn add_APPROACHES(&mut self, APPROACHES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRLaunchApproach<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRLaunchResult::VT_APPROACHES, APPROACHES);
+  }
+  #[inline]
+  pub fn add_STATISTICS(&mut self, STATISTICS: ::flatbuffers::WIPOffset<CQRScreeningStatistics<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CQRScreeningStatistics>>(CQRLaunchResult::VT_STATISTICS, STATISTICS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRLaunchResultBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CQRLaunchResultBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRLaunchResult<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CQRLaunchResult<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CQRLaunchResult");
+      ds.field("MISSION_NAME", &self.MISSION_NAME());
+      ds.field("WINDOW_OPEN", &self.WINDOW_OPEN());
+      ds.field("WINDOW_CLOSE", &self.WINDOW_CLOSE());
+      ds.field("LIFTOFF_STEP_SECONDS", &self.LIFTOFF_STEP_SECONDS());
+      ds.field("LIFTOFF_TIMES_EVALUATED", &self.LIFTOFF_TIMES_EVALUATED());
+      ds.field("CLOSURES", &self.CLOSURES());
+      ds.field("APPROACHES", &self.APPROACHES());
+      ds.field("STATISTICS", &self.STATISTICS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRLaunchResultT {
+  pub MISSION_NAME: Option<alloc::string::String>,
+  pub WINDOW_OPEN: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub WINDOW_CLOSE: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub LIFTOFF_STEP_SECONDS: f64,
+  pub LIFTOFF_TIMES_EVALUATED: u64,
+  pub CLOSURES: Option<alloc::vec::Vec<CQRLaunchClosureT>>,
+  pub APPROACHES: Option<alloc::vec::Vec<CQRLaunchApproachT>>,
+  pub STATISTICS: Option<alloc::boxed::Box<CQRScreeningStatisticsT>>,
+}
+impl Default for CQRLaunchResultT {
+  fn default() -> Self {
+    Self {
+      MISSION_NAME: None,
+      WINDOW_OPEN: None,
+      WINDOW_CLOSE: None,
+      LIFTOFF_STEP_SECONDS: 0.0,
+      LIFTOFF_TIMES_EVALUATED: 0,
+      CLOSURES: None,
+      APPROACHES: None,
+      STATISTICS: None,
+    }
+  }
+}
+impl CQRLaunchResultT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CQRLaunchResult<'b>> {
+    let MISSION_NAME = self.MISSION_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let WINDOW_OPEN = self.WINDOW_OPEN.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let WINDOW_CLOSE = self.WINDOW_CLOSE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let LIFTOFF_STEP_SECONDS = self.LIFTOFF_STEP_SECONDS;
+    let LIFTOFF_TIMES_EVALUATED = self.LIFTOFF_TIMES_EVALUATED;
+    let CLOSURES = self.CLOSURES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let APPROACHES = self.APPROACHES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let STATISTICS = self.STATISTICS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CQRLaunchResult::create(_fbb, &CQRLaunchResultArgs{
+      MISSION_NAME,
+      WINDOW_OPEN,
+      WINDOW_CLOSE,
+      LIFTOFF_STEP_SECONDS,
+      LIFTOFF_TIMES_EVALUATED,
+      CLOSURES,
+      APPROACHES,
+      STATISTICS,
+    })
+  }
+}
 pub enum CQROffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Conjunction Query and Result — pair/catalog screening, encounter-plane
-/// probability, typed native documents and resident screening-index control.
+/// probability, typed native documents, resident screening-index control and
+/// launch-window screening.
 /// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 pub struct CQR<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
@@ -6285,6 +8735,8 @@ impl<'a> CQR<'a> {
   pub const VT_DESTROY_REQUEST: ::flatbuffers::VOffsetT = 30;
   pub const VT_VERSION_QUERY: ::flatbuffers::VOffsetT = 32;
   pub const VT_VERSION_RESULT: ::flatbuffers::VOffsetT = 34;
+  pub const VT_LAUNCH_REQUEST: ::flatbuffers::VOffsetT = 36;
+  pub const VT_LAUNCH_RESULT: ::flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6296,6 +8748,8 @@ impl<'a> CQR<'a> {
     args: &'args CQRArgs<'args>
   ) -> ::flatbuffers::WIPOffset<CQR<'bldr>> {
     let mut builder = CQRBuilder::new(_fbb);
+    if let Some(x) = args.LAUNCH_RESULT { builder.add_LAUNCH_RESULT(x); }
+    if let Some(x) = args.LAUNCH_REQUEST { builder.add_LAUNCH_REQUEST(x); }
     if let Some(x) = args.VERSION_RESULT { builder.add_VERSION_RESULT(x); }
     if let Some(x) = args.DESTROY_REQUEST { builder.add_DESTROY_REQUEST(x); }
     if let Some(x) = args.WINDOW_REQUEST { builder.add_WINDOW_REQUEST(x); }
@@ -6362,6 +8816,12 @@ impl<'a> CQR<'a> {
     let VERSION_RESULT = self.VERSION_RESULT().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let LAUNCH_REQUEST = self.LAUNCH_REQUEST().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let LAUNCH_RESULT = self.LAUNCH_RESULT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     CQRT {
       PAIR_REQUEST,
       CATALOG_REQUEST,
@@ -6379,6 +8839,8 @@ impl<'a> CQR<'a> {
       DESTROY_REQUEST,
       VERSION_QUERY,
       VERSION_RESULT,
+      LAUNCH_REQUEST,
+      LAUNCH_RESULT,
     }
   }
 
@@ -6494,6 +8956,21 @@ impl<'a> CQR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CQRVersionResult>>(CQR::VT_VERSION_RESULT, None)}
   }
+  /// APPENDED. Launch-window screening request and result.
+  #[inline]
+  pub fn LAUNCH_REQUEST(&self) -> Option<CQRLaunchRequest<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CQRLaunchRequest>>(CQR::VT_LAUNCH_REQUEST, None)}
+  }
+  #[inline]
+  pub fn LAUNCH_RESULT(&self) -> Option<CQRLaunchResult<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CQRLaunchResult>>(CQR::VT_LAUNCH_RESULT, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for CQR<'_> {
@@ -6518,6 +8995,8 @@ impl ::flatbuffers::Verifiable for CQR<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<CQRDestroyRequest>>("DESTROY_REQUEST", Self::VT_DESTROY_REQUEST, false)?
      .visit_field::<bool>("VERSION_QUERY", Self::VT_VERSION_QUERY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<CQRVersionResult>>("VERSION_RESULT", Self::VT_VERSION_RESULT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CQRLaunchRequest>>("LAUNCH_REQUEST", Self::VT_LAUNCH_REQUEST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CQRLaunchResult>>("LAUNCH_RESULT", Self::VT_LAUNCH_RESULT, false)?
      .finish();
     Ok(())
   }
@@ -6539,6 +9018,8 @@ pub struct CQRArgs<'a> {
     pub DESTROY_REQUEST: Option<::flatbuffers::WIPOffset<CQRDestroyRequest<'a>>>,
     pub VERSION_QUERY: bool,
     pub VERSION_RESULT: Option<::flatbuffers::WIPOffset<CQRVersionResult<'a>>>,
+    pub LAUNCH_REQUEST: Option<::flatbuffers::WIPOffset<CQRLaunchRequest<'a>>>,
+    pub LAUNCH_RESULT: Option<::flatbuffers::WIPOffset<CQRLaunchResult<'a>>>,
 }
 impl<'a> Default for CQRArgs<'a> {
   #[inline]
@@ -6560,6 +9041,8 @@ impl<'a> Default for CQRArgs<'a> {
       DESTROY_REQUEST: None,
       VERSION_QUERY: false,
       VERSION_RESULT: None,
+      LAUNCH_REQUEST: None,
+      LAUNCH_RESULT: None,
     }
   }
 }
@@ -6634,6 +9117,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CQRVersionResult>>(CQR::VT_VERSION_RESULT, VERSION_RESULT);
   }
   #[inline]
+  pub fn add_LAUNCH_REQUEST(&mut self, LAUNCH_REQUEST: ::flatbuffers::WIPOffset<CQRLaunchRequest<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CQRLaunchRequest>>(CQR::VT_LAUNCH_REQUEST, LAUNCH_REQUEST);
+  }
+  #[inline]
+  pub fn add_LAUNCH_RESULT(&mut self, LAUNCH_RESULT: ::flatbuffers::WIPOffset<CQRLaunchResult<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CQRLaunchResult>>(CQR::VT_LAUNCH_RESULT, LAUNCH_RESULT);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CQRBuilder {
@@ -6667,6 +9158,8 @@ impl ::core::fmt::Debug for CQR<'_> {
       ds.field("DESTROY_REQUEST", &self.DESTROY_REQUEST());
       ds.field("VERSION_QUERY", &self.VERSION_QUERY());
       ds.field("VERSION_RESULT", &self.VERSION_RESULT());
+      ds.field("LAUNCH_REQUEST", &self.LAUNCH_REQUEST());
+      ds.field("LAUNCH_RESULT", &self.LAUNCH_RESULT());
       ds.finish()
   }
 }
@@ -6689,6 +9182,8 @@ pub struct CQRT {
   pub DESTROY_REQUEST: Option<alloc::boxed::Box<CQRDestroyRequestT>>,
   pub VERSION_QUERY: bool,
   pub VERSION_RESULT: Option<alloc::boxed::Box<CQRVersionResultT>>,
+  pub LAUNCH_REQUEST: Option<alloc::boxed::Box<CQRLaunchRequestT>>,
+  pub LAUNCH_RESULT: Option<alloc::boxed::Box<CQRLaunchResultT>>,
 }
 impl Default for CQRT {
   fn default() -> Self {
@@ -6709,6 +9204,8 @@ impl Default for CQRT {
       DESTROY_REQUEST: None,
       VERSION_QUERY: false,
       VERSION_RESULT: None,
+      LAUNCH_REQUEST: None,
+      LAUNCH_RESULT: None,
     }
   }
 }
@@ -6763,6 +9260,12 @@ impl CQRT {
     let VERSION_RESULT = self.VERSION_RESULT.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let LAUNCH_REQUEST = self.LAUNCH_REQUEST.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let LAUNCH_RESULT = self.LAUNCH_RESULT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     CQR::create(_fbb, &CQRArgs{
       PAIR_REQUEST,
       CATALOG_REQUEST,
@@ -6780,6 +9283,8 @@ impl CQRT {
       DESTROY_REQUEST,
       VERSION_QUERY,
       VERSION_RESULT,
+      LAUNCH_REQUEST,
+      LAUNCH_RESULT,
     })
   }
 }

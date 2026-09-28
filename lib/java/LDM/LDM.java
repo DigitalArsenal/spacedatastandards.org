@@ -202,6 +202,13 @@ public final class LDM extends com.google.flatbuffers.Table {
   public int BURN_OUT_VECTORSLength() { int o = __offset(56); return o != 0 ? __vector_len(o) : 0; }
   public BOV.Vector burnOutVectorsVector() { return burnOutVectorsVector(new BOV.Vector()); }
   public BOV.Vector burnOutVectorsVector(BOV.Vector obj) { int o = __offset(56); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * APPENDED. Stable identifier of this launch in the registry that
+   * published it; unchanged when the launch time or status changes.
+   */
+  public String ID() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
 
   public static int createLDM(FlatBufferBuilder builder,
       int SITEOffset,
@@ -230,8 +237,10 @@ public final class LDM extends com.google.flatbuffers.Table {
       int COLA_RUNS_REQUIREDOffset,
       int COLA_POINTS_OF_CONTACTOffset,
       int ORBITAL_PARAMETERSOffset,
-      int BURN_OUT_VECTORSOffset) {
-    builder.startTable(27);
+      int BURN_OUT_VECTORSOffset,
+      int IDOffset) {
+    builder.startTable(28);
+    LDM.addId(builder, IDOffset);
     LDM.addBurnOutVectors(builder, BURN_OUT_VECTORSOffset);
     LDM.addOrbitalParameters(builder, ORBITAL_PARAMETERSOffset);
     LDM.addColaPointsOfContact(builder, COLA_POINTS_OF_CONTACTOffset);
@@ -262,7 +271,7 @@ public final class LDM extends com.google.flatbuffers.Table {
     return LDM.endLDM(builder);
   }
 
-  public static void startLDM(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startLDM(FlatBufferBuilder builder) { builder.startTable(28); }
   public static void addSite(FlatBufferBuilder builder, int SITEOffset) { builder.addOffset(0, SITEOffset, 0); }
   public static void addAzimuth(FlatBufferBuilder builder, float AZIMUTH) { builder.addFloat(1, AZIMUTH, 0.0f); }
   public static void addReferences(FlatBufferBuilder builder, int REFERENCESOffset) { builder.addOffset(2, REFERENCESOffset, 0); }
@@ -312,6 +321,7 @@ public final class LDM extends com.google.flatbuffers.Table {
   public static void addBurnOutVectors(FlatBufferBuilder builder, int BURN_OUT_VECTORSOffset) { builder.addOffset(26, BURN_OUT_VECTORSOffset, 0); }
   public static int createBurnOutVectorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startBurnOutVectorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(27, IDOffset, 0); }
   public static int endLDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

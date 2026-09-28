@@ -7,7 +7,8 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Conjunction Query and Result — pair/catalog screening, encounter-plane
-/// probability, typed native documents and resident screening-index control.
+/// probability, typed native documents, resident screening-index control and
+/// launch-window screening.
 /// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 class CQR extends Table
 {
@@ -157,22 +158,37 @@ class CQR extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// APPENDED. Launch-window screening request and result.
+    public function getLAUNCH_REQUEST()
+    {
+        $obj = new CQRLaunchRequest();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getLAUNCH_RESULT()
+    {
+        $obj = new CQRLaunchResult();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQR
      */
-    public static function createCQR(FlatBufferBuilder $builder, $PAIR_REQUEST, $CATALOG_REQUEST, $PROBABILITY_REQUEST, $PROBABILITY_RESULT, $ALFANO_REQUEST, $ALFANO_RESULT, $EVENT_RESULT, $TCA_RESULT, $CATALOG_RESULT, $NATIVE_DOCUMENT, $INDEX_REQUEST, $INDEX_RESULT, $WINDOW_REQUEST, $DESTROY_REQUEST, $VERSION_QUERY, $VERSION_RESULT)
+    public static function createCQR(FlatBufferBuilder $builder, $PAIR_REQUEST, $CATALOG_REQUEST, $PROBABILITY_REQUEST, $PROBABILITY_RESULT, $ALFANO_REQUEST, $ALFANO_RESULT, $EVENT_RESULT, $TCA_RESULT, $CATALOG_RESULT, $NATIVE_DOCUMENT, $INDEX_REQUEST, $INDEX_RESULT, $WINDOW_REQUEST, $DESTROY_REQUEST, $VERSION_QUERY, $VERSION_RESULT, $LAUNCH_REQUEST, $LAUNCH_RESULT)
     {
-        $builder->startObject(16);
+        $builder->startObject(18);
         self::addPAIR_REQUEST($builder, $PAIR_REQUEST);
         self::addCATALOG_REQUEST($builder, $CATALOG_REQUEST);
         self::addPROBABILITY_REQUEST($builder, $PROBABILITY_REQUEST);
@@ -189,6 +205,8 @@ class CQR extends Table
         self::addDESTROY_REQUEST($builder, $DESTROY_REQUEST);
         self::addVERSION_QUERY($builder, $VERSION_QUERY);
         self::addVERSION_RESULT($builder, $VERSION_RESULT);
+        self::addLAUNCH_REQUEST($builder, $LAUNCH_REQUEST);
+        self::addLAUNCH_RESULT($builder, $LAUNCH_RESULT);
         $o = $builder->endObject();
         return $o;
     }
@@ -351,6 +369,26 @@ class CQR extends Table
     public static function addVERSION_RESULT(FlatBufferBuilder $builder, $VERSION_RESULT)
     {
         $builder->addOffsetX(15, $VERSION_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLAUNCH_REQUEST(FlatBufferBuilder $builder, $LAUNCH_REQUEST)
+    {
+        $builder->addOffsetX(16, $LAUNCH_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLAUNCH_RESULT(FlatBufferBuilder $builder, $LAUNCH_RESULT)
+    {
+        $builder->addOffsetX(17, $LAUNCH_RESULT, 0);
     }
 
     /**

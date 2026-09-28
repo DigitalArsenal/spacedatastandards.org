@@ -9135,6 +9135,62 @@
         }
       }
     },
+    "cqrLaunchObjectClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "INHABITABLE",
+        "NON_DEBRIS",
+        "DEBRIS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "INHABITABLE": {
+          "value": 1,
+          "description": "Crewed or crew-capable object."
+        },
+        "NON_DEBRIS": {
+          "value": 2,
+          "description": "Any object that is neither inhabitable nor orbital debris."
+        },
+        "DEBRIS": {
+          "value": 3,
+          "description": "Catalogued orbital debris."
+        }
+      }
+    },
+    "cqrLaunchScreening": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SPHERICAL",
+        "ELLIPSOIDAL",
+        "PROBABILITY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SPHERICAL": {
+          "value": 1,
+          "description": "Separation below RADIUS_M."
+        },
+        "ELLIPSOIDAL": {
+          "value": 2,
+          "description": "Separation inside the RADIAL_M / IN_TRACK_M / CROSS_TRACK_M ellipsoid, centred on the orbiting object in its radial/in-track/cross-track frame."
+        },
+        "PROBABILITY": {
+          "value": 3,
+          "description": "Probability of collision above MAX_PROBABILITY."
+        }
+      }
+    },
     "CoordFrame": {
       "type": "string",
       "enum": [
@@ -53658,9 +53714,474 @@
       ],
       "additionalProperties": false
     },
+    "CQRLaunchCriterion": {
+      "type": "object",
+      "description": "Screening criterion for one object class. Exactly one kind per entry;\nSCREENING selects which fields apply.",
+      "properties": {
+        "OBJECT_CLASS": {
+          "$ref": "#/definitions/cqrLaunchObjectClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "INHABITABLE": {
+              "value": 1,
+              "description": "Crewed or crew-capable object."
+            },
+            "NON_DEBRIS": {
+              "value": 2,
+              "description": "Any object that is neither inhabitable nor orbital debris."
+            },
+            "DEBRIS": {
+              "value": 3,
+              "description": "Catalogued orbital debris."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SCREENING": {
+          "$ref": "#/definitions/cqrLaunchScreening",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SPHERICAL": {
+              "value": 1,
+              "description": "Separation below RADIUS_M."
+            },
+            "ELLIPSOIDAL": {
+              "value": 2,
+              "description": "Separation inside the RADIAL_M / IN_TRACK_M / CROSS_TRACK_M ellipsoid, centred on the orbiting object in its radial/in-track/cross-track frame."
+            },
+            "PROBABILITY": {
+              "value": 3,
+              "description": "Probability of collision above MAX_PROBABILITY."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "RADIUS_M": {
+          "type": "number",
+          "description": "Sphere radius, metres (SPHERICAL).",
+          "x-flatbuffer-type": "double"
+        },
+        "RADIAL_M": {
+          "type": "number",
+          "description": "Ellipsoid semi-axes, metres (ELLIPSOIDAL).",
+          "x-flatbuffer-type": "double"
+        },
+        "IN_TRACK_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_PROBABILITY": {
+          "type": "number",
+          "description": "Largest acceptable probability of collision (PROBABILITY).",
+          "x-flatbuffer-type": "double"
+        },
+        "ALGORITHM": {
+          "$ref": "#/definitions/cqrProbabilityAlgorithm",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ALFRIEND_1999": {
+              "value": 5
+            },
+            "LAAS_2015": {
+              "value": 8
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CQRLaunchSegment": {
+      "type": "object",
+      "description": "One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.",
+      "properties": {
+        "SEGMENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SEGMENT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRAJECTORY": {
+          "$ref": "#/definitions/OEM",
+          "description": "Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines.",
+          "x-flatbuffer-type": "OEM",
+          "x-flatbuffer-required": true
+        },
+        "RADIUS_M": {
+          "type": "number",
+          "description": "Hard-body radius, metres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "5"
+        },
+        "RADAR_CROSS_SECTION_M2": {
+          "type": "number",
+          "description": "Radar cross section, square metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_RADAR_CROSS_SECTION_M2": {
+          "type": "boolean",
+          "description": "True when RADAR_CROSS_SECTION_M2 carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "VALID_FROM": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Liftoff times this trajectory applies to, half-open [VALID_FROM,\nVALID_UNTIL). Absent bounds select the whole window. Windows whose\ntrajectory changes (for example a varying azimuth) supply one segment\nper span.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "VALID_UNTIL": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant"
+        }
+      },
+      "required": [
+        "SEGMENT_ID",
+        "TRAJECTORY"
+      ],
+      "additionalProperties": false
+    },
+    "CQRLaunchObject": {
+      "type": "object",
+      "description": "One orbiting object to screen against.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/CQRObjectSource",
+          "description": "Ephemeris in EVALUATION_FRAME covering the screened absolute times.",
+          "x-flatbuffer-type": "CQRObjectSource",
+          "x-flatbuffer-required": true
+        },
+        "OBJECT_CLASS": {
+          "$ref": "#/definitions/cqrLaunchObjectClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "INHABITABLE": {
+              "value": 1,
+              "description": "Crewed or crew-capable object."
+            },
+            "NON_DEBRIS": {
+              "value": 2,
+              "description": "Any object that is neither inhabitable nor orbital debris."
+            },
+            "DEBRIS": {
+              "value": 3,
+              "description": "Catalogued orbital debris."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "RENDEZVOUS_COORDINATED": {
+          "type": "boolean",
+          "description": "A pre-coordinated rendezvous or close approach: reported, never a\nwindow closure.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "CQRLaunchRequest": {
+      "type": "object",
+      "properties": {
+        "MISSION_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NOMINAL_LIFTOFF": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Liftoff time the segment trajectories were produced for.",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "WINDOW_OPEN": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Liftoff window, inclusive of both ends.",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "WINDOW_CLOSE": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "LIFTOFF_STEP_SECONDS": {
+          "type": "number",
+          "description": "Spacing of evaluated liftoff times, seconds.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRLaunchSegment"
+          },
+          "x-flatbuffer-type": "[CQRLaunchSegment]",
+          "x-flatbuffer-required": true
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRLaunchObject"
+          },
+          "x-flatbuffer-type": "[CQRLaunchObject]",
+          "x-flatbuffer-required": true
+        },
+        "CRITERIA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRLaunchCriterion"
+          },
+          "description": "One criterion per object class present in OBJECTS.",
+          "x-flatbuffer-type": "[CQRLaunchCriterion]",
+          "x-flatbuffer-required": true
+        },
+        "MINIMUM_ALTITUDE_M": {
+          "type": "number",
+          "description": "Segment states below this height above the reference ellipsoid are not\nscreened, metres.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "150000"
+        },
+        "SCREEN_SECONDS_AFTER_LIFTOFF": {
+          "type": "number",
+          "description": "Screening ends this long after liftoff, seconds, or earlier where a\ntrajectory ends.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "10800"
+        },
+        "CLOSURE_PAD_SECONDS": {
+          "type": "number",
+          "description": "Time added before and after every closure for vehicle performance and\ntiming uncertainty, seconds.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "REPORT_RATIO": {
+          "type": "number",
+          "description": "Report approaches whose criterion ratio is below this value; 1 reports\nviolations only.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "EVALUATION_FRAME": {
+          "$ref": "#/definitions/RFMCoordinateSystem",
+          "description": "Earth-fixed frame shared by every trajectory and ephemeris.",
+          "x-flatbuffer-type": "RFMCoordinateSystem",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "NOMINAL_LIFTOFF",
+        "WINDOW_OPEN",
+        "WINDOW_CLOSE",
+        "SEGMENTS",
+        "OBJECTS",
+        "CRITERIA",
+        "EVALUATION_FRAME"
+      ],
+      "additionalProperties": false
+    },
+    "CQRLaunchClosure": {
+      "type": "object",
+      "description": "Liftoff times that violate at least one criterion, half-open [START, END),\nwidened by the liftoff step and CLOSURE_PAD_SECONDS and merged.",
+      "properties": {
+        "START": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "END": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "OBJECT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Orbiting objects that cause this closure.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SEGMENT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Segments involved.",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "required": [
+        "START",
+        "END"
+      ],
+      "additionalProperties": false
+    },
+    "CQRLaunchApproach": {
+      "type": "object",
+      "description": "Closest approach of one segment to one orbiting object for one liftoff\ntime: the worst liftoff time of each contiguous run below REPORT_RATIO.",
+      "properties": {
+        "SEGMENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBJECT_CLASS": {
+          "$ref": "#/definitions/cqrLaunchObjectClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "INHABITABLE": {
+              "value": 1,
+              "description": "Crewed or crew-capable object."
+            },
+            "NON_DEBRIS": {
+              "value": 2,
+              "description": "Any object that is neither inhabitable nor orbital debris."
+            },
+            "DEBRIS": {
+              "value": 3,
+              "description": "Catalogued orbital debris."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LIFTOFF": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "TCA": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "MISS_DISTANCE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_SPEED_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_POSITION_RTN": {
+          "$ref": "#/definitions/FRMVector3",
+          "description": "Segment position relative to the orbiting object in the object's\nradial/in-track/cross-track frame, metres.",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "CRITERION_RATIO": {
+          "type": "number",
+          "description": "Normalised separation: distance over radius (SPHERICAL) or ellipsoid\nradius (ELLIPSOIDAL). Below 1 violates.",
+          "x-flatbuffer-type": "double"
+        },
+        "VIOLATES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "RENDEZVOUS_COORDINATED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "RUN_START": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "First and last liftoff times of the run this approach represents.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "RUN_END": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant"
+        }
+      },
+      "required": [
+        "SEGMENT_ID",
+        "OBJECT_ID",
+        "LIFTOFF",
+        "TCA"
+      ],
+      "additionalProperties": false
+    },
+    "CQRLaunchResult": {
+      "type": "object",
+      "properties": {
+        "MISSION_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_OPEN": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "WINDOW_CLOSE": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "LIFTOFF_STEP_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIFTOFF_TIMES_EVALUATED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "CLOSURES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRLaunchClosure"
+          },
+          "description": "Ordered by START.",
+          "x-flatbuffer-type": "[CQRLaunchClosure]"
+        },
+        "APPROACHES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRLaunchApproach"
+          },
+          "description": "Ordered by LIFTOFF, then segment and object identity.",
+          "x-flatbuffer-type": "[CQRLaunchApproach]"
+        },
+        "STATISTICS": {
+          "$ref": "#/definitions/CQRScreeningStatistics",
+          "x-flatbuffer-type": "CQRScreeningStatistics"
+        }
+      },
+      "additionalProperties": false
+    },
     "CQR": {
       "type": "object",
-      "description": "Conjunction Query and Result \u2014 pair/catalog screening, encounter-plane\nprobability, typed native documents and resident screening-index control.\nExactly one arm per PIV payload, selected by the declared METHOD_ID.",
+      "description": "Conjunction Query and Result \u2014 pair/catalog screening, encounter-plane\nprobability, typed native documents, resident screening-index control and\nlaunch-window screening.\nExactly one arm per PIV payload, selected by the declared METHOD_ID.",
       "properties": {
         "PAIR_REQUEST": {
           "$ref": "#/definitions/CQRPairRequest",
@@ -53726,6 +54247,15 @@
         "VERSION_RESULT": {
           "$ref": "#/definitions/CQRVersionResult",
           "x-flatbuffer-type": "CQRVersionResult"
+        },
+        "LAUNCH_REQUEST": {
+          "$ref": "#/definitions/CQRLaunchRequest",
+          "description": "APPENDED. Launch-window screening request and result.",
+          "x-flatbuffer-type": "CQRLaunchRequest"
+        },
+        "LAUNCH_RESULT": {
+          "$ref": "#/definitions/CQRLaunchResult",
+          "x-flatbuffer-type": "CQRLaunchResult"
         }
       },
       "additionalProperties": false
@@ -76761,6 +77291,11 @@
           },
           "description": "Burn Out Vectors for the Launch",
           "x-flatbuffer-type": "[BOV]"
+        },
+        "ID": {
+          "type": "string",
+          "description": "APPENDED. Stable identifier of this launch in the registry that\npublished it; unchanged when the launch time or status changes.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

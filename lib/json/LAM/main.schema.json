@@ -2924,6 +2924,10 @@
         "BURN_OUT_VECTORS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/BOV"},
                 "description" : "Burn Out Vectors for the Launch"
+              },
+        "ID" : {
+                "type" : "string",
+                "description" : "APPENDED. Stable identifier of this launch in the registry that\npublished it; unchanged when the launch time or status changes."
               }
       },
       "additionalProperties" : false

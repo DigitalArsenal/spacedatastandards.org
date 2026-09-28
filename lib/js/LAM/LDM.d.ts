@@ -152,6 +152,12 @@ export declare class LDM implements flatbuffers.IUnpackableObject<LDMT> {
      */
     BURN_OUT_VECTORS(index: number, obj?: BOV): BOV | null;
     burnOutVectorsLength(): number;
+    /**
+     * APPENDED. Stable identifier of this launch in the registry that
+     * published it; unchanged when the launch time or status changes.
+     */
+    ID(): string | null;
+    ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startLDM(builder: flatbuffers.Builder): void;
     static addSite(builder: flatbuffers.Builder, SITEOffset: flatbuffers.Offset): void;
     static addAzimuth(builder: flatbuffers.Builder, AZIMUTH: number): void;
@@ -202,6 +208,7 @@ export declare class LDM implements flatbuffers.IUnpackableObject<LDMT> {
     static addBurnOutVectors(builder: flatbuffers.Builder, BURN_OUT_VECTORSOffset: flatbuffers.Offset): void;
     static createBurnOutVectorsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startBurnOutVectorsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static endLDM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishLDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedLDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -236,7 +243,8 @@ export declare class LDMT implements flatbuffers.IGeneratedObject {
     COLA_POINTS_OF_CONTACT: (EPMT)[];
     ORBITAL_PARAMETERS: (string)[];
     BURN_OUT_VECTORS: (BOVT)[];
-    constructor(SITE?: SITT | null, AZIMUTH?: number, REFERENCES?: string | Uint8Array | null, AGENCY_NAME?: string | Uint8Array | null, POINTS_OF_CONTACT?: (EPMT)[], OPERATIONS_POINTS_OF_CONTACT?: (EPMT)[], NET?: string | Uint8Array | null, ROCKET_CONFIGURATION?: ROCT | null, MISSION_NAME?: string | Uint8Array | null, MISSION_DESCRIPTION?: string | Uint8Array | null, MISSION_TYPE?: string | Uint8Array | null, ORBIT_TYPE?: string | Uint8Array | null, WEATHER_CONDITIONS?: string | Uint8Array | null, LAUNCH_STATUS?: string | Uint8Array | null, WEBCAST_URL?: string | Uint8Array | null, MEDIA_LINKS?: (string)[], EARLIEST_LAUNCH_TIMES?: (string)[], LATEST_LAUNCH_TIMES?: (string)[], LCOLA_WINDOW_CLOSURES?: (string)[], OBJECTS?: (CATT)[], TRACKING_REQUIREMENTS?: (string)[], COLA_SCREEN_DURATION?: string | Uint8Array | null, PROBABILITY_OF_COLLISION_THRESHOLD?: string | Uint8Array | null, COLA_RUNS_REQUIRED?: string | Uint8Array | null, COLA_POINTS_OF_CONTACT?: (EPMT)[], ORBITAL_PARAMETERS?: (string)[], BURN_OUT_VECTORS?: (BOVT)[]);
+    ID: string | Uint8Array | null;
+    constructor(SITE?: SITT | null, AZIMUTH?: number, REFERENCES?: string | Uint8Array | null, AGENCY_NAME?: string | Uint8Array | null, POINTS_OF_CONTACT?: (EPMT)[], OPERATIONS_POINTS_OF_CONTACT?: (EPMT)[], NET?: string | Uint8Array | null, ROCKET_CONFIGURATION?: ROCT | null, MISSION_NAME?: string | Uint8Array | null, MISSION_DESCRIPTION?: string | Uint8Array | null, MISSION_TYPE?: string | Uint8Array | null, ORBIT_TYPE?: string | Uint8Array | null, WEATHER_CONDITIONS?: string | Uint8Array | null, LAUNCH_STATUS?: string | Uint8Array | null, WEBCAST_URL?: string | Uint8Array | null, MEDIA_LINKS?: (string)[], EARLIEST_LAUNCH_TIMES?: (string)[], LATEST_LAUNCH_TIMES?: (string)[], LCOLA_WINDOW_CLOSURES?: (string)[], OBJECTS?: (CATT)[], TRACKING_REQUIREMENTS?: (string)[], COLA_SCREEN_DURATION?: string | Uint8Array | null, PROBABILITY_OF_COLLISION_THRESHOLD?: string | Uint8Array | null, COLA_RUNS_REQUIRED?: string | Uint8Array | null, COLA_POINTS_OF_CONTACT?: (EPMT)[], ORBITAL_PARAMETERS?: (string)[], BURN_OUT_VECTORS?: (BOVT)[], ID?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=LDM.d.ts.map

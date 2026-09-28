@@ -378,22 +378,30 @@ class LDM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// APPENDED. Stable identifier of this launch in the registry that
+    /// published it; unchanged when the launch time or status changes.
+    public function getID()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startLDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(28);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LDM
      */
-    public static function createLDM(FlatBufferBuilder $builder, $SITE, $AZIMUTH, $REFERENCES, $AGENCY_NAME, $POINTS_OF_CONTACT, $OPERATIONS_POINTS_OF_CONTACT, $NET, $ROCKET_CONFIGURATION, $MISSION_NAME, $MISSION_DESCRIPTION, $MISSION_TYPE, $ORBIT_TYPE, $WEATHER_CONDITIONS, $LAUNCH_STATUS, $WEBCAST_URL, $MEDIA_LINKS, $EARLIEST_LAUNCH_TIMES, $LATEST_LAUNCH_TIMES, $LCOLA_WINDOW_CLOSURES, $OBJECTS, $TRACKING_REQUIREMENTS, $COLA_SCREEN_DURATION, $PROBABILITY_OF_COLLISION_THRESHOLD, $COLA_RUNS_REQUIRED, $COLA_POINTS_OF_CONTACT, $ORBITAL_PARAMETERS, $BURN_OUT_VECTORS)
+    public static function createLDM(FlatBufferBuilder $builder, $SITE, $AZIMUTH, $REFERENCES, $AGENCY_NAME, $POINTS_OF_CONTACT, $OPERATIONS_POINTS_OF_CONTACT, $NET, $ROCKET_CONFIGURATION, $MISSION_NAME, $MISSION_DESCRIPTION, $MISSION_TYPE, $ORBIT_TYPE, $WEATHER_CONDITIONS, $LAUNCH_STATUS, $WEBCAST_URL, $MEDIA_LINKS, $EARLIEST_LAUNCH_TIMES, $LATEST_LAUNCH_TIMES, $LCOLA_WINDOW_CLOSURES, $OBJECTS, $TRACKING_REQUIREMENTS, $COLA_SCREEN_DURATION, $PROBABILITY_OF_COLLISION_THRESHOLD, $COLA_RUNS_REQUIRED, $COLA_POINTS_OF_CONTACT, $ORBITAL_PARAMETERS, $BURN_OUT_VECTORS, $ID)
     {
-        $builder->startObject(27);
+        $builder->startObject(28);
         self::addSITE($builder, $SITE);
         self::addAZIMUTH($builder, $AZIMUTH);
         self::addREFERENCES($builder, $REFERENCES);
@@ -421,6 +429,7 @@ class LDM extends Table
         self::addCOLA_POINTS_OF_CONTACT($builder, $COLA_POINTS_OF_CONTACT);
         self::addORBITAL_PARAMETERS($builder, $ORBITAL_PARAMETERS);
         self::addBURN_OUT_VECTORS($builder, $BURN_OUT_VECTORS);
+        self::addID($builder, $ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -957,6 +966,16 @@ class LDM extends Table
     public static function startBURN_OUT_VECTORSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID(FlatBufferBuilder $builder, $ID)
+    {
+        $builder->addOffsetX(27, $ID, 0);
     }
 
     /**

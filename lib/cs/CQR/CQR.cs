@@ -7,7 +7,8 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Conjunction Query and Result — pair/catalog screening, encounter-plane
-/// probability, typed native documents and resident screening-index control.
+/// probability, typed native documents, resident screening-index control and
+/// launch-window screening.
 /// Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 public struct CQR : IFlatbufferObject
 {
@@ -37,6 +38,9 @@ public struct CQR : IFlatbufferObject
   public CQRDestroyRequest? DESTROY_REQUEST { get { int o = __p.__offset(30); return o != 0 ? (CQRDestroyRequest?)(new CQRDestroyRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public bool VERSION_QUERY { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public CQRVersionResult? VERSION_RESULT { get { int o = __p.__offset(34); return o != 0 ? (CQRVersionResult?)(new CQRVersionResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// APPENDED. Launch-window screening request and result.
+  public CQRLaunchRequest? LAUNCH_REQUEST { get { int o = __p.__offset(36); return o != 0 ? (CQRLaunchRequest?)(new CQRLaunchRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public CQRLaunchResult? LAUNCH_RESULT { get { int o = __p.__offset(38); return o != 0 ? (CQRLaunchResult?)(new CQRLaunchResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<CQR> CreateCQR(FlatBufferBuilder builder,
       Offset<CQRPairRequest> PAIR_REQUESTOffset = default(Offset<CQRPairRequest>),
@@ -54,8 +58,12 @@ public struct CQR : IFlatbufferObject
       Offset<CQRWindowRequest> WINDOW_REQUESTOffset = default(Offset<CQRWindowRequest>),
       Offset<CQRDestroyRequest> DESTROY_REQUESTOffset = default(Offset<CQRDestroyRequest>),
       bool VERSION_QUERY = false,
-      Offset<CQRVersionResult> VERSION_RESULTOffset = default(Offset<CQRVersionResult>)) {
-    builder.StartTable(16);
+      Offset<CQRVersionResult> VERSION_RESULTOffset = default(Offset<CQRVersionResult>),
+      Offset<CQRLaunchRequest> LAUNCH_REQUESTOffset = default(Offset<CQRLaunchRequest>),
+      Offset<CQRLaunchResult> LAUNCH_RESULTOffset = default(Offset<CQRLaunchResult>)) {
+    builder.StartTable(18);
+    CQR.AddLAUNCH_RESULT(builder, LAUNCH_RESULTOffset);
+    CQR.AddLAUNCH_REQUEST(builder, LAUNCH_REQUESTOffset);
     CQR.AddVERSION_RESULT(builder, VERSION_RESULTOffset);
     CQR.AddDESTROY_REQUEST(builder, DESTROY_REQUESTOffset);
     CQR.AddWINDOW_REQUEST(builder, WINDOW_REQUESTOffset);
@@ -75,7 +83,7 @@ public struct CQR : IFlatbufferObject
     return CQR.EndCQR(builder);
   }
 
-  public static void StartCQR(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartCQR(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddPAIR_REQUEST(FlatBufferBuilder builder, Offset<CQRPairRequest> PAIR_REQUESTOffset) { builder.AddOffset(0, PAIR_REQUESTOffset.Value, 0); }
   public static void AddCATALOG_REQUEST(FlatBufferBuilder builder, Offset<CQRCatalogRequest> CATALOG_REQUESTOffset) { builder.AddOffset(1, CATALOG_REQUESTOffset.Value, 0); }
   public static void AddPROBABILITY_REQUEST(FlatBufferBuilder builder, Offset<CQRProbabilityRequest> PROBABILITY_REQUESTOffset) { builder.AddOffset(2, PROBABILITY_REQUESTOffset.Value, 0); }
@@ -92,6 +100,8 @@ public struct CQR : IFlatbufferObject
   public static void AddDESTROY_REQUEST(FlatBufferBuilder builder, Offset<CQRDestroyRequest> DESTROY_REQUESTOffset) { builder.AddOffset(13, DESTROY_REQUESTOffset.Value, 0); }
   public static void AddVERSION_QUERY(FlatBufferBuilder builder, bool VERSION_QUERY) { builder.AddBool(14, VERSION_QUERY, false); }
   public static void AddVERSION_RESULT(FlatBufferBuilder builder, Offset<CQRVersionResult> VERSION_RESULTOffset) { builder.AddOffset(15, VERSION_RESULTOffset.Value, 0); }
+  public static void AddLAUNCH_REQUEST(FlatBufferBuilder builder, Offset<CQRLaunchRequest> LAUNCH_REQUESTOffset) { builder.AddOffset(16, LAUNCH_REQUESTOffset.Value, 0); }
+  public static void AddLAUNCH_RESULT(FlatBufferBuilder builder, Offset<CQRLaunchResult> LAUNCH_RESULTOffset) { builder.AddOffset(17, LAUNCH_RESULTOffset.Value, 0); }
   public static Offset<CQR> EndCQR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CQR>(o);
@@ -120,6 +130,8 @@ public struct CQR : IFlatbufferObject
     _o.DESTROY_REQUEST = this.DESTROY_REQUEST.HasValue ? this.DESTROY_REQUEST.Value.UnPack() : null;
     _o.VERSION_QUERY = this.VERSION_QUERY;
     _o.VERSION_RESULT = this.VERSION_RESULT.HasValue ? this.VERSION_RESULT.Value.UnPack() : null;
+    _o.LAUNCH_REQUEST = this.LAUNCH_REQUEST.HasValue ? this.LAUNCH_REQUEST.Value.UnPack() : null;
+    _o.LAUNCH_RESULT = this.LAUNCH_RESULT.HasValue ? this.LAUNCH_RESULT.Value.UnPack() : null;
   }
   public static Offset<CQR> Pack(FlatBufferBuilder builder, CQRT _o) {
     if (_o == null) return default(Offset<CQR>);
@@ -138,6 +150,8 @@ public struct CQR : IFlatbufferObject
     var _WINDOW_REQUEST = _o.WINDOW_REQUEST == null ? default(Offset<CQRWindowRequest>) : CQRWindowRequest.Pack(builder, _o.WINDOW_REQUEST);
     var _DESTROY_REQUEST = _o.DESTROY_REQUEST == null ? default(Offset<CQRDestroyRequest>) : CQRDestroyRequest.Pack(builder, _o.DESTROY_REQUEST);
     var _VERSION_RESULT = _o.VERSION_RESULT == null ? default(Offset<CQRVersionResult>) : CQRVersionResult.Pack(builder, _o.VERSION_RESULT);
+    var _LAUNCH_REQUEST = _o.LAUNCH_REQUEST == null ? default(Offset<CQRLaunchRequest>) : CQRLaunchRequest.Pack(builder, _o.LAUNCH_REQUEST);
+    var _LAUNCH_RESULT = _o.LAUNCH_RESULT == null ? default(Offset<CQRLaunchResult>) : CQRLaunchResult.Pack(builder, _o.LAUNCH_RESULT);
     return CreateCQR(
       builder,
       _PAIR_REQUEST,
@@ -155,7 +169,9 @@ public struct CQR : IFlatbufferObject
       _WINDOW_REQUEST,
       _DESTROY_REQUEST,
       _o.VERSION_QUERY,
-      _VERSION_RESULT);
+      _VERSION_RESULT,
+      _LAUNCH_REQUEST,
+      _LAUNCH_RESULT);
   }
 }
 
@@ -177,6 +193,8 @@ public class CQRT
   public CQRDestroyRequestT DESTROY_REQUEST { get; set; }
   public bool VERSION_QUERY { get; set; }
   public CQRVersionResultT VERSION_RESULT { get; set; }
+  public CQRLaunchRequestT LAUNCH_REQUEST { get; set; }
+  public CQRLaunchResultT LAUNCH_RESULT { get; set; }
 
   public CQRT() {
     this.PAIR_REQUEST = null;
@@ -195,6 +213,8 @@ public class CQRT
     this.DESTROY_REQUEST = null;
     this.VERSION_QUERY = false;
     this.VERSION_RESULT = null;
+    this.LAUNCH_REQUEST = null;
+    this.LAUNCH_RESULT = null;
   }
   public static CQRT DeserializeFromBinary(byte[] fbBuffer) {
     return CQR.GetRootAsCQR(new ByteBuffer(fbBuffer)).UnPack();
@@ -228,6 +248,8 @@ static public class CQRVerify
       && verifier.VerifyTable(tablePos, 30 /*DESTROY_REQUEST*/, CQRDestroyRequestVerify.Verify, false)
       && verifier.VerifyField(tablePos, 32 /*VERSION_QUERY*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTable(tablePos, 34 /*VERSION_RESULT*/, CQRVersionResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 36 /*LAUNCH_REQUEST*/, CQRLaunchRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 38 /*LAUNCH_RESULT*/, CQRLaunchResultVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

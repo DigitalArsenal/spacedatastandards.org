@@ -18,7 +18,8 @@ import java.nio.ByteOrder;
 
 /**
  * Conjunction Query and Result — pair/catalog screening, encounter-plane
- * probability, typed native documents and resident screening-index control.
+ * probability, typed native documents, resident screening-index control and
+ * launch-window screening.
  * Exactly one arm per PIV payload, selected by the declared METHOD_ID.
  */
 @SuppressWarnings("unused")
@@ -61,6 +62,13 @@ public final class CQR extends com.google.flatbuffers.Table {
   public boolean VERSION_QUERY() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public CQRVersionResult VERSION_RESULT() { return VERSION_RESULT(new CQRVersionResult()); }
   public CQRVersionResult VERSION_RESULT(CQRVersionResult obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * APPENDED. Launch-window screening request and result.
+   */
+  public CQRLaunchRequest LAUNCH_REQUEST() { return LAUNCH_REQUEST(new CQRLaunchRequest()); }
+  public CQRLaunchRequest LAUNCH_REQUEST(CQRLaunchRequest obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public CQRLaunchResult LAUNCH_RESULT() { return LAUNCH_RESULT(new CQRLaunchResult()); }
+  public CQRLaunchResult LAUNCH_RESULT(CQRLaunchResult obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createCQR(FlatBufferBuilder builder,
       int PAIR_REQUESTOffset,
@@ -78,8 +86,12 @@ public final class CQR extends com.google.flatbuffers.Table {
       int WINDOW_REQUESTOffset,
       int DESTROY_REQUESTOffset,
       boolean VERSION_QUERY,
-      int VERSION_RESULTOffset) {
-    builder.startTable(16);
+      int VERSION_RESULTOffset,
+      int LAUNCH_REQUESTOffset,
+      int LAUNCH_RESULTOffset) {
+    builder.startTable(18);
+    CQR.addLaunchResult(builder, LAUNCH_RESULTOffset);
+    CQR.addLaunchRequest(builder, LAUNCH_REQUESTOffset);
     CQR.addVersionResult(builder, VERSION_RESULTOffset);
     CQR.addDestroyRequest(builder, DESTROY_REQUESTOffset);
     CQR.addWindowRequest(builder, WINDOW_REQUESTOffset);
@@ -99,7 +111,7 @@ public final class CQR extends com.google.flatbuffers.Table {
     return CQR.endCQR(builder);
   }
 
-  public static void startCQR(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startCQR(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addPairRequest(FlatBufferBuilder builder, int PAIR_REQUESTOffset) { builder.addOffset(0, PAIR_REQUESTOffset, 0); }
   public static void addCatalogRequest(FlatBufferBuilder builder, int CATALOG_REQUESTOffset) { builder.addOffset(1, CATALOG_REQUESTOffset, 0); }
   public static void addProbabilityRequest(FlatBufferBuilder builder, int PROBABILITY_REQUESTOffset) { builder.addOffset(2, PROBABILITY_REQUESTOffset, 0); }
@@ -116,6 +128,8 @@ public final class CQR extends com.google.flatbuffers.Table {
   public static void addDestroyRequest(FlatBufferBuilder builder, int DESTROY_REQUESTOffset) { builder.addOffset(13, DESTROY_REQUESTOffset, 0); }
   public static void addVersionQuery(FlatBufferBuilder builder, boolean VERSION_QUERY) { builder.addBoolean(14, VERSION_QUERY, false); }
   public static void addVersionResult(FlatBufferBuilder builder, int VERSION_RESULTOffset) { builder.addOffset(15, VERSION_RESULTOffset, 0); }
+  public static void addLaunchRequest(FlatBufferBuilder builder, int LAUNCH_REQUESTOffset) { builder.addOffset(16, LAUNCH_REQUESTOffset, 0); }
+  public static void addLaunchResult(FlatBufferBuilder builder, int LAUNCH_RESULTOffset) { builder.addOffset(17, LAUNCH_RESULTOffset, 0); }
   public static int endCQR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

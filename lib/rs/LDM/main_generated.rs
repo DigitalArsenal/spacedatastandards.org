@@ -55,6 +55,7 @@ impl<'a> LDM<'a> {
   pub const VT_COLA_POINTS_OF_CONTACT: ::flatbuffers::VOffsetT = 52;
   pub const VT_ORBITAL_PARAMETERS: ::flatbuffers::VOffsetT = 54;
   pub const VT_BURN_OUT_VECTORS: ::flatbuffers::VOffsetT = 56;
+  pub const VT_ID: ::flatbuffers::VOffsetT = 58;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -66,6 +67,7 @@ impl<'a> LDM<'a> {
     args: &'args LDMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<LDM<'bldr>> {
     let mut builder = LDMBuilder::new(_fbb);
+    if let Some(x) = args.ID { builder.add_ID(x); }
     if let Some(x) = args.BURN_OUT_VECTORS { builder.add_BURN_OUT_VECTORS(x); }
     if let Some(x) = args.ORBITAL_PARAMETERS { builder.add_ORBITAL_PARAMETERS(x); }
     if let Some(x) = args.COLA_POINTS_OF_CONTACT { builder.add_COLA_POINTS_OF_CONTACT(x); }
@@ -176,6 +178,9 @@ impl<'a> LDM<'a> {
     let BURN_OUT_VECTORS = self.BURN_OUT_VECTORS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let ID = self.ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     LDMT {
       SITE,
       AZIMUTH,
@@ -204,6 +209,7 @@ impl<'a> LDM<'a> {
       COLA_POINTS_OF_CONTACT,
       ORBITAL_PARAMETERS,
       BURN_OUT_VECTORS,
+      ID,
     }
   }
 
@@ -423,6 +429,15 @@ impl<'a> LDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<BOV>>>>(LDM::VT_BURN_OUT_VECTORS, None)}
   }
+  /// APPENDED. Stable identifier of this launch in the registry that
+  /// published it; unchanged when the launch time or status changes.
+  #[inline]
+  pub fn ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LDM::VT_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for LDM<'_> {
@@ -458,6 +473,7 @@ impl ::flatbuffers::Verifiable for LDM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EPM>>>>("COLA_POINTS_OF_CONTACT", Self::VT_COLA_POINTS_OF_CONTACT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ORBITAL_PARAMETERS", Self::VT_ORBITAL_PARAMETERS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<BOV>>>>("BURN_OUT_VECTORS", Self::VT_BURN_OUT_VECTORS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .finish();
     Ok(())
   }
@@ -490,6 +506,7 @@ pub struct LDMArgs<'a> {
     pub COLA_POINTS_OF_CONTACT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EPM<'a>>>>>,
     pub ORBITAL_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub BURN_OUT_VECTORS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<BOV<'a>>>>>,
+    pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for LDMArgs<'a> {
   #[inline]
@@ -522,6 +539,7 @@ impl<'a> Default for LDMArgs<'a> {
       COLA_POINTS_OF_CONTACT: None,
       ORBITAL_PARAMETERS: None,
       BURN_OUT_VECTORS: None,
+      ID: None,
     }
   }
 }
@@ -640,6 +658,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LDM::VT_BURN_OUT_VECTORS, BURN_OUT_VECTORS);
   }
   #[inline]
+  pub fn add_ID(&mut self, ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LDM::VT_ID, ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LDMBuilder {
@@ -684,6 +706,7 @@ impl ::core::fmt::Debug for LDM<'_> {
       ds.field("COLA_POINTS_OF_CONTACT", &self.COLA_POINTS_OF_CONTACT());
       ds.field("ORBITAL_PARAMETERS", &self.ORBITAL_PARAMETERS());
       ds.field("BURN_OUT_VECTORS", &self.BURN_OUT_VECTORS());
+      ds.field("ID", &self.ID());
       ds.finish()
   }
 }
@@ -717,6 +740,7 @@ pub struct LDMT {
   pub COLA_POINTS_OF_CONTACT: Option<alloc::vec::Vec<EPMT>>,
   pub ORBITAL_PARAMETERS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub BURN_OUT_VECTORS: Option<alloc::vec::Vec<BOVT>>,
+  pub ID: Option<alloc::string::String>,
 }
 impl Default for LDMT {
   fn default() -> Self {
@@ -748,6 +772,7 @@ impl Default for LDMT {
       COLA_POINTS_OF_CONTACT: None,
       ORBITAL_PARAMETERS: None,
       BURN_OUT_VECTORS: None,
+      ID: None,
     }
   }
 }
@@ -835,6 +860,9 @@ impl LDMT {
     let BURN_OUT_VECTORS = self.BURN_OUT_VECTORS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let ID = self.ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     LDM::create(_fbb, &LDMArgs{
       SITE,
       AZIMUTH,
@@ -863,6 +891,7 @@ impl LDMT {
       COLA_POINTS_OF_CONTACT,
       ORBITAL_PARAMETERS,
       BURN_OUT_VECTORS,
+      ID,
     })
   }
 }

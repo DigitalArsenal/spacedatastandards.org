@@ -413,6 +413,21 @@ class LDM : Table() {
         get() {
             val o = __offset(56); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * APPENDED. Stable identifier of this launch in the registry that
+     * published it; unchanged when the launch time or status changes.
+     */
+    val id : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLDM(_bb: ByteBuffer): LDM = getRootAsLDM(_bb, LDM())
@@ -421,8 +436,9 @@ class LDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LDM")
-        fun createLDM(builder: FlatBufferBuilder, siteOffset: Int, azimuth: Float, referencesOffset: Int, agencyNameOffset: Int, pointsOfContactOffset: Int, operationsPointsOfContactOffset: Int, netOffset: Int, rocketConfigurationOffset: Int, missionNameOffset: Int, missionDescriptionOffset: Int, missionTypeOffset: Int, orbitTypeOffset: Int, weatherConditionsOffset: Int, launchStatusOffset: Int, webcastUrlOffset: Int, mediaLinksOffset: Int, earliestLaunchTimesOffset: Int, latestLaunchTimesOffset: Int, lcolaWindowClosuresOffset: Int, objectsOffset: Int, trackingRequirementsOffset: Int, colaScreenDurationOffset: Int, probabilityOfCollisionThresholdOffset: Int, colaRunsRequiredOffset: Int, colaPointsOfContactOffset: Int, orbitalParametersOffset: Int, burnOutVectorsOffset: Int) : Int {
-            builder.startTable(27)
+        fun createLDM(builder: FlatBufferBuilder, siteOffset: Int, azimuth: Float, referencesOffset: Int, agencyNameOffset: Int, pointsOfContactOffset: Int, operationsPointsOfContactOffset: Int, netOffset: Int, rocketConfigurationOffset: Int, missionNameOffset: Int, missionDescriptionOffset: Int, missionTypeOffset: Int, orbitTypeOffset: Int, weatherConditionsOffset: Int, launchStatusOffset: Int, webcastUrlOffset: Int, mediaLinksOffset: Int, earliestLaunchTimesOffset: Int, latestLaunchTimesOffset: Int, lcolaWindowClosuresOffset: Int, objectsOffset: Int, trackingRequirementsOffset: Int, colaScreenDurationOffset: Int, probabilityOfCollisionThresholdOffset: Int, colaRunsRequiredOffset: Int, colaPointsOfContactOffset: Int, orbitalParametersOffset: Int, burnOutVectorsOffset: Int, idOffset: Int) : Int {
+            builder.startTable(28)
+            addID(builder, idOffset)
             addBURNOUTVECTORS(builder, burnOutVectorsOffset)
             addORBITALPARAMETERS(builder, orbitalParametersOffset)
             addCOLAPOINTSOFCONTACT(builder, colaPointsOfContactOffset)
@@ -452,7 +468,7 @@ class LDM : Table() {
             addSITE(builder, siteOffset)
             return endLDM(builder)
         }
-        fun startLDM(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startLDM(builder: FlatBufferBuilder) = builder.startTable(28)
         fun addSITE(builder: FlatBufferBuilder, site: Int) = builder.addOffset(0, site, 0)
         fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Float) = builder.addFloat(1, azimuth, 0.0)
         fun addREFERENCES(builder: FlatBufferBuilder, references: Int) = builder.addOffset(2, references, 0)
@@ -568,6 +584,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startBurnOutVectorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(27, id, 0)
         fun endLDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

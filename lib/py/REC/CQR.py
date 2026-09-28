@@ -7,7 +7,8 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Conjunction Query and Result — pair/catalog screening, encounter-plane
-# probability, typed native documents and resident screening-index control.
+# probability, typed native documents, resident screening-index control and
+# launch-window screening.
 # Exactly one arm per PIV payload, selected by the declared METHOD_ID.
 class CQR(object):
     __slots__ = ['_tab']
@@ -203,8 +204,31 @@ class CQR(object):
             return obj
         return None
 
+    # APPENDED. Launch-window screening request and result.
+    # CQR
+    def LAUNCH_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CQRLaunchRequest import CQRLaunchRequest
+            obj = CQRLaunchRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CQR
+    def LAUNCH_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CQRLaunchResult import CQRLaunchResult
+            obj = CQRLaunchResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def CQRStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(18)
 
 def Start(builder):
     CQRStart(builder)
@@ -305,6 +329,18 @@ def CQRAddVERSION_RESULT(builder, VERSION_RESULT):
 def AddVERSION_RESULT(builder, VERSION_RESULT):
     CQRAddVERSION_RESULT(builder, VERSION_RESULT)
 
+def CQRAddLAUNCH_REQUEST(builder, LAUNCH_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_REQUEST), 0)
+
+def AddLAUNCH_REQUEST(builder, LAUNCH_REQUEST):
+    CQRAddLAUNCH_REQUEST(builder, LAUNCH_REQUEST)
+
+def CQRAddLAUNCH_RESULT(builder, LAUNCH_RESULT):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_RESULT), 0)
+
+def AddLAUNCH_RESULT(builder, LAUNCH_RESULT):
+    CQRAddLAUNCH_RESULT(builder, LAUNCH_RESULT)
+
 def CQREnd(builder):
     return builder.EndObject()
 
@@ -319,6 +355,8 @@ import CQRDestroyRequest
 import CQREvent
 import CQRIndexRequest
 import CQRIndexResult
+import CQRLaunchRequest
+import CQRLaunchResult
 import CQRNativeDocument
 import CQRPairRequest
 import CQRProbabilityRequest
@@ -352,6 +390,8 @@ class CQRT(object):
         DESTROY_REQUEST = None,
         VERSION_QUERY = False,
         VERSION_RESULT = None,
+        LAUNCH_REQUEST = None,
+        LAUNCH_RESULT = None,
     ):
         self.PAIR_REQUEST = PAIR_REQUEST  # type: Optional[CQRPairRequest.CQRPairRequestT]
         self.CATALOG_REQUEST = CATALOG_REQUEST  # type: Optional[CQRCatalogRequest.CQRCatalogRequestT]
@@ -369,6 +409,8 @@ class CQRT(object):
         self.DESTROY_REQUEST = DESTROY_REQUEST  # type: Optional[CQRDestroyRequest.CQRDestroyRequestT]
         self.VERSION_QUERY = VERSION_QUERY  # type: bool
         self.VERSION_RESULT = VERSION_RESULT  # type: Optional[CQRVersionResult.CQRVersionResultT]
+        self.LAUNCH_REQUEST = LAUNCH_REQUEST  # type: Optional[CQRLaunchRequest.CQRLaunchRequestT]
+        self.LAUNCH_RESULT = LAUNCH_RESULT  # type: Optional[CQRLaunchResult.CQRLaunchResultT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -422,6 +464,10 @@ class CQRT(object):
         self.VERSION_QUERY = CQR.VERSION_QUERY()
         if CQR.VERSION_RESULT() is not None:
             self.VERSION_RESULT = CQRVersionResult.CQRVersionResultT.InitFromObj(CQR.VERSION_RESULT())
+        if CQR.LAUNCH_REQUEST() is not None:
+            self.LAUNCH_REQUEST = CQRLaunchRequest.CQRLaunchRequestT.InitFromObj(CQR.LAUNCH_REQUEST())
+        if CQR.LAUNCH_RESULT() is not None:
+            self.LAUNCH_RESULT = CQRLaunchResult.CQRLaunchResultT.InitFromObj(CQR.LAUNCH_RESULT())
 
     # CQRT
     def Pack(self, builder):
@@ -455,6 +501,10 @@ class CQRT(object):
             DESTROY_REQUEST = self.DESTROY_REQUEST.Pack(builder)
         if self.VERSION_RESULT is not None:
             VERSION_RESULT = self.VERSION_RESULT.Pack(builder)
+        if self.LAUNCH_REQUEST is not None:
+            LAUNCH_REQUEST = self.LAUNCH_REQUEST.Pack(builder)
+        if self.LAUNCH_RESULT is not None:
+            LAUNCH_RESULT = self.LAUNCH_RESULT.Pack(builder)
         CQRStart(builder)
         if self.PAIR_REQUEST is not None:
             CQRAddPAIR_REQUEST(builder, PAIR_REQUEST)
@@ -487,5 +537,9 @@ class CQRT(object):
         CQRAddVERSION_QUERY(builder, self.VERSION_QUERY)
         if self.VERSION_RESULT is not None:
             CQRAddVERSION_RESULT(builder, VERSION_RESULT)
+        if self.LAUNCH_REQUEST is not None:
+            CQRAddLAUNCH_REQUEST(builder, LAUNCH_REQUEST)
+        if self.LAUNCH_RESULT is not None:
+            CQRAddLAUNCH_RESULT(builder, LAUNCH_RESULT)
         CQR = CQREnd(builder)
         return CQR

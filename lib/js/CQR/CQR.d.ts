@@ -7,6 +7,8 @@ import { CQRDestroyRequest, CQRDestroyRequestT } from './CQRDestroyRequest.js';
 import { CQREvent, CQREventT } from './CQREvent.js';
 import { CQRIndexRequest, CQRIndexRequestT } from './CQRIndexRequest.js';
 import { CQRIndexResult, CQRIndexResultT } from './CQRIndexResult.js';
+import { CQRLaunchRequest, CQRLaunchRequestT } from './CQRLaunchRequest.js';
+import { CQRLaunchResult, CQRLaunchResultT } from './CQRLaunchResult.js';
 import { CQRNativeDocument, CQRNativeDocumentT } from './CQRNativeDocument.js';
 import { CQRPairRequest, CQRPairRequestT } from './CQRPairRequest.js';
 import { CQRProbabilityRequest, CQRProbabilityRequestT } from './CQRProbabilityRequest.js';
@@ -16,7 +18,8 @@ import { CQRWindowRequest, CQRWindowRequestT } from './CQRWindowRequest.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 /**
  * Conjunction Query and Result — pair/catalog screening, encounter-plane
- * probability, typed native documents and resident screening-index control.
+ * probability, typed native documents, resident screening-index control and
+ * launch-window screening.
  * Exactly one arm per PIV payload, selected by the declared METHOD_ID.
  */
 export declare class CQR implements flatbuffers.IUnpackableObject<CQRT> {
@@ -42,6 +45,11 @@ export declare class CQR implements flatbuffers.IUnpackableObject<CQRT> {
     DESTROY_REQUEST(obj?: CQRDestroyRequest): CQRDestroyRequest | null;
     VERSION_QUERY(): boolean;
     VERSION_RESULT(obj?: CQRVersionResult): CQRVersionResult | null;
+    /**
+     * APPENDED. Launch-window screening request and result.
+     */
+    LAUNCH_REQUEST(obj?: CQRLaunchRequest): CQRLaunchRequest | null;
+    LAUNCH_RESULT(obj?: CQRLaunchResult): CQRLaunchResult | null;
     static startCQR(builder: flatbuffers.Builder): void;
     static addPairRequest(builder: flatbuffers.Builder, PAIR_REQUESTOffset: flatbuffers.Offset): void;
     static addCatalogRequest(builder: flatbuffers.Builder, CATALOG_REQUESTOffset: flatbuffers.Offset): void;
@@ -59,6 +67,8 @@ export declare class CQR implements flatbuffers.IUnpackableObject<CQRT> {
     static addDestroyRequest(builder: flatbuffers.Builder, DESTROY_REQUESTOffset: flatbuffers.Offset): void;
     static addVersionQuery(builder: flatbuffers.Builder, VERSION_QUERY: boolean): void;
     static addVersionResult(builder: flatbuffers.Builder, VERSION_RESULTOffset: flatbuffers.Offset): void;
+    static addLaunchRequest(builder: flatbuffers.Builder, LAUNCH_REQUESTOffset: flatbuffers.Offset): void;
+    static addLaunchResult(builder: flatbuffers.Builder, LAUNCH_RESULTOffset: flatbuffers.Offset): void;
     static endCQR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCQRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCQRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -82,7 +92,9 @@ export declare class CQRT implements flatbuffers.IGeneratedObject {
     DESTROY_REQUEST: CQRDestroyRequestT | null;
     VERSION_QUERY: boolean;
     VERSION_RESULT: CQRVersionResultT | null;
-    constructor(PAIR_REQUEST?: CQRPairRequestT | null, CATALOG_REQUEST?: CQRCatalogRequestT | null, PROBABILITY_REQUEST?: CQRProbabilityRequestT | null, PROBABILITY_RESULT?: CQRProbabilityResultT | null, ALFANO_REQUEST?: CQRAlfanoRequestT | null, ALFANO_RESULT?: CQRAlfanoResultT | null, EVENT_RESULT?: CQREventT | null, TCA_RESULT?: TIMInstantT | null, CATALOG_RESULT?: CQRCatalogResultT | null, NATIVE_DOCUMENT?: CQRNativeDocumentT | null, INDEX_REQUEST?: CQRIndexRequestT | null, INDEX_RESULT?: CQRIndexResultT | null, WINDOW_REQUEST?: CQRWindowRequestT | null, DESTROY_REQUEST?: CQRDestroyRequestT | null, VERSION_QUERY?: boolean, VERSION_RESULT?: CQRVersionResultT | null);
+    LAUNCH_REQUEST: CQRLaunchRequestT | null;
+    LAUNCH_RESULT: CQRLaunchResultT | null;
+    constructor(PAIR_REQUEST?: CQRPairRequestT | null, CATALOG_REQUEST?: CQRCatalogRequestT | null, PROBABILITY_REQUEST?: CQRProbabilityRequestT | null, PROBABILITY_RESULT?: CQRProbabilityResultT | null, ALFANO_REQUEST?: CQRAlfanoRequestT | null, ALFANO_RESULT?: CQRAlfanoResultT | null, EVENT_RESULT?: CQREventT | null, TCA_RESULT?: TIMInstantT | null, CATALOG_RESULT?: CQRCatalogResultT | null, NATIVE_DOCUMENT?: CQRNativeDocumentT | null, INDEX_REQUEST?: CQRIndexRequestT | null, INDEX_RESULT?: CQRIndexResultT | null, WINDOW_REQUEST?: CQRWindowRequestT | null, DESTROY_REQUEST?: CQRDestroyRequestT | null, VERSION_QUERY?: boolean, VERSION_RESULT?: CQRVersionResultT | null, LAUNCH_REQUEST?: CQRLaunchRequestT | null, LAUNCH_RESULT?: CQRLaunchResultT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQR.d.ts.map

@@ -162,6 +162,15 @@ public struct LDM : IFlatbufferObject
   /// Burn Out Vectors for the Launch
   public BOV? BURN_OUT_VECTORS(int j) { int o = __p.__offset(56); return o != 0 ? (BOV?)(new BOV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int BURN_OUT_VECTORSLength { get { int o = __p.__offset(56); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// APPENDED. Stable identifier of this launch in the registry that
+  /// published it; unchanged when the launch time or status changes.
+  public string ID { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetIDArray() { return __p.__vector_as_array<byte>(58); }
 
   public static Offset<LDM> CreateLDM(FlatBufferBuilder builder,
       Offset<SIT> SITEOffset = default(Offset<SIT>),
@@ -190,8 +199,10 @@ public struct LDM : IFlatbufferObject
       StringOffset COLA_RUNS_REQUIREDOffset = default(StringOffset),
       VectorOffset COLA_POINTS_OF_CONTACTOffset = default(VectorOffset),
       VectorOffset ORBITAL_PARAMETERSOffset = default(VectorOffset),
-      VectorOffset BURN_OUT_VECTORSOffset = default(VectorOffset)) {
-    builder.StartTable(27);
+      VectorOffset BURN_OUT_VECTORSOffset = default(VectorOffset),
+      StringOffset IDOffset = default(StringOffset)) {
+    builder.StartTable(28);
+    LDM.AddID(builder, IDOffset);
     LDM.AddBURN_OUT_VECTORS(builder, BURN_OUT_VECTORSOffset);
     LDM.AddORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERSOffset);
     LDM.AddCOLA_POINTS_OF_CONTACT(builder, COLA_POINTS_OF_CONTACTOffset);
@@ -222,7 +233,7 @@ public struct LDM : IFlatbufferObject
     return LDM.EndLDM(builder);
   }
 
-  public static void StartLDM(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartLDM(FlatBufferBuilder builder) { builder.StartTable(28); }
   public static void AddSITE(FlatBufferBuilder builder, Offset<SIT> SITEOffset) { builder.AddOffset(0, SITEOffset.Value, 0); }
   public static void AddAZIMUTH(FlatBufferBuilder builder, float AZIMUTH) { builder.AddFloat(1, AZIMUTH, 0.0f); }
   public static void AddREFERENCES(FlatBufferBuilder builder, StringOffset REFERENCESOffset) { builder.AddOffset(2, REFERENCESOffset.Value, 0); }
@@ -305,6 +316,7 @@ public struct LDM : IFlatbufferObject
   public static VectorOffset CreateBURN_OUT_VECTORSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<BOV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBURN_OUT_VECTORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<BOV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBURN_OUT_VECTORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(27, IDOffset.Value, 0); }
   public static Offset<LDM> EndLDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<LDM>(o);
@@ -355,6 +367,7 @@ public struct LDM : IFlatbufferObject
     for (var _j = 0; _j < this.ORBITAL_PARAMETERSLength; ++_j) {_o.ORBITAL_PARAMETERS.Add(this.ORBITAL_PARAMETERS(_j));}
     _o.BURN_OUT_VECTORS = new List<BOVT>();
     for (var _j = 0; _j < this.BURN_OUT_VECTORSLength; ++_j) {_o.BURN_OUT_VECTORS.Add(this.BURN_OUT_VECTORS(_j).HasValue ? this.BURN_OUT_VECTORS(_j).Value.UnPack() : null);}
+    _o.ID = this.ID;
   }
   public static Offset<LDM> Pack(FlatBufferBuilder builder, LDMT _o) {
     if (_o == null) return default(Offset<LDM>);
@@ -439,6 +452,7 @@ public struct LDM : IFlatbufferObject
       for (var _j = 0; _j < __BURN_OUT_VECTORS.Length; ++_j) { __BURN_OUT_VECTORS[_j] = BOV.Pack(builder, _o.BURN_OUT_VECTORS[_j]); }
       _BURN_OUT_VECTORS = CreateBURN_OUT_VECTORSVector(builder, __BURN_OUT_VECTORS);
     }
+    var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     return CreateLDM(
       builder,
       _SITE,
@@ -467,7 +481,8 @@ public struct LDM : IFlatbufferObject
       _COLA_RUNS_REQUIRED,
       _COLA_POINTS_OF_CONTACT,
       _ORBITAL_PARAMETERS,
-      _BURN_OUT_VECTORS);
+      _BURN_OUT_VECTORS,
+      _ID);
   }
 }
 
@@ -500,6 +515,7 @@ public class LDMT
   public List<EPMT> COLA_POINTS_OF_CONTACT { get; set; }
   public List<string> ORBITAL_PARAMETERS { get; set; }
   public List<BOVT> BURN_OUT_VECTORS { get; set; }
+  public string ID { get; set; }
 
   public LDMT() {
     this.SITE = null;
@@ -529,6 +545,7 @@ public class LDMT
     this.COLA_POINTS_OF_CONTACT = null;
     this.ORBITAL_PARAMETERS = null;
     this.BURN_OUT_VECTORS = null;
+    this.ID = null;
   }
   public static LDMT DeserializeFromBinary(byte[] fbBuffer) {
     return LDM.GetRootAsLDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -573,6 +590,7 @@ static public class LDMVerify
       && verifier.VerifyVectorOfTables(tablePos, 52 /*COLA_POINTS_OF_CONTACT*/, EPMVerify.Verify, false)
       && verifier.VerifyVectorOfStrings(tablePos, 54 /*ORBITAL_PARAMETERS*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 56 /*BURN_OUT_VECTORS*/, BOVVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 58 /*ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -421,8 +421,17 @@ class LDM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         return o == 0
 
+    # APPENDED. Stable identifier of this launch in the registry that
+    # published it; unchanged when the launch time or status changes.
+    # LDM
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def LDMStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(28)
 
 def Start(builder):
     LDMStart(builder)
@@ -721,6 +730,12 @@ def LDMCreateBURN_OUT_VECTORSVector(builder, data):
 def CreateBURN_OUT_VECTORSVector(builder, data):
     LDMCreateBURN_OUT_VECTORSVector(builder, data)
 
+def LDMAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    LDMAddID(builder, ID)
+
 def LDMEnd(builder):
     return builder.EndObject()
 
@@ -769,6 +784,7 @@ class LDMT(object):
         COLA_POINTS_OF_CONTACT = None,
         ORBITAL_PARAMETERS = None,
         BURN_OUT_VECTORS = None,
+        ID = None,
     ):
         self.SITE = SITE  # type: Optional[SIT.SITT]
         self.AZIMUTH = AZIMUTH  # type: float
@@ -797,6 +813,7 @@ class LDMT(object):
         self.COLA_POINTS_OF_CONTACT = COLA_POINTS_OF_CONTACT  # type: Optional[List[EPM.EPMT]]
         self.ORBITAL_PARAMETERS = ORBITAL_PARAMETERS  # type: Optional[List[Optional[str]]]
         self.BURN_OUT_VECTORS = BURN_OUT_VECTORS  # type: Optional[List[BOV.BOVT]]
+        self.ID = ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -901,6 +918,7 @@ class LDMT(object):
                 else:
                     bOV_ = BOV.BOVT.InitFromObj(LDM.BURN_OUT_VECTORS(i))
                     self.BURN_OUT_VECTORS.append(bOV_)
+        self.ID = LDM.ID()
 
     # LDMT
     def Pack(self, builder):
@@ -1022,6 +1040,8 @@ class LDMT(object):
             for i in reversed(range(len(self.BURN_OUT_VECTORS))):
                 builder.PrependUOffsetTRelative(BURN_OUT_VECTORSlist[i])
             BURN_OUT_VECTORS = builder.EndVector()
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
         LDMStart(builder)
         if self.SITE is not None:
             LDMAddSITE(builder, SITE)
@@ -1076,5 +1096,7 @@ class LDMT(object):
             LDMAddORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERS)
         if self.BURN_OUT_VECTORS is not None:
             LDMAddBURN_OUT_VECTORS(builder, BURN_OUT_VECTORS)
+        if self.ID is not None:
+            LDMAddID(builder, ID)
         LDM = LDMEnd(builder)
         return LDM

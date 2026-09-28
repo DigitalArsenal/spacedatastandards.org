@@ -345,8 +345,19 @@ burnOutVectorsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * APPENDED. Stable identifier of this launch in the registry that
+ * published it; unchanged when the launch time or status changes.
+ */
+ID():string|null
+ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startLDM(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(28);
 }
 
 static addSite(builder:flatbuffers.Builder, SITEOffset:flatbuffers.Offset) {
@@ -589,6 +600,10 @@ static startBurnOutVectorsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, IDOffset, 0);
+}
+
 static endLDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -631,7 +646,8 @@ unpack(): LDMT {
     this.COLA_RUNS_REQUIRED(),
     this.bb!.createObjList<EPM, EPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength()),
     this.bb!.createScalarList<string>(this.ORBITAL_PARAMETERS.bind(this), this.orbitalParametersLength()),
-    this.bb!.createObjList<BOV, BOVT>(this.BURN_OUT_VECTORS.bind(this), this.burnOutVectorsLength())
+    this.bb!.createObjList<BOV, BOVT>(this.BURN_OUT_VECTORS.bind(this), this.burnOutVectorsLength()),
+    this.ID()
   );
 }
 
@@ -664,6 +680,7 @@ unpackTo(_o: LDMT): void {
   _o.COLA_POINTS_OF_CONTACT = this.bb!.createObjList<EPM, EPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength());
   _o.ORBITAL_PARAMETERS = this.bb!.createScalarList<string>(this.ORBITAL_PARAMETERS.bind(this), this.orbitalParametersLength());
   _o.BURN_OUT_VECTORS = this.bb!.createObjList<BOV, BOVT>(this.BURN_OUT_VECTORS.bind(this), this.burnOutVectorsLength());
+  _o.ID = this.ID();
 }
 }
 
@@ -695,7 +712,8 @@ constructor(
   public COLA_RUNS_REQUIRED: string|Uint8Array|null = null,
   public COLA_POINTS_OF_CONTACT: (EPMT)[] = [],
   public ORBITAL_PARAMETERS: (string)[] = [],
-  public BURN_OUT_VECTORS: (BOVT)[] = []
+  public BURN_OUT_VECTORS: (BOVT)[] = [],
+  public ID: string|Uint8Array|null = null
 ){}
 
 
@@ -726,6 +744,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLA_POINTS_OF_CONTACT = LDM.createColaPointsOfContactVector(builder, builder.createObjectOffsetList(this.COLA_POINTS_OF_CONTACT));
   const ORBITAL_PARAMETERS = LDM.createOrbitalParametersVector(builder, builder.createObjectOffsetList(this.ORBITAL_PARAMETERS));
   const BURN_OUT_VECTORS = LDM.createBurnOutVectorsVector(builder, builder.createObjectOffsetList(this.BURN_OUT_VECTORS));
+  const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
 
   LDM.startLDM(builder);
   LDM.addSite(builder, SITE);
@@ -755,6 +774,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   LDM.addColaPointsOfContact(builder, COLA_POINTS_OF_CONTACT);
   LDM.addOrbitalParameters(builder, ORBITAL_PARAMETERS);
   LDM.addBurnOutVectors(builder, BURN_OUT_VECTORS);
+  LDM.addId(builder, ID);
 
   return LDM.endLDM(builder);
 }

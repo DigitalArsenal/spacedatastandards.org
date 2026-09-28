@@ -265,6 +265,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "OMM_RECORD", "OCM_RECORD", "OEM_RECORD", "CDM_RECORD", "QUERY_SELECTION", "PUBLICATION", "PUBSUB_TOPIC"]
     },
+    "cqrLaunchObjectClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "INHABITABLE", "NON_DEBRIS", "DEBRIS"]
+    },
+    "cqrLaunchScreening" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPHERICAL", "ELLIPSOIDAL", "PROBABILITY"]
+    },
     "RFMOrigin" : {
       "type" : "object",
       "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -5584,9 +5592,258 @@
       "required" : ["VERSION"],
       "additionalProperties" : false
     },
+    "CQRLaunchCriterion" : {
+      "type" : "object",
+      "description" : "Screening criterion for one object class. Exactly one kind per entry;\nSCREENING selects which fields apply.",
+      "properties" : {
+        "OBJECT_CLASS" : {
+                "$ref" : "#/definitions/cqrLaunchObjectClass"
+              },
+        "SCREENING" : {
+                "$ref" : "#/definitions/cqrLaunchScreening"
+              },
+        "RADIUS_M" : {
+                "type" : "number",
+                "description" : "Sphere radius, metres (SPHERICAL)."
+              },
+        "RADIAL_M" : {
+                "type" : "number",
+                "description" : "Ellipsoid semi-axes, metres (ELLIPSOIDAL)."
+              },
+        "IN_TRACK_M" : {
+                "type" : "number"
+              },
+        "CROSS_TRACK_M" : {
+                "type" : "number"
+              },
+        "MAX_PROBABILITY" : {
+                "type" : "number",
+                "description" : "Largest acceptable probability of collision (PROBABILITY)."
+              },
+        "ALGORITHM" : {
+                "$ref" : "#/definitions/cqrProbabilityAlgorithm"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CQRLaunchSegment" : {
+      "type" : "object",
+      "description" : "One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.",
+      "properties" : {
+        "SEGMENT_ID" : {
+                "type" : "string"
+              },
+        "SEGMENT_NAME" : {
+                "type" : "string"
+              },
+        "TRAJECTORY" : {
+                "$ref" : "#/definitions/OEM",
+                "description" : "Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines."
+              },
+        "RADIUS_M" : {
+                "type" : "number",
+                "description" : "Hard-body radius, metres."
+              },
+        "RADAR_CROSS_SECTION_M2" : {
+                "type" : "number",
+                "description" : "Radar cross section, square metres."
+              },
+        "HAS_RADAR_CROSS_SECTION_M2" : {
+                "type" : "boolean",
+                "description" : "True when RADAR_CROSS_SECTION_M2 carries a value; false means absent."
+              },
+        "VALID_FROM" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Liftoff times this trajectory applies to, half-open [VALID_FROM,\nVALID_UNTIL). Absent bounds select the whole window. Windows whose\ntrajectory changes (for example a varying azimuth) supply one segment\nper span."
+              },
+        "VALID_UNTIL" : {
+                "$ref" : "#/definitions/TIMInstant"
+              }
+      },
+      "required" : ["SEGMENT_ID", "TRAJECTORY"],
+      "additionalProperties" : false
+    },
+    "CQRLaunchObject" : {
+      "type" : "object",
+      "description" : "One orbiting object to screen against.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/CQRObjectSource",
+                "description" : "Ephemeris in EVALUATION_FRAME covering the screened absolute times."
+              },
+        "OBJECT_CLASS" : {
+                "$ref" : "#/definitions/cqrLaunchObjectClass"
+              },
+        "RENDEZVOUS_COORDINATED" : {
+                "type" : "boolean",
+                "description" : "A pre-coordinated rendezvous or close approach: reported, never a\nwindow closure."
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "CQRLaunchRequest" : {
+      "type" : "object",
+      "properties" : {
+        "MISSION_NAME" : {
+                "type" : "string"
+              },
+        "NOMINAL_LIFTOFF" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Liftoff time the segment trajectories were produced for."
+              },
+        "WINDOW_OPEN" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Liftoff window, inclusive of both ends."
+              },
+        "WINDOW_CLOSE" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "LIFTOFF_STEP_SECONDS" : {
+                "type" : "number",
+                "description" : "Spacing of evaluated liftoff times, seconds."
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRLaunchSegment"}
+              },
+        "OBJECTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRLaunchObject"}
+              },
+        "CRITERIA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRLaunchCriterion"},
+                "description" : "One criterion per object class present in OBJECTS."
+              },
+        "MINIMUM_ALTITUDE_M" : {
+                "type" : "number",
+                "description" : "Segment states below this height above the reference ellipsoid are not\nscreened, metres."
+              },
+        "SCREEN_SECONDS_AFTER_LIFTOFF" : {
+                "type" : "number",
+                "description" : "Screening ends this long after liftoff, seconds, or earlier where a\ntrajectory ends."
+              },
+        "CLOSURE_PAD_SECONDS" : {
+                "type" : "number",
+                "description" : "Time added before and after every closure for vehicle performance and\ntiming uncertainty, seconds."
+              },
+        "REPORT_RATIO" : {
+                "type" : "number",
+                "description" : "Report approaches whose criterion ratio is below this value; 1 reports\nviolations only."
+              },
+        "EVALUATION_FRAME" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "Earth-fixed frame shared by every trajectory and ephemeris."
+              }
+      },
+      "required" : ["NOMINAL_LIFTOFF", "WINDOW_OPEN", "WINDOW_CLOSE", "SEGMENTS", "OBJECTS", "CRITERIA", "EVALUATION_FRAME"],
+      "additionalProperties" : false
+    },
+    "CQRLaunchClosure" : {
+      "type" : "object",
+      "description" : "Liftoff times that violate at least one criterion, half-open [START, END),\nwidened by the liftoff step and CLOSURE_PAD_SECONDS and merged.",
+      "properties" : {
+        "START" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "END" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "OBJECT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Orbiting objects that cause this closure."
+              },
+        "SEGMENT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Segments involved."
+              }
+      },
+      "required" : ["START", "END"],
+      "additionalProperties" : false
+    },
+    "CQRLaunchApproach" : {
+      "type" : "object",
+      "description" : "Closest approach of one segment to one orbiting object for one liftoff\ntime: the worst liftoff time of each contiguous run below REPORT_RATIO.",
+      "properties" : {
+        "SEGMENT_ID" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "OBJECT_CLASS" : {
+                "$ref" : "#/definitions/cqrLaunchObjectClass"
+              },
+        "LIFTOFF" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "TCA" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "MISS_DISTANCE_M" : {
+                "type" : "number"
+              },
+        "RELATIVE_SPEED_M_S" : {
+                "type" : "number"
+              },
+        "RELATIVE_POSITION_RTN" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Segment position relative to the orbiting object in the object's\nradial/in-track/cross-track frame, metres."
+              },
+        "CRITERION_RATIO" : {
+                "type" : "number",
+                "description" : "Normalised separation: distance over radius (SPHERICAL) or ellipsoid\nradius (ELLIPSOIDAL). Below 1 violates."
+              },
+        "VIOLATES" : {
+                "type" : "boolean"
+              },
+        "RENDEZVOUS_COORDINATED" : {
+                "type" : "boolean"
+              },
+        "RUN_START" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "First and last liftoff times of the run this approach represents."
+              },
+        "RUN_END" : {
+                "$ref" : "#/definitions/TIMInstant"
+              }
+      },
+      "required" : ["SEGMENT_ID", "OBJECT_ID", "LIFTOFF", "TCA"],
+      "additionalProperties" : false
+    },
+    "CQRLaunchResult" : {
+      "type" : "object",
+      "properties" : {
+        "MISSION_NAME" : {
+                "type" : "string"
+              },
+        "WINDOW_OPEN" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "WINDOW_CLOSE" : {
+                "$ref" : "#/definitions/TIMInstant"
+              },
+        "LIFTOFF_STEP_SECONDS" : {
+                "type" : "number"
+              },
+        "LIFTOFF_TIMES_EVALUATED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "CLOSURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRLaunchClosure"},
+                "description" : "Ordered by START."
+              },
+        "APPROACHES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRLaunchApproach"},
+                "description" : "Ordered by LIFTOFF, then segment and object identity."
+              },
+        "STATISTICS" : {
+                "$ref" : "#/definitions/CQRScreeningStatistics"
+              }
+      },
+      "additionalProperties" : false
+    },
     "CQR" : {
       "type" : "object",
-      "description" : "Conjunction Query and Result — pair/catalog screening, encounter-plane\nprobability, typed native documents and resident screening-index control.\nExactly one arm per PIV payload, selected by the declared METHOD_ID.",
+      "description" : "Conjunction Query and Result — pair/catalog screening, encounter-plane\nprobability, typed native documents, resident screening-index control and\nlaunch-window screening.\nExactly one arm per PIV payload, selected by the declared METHOD_ID.",
       "properties" : {
         "PAIR_REQUEST" : {
                 "$ref" : "#/definitions/CQRPairRequest"
@@ -5635,6 +5892,13 @@
               },
         "VERSION_RESULT" : {
                 "$ref" : "#/definitions/CQRVersionResult"
+              },
+        "LAUNCH_REQUEST" : {
+                "$ref" : "#/definitions/CQRLaunchRequest",
+                "description" : "APPENDED. Launch-window screening request and result."
+              },
+        "LAUNCH_RESULT" : {
+                "$ref" : "#/definitions/CQRLaunchResult"
               }
       },
       "additionalProperties" : false

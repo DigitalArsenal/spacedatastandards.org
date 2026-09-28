@@ -1,5 +1,5 @@
-// Hash: 25557a81e571c04e94ad7ff97f4becbc6f70e8a0c2dd0c8b83a15498fee2b7b9
-// Version: 1.0.1
+// Hash: 57ef70999d639c66c452ad352792d0415b2023861963a82a63887b0b86821fbe
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../SIT/main.fbs";
 include "../EPM/main.fbs";
@@ -89,6 +89,10 @@ table LDM {
 
   /// Burn Out Vectors for the Launch
   BURN_OUT_VECTORS: [BOV];
+
+  /// APPENDED. Stable identifier of this launch in the registry that
+  /// published it; unchanged when the launch time or status changes.
+  ID: string;
 }
 
 // Collection of Launch Data Messages

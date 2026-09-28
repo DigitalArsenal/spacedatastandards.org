@@ -18,7 +18,8 @@ import kotlin.math.sign
 
 /**
  * Conjunction Query and Result — pair/catalog screening, encounter-plane
- * probability, typed native documents and resident screening-index control.
+ * probability, typed native documents, resident screening-index control and
+ * launch-window screening.
  * Exactly one arm per PIV payload, selected by the declared METHOD_ID.
  */
 @Suppress("unused")
@@ -171,6 +172,27 @@ class CQR : Table() {
             null
         }
     }
+    /**
+     * APPENDED. Launch-window screening request and result.
+     */
+    val launchRequest : CQRLaunchRequest? get() = launchRequest(CQRLaunchRequest())
+    fun launchRequest(obj: CQRLaunchRequest) : CQRLaunchRequest? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val launchResult : CQRLaunchResult? get() = launchResult(CQRLaunchResult())
+    fun launchResult(obj: CQRLaunchResult) : CQRLaunchResult? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQR(_bb: ByteBuffer): CQR = getRootAsCQR(_bb, CQR())
@@ -179,8 +201,10 @@ class CQR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CQRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CQR")
-        fun createCQR(builder: FlatBufferBuilder, pairRequestOffset: Int, catalogRequestOffset: Int, probabilityRequestOffset: Int, probabilityResultOffset: Int, alfanoRequestOffset: Int, alfanoResultOffset: Int, eventResultOffset: Int, tcaResultOffset: Int, catalogResultOffset: Int, nativeDocumentOffset: Int, indexRequestOffset: Int, indexResultOffset: Int, windowRequestOffset: Int, destroyRequestOffset: Int, versionQuery: Boolean, versionResultOffset: Int) : Int {
-            builder.startTable(16)
+        fun createCQR(builder: FlatBufferBuilder, pairRequestOffset: Int, catalogRequestOffset: Int, probabilityRequestOffset: Int, probabilityResultOffset: Int, alfanoRequestOffset: Int, alfanoResultOffset: Int, eventResultOffset: Int, tcaResultOffset: Int, catalogResultOffset: Int, nativeDocumentOffset: Int, indexRequestOffset: Int, indexResultOffset: Int, windowRequestOffset: Int, destroyRequestOffset: Int, versionQuery: Boolean, versionResultOffset: Int, launchRequestOffset: Int, launchResultOffset: Int) : Int {
+            builder.startTable(18)
+            addLAUNCHRESULT(builder, launchResultOffset)
+            addLAUNCHREQUEST(builder, launchRequestOffset)
             addVERSIONRESULT(builder, versionResultOffset)
             addDESTROYREQUEST(builder, destroyRequestOffset)
             addWINDOWREQUEST(builder, windowRequestOffset)
@@ -199,7 +223,7 @@ class CQR : Table() {
             addVERSIONQUERY(builder, versionQuery)
             return endCQR(builder)
         }
-        fun startCQR(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startCQR(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addPAIRREQUEST(builder: FlatBufferBuilder, pairRequest: Int) = builder.addOffset(0, pairRequest, 0)
         fun addCATALOGREQUEST(builder: FlatBufferBuilder, catalogRequest: Int) = builder.addOffset(1, catalogRequest, 0)
         fun addPROBABILITYREQUEST(builder: FlatBufferBuilder, probabilityRequest: Int) = builder.addOffset(2, probabilityRequest, 0)
@@ -216,6 +240,8 @@ class CQR : Table() {
         fun addDESTROYREQUEST(builder: FlatBufferBuilder, destroyRequest: Int) = builder.addOffset(13, destroyRequest, 0)
         fun addVERSIONQUERY(builder: FlatBufferBuilder, versionQuery: Boolean) = builder.addBoolean(14, versionQuery, false)
         fun addVERSIONRESULT(builder: FlatBufferBuilder, versionResult: Int) = builder.addOffset(15, versionResult, 0)
+        fun addLAUNCHREQUEST(builder: FlatBufferBuilder, launchRequest: Int) = builder.addOffset(16, launchRequest, 0)
+        fun addLAUNCHRESULT(builder: FlatBufferBuilder, launchResult: Int) = builder.addOffset(17, launchResult, 0)
         fun endCQR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

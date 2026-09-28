@@ -12,6 +12,8 @@ import { CQRDestroyRequest, CQRDestroyRequestT } from './CQRDestroyRequest.js';
 import { CQREvent, CQREventT } from './CQREvent.js';
 import { CQRIndexRequest, CQRIndexRequestT } from './CQRIndexRequest.js';
 import { CQRIndexResult, CQRIndexResultT } from './CQRIndexResult.js';
+import { CQRLaunchRequest, CQRLaunchRequestT } from './CQRLaunchRequest.js';
+import { CQRLaunchResult, CQRLaunchResultT } from './CQRLaunchResult.js';
 import { CQRNativeDocument, CQRNativeDocumentT } from './CQRNativeDocument.js';
 import { CQRPairRequest, CQRPairRequestT } from './CQRPairRequest.js';
 import { CQRProbabilityRequest, CQRProbabilityRequestT } from './CQRProbabilityRequest.js';
@@ -23,7 +25,8 @@ import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 
 /**
  * Conjunction Query and Result — pair/catalog screening, encounter-plane
- * probability, typed native documents and resident screening-index control.
+ * probability, typed native documents, resident screening-index control and
+ * launch-window screening.
  * Exactly one arm per PIV payload, selected by the declared METHOD_ID.
  */
 export class CQR implements flatbuffers.IUnpackableObject<CQRT> {
@@ -128,8 +131,21 @@ VERSION_RESULT(obj?:CQRVersionResult):CQRVersionResult|null {
   return offset ? (obj || new CQRVersionResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * APPENDED. Launch-window screening request and result.
+ */
+LAUNCH_REQUEST(obj?:CQRLaunchRequest):CQRLaunchRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new CQRLaunchRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+LAUNCH_RESULT(obj?:CQRLaunchResult):CQRLaunchResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new CQRLaunchResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startCQR(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(18);
 }
 
 static addPairRequest(builder:flatbuffers.Builder, PAIR_REQUESTOffset:flatbuffers.Offset) {
@@ -196,6 +212,14 @@ static addVersionResult(builder:flatbuffers.Builder, VERSION_RESULTOffset:flatbu
   builder.addFieldOffset(15, VERSION_RESULTOffset, 0);
 }
 
+static addLaunchRequest(builder:flatbuffers.Builder, LAUNCH_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, LAUNCH_REQUESTOffset, 0);
+}
+
+static addLaunchResult(builder:flatbuffers.Builder, LAUNCH_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, LAUNCH_RESULTOffset, 0);
+}
+
 static endCQR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -227,7 +251,9 @@ unpack(): CQRT {
     (this.WINDOW_REQUEST() !== null ? this.WINDOW_REQUEST()!.unpack() : null),
     (this.DESTROY_REQUEST() !== null ? this.DESTROY_REQUEST()!.unpack() : null),
     this.VERSION_QUERY(),
-    (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null)
+    (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null),
+    (this.LAUNCH_REQUEST() !== null ? this.LAUNCH_REQUEST()!.unpack() : null),
+    (this.LAUNCH_RESULT() !== null ? this.LAUNCH_RESULT()!.unpack() : null)
   );
 }
 
@@ -249,6 +275,8 @@ unpackTo(_o: CQRT): void {
   _o.DESTROY_REQUEST = (this.DESTROY_REQUEST() !== null ? this.DESTROY_REQUEST()!.unpack() : null);
   _o.VERSION_QUERY = this.VERSION_QUERY();
   _o.VERSION_RESULT = (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null);
+  _o.LAUNCH_REQUEST = (this.LAUNCH_REQUEST() !== null ? this.LAUNCH_REQUEST()!.unpack() : null);
+  _o.LAUNCH_RESULT = (this.LAUNCH_RESULT() !== null ? this.LAUNCH_RESULT()!.unpack() : null);
 }
 }
 
@@ -269,7 +297,9 @@ constructor(
   public WINDOW_REQUEST: CQRWindowRequestT|null = null,
   public DESTROY_REQUEST: CQRDestroyRequestT|null = null,
   public VERSION_QUERY: boolean = false,
-  public VERSION_RESULT: CQRVersionResultT|null = null
+  public VERSION_RESULT: CQRVersionResultT|null = null,
+  public LAUNCH_REQUEST: CQRLaunchRequestT|null = null,
+  public LAUNCH_RESULT: CQRLaunchResultT|null = null
 ){}
 
 
@@ -289,6 +319,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const WINDOW_REQUEST = (this.WINDOW_REQUEST !== null ? this.WINDOW_REQUEST!.pack(builder) : 0);
   const DESTROY_REQUEST = (this.DESTROY_REQUEST !== null ? this.DESTROY_REQUEST!.pack(builder) : 0);
   const VERSION_RESULT = (this.VERSION_RESULT !== null ? this.VERSION_RESULT!.pack(builder) : 0);
+  const LAUNCH_REQUEST = (this.LAUNCH_REQUEST !== null ? this.LAUNCH_REQUEST!.pack(builder) : 0);
+  const LAUNCH_RESULT = (this.LAUNCH_RESULT !== null ? this.LAUNCH_RESULT!.pack(builder) : 0);
 
   CQR.startCQR(builder);
   CQR.addPairRequest(builder, PAIR_REQUEST);
@@ -307,6 +339,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQR.addDestroyRequest(builder, DESTROY_REQUEST);
   CQR.addVersionQuery(builder, this.VERSION_QUERY);
   CQR.addVersionResult(builder, VERSION_RESULT);
+  CQR.addLaunchRequest(builder, LAUNCH_REQUEST);
+  CQR.addLaunchResult(builder, LAUNCH_RESULT);
 
   return CQR.endCQR(builder);
 }

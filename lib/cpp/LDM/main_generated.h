@@ -52,7 +52,8 @@ struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COLA_RUNS_REQUIRED = 50,
     VT_COLA_POINTS_OF_CONTACT = 52,
     VT_ORBITAL_PARAMETERS = 54,
-    VT_BURN_OUT_VECTORS = 56
+    VT_BURN_OUT_VECTORS = 56,
+    VT_ID = 58
   };
   /// Launch Site Information
   const SIT *SITE() const {
@@ -162,6 +163,11 @@ struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<BOV>> *BURN_OUT_VECTORS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<BOV>> *>(VT_BURN_OUT_VECTORS);
   }
+  /// APPENDED. Stable identifier of this launch in the registry that
+  /// published it; unchanged when the launch time or status changes.
+  const ::flatbuffers::String *ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -229,6 +235,8 @@ struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_BURN_OUT_VECTORS) &&
            verifier.VerifyVector(BURN_OUT_VECTORS()) &&
            verifier.VerifyVectorOfTables(BURN_OUT_VECTORS()) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(ID()) &&
            verifier.EndTable();
   }
 };
@@ -318,6 +326,9 @@ struct LDMBuilder {
   void add_BURN_OUT_VECTORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> BURN_OUT_VECTORS) {
     fbb_.AddOffset(LDM::VT_BURN_OUT_VECTORS, BURN_OUT_VECTORS);
   }
+  void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
+    fbb_.AddOffset(LDM::VT_ID, ID);
+  }
   explicit LDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -357,8 +368,10 @@ inline ::flatbuffers::Offset<LDM> CreateLDM(
     ::flatbuffers::Offset<::flatbuffers::String> COLA_RUNS_REQUIRED = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> COLA_POINTS_OF_CONTACT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ORBITAL_PARAMETERS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> BURN_OUT_VECTORS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> BURN_OUT_VECTORS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID = 0) {
   LDMBuilder builder_(_fbb);
+  builder_.add_ID(ID);
   builder_.add_BURN_OUT_VECTORS(BURN_OUT_VECTORS);
   builder_.add_ORBITAL_PARAMETERS(ORBITAL_PARAMETERS);
   builder_.add_COLA_POINTS_OF_CONTACT(COLA_POINTS_OF_CONTACT);
@@ -417,7 +430,8 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
     const char *COLA_RUNS_REQUIRED = nullptr,
     const std::vector<::flatbuffers::Offset<EPM>> *COLA_POINTS_OF_CONTACT = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ORBITAL_PARAMETERS = nullptr,
-    const std::vector<::flatbuffers::Offset<BOV>> *BURN_OUT_VECTORS = nullptr) {
+    const std::vector<::flatbuffers::Offset<BOV>> *BURN_OUT_VECTORS = nullptr,
+    const char *ID = nullptr) {
   auto REFERENCES__ = REFERENCES ? _fbb.CreateString(REFERENCES) : 0;
   auto AGENCY_NAME__ = AGENCY_NAME ? _fbb.CreateString(AGENCY_NAME) : 0;
   auto POINTS_OF_CONTACT__ = POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*POINTS_OF_CONTACT) : 0;
@@ -442,6 +456,7 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
   auto COLA_POINTS_OF_CONTACT__ = COLA_POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*COLA_POINTS_OF_CONTACT) : 0;
   auto ORBITAL_PARAMETERS__ = ORBITAL_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ORBITAL_PARAMETERS) : 0;
   auto BURN_OUT_VECTORS__ = BURN_OUT_VECTORS ? _fbb.CreateVector<::flatbuffers::Offset<BOV>>(*BURN_OUT_VECTORS) : 0;
+  auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   return CreateLDM(
       _fbb,
       SITE,
@@ -470,7 +485,8 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
       COLA_RUNS_REQUIRED__,
       COLA_POINTS_OF_CONTACT__,
       ORBITAL_PARAMETERS__,
-      BURN_OUT_VECTORS__);
+      BURN_OUT_VECTORS__,
+      ID__);
 }
 
 inline const LDM *GetLDM(const void *buf) {
