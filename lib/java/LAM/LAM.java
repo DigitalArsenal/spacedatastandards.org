@@ -407,6 +407,49 @@ public final class LAM extends com.google.flatbuffers.Table {
   public String COMMENT() { int o = __offset(116); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(116, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 1); }
+  /**
+   * Orbit the launch is steered to.
+   */
+  public lamTargetOrbit TARGET_ORBIT() { return TARGET_ORBIT(new lamTargetOrbit()); }
+  public lamTargetOrbit TARGET_ORBIT(lamTargetOrbit obj) { int o = __offset(118); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Origin of the trajectory samples.
+   */
+  public byte TRAJECTORY_SOURCE() { int o = __offset(120); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Frame of SPEED_M_PER_S samples.
+   */
+  public byte SPEED_REFERENCE() { int o = __offset(122); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Orbit at insertion.
+   */
+  public lamInsertionOrbit INSERTION() { return INSERTION(new lamInsertionOrbit()); }
+  public lamInsertionOrbit INSERTION(lamInsertionOrbit obj) { int o = __offset(124); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+   */
+  public double INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(int j) { int o = __offset(126); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int INSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength() { int o = __offset(126); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector instantaneousPeriapsisAltitudeMVector() { return instantaneousPeriapsisAltitudeMVector(new DoubleVector()); }
+  public DoubleVector instantaneousPeriapsisAltitudeMVector(DoubleVector obj) { int o = __offset(126); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INSTANTANEOUS_PERIAPSIS_ALTITUDE_MAsByteBuffer() { return __vector_as_bytebuffer(126, 8); }
+  public ByteBuffer INSTANTANEOUS_PERIAPSIS_ALTITUDE_MInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 126, 8); }
+  /**
+   * Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+   */
+  public double INSTANTANEOUS_APOAPSIS_ALTITUDE_M(int j) { int o = __offset(128); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int INSTANTANEOUS_APOAPSIS_ALTITUDE_MLength() { int o = __offset(128); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector instantaneousApoapsisAltitudeMVector() { return instantaneousApoapsisAltitudeMVector(new DoubleVector()); }
+  public DoubleVector instantaneousApoapsisAltitudeMVector(DoubleVector obj) { int o = __offset(128); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INSTANTANEOUS_APOAPSIS_ALTITUDE_MAsByteBuffer() { return __vector_as_bytebuffer(128, 8); }
+  public ByteBuffer INSTANTANEOUS_APOAPSIS_ALTITUDE_MInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 128, 8); }
+  /**
+   * Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+   */
+  public String IN_PLANE_LIFTOFF_EPOCHS(int j) { int o = __offset(130); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int IN_PLANE_LIFTOFF_EPOCHSLength() { int o = __offset(130); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector inPlaneLiftoffEpochsVector() { return inPlaneLiftoffEpochsVector(new StringVector()); }
+  public StringVector inPlaneLiftoffEpochsVector(StringVector obj) { int o = __offset(130); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createLAM(FlatBufferBuilder builder,
       int MESSAGE_IDOffset,
@@ -465,8 +508,15 @@ public final class LAM extends com.google.flatbuffers.Table {
       int ASCENT_EVENTSOffset,
       int CONSTRAINT_VIOLATIONSOffset,
       int ASSUMPTIONSOffset,
-      int COMMENTOffset) {
-    builder.startTable(57);
+      int COMMENTOffset,
+      int TARGET_ORBITOffset,
+      byte TRAJECTORY_SOURCE,
+      byte SPEED_REFERENCE,
+      int INSERTIONOffset,
+      int INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset,
+      int INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset,
+      int IN_PLANE_LIFTOFF_EPOCHSOffset) {
+    builder.startTable(64);
     LAM.addPayloadInjectionErrorMPerS(builder, PAYLOAD_INJECTION_ERROR_M_PER_S);
     LAM.addInclinationDeg(builder, INCLINATION_DEG);
     LAM.addPeriapsisM(builder, PERIAPSIS_M);
@@ -474,6 +524,11 @@ public final class LAM extends com.google.flatbuffers.Table {
     LAM.addMaxHeatFluxWPerM2(builder, MAX_HEAT_FLUX_W_PER_M2);
     LAM.addMaxDynamicPressurePa(builder, MAX_DYNAMIC_PRESSURE_PA);
     LAM.addStepSize(builder, STEP_SIZE);
+    LAM.addInPlaneLiftoffEpochs(builder, IN_PLANE_LIFTOFF_EPOCHSOffset);
+    LAM.addInstantaneousApoapsisAltitudeM(builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset);
+    LAM.addInstantaneousPeriapsisAltitudeM(builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset);
+    LAM.addInsertion(builder, INSERTIONOffset);
+    LAM.addTargetOrbit(builder, TARGET_ORBITOffset);
     LAM.addComment(builder, COMMENTOffset);
     LAM.addAssumptions(builder, ASSUMPTIONSOffset);
     LAM.addConstraintViolations(builder, CONSTRAINT_VIOLATIONSOffset);
@@ -522,12 +577,14 @@ public final class LAM extends com.google.flatbuffers.Table {
     LAM.addOriginator(builder, ORIGINATOROffset);
     LAM.addCreationDate(builder, CREATION_DATEOffset);
     LAM.addMessageId(builder, MESSAGE_IDOffset);
+    LAM.addSpeedReference(builder, SPEED_REFERENCE);
+    LAM.addTrajectorySource(builder, TRAJECTORY_SOURCE);
     LAM.addConstraintStatus(builder, CONSTRAINT_STATUS);
     LAM.addPhase(builder, PHASE);
     return LAM.endLAM(builder);
   }
 
-  public static void startLAM(FlatBufferBuilder builder) { builder.startTable(57); }
+  public static void startLAM(FlatBufferBuilder builder) { builder.startTable(64); }
   public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(0, MESSAGE_IDOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -631,6 +688,19 @@ public final class LAM extends com.google.flatbuffers.Table {
   public static int createAssumptionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAssumptionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(56, COMMENTOffset, 0); }
+  public static void addTargetOrbit(FlatBufferBuilder builder, int TARGET_ORBITOffset) { builder.addOffset(57, TARGET_ORBITOffset, 0); }
+  public static void addTrajectorySource(FlatBufferBuilder builder, byte TRAJECTORY_SOURCE) { builder.addByte(58, TRAJECTORY_SOURCE, 0); }
+  public static void addSpeedReference(FlatBufferBuilder builder, byte SPEED_REFERENCE) { builder.addByte(59, SPEED_REFERENCE, 0); }
+  public static void addInsertion(FlatBufferBuilder builder, int INSERTIONOffset) { builder.addOffset(60, INSERTIONOffset, 0); }
+  public static void addInstantaneousPeriapsisAltitudeM(FlatBufferBuilder builder, int INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset) { builder.addOffset(61, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset, 0); }
+  public static int createInstantaneousPeriapsisAltitudeMVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startInstantaneousPeriapsisAltitudeMVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addInstantaneousApoapsisAltitudeM(FlatBufferBuilder builder, int INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset) { builder.addOffset(62, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset, 0); }
+  public static int createInstantaneousApoapsisAltitudeMVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startInstantaneousApoapsisAltitudeMVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addInPlaneLiftoffEpochs(FlatBufferBuilder builder, int IN_PLANE_LIFTOFF_EPOCHSOffset) { builder.addOffset(63, IN_PLANE_LIFTOFF_EPOCHSOffset, 0); }
+  public static int createInPlaneLiftoffEpochsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startInPlaneLiftoffEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endLAM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

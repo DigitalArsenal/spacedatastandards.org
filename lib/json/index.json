@@ -30704,6 +30704,32 @@
                         "WAIVED"
                     ]
                 },
+                "lamPassDirection": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NORTHBOUND",
+                        "SOUTHBOUND"
+                    ]
+                },
+                "lamTrajectorySource": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "PROJECTED",
+                        "TELEMETRY",
+                        "TRACKING",
+                        "SIMULATED"
+                    ]
+                },
+                "lamSpeedReference": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "EARTH_RELATIVE",
+                        "INERTIAL"
+                    ]
+                },
                 "ATM": {
                     "type": "object",
                     "description": "Atmospheric Model Message",
@@ -34383,6 +34409,104 @@
                     },
                     "additionalProperties": false
                 },
+                "lamTargetOrbit": {
+                    "type": "object",
+                    "description": "Orbit a launch is steered to.",
+                    "properties": {
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Target inclination in degrees."
+                        },
+                        "PASS_DIRECTION": {
+                            "$ref": "#/definitions/lamPassDirection",
+                            "description": "Ground-track direction of the ascent."
+                        },
+                        "PERIAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Target periapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Target apoapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "INSERTION_TIME_FROM_LAUNCH_S": {
+                            "type": "number",
+                            "description": "Time from launch of orbit insertion (engine cutoff), in seconds."
+                        },
+                        "PLANE_REFERENCE": {
+                            "$ref": "#/definitions/OEM",
+                            "description": "Ephemeris of an object whose orbit plane the launch joins, in the TEME frame."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "lamInsertionOrbit": {
+                    "type": "object",
+                    "description": "Orbit at insertion, measured or projected.",
+                    "properties": {
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Insertion epoch in ISO 8601 UTC format."
+                        },
+                        "TIME_FROM_LAUNCH_S": {
+                            "type": "number",
+                            "description": "Time from launch of insertion, in seconds."
+                        },
+                        "REF_FRAME": {
+                            "type": "string",
+                            "description": "Frame of the angular elements."
+                        },
+                        "SEMI_MAJOR_AXIS_M": {
+                            "type": "number",
+                            "description": "Osculating semi-major axis in meters."
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Osculating eccentricity."
+                        },
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Inclination in degrees."
+                        },
+                        "RAAN_DEG": {
+                            "type": "number",
+                            "description": "Right ascension of the ascending node in degrees."
+                        },
+                        "ARGUMENT_OF_PERIAPSIS_DEG": {
+                            "type": "number",
+                            "description": "Argument of periapsis in degrees."
+                        },
+                        "ARGUMENT_OF_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Argument of latitude at insertion in degrees."
+                        },
+                        "PERIAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Periapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Apoapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "RAAN_UNCERTAINTY_DEG": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of RAAN_DEG in degrees."
+                        },
+                        "ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees."
+                        },
+                        "PERIAPSIS_ALTITUDE_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "LAM": {
                     "type": "object",
                     "description": "Launch Ascent Message",
@@ -34683,6 +34807,43 @@
                         "COMMENT": {
                             "type": "string",
                             "description": "Additional comments."
+                        },
+                        "TARGET_ORBIT": {
+                            "$ref": "#/definitions/lamTargetOrbit",
+                            "description": "Orbit the launch is steered to."
+                        },
+                        "TRAJECTORY_SOURCE": {
+                            "$ref": "#/definitions/lamTrajectorySource",
+                            "description": "Origin of the trajectory samples."
+                        },
+                        "SPEED_REFERENCE": {
+                            "$ref": "#/definitions/lamSpeedReference",
+                            "description": "Frame of SPEED_M_PER_S samples."
+                        },
+                        "INSERTION": {
+                            "$ref": "#/definitions/lamInsertionOrbit",
+                            "description": "Orbit at insertion."
+                        },
+                        "INSTANTANEOUS_PERIAPSIS_ALTITUDE_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters."
+                        },
+                        "INSTANTANEOUS_APOAPSIS_ALTITUDE_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters."
+                        },
+                        "IN_PLANE_LIFTOFF_EPOCHS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane."
                         }
                     },
                     "additionalProperties": false
@@ -66996,6 +67157,32 @@
                         "WARNING",
                         "VIOLATED",
                         "WAIVED"
+                    ]
+                },
+                "lamPassDirection": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NORTHBOUND",
+                        "SOUTHBOUND"
+                    ]
+                },
+                "lamTrajectorySource": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "PROJECTED",
+                        "TELEMETRY",
+                        "TRACKING",
+                        "SIMULATED"
+                    ]
+                },
+                "lamSpeedReference": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "EARTH_RELATIVE",
+                        "INERTIAL"
                     ]
                 },
                 "licensingConfigMessageType": {
@@ -100089,6 +100276,104 @@
                     },
                     "additionalProperties": false
                 },
+                "lamTargetOrbit": {
+                    "type": "object",
+                    "description": "Orbit a launch is steered to.",
+                    "properties": {
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Target inclination in degrees."
+                        },
+                        "PASS_DIRECTION": {
+                            "$ref": "#/definitions/lamPassDirection",
+                            "description": "Ground-track direction of the ascent."
+                        },
+                        "PERIAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Target periapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Target apoapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "INSERTION_TIME_FROM_LAUNCH_S": {
+                            "type": "number",
+                            "description": "Time from launch of orbit insertion (engine cutoff), in seconds."
+                        },
+                        "PLANE_REFERENCE": {
+                            "$ref": "#/definitions/OEM",
+                            "description": "Ephemeris of an object whose orbit plane the launch joins, in the TEME frame."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "lamInsertionOrbit": {
+                    "type": "object",
+                    "description": "Orbit at insertion, measured or projected.",
+                    "properties": {
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Insertion epoch in ISO 8601 UTC format."
+                        },
+                        "TIME_FROM_LAUNCH_S": {
+                            "type": "number",
+                            "description": "Time from launch of insertion, in seconds."
+                        },
+                        "REF_FRAME": {
+                            "type": "string",
+                            "description": "Frame of the angular elements."
+                        },
+                        "SEMI_MAJOR_AXIS_M": {
+                            "type": "number",
+                            "description": "Osculating semi-major axis in meters."
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Osculating eccentricity."
+                        },
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Inclination in degrees."
+                        },
+                        "RAAN_DEG": {
+                            "type": "number",
+                            "description": "Right ascension of the ascending node in degrees."
+                        },
+                        "ARGUMENT_OF_PERIAPSIS_DEG": {
+                            "type": "number",
+                            "description": "Argument of periapsis in degrees."
+                        },
+                        "ARGUMENT_OF_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Argument of latitude at insertion in degrees."
+                        },
+                        "PERIAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Periapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Apoapsis altitude above the WGS-84 equatorial radius, in meters."
+                        },
+                        "RAAN_UNCERTAINTY_DEG": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of RAAN_DEG in degrees."
+                        },
+                        "ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees."
+                        },
+                        "PERIAPSIS_ALTITUDE_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters."
+                        },
+                        "APOAPSIS_ALTITUDE_UNCERTAINTY_M": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "LAM": {
                     "type": "object",
                     "description": "Launch Ascent Message",
@@ -100389,6 +100674,43 @@
                         "COMMENT": {
                             "type": "string",
                             "description": "Additional comments."
+                        },
+                        "TARGET_ORBIT": {
+                            "$ref": "#/definitions/lamTargetOrbit",
+                            "description": "Orbit the launch is steered to."
+                        },
+                        "TRAJECTORY_SOURCE": {
+                            "$ref": "#/definitions/lamTrajectorySource",
+                            "description": "Origin of the trajectory samples."
+                        },
+                        "SPEED_REFERENCE": {
+                            "$ref": "#/definitions/lamSpeedReference",
+                            "description": "Frame of SPEED_M_PER_S samples."
+                        },
+                        "INSERTION": {
+                            "$ref": "#/definitions/lamInsertionOrbit",
+                            "description": "Orbit at insertion."
+                        },
+                        "INSTANTANEOUS_PERIAPSIS_ALTITUDE_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters."
+                        },
+                        "INSTANTANEOUS_APOAPSIS_ALTITUDE_M": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters."
+                        },
+                        "IN_PLANE_LIFTOFF_EPOCHS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane."
                         }
                     },
                     "additionalProperties": false

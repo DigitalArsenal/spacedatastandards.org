@@ -822,6 +822,95 @@ class LAM : Table() {
         }
     val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(116, 1)
     fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 116, 1)
+    /**
+     * Orbit the launch is steered to.
+     */
+    val targetOrbit : lamTargetOrbit? get() = targetOrbit(lamTargetOrbit())
+    fun targetOrbit(obj: lamTargetOrbit) : lamTargetOrbit? {
+        val o = __offset(118)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Origin of the trajectory samples.
+     */
+    val trajectorySource : Byte
+        get() {
+            val o = __offset(120)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Frame of SPEED_M_PER_S samples.
+     */
+    val speedReference : Byte
+        get() {
+            val o = __offset(122)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Orbit at insertion.
+     */
+    val insertion : lamInsertionOrbit? get() = insertion(lamInsertionOrbit())
+    fun insertion(obj: lamInsertionOrbit) : lamInsertionOrbit? {
+        val o = __offset(124)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+     */
+    fun instantaneousPeriapsisAltitudeM(j: Int) : Double {
+        val o = __offset(126)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val instantaneousPeriapsisAltitudeMLength : Int
+        get() {
+            val o = __offset(126); return if (o != 0) __vector_len(o) else 0
+        }
+    val instantaneousPeriapsisAltitudeMAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(126, 8)
+    fun instantaneousPeriapsisAltitudeMInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 126, 8)
+    /**
+     * Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+     */
+    fun instantaneousApoapsisAltitudeM(j: Int) : Double {
+        val o = __offset(128)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val instantaneousApoapsisAltitudeMLength : Int
+        get() {
+            val o = __offset(128); return if (o != 0) __vector_len(o) else 0
+        }
+    val instantaneousApoapsisAltitudeMAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(128, 8)
+    fun instantaneousApoapsisAltitudeMInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 128, 8)
+    /**
+     * Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+     */
+    fun inPlaneLiftoffEpochs(j: Int) : String? {
+        val o = __offset(130)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val inPlaneLiftoffEpochsLength : Int
+        get() {
+            val o = __offset(130); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLAM(_bb: ByteBuffer): LAM = getRootAsLAM(_bb, LAM())
@@ -830,8 +919,8 @@ class LAM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LAM")
-        fun createLAM(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, missionNameOffset: Int, vehicleNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, launchEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, launchDataOffset: Int, rocketConfigurationOffset: Int, eventRecordsOffset: Int, detectionsOffset: Int, boostTracksOffset: Int, burnOutVectorsOffset: Int, trajectoryOemOffset: Int, trajectoryOcmOffset: Int, atmosphereOffset: Int, hypersonicConditionsOffset: Int, propagatorNameOffset: Int, propagatorVersionOffset: Int, guidanceModelOffset: Int, thrustModelOffset: Int, aerodynamicModelOffset: Int, phase: Byte, constraintStatus: Byte, timeFromLaunchSOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, downrangeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, heatFluxWPerM2Offset: Int, massKgOffset: Int, thrustNOffset: Int, accelerationGOffset: Int, pitchDegOffset: Int, flightPathAngleDegOffset: Int, iipLatitudeDegOffset: Int, iipLongitudeDegOffset: Int, maxDynamicPressurePa: Double, maxDynamicPressureEpochOffset: Int, maxHeatFluxWPerM2: Double, maxHeatFluxEpochOffset: Int, orbitInsertionEpochOffset: Int, apoapsisM: Double, periapsisM: Double, inclinationDeg: Double, payloadInjectionErrorMPerS: Double, ascentEventsOffset: Int, constraintViolationsOffset: Int, assumptionsOffset: Int, commentOffset: Int) : Int {
-            builder.startTable(57)
+        fun createLAM(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, missionNameOffset: Int, vehicleNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, launchEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, launchDataOffset: Int, rocketConfigurationOffset: Int, eventRecordsOffset: Int, detectionsOffset: Int, boostTracksOffset: Int, burnOutVectorsOffset: Int, trajectoryOemOffset: Int, trajectoryOcmOffset: Int, atmosphereOffset: Int, hypersonicConditionsOffset: Int, propagatorNameOffset: Int, propagatorVersionOffset: Int, guidanceModelOffset: Int, thrustModelOffset: Int, aerodynamicModelOffset: Int, phase: Byte, constraintStatus: Byte, timeFromLaunchSOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, downrangeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, heatFluxWPerM2Offset: Int, massKgOffset: Int, thrustNOffset: Int, accelerationGOffset: Int, pitchDegOffset: Int, flightPathAngleDegOffset: Int, iipLatitudeDegOffset: Int, iipLongitudeDegOffset: Int, maxDynamicPressurePa: Double, maxDynamicPressureEpochOffset: Int, maxHeatFluxWPerM2: Double, maxHeatFluxEpochOffset: Int, orbitInsertionEpochOffset: Int, apoapsisM: Double, periapsisM: Double, inclinationDeg: Double, payloadInjectionErrorMPerS: Double, ascentEventsOffset: Int, constraintViolationsOffset: Int, assumptionsOffset: Int, commentOffset: Int, targetOrbitOffset: Int, trajectorySource: Byte, speedReference: Byte, insertionOffset: Int, instantaneousPeriapsisAltitudeMOffset: Int, instantaneousApoapsisAltitudeMOffset: Int, inPlaneLiftoffEpochsOffset: Int) : Int {
+            builder.startTable(64)
             addPAYLOADINJECTIONERRORMPERS(builder, payloadInjectionErrorMPerS)
             addINCLINATIONDEG(builder, inclinationDeg)
             addPERIAPSISM(builder, periapsisM)
@@ -839,6 +928,11 @@ class LAM : Table() {
             addMAXHEATFLUXWPERM2(builder, maxHeatFluxWPerM2)
             addMAXDYNAMICPRESSUREPA(builder, maxDynamicPressurePa)
             addSTEPSIZE(builder, stepSize)
+            addINPLANELIFTOFFEPOCHS(builder, inPlaneLiftoffEpochsOffset)
+            addINSTANTANEOUSAPOAPSISALTITUDEM(builder, instantaneousApoapsisAltitudeMOffset)
+            addINSTANTANEOUSPERIAPSISALTITUDEM(builder, instantaneousPeriapsisAltitudeMOffset)
+            addINSERTION(builder, insertionOffset)
+            addTARGETORBIT(builder, targetOrbitOffset)
             addCOMMENT(builder, commentOffset)
             addASSUMPTIONS(builder, assumptionsOffset)
             addCONSTRAINTVIOLATIONS(builder, constraintViolationsOffset)
@@ -887,11 +981,13 @@ class LAM : Table() {
             addORIGINATOR(builder, originatorOffset)
             addCREATIONDATE(builder, creationDateOffset)
             addMESSAGEID(builder, messageIdOffset)
+            addSPEEDREFERENCE(builder, speedReference)
+            addTRAJECTORYSOURCE(builder, trajectorySource)
             addCONSTRAINTSTATUS(builder, constraintStatus)
             addPHASE(builder, phase)
             return endLAM(builder)
         }
-        fun startLAM(builder: FlatBufferBuilder) = builder.startTable(57)
+        fun startLAM(builder: FlatBufferBuilder) = builder.startTable(64)
         fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(0, messageId, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -1133,6 +1229,37 @@ class LAM : Table() {
         }
         fun startAssumptionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(56, comment, 0)
+        fun addTARGETORBIT(builder: FlatBufferBuilder, targetOrbit: Int) = builder.addOffset(57, targetOrbit, 0)
+        fun addTRAJECTORYSOURCE(builder: FlatBufferBuilder, trajectorySource: Byte) = builder.addByte(58, trajectorySource, 0)
+        fun addSPEEDREFERENCE(builder: FlatBufferBuilder, speedReference: Byte) = builder.addByte(59, speedReference, 0)
+        fun addINSERTION(builder: FlatBufferBuilder, insertion: Int) = builder.addOffset(60, insertion, 0)
+        fun addINSTANTANEOUSPERIAPSISALTITUDEM(builder: FlatBufferBuilder, instantaneousPeriapsisAltitudeM: Int) = builder.addOffset(61, instantaneousPeriapsisAltitudeM, 0)
+        fun createInstantaneousPeriapsisAltitudeMVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startInstantaneousPeriapsisAltitudeMVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addINSTANTANEOUSAPOAPSISALTITUDEM(builder: FlatBufferBuilder, instantaneousApoapsisAltitudeM: Int) = builder.addOffset(62, instantaneousApoapsisAltitudeM, 0)
+        fun createInstantaneousApoapsisAltitudeMVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startInstantaneousApoapsisAltitudeMVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addINPLANELIFTOFFEPOCHS(builder: FlatBufferBuilder, inPlaneLiftoffEpochs: Int) = builder.addOffset(63, inPlaneLiftoffEpochs, 0)
+        fun createInPlaneLiftoffEpochsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startInPlaneLiftoffEpochsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endLAM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

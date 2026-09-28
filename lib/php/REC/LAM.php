@@ -772,22 +772,118 @@ class LAM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Orbit the launch is steered to.
+    public function getTARGET_ORBIT()
+    {
+        $obj = new LamTargetOrbit();
+        $o = $this->__offset(118);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Origin of the trajectory samples.
+    /**
+     * @return sbyte
+     */
+    public function getTRAJECTORY_SOURCE()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \lamTrajectorySource::UNSPECIFIED;
+    }
+
+    /// Frame of SPEED_M_PER_S samples.
+    /**
+     * @return sbyte
+     */
+    public function getSPEED_REFERENCE()
+    {
+        $o = $this->__offset(122);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \lamSpeedReference::UNSPECIFIED;
+    }
+
+    /// Orbit at insertion.
+    public function getINSERTION()
+    {
+        $obj = new LamInsertionOrbit();
+        $o = $this->__offset(124);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getINSTANTANEOUS_PERIAPSIS_ALTITUDE_M($j)
+    {
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength()
+    {
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getINSTANTANEOUS_APOAPSIS_ALTITUDE_M($j)
+    {
+        $o = $this->__offset(128);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINSTANTANEOUS_APOAPSIS_ALTITUDE_MLength()
+    {
+        $o = $this->__offset(128);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getIN_PLANE_LIFTOFF_EPOCHS($j)
+    {
+        $o = $this->__offset(130);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIN_PLANE_LIFTOFF_EPOCHSLength()
+    {
+        $o = $this->__offset(130);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startLAM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(57);
+        $builder->StartObject(64);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LAM
      */
-    public static function createLAM(FlatBufferBuilder $builder, $MESSAGE_ID, $CREATION_DATE, $ORIGINATOR, $MISSION_NAME, $VEHICLE_NAME, $TIME_SYSTEM, $REF_FRAME, $LAUNCH_EPOCH, $START_TIME, $STOP_TIME, $STEP_SIZE, $LAUNCH_DATA, $ROCKET_CONFIGURATION, $EVENT_RECORDS, $DETECTIONS, $BOOST_TRACKS, $BURN_OUT_VECTORS, $TRAJECTORY_OEM, $TRAJECTORY_OCM, $ATMOSPHERE, $HYPERSONIC_CONDITIONS, $PROPAGATOR_NAME, $PROPAGATOR_VERSION, $GUIDANCE_MODEL, $THRUST_MODEL, $AERODYNAMIC_MODEL, $PHASE, $CONSTRAINT_STATUS, $TIME_FROM_LAUNCH_S, $LATITUDE_DEG, $LONGITUDE_DEG, $ALTITUDE_M, $DOWNRANGE_M, $SPEED_M_PER_S, $MACH, $DYNAMIC_PRESSURE_PA, $HEAT_FLUX_W_PER_M2, $MASS_KG, $THRUST_N, $ACCELERATION_G, $PITCH_DEG, $FLIGHT_PATH_ANGLE_DEG, $IIP_LATITUDE_DEG, $IIP_LONGITUDE_DEG, $MAX_DYNAMIC_PRESSURE_PA, $MAX_DYNAMIC_PRESSURE_EPOCH, $MAX_HEAT_FLUX_W_PER_M2, $MAX_HEAT_FLUX_EPOCH, $ORBIT_INSERTION_EPOCH, $APOAPSIS_M, $PERIAPSIS_M, $INCLINATION_DEG, $PAYLOAD_INJECTION_ERROR_M_PER_S, $ASCENT_EVENTS, $CONSTRAINT_VIOLATIONS, $ASSUMPTIONS, $COMMENT)
+    public static function createLAM(FlatBufferBuilder $builder, $MESSAGE_ID, $CREATION_DATE, $ORIGINATOR, $MISSION_NAME, $VEHICLE_NAME, $TIME_SYSTEM, $REF_FRAME, $LAUNCH_EPOCH, $START_TIME, $STOP_TIME, $STEP_SIZE, $LAUNCH_DATA, $ROCKET_CONFIGURATION, $EVENT_RECORDS, $DETECTIONS, $BOOST_TRACKS, $BURN_OUT_VECTORS, $TRAJECTORY_OEM, $TRAJECTORY_OCM, $ATMOSPHERE, $HYPERSONIC_CONDITIONS, $PROPAGATOR_NAME, $PROPAGATOR_VERSION, $GUIDANCE_MODEL, $THRUST_MODEL, $AERODYNAMIC_MODEL, $PHASE, $CONSTRAINT_STATUS, $TIME_FROM_LAUNCH_S, $LATITUDE_DEG, $LONGITUDE_DEG, $ALTITUDE_M, $DOWNRANGE_M, $SPEED_M_PER_S, $MACH, $DYNAMIC_PRESSURE_PA, $HEAT_FLUX_W_PER_M2, $MASS_KG, $THRUST_N, $ACCELERATION_G, $PITCH_DEG, $FLIGHT_PATH_ANGLE_DEG, $IIP_LATITUDE_DEG, $IIP_LONGITUDE_DEG, $MAX_DYNAMIC_PRESSURE_PA, $MAX_DYNAMIC_PRESSURE_EPOCH, $MAX_HEAT_FLUX_W_PER_M2, $MAX_HEAT_FLUX_EPOCH, $ORBIT_INSERTION_EPOCH, $APOAPSIS_M, $PERIAPSIS_M, $INCLINATION_DEG, $PAYLOAD_INJECTION_ERROR_M_PER_S, $ASCENT_EVENTS, $CONSTRAINT_VIOLATIONS, $ASSUMPTIONS, $COMMENT, $TARGET_ORBIT, $TRAJECTORY_SOURCE, $SPEED_REFERENCE, $INSERTION, $INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, $INSTANTANEOUS_APOAPSIS_ALTITUDE_M, $IN_PLANE_LIFTOFF_EPOCHS)
     {
-        $builder->startObject(57);
+        $builder->startObject(64);
         self::addMESSAGE_ID($builder, $MESSAGE_ID);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -845,6 +941,13 @@ class LAM extends Table
         self::addCONSTRAINT_VIOLATIONS($builder, $CONSTRAINT_VIOLATIONS);
         self::addASSUMPTIONS($builder, $ASSUMPTIONS);
         self::addCOMMENT($builder, $COMMENT);
+        self::addTARGET_ORBIT($builder, $TARGET_ORBIT);
+        self::addTRAJECTORY_SOURCE($builder, $TRAJECTORY_SOURCE);
+        self::addSPEED_REFERENCE($builder, $SPEED_REFERENCE);
+        self::addINSERTION($builder, $INSERTION);
+        self::addINSTANTANEOUS_PERIAPSIS_ALTITUDE_M($builder, $INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+        self::addINSTANTANEOUS_APOAPSIS_ALTITUDE_M($builder, $INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+        self::addIN_PLANE_LIFTOFF_EPOCHS($builder, $IN_PLANE_LIFTOFF_EPOCHS);
         $o = $builder->endObject();
         return $o;
     }
@@ -1969,6 +2072,148 @@ class LAM extends Table
     public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
     {
         $builder->addOffsetX(56, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGET_ORBIT(FlatBufferBuilder $builder, $TARGET_ORBIT)
+    {
+        $builder->addOffsetX(57, $TARGET_ORBIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTRAJECTORY_SOURCE(FlatBufferBuilder $builder, $TRAJECTORY_SOURCE)
+    {
+        $builder->addSbyteX(58, $TRAJECTORY_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSPEED_REFERENCE(FlatBufferBuilder $builder, $SPEED_REFERENCE)
+    {
+        $builder->addSbyteX(59, $SPEED_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINSERTION(FlatBufferBuilder $builder, $INSERTION)
+    {
+        $builder->addOffsetX(60, $INSERTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(FlatBufferBuilder $builder, $INSTANTANEOUS_PERIAPSIS_ALTITUDE_M)
+    {
+        $builder->addOffsetX(61, $INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINSTANTANEOUS_APOAPSIS_ALTITUDE_M(FlatBufferBuilder $builder, $INSTANTANEOUS_APOAPSIS_ALTITUDE_M)
+    {
+        $builder->addOffsetX(62, $INSTANTANEOUS_APOAPSIS_ALTITUDE_M, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addIN_PLANE_LIFTOFF_EPOCHS(FlatBufferBuilder $builder, $IN_PLANE_LIFTOFF_EPOCHS)
+    {
+        $builder->addOffsetX(63, $IN_PLANE_LIFTOFF_EPOCHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createIN_PLANE_LIFTOFF_EPOCHSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startIN_PLANE_LIFTOFF_EPOCHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

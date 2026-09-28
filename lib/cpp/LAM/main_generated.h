@@ -30,6 +30,12 @@ struct lamAscentEventBuilder;
 struct lamConstraintViolation;
 struct lamConstraintViolationBuilder;
 
+struct lamTargetOrbit;
+struct lamTargetOrbitBuilder;
+
+struct lamInsertionOrbit;
+struct lamInsertionOrbitBuilder;
+
 struct LAM;
 struct LAMBuilder;
 
@@ -126,6 +132,122 @@ inline const char *EnumNamelamConstraintStatus(lamConstraintStatus e) {
   if (::flatbuffers::IsOutRange(e, lamConstraintStatus_UNKNOWN, lamConstraintStatus_WAIVED)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameslamConstraintStatus()[index];
+}
+
+/// Direction of an ascent's ground track relative to the equator.
+enum lamPassDirection : int8_t {
+  lamPassDirection_UNSPECIFIED = 0,
+  /// Climbs northward, into the ascending half of the orbit.
+  lamPassDirection_NORTHBOUND = 1,
+  /// Climbs southward, into the descending half of the orbit.
+  lamPassDirection_SOUTHBOUND = 2,
+  lamPassDirection_MIN = lamPassDirection_UNSPECIFIED,
+  lamPassDirection_MAX = lamPassDirection_SOUTHBOUND
+};
+
+inline const lamPassDirection (&EnumValueslamPassDirection())[3] {
+  static const lamPassDirection values[] = {
+    lamPassDirection_UNSPECIFIED,
+    lamPassDirection_NORTHBOUND,
+    lamPassDirection_SOUTHBOUND
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslamPassDirection() {
+  static const char * const names[4] = {
+    "UNSPECIFIED",
+    "NORTHBOUND",
+    "SOUTHBOUND",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelamPassDirection(lamPassDirection e) {
+  if (::flatbuffers::IsOutRange(e, lamPassDirection_UNSPECIFIED, lamPassDirection_SOUTHBOUND)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslamPassDirection()[index];
+}
+
+/// Origin of trajectory samples.
+enum lamTrajectorySource : int8_t {
+  lamTrajectorySource_UNSPECIFIED = 0,
+  /// Projected from a target orbit and a reference ascent profile.
+  lamTrajectorySource_PROJECTED = 1,
+  /// Reconstructed from vehicle telemetry.
+  lamTrajectorySource_TELEMETRY = 2,
+  /// Reconstructed from tracking observations or catalog element sets.
+  lamTrajectorySource_TRACKING = 3,
+  /// Produced by a physics simulation of the vehicle.
+  lamTrajectorySource_SIMULATED = 4,
+  lamTrajectorySource_MIN = lamTrajectorySource_UNSPECIFIED,
+  lamTrajectorySource_MAX = lamTrajectorySource_SIMULATED
+};
+
+inline const lamTrajectorySource (&EnumValueslamTrajectorySource())[5] {
+  static const lamTrajectorySource values[] = {
+    lamTrajectorySource_UNSPECIFIED,
+    lamTrajectorySource_PROJECTED,
+    lamTrajectorySource_TELEMETRY,
+    lamTrajectorySource_TRACKING,
+    lamTrajectorySource_SIMULATED
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslamTrajectorySource() {
+  static const char * const names[6] = {
+    "UNSPECIFIED",
+    "PROJECTED",
+    "TELEMETRY",
+    "TRACKING",
+    "SIMULATED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelamTrajectorySource(lamTrajectorySource e) {
+  if (::flatbuffers::IsOutRange(e, lamTrajectorySource_UNSPECIFIED, lamTrajectorySource_SIMULATED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslamTrajectorySource()[index];
+}
+
+/// Frame of speed samples.
+enum lamSpeedReference : int8_t {
+  lamSpeedReference_UNSPECIFIED = 0,
+  /// Speed relative to the rotating Earth, as launch broadcasts report it.
+  lamSpeedReference_EARTH_RELATIVE = 1,
+  /// Speed in an inertial frame.
+  lamSpeedReference_INERTIAL = 2,
+  lamSpeedReference_MIN = lamSpeedReference_UNSPECIFIED,
+  lamSpeedReference_MAX = lamSpeedReference_INERTIAL
+};
+
+inline const lamSpeedReference (&EnumValueslamSpeedReference())[3] {
+  static const lamSpeedReference values[] = {
+    lamSpeedReference_UNSPECIFIED,
+    lamSpeedReference_EARTH_RELATIVE,
+    lamSpeedReference_INERTIAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslamSpeedReference() {
+  static const char * const names[4] = {
+    "UNSPECIFIED",
+    "EARTH_RELATIVE",
+    "INERTIAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelamSpeedReference(lamSpeedReference e) {
+  if (::flatbuffers::IsOutRange(e, lamSpeedReference_UNSPECIFIED, lamSpeedReference_INERTIAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslamSpeedReference()[index];
 }
 
 /// Launch-ascent event.
@@ -458,6 +580,344 @@ inline ::flatbuffers::Offset<lamConstraintViolation> CreatelamConstraintViolatio
       DESCRIPTION__);
 }
 
+/// Orbit a launch is steered to.
+struct lamTargetOrbit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef lamTargetOrbitBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_INCLINATION_DEG = 4,
+    VT_PASS_DIRECTION = 6,
+    VT_PERIAPSIS_ALTITUDE_M = 8,
+    VT_APOAPSIS_ALTITUDE_M = 10,
+    VT_INSERTION_TIME_FROM_LAUNCH_S = 12,
+    VT_PLANE_REFERENCE = 14
+  };
+  /// Target inclination in degrees.
+  double INCLINATION_DEG() const {
+    return GetField<double>(VT_INCLINATION_DEG, 0.0);
+  }
+  /// Ground-track direction of the ascent.
+  lamPassDirection PASS_DIRECTION() const {
+    return static_cast<lamPassDirection>(GetField<int8_t>(VT_PASS_DIRECTION, 0));
+  }
+  /// Target periapsis altitude above the WGS-84 equatorial radius, in meters.
+  double PERIAPSIS_ALTITUDE_M() const {
+    return GetField<double>(VT_PERIAPSIS_ALTITUDE_M, 0.0);
+  }
+  /// Target apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  double APOAPSIS_ALTITUDE_M() const {
+    return GetField<double>(VT_APOAPSIS_ALTITUDE_M, 0.0);
+  }
+  /// Time from launch of orbit insertion (engine cutoff), in seconds.
+  double INSERTION_TIME_FROM_LAUNCH_S() const {
+    return GetField<double>(VT_INSERTION_TIME_FROM_LAUNCH_S, 0.0);
+  }
+  /// Ephemeris of an object whose orbit plane the launch joins, in the TEME frame.
+  const OEM *PLANE_REFERENCE() const {
+    return GetPointer<const OEM *>(VT_PLANE_REFERENCE);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_INCLINATION_DEG, 8) &&
+           VerifyField<int8_t>(verifier, VT_PASS_DIRECTION, 1) &&
+           VerifyField<double>(verifier, VT_PERIAPSIS_ALTITUDE_M, 8) &&
+           VerifyField<double>(verifier, VT_APOAPSIS_ALTITUDE_M, 8) &&
+           VerifyField<double>(verifier, VT_INSERTION_TIME_FROM_LAUNCH_S, 8) &&
+           VerifyOffset(verifier, VT_PLANE_REFERENCE) &&
+           verifier.VerifyTable(PLANE_REFERENCE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct lamTargetOrbitBuilder {
+  typedef lamTargetOrbit Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_INCLINATION_DEG(double INCLINATION_DEG) {
+    fbb_.AddElement<double>(lamTargetOrbit::VT_INCLINATION_DEG, INCLINATION_DEG, 0.0);
+  }
+  void add_PASS_DIRECTION(lamPassDirection PASS_DIRECTION) {
+    fbb_.AddElement<int8_t>(lamTargetOrbit::VT_PASS_DIRECTION, static_cast<int8_t>(PASS_DIRECTION), 0);
+  }
+  void add_PERIAPSIS_ALTITUDE_M(double PERIAPSIS_ALTITUDE_M) {
+    fbb_.AddElement<double>(lamTargetOrbit::VT_PERIAPSIS_ALTITUDE_M, PERIAPSIS_ALTITUDE_M, 0.0);
+  }
+  void add_APOAPSIS_ALTITUDE_M(double APOAPSIS_ALTITUDE_M) {
+    fbb_.AddElement<double>(lamTargetOrbit::VT_APOAPSIS_ALTITUDE_M, APOAPSIS_ALTITUDE_M, 0.0);
+  }
+  void add_INSERTION_TIME_FROM_LAUNCH_S(double INSERTION_TIME_FROM_LAUNCH_S) {
+    fbb_.AddElement<double>(lamTargetOrbit::VT_INSERTION_TIME_FROM_LAUNCH_S, INSERTION_TIME_FROM_LAUNCH_S, 0.0);
+  }
+  void add_PLANE_REFERENCE(::flatbuffers::Offset<OEM> PLANE_REFERENCE) {
+    fbb_.AddOffset(lamTargetOrbit::VT_PLANE_REFERENCE, PLANE_REFERENCE);
+  }
+  explicit lamTargetOrbitBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<lamTargetOrbit> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<lamTargetOrbit>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<lamTargetOrbit> CreatelamTargetOrbit(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double INCLINATION_DEG = 0.0,
+    lamPassDirection PASS_DIRECTION = lamPassDirection_UNSPECIFIED,
+    double PERIAPSIS_ALTITUDE_M = 0.0,
+    double APOAPSIS_ALTITUDE_M = 0.0,
+    double INSERTION_TIME_FROM_LAUNCH_S = 0.0,
+    ::flatbuffers::Offset<OEM> PLANE_REFERENCE = 0) {
+  lamTargetOrbitBuilder builder_(_fbb);
+  builder_.add_INSERTION_TIME_FROM_LAUNCH_S(INSERTION_TIME_FROM_LAUNCH_S);
+  builder_.add_APOAPSIS_ALTITUDE_M(APOAPSIS_ALTITUDE_M);
+  builder_.add_PERIAPSIS_ALTITUDE_M(PERIAPSIS_ALTITUDE_M);
+  builder_.add_INCLINATION_DEG(INCLINATION_DEG);
+  builder_.add_PLANE_REFERENCE(PLANE_REFERENCE);
+  builder_.add_PASS_DIRECTION(PASS_DIRECTION);
+  return builder_.Finish();
+}
+
+/// Orbit at insertion, measured or projected.
+struct lamInsertionOrbit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef lamInsertionOrbitBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_TIME_FROM_LAUNCH_S = 6,
+    VT_REF_FRAME = 8,
+    VT_SEMI_MAJOR_AXIS_M = 10,
+    VT_ECCENTRICITY = 12,
+    VT_INCLINATION_DEG = 14,
+    VT_RAAN_DEG = 16,
+    VT_ARGUMENT_OF_PERIAPSIS_DEG = 18,
+    VT_ARGUMENT_OF_LATITUDE_DEG = 20,
+    VT_PERIAPSIS_ALTITUDE_M = 22,
+    VT_APOAPSIS_ALTITUDE_M = 24,
+    VT_RAAN_UNCERTAINTY_DEG = 26,
+    VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 28,
+    VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 30,
+    VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M = 32
+  };
+  /// Insertion epoch in ISO 8601 UTC format.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Time from launch of insertion, in seconds.
+  double TIME_FROM_LAUNCH_S() const {
+    return GetField<double>(VT_TIME_FROM_LAUNCH_S, 0.0);
+  }
+  /// Frame of the angular elements.
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// Osculating semi-major axis in meters.
+  double SEMI_MAJOR_AXIS_M() const {
+    return GetField<double>(VT_SEMI_MAJOR_AXIS_M, 0.0);
+  }
+  /// Osculating eccentricity.
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Inclination in degrees.
+  double INCLINATION_DEG() const {
+    return GetField<double>(VT_INCLINATION_DEG, 0.0);
+  }
+  /// Right ascension of the ascending node in degrees.
+  double RAAN_DEG() const {
+    return GetField<double>(VT_RAAN_DEG, 0.0);
+  }
+  /// Argument of periapsis in degrees.
+  double ARGUMENT_OF_PERIAPSIS_DEG() const {
+    return GetField<double>(VT_ARGUMENT_OF_PERIAPSIS_DEG, 0.0);
+  }
+  /// Argument of latitude at insertion in degrees.
+  double ARGUMENT_OF_LATITUDE_DEG() const {
+    return GetField<double>(VT_ARGUMENT_OF_LATITUDE_DEG, 0.0);
+  }
+  /// Periapsis altitude above the WGS-84 equatorial radius, in meters.
+  double PERIAPSIS_ALTITUDE_M() const {
+    return GetField<double>(VT_PERIAPSIS_ALTITUDE_M, 0.0);
+  }
+  /// Apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  double APOAPSIS_ALTITUDE_M() const {
+    return GetField<double>(VT_APOAPSIS_ALTITUDE_M, 0.0);
+  }
+  /// One-sigma uncertainty of RAAN_DEG in degrees.
+  double RAAN_UNCERTAINTY_DEG() const {
+    return GetField<double>(VT_RAAN_UNCERTAINTY_DEG, 0.0);
+  }
+  /// One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees.
+  double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG() const {
+    return GetField<double>(VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, 0.0);
+  }
+  /// One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters.
+  double PERIAPSIS_ALTITUDE_UNCERTAINTY_M() const {
+    return GetField<double>(VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
+  }
+  /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
+  double APOAPSIS_ALTITUDE_UNCERTAINTY_M() const {
+    return GetField<double>(VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_TIME_FROM_LAUNCH_S, 8) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_SEMI_MAJOR_AXIS_M, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION_DEG, 8) &&
+           VerifyField<double>(verifier, VT_RAAN_DEG, 8) &&
+           VerifyField<double>(verifier, VT_ARGUMENT_OF_PERIAPSIS_DEG, 8) &&
+           VerifyField<double>(verifier, VT_ARGUMENT_OF_LATITUDE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_PERIAPSIS_ALTITUDE_M, 8) &&
+           VerifyField<double>(verifier, VT_APOAPSIS_ALTITUDE_M, 8) &&
+           VerifyField<double>(verifier, VT_RAAN_UNCERTAINTY_DEG, 8) &&
+           VerifyField<double>(verifier, VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, 8) &&
+           VerifyField<double>(verifier, VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M, 8) &&
+           VerifyField<double>(verifier, VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct lamInsertionOrbitBuilder {
+  typedef lamInsertionOrbit Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(lamInsertionOrbit::VT_EPOCH, EPOCH);
+  }
+  void add_TIME_FROM_LAUNCH_S(double TIME_FROM_LAUNCH_S) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_TIME_FROM_LAUNCH_S, TIME_FROM_LAUNCH_S, 0.0);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(lamInsertionOrbit::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_SEMI_MAJOR_AXIS_M(double SEMI_MAJOR_AXIS_M) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_SEMI_MAJOR_AXIS_M, SEMI_MAJOR_AXIS_M, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_INCLINATION_DEG(double INCLINATION_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_INCLINATION_DEG, INCLINATION_DEG, 0.0);
+  }
+  void add_RAAN_DEG(double RAAN_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_RAAN_DEG, RAAN_DEG, 0.0);
+  }
+  void add_ARGUMENT_OF_PERIAPSIS_DEG(double ARGUMENT_OF_PERIAPSIS_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_ARGUMENT_OF_PERIAPSIS_DEG, ARGUMENT_OF_PERIAPSIS_DEG, 0.0);
+  }
+  void add_ARGUMENT_OF_LATITUDE_DEG(double ARGUMENT_OF_LATITUDE_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_ARGUMENT_OF_LATITUDE_DEG, ARGUMENT_OF_LATITUDE_DEG, 0.0);
+  }
+  void add_PERIAPSIS_ALTITUDE_M(double PERIAPSIS_ALTITUDE_M) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_PERIAPSIS_ALTITUDE_M, PERIAPSIS_ALTITUDE_M, 0.0);
+  }
+  void add_APOAPSIS_ALTITUDE_M(double APOAPSIS_ALTITUDE_M) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_APOAPSIS_ALTITUDE_M, APOAPSIS_ALTITUDE_M, 0.0);
+  }
+  void add_RAAN_UNCERTAINTY_DEG(double RAAN_UNCERTAINTY_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_RAAN_UNCERTAINTY_DEG, RAAN_UNCERTAINTY_DEG, 0.0);
+  }
+  void add_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, 0.0);
+  }
+  void add_PERIAPSIS_ALTITUDE_UNCERTAINTY_M(double PERIAPSIS_ALTITUDE_UNCERTAINTY_M) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M, PERIAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
+  }
+  void add_APOAPSIS_ALTITUDE_UNCERTAINTY_M(double APOAPSIS_ALTITUDE_UNCERTAINTY_M) {
+    fbb_.AddElement<double>(lamInsertionOrbit::VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M, APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
+  }
+  explicit lamInsertionOrbitBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<lamInsertionOrbit> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<lamInsertionOrbit>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<lamInsertionOrbit> CreatelamInsertionOrbit(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double TIME_FROM_LAUNCH_S = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    double SEMI_MAJOR_AXIS_M = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION_DEG = 0.0,
+    double RAAN_DEG = 0.0,
+    double ARGUMENT_OF_PERIAPSIS_DEG = 0.0,
+    double ARGUMENT_OF_LATITUDE_DEG = 0.0,
+    double PERIAPSIS_ALTITUDE_M = 0.0,
+    double APOAPSIS_ALTITUDE_M = 0.0,
+    double RAAN_UNCERTAINTY_DEG = 0.0,
+    double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 0.0,
+    double PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
+    double APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0) {
+  lamInsertionOrbitBuilder builder_(_fbb);
+  builder_.add_APOAPSIS_ALTITUDE_UNCERTAINTY_M(APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+  builder_.add_PERIAPSIS_ALTITUDE_UNCERTAINTY_M(PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
+  builder_.add_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
+  builder_.add_RAAN_UNCERTAINTY_DEG(RAAN_UNCERTAINTY_DEG);
+  builder_.add_APOAPSIS_ALTITUDE_M(APOAPSIS_ALTITUDE_M);
+  builder_.add_PERIAPSIS_ALTITUDE_M(PERIAPSIS_ALTITUDE_M);
+  builder_.add_ARGUMENT_OF_LATITUDE_DEG(ARGUMENT_OF_LATITUDE_DEG);
+  builder_.add_ARGUMENT_OF_PERIAPSIS_DEG(ARGUMENT_OF_PERIAPSIS_DEG);
+  builder_.add_RAAN_DEG(RAAN_DEG);
+  builder_.add_INCLINATION_DEG(INCLINATION_DEG);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_SEMI_MAJOR_AXIS_M(SEMI_MAJOR_AXIS_M);
+  builder_.add_TIME_FROM_LAUNCH_S(TIME_FROM_LAUNCH_S);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<lamInsertionOrbit> CreatelamInsertionOrbitDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    double TIME_FROM_LAUNCH_S = 0.0,
+    const char *REF_FRAME = nullptr,
+    double SEMI_MAJOR_AXIS_M = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION_DEG = 0.0,
+    double RAAN_DEG = 0.0,
+    double ARGUMENT_OF_PERIAPSIS_DEG = 0.0,
+    double ARGUMENT_OF_LATITUDE_DEG = 0.0,
+    double PERIAPSIS_ALTITUDE_M = 0.0,
+    double APOAPSIS_ALTITUDE_M = 0.0,
+    double RAAN_UNCERTAINTY_DEG = 0.0,
+    double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 0.0,
+    double PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
+    double APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  return CreatelamInsertionOrbit(
+      _fbb,
+      EPOCH__,
+      TIME_FROM_LAUNCH_S,
+      REF_FRAME__,
+      SEMI_MAJOR_AXIS_M,
+      ECCENTRICITY,
+      INCLINATION_DEG,
+      RAAN_DEG,
+      ARGUMENT_OF_PERIAPSIS_DEG,
+      ARGUMENT_OF_LATITUDE_DEG,
+      PERIAPSIS_ALTITUDE_M,
+      APOAPSIS_ALTITUDE_M,
+      RAAN_UNCERTAINTY_DEG,
+      ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
+      PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
+      APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+}
+
 /// Launch Ascent Message
 struct LAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LAMBuilder Builder;
@@ -518,7 +978,14 @@ struct LAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ASCENT_EVENTS = 110,
     VT_CONSTRAINT_VIOLATIONS = 112,
     VT_ASSUMPTIONS = 114,
-    VT_COMMENT = 116
+    VT_COMMENT = 116,
+    VT_TARGET_ORBIT = 118,
+    VT_TRAJECTORY_SOURCE = 120,
+    VT_SPEED_REFERENCE = 122,
+    VT_INSERTION = 124,
+    VT_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = 126,
+    VT_INSTANTANEOUS_APOAPSIS_ALTITUDE_M = 128,
+    VT_IN_PLANE_LIFTOFF_EPOCHS = 130
   };
   /// Producer-defined message identifier.
   const ::flatbuffers::String *MESSAGE_ID() const {
@@ -748,6 +1215,34 @@ struct LAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
+  /// Orbit the launch is steered to.
+  const lamTargetOrbit *TARGET_ORBIT() const {
+    return GetPointer<const lamTargetOrbit *>(VT_TARGET_ORBIT);
+  }
+  /// Origin of the trajectory samples.
+  lamTrajectorySource TRAJECTORY_SOURCE() const {
+    return static_cast<lamTrajectorySource>(GetField<int8_t>(VT_TRAJECTORY_SOURCE, 0));
+  }
+  /// Frame of SPEED_M_PER_S samples.
+  lamSpeedReference SPEED_REFERENCE() const {
+    return static_cast<lamSpeedReference>(GetField<int8_t>(VT_SPEED_REFERENCE, 0));
+  }
+  /// Orbit at insertion.
+  const lamInsertionOrbit *INSERTION() const {
+    return GetPointer<const lamInsertionOrbit *>(VT_INSERTION);
+  }
+  /// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  const ::flatbuffers::Vector<double> *INSTANTANEOUS_PERIAPSIS_ALTITUDE_M() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+  }
+  /// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  const ::flatbuffers::Vector<double> *INSTANTANEOUS_APOAPSIS_ALTITUDE_M() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+  }
+  /// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *IN_PLANE_LIFTOFF_EPOCHS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_IN_PLANE_LIFTOFF_EPOCHS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -863,6 +1358,19 @@ struct LAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfStrings(ASSUMPTIONS()) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_TARGET_ORBIT) &&
+           verifier.VerifyTable(TARGET_ORBIT()) &&
+           VerifyField<int8_t>(verifier, VT_TRAJECTORY_SOURCE, 1) &&
+           VerifyField<int8_t>(verifier, VT_SPEED_REFERENCE, 1) &&
+           VerifyOffset(verifier, VT_INSERTION) &&
+           verifier.VerifyTable(INSERTION()) &&
+           VerifyOffset(verifier, VT_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M) &&
+           verifier.VerifyVector(INSTANTANEOUS_PERIAPSIS_ALTITUDE_M()) &&
+           VerifyOffset(verifier, VT_INSTANTANEOUS_APOAPSIS_ALTITUDE_M) &&
+           verifier.VerifyVector(INSTANTANEOUS_APOAPSIS_ALTITUDE_M()) &&
+           VerifyOffset(verifier, VT_IN_PLANE_LIFTOFF_EPOCHS) &&
+           verifier.VerifyVector(IN_PLANE_LIFTOFF_EPOCHS()) &&
+           verifier.VerifyVectorOfStrings(IN_PLANE_LIFTOFF_EPOCHS()) &&
            verifier.EndTable();
   }
 };
@@ -1042,6 +1550,27 @@ struct LAMBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(LAM::VT_COMMENT, COMMENT);
   }
+  void add_TARGET_ORBIT(::flatbuffers::Offset<lamTargetOrbit> TARGET_ORBIT) {
+    fbb_.AddOffset(LAM::VT_TARGET_ORBIT, TARGET_ORBIT);
+  }
+  void add_TRAJECTORY_SOURCE(lamTrajectorySource TRAJECTORY_SOURCE) {
+    fbb_.AddElement<int8_t>(LAM::VT_TRAJECTORY_SOURCE, static_cast<int8_t>(TRAJECTORY_SOURCE), 0);
+  }
+  void add_SPEED_REFERENCE(lamSpeedReference SPEED_REFERENCE) {
+    fbb_.AddElement<int8_t>(LAM::VT_SPEED_REFERENCE, static_cast<int8_t>(SPEED_REFERENCE), 0);
+  }
+  void add_INSERTION(::flatbuffers::Offset<lamInsertionOrbit> INSERTION) {
+    fbb_.AddOffset(LAM::VT_INSERTION, INSERTION);
+  }
+  void add_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(::flatbuffers::Offset<::flatbuffers::Vector<double>> INSTANTANEOUS_PERIAPSIS_ALTITUDE_M) {
+    fbb_.AddOffset(LAM::VT_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+  }
+  void add_INSTANTANEOUS_APOAPSIS_ALTITUDE_M(::flatbuffers::Offset<::flatbuffers::Vector<double>> INSTANTANEOUS_APOAPSIS_ALTITUDE_M) {
+    fbb_.AddOffset(LAM::VT_INSTANTANEOUS_APOAPSIS_ALTITUDE_M, INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+  }
+  void add_IN_PLANE_LIFTOFF_EPOCHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> IN_PLANE_LIFTOFF_EPOCHS) {
+    fbb_.AddOffset(LAM::VT_IN_PLANE_LIFTOFF_EPOCHS, IN_PLANE_LIFTOFF_EPOCHS);
+  }
   explicit LAMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1111,7 +1640,14 @@ inline ::flatbuffers::Offset<LAM> CreateLAM(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<lamAscentEvent>>> ASCENT_EVENTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<lamConstraintViolation>>> CONSTRAINT_VIOLATIONS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ASSUMPTIONS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<lamTargetOrbit> TARGET_ORBIT = 0,
+    lamTrajectorySource TRAJECTORY_SOURCE = lamTrajectorySource_UNSPECIFIED,
+    lamSpeedReference SPEED_REFERENCE = lamSpeedReference_UNSPECIFIED,
+    ::flatbuffers::Offset<lamInsertionOrbit> INSERTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INSTANTANEOUS_APOAPSIS_ALTITUDE_M = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> IN_PLANE_LIFTOFF_EPOCHS = 0) {
   LAMBuilder builder_(_fbb);
   builder_.add_PAYLOAD_INJECTION_ERROR_M_PER_S(PAYLOAD_INJECTION_ERROR_M_PER_S);
   builder_.add_INCLINATION_DEG(INCLINATION_DEG);
@@ -1120,6 +1656,11 @@ inline ::flatbuffers::Offset<LAM> CreateLAM(
   builder_.add_MAX_HEAT_FLUX_W_PER_M2(MAX_HEAT_FLUX_W_PER_M2);
   builder_.add_MAX_DYNAMIC_PRESSURE_PA(MAX_DYNAMIC_PRESSURE_PA);
   builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_IN_PLANE_LIFTOFF_EPOCHS(IN_PLANE_LIFTOFF_EPOCHS);
+  builder_.add_INSTANTANEOUS_APOAPSIS_ALTITUDE_M(INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+  builder_.add_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+  builder_.add_INSERTION(INSERTION);
+  builder_.add_TARGET_ORBIT(TARGET_ORBIT);
   builder_.add_COMMENT(COMMENT);
   builder_.add_ASSUMPTIONS(ASSUMPTIONS);
   builder_.add_CONSTRAINT_VIOLATIONS(CONSTRAINT_VIOLATIONS);
@@ -1168,6 +1709,8 @@ inline ::flatbuffers::Offset<LAM> CreateLAM(
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_MESSAGE_ID(MESSAGE_ID);
+  builder_.add_SPEED_REFERENCE(SPEED_REFERENCE);
+  builder_.add_TRAJECTORY_SOURCE(TRAJECTORY_SOURCE);
   builder_.add_CONSTRAINT_STATUS(CONSTRAINT_STATUS);
   builder_.add_PHASE(PHASE);
   return builder_.Finish();
@@ -1231,7 +1774,14 @@ inline ::flatbuffers::Offset<LAM> CreateLAMDirect(
     const std::vector<::flatbuffers::Offset<lamAscentEvent>> *ASCENT_EVENTS = nullptr,
     const std::vector<::flatbuffers::Offset<lamConstraintViolation>> *CONSTRAINT_VIOLATIONS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ASSUMPTIONS = nullptr,
-    const char *COMMENT = nullptr) {
+    const char *COMMENT = nullptr,
+    ::flatbuffers::Offset<lamTargetOrbit> TARGET_ORBIT = 0,
+    lamTrajectorySource TRAJECTORY_SOURCE = lamTrajectorySource_UNSPECIFIED,
+    lamSpeedReference SPEED_REFERENCE = lamSpeedReference_UNSPECIFIED,
+    ::flatbuffers::Offset<lamInsertionOrbit> INSERTION = 0,
+    const std::vector<double> *INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = nullptr,
+    const std::vector<double> *INSTANTANEOUS_APOAPSIS_ALTITUDE_M = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *IN_PLANE_LIFTOFF_EPOCHS = nullptr) {
   auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -1274,6 +1824,9 @@ inline ::flatbuffers::Offset<LAM> CreateLAMDirect(
   auto CONSTRAINT_VIOLATIONS__ = CONSTRAINT_VIOLATIONS ? _fbb.CreateVector<::flatbuffers::Offset<lamConstraintViolation>>(*CONSTRAINT_VIOLATIONS) : 0;
   auto ASSUMPTIONS__ = ASSUMPTIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ASSUMPTIONS) : 0;
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto INSTANTANEOUS_PERIAPSIS_ALTITUDE_M__ = INSTANTANEOUS_PERIAPSIS_ALTITUDE_M ? _fbb.CreateVector<double>(*INSTANTANEOUS_PERIAPSIS_ALTITUDE_M) : 0;
+  auto INSTANTANEOUS_APOAPSIS_ALTITUDE_M__ = INSTANTANEOUS_APOAPSIS_ALTITUDE_M ? _fbb.CreateVector<double>(*INSTANTANEOUS_APOAPSIS_ALTITUDE_M) : 0;
+  auto IN_PLANE_LIFTOFF_EPOCHS__ = IN_PLANE_LIFTOFF_EPOCHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*IN_PLANE_LIFTOFF_EPOCHS) : 0;
   return CreateLAM(
       _fbb,
       MESSAGE_ID__,
@@ -1332,7 +1885,14 @@ inline ::flatbuffers::Offset<LAM> CreateLAMDirect(
       ASCENT_EVENTS__,
       CONSTRAINT_VIOLATIONS__,
       ASSUMPTIONS__,
-      COMMENT__);
+      COMMENT__,
+      TARGET_ORBIT,
+      TRAJECTORY_SOURCE,
+      SPEED_REFERENCE,
+      INSERTION,
+      INSTANTANEOUS_PERIAPSIS_ALTITUDE_M__,
+      INSTANTANEOUS_APOAPSIS_ALTITUDE_M__,
+      IN_PLANE_LIFTOFF_EPOCHS__);
 }
 
 inline const LAM *GetLAM(const void *buf) {

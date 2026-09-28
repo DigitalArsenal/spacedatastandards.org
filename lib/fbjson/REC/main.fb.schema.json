@@ -15472,6 +15472,85 @@
         }
       }
     },
+    "lamPassDirection": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NORTHBOUND",
+        "SOUTHBOUND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NORTHBOUND": {
+          "value": 1,
+          "description": "Climbs northward, into the ascending half of the orbit."
+        },
+        "SOUTHBOUND": {
+          "value": 2,
+          "description": "Climbs southward, into the descending half of the orbit."
+        }
+      }
+    },
+    "lamTrajectorySource": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "PROJECTED",
+        "TELEMETRY",
+        "TRACKING",
+        "SIMULATED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "PROJECTED": {
+          "value": 1,
+          "description": "Projected from a target orbit and a reference ascent profile."
+        },
+        "TELEMETRY": {
+          "value": 2,
+          "description": "Reconstructed from vehicle telemetry."
+        },
+        "TRACKING": {
+          "value": 3,
+          "description": "Reconstructed from tracking observations or catalog element sets."
+        },
+        "SIMULATED": {
+          "value": 4,
+          "description": "Produced by a physics simulation of the vehicle."
+        }
+      }
+    },
+    "lamSpeedReference": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "EARTH_RELATIVE",
+        "INERTIAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "EARTH_RELATIVE": {
+          "value": 1,
+          "description": "Speed relative to the rotating Earth, as launch broadcasts report it."
+        },
+        "INERTIAL": {
+          "value": 2,
+          "description": "Speed in an inertial frame."
+        }
+      }
+    },
     "licensingConfigMessageType": {
       "type": "string",
       "enum": [
@@ -78125,6 +78204,139 @@
       },
       "additionalProperties": false
     },
+    "lamTargetOrbit": {
+      "type": "object",
+      "description": "Orbit a launch is steered to.",
+      "properties": {
+        "INCLINATION_DEG": {
+          "type": "number",
+          "description": "Target inclination in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "PASS_DIRECTION": {
+          "$ref": "#/definitions/lamPassDirection",
+          "description": "Ground-track direction of the ascent.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NORTHBOUND": {
+              "value": 1,
+              "description": "Climbs northward, into the ascending half of the orbit."
+            },
+            "SOUTHBOUND": {
+              "value": 2,
+              "description": "Climbs southward, into the descending half of the orbit."
+            }
+          }
+        },
+        "PERIAPSIS_ALTITUDE_M": {
+          "type": "number",
+          "description": "Target periapsis altitude above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "APOAPSIS_ALTITUDE_M": {
+          "type": "number",
+          "description": "Target apoapsis altitude above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "INSERTION_TIME_FROM_LAUNCH_S": {
+          "type": "number",
+          "description": "Time from launch of orbit insertion (engine cutoff), in seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "PLANE_REFERENCE": {
+          "$ref": "#/definitions/OEM",
+          "description": "Ephemeris of an object whose orbit plane the launch joins, in the TEME frame.",
+          "x-flatbuffer-type": "OEM"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lamInsertionOrbit": {
+      "type": "object",
+      "description": "Orbit at insertion, measured or projected.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Insertion epoch in ISO 8601 UTC format.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_FROM_LAUNCH_S": {
+          "type": "number",
+          "description": "Time from launch of insertion, in seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Frame of the angular elements.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEMI_MAJOR_AXIS_M": {
+          "type": "number",
+          "description": "Osculating semi-major axis in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Osculating eccentricity.",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION_DEG": {
+          "type": "number",
+          "description": "Inclination in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN_DEG": {
+          "type": "number",
+          "description": "Right ascension of the ascending node in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "ARGUMENT_OF_PERIAPSIS_DEG": {
+          "type": "number",
+          "description": "Argument of periapsis in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "ARGUMENT_OF_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Argument of latitude at insertion in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIAPSIS_ALTITUDE_M": {
+          "type": "number",
+          "description": "Periapsis altitude above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "APOAPSIS_ALTITUDE_M": {
+          "type": "number",
+          "description": "Apoapsis altitude above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN_UNCERTAINTY_DEG": {
+          "type": "number",
+          "description": "One-sigma uncertainty of RAAN_DEG in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG": {
+          "type": "number",
+          "description": "One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIAPSIS_ALTITUDE_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "APOAPSIS_ALTITUDE_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "LAM": {
       "type": "object",
       "description": "Launch Ascent Message",
@@ -78533,6 +78745,86 @@
           "type": "string",
           "description": "Additional comments.",
           "x-flatbuffer-type": "string"
+        },
+        "TARGET_ORBIT": {
+          "$ref": "#/definitions/lamTargetOrbit",
+          "description": "Orbit the launch is steered to.",
+          "x-flatbuffer-type": "lamTargetOrbit"
+        },
+        "TRAJECTORY_SOURCE": {
+          "$ref": "#/definitions/lamTrajectorySource",
+          "description": "Origin of the trajectory samples.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "PROJECTED": {
+              "value": 1,
+              "description": "Projected from a target orbit and a reference ascent profile."
+            },
+            "TELEMETRY": {
+              "value": 2,
+              "description": "Reconstructed from vehicle telemetry."
+            },
+            "TRACKING": {
+              "value": 3,
+              "description": "Reconstructed from tracking observations or catalog element sets."
+            },
+            "SIMULATED": {
+              "value": 4,
+              "description": "Produced by a physics simulation of the vehicle."
+            }
+          }
+        },
+        "SPEED_REFERENCE": {
+          "$ref": "#/definitions/lamSpeedReference",
+          "description": "Frame of SPEED_M_PER_S samples.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "EARTH_RELATIVE": {
+              "value": 1,
+              "description": "Speed relative to the rotating Earth, as launch broadcasts report it."
+            },
+            "INERTIAL": {
+              "value": 2,
+              "description": "Speed in an inertial frame."
+            }
+          }
+        },
+        "INSERTION": {
+          "$ref": "#/definitions/lamInsertionOrbit",
+          "description": "Orbit at insertion.",
+          "x-flatbuffer-type": "lamInsertionOrbit"
+        },
+        "INSTANTANEOUS_PERIAPSIS_ALTITUDE_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "INSTANTANEOUS_APOAPSIS_ALTITUDE_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "IN_PLANE_LIFTOFF_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.",
+          "x-flatbuffer-type": "[string]"
         }
       },
       "additionalProperties": false

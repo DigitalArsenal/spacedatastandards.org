@@ -17,7 +17,11 @@ import { ROC, ROCT } from './ROC.js';
 import { lamAscentEvent, lamAscentEventT } from './lamAscentEvent.js';
 import { lamConstraintStatus } from './lamConstraintStatus.js';
 import { lamConstraintViolation, lamConstraintViolationT } from './lamConstraintViolation.js';
+import { lamInsertionOrbit, lamInsertionOrbitT } from './lamInsertionOrbit.js';
 import { lamMissionPhase } from './lamMissionPhase.js';
+import { lamSpeedReference } from './lamSpeedReference.js';
+import { lamTargetOrbit, lamTargetOrbitT } from './lamTargetOrbit.js';
+import { lamTrajectorySource } from './lamTrajectorySource.js';
 
 
 /**
@@ -736,8 +740,91 @@ COMMENT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Orbit the launch is steered to.
+ */
+TARGET_ORBIT(obj?:lamTargetOrbit):lamTargetOrbit|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? (obj || new lamTargetOrbit()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Origin of the trajectory samples.
+ */
+TRAJECTORY_SOURCE():lamTrajectorySource {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : lamTrajectorySource.UNSPECIFIED;
+}
+
+/**
+ * Frame of SPEED_M_PER_S samples.
+ */
+SPEED_REFERENCE():lamSpeedReference {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : lamSpeedReference.UNSPECIFIED;
+}
+
+/**
+ * Orbit at insertion.
+ */
+INSERTION(obj?:lamInsertionOrbit):lamInsertionOrbit|null {
+  const offset = this.bb!.__offset(this.bb_pos, 124);
+  return offset ? (obj || new lamInsertionOrbit()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+ */
+INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+instantaneousPeriapsisAltitudeMLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+instantaneousPeriapsisAltitudeMArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+ */
+INSTANTANEOUS_APOAPSIS_ALTITUDE_M(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+instantaneousApoapsisAltitudeMLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+instantaneousApoapsisAltitudeMArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+ */
+IN_PLANE_LIFTOFF_EPOCHS(index: number):string
+IN_PLANE_LIFTOFF_EPOCHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+IN_PLANE_LIFTOFF_EPOCHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+inPlaneLiftoffEpochsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startLAM(builder:flatbuffers.Builder) {
-  builder.startObject(57);
+  builder.startObject(64);
 }
 
 static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
@@ -1324,6 +1411,80 @@ static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset)
   builder.addFieldOffset(56, COMMENTOffset, 0);
 }
 
+static addTargetOrbit(builder:flatbuffers.Builder, TARGET_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(57, TARGET_ORBITOffset, 0);
+}
+
+static addTrajectorySource(builder:flatbuffers.Builder, TRAJECTORY_SOURCE:lamTrajectorySource) {
+  builder.addFieldInt8(58, TRAJECTORY_SOURCE, lamTrajectorySource.UNSPECIFIED);
+}
+
+static addSpeedReference(builder:flatbuffers.Builder, SPEED_REFERENCE:lamSpeedReference) {
+  builder.addFieldInt8(59, SPEED_REFERENCE, lamSpeedReference.UNSPECIFIED);
+}
+
+static addInsertion(builder:flatbuffers.Builder, INSERTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(60, INSERTIONOffset, 0);
+}
+
+static addInstantaneousPeriapsisAltitudeM(builder:flatbuffers.Builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(61, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset, 0);
+}
+
+static createInstantaneousPeriapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createInstantaneousPeriapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createInstantaneousPeriapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInstantaneousPeriapsisAltitudeMVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addInstantaneousApoapsisAltitudeM(builder:flatbuffers.Builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(62, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset, 0);
+}
+
+static createInstantaneousApoapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createInstantaneousApoapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createInstantaneousApoapsisAltitudeMVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInstantaneousApoapsisAltitudeMVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addInPlaneLiftoffEpochs(builder:flatbuffers.Builder, IN_PLANE_LIFTOFF_EPOCHSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(63, IN_PLANE_LIFTOFF_EPOCHSOffset, 0);
+}
+
+static createInPlaneLiftoffEpochsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInPlaneLiftoffEpochsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endLAM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1396,7 +1557,14 @@ unpack(): LAMT {
     this.bb!.createObjList<lamAscentEvent, lamAscentEventT>(this.ASCENT_EVENTS.bind(this), this.ascentEventsLength()),
     this.bb!.createObjList<lamConstraintViolation, lamConstraintViolationT>(this.CONSTRAINT_VIOLATIONS.bind(this), this.constraintViolationsLength()),
     this.bb!.createScalarList<string>(this.ASSUMPTIONS.bind(this), this.assumptionsLength()),
-    this.COMMENT()
+    this.COMMENT(),
+    (this.TARGET_ORBIT() !== null ? this.TARGET_ORBIT()!.unpack() : null),
+    this.TRAJECTORY_SOURCE(),
+    this.SPEED_REFERENCE(),
+    (this.INSERTION() !== null ? this.INSERTION()!.unpack() : null),
+    this.bb!.createScalarList<number>(this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M.bind(this), this.instantaneousPeriapsisAltitudeMLength()),
+    this.bb!.createScalarList<number>(this.INSTANTANEOUS_APOAPSIS_ALTITUDE_M.bind(this), this.instantaneousApoapsisAltitudeMLength()),
+    this.bb!.createScalarList<string>(this.IN_PLANE_LIFTOFF_EPOCHS.bind(this), this.inPlaneLiftoffEpochsLength())
   );
 }
 
@@ -1459,6 +1627,13 @@ unpackTo(_o: LAMT): void {
   _o.CONSTRAINT_VIOLATIONS = this.bb!.createObjList<lamConstraintViolation, lamConstraintViolationT>(this.CONSTRAINT_VIOLATIONS.bind(this), this.constraintViolationsLength());
   _o.ASSUMPTIONS = this.bb!.createScalarList<string>(this.ASSUMPTIONS.bind(this), this.assumptionsLength());
   _o.COMMENT = this.COMMENT();
+  _o.TARGET_ORBIT = (this.TARGET_ORBIT() !== null ? this.TARGET_ORBIT()!.unpack() : null);
+  _o.TRAJECTORY_SOURCE = this.TRAJECTORY_SOURCE();
+  _o.SPEED_REFERENCE = this.SPEED_REFERENCE();
+  _o.INSERTION = (this.INSERTION() !== null ? this.INSERTION()!.unpack() : null);
+  _o.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = this.bb!.createScalarList<number>(this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M.bind(this), this.instantaneousPeriapsisAltitudeMLength());
+  _o.INSTANTANEOUS_APOAPSIS_ALTITUDE_M = this.bb!.createScalarList<number>(this.INSTANTANEOUS_APOAPSIS_ALTITUDE_M.bind(this), this.instantaneousApoapsisAltitudeMLength());
+  _o.IN_PLANE_LIFTOFF_EPOCHS = this.bb!.createScalarList<string>(this.IN_PLANE_LIFTOFF_EPOCHS.bind(this), this.inPlaneLiftoffEpochsLength());
 }
 }
 
@@ -1520,7 +1695,14 @@ constructor(
   public ASCENT_EVENTS: (lamAscentEventT)[] = [],
   public CONSTRAINT_VIOLATIONS: (lamConstraintViolationT)[] = [],
   public ASSUMPTIONS: (string)[] = [],
-  public COMMENT: string|Uint8Array|null = null
+  public COMMENT: string|Uint8Array|null = null,
+  public TARGET_ORBIT: lamTargetOrbitT|null = null,
+  public TRAJECTORY_SOURCE: lamTrajectorySource = lamTrajectorySource.UNSPECIFIED,
+  public SPEED_REFERENCE: lamSpeedReference = lamSpeedReference.UNSPECIFIED,
+  public INSERTION: lamInsertionOrbitT|null = null,
+  public INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: (number)[] = [],
+  public INSTANTANEOUS_APOAPSIS_ALTITUDE_M: (number)[] = [],
+  public IN_PLANE_LIFTOFF_EPOCHS: (string)[] = []
 ){}
 
 
@@ -1573,6 +1755,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONSTRAINT_VIOLATIONS = LAM.createConstraintViolationsVector(builder, builder.createObjectOffsetList(this.CONSTRAINT_VIOLATIONS));
   const ASSUMPTIONS = LAM.createAssumptionsVector(builder, builder.createObjectOffsetList(this.ASSUMPTIONS));
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const TARGET_ORBIT = (this.TARGET_ORBIT !== null ? this.TARGET_ORBIT!.pack(builder) : 0);
+  const INSERTION = (this.INSERTION !== null ? this.INSERTION!.pack(builder) : 0);
+  const INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = LAM.createInstantaneousPeriapsisAltitudeMVector(builder, this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+  const INSTANTANEOUS_APOAPSIS_ALTITUDE_M = LAM.createInstantaneousApoapsisAltitudeMVector(builder, this.INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+  const IN_PLANE_LIFTOFF_EPOCHS = LAM.createInPlaneLiftoffEpochsVector(builder, builder.createObjectOffsetList(this.IN_PLANE_LIFTOFF_EPOCHS));
 
   LAM.startLAM(builder);
   LAM.addMessageId(builder, MESSAGE_ID);
@@ -1632,6 +1819,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   LAM.addConstraintViolations(builder, CONSTRAINT_VIOLATIONS);
   LAM.addAssumptions(builder, ASSUMPTIONS);
   LAM.addComment(builder, COMMENT);
+  LAM.addTargetOrbit(builder, TARGET_ORBIT);
+  LAM.addTrajectorySource(builder, this.TRAJECTORY_SOURCE);
+  LAM.addSpeedReference(builder, this.SPEED_REFERENCE);
+  LAM.addInsertion(builder, INSERTION);
+  LAM.addInstantaneousPeriapsisAltitudeM(builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+  LAM.addInstantaneousApoapsisAltitudeM(builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+  LAM.addInPlaneLiftoffEpochs(builder, IN_PLANE_LIFTOFF_EPOCHS);
 
   return LAM.endLAM(builder);
 }

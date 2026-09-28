@@ -1,5 +1,5 @@
-// Hash: 2232ca42f3774e550dff3015b015ac9cc4abc1c59815c98e2e26451c5aa48f85
-// Version: 1.100.0
+// Hash: 08de4812943d109ae6d33a52ef8fe90eb53d4a1992077325043593199bb2f0ac
+// Version: 1.100.1
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../BOV/main.fbs";
@@ -77,6 +77,87 @@ table lamConstraintViolation {
   UNITS:string;
   /// Free-form description.
   DESCRIPTION:string;
+}
+
+/// Direction of an ascent's ground track relative to the equator.
+enum lamPassDirection : byte {
+  UNSPECIFIED,
+  /// Climbs northward, into the ascending half of the orbit.
+  NORTHBOUND,
+  /// Climbs southward, into the descending half of the orbit.
+  SOUTHBOUND
+}
+
+/// Origin of trajectory samples.
+enum lamTrajectorySource : byte {
+  UNSPECIFIED,
+  /// Projected from a target orbit and a reference ascent profile.
+  PROJECTED,
+  /// Reconstructed from vehicle telemetry.
+  TELEMETRY,
+  /// Reconstructed from tracking observations or catalog element sets.
+  TRACKING,
+  /// Produced by a physics simulation of the vehicle.
+  SIMULATED
+}
+
+/// Frame of speed samples.
+enum lamSpeedReference : byte {
+  UNSPECIFIED,
+  /// Speed relative to the rotating Earth, as launch broadcasts report it.
+  EARTH_RELATIVE,
+  /// Speed in an inertial frame.
+  INERTIAL
+}
+
+/// Orbit a launch is steered to.
+table lamTargetOrbit {
+  /// Target inclination in degrees.
+  INCLINATION_DEG:double;
+  /// Ground-track direction of the ascent.
+  PASS_DIRECTION:lamPassDirection;
+  /// Target periapsis altitude above the WGS-84 equatorial radius, in meters.
+  PERIAPSIS_ALTITUDE_M:double;
+  /// Target apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  APOAPSIS_ALTITUDE_M:double;
+  /// Time from launch of orbit insertion (engine cutoff), in seconds.
+  INSERTION_TIME_FROM_LAUNCH_S:double;
+  /// Ephemeris of an object whose orbit plane the launch joins, in the TEME frame.
+  PLANE_REFERENCE:OEM;
+}
+
+/// Orbit at insertion, measured or projected.
+table lamInsertionOrbit {
+  /// Insertion epoch in ISO 8601 UTC format.
+  EPOCH:string;
+  /// Time from launch of insertion, in seconds.
+  TIME_FROM_LAUNCH_S:double;
+  /// Frame of the angular elements.
+  REF_FRAME:string;
+  /// Osculating semi-major axis in meters.
+  SEMI_MAJOR_AXIS_M:double;
+  /// Osculating eccentricity.
+  ECCENTRICITY:double;
+  /// Inclination in degrees.
+  INCLINATION_DEG:double;
+  /// Right ascension of the ascending node in degrees.
+  RAAN_DEG:double;
+  /// Argument of periapsis in degrees.
+  ARGUMENT_OF_PERIAPSIS_DEG:double;
+  /// Argument of latitude at insertion in degrees.
+  ARGUMENT_OF_LATITUDE_DEG:double;
+  /// Periapsis altitude above the WGS-84 equatorial radius, in meters.
+  PERIAPSIS_ALTITUDE_M:double;
+  /// Apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  APOAPSIS_ALTITUDE_M:double;
+  /// One-sigma uncertainty of RAAN_DEG in degrees.
+  RAAN_UNCERTAINTY_DEG:double;
+  /// One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees.
+  ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG:double;
+  /// One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters.
+  PERIAPSIS_ALTITUDE_UNCERTAINTY_M:double;
+  /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
+  APOAPSIS_ALTITUDE_UNCERTAINTY_M:double;
 }
 
 /// Launch Ascent Message
@@ -195,6 +276,20 @@ table LAM {
   ASSUMPTIONS:[string];
   /// Additional comments.
   COMMENT:string;
+  /// Orbit the launch is steered to.
+  TARGET_ORBIT:lamTargetOrbit;
+  /// Origin of the trajectory samples.
+  TRAJECTORY_SOURCE:lamTrajectorySource;
+  /// Frame of SPEED_M_PER_S samples.
+  SPEED_REFERENCE:lamSpeedReference;
+  /// Orbit at insertion.
+  INSERTION:lamInsertionOrbit;
+  /// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  INSTANTANEOUS_PERIAPSIS_ALTITUDE_M:[double];
+  /// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  INSTANTANEOUS_APOAPSIS_ALTITUDE_M:[double];
+  /// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+  IN_PLANE_LIFTOFF_EPOCHS:[string];
 }
 
 root_type LAM;

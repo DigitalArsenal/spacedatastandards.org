@@ -12,7 +12,11 @@ import { ROC, ROCT } from './ROC.js';
 import { lamAscentEvent, lamAscentEventT } from './lamAscentEvent.js';
 import { lamConstraintStatus } from './lamConstraintStatus.js';
 import { lamConstraintViolation, lamConstraintViolationT } from './lamConstraintViolation.js';
+import { lamInsertionOrbit, lamInsertionOrbitT } from './lamInsertionOrbit.js';
 import { lamMissionPhase } from './lamMissionPhase.js';
+import { lamSpeedReference } from './lamSpeedReference.js';
+import { lamTargetOrbit, lamTargetOrbitT } from './lamTargetOrbit.js';
+import { lamTrajectorySource } from './lamTrajectorySource.js';
 /**
  * Launch Ascent Message
  */
@@ -310,6 +314,40 @@ export declare class LAM implements flatbuffers.IUnpackableObject<LAMT> {
      */
     COMMENT(): string | null;
     COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Orbit the launch is steered to.
+     */
+    TARGET_ORBIT(obj?: lamTargetOrbit): lamTargetOrbit | null;
+    /**
+     * Origin of the trajectory samples.
+     */
+    TRAJECTORY_SOURCE(): lamTrajectorySource;
+    /**
+     * Frame of SPEED_M_PER_S samples.
+     */
+    SPEED_REFERENCE(): lamSpeedReference;
+    /**
+     * Orbit at insertion.
+     */
+    INSERTION(obj?: lamInsertionOrbit): lamInsertionOrbit | null;
+    /**
+     * Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+     */
+    INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(index: number): number | null;
+    instantaneousPeriapsisAltitudeMLength(): number;
+    instantaneousPeriapsisAltitudeMArray(): Float64Array | null;
+    /**
+     * Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+     */
+    INSTANTANEOUS_APOAPSIS_ALTITUDE_M(index: number): number | null;
+    instantaneousApoapsisAltitudeMLength(): number;
+    instantaneousApoapsisAltitudeMArray(): Float64Array | null;
+    /**
+     * Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+     */
+    IN_PLANE_LIFTOFF_EPOCHS(index: number): string;
+    IN_PLANE_LIFTOFF_EPOCHS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    inPlaneLiftoffEpochsLength(): number;
     static startLAM(builder: flatbuffers.Builder): void;
     static addMessageId(builder: flatbuffers.Builder, MESSAGE_IDOffset: flatbuffers.Offset): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -478,6 +516,27 @@ export declare class LAM implements flatbuffers.IUnpackableObject<LAMT> {
     static createAssumptionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startAssumptionsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
+    static addTargetOrbit(builder: flatbuffers.Builder, TARGET_ORBITOffset: flatbuffers.Offset): void;
+    static addTrajectorySource(builder: flatbuffers.Builder, TRAJECTORY_SOURCE: lamTrajectorySource): void;
+    static addSpeedReference(builder: flatbuffers.Builder, SPEED_REFERENCE: lamSpeedReference): void;
+    static addInsertion(builder: flatbuffers.Builder, INSERTIONOffset: flatbuffers.Offset): void;
+    static addInstantaneousPeriapsisAltitudeM(builder: flatbuffers.Builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset: flatbuffers.Offset): void;
+    static createInstantaneousPeriapsisAltitudeMVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createInstantaneousPeriapsisAltitudeMVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startInstantaneousPeriapsisAltitudeMVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addInstantaneousApoapsisAltitudeM(builder: flatbuffers.Builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset: flatbuffers.Offset): void;
+    static createInstantaneousApoapsisAltitudeMVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createInstantaneousApoapsisAltitudeMVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startInstantaneousApoapsisAltitudeMVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addInPlaneLiftoffEpochs(builder: flatbuffers.Builder, IN_PLANE_LIFTOFF_EPOCHSOffset: flatbuffers.Offset): void;
+    static createInPlaneLiftoffEpochsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startInPlaneLiftoffEpochsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endLAM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishLAMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedLAMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -542,7 +601,14 @@ export declare class LAMT implements flatbuffers.IGeneratedObject {
     CONSTRAINT_VIOLATIONS: (lamConstraintViolationT)[];
     ASSUMPTIONS: (string)[];
     COMMENT: string | Uint8Array | null;
-    constructor(MESSAGE_ID?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MISSION_NAME?: string | Uint8Array | null, VEHICLE_NAME?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, REF_FRAME?: string | Uint8Array | null, LAUNCH_EPOCH?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, LAUNCH_DATA?: LDMT | null, ROCKET_CONFIGURATION?: ROCT | null, EVENT_RECORDS?: (LNET)[], DETECTIONS?: (LNDT)[], BOOST_TRACKS?: (MSTT)[], BURN_OUT_VECTORS?: (BOVT)[], TRAJECTORY_OEM?: OEMT | null, TRAJECTORY_OCM?: OCMT | null, ATMOSPHERE?: ATMT | null, HYPERSONIC_CONDITIONS?: HFCT | null, PROPAGATOR_NAME?: string | Uint8Array | null, PROPAGATOR_VERSION?: string | Uint8Array | null, GUIDANCE_MODEL?: string | Uint8Array | null, THRUST_MODEL?: string | Uint8Array | null, AERODYNAMIC_MODEL?: string | Uint8Array | null, PHASE?: lamMissionPhase, CONSTRAINT_STATUS?: lamConstraintStatus, TIME_FROM_LAUNCH_S?: (number)[], LATITUDE_DEG?: (number)[], LONGITUDE_DEG?: (number)[], ALTITUDE_M?: (number)[], DOWNRANGE_M?: (number)[], SPEED_M_PER_S?: (number)[], MACH?: (number)[], DYNAMIC_PRESSURE_PA?: (number)[], HEAT_FLUX_W_PER_M2?: (number)[], MASS_KG?: (number)[], THRUST_N?: (number)[], ACCELERATION_G?: (number)[], PITCH_DEG?: (number)[], FLIGHT_PATH_ANGLE_DEG?: (number)[], IIP_LATITUDE_DEG?: (number)[], IIP_LONGITUDE_DEG?: (number)[], MAX_DYNAMIC_PRESSURE_PA?: number, MAX_DYNAMIC_PRESSURE_EPOCH?: string | Uint8Array | null, MAX_HEAT_FLUX_W_PER_M2?: number, MAX_HEAT_FLUX_EPOCH?: string | Uint8Array | null, ORBIT_INSERTION_EPOCH?: string | Uint8Array | null, APOAPSIS_M?: number, PERIAPSIS_M?: number, INCLINATION_DEG?: number, PAYLOAD_INJECTION_ERROR_M_PER_S?: number, ASCENT_EVENTS?: (lamAscentEventT)[], CONSTRAINT_VIOLATIONS?: (lamConstraintViolationT)[], ASSUMPTIONS?: (string)[], COMMENT?: string | Uint8Array | null);
+    TARGET_ORBIT: lamTargetOrbitT | null;
+    TRAJECTORY_SOURCE: lamTrajectorySource;
+    SPEED_REFERENCE: lamSpeedReference;
+    INSERTION: lamInsertionOrbitT | null;
+    INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: (number)[];
+    INSTANTANEOUS_APOAPSIS_ALTITUDE_M: (number)[];
+    IN_PLANE_LIFTOFF_EPOCHS: (string)[];
+    constructor(MESSAGE_ID?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MISSION_NAME?: string | Uint8Array | null, VEHICLE_NAME?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, REF_FRAME?: string | Uint8Array | null, LAUNCH_EPOCH?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, LAUNCH_DATA?: LDMT | null, ROCKET_CONFIGURATION?: ROCT | null, EVENT_RECORDS?: (LNET)[], DETECTIONS?: (LNDT)[], BOOST_TRACKS?: (MSTT)[], BURN_OUT_VECTORS?: (BOVT)[], TRAJECTORY_OEM?: OEMT | null, TRAJECTORY_OCM?: OCMT | null, ATMOSPHERE?: ATMT | null, HYPERSONIC_CONDITIONS?: HFCT | null, PROPAGATOR_NAME?: string | Uint8Array | null, PROPAGATOR_VERSION?: string | Uint8Array | null, GUIDANCE_MODEL?: string | Uint8Array | null, THRUST_MODEL?: string | Uint8Array | null, AERODYNAMIC_MODEL?: string | Uint8Array | null, PHASE?: lamMissionPhase, CONSTRAINT_STATUS?: lamConstraintStatus, TIME_FROM_LAUNCH_S?: (number)[], LATITUDE_DEG?: (number)[], LONGITUDE_DEG?: (number)[], ALTITUDE_M?: (number)[], DOWNRANGE_M?: (number)[], SPEED_M_PER_S?: (number)[], MACH?: (number)[], DYNAMIC_PRESSURE_PA?: (number)[], HEAT_FLUX_W_PER_M2?: (number)[], MASS_KG?: (number)[], THRUST_N?: (number)[], ACCELERATION_G?: (number)[], PITCH_DEG?: (number)[], FLIGHT_PATH_ANGLE_DEG?: (number)[], IIP_LATITUDE_DEG?: (number)[], IIP_LONGITUDE_DEG?: (number)[], MAX_DYNAMIC_PRESSURE_PA?: number, MAX_DYNAMIC_PRESSURE_EPOCH?: string | Uint8Array | null, MAX_HEAT_FLUX_W_PER_M2?: number, MAX_HEAT_FLUX_EPOCH?: string | Uint8Array | null, ORBIT_INSERTION_EPOCH?: string | Uint8Array | null, APOAPSIS_M?: number, PERIAPSIS_M?: number, INCLINATION_DEG?: number, PAYLOAD_INJECTION_ERROR_M_PER_S?: number, ASCENT_EVENTS?: (lamAscentEventT)[], CONSTRAINT_VIOLATIONS?: (lamConstraintViolationT)[], ASSUMPTIONS?: (string)[], COMMENT?: string | Uint8Array | null, TARGET_ORBIT?: lamTargetOrbitT | null, TRAJECTORY_SOURCE?: lamTrajectorySource, SPEED_REFERENCE?: lamSpeedReference, INSERTION?: lamInsertionOrbitT | null, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M?: (number)[], INSTANTANEOUS_APOAPSIS_ALTITUDE_M?: (number)[], IN_PLANE_LIFTOFF_EPOCHS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=LAM.d.ts.map

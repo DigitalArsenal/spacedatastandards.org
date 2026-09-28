@@ -366,6 +366,35 @@ public struct LAM : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(116); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(116); }
+  /// Orbit the launch is steered to.
+  public lamTargetOrbit? TARGET_ORBIT { get { int o = __p.__offset(118); return o != 0 ? (lamTargetOrbit?)(new lamTargetOrbit()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Origin of the trajectory samples.
+  public lamTrajectorySource TRAJECTORY_SOURCE { get { int o = __p.__offset(120); return o != 0 ? (lamTrajectorySource)__p.bb.GetSbyte(o + __p.bb_pos) : lamTrajectorySource.UNSPECIFIED; } }
+  /// Frame of SPEED_M_PER_S samples.
+  public lamSpeedReference SPEED_REFERENCE { get { int o = __p.__offset(122); return o != 0 ? (lamSpeedReference)__p.bb.GetSbyte(o + __p.bb_pos) : lamSpeedReference.UNSPECIFIED; } }
+  /// Orbit at insertion.
+  public lamInsertionOrbit? INSERTION { get { int o = __p.__offset(124); return o != 0 ? (lamInsertionOrbit?)(new lamInsertionOrbit()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  public double INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(int j) { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int INSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength { get { int o = __p.__offset(126); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetINSTANTANEOUS_PERIAPSIS_ALTITUDE_MBytes() { return __p.__vector_as_span<double>(126, 8); }
+#else
+  public ArraySegment<byte>? GetINSTANTANEOUS_PERIAPSIS_ALTITUDE_MBytes() { return __p.__vector_as_arraysegment(126); }
+#endif
+  public double[] GetINSTANTANEOUS_PERIAPSIS_ALTITUDE_MArray() { return __p.__vector_as_array<double>(126); }
+  /// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  public double INSTANTANEOUS_APOAPSIS_ALTITUDE_M(int j) { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int INSTANTANEOUS_APOAPSIS_ALTITUDE_MLength { get { int o = __p.__offset(128); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetINSTANTANEOUS_APOAPSIS_ALTITUDE_MBytes() { return __p.__vector_as_span<double>(128, 8); }
+#else
+  public ArraySegment<byte>? GetINSTANTANEOUS_APOAPSIS_ALTITUDE_MBytes() { return __p.__vector_as_arraysegment(128); }
+#endif
+  public double[] GetINSTANTANEOUS_APOAPSIS_ALTITUDE_MArray() { return __p.__vector_as_array<double>(128); }
+  /// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+  public string IN_PLANE_LIFTOFF_EPOCHS(int j) { int o = __p.__offset(130); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int IN_PLANE_LIFTOFF_EPOCHSLength { get { int o = __p.__offset(130); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<LAM> CreateLAM(FlatBufferBuilder builder,
       StringOffset MESSAGE_IDOffset = default(StringOffset),
@@ -424,8 +453,15 @@ public struct LAM : IFlatbufferObject
       VectorOffset ASCENT_EVENTSOffset = default(VectorOffset),
       VectorOffset CONSTRAINT_VIOLATIONSOffset = default(VectorOffset),
       VectorOffset ASSUMPTIONSOffset = default(VectorOffset),
-      StringOffset COMMENTOffset = default(StringOffset)) {
-    builder.StartTable(57);
+      StringOffset COMMENTOffset = default(StringOffset),
+      Offset<lamTargetOrbit> TARGET_ORBITOffset = default(Offset<lamTargetOrbit>),
+      lamTrajectorySource TRAJECTORY_SOURCE = lamTrajectorySource.UNSPECIFIED,
+      lamSpeedReference SPEED_REFERENCE = lamSpeedReference.UNSPECIFIED,
+      Offset<lamInsertionOrbit> INSERTIONOffset = default(Offset<lamInsertionOrbit>),
+      VectorOffset INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset = default(VectorOffset),
+      VectorOffset INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset = default(VectorOffset),
+      VectorOffset IN_PLANE_LIFTOFF_EPOCHSOffset = default(VectorOffset)) {
+    builder.StartTable(64);
     LAM.AddPAYLOAD_INJECTION_ERROR_M_PER_S(builder, PAYLOAD_INJECTION_ERROR_M_PER_S);
     LAM.AddINCLINATION_DEG(builder, INCLINATION_DEG);
     LAM.AddPERIAPSIS_M(builder, PERIAPSIS_M);
@@ -433,6 +469,11 @@ public struct LAM : IFlatbufferObject
     LAM.AddMAX_HEAT_FLUX_W_PER_M2(builder, MAX_HEAT_FLUX_W_PER_M2);
     LAM.AddMAX_DYNAMIC_PRESSURE_PA(builder, MAX_DYNAMIC_PRESSURE_PA);
     LAM.AddSTEP_SIZE(builder, STEP_SIZE);
+    LAM.AddIN_PLANE_LIFTOFF_EPOCHS(builder, IN_PLANE_LIFTOFF_EPOCHSOffset);
+    LAM.AddINSTANTANEOUS_APOAPSIS_ALTITUDE_M(builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset);
+    LAM.AddINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset);
+    LAM.AddINSERTION(builder, INSERTIONOffset);
+    LAM.AddTARGET_ORBIT(builder, TARGET_ORBITOffset);
     LAM.AddCOMMENT(builder, COMMENTOffset);
     LAM.AddASSUMPTIONS(builder, ASSUMPTIONSOffset);
     LAM.AddCONSTRAINT_VIOLATIONS(builder, CONSTRAINT_VIOLATIONSOffset);
@@ -481,12 +522,14 @@ public struct LAM : IFlatbufferObject
     LAM.AddORIGINATOR(builder, ORIGINATOROffset);
     LAM.AddCREATION_DATE(builder, CREATION_DATEOffset);
     LAM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    LAM.AddSPEED_REFERENCE(builder, SPEED_REFERENCE);
+    LAM.AddTRAJECTORY_SOURCE(builder, TRAJECTORY_SOURCE);
     LAM.AddCONSTRAINT_STATUS(builder, CONSTRAINT_STATUS);
     LAM.AddPHASE(builder, PHASE);
     return LAM.EndLAM(builder);
   }
 
-  public static void StartLAM(FlatBufferBuilder builder) { builder.StartTable(57); }
+  public static void StartLAM(FlatBufferBuilder builder) { builder.StartTable(64); }
   public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(0, MESSAGE_IDOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -659,6 +702,28 @@ public struct LAM : IFlatbufferObject
   public static VectorOffset CreateASSUMPTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartASSUMPTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(56, COMMENTOffset.Value, 0); }
+  public static void AddTARGET_ORBIT(FlatBufferBuilder builder, Offset<lamTargetOrbit> TARGET_ORBITOffset) { builder.AddOffset(57, TARGET_ORBITOffset.Value, 0); }
+  public static void AddTRAJECTORY_SOURCE(FlatBufferBuilder builder, lamTrajectorySource TRAJECTORY_SOURCE) { builder.AddSbyte(58, (sbyte)TRAJECTORY_SOURCE, 0); }
+  public static void AddSPEED_REFERENCE(FlatBufferBuilder builder, lamSpeedReference SPEED_REFERENCE) { builder.AddSbyte(59, (sbyte)SPEED_REFERENCE, 0); }
+  public static void AddINSERTION(FlatBufferBuilder builder, Offset<lamInsertionOrbit> INSERTIONOffset) { builder.AddOffset(60, INSERTIONOffset.Value, 0); }
+  public static void AddINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(FlatBufferBuilder builder, VectorOffset INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset) { builder.AddOffset(61, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset.Value, 0); }
+  public static VectorOffset CreateINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddINSTANTANEOUS_APOAPSIS_ALTITUDE_M(FlatBufferBuilder builder, VectorOffset INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset) { builder.AddOffset(62, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset.Value, 0); }
+  public static VectorOffset CreateINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_APOAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_APOAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANTANEOUS_APOAPSIS_ALTITUDE_MVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddIN_PLANE_LIFTOFF_EPOCHS(FlatBufferBuilder builder, VectorOffset IN_PLANE_LIFTOFF_EPOCHSOffset) { builder.AddOffset(63, IN_PLANE_LIFTOFF_EPOCHSOffset.Value, 0); }
+  public static VectorOffset CreateIN_PLANE_LIFTOFF_EPOCHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateIN_PLANE_LIFTOFF_EPOCHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIN_PLANE_LIFTOFF_EPOCHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIN_PLANE_LIFTOFF_EPOCHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartIN_PLANE_LIFTOFF_EPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<LAM> EndLAM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<LAM>(o);
@@ -751,6 +816,16 @@ public struct LAM : IFlatbufferObject
     _o.ASSUMPTIONS = new List<string>();
     for (var _j = 0; _j < this.ASSUMPTIONSLength; ++_j) {_o.ASSUMPTIONS.Add(this.ASSUMPTIONS(_j));}
     _o.COMMENT = this.COMMENT;
+    _o.TARGET_ORBIT = this.TARGET_ORBIT.HasValue ? this.TARGET_ORBIT.Value.UnPack() : null;
+    _o.TRAJECTORY_SOURCE = this.TRAJECTORY_SOURCE;
+    _o.SPEED_REFERENCE = this.SPEED_REFERENCE;
+    _o.INSERTION = this.INSERTION.HasValue ? this.INSERTION.Value.UnPack() : null;
+    _o.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = new List<double>();
+    for (var _j = 0; _j < this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength; ++_j) {_o.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M.Add(this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(_j));}
+    _o.INSTANTANEOUS_APOAPSIS_ALTITUDE_M = new List<double>();
+    for (var _j = 0; _j < this.INSTANTANEOUS_APOAPSIS_ALTITUDE_MLength; ++_j) {_o.INSTANTANEOUS_APOAPSIS_ALTITUDE_M.Add(this.INSTANTANEOUS_APOAPSIS_ALTITUDE_M(_j));}
+    _o.IN_PLANE_LIFTOFF_EPOCHS = new List<string>();
+    for (var _j = 0; _j < this.IN_PLANE_LIFTOFF_EPOCHSLength; ++_j) {_o.IN_PLANE_LIFTOFF_EPOCHS.Add(this.IN_PLANE_LIFTOFF_EPOCHS(_j));}
   }
   public static Offset<LAM> Pack(FlatBufferBuilder builder, LAMT _o) {
     if (_o == null) return default(Offset<LAM>);
@@ -901,6 +976,24 @@ public struct LAM : IFlatbufferObject
       _ASSUMPTIONS = CreateASSUMPTIONSVector(builder, __ASSUMPTIONS);
     }
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _TARGET_ORBIT = _o.TARGET_ORBIT == null ? default(Offset<lamTargetOrbit>) : lamTargetOrbit.Pack(builder, _o.TARGET_ORBIT);
+    var _INSERTION = _o.INSERTION == null ? default(Offset<lamInsertionOrbit>) : lamInsertionOrbit.Pack(builder, _o.INSERTION);
+    var _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = default(VectorOffset);
+    if (_o.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M != null) {
+      var __INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = _o.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M.ToArray();
+      _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = CreateINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(builder, __INSTANTANEOUS_PERIAPSIS_ALTITUDE_M);
+    }
+    var _INSTANTANEOUS_APOAPSIS_ALTITUDE_M = default(VectorOffset);
+    if (_o.INSTANTANEOUS_APOAPSIS_ALTITUDE_M != null) {
+      var __INSTANTANEOUS_APOAPSIS_ALTITUDE_M = _o.INSTANTANEOUS_APOAPSIS_ALTITUDE_M.ToArray();
+      _INSTANTANEOUS_APOAPSIS_ALTITUDE_M = CreateINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(builder, __INSTANTANEOUS_APOAPSIS_ALTITUDE_M);
+    }
+    var _IN_PLANE_LIFTOFF_EPOCHS = default(VectorOffset);
+    if (_o.IN_PLANE_LIFTOFF_EPOCHS != null) {
+      var __IN_PLANE_LIFTOFF_EPOCHS = new StringOffset[_o.IN_PLANE_LIFTOFF_EPOCHS.Count];
+      for (var _j = 0; _j < __IN_PLANE_LIFTOFF_EPOCHS.Length; ++_j) { __IN_PLANE_LIFTOFF_EPOCHS[_j] = builder.CreateString(_o.IN_PLANE_LIFTOFF_EPOCHS[_j]); }
+      _IN_PLANE_LIFTOFF_EPOCHS = CreateIN_PLANE_LIFTOFF_EPOCHSVector(builder, __IN_PLANE_LIFTOFF_EPOCHS);
+    }
     return CreateLAM(
       builder,
       _MESSAGE_ID,
@@ -959,7 +1052,14 @@ public struct LAM : IFlatbufferObject
       _ASCENT_EVENTS,
       _CONSTRAINT_VIOLATIONS,
       _ASSUMPTIONS,
-      _COMMENT);
+      _COMMENT,
+      _TARGET_ORBIT,
+      _o.TRAJECTORY_SOURCE,
+      _o.SPEED_REFERENCE,
+      _INSERTION,
+      _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M,
+      _INSTANTANEOUS_APOAPSIS_ALTITUDE_M,
+      _IN_PLANE_LIFTOFF_EPOCHS);
   }
 }
 
@@ -1022,6 +1122,13 @@ public class LAMT
   public List<lamConstraintViolationT> CONSTRAINT_VIOLATIONS { get; set; }
   public List<string> ASSUMPTIONS { get; set; }
   public string COMMENT { get; set; }
+  public lamTargetOrbitT TARGET_ORBIT { get; set; }
+  public lamTrajectorySource TRAJECTORY_SOURCE { get; set; }
+  public lamSpeedReference SPEED_REFERENCE { get; set; }
+  public lamInsertionOrbitT INSERTION { get; set; }
+  public List<double> INSTANTANEOUS_PERIAPSIS_ALTITUDE_M { get; set; }
+  public List<double> INSTANTANEOUS_APOAPSIS_ALTITUDE_M { get; set; }
+  public List<string> IN_PLANE_LIFTOFF_EPOCHS { get; set; }
 
   public LAMT() {
     this.MESSAGE_ID = null;
@@ -1081,6 +1188,13 @@ public class LAMT
     this.CONSTRAINT_VIOLATIONS = null;
     this.ASSUMPTIONS = null;
     this.COMMENT = null;
+    this.TARGET_ORBIT = null;
+    this.TRAJECTORY_SOURCE = lamTrajectorySource.UNSPECIFIED;
+    this.SPEED_REFERENCE = lamSpeedReference.UNSPECIFIED;
+    this.INSERTION = null;
+    this.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = null;
+    this.INSTANTANEOUS_APOAPSIS_ALTITUDE_M = null;
+    this.IN_PLANE_LIFTOFF_EPOCHS = null;
   }
   public static LAMT DeserializeFromBinary(byte[] fbBuffer) {
     return LAM.GetRootAsLAM(new ByteBuffer(fbBuffer)).UnPack();
@@ -1155,6 +1269,13 @@ static public class LAMVerify
       && verifier.VerifyVectorOfTables(tablePos, 112 /*CONSTRAINT_VIOLATIONS*/, lamConstraintViolationVerify.Verify, false)
       && verifier.VerifyVectorOfStrings(tablePos, 114 /*ASSUMPTIONS*/, false)
       && verifier.VerifyString(tablePos, 116 /*COMMENT*/, false)
+      && verifier.VerifyTable(tablePos, 118 /*TARGET_ORBIT*/, lamTargetOrbitVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 120 /*TRAJECTORY_SOURCE*/, 1 /*lamTrajectorySource*/, 1, false)
+      && verifier.VerifyField(tablePos, 122 /*SPEED_REFERENCE*/, 1 /*lamSpeedReference*/, 1, false)
+      && verifier.VerifyTable(tablePos, 124 /*INSERTION*/, lamInsertionOrbitVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 126 /*INSTANTANEOUS_PERIAPSIS_ALTITUDE_M*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 128 /*INSTANTANEOUS_APOAPSIS_ALTITUDE_M*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 130 /*IN_PLANE_LIFTOFF_EPOCHS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

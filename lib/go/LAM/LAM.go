@@ -1497,8 +1497,197 @@ func (rcv *LAM) Comment() []byte {
 }
 
 /// Additional comments.
+/// Orbit the launch is steered to.
+func (rcv *LAM) TARGET_ORBIT(obj *lamTargetOrbit) *lamTargetOrbit {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(lamTargetOrbit)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *LAM) TargetOrbit(obj *lamTargetOrbit) *lamTargetOrbit {
+	return rcv.TARGET_ORBIT(obj)
+}
+
+/// Orbit the launch is steered to.
+/// Origin of the trajectory samples.
+func (rcv *LAM) TRAJECTORY_SOURCE() lamTrajectorySource {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return lamTrajectorySource(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *LAM) TrajectorySource() lamTrajectorySource {
+	return rcv.TRAJECTORY_SOURCE()
+}
+
+/// Origin of the trajectory samples.
+func (rcv *LAM) MutateTRAJECTORY_SOURCE(n lamTrajectorySource) bool {
+	return rcv._tab.MutateInt8Slot(120, int8(n))
+}
+
+func (rcv *LAM) MutateTrajectorySource(n lamTrajectorySource) bool {
+	return rcv.MutateTRAJECTORY_SOURCE(n)
+}
+
+/// Frame of SPEED_M_PER_S samples.
+func (rcv *LAM) SPEED_REFERENCE() lamSpeedReference {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		return lamSpeedReference(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *LAM) SpeedReference() lamSpeedReference {
+	return rcv.SPEED_REFERENCE()
+}
+
+/// Frame of SPEED_M_PER_S samples.
+func (rcv *LAM) MutateSPEED_REFERENCE(n lamSpeedReference) bool {
+	return rcv._tab.MutateInt8Slot(122, int8(n))
+}
+
+func (rcv *LAM) MutateSpeedReference(n lamSpeedReference) bool {
+	return rcv.MutateSPEED_REFERENCE(n)
+}
+
+/// Orbit at insertion.
+func (rcv *LAM) INSERTION(obj *lamInsertionOrbit) *lamInsertionOrbit {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(lamInsertionOrbit)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *LAM) Insertion(obj *lamInsertionOrbit) *lamInsertionOrbit {
+	return rcv.INSERTION(obj)
+}
+
+/// Orbit at insertion.
+/// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+func (rcv *LAM) INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *LAM) InstantaneousPeriapsisAltitudeM(j int) float64 {
+	return rcv.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M(j)
+}
+
+func (rcv *LAM) INSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *LAM) InstantaneousPeriapsisAltitudeMLength() int {
+	return rcv.INSTANTANEOUS_PERIAPSIS_ALTITUDE_MLength()
+}
+
+/// Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+func (rcv *LAM) MutateINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *LAM) MutateInstantaneousPeriapsisAltitudeM(j int, n float64) bool {
+	return rcv.MutateINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(j, n)
+}
+
+/// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+func (rcv *LAM) INSTANTANEOUS_APOAPSIS_ALTITUDE_M(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *LAM) InstantaneousApoapsisAltitudeM(j int) float64 {
+	return rcv.INSTANTANEOUS_APOAPSIS_ALTITUDE_M(j)
+}
+
+func (rcv *LAM) INSTANTANEOUS_APOAPSIS_ALTITUDE_MLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *LAM) InstantaneousApoapsisAltitudeMLength() int {
+	return rcv.INSTANTANEOUS_APOAPSIS_ALTITUDE_MLength()
+}
+
+/// Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+func (rcv *LAM) MutateINSTANTANEOUS_APOAPSIS_ALTITUDE_M(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *LAM) MutateInstantaneousApoapsisAltitudeM(j int, n float64) bool {
+	return rcv.MutateINSTANTANEOUS_APOAPSIS_ALTITUDE_M(j, n)
+}
+
+/// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+func (rcv *LAM) IN_PLANE_LIFTOFF_EPOCHS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *LAM) InPlaneLiftoffEpochs(j int) []byte {
+	return rcv.IN_PLANE_LIFTOFF_EPOCHS(j)
+}
+
+func (rcv *LAM) IN_PLANE_LIFTOFF_EPOCHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *LAM) InPlaneLiftoffEpochsLength() int {
+	return rcv.IN_PLANE_LIFTOFF_EPOCHSLength()
+}
+
+/// Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
 func LAMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(57)
+	builder.StartObject(64)
 }
 func LAMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MESSAGE_ID), 0)
@@ -1979,6 +2168,66 @@ func LAMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 }
 func LAMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	LAMAddCOMMENT(builder, COMMENT)
+}
+func LAMAddTARGET_ORBIT(builder *flatbuffers.Builder, TARGET_ORBIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(TARGET_ORBIT), 0)
+}
+func LAMAddTargetOrbit(builder *flatbuffers.Builder, TARGET_ORBIT flatbuffers.UOffsetT) {
+	LAMAddTARGET_ORBIT(builder, TARGET_ORBIT)
+}
+func LAMAddTRAJECTORY_SOURCE(builder *flatbuffers.Builder, TRAJECTORY_SOURCE lamTrajectorySource) {
+	builder.PrependInt8Slot(58, int8(TRAJECTORY_SOURCE), 0)
+}
+func LAMAddTrajectorySource(builder *flatbuffers.Builder, TRAJECTORY_SOURCE lamTrajectorySource) {
+	LAMAddTRAJECTORY_SOURCE(builder, TRAJECTORY_SOURCE)
+}
+func LAMAddSPEED_REFERENCE(builder *flatbuffers.Builder, SPEED_REFERENCE lamSpeedReference) {
+	builder.PrependInt8Slot(59, int8(SPEED_REFERENCE), 0)
+}
+func LAMAddSpeedReference(builder *flatbuffers.Builder, SPEED_REFERENCE lamSpeedReference) {
+	LAMAddSPEED_REFERENCE(builder, SPEED_REFERENCE)
+}
+func LAMAddINSERTION(builder *flatbuffers.Builder, INSERTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(60, flatbuffers.UOffsetT(INSERTION), 0)
+}
+func LAMAddInsertion(builder *flatbuffers.Builder, INSERTION flatbuffers.UOffsetT) {
+	LAMAddINSERTION(builder, INSERTION)
+}
+func LAMAddINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(builder *flatbuffers.Builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(INSTANTANEOUS_PERIAPSIS_ALTITUDE_M), 0)
+}
+func LAMAddInstantaneousPeriapsisAltitudeM(builder *flatbuffers.Builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M flatbuffers.UOffsetT) {
+	LAMAddINSTANTANEOUS_PERIAPSIS_ALTITUDE_M(builder, INSTANTANEOUS_PERIAPSIS_ALTITUDE_M)
+}
+func LAMStartINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func LAMStartInstantaneousPeriapsisAltitudeMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LAMStartINSTANTANEOUS_PERIAPSIS_ALTITUDE_MVector(builder, numElems)
+}
+func LAMAddINSTANTANEOUS_APOAPSIS_ALTITUDE_M(builder *flatbuffers.Builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_M flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(62, flatbuffers.UOffsetT(INSTANTANEOUS_APOAPSIS_ALTITUDE_M), 0)
+}
+func LAMAddInstantaneousApoapsisAltitudeM(builder *flatbuffers.Builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_M flatbuffers.UOffsetT) {
+	LAMAddINSTANTANEOUS_APOAPSIS_ALTITUDE_M(builder, INSTANTANEOUS_APOAPSIS_ALTITUDE_M)
+}
+func LAMStartINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func LAMStartInstantaneousApoapsisAltitudeMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LAMStartINSTANTANEOUS_APOAPSIS_ALTITUDE_MVector(builder, numElems)
+}
+func LAMAddIN_PLANE_LIFTOFF_EPOCHS(builder *flatbuffers.Builder, IN_PLANE_LIFTOFF_EPOCHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(63, flatbuffers.UOffsetT(IN_PLANE_LIFTOFF_EPOCHS), 0)
+}
+func LAMAddInPlaneLiftoffEpochs(builder *flatbuffers.Builder, IN_PLANE_LIFTOFF_EPOCHS flatbuffers.UOffsetT) {
+	LAMAddIN_PLANE_LIFTOFF_EPOCHS(builder, IN_PLANE_LIFTOFF_EPOCHS)
+}
+func LAMStartIN_PLANE_LIFTOFF_EPOCHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func LAMStartInPlaneLiftoffEpochsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LAMStartIN_PLANE_LIFTOFF_EPOCHSVector(builder, numElems)
 }
 func LAMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
