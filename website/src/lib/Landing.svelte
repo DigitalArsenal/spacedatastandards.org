@@ -3,7 +3,14 @@
   import { onMount } from "svelte";
   import { landingFeatureCategories } from "./schemaTaxonomy";
 
-  let schemaCount = 0;
+  // Real count as of this build: Object.keys(STANDARDS).length in the
+  // committed dist/manifest.json (one directory per standard under
+  // schema/). onMount below refreshes this from the live manifest; this is
+  // only what renders before that fetch resolves, or if it fails. Keep it
+  // matched to dist/manifest.json's STANDARDS count on every rebuild — it is
+  // intentionally NOT a static import of that file, which would bundle its
+  // full ~1.5 MB payload into this single-file build just to count keys.
+  let schemaCount = 255;
   let canvas: HTMLCanvasElement;
   let animationFrame: number;
   let selectedLang = 'typescript';
@@ -865,14 +872,15 @@ CN_N           = 6.789e-3`
   }
 
   onMount(() => {
-    // Fetch actual schema count from manifest
+    // Fetch the live manifest so the badge stays exact even if the manifest
+    // is updated without a full site rebuild.
     void (async () => {
       try {
         const response = await fetch('/dist/manifest.json');
         const manifest = await response.json();
         schemaCount = Object.keys(manifest.STANDARDS || {}).length;
       } catch (e) {
-        schemaCount = 250; // Fallback count
+        // keep the count set above
       }
     })();
 
