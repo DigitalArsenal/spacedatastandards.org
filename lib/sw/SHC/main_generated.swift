@@ -45,7 +45,7 @@ public enum shcTideSystem: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 ///  One time-variable coefficient term: a rate or a periodic variation applied
 ///  to the static coefficient at DEGREE/ORDER.
-public struct SHCVariableTerm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHCVariableTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -135,7 +135,7 @@ public struct SHCVariableTerm: FlatBufferTable, FlatbuffersVectorInitializable, 
 ///  term C[i] and sine term S[i]. Parallel arrays rather than a table per
 ///  coefficient because a 200x200 field is ~40,000 coefficients and a
 ///  table-per-coefficient encoding is pathological in both size and decode cost.
-public struct SHC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

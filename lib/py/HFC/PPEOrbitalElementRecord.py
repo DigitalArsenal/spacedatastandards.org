@@ -340,7 +340,7 @@ def PPEOrbitalElementRecordCreateCOEFF_SIZE_SHAPEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_SIZE_SHAPEVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_SIZE_SHAPEVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_SIZE_SHAPEVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_ECCENTRICITY(builder, COEFF_ECCENTRICITY):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ECCENTRICITY), 0)
@@ -362,7 +362,7 @@ def PPEOrbitalElementRecordCreateCOEFF_ECCENTRICITYVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_ECCENTRICITYVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_ECCENTRICITYVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_ECCENTRICITYVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_INCLINATION(builder, COEFF_INCLINATION):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_INCLINATION), 0)
@@ -384,7 +384,7 @@ def PPEOrbitalElementRecordCreateCOEFF_INCLINATIONVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_INCLINATIONVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_INCLINATIONVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_INCLINATIONVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_RAAN(builder, COEFF_RAAN):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_RAAN), 0)
@@ -406,7 +406,7 @@ def PPEOrbitalElementRecordCreateCOEFF_RAANVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_RAANVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_RAANVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_RAANVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_ARG_PERIAPSIS(builder, COEFF_ARG_PERIAPSIS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ARG_PERIAPSIS), 0)
@@ -428,7 +428,7 @@ def PPEOrbitalElementRecordCreateCOEFF_ARG_PERIAPSISVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_ARG_PERIAPSISVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_ARG_PERIAPSISVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_ARG_PERIAPSISVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_ANOMALY(builder, COEFF_ANOMALY):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ANOMALY), 0)
@@ -450,7 +450,7 @@ def PPEOrbitalElementRecordCreateCOEFF_ANOMALYVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFF_ANOMALYVector(builder, data):
-    PPEOrbitalElementRecordCreateCOEFF_ANOMALYVector(builder, data)
+    return PPEOrbitalElementRecordCreateCOEFF_ANOMALYVector(builder, data)
 
 def PPEOrbitalElementRecordAddMAX_ELEMENT_RESIDUAL(builder, MAX_ELEMENT_RESIDUAL):
     builder.PrependFloat64Slot(12, MAX_ELEMENT_RESIDUAL, 0.0)

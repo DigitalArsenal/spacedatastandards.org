@@ -77,7 +77,7 @@ def KMLLatLonQuadCreateCOORDINATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOORDINATESVector(builder, data):
-    KMLLatLonQuadCreateCOORDINATESVector(builder, data)
+    return KMLLatLonQuadCreateCOORDINATESVector(builder, data)
 
 def KMLLatLonQuadEnd(builder):
     return builder.EndObject()

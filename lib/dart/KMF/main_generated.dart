@@ -3,118 +3,8 @@
 
 import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
-import 'package:pointycastle/export.dart';
 
 
-
-/// FlatBuffers field-level encryption support using AES-256-CTR.
-class FlatbuffersEncryption {
-  /// Derive a 16-byte nonce from encryption context and field offset.
-  static Uint8List _deriveNonce(Uint8List ctx, int fieldOffset) {
-    if (ctx.length < 12) {
-      throw ArgumentError('Encryption context must be at least 12 bytes');
-    }
-    final nonce = Uint8List(16);
-    nonce.setRange(0, 12, ctx);
-    // Little-endian field offset
-    nonce[12] = fieldOffset & 0xFF;
-    nonce[13] = (fieldOffset >> 8) & 0xFF;
-    nonce[14] = (fieldOffset >> 16) & 0xFF;
-    nonce[15] = (fieldOffset >> 24) & 0xFF;
-    return nonce;
-  }
-
-  /// Decrypt bytes using AES-256-CTR.
-  static Uint8List _decryptBytes(Uint8List data, Uint8List ctx, int fieldOffset) {
-    if (ctx.length < 32) {
-      throw ArgumentError('Encryption context must be at least 32 bytes');
-    }
-    final key = ctx.sublist(0, 32);
-    final nonce = _deriveNonce(ctx, fieldOffset);
-    final cipher = CTRStreamCipher(AESEngine())
-      ..init(false, ParametersWithIV(KeyParameter(key), nonce));
-    return cipher.process(data);
-  }
-
-  /// Decrypt a boolean value.
-  static bool decryptScalar(bool value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(1)..[0] = value ? 1 : 0;
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted[0] != 0;
-  }
-
-  /// Decrypt an int8/uint8 value.
-  static int decryptInt8(int value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(1)..[0] = value & 0xFF;
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted[0];
-  }
-
-  /// Decrypt an int16/uint16 value.
-  static int decryptInt16(int value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(2);
-    data.buffer.asByteData().setInt16(0, value, Endian.little);
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted.buffer.asByteData().getInt16(0, Endian.little);
-  }
-
-  /// Decrypt an int32/uint32 value.
-  static int decryptInt32(int value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(4);
-    data.buffer.asByteData().setInt32(0, value, Endian.little);
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted.buffer.asByteData().getInt32(0, Endian.little);
-  }
-
-  /// Decrypt an int64/uint64 value.
-  static int decryptInt64(int value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(8);
-    data.buffer.asByteData().setInt64(0, value, Endian.little);
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted.buffer.asByteData().getInt64(0, Endian.little);
-  }
-
-  /// Decrypt a float32 value.
-  static double decryptFloat32(double value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(4);
-    data.buffer.asByteData().setFloat32(0, value, Endian.little);
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted.buffer.asByteData().getFloat32(0, Endian.little);
-  }
-
-  /// Decrypt a float64 value.
-  static double decryptFloat64(double value, Uint8List? ctx, int fieldOffset) {
-    if (ctx == null) return value;
-    final data = Uint8List(8);
-    data.buffer.asByteData().setFloat64(0, value, Endian.little);
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return decrypted.buffer.asByteData().getFloat64(0, Endian.little);
-  }
-
-  /// Decrypt a string from raw bytes.
-  static String? decryptString(fb.BufferContext bc, int offset, Uint8List? ctx, int fieldOffset) {
-    // Read raw bytes from the vector
-    final vecOffset = bc.derefObject(offset);
-    final len = bc.buffer.getUint32(vecOffset, Endian.little);
-    final data = Uint8List(len);
-    for (var i = 0; i < len; i++) {
-      data[i] = bc.buffer.getUint8(vecOffset + 4 + i);
-    }
-    if (ctx == null) {
-      // No encryption context, decode as regular string
-      return String.fromCharCodes(data);
-    }
-    // Decrypt and decode
-    final decrypted = _decryptBytes(data, ctx, fieldOffset);
-    return String.fromCharCodes(decrypted);
-  }
-}
 
 enum keyMaterialRole {
   Unknown(0),
@@ -240,24 +130,427 @@ class _keyMaterialEncodingReader extends fb.Reader<keyMaterialEncoding> {
       keyMaterialEncoding.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+/// Field-encryption format 3: encrypts or decrypts, in place, every
+/// (encrypted) field instance of a buffer exactly as the C++ walker
+/// (flatbuffers::EncryptBuffer/DecryptBuffer, version 3) and flatc-wasm do.
+/// The record's key is
+/// K = HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)),
+/// and each instance is AES-256-CTR encrypted with K and the IV
+/// BE32(position of its first byte in the buffer) || 12 zero bytes, so no two
+/// instances share a key stream. (key, recordIndex) must be unique per buffer.
+/// Generated tables call it with their walk program.
+class _FlatbuffersEncryption {
+  static const List<int> _sbox = [
+    0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+    0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+    0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+    0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+    0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+    0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+    0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+    0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+    0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+    0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+    0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+    0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+    0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+    0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+    0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
+  ];
+
+  static const List<int> _k = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+  ];
+
+  static int _rotr(int x, int n) => ((x >> n) | (x << (32 - n))) & 0xFFFFFFFF;
+
+  static Uint8List _sha256(List<int> message) {
+    final h = <int>[
+      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+      0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
+    ];
+    final length = message.length;
+    final data = Uint8List(((length + 8) ~/ 64 + 1) * 64);
+    data.setRange(0, length, message);
+    data[length] = 0x80;
+    final bits = length * 8;
+    for (var i = 0; i < 4; i++) {
+      data[data.length - 1 - i] = (bits >> (8 * i)) & 0xFF;
+    }
+    final w = List<int>.filled(64, 0);
+    for (var chunk = 0; chunk < data.length; chunk += 64) {
+      for (var i = 0; i < 16; i++) {
+        final j = chunk + 4 * i;
+        w[i] = (data[j] << 24) | (data[j + 1] << 16) | (data[j + 2] << 8) | data[j + 3];
+      }
+      for (var i = 16; i < 64; i++) {
+        final s0 = _rotr(w[i - 15], 7) ^ _rotr(w[i - 15], 18) ^ (w[i - 15] >> 3);
+        final s1 = _rotr(w[i - 2], 17) ^ _rotr(w[i - 2], 19) ^ (w[i - 2] >> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) & 0xFFFFFFFF;
+      }
+      var a = h[0], b = h[1], c = h[2], d = h[3];
+      var e = h[4], f = h[5], g = h[6], hh = h[7];
+      for (var i = 0; i < 64; i++) {
+        final s1 = _rotr(e, 6) ^ _rotr(e, 11) ^ _rotr(e, 25);
+        final ch = (e & f) ^ ((~e & 0xFFFFFFFF) & g);
+        final t1 = (hh + s1 + ch + _k[i] + w[i]) & 0xFFFFFFFF;
+        final s0 = _rotr(a, 2) ^ _rotr(a, 13) ^ _rotr(a, 22);
+        final maj = (a & b) ^ (a & c) ^ (b & c);
+        final t2 = (s0 + maj) & 0xFFFFFFFF;
+        hh = g;
+        g = f;
+        f = e;
+        e = (d + t1) & 0xFFFFFFFF;
+        d = c;
+        c = b;
+        b = a;
+        a = (t1 + t2) & 0xFFFFFFFF;
+      }
+      h[0] = (h[0] + a) & 0xFFFFFFFF;
+      h[1] = (h[1] + b) & 0xFFFFFFFF;
+      h[2] = (h[2] + c) & 0xFFFFFFFF;
+      h[3] = (h[3] + d) & 0xFFFFFFFF;
+      h[4] = (h[4] + e) & 0xFFFFFFFF;
+      h[5] = (h[5] + f) & 0xFFFFFFFF;
+      h[6] = (h[6] + g) & 0xFFFFFFFF;
+      h[7] = (h[7] + hh) & 0xFFFFFFFF;
+    }
+    final out = Uint8List(32);
+    for (var i = 0; i < 8; i++) {
+      out[4 * i] = (h[i] >> 24) & 0xFF;
+      out[4 * i + 1] = (h[i] >> 16) & 0xFF;
+      out[4 * i + 2] = (h[i] >> 8) & 0xFF;
+      out[4 * i + 3] = h[i] & 0xFF;
+    }
+    return out;
+  }
+
+  static Uint8List _hmac(List<int> key, List<int> message) {
+    final block = Uint8List(64)..setRange(0, key.length, key);
+    final inner = Uint8List(64 + message.length);
+    final outer = Uint8List(64 + 32);
+    for (var i = 0; i < 64; i++) {
+      inner[i] = block[i] ^ 0x36;
+      outer[i] = block[i] ^ 0x5c;
+    }
+    inner.setRange(64, inner.length, message);
+    outer.setRange(64, 96, _sha256(inner));
+    return _sha256(outer);
+  }
+
+  /// HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)).
+  static Uint8List bufferKey(List<int> key, int recordIndex) {
+    final prk = _hmac(Uint8List(32), key);
+    final info = <int>[...'flatbuffers-buffer-v3'.codeUnits,
+      (recordIndex >> 24) & 0xFF, (recordIndex >> 16) & 0xFF,
+      (recordIndex >> 8) & 0xFF, recordIndex & 0xFF, 1];
+    return _hmac(prk, info);
+  }
+
+  static int _xtime(int a) => ((a << 1) ^ ((a & 0x80) != 0 ? 0x1b : 0)) & 0xFF;
+
+  static List<int> _expandKey(List<int> key) {
+    final w = List<int>.filled(240, 0)..setRange(0, 32, key);
+    var rcon = 1;
+    for (var i = 32; i < 240; i += 4) {
+      var t0 = w[i - 4], t1 = w[i - 3], t2 = w[i - 2], t3 = w[i - 1];
+      if (i % 32 == 0) {
+        final r0 = _sbox[t1] ^ rcon;
+        t1 = _sbox[t2];
+        t2 = _sbox[t3];
+        t3 = _sbox[t0];
+        t0 = r0;
+        rcon = _xtime(rcon);
+      } else if (i % 32 == 16) {
+        t0 = _sbox[t0];
+        t1 = _sbox[t1];
+        t2 = _sbox[t2];
+        t3 = _sbox[t3];
+      }
+      w[i] = w[i - 32] ^ t0;
+      w[i + 1] = w[i - 31] ^ t1;
+      w[i + 2] = w[i - 30] ^ t2;
+      w[i + 3] = w[i - 29] ^ t3;
+    }
+    return w;
+  }
+
+  static List<int> _encryptBlock(List<int> w, List<int> block) {
+    var s = List<int>.generate(16, (i) => block[i] ^ w[i]);
+    for (var round = 1; round < 15; round++) {
+      final t = List<int>.generate(16, (i) => _sbox[s[i]]);
+      s = [t[0], t[5], t[10], t[15], t[4], t[9], t[14], t[3],
+           t[8], t[13], t[2], t[7], t[12], t[1], t[6], t[11]];
+      if (round < 14) {
+        for (var c = 0; c < 16; c += 4) {
+          final a0 = s[c], a1 = s[c + 1], a2 = s[c + 2], a3 = s[c + 3];
+          final x = a0 ^ a1 ^ a2 ^ a3;
+          s[c] = a0 ^ x ^ _xtime(a0 ^ a1);
+          s[c + 1] = a1 ^ x ^ _xtime(a1 ^ a2);
+          s[c + 2] = a2 ^ x ^ _xtime(a2 ^ a3);
+          s[c + 3] = a3 ^ x ^ _xtime(a3 ^ a0);
+        }
+      }
+      for (var i = 0; i < 16; i++) {
+        s[i] ^= w[16 * round + i];
+      }
+    }
+    return s;
+  }
+
+  /// Encrypts or decrypts (the same operation), in place, every (encrypted)
+  /// field instance of bytes by a table's walk program. Throws ArgumentError,
+  /// before any byte changes, for a bad key or a malformed buffer.
+  static void cryptBuffer(
+      Uint8List bytes, List<int> key, int recordIndex, List<int> program) {
+    if (key.length != 32) {
+      throw ArgumentError('FlatbuffersEncryption: the key must be 32 bytes');
+    }
+    if (recordIndex < 0 || recordIndex > 0xFFFFFFFF) {
+      throw ArgumentError('FlatbuffersEncryption: recordIndex must fit in 32 bits');
+    }
+    if (bytes.length < 4 || bytes.length > 0x7FFFFFFF) {
+      throw ArgumentError('FlatbuffersEncryption: invalid buffer');
+    }
+    final dry = _FlatbuffersEncryptionWalk(bytes, program, null);
+    final root = dry.u32(0);
+    dry.check(root, 4);
+    dry.walk(0, root, 0);
+    _FlatbuffersEncryptionWalk(
+            bytes, program, _expandKey(bufferKey(key, recordIndex)))
+        .walk(0, root, 0);
+  }
+}
+
+class _FlatbuffersEncryptionWalk {
+  _FlatbuffersEncryptionWalk(this.buf, this.program, this.roundKeys);
+
+  final Uint8List buf;
+  final List<int> program;
+  final List<int>? roundKeys; // null: a dry run that only checks the buffer
+  final Set<int> tables = <int>{};
+  final Set<int> regions = <int>{};
+
+  Never fail(String what) =>
+      throw ArgumentError('FlatbuffersEncryption: ' + what);
+
+  void check(int pos, int length) {
+    if (pos < 0 || length < 0 || pos > buf.length || length > buf.length - pos) {
+      fail('the buffer is malformed (offset $pos out of bounds)');
+    }
+  }
+
+  int u8(int pos) {
+    check(pos, 1);
+    return buf[pos];
+  }
+
+  int u16(int pos) {
+    check(pos, 2);
+    return buf[pos] | (buf[pos + 1] << 8);
+  }
+
+  int u32(int pos) {
+    check(pos, 4);
+    return u16(pos) + u16(pos + 2) * 65536;
+  }
+
+  int follow(int pos) {
+    final target = pos + u32(pos);
+    check(target, 4);
+    return target;
+  }
+
+  int count(int pos, int elementSize) {
+    final n = u32(pos);
+    check(pos + 4, n * elementSize);
+    return n;
+  }
+
+  void crypt(int start, int length) {
+    final keys = roundKeys;
+    if (length == 0 || !regions.add(start) || keys == null) return;
+    final counter = List<int>.filled(16, 0);
+    counter[0] = (start >> 24) & 0xFF;
+    counter[1] = (start >> 16) & 0xFF;
+    counter[2] = (start >> 8) & 0xFF;
+    counter[3] = start & 0xFF;
+    for (var done = 0; done < length; done += 16) {
+      final stream = _FlatbuffersEncryption._encryptBlock(keys, counter);
+      for (var i = 0; i < 16 && done + i < length; i++) {
+        buf[start + done + i] ^= stream[i];
+      }
+      for (var k = 15; k >= 0; k--) {
+        counter[k] = (counter[k] + 1) & 0xFF;
+        if (counter[k] != 0) break;
+      }
+    }
+  }
+
+  void string(int pos) {
+    final s = follow(pos);
+    final n = u32(s);
+    check(s + 4, n + 1);
+    crypt(s + 4, n);
+  }
+
+  int vtable(int table) {
+    final soffset = u32(table);
+    return table - (soffset >= 0x80000000 ? soffset - 0x100000000 : soffset);
+  }
+
+  int field(int table, int slot) {
+    final vt = vtable(table);
+    if (slot + 2 > u16(vt)) return 0;
+    final offset = u16(vt + slot);
+    return offset == 0 ? 0 : table + offset;
+  }
+
+  bool enter(int table, int depth) {
+    if (depth > 64) fail('tables nested deeper than 64 levels');
+    if (!tables.add(table)) return false;
+    final vt = vtable(table);
+    check(vt, 4);
+    final vtableSize = u16(vt);
+    final tableSize = u16(vt + 2);
+    if (vtableSize < 4 || vtableSize.isOdd) {
+      fail('the buffer is malformed (bad vtable)');
+    }
+    check(vt, vtableSize);
+    check(table, tableSize);
+    for (var slot = 4; slot < vtableSize; slot += 2) {
+      final offset = u16(vt + slot);
+      if (offset != 0 && offset >= tableSize) {
+        fail('the buffer is malformed (bad field offset)');
+      }
+    }
+    return true;
+  }
+
+  int member(int at, int n, int unionType) {
+    for (var i = 0; i < n; i++) {
+      if (program[at + 2 * i] == unionType) return program[at + 2 * i + 1];
+    }
+    return -1;
+  }
+
+  void walk(int index, int table, int depth) {
+    if (!enter(table, depth)) return;
+    final p = program;
+    var at = p[1 + index];
+    final ops = p[at++];
+    for (var op = 0; op < ops; op++) {
+      final kind = p[at];
+      final slot = p[at + 1];
+      at += 2;
+      var arg = 0, typeSlot = 0, members = 0, n = 0;
+      if (kind == 0 || kind == 2 || kind == 4 || kind == 5) {
+        arg = p[at++];
+      } else if (kind == 6 || kind == 7) {
+        typeSlot = p[at];
+        n = p[at + 1];
+        members = at + 2;
+        at += 2 + 2 * n;
+      }
+      final loc = field(table, slot);
+      if (loc == 0) continue;
+      switch (kind) {
+        case 0:
+          check(loc, arg);
+          crypt(loc, arg);
+          break;
+        case 1:
+          string(loc);
+          break;
+        case 2:
+          final v = follow(loc);
+          crypt(v + 4, count(v, arg) * arg);
+          break;
+        case 3:
+          final v = follow(loc);
+          final c = count(v, 4);
+          for (var i = 0; i < c; i++) {
+            string(v + 4 + 4 * i);
+          }
+          break;
+        case 4:
+          walk(arg, follow(loc), depth + 1);
+          break;
+        case 5:
+          final v = follow(loc);
+          final c = count(v, 4);
+          for (var i = 0; i < c; i++) {
+            walk(arg, follow(v + 4 + 4 * i), depth + 1);
+          }
+          break;
+        case 6:
+          final typeLoc = field(table, typeSlot);
+          if (typeLoc == 0) break;
+          final m = member(members, n, u8(typeLoc));
+          if (m >= 0) walk(m, follow(loc), depth + 1);
+          break;
+        case 7:
+          final typeLoc = field(table, typeSlot);
+          if (typeLoc == 0) break;
+          final types = follow(typeLoc);
+          final c = count(types, 1);
+          final values = follow(loc);
+          if (count(values, 4) != c) {
+            fail('the buffer is malformed (union vectors differ)');
+          }
+          for (var i = 0; i < c; i++) {
+            final m = member(members, n, u8(types + 4 + i));
+            if (m >= 0) walk(m, follow(values + 4 + 4 * i), depth + 1);
+          }
+          break;
+        default:
+          fail('unknown walk program op $kind');
+      }
+    }
+  }
+}
+
 ///  Key Material Frame
 class KMF {
-  KMF._(this._bc, this._bcOffset, [this.encryptionCtx]);
+  KMF._(this._bc, this._bcOffset);
   factory KMF(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
-  factory KMF.withEncryption(List<int> bytes, Uint8List encryptionCtx) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    final obj = reader.read(rootRef, 0);
-    return KMF._(obj._bc, obj._bcOffset, encryptionCtx);
-  }
 
   static const fb.Reader<KMF> reader = _KMFReader();
 
+  // Field-encryption format 3 walk program of KMF (see _FlatbuffersEncryption).
+  static const List<int> _flatbuffersEncryptionProgram = [
+    1, 2, 1, 2, 12, 1,
+  ];
+
+  /// Encrypts, in place, the (encrypted) fields of a KMF buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void encryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
+
+  /// Decrypts, in place, the (encrypted) fields of a KMF buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void decryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
+
   final fb.BufferContext _bc;
   final int _bcOffset;
-  final Uint8List? encryptionCtx;
 
   ///  Logical key identifier used across publication and grant records.
   String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);

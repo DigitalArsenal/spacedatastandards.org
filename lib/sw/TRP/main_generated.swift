@@ -45,7 +45,7 @@ public enum trpCombinator: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Asset admitted by a value or token predicate.
-public struct TRPAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRPAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -108,7 +108,7 @@ public struct TRPAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  One independently measurable predicate in a trust rule policy.
-public struct TRPPredicate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -203,7 +203,7 @@ public struct TRPPredicate: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Recursive boolean group for a compound trust rule set.
-public struct TRPGroup: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRPGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -262,7 +262,7 @@ public struct TRPGroup: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Trust Rule Policy - Signed compound criteria for evaluating one subject.
-public struct TRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

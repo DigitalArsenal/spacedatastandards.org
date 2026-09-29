@@ -225,7 +225,7 @@ def SCVPackedRasterProductsCreateMEMORY_REGIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMORY_REGIONSVector(builder, data):
-    SCVPackedRasterProductsCreateMEMORY_REGIONSVector(builder, data)
+    return SCVPackedRasterProductsCreateMEMORY_REGIONSVector(builder, data)
 
 def SCVPackedRasterProductsAddBANDS(builder, BANDS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BANDS), 0)
@@ -243,7 +243,7 @@ def SCVPackedRasterProductsCreateBANDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBANDSVector(builder, data):
-    SCVPackedRasterProductsCreateBANDSVector(builder, data)
+    return SCVPackedRasterProductsCreateBANDSVector(builder, data)
 
 def SCVPackedRasterProductsEnd(builder):
     return builder.EndObject()

@@ -235,7 +235,7 @@ def PKBCreateMULTIFORMAT_ADDRESSESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIFORMAT_ADDRESSESVector(builder, data):
-    PKBCreateMULTIFORMAT_ADDRESSESVector(builder, data)
+    return PKBCreateMULTIFORMAT_ADDRESSESVector(builder, data)
 
 def PKBAddBROKER_PUBLIC_KEY(builder, BROKER_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BROKER_PUBLIC_KEY), 0)
@@ -257,7 +257,7 @@ def PKBCreateBROKER_PUBLIC_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreateBROKER_PUBLIC_KEYVector(builder, data):
-    PKBCreateBROKER_PUBLIC_KEYVector(builder, data)
+    return PKBCreateBROKER_PUBLIC_KEYVector(builder, data)
 
 def PKBAddBROKER_KIND(builder, BROKER_KIND):
     builder.PrependInt8Slot(6, BROKER_KIND, 0)
@@ -315,7 +315,7 @@ def PKBCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PKBCreateSIGNATUREVector(builder, data)
+    return PKBCreateSIGNATUREVector(builder, data)
 
 def PKBEnd(builder):
     return builder.EndObject()

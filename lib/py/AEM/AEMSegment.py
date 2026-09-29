@@ -357,7 +357,7 @@ def AEMSegmentCreateATTITUDE_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateATTITUDE_DATAVector(builder, data):
-    AEMSegmentCreateATTITUDE_DATAVector(builder, data)
+    return AEMSegmentCreateATTITUDE_DATAVector(builder, data)
 
 def AEMSegmentAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
@@ -375,7 +375,7 @@ def AEMSegmentCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    AEMSegmentCreateCOMMENTVector(builder, data)
+    return AEMSegmentCreateCOMMENTVector(builder, data)
 
 def AEMSegmentAddCENTER_NAME(builder, CENTER_NAME):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
@@ -441,7 +441,7 @@ def AEMSegmentCreateATTITUDE_DATA_LINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateATTITUDE_DATA_LINESVector(builder, data):
-    AEMSegmentCreateATTITUDE_DATA_LINESVector(builder, data)
+    return AEMSegmentCreateATTITUDE_DATA_LINESVector(builder, data)
 
 def AEMSegmentEnd(builder):
     return builder.EndObject()

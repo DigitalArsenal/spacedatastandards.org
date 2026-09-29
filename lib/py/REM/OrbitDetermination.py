@@ -374,7 +374,7 @@ def OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOD_OBSERVATIONS_TYPEVector(builder, data):
-    OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data)
+    return OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data)
 
 def OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
     builder.PrependInt32Slot(10, OD_OBSERVATIONS_USED, 0)
@@ -416,7 +416,7 @@ def OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOD_EST_PARAMETERSVector(builder, data):
-    OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data)
+    return OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data)
 
 def OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(OD_APRIORI_DATA), 0)
@@ -462,7 +462,7 @@ def OrbitDeterminationCreateOD_RESIDUALS_SERIESVector(builder, data):
     return builder.EndVector()
 
 def CreateOD_RESIDUALS_SERIESVector(builder, data):
-    OrbitDeterminationCreateOD_RESIDUALS_SERIESVector(builder, data)
+    return OrbitDeterminationCreateOD_RESIDUALS_SERIESVector(builder, data)
 
 def OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(OD_RESIDUAL_EPOCHS), 0)
@@ -484,7 +484,7 @@ def OrbitDeterminationCreateOD_RESIDUAL_EPOCHSVector(builder, data):
     return builder.EndVector()
 
 def CreateOD_RESIDUAL_EPOCHSVector(builder, data):
-    OrbitDeterminationCreateOD_RESIDUAL_EPOCHSVector(builder, data)
+    return OrbitDeterminationCreateOD_RESIDUAL_EPOCHSVector(builder, data)
 
 def OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OD_BATCH_BASELINE_ID), 0)

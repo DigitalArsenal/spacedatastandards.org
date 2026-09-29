@@ -184,7 +184,7 @@ def TRPPredicateCreateASSETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSETSVector(builder, data):
-    TRPPredicateCreateASSETSVector(builder, data)
+    return TRPPredicateCreateASSETSVector(builder, data)
 
 def TRPPredicateAddREQUIRED_COUNT(builder, REQUIRED_COUNT):
     builder.PrependUint32Slot(6, REQUIRED_COUNT, 0)
@@ -208,7 +208,7 @@ def TRPPredicateCreateTRUSTER_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRUSTER_IDSVector(builder, data):
-    TRPPredicateCreateTRUSTER_IDSVector(builder, data)
+    return TRPPredicateCreateTRUSTER_IDSVector(builder, data)
 
 def TRPPredicateAddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT):
     builder.PrependFloat64Slot(8, MIN_EDGE_WEIGHT, 0.0)

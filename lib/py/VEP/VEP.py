@@ -282,7 +282,7 @@ def VEPCreatePERFORMANCE_POINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePERFORMANCE_POINTSVector(builder, data):
-    VEPCreatePERFORMANCE_POINTSVector(builder, data)
+    return VEPCreatePERFORMANCE_POINTSVector(builder, data)
 
 def VEPAddINTERPOLATION(builder, INTERPOLATION):
     builder.PrependInt8Slot(9, INTERPOLATION, 0)
@@ -330,7 +330,7 @@ def VEPCreateREPLENISHMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREPLENISHMENTVector(builder, data):
-    VEPCreateREPLENISHMENTVector(builder, data)
+    return VEPCreateREPLENISHMENTVector(builder, data)
 
 def VEPAddREFINES_ID(builder, REFINES_ID):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(REFINES_ID), 0)

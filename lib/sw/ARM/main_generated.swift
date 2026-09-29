@@ -78,7 +78,7 @@ public enum PenResult: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Armor and Protection
-public struct ARM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ARM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

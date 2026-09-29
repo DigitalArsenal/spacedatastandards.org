@@ -29,7 +29,7 @@ public enum peerRegistryTrustCategory: Int8, FlatbuffersVectorInitializable, Enu
 
 
 ///  String metadata key/value attached to a peer registry entry.
-public struct PRRMetadataEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRRMetadataEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -74,7 +74,7 @@ public struct PRRMetadataEntry: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
-public struct PRR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

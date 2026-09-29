@@ -138,7 +138,7 @@ def DTTPayloadRefCreateBYTESVector(builder, data):
     return builder.EndVector()
 
 def CreateBYTESVector(builder, data):
-    DTTPayloadRefCreateBYTESVector(builder, data)
+    return DTTPayloadRefCreateBYTESVector(builder, data)
 
 def DTTPayloadRefAddSIZE_BYTES(builder, SIZE_BYTES):
     builder.PrependUint64Slot(2, SIZE_BYTES, 0)

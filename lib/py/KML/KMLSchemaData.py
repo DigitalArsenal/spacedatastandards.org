@@ -91,7 +91,7 @@ def KMLSchemaDataCreateSIMPLE_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSIMPLE_DATAVector(builder, data):
-    KMLSchemaDataCreateSIMPLE_DATAVector(builder, data)
+    return KMLSchemaDataCreateSIMPLE_DATAVector(builder, data)
 
 def KMLSchemaDataEnd(builder):
     return builder.EndObject()

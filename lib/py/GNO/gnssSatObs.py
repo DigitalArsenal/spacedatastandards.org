@@ -161,7 +161,7 @@ def gnssSatObsCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    gnssSatObsCreateOBSERVATIONSVector(builder, data)
+    return gnssSatObsCreateOBSERVATIONSVector(builder, data)
 
 def gnssSatObsEnd(builder):
     return builder.EndObject()

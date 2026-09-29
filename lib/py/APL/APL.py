@@ -481,7 +481,7 @@ def APLCreateEXCEEDANCE_PERCENTVector(builder, data):
     return builder.EndVector()
 
 def CreateEXCEEDANCE_PERCENTVector(builder, data):
-    APLCreateEXCEEDANCE_PERCENTVector(builder, data)
+    return APLCreateEXCEEDANCE_PERCENTVector(builder, data)
 
 def APLAddRAIN_LOSS_DB(builder, RAIN_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RAIN_LOSS_DB), 0)
@@ -503,7 +503,7 @@ def APLCreateRAIN_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateRAIN_LOSS_DBVector(builder, data):
-    APLCreateRAIN_LOSS_DBVector(builder, data)
+    return APLCreateRAIN_LOSS_DBVector(builder, data)
 
 def APLAddGASEOUS_ABSORPTION_LOSS_DB(builder, GASEOUS_ABSORPTION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(GASEOUS_ABSORPTION_LOSS_DB), 0)
@@ -525,7 +525,7 @@ def APLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data):
-    APLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data)
+    return APLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data)
 
 def APLAddCLOUD_FOG_LOSS_DB(builder, CLOUD_FOG_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLOUD_FOG_LOSS_DB), 0)
@@ -547,7 +547,7 @@ def APLCreateCLOUD_FOG_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateCLOUD_FOG_LOSS_DBVector(builder, data):
-    APLCreateCLOUD_FOG_LOSS_DBVector(builder, data)
+    return APLCreateCLOUD_FOG_LOSS_DBVector(builder, data)
 
 def APLAddSCINTILLATION_LOSS_DB(builder, SCINTILLATION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SCINTILLATION_LOSS_DB), 0)
@@ -569,7 +569,7 @@ def APLCreateSCINTILLATION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateSCINTILLATION_LOSS_DBVector(builder, data):
-    APLCreateSCINTILLATION_LOSS_DBVector(builder, data)
+    return APLCreateSCINTILLATION_LOSS_DBVector(builder, data)
 
 def APLAddTOTAL_LOSS_DB(builder, TOTAL_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TOTAL_LOSS_DB), 0)
@@ -591,7 +591,7 @@ def APLCreateTOTAL_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateTOTAL_LOSS_DBVector(builder, data):
-    APLCreateTOTAL_LOSS_DBVector(builder, data)
+    return APLCreateTOTAL_LOSS_DBVector(builder, data)
 
 def APLAddXPD_DB(builder, XPD_DB):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(XPD_DB), 0)
@@ -613,7 +613,7 @@ def APLCreateXPD_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateXPD_DBVector(builder, data):
-    APLCreateXPD_DBVector(builder, data)
+    return APLCreateXPD_DBVector(builder, data)
 
 def APLAddWORST_MONTH_EXCEEDANCE_PERCENT(builder, WORST_MONTH_EXCEEDANCE_PERCENT):
     builder.PrependFloat64Slot(15, WORST_MONTH_EXCEEDANCE_PERCENT, 0.0)
@@ -689,7 +689,7 @@ def APLCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    APLCreateSIGNATUREVector(builder, data)
+    return APLCreateSIGNATUREVector(builder, data)
 
 def APLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -711,7 +711,7 @@ def APLCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    APLCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return APLCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def APLEnd(builder):
     return builder.EndObject()

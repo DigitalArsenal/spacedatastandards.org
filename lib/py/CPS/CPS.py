@@ -324,7 +324,7 @@ def CPSCreateCOMPRESSED_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateCOMPRESSED_DATAVector(builder, data):
-    CPSCreateCOMPRESSED_DATAVector(builder, data)
+    return CPSCreateCOMPRESSED_DATAVector(builder, data)
 
 def CPSAddUNCOMPRESSED_LENGTH(builder, UNCOMPRESSED_LENGTH):
     builder.PrependUint32Slot(15, UNCOMPRESSED_LENGTH, 0)

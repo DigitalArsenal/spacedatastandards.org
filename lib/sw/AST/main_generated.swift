@@ -110,7 +110,7 @@ public enum ReferenceFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Astrodynamics
-public struct AST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

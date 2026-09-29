@@ -241,7 +241,7 @@ def RPCBodyCreateBODYVector(builder, data):
     return builder.EndVector()
 
 def CreateBODYVector(builder, data):
-    RPCBodyCreateBODYVector(builder, data)
+    return RPCBodyCreateBODYVector(builder, data)
 
 def RPCBodyAddBODY_FILE_ID(builder, BODY_FILE_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BODY_FILE_ID), 0)
@@ -275,7 +275,7 @@ def RPCBodyCreateSIGNER_KEY_IDVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNER_KEY_IDVector(builder, data):
-    RPCBodyCreateSIGNER_KEY_IDVector(builder, data)
+    return RPCBodyCreateSIGNER_KEY_IDVector(builder, data)
 
 def RPCBodyAddREPLY_KEY(builder, REPLY_KEY):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(REPLY_KEY), 0)
@@ -297,7 +297,7 @@ def RPCBodyCreateREPLY_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreateREPLY_KEYVector(builder, data):
-    RPCBodyCreateREPLY_KEYVector(builder, data)
+    return RPCBodyCreateREPLY_KEYVector(builder, data)
 
 def RPCBodyAddREQUEST_NONCE(builder, REQUEST_NONCE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REQUEST_NONCE), 0)
@@ -319,7 +319,7 @@ def RPCBodyCreateREQUEST_NONCEVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUEST_NONCEVector(builder, data):
-    RPCBodyCreateREQUEST_NONCEVector(builder, data)
+    return RPCBodyCreateREQUEST_NONCEVector(builder, data)
 
 def RPCBodyAddREQUEST_DIGEST(builder, REQUEST_DIGEST):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(REQUEST_DIGEST), 0)
@@ -341,7 +341,7 @@ def RPCBodyCreateREQUEST_DIGESTVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUEST_DIGESTVector(builder, data):
-    RPCBodyCreateREQUEST_DIGESTVector(builder, data)
+    return RPCBodyCreateREQUEST_DIGESTVector(builder, data)
 
 def RPCBodyEnd(builder):
     return builder.EndObject()

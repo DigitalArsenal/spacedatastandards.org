@@ -189,7 +189,7 @@ def EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_ALARMSVector(builder, data):
-    EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+    return EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def EnumeratedParameterTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATION_LIST), 0)
@@ -207,7 +207,7 @@ def EnumeratedParameterTypeCreateENUMERATION_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENUMERATION_LISTVector(builder, data):
-    EnumeratedParameterTypeCreateENUMERATION_LISTVector(builder, data)
+    return EnumeratedParameterTypeCreateENUMERATION_LISTVector(builder, data)
 
 def EnumeratedParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)

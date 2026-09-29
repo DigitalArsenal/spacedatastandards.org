@@ -393,7 +393,7 @@ def BEMCreateBEAM_CONTOURSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBEAM_CONTOURSVector(builder, data):
-    BEMCreateBEAM_CONTOURSVector(builder, data)
+    return BEMCreateBEAM_CONTOURSVector(builder, data)
 
 def BEMAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -445,7 +445,7 @@ def BEMCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    BEMCreateSIGNATUREVector(builder, data)
+    return BEMCreateSIGNATUREVector(builder, data)
 
 def BEMAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -467,7 +467,7 @@ def BEMCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    BEMCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return BEMCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def BEMEnd(builder):
     return builder.EndObject()

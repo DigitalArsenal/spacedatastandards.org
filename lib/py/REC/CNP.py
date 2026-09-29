@@ -306,7 +306,7 @@ def CNPCreateMETRICSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMETRICSVector(builder, data):
-    CNPCreateMETRICSVector(builder, data)
+    return CNPCreateMETRICSVector(builder, data)
 
 def CNPAddSOURCES(builder, SOURCES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCES), 0)
@@ -324,7 +324,7 @@ def CNPCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    CNPCreateSOURCESVector(builder, data)
+    return CNPCreateSOURCESVector(builder, data)
 
 def CNPAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)

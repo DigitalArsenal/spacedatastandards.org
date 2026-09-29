@@ -117,7 +117,7 @@ def CZMDynamicPropertyCreateINTERVALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTERVALSVector(builder, data):
-    CZMDynamicPropertyCreateINTERVALSVector(builder, data)
+    return CZMDynamicPropertyCreateINTERVALSVector(builder, data)
 
 def CZMDynamicPropertyAddREFERENCE(builder, REFERENCE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE), 0)

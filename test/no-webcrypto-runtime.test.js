@@ -1,7 +1,9 @@
 import { strict as assert } from 'node:assert';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { FlatbuffersEncryption } from '../lib/js/REC/flatbuffers-encryption.js';
+import * as flatbuffers from 'flatbuffers';
+import { KMF } from '../lib/js/KMF/KMF.js';
+import { decryptKMFBuffer, encryptKMFBuffer } from '../lib/js/KMF/flatbuffers-encryption.js';
 
 const productionFiles = [
   'lib/ts/REC/flatbuffers-encryption.ts',
@@ -33,14 +35,22 @@ describe('generated JS encryption runtime surface', () => {
   });
 
   it('round-trips field encryption through the WASM AES-CTR helper', async () => {
-    const data = new TextEncoder().encode('protected flatbuffer field');
-    const ctx = new Uint8Array(40);
-    for (let i = 0; i < ctx.length; i += 1) ctx[i] = i + 1;
+    const keyBytes = new TextEncoder().encode('protected flatbuffer field bytes');
+    const builder = new flatbuffers.Builder(128);
+    const keyBytesOffset = KMF.createKeyBytesVector(builder, keyBytes);
+    KMF.startKMF(builder);
+    KMF.addKeyBytes(builder, keyBytesOffset);
+    KMF.finishKMFBuffer(builder, KMF.endKMF(builder));
+    const plain = builder.asUint8Array().slice();
+    const key = new Uint8Array(32);
+    for (let i = 0; i < key.length; i += 1) key[i] = i + 1;
 
-    const encrypted = await FlatbuffersEncryption.encryptBytes(data, ctx, 24);
-    assert.notDeepEqual(Array.from(encrypted), Array.from(data));
+    const buffer = await encryptKMFBuffer(plain.slice(), key, 24);
+    const read = (bytes) => KMF.getRootAsKMF(new flatbuffers.ByteBuffer(bytes)).keyBytesArray();
+    assert.notDeepEqual(Array.from(read(buffer)), Array.from(keyBytes));
 
-    const decrypted = await FlatbuffersEncryption.decryptBytes(encrypted, ctx, 24);
-    assert.deepEqual(Array.from(decrypted), Array.from(data));
+    await decryptKMFBuffer(buffer, key, 24);
+    assert.deepEqual(Array.from(buffer), Array.from(plain));
+    assert.deepEqual(Array.from(read(buffer)), Array.from(keyBytes));
   });
 });

@@ -429,7 +429,7 @@ def SKQCreateOBSERVER_POSITION_MVector(builder, data):
     return builder.EndVector()
 
 def CreateOBSERVER_POSITION_MVector(builder, data):
-    SKQCreateOBSERVER_POSITION_MVector(builder, data)
+    return SKQCreateOBSERVER_POSITION_MVector(builder, data)
 
 def SKQAddOBSERVER_VELOCITY_M_PER_S(builder, OBSERVER_VELOCITY_M_PER_S):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER_VELOCITY_M_PER_S), 0)
@@ -451,7 +451,7 @@ def SKQCreateOBSERVER_VELOCITY_M_PER_SVector(builder, data):
     return builder.EndVector()
 
 def CreateOBSERVER_VELOCITY_M_PER_SVector(builder, data):
-    SKQCreateOBSERVER_VELOCITY_M_PER_SVector(builder, data)
+    return SKQCreateOBSERVER_VELOCITY_M_PER_SVector(builder, data)
 
 def SKQAddPLACE(builder, PLACE):
     builder.PrependUint8Slot(7, PLACE, 3)
@@ -523,7 +523,7 @@ def SKQCreateBAND_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBAND_IDSVector(builder, data):
-    SKQCreateBAND_IDSVector(builder, data)
+    return SKQCreateBAND_IDSVector(builder, data)
 
 def SKQAddRA_DEG(builder, RA_DEG):
     builder.PrependFloat64Slot(17, RA_DEG, float('nan'))
@@ -581,7 +581,7 @@ def SKQCreateDETECTIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateDETECTIONSVector(builder, data):
-    SKQCreateDETECTIONSVector(builder, data)
+    return SKQCreateDETECTIONSVector(builder, data)
 
 def SKQAddTOLERANCE_ARCSEC(builder, TOLERANCE_ARCSEC):
     builder.PrependFloat64Slot(24, TOLERANCE_ARCSEC, float('nan'))
@@ -615,7 +615,7 @@ def SKQCreateTRACKSVector(builder, data):
     return builder.EndVector()
 
 def CreateTRACKSVector(builder, data):
-    SKQCreateTRACKSVector(builder, data)
+    return SKQCreateTRACKSVector(builder, data)
 
 def SKQAddPOINTINGS(builder, POINTINGS):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(POINTINGS), 0)
@@ -637,7 +637,7 @@ def SKQCreatePOINTINGSVector(builder, data):
     return builder.EndVector()
 
 def CreatePOINTINGSVector(builder, data):
-    SKQCreatePOINTINGSVector(builder, data)
+    return SKQCreatePOINTINGSVector(builder, data)
 
 def SKQAddEXCLUSION_RADIUS_DEG(builder, EXCLUSION_RADIUS_DEG):
     builder.PrependFloat64Slot(28, EXCLUSION_RADIUS_DEG, float('nan'))

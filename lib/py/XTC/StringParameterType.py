@@ -171,7 +171,7 @@ def StringParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_ALARMSVector(builder, data):
-    StringParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+    return StringParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def StringParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)

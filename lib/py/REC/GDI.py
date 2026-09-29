@@ -339,7 +339,7 @@ def GDICreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    GDICreateTAGSVector(builder, data)
+    return GDICreateTAGSVector(builder, data)
 
 def GDIAddKEYWORDS(builder, KEYWORDS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(KEYWORDS), 0)
@@ -357,7 +357,7 @@ def GDICreateKEYWORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateKEYWORDSVector(builder, data):
-    GDICreateKEYWORDSVector(builder, data)
+    return GDICreateKEYWORDSVector(builder, data)
 
 def GDIAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)

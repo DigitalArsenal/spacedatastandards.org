@@ -210,7 +210,7 @@ def TCTPointCreateRADIIVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRADIIVector(builder, data):
-    TCTPointCreateRADIIVector(builder, data)
+    return TCTPointCreateRADIIVector(builder, data)
 
 def TCTPointAddCATEGORY(builder, CATEGORY):
     builder.PrependInt8Slot(8, CATEGORY, 0)

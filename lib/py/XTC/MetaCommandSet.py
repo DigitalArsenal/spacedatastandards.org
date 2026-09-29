@@ -77,7 +77,7 @@ def MetaCommandSetCreateMETA_COMMANDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMETA_COMMANDSVector(builder, data):
-    MetaCommandSetCreateMETA_COMMANDSVector(builder, data)
+    return MetaCommandSetCreateMETA_COMMANDSVector(builder, data)
 
 def MetaCommandSetEnd(builder):
     return builder.EndObject()

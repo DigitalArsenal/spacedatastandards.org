@@ -428,7 +428,7 @@ def QRPCreateFILTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFILTERSVector(builder, data):
-    QRPCreateFILTERSVector(builder, data)
+    return QRPCreateFILTERSVector(builder, data)
 
 def QRPAddSORT_FIELD(builder, SORT_FIELD):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SORT_FIELD), 0)
@@ -602,7 +602,7 @@ def QRPCreateCOLUMNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMNSVector(builder, data):
-    QRPCreateCOLUMNSVector(builder, data)
+    return QRPCreateCOLUMNSVector(builder, data)
 
 def QRPEnd(builder):
     return builder.EndObject()

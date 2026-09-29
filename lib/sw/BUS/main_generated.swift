@@ -44,7 +44,7 @@ public enum BusStabilizationType: Int8, FlatbuffersVectorInitializable, Enum, Ve
 
 
 ///  Satellite Bus Specification
-public struct BUS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BUS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

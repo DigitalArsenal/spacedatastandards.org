@@ -235,7 +235,7 @@ def WKSCreateQUERIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateQUERIESVector(builder, data):
-    WKSCreateQUERIESVector(builder, data)
+    return WKSCreateQUERIESVector(builder, data)
 
 def WKSAddSHARE_GRANTS(builder, SHARE_GRANTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SHARE_GRANTS), 0)
@@ -253,7 +253,7 @@ def WKSCreateSHARE_GRANTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSHARE_GRANTSVector(builder, data):
-    WKSCreateSHARE_GRANTSVector(builder, data)
+    return WKSCreateSHARE_GRANTSVector(builder, data)
 
 def WKSAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUint64Slot(8, CREATED_AT, 0)
@@ -287,7 +287,7 @@ def WKSCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    WKSCreateSIGNATUREVector(builder, data)
+    return WKSCreateSIGNATUREVector(builder, data)
 
 def WKSEnd(builder):
     return builder.EndObject()

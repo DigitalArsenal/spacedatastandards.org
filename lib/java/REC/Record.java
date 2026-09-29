@@ -27,6 +27,31 @@ public final class Record extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Record __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  // Field-encryption format 3 walk program of Record (see FlatbuffersEncryption).
+  private static final int[] FLATBUFFERS_ENCRYPTION_PROGRAM = {
+    2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1
+  };
+  /**
+   * Encrypts, in place, the (encrypted) fields of the Record buffer that starts at
+   * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+   * an unsigned 32-bit value, unique per buffer under the key). Throws
+   * IllegalArgumentException, before any byte changes, for a bad key or a
+   * malformed buffer.
+   */
+  public static void encryptBuffer(ByteBuffer _bb, byte[] key, int recordIndex) {
+    FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM);
+  }
+  /**
+   * Decrypts, in place, the (encrypted) fields of the Record buffer that starts at
+   * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+   * an unsigned 32-bit value, unique per buffer under the key). Throws
+   * IllegalArgumentException, before any byte changes, for a bad key or a
+   * malformed buffer.
+   */
+  public static void decryptBuffer(ByteBuffer _bb, byte[] key, int recordIndex) {
+    FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM);
+  }
+
   public byte value_type() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * The record data (union of all supported standards)

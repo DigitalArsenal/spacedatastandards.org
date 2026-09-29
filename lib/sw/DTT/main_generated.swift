@@ -158,7 +158,7 @@ public enum dttWaterMask: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 ///  enough that a second fetch costs more than it saves. Exactly one of CID or
 ///  BYTES is the authority for a given ref; when both are present the bytes
 ///  MUST hash to the CID.
-public struct DTTPayloadRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DTTPayloadRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -245,7 +245,7 @@ public struct DTTPayloadRef: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  DATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the
 ///  source states about itself. The standard names no dataset, mission, agency,
 ///  or vendor.
-public struct DTTProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DTTProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -432,7 +432,7 @@ public struct DTTProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///
 ///  Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
 ///  referenced by content identifier by default; see DTTPayloadRef.
-public struct DTT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -152,7 +152,7 @@ def AEMCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    AEMCreateSEGMENTSVector(builder, data)
+    return AEMCreateSEGMENTSVector(builder, data)
 
 def AEMAddMESSAGE_ID(builder, MESSAGE_ID):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
@@ -176,7 +176,7 @@ def AEMCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    AEMCreateCOMMENTVector(builder, data)
+    return AEMCreateCOMMENTVector(builder, data)
 
 def AEMAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)

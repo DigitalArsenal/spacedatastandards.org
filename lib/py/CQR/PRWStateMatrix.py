@@ -96,7 +96,7 @@ def PRWStateMatrixCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    PRWStateMatrixCreateVALUESVector(builder, data)
+    return PRWStateMatrixCreateVALUESVector(builder, data)
 
 def PRWStateMatrixEnd(builder):
     return builder.EndObject()

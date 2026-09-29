@@ -258,7 +258,7 @@ def MDPCreateENCOUNTER_STAGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENCOUNTER_STAGESVector(builder, data):
-    MDPCreateENCOUNTER_STAGESVector(builder, data)
+    return MDPCreateENCOUNTER_STAGESVector(builder, data)
 
 def MDPAddFLIGHT_TIME_BOUNDS(builder, FLIGHT_TIME_BOUNDS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FLIGHT_TIME_BOUNDS), 0)
@@ -276,7 +276,7 @@ def MDPCreateFLIGHT_TIME_BOUNDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLIGHT_TIME_BOUNDSVector(builder, data):
-    MDPCreateFLIGHT_TIME_BOUNDSVector(builder, data)
+    return MDPCreateFLIGHT_TIME_BOUNDSVector(builder, data)
 
 def MDPAddMAX_TOTAL_FLIGHT_TIME_DAYS(builder, MAX_TOTAL_FLIGHT_TIME_DAYS):
     builder.PrependFloat64Slot(4, MAX_TOTAL_FLIGHT_TIME_DAYS, 0.0)

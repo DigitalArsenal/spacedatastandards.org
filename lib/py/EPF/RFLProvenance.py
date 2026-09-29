@@ -259,7 +259,7 @@ def RFLProvenanceCreateMODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODELSVector(builder, data):
-    RFLProvenanceCreateMODELSVector(builder, data)
+    return RFLProvenanceCreateMODELSVector(builder, data)
 
 def RFLProvenanceAddENVIRONMENT_DATASET(builder, ENVIRONMENT_DATASET):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ENVIRONMENT_DATASET), 0)

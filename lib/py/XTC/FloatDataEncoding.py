@@ -133,7 +133,7 @@ def FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
-    FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data)
+    return FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data)
 
 def FloatDataEncodingEnd(builder):
     return builder.EndObject()

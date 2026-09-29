@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Orbit Parameter Message
-public struct OPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

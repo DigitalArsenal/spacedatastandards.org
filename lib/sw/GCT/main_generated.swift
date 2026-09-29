@@ -307,7 +307,7 @@ public enum wxfTimeBasis: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 ///  (LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north
 ///  to south. Longitudes are in [-180, 180) or [0, 360) exactly as the
 ///  producer publishes them; a consumer normalises.
-public struct WXFGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WXFGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -395,7 +395,7 @@ public struct WXFGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
 ///  Weather Forecast Field - One variable, level, member and valid time on a
 ///  regular grid.
-public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

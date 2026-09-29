@@ -216,7 +216,7 @@ def ASTCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    ASTCreateOBSERVATIONSVector(builder, data)
+    return ASTCreateOBSERVATIONSVector(builder, data)
 
 def ASTAddOD_CONFIG(builder, OD_CONFIG):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OD_CONFIG), 0)

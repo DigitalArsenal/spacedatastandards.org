@@ -884,7 +884,7 @@ def SARCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    SARCreateTAGSVector(builder, data)
+    return SARCreateTAGSVector(builder, data)
 
 def SARAddSRC_TYPS(builder, SRC_TYPS):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
@@ -902,7 +902,7 @@ def SARCreateSRC_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_TYPSVector(builder, data):
-    SARCreateSRC_TYPSVector(builder, data)
+    return SARCreateSRC_TYPSVector(builder, data)
 
 def SARAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
@@ -920,7 +920,7 @@ def SARCreateSRC_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_IDSVector(builder, data):
-    SARCreateSRC_IDSVector(builder, data)
+    return SARCreateSRC_IDSVector(builder, data)
 
 def SAREnd(builder):
     return builder.EndObject()

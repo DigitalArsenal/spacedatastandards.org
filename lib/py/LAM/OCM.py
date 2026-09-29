@@ -420,7 +420,7 @@ def OCMCreateSTATE_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATE_DATAVector(builder, data):
-    OCMCreateSTATE_DATAVector(builder, data)
+    return OCMCreateSTATE_DATAVector(builder, data)
 
 def OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
@@ -442,7 +442,7 @@ def OCMCreateCOVARIANCE_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE_DATAVector(builder, data):
-    OCMCreateCOVARIANCE_DATAVector(builder, data)
+    return OCMCreateCOVARIANCE_DATAVector(builder, data)
 
 def OCMAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_POSITION_RECORDS), 0)
@@ -460,7 +460,7 @@ def OCMCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
-    OCMCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
+    return OCMCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
 
 def OCMAddPOLYNOMIAL_OE_RECORDS(builder, POLYNOMIAL_OE_RECORDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_OE_RECORDS), 0)
@@ -478,7 +478,7 @@ def OCMCreatePOLYNOMIAL_OE_RECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYNOMIAL_OE_RECORDSVector(builder, data):
-    OCMCreatePOLYNOMIAL_OE_RECORDSVector(builder, data)
+    return OCMCreatePOLYNOMIAL_OE_RECORDSVector(builder, data)
 
 def OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PHYSICAL_PROPERTIES), 0)
@@ -502,7 +502,7 @@ def OCMCreateMANEUVER_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVER_DATAVector(builder, data):
-    OCMCreateMANEUVER_DATAVector(builder, data)
+    return OCMCreateMANEUVER_DATAVector(builder, data)
 
 def OCMAddPERTURBATIONS(builder, PERTURBATIONS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PERTURBATIONS), 0)
@@ -532,7 +532,7 @@ def OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
-    OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+    return OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
 
 def OCMAddCENTER_NAME(builder, CENTER_NAME):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)

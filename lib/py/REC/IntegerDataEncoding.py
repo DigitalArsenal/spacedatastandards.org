@@ -133,7 +133,7 @@ def IntegerDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
-    IntegerDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data)
+    return IntegerDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data)
 
 def IntegerDataEncodingEnd(builder):
     return builder.EndObject()

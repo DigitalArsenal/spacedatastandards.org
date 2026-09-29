@@ -128,7 +128,7 @@ def sensorMaintenanceEventCreateCOMPONENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMPONENTSVector(builder, data):
-    sensorMaintenanceEventCreateCOMPONENTSVector(builder, data)
+    return sensorMaintenanceEventCreateCOMPONENTSVector(builder, data)
 
 def sensorMaintenanceEventEnd(builder):
     return builder.EndObject()

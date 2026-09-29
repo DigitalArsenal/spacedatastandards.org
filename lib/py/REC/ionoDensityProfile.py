@@ -125,7 +125,7 @@ def ionoDensityProfileCreateALTITUDESVector(builder, data):
     return builder.EndVector()
 
 def CreateALTITUDESVector(builder, data):
-    ionoDensityProfileCreateALTITUDESVector(builder, data)
+    return ionoDensityProfileCreateALTITUDESVector(builder, data)
 
 def ionoDensityProfileAddDENSITIES(builder, DENSITIES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITIES), 0)
@@ -147,7 +147,7 @@ def ionoDensityProfileCreateDENSITIESVector(builder, data):
     return builder.EndVector()
 
 def CreateDENSITIESVector(builder, data):
-    ionoDensityProfileCreateDENSITIESVector(builder, data)
+    return ionoDensityProfileCreateDENSITIESVector(builder, data)
 
 def ionoDensityProfileEnd(builder):
     return builder.EndObject()

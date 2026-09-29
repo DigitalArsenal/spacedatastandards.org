@@ -174,7 +174,7 @@ def CAQResultCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    CAQResultCreateROWSVector(builder, data)
+    return CAQResultCreateROWSVector(builder, data)
 
 def CAQResultAddENTITY_INDICES(builder, ENTITY_INDICES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_INDICES), 0)
@@ -196,7 +196,7 @@ def CAQResultCreateENTITY_INDICESVector(builder, data):
     return builder.EndVector()
 
 def CreateENTITY_INDICESVector(builder, data):
-    CAQResultCreateENTITY_INDICESVector(builder, data)
+    return CAQResultCreateENTITY_INDICESVector(builder, data)
 
 def CAQResultAddMASK(builder, MASK):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MASK), 0)
@@ -218,7 +218,7 @@ def CAQResultCreateMASKVector(builder, data):
     return builder.EndVector()
 
 def CreateMASKVector(builder, data):
-    CAQResultCreateMASKVector(builder, data)
+    return CAQResultCreateMASKVector(builder, data)
 
 def CAQResultAddVISIBLE_COUNT(builder, VISIBLE_COUNT):
     builder.PrependUint32Slot(4, VISIBLE_COUNT, 0)

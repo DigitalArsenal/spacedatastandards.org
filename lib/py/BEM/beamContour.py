@@ -105,7 +105,7 @@ def beamContourCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    beamContourCreatePOINTSVector(builder, data)
+    return beamContourCreatePOINTSVector(builder, data)
 
 def beamContourEnd(builder):
     return builder.EndObject()

@@ -141,7 +141,7 @@ def TIMCcsdsTimeCodeCreateTIME_FIELDVector(builder, data):
     return builder.EndVector()
 
 def CreateTIME_FIELDVector(builder, data):
-    TIMCcsdsTimeCodeCreateTIME_FIELDVector(builder, data)
+    return TIMCcsdsTimeCodeCreateTIME_FIELDVector(builder, data)
 
 def TIMCcsdsTimeCodeAddAGENCY_DEFINED_EPOCH_ISO8601(builder, AGENCY_DEFINED_EPOCH_ISO8601):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(AGENCY_DEFINED_EPOCH_ISO8601), 0)

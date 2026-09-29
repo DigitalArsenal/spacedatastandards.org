@@ -126,7 +126,7 @@ public enum oppMaterialClass: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  source cannot be encoded at all. Unknown values are ABSENT. They are never
 ///  zero, never a placeholder, and never carried forward from a different
 ///  object.
-public struct OPPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -253,7 +253,7 @@ public struct OPPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  PROVENANCE is required: an OPPQuantity that exists names where it came from.
 ///  Presence of the table is the signal that a value exists, so VALUE zero is a
 ///  real zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.
-public struct OPPQuantity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPQuantity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -318,7 +318,7 @@ public struct OPPQuantity: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  carries a list of these and never a single scalar. A source publishing
 ///  minimum, average and maximum cross-sections becomes three entries with
 ///  ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
-public struct OPPRadarCrossSection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPRadarCrossSection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -407,7 +407,7 @@ public struct OPPRadarCrossSection: FlatBufferTable, FlatbuffersVectorInitializa
 
 ///  Mass breakdown. Each component is independently sourced; a wet mass and a
 ///  dry mass may legitimately come from different publishers and epochs.
-public struct OPPMass: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPMass: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -481,7 +481,7 @@ public struct OPPMass: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 ///  Physical envelope. Every extent is a sourced quantity. Extents measured off
 ///  3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the
 ///  model, not the flight article.
-public struct OPPDimensions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPDimensions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -585,7 +585,7 @@ public struct OPPDimensions: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Projected areas and the ratios derived from them.
-public struct OPPAreas: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPAreas: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -665,7 +665,7 @@ public struct OPPAreas: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 ///  exist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and
 ///  GLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant
 ///  named by OPP.ASSET.
-public struct OPPSurface: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPSurface: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -822,7 +822,7 @@ public struct OPPSurface: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 ///  $OPP is valid for exactly one reviewed variant. Different bytes are a
 ///  different asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than
 ///  repointing an existing one.
-public struct OPPAssetRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPPAssetRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -975,7 +975,7 @@ public struct OPPAssetRef: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  cross-section that does not name where it came from. Unknown values are
 ///  absent. A consumer that finds a field missing has learned that no admissible
 ///  source published it.
-public struct OPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -269,7 +269,7 @@ def ACMCreateATT_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateATT_STATESVector(builder, data):
-    ACMCreateATT_STATESVector(builder, data)
+    return ACMCreateATT_STATESVector(builder, data)
 
 def ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PHYS_PROPERTIES), 0)
@@ -293,7 +293,7 @@ def ACMCreateCOV_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOV_DATAVector(builder, data):
-    ACMCreateCOV_DATAVector(builder, data)
+    return ACMCreateCOV_DATAVector(builder, data)
 
 def ACMAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
@@ -311,7 +311,7 @@ def ACMCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    ACMCreateMANEUVERSVector(builder, data)
+    return ACMCreateMANEUVERSVector(builder, data)
 
 def ACMAddMANEUVERABLE(builder, MANEUVERABLE):
     builder.PrependInt8Slot(12, MANEUVERABLE, 0)

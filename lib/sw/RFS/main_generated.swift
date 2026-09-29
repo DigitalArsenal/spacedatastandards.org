@@ -41,7 +41,7 @@ public enum linkCondition: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Link Status
-public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LKS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

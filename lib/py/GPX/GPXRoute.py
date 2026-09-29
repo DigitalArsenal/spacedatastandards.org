@@ -175,7 +175,7 @@ def GPXRouteCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    GPXRouteCreateLINKSVector(builder, data)
+    return GPXRouteCreateLINKSVector(builder, data)
 
 def GPXRouteAddNUMBER(builder, NUMBER):
     builder.PrependUint32Slot(5, NUMBER, 0)
@@ -205,7 +205,7 @@ def GPXRouteCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    GPXRouteCreatePOINTSVector(builder, data)
+    return GPXRouteCreatePOINTSVector(builder, data)
 
 def GPXRouteEnd(builder):
     return builder.EndObject()

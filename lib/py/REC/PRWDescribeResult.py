@@ -120,7 +120,7 @@ def PRWDescribeResultCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    PRWDescribeResultCreateSOURCESVector(builder, data)
+    return PRWDescribeResultCreateSOURCESVector(builder, data)
 
 def PRWDescribeResultAddSOURCE_OFFSET(builder, SOURCE_OFFSET):
     builder.PrependUint64Slot(3, SOURCE_OFFSET, 0)

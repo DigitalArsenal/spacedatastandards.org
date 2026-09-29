@@ -275,7 +275,7 @@ def PRWExecutionRequestCreateSAMPLE_EPOCHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLE_EPOCHSVector(builder, data):
-    PRWExecutionRequestCreateSAMPLE_EPOCHSVector(builder, data)
+    return PRWExecutionRequestCreateSAMPLE_EPOCHSVector(builder, data)
 
 def PRWExecutionRequestAddIMPULSES(builder, IMPULSES):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(IMPULSES), 0)
@@ -293,7 +293,7 @@ def PRWExecutionRequestCreateIMPULSESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateIMPULSESVector(builder, data):
-    PRWExecutionRequestCreateIMPULSESVector(builder, data)
+    return PRWExecutionRequestCreateIMPULSESVector(builder, data)
 
 def PRWExecutionRequestAddINCLUDE_MASS_DYNAMICS(builder, INCLUDE_MASS_DYNAMICS):
     builder.PrependBoolSlot(11, INCLUDE_MASS_DYNAMICS, 0)
@@ -317,7 +317,7 @@ def PRWExecutionRequestCreateFINITE_BURNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFINITE_BURNSVector(builder, data):
-    PRWExecutionRequestCreateFINITE_BURNSVector(builder, data)
+    return PRWExecutionRequestCreateFINITE_BURNSVector(builder, data)
 
 def PRWExecutionRequestEnd(builder):
     return builder.EndObject()

@@ -313,7 +313,7 @@ def VAMMetadataOnlyReviewCreateREASONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREASONSVector(builder, data):
-    VAMMetadataOnlyReviewCreateREASONSVector(builder, data)
+    return VAMMetadataOnlyReviewCreateREASONSVector(builder, data)
 
 def VAMMetadataOnlyReviewAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
@@ -337,7 +337,7 @@ def VAMMetadataOnlyReviewCreateANNOTATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANNOTATIONSVector(builder, data):
-    VAMMetadataOnlyReviewCreateANNOTATIONSVector(builder, data)
+    return VAMMetadataOnlyReviewCreateANNOTATIONSVector(builder, data)
 
 def VAMMetadataOnlyReviewAddENVELOPE_SHA256(builder, ENVELOPE_SHA256):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ENVELOPE_SHA256), 0)
@@ -365,7 +365,7 @@ def VAMMetadataOnlyReviewCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    VAMMetadataOnlyReviewCreateSIGNATUREVector(builder, data)
+    return VAMMetadataOnlyReviewCreateSIGNATUREVector(builder, data)
 
 def VAMMetadataOnlyReviewAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)

@@ -139,7 +139,7 @@ public enum TorpedoGuidanceMode: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Sonar and Underwater Acoustics
-public struct SON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SON: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

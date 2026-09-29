@@ -149,7 +149,7 @@ def PRWIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data):
     return builder.EndVector()
 
 def CreateABSOLUTE_TOLERANCESVector(builder, data):
-    PRWIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data)
+    return PRWIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data)
 
 def PRWIntegratorSettingsAddRELATIVE_TOLERANCE(builder, RELATIVE_TOLERANCE):
     builder.PrependFloat64Slot(5, RELATIVE_TOLERANCE, 1e-12)

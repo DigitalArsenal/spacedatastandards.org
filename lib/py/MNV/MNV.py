@@ -702,7 +702,7 @@ def MNVCreateCOVVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVVector(builder, data):
-    MNVCreateCOVVector(builder, data)
+    return MNVCreateCOVVector(builder, data)
 
 def MNVAddNUM_OBS(builder, NUM_OBS):
     builder.PrependUint32Slot(31, NUM_OBS, 0)
@@ -744,7 +744,7 @@ def MNVCreateMNVR_ACCEL_TIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMNVR_ACCEL_TIMESVector(builder, data):
-    MNVCreateMNVR_ACCEL_TIMESVector(builder, data)
+    return MNVCreateMNVR_ACCEL_TIMESVector(builder, data)
 
 def MNVAddMNVR_ACCELS(builder, MNVR_ACCELS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCELS), 0)
@@ -766,7 +766,7 @@ def MNVCreateMNVR_ACCELSVector(builder, data):
     return builder.EndVector()
 
 def CreateMNVR_ACCELSVector(builder, data):
-    MNVCreateMNVR_ACCELSVector(builder, data)
+    return MNVCreateMNVR_ACCELSVector(builder, data)
 
 def MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_UNCS), 0)
@@ -788,7 +788,7 @@ def MNVCreateMNVR_ACCEL_UNCSVector(builder, data):
     return builder.EndVector()
 
 def CreateMNVR_ACCEL_UNCSVector(builder, data):
-    MNVCreateMNVR_ACCEL_UNCSVector(builder, data)
+    return MNVCreateMNVR_ACCEL_UNCSVector(builder, data)
 
 def MNVAddDESCRIPTION(builder, DESCRIPTION):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
@@ -824,7 +824,7 @@ def MNVCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    MNVCreateTAGSVector(builder, data)
+    return MNVCreateTAGSVector(builder, data)
 
 def MNVAddSOURCED_DATA(builder, SOURCED_DATA):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA), 0)
@@ -842,7 +842,7 @@ def MNVCreateSOURCED_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCED_DATAVector(builder, data):
-    MNVCreateSOURCED_DATAVector(builder, data)
+    return MNVCreateSOURCED_DATAVector(builder, data)
 
 def MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA_TYPES), 0)

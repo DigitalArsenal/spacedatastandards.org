@@ -433,7 +433,7 @@ def RDMCreateIMPACT_PREDICTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateIMPACT_PREDICTIONSVector(builder, data):
-    RDMCreateIMPACT_PREDICTIONSVector(builder, data)
+    return RDMCreateIMPACT_PREDICTIONSVector(builder, data)
 
 def RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SURVIVING_DEBRIS), 0)
@@ -451,7 +451,7 @@ def RDMCreateSURVIVING_DEBRISVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSURVIVING_DEBRISVector(builder, data):
-    RDMCreateSURVIVING_DEBRISVector(builder, data)
+    return RDMCreateSURVIVING_DEBRISVector(builder, data)
 
 def RDMAddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION):
     builder.PrependFloat64Slot(23, CASUALTY_EXPECTATION, 0.0)

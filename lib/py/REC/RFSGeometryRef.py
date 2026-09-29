@@ -360,7 +360,7 @@ def RFSGeometryRefCreateFACE_INDEXESVector(builder, data):
     return builder.EndVector()
 
 def CreateFACE_INDEXESVector(builder, data):
-    RFSGeometryRefCreateFACE_INDEXESVector(builder, data)
+    return RFSGeometryRefCreateFACE_INDEXESVector(builder, data)
 
 def RFSGeometryRefAddOPP_SURFACE_ID(builder, OPP_SURFACE_ID):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OPP_SURFACE_ID), 0)
@@ -424,7 +424,7 @@ def RFSGeometryRefCreateSHAPE_DIMENSIONS_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSHAPE_DIMENSIONS_MVector(builder, data):
-    RFSGeometryRefCreateSHAPE_DIMENSIONS_MVector(builder, data)
+    return RFSGeometryRefCreateSHAPE_DIMENSIONS_MVector(builder, data)
 
 def RFSGeometryRefAddSHAPE_DIMENSION_NAMES(builder, SHAPE_DIMENSION_NAMES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE_DIMENSION_NAMES), 0)
@@ -442,7 +442,7 @@ def RFSGeometryRefCreateSHAPE_DIMENSION_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSHAPE_DIMENSION_NAMESVector(builder, data):
-    RFSGeometryRefCreateSHAPE_DIMENSION_NAMESVector(builder, data)
+    return RFSGeometryRefCreateSHAPE_DIMENSION_NAMESVector(builder, data)
 
 def RFSGeometryRefAddLATITUDE_DEG(builder, LATITUDE_DEG):
     builder.PrependFloat64Slot(19, LATITUDE_DEG, 0.0)

@@ -379,7 +379,7 @@ def KMLCreateSTYLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTYLESVector(builder, data):
-    KMLCreateSTYLESVector(builder, data)
+    return KMLCreateSTYLESVector(builder, data)
 
 def KMLAddSTYLE_MAPS(builder, STYLE_MAPS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAPS), 0)
@@ -397,7 +397,7 @@ def KMLCreateSTYLE_MAPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTYLE_MAPSVector(builder, data):
-    KMLCreateSTYLE_MAPSVector(builder, data)
+    return KMLCreateSTYLE_MAPSVector(builder, data)
 
 def KMLAddPLACEMARKS(builder, PLACEMARKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PLACEMARKS), 0)
@@ -415,7 +415,7 @@ def KMLCreatePLACEMARKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLACEMARKSVector(builder, data):
-    KMLCreatePLACEMARKSVector(builder, data)
+    return KMLCreatePLACEMARKSVector(builder, data)
 
 def KMLAddFOLDERS(builder, FOLDERS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(FOLDERS), 0)
@@ -433,7 +433,7 @@ def KMLCreateFOLDERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFOLDERSVector(builder, data):
-    KMLCreateFOLDERSVector(builder, data)
+    return KMLCreateFOLDERSVector(builder, data)
 
 def KMLAddNETWORK_LINKS(builder, NETWORK_LINKS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINKS), 0)
@@ -451,7 +451,7 @@ def KMLCreateNETWORK_LINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNETWORK_LINKSVector(builder, data):
-    KMLCreateNETWORK_LINKSVector(builder, data)
+    return KMLCreateNETWORK_LINKSVector(builder, data)
 
 def KMLAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_OVERLAYS), 0)
@@ -469,7 +469,7 @@ def KMLCreateGROUND_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUND_OVERLAYSVector(builder, data):
-    KMLCreateGROUND_OVERLAYSVector(builder, data)
+    return KMLCreateGROUND_OVERLAYSVector(builder, data)
 
 def KMLAddSCHEMAS(builder, SCHEMAS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMAS), 0)
@@ -487,7 +487,7 @@ def KMLCreateSCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCHEMASVector(builder, data):
-    KMLCreateSCHEMASVector(builder, data)
+    return KMLCreateSCHEMASVector(builder, data)
 
 def KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
@@ -505,7 +505,7 @@ def KMLCreateSCREEN_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCREEN_OVERLAYSVector(builder, data):
-    KMLCreateSCREEN_OVERLAYSVector(builder, data)
+    return KMLCreateSCREEN_OVERLAYSVector(builder, data)
 
 def KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
@@ -523,7 +523,7 @@ def KMLCreatePHOTO_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePHOTO_OVERLAYSVector(builder, data):
-    KMLCreatePHOTO_OVERLAYSVector(builder, data)
+    return KMLCreatePHOTO_OVERLAYSVector(builder, data)
 
 def KMLAddTOURS(builder, TOURS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
@@ -541,7 +541,7 @@ def KMLCreateTOURSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTOURSVector(builder, data):
-    KMLCreateTOURSVector(builder, data)
+    return KMLCreateTOURSVector(builder, data)
 
 def KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINK_CONTROL), 0)

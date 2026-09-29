@@ -467,7 +467,7 @@ def PAPCreateELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEMENTSVector(builder, data):
-    PAPCreateELEMENTSVector(builder, data)
+    return PAPCreateELEMENTSVector(builder, data)
 
 def PAPAddTAPER(builder, TAPER):
     builder.PrependInt8Slot(8, TAPER, 0)
@@ -495,7 +495,7 @@ def PAPCreateTAPER_PARAMETERSVector(builder, data):
     return builder.EndVector()
 
 def CreateTAPER_PARAMETERSVector(builder, data):
-    PAPCreateTAPER_PARAMETERSVector(builder, data)
+    return PAPCreateTAPER_PARAMETERSVector(builder, data)
 
 def PAPAddSTEERING_AZIMUTH_DEG(builder, STEERING_AZIMUTH_DEG):
     builder.PrependFloat64Slot(10, STEERING_AZIMUTH_DEG, 0.0)
@@ -549,7 +549,7 @@ def PAPCreateGAIN_CUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGAIN_CUTSVector(builder, data):
-    PAPCreateGAIN_CUTSVector(builder, data)
+    return PAPCreateGAIN_CUTSVector(builder, data)
 
 def PAPAddAZIMUTH_3DB_BEAMWIDTH_DEG(builder, AZIMUTH_3DB_BEAMWIDTH_DEG):
     builder.PrependFloat64Slot(17, AZIMUTH_3DB_BEAMWIDTH_DEG, 0.0)
@@ -601,7 +601,7 @@ def PAPCreateGRATING_LOBE_AZIMUTH_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateGRATING_LOBE_AZIMUTH_DEGVector(builder, data):
-    PAPCreateGRATING_LOBE_AZIMUTH_DEGVector(builder, data)
+    return PAPCreateGRATING_LOBE_AZIMUTH_DEGVector(builder, data)
 
 def PAPAddGRATING_LOBE_ELEVATION_DEG(builder, GRATING_LOBE_ELEVATION_DEG):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(GRATING_LOBE_ELEVATION_DEG), 0)
@@ -623,7 +623,7 @@ def PAPCreateGRATING_LOBE_ELEVATION_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateGRATING_LOBE_ELEVATION_DEGVector(builder, data):
-    PAPCreateGRATING_LOBE_ELEVATION_DEGVector(builder, data)
+    return PAPCreateGRATING_LOBE_ELEVATION_DEGVector(builder, data)
 
 def PAPAddNULLS(builder, NULLS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(NULLS), 0)
@@ -641,7 +641,7 @@ def PAPCreateNULLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNULLSVector(builder, data):
-    PAPCreateNULLSVector(builder, data)
+    return PAPCreateNULLSVector(builder, data)
 
 def PAPAddPROVENANCE(builder, PROVENANCE):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
@@ -681,7 +681,7 @@ def PAPCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PAPCreateSIGNATUREVector(builder, data)
+    return PAPCreateSIGNATUREVector(builder, data)
 
 def PAPAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -703,7 +703,7 @@ def PAPCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    PAPCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return PAPCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def PAPEnd(builder):
     return builder.EndObject()

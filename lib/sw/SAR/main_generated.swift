@@ -46,7 +46,7 @@ public enum sarPolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  SAR Observation
-public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SAR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

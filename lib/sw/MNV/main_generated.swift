@@ -46,7 +46,7 @@ public enum maneuverCharacterization: Int8, FlatbuffersVectorInitializable, Enum
 
 
 ///  Pre/post-maneuver orbital state
-public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct mnvOrbitalState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -248,7 +248,7 @@ public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Spacecraft Maneuver
-public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

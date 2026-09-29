@@ -673,7 +673,7 @@ def ICNCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    ICNCreatePROVIDER_SIGNATUREVector(builder, data)
+    return ICNCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def ICNAddORIGIN_ID(builder, ORIGIN_ID):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN_ID), 0)
@@ -823,7 +823,7 @@ def ICNCreateEMITS_SCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEMITS_SCHEMASVector(builder, data):
-    ICNCreateEMITS_SCHEMASVector(builder, data)
+    return ICNCreateEMITS_SCHEMASVector(builder, data)
 
 def ICNEnd(builder):
     return builder.EndObject()

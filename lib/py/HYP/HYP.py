@@ -227,7 +227,7 @@ def HYPCreateCAT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCAT_IDSVector(builder, data):
-    HYPCreateCAT_IDSVector(builder, data)
+    return HYPCreateCAT_IDSVector(builder, data)
 
 def HYPAddSIT_IDS(builder, SIT_IDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SIT_IDS), 0)
@@ -245,7 +245,7 @@ def HYPCreateSIT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSIT_IDSVector(builder, data):
-    HYPCreateSIT_IDSVector(builder, data)
+    return HYPCreateSIT_IDSVector(builder, data)
 
 def HYPAddNAME(builder, NAME):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
@@ -275,7 +275,7 @@ def HYPCreateROW_INDICATORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROW_INDICATORSVector(builder, data):
-    HYPCreateROW_INDICATORSVector(builder, data)
+    return HYPCreateROW_INDICATORSVector(builder, data)
 
 def HYPAddCOL_INDICATORS(builder, COL_INDICATORS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COL_INDICATORS), 0)
@@ -293,7 +293,7 @@ def HYPCreateCOL_INDICATORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOL_INDICATORSVector(builder, data):
-    HYPCreateCOL_INDICATORSVector(builder, data)
+    return HYPCreateCOL_INDICATORSVector(builder, data)
 
 def HYPAddMATRIX(builder, MATRIX):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATRIX), 0)
@@ -315,7 +315,7 @@ def HYPCreateMATRIXVector(builder, data):
     return builder.EndVector()
 
 def CreateMATRIXVector(builder, data):
-    HYPCreateMATRIXVector(builder, data)
+    return HYPCreateMATRIXVector(builder, data)
 
 def HYPAddSCORE(builder, SCORE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SCORE), 0)
@@ -333,7 +333,7 @@ def HYPCreateSCOREVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCOREVector(builder, data):
-    HYPCreateSCOREVector(builder, data)
+    return HYPCreateSCOREVector(builder, data)
 
 def HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ANALYSIS_METHOD), 0)

@@ -150,7 +150,7 @@ def CESObjectVectorCreateVECTOR_INT8Vector(builder, data):
     return builder.EndVector()
 
 def CreateVECTOR_INT8Vector(builder, data):
-    CESObjectVectorCreateVECTOR_INT8Vector(builder, data)
+    return CESObjectVectorCreateVECTOR_INT8Vector(builder, data)
 
 def CESObjectVectorAddSCALE(builder, SCALE):
     builder.PrependFloat32Slot(3, SCALE, 0.0)
@@ -178,7 +178,7 @@ def CESObjectVectorCreateVECTOR_FLOAT32Vector(builder, data):
     return builder.EndVector()
 
 def CreateVECTOR_FLOAT32Vector(builder, data):
-    CESObjectVectorCreateVECTOR_FLOAT32Vector(builder, data)
+    return CESObjectVectorCreateVECTOR_FLOAT32Vector(builder, data)
 
 def CESObjectVectorEnd(builder):
     return builder.EndObject()

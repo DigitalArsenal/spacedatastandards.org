@@ -461,7 +461,7 @@ def PMMModuleEntryCreateARTIFACT_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateARTIFACT_SIGNATUREVector(builder, data):
-    PMMModuleEntryCreateARTIFACT_SIGNATUREVector(builder, data)
+    return PMMModuleEntryCreateARTIFACT_SIGNATUREVector(builder, data)
 
 def PMMModuleEntryAddTRUST_TIER(builder, TRUST_TIER):
     builder.PrependUint8Slot(12, TRUST_TIER, 0)
@@ -503,7 +503,7 @@ def PMMModuleEntryCreateRUNTIME_TARGETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRUNTIME_TARGETSVector(builder, data):
-    PMMModuleEntryCreateRUNTIME_TARGETSVector(builder, data)
+    return PMMModuleEntryCreateRUNTIME_TARGETSVector(builder, data)
 
 def PMMModuleEntryAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCHEMAS), 0)
@@ -521,7 +521,7 @@ def PMMModuleEntryCreateREQUIRED_SCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUIRED_SCHEMASVector(builder, data):
-    PMMModuleEntryCreateREQUIRED_SCHEMASVector(builder, data)
+    return PMMModuleEntryCreateREQUIRED_SCHEMASVector(builder, data)
 
 def PMMModuleEntryAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MIN_PERMISSIONS), 0)
@@ -539,7 +539,7 @@ def PMMModuleEntryCreateMIN_PERMISSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMIN_PERMISSIONSVector(builder, data):
-    PMMModuleEntryCreateMIN_PERMISSIONSVector(builder, data)
+    return PMMModuleEntryCreateMIN_PERMISSIONSVector(builder, data)
 
 def PMMModuleEntryAddLICENSE(builder, LICENSE):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
@@ -603,7 +603,7 @@ def PMMModuleEntryCreateCATEGORIESVector(builder, data):
     return builder.EndVector()
 
 def CreateCATEGORIESVector(builder, data):
-    PMMModuleEntryCreateCATEGORIESVector(builder, data)
+    return PMMModuleEntryCreateCATEGORIESVector(builder, data)
 
 def PMMModuleEntryEnd(builder):
     return builder.EndObject()

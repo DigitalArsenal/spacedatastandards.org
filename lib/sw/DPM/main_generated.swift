@@ -66,7 +66,7 @@ public enum dpmTransportKind: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Completeness-capable signed index over a dataset update.
-public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPMCompletenessIndex: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -155,7 +155,7 @@ public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializa
 
 ///  One immutable asset or provider-mediated query contract published for a
 ///  dataset update.
-public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -305,7 +305,7 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Source batch metadata bound into the dataset publication.
-public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPMSourceBatch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -433,7 +433,7 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Canonical query metadata that can replay the dataset selection.
-public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPMQueryBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -570,7 +570,7 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Encryption metadata for protected dataset artifacts.
-public struct DPMEncryptionBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPMEncryptionBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -656,7 +656,7 @@ public struct DPMEncryptionBinding: FlatBufferTable, FlatbuffersVectorInitializa
 ///  hashed, whether content-key metadata applies, and which provider signature
 ///  commits to the manifest. PNM announces the current DPM; DPM defines what
 ///  must be fetched, verified, imported, pinned, or archived.
-public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -213,7 +213,7 @@ def CustomAlgorithmCreateINPUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINPUTSVector(builder, data):
-    CustomAlgorithmCreateINPUTSVector(builder, data)
+    return CustomAlgorithmCreateINPUTSVector(builder, data)
 
 def CustomAlgorithmAddOUTPUTS(builder, OUTPUTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUTS), 0)
@@ -231,7 +231,7 @@ def CustomAlgorithmCreateOUTPUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOUTPUTSVector(builder, data):
-    CustomAlgorithmCreateOUTPUTSVector(builder, data)
+    return CustomAlgorithmCreateOUTPUTSVector(builder, data)
 
 def CustomAlgorithmAddTRIGGERS(builder, TRIGGERS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRIGGERS), 0)
@@ -249,7 +249,7 @@ def CustomAlgorithmCreateTRIGGERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRIGGERSVector(builder, data):
-    CustomAlgorithmCreateTRIGGERSVector(builder, data)
+    return CustomAlgorithmCreateTRIGGERSVector(builder, data)
 
 def CustomAlgorithmEnd(builder):
     return builder.EndObject()

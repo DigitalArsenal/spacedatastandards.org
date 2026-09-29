@@ -836,7 +836,7 @@ def SOICreateSPECTRAL_FILTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPECTRAL_FILTERSVector(builder, data):
-    SOICreateSPECTRAL_FILTERSVector(builder, data)
+    return SOICreateSPECTRAL_FILTERSVector(builder, data)
 
 def SOIAddGAIN(builder, GAIN):
     builder.PrependFloat64Slot(37, GAIN, 0.0)
@@ -980,7 +980,7 @@ def SOICreateCALIBRATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCALIBRATIONSVector(builder, data):
-    SOICreateCALIBRATIONSVector(builder, data)
+    return SOICreateCALIBRATIONSVector(builder, data)
 
 def SOIAddTAGS(builder, TAGS):
     builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
@@ -998,7 +998,7 @@ def SOICreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    SOICreateTAGSVector(builder, data)
+    return SOICreateTAGSVector(builder, data)
 
 def SOIAddTRANSACTION_ID(builder, TRANSACTION_ID):
     builder.PrependUOffsetTRelativeSlot(60, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
@@ -1022,7 +1022,7 @@ def SOICreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data):
-    SOICreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data)
+    return SOICreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data)
 
 def SOIAddRADAR_SOIOBSERVATION_LIST(builder, RADAR_SOIOBSERVATION_LIST):
     builder.PrependUOffsetTRelativeSlot(62, flatbuffers.number_types.UOffsetTFlags.py_type(RADAR_SOIOBSERVATION_LIST), 0)
@@ -1040,7 +1040,7 @@ def SOICreateRADAR_SOIOBSERVATION_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRADAR_SOIOBSERVATION_LISTVector(builder, data):
-    SOICreateRADAR_SOIOBSERVATION_LISTVector(builder, data)
+    return SOICreateRADAR_SOIOBSERVATION_LISTVector(builder, data)
 
 def SOIEnd(builder):
     return builder.EndObject()

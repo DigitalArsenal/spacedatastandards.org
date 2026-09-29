@@ -13,7 +13,7 @@ import FlatBuffers
 ///  TNR records preserve isolated trust graph nodes that do not currently have
 ///  an active trust edge. The current graph is a projection over the latest TNR
 ///  and TRE records, where deleted records are tombstones.
-public struct TNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

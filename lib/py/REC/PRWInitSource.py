@@ -134,7 +134,7 @@ def PRWInitSourceCreateBYTESVector(builder, data):
     return builder.EndVector()
 
 def CreateBYTESVector(builder, data):
-    PRWInitSourceCreateBYTESVector(builder, data)
+    return PRWInitSourceCreateBYTESVector(builder, data)
 
 def PRWInitSourceAddKEPLERIAN(builder, KEPLERIAN):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(KEPLERIAN), 0)

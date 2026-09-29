@@ -98,7 +98,7 @@ def CQRNativeDocumentCreateCONTENTVector(builder, data):
     return builder.EndVector()
 
 def CreateCONTENTVector(builder, data):
-    CQRNativeDocumentCreateCONTENTVector(builder, data)
+    return CQRNativeDocumentCreateCONTENTVector(builder, data)
 
 def CQRNativeDocumentEnd(builder):
     return builder.EndObject()

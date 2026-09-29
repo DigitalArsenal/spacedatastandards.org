@@ -304,7 +304,7 @@ def RPCCreateSENDER_KEY_IDVector(builder, data):
     return builder.EndVector()
 
 def CreateSENDER_KEY_IDVector(builder, data):
-    RPCCreateSENDER_KEY_IDVector(builder, data)
+    return RPCCreateSENDER_KEY_IDVector(builder, data)
 
 def RPCAddTIMESTAMP(builder, TIMESTAMP):
     builder.PrependUint64Slot(5, TIMESTAMP, 0)
@@ -332,7 +332,7 @@ def RPCCreateNONCEVector(builder, data):
     return builder.EndVector()
 
 def CreateNONCEVector(builder, data):
-    RPCCreateNONCEVector(builder, data)
+    return RPCCreateNONCEVector(builder, data)
 
 def RPCAddCIPHERTEXT(builder, CIPHERTEXT):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHERTEXT), 0)
@@ -354,7 +354,7 @@ def RPCCreateCIPHERTEXTVector(builder, data):
     return builder.EndVector()
 
 def CreateCIPHERTEXTVector(builder, data):
-    RPCCreateCIPHERTEXTVector(builder, data)
+    return RPCCreateCIPHERTEXTVector(builder, data)
 
 def RPCAddSIGNER_PUBLIC_KEY(builder, SIGNER_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNER_PUBLIC_KEY), 0)
@@ -376,7 +376,7 @@ def RPCCreateSIGNER_PUBLIC_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNER_PUBLIC_KEYVector(builder, data):
-    RPCCreateSIGNER_PUBLIC_KEYVector(builder, data)
+    return RPCCreateSIGNER_PUBLIC_KEYVector(builder, data)
 
 def RPCAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
@@ -404,7 +404,7 @@ def RPCCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RPCCreateSIGNATUREVector(builder, data)
+    return RPCCreateSIGNATUREVector(builder, data)
 
 def RPCAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -426,7 +426,7 @@ def RPCCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    RPCCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return RPCCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def RPCEnd(builder):
     return builder.EndObject()

@@ -105,7 +105,7 @@ def KMLMultiTrackCreateTRACKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACKSVector(builder, data):
-    KMLMultiTrackCreateTRACKSVector(builder, data)
+    return KMLMultiTrackCreateTRACKSVector(builder, data)
 
 def KMLMultiTrackEnd(builder):
     return builder.EndObject()

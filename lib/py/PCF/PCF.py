@@ -251,7 +251,7 @@ def PCFCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    PCFCreateRESERVEDVector(builder, data)
+    return PCFCreateRESERVEDVector(builder, data)
 
 def PCFEnd(builder):
     return builder.EndObject()

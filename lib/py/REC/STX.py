@@ -503,7 +503,7 @@ def STXCreateTARGET_ZONESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGET_ZONESVector(builder, data):
-    STXCreateTARGET_ZONESVector(builder, data)
+    return STXCreateTARGET_ZONESVector(builder, data)
 
 def STXAddLANGUAGE(builder, LANGUAGE):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(LANGUAGE), 0)
@@ -593,7 +593,7 @@ def STXCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    STXCreateSOURCESVector(builder, data)
+    return STXCreateSOURCESVector(builder, data)
 
 def STXEnd(builder):
     return builder.EndObject()

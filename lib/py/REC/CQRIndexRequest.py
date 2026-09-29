@@ -199,7 +199,7 @@ def CQRIndexRequestCreateSOURCE_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateSOURCE_HANDLESVector(builder, data):
-    CQRIndexRequestCreateSOURCE_HANDLESVector(builder, data)
+    return CQRIndexRequestCreateSOURCE_HANDLESVector(builder, data)
 
 def CQRIndexRequestAddSEGMENT_SET_HANDLE(builder, SEGMENT_SET_HANDLE):
     builder.PrependUint32Slot(3, SEGMENT_SET_HANDLE, 0)
@@ -227,7 +227,7 @@ def CQRIndexRequestCreatePRIMARY_SOURCE_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreatePRIMARY_SOURCE_HANDLESVector(builder, data):
-    CQRIndexRequestCreatePRIMARY_SOURCE_HANDLESVector(builder, data)
+    return CQRIndexRequestCreatePRIMARY_SOURCE_HANDLESVector(builder, data)
 
 def CQRIndexRequestAddINDEX_CONTENT(builder, INDEX_CONTENT):
     builder.PrependUint8Slot(5, INDEX_CONTENT, 0)
@@ -257,7 +257,7 @@ def CQRIndexRequestCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    CQRIndexRequestCreateSOURCESVector(builder, data)
+    return CQRIndexRequestCreateSOURCESVector(builder, data)
 
 def CQRIndexRequestAddSEGMENTS(builder, SEGMENTS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)

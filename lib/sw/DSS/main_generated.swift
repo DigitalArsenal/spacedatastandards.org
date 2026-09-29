@@ -85,7 +85,7 @@ public enum dssRetention: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 }
 
 
-public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Attitude Parameter Message
-public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -211,7 +211,7 @@ def ESLCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    ESLCreateRESERVEDVector(builder, data)
+    return ESLCreateRESERVEDVector(builder, data)
 
 def ESLEnd(builder):
     return builder.EndObject()

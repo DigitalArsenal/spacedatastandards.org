@@ -19,6 +19,34 @@ class REC extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
+    // Field-encryption format 3 walk program of REC (see FlatbuffersEncryption).
+    const FLATBUFFERS_ENCRYPTION_PROGRAM = array(
+        3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
+        2, 12, 1
+    );
+
+    /**
+     * Returns a copy of a REC buffer (a string) with its (encrypted) fields
+     * encrypted with field-encryption format 3 ($key: 32 bytes; $recordIndex:
+     * unique per buffer under the key).
+     * @throws \InvalidArgumentException for a bad key or a malformed buffer
+     */
+    public static function encryptBuffer($bytes, $key, $recordIndex = 0)
+    {
+        return FlatbuffersEncryption::cryptBuffer($bytes, $key, $recordIndex, self::FLATBUFFERS_ENCRYPTION_PROGRAM);
+    }
+
+    /**
+     * Returns a copy of a REC buffer (a string) with its (encrypted) fields
+     * decrypted with field-encryption format 3 ($key: 32 bytes; $recordIndex:
+     * unique per buffer under the key).
+     * @throws \InvalidArgumentException for a bad key or a malformed buffer
+     */
+    public static function decryptBuffer($bytes, $key, $recordIndex = 0)
+    {
+        return FlatbuffersEncryption::cryptBuffer($bytes, $key, $recordIndex, self::FLATBUFFERS_ENCRYPTION_PROGRAM);
+    }
+
     public static function RECIdentifier()
     {
         return "$REC";

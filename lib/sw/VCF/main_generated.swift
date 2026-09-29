@@ -94,7 +94,7 @@ public enum vcfPhotoPolicy: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  One emitted card property, as the publisher parsed its own output.
-public struct VCFProperty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VCFProperty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -174,7 +174,7 @@ public struct VCFProperty: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  One identity address row: the machine-readable half of the card.
-public struct VCFAlias: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VCFAlias: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -301,7 +301,7 @@ public struct VCFAlias: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  The profile this card projects, and the provenance that binds them.
-public struct VCFSubject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VCFSubject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -417,7 +417,7 @@ public struct VCFSubject: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
 ///  Everything needed to decide whether this card is servable, and whether two
 ///  implementations produced the same bytes.
-public struct VCFConformance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VCFConformance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -540,7 +540,7 @@ public struct VCFConformance: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  vCard Projection Card
-public struct VCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

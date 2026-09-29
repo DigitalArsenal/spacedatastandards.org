@@ -27,7 +27,7 @@ public enum IntegratorType: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Propagator Configuration
-public struct PCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

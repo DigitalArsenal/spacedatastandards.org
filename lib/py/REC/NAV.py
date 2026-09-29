@@ -524,7 +524,7 @@ def NAVCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    NAVCreateRESERVEDVector(builder, data)
+    return NAVCreateRESERVEDVector(builder, data)
 
 def NAVEnd(builder):
     return builder.EndObject()

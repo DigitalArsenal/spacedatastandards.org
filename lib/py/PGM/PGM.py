@@ -199,7 +199,7 @@ def PGMCreateMEMBERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMBERSVector(builder, data):
-    PGMCreateMEMBERSVector(builder, data)
+    return PGMCreateMEMBERSVector(builder, data)
 
 def PGMAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUint64Slot(4, CREATED_AT, 0)
@@ -229,7 +229,7 @@ def PGMCreateMETADATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMETADATAVector(builder, data):
-    PGMCreateMETADATAVector(builder, data)
+    return PGMCreateMETADATAVector(builder, data)
 
 def PGMAddDELETED(builder, DELETED):
     builder.PrependBoolSlot(7, DELETED, 0)
@@ -263,7 +263,7 @@ def PGMCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    PGMCreatePROVIDER_SIGNATUREVector(builder, data)
+    return PGMCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def PGMEnd(builder):
     return builder.EndObject()

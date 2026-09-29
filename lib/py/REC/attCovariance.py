@@ -125,7 +125,7 @@ def attCovarianceCreateCOVVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVVector(builder, data):
-    attCovarianceCreateCOVVector(builder, data)
+    return attCovarianceCreateCOVVector(builder, data)
 
 def attCovarianceEnd(builder):
     return builder.EndObject()

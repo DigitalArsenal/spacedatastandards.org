@@ -233,7 +233,7 @@ def SCNAssetsChangedCreateADDED_SATELLITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateADDED_SATELLITESVector(builder, data):
-    SCNAssetsChangedCreateADDED_SATELLITESVector(builder, data)
+    return SCNAssetsChangedCreateADDED_SATELLITESVector(builder, data)
 
 def SCNAssetsChangedAddADDED_GROUND_SITES(builder, ADDED_GROUND_SITES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ADDED_GROUND_SITES), 0)
@@ -251,7 +251,7 @@ def SCNAssetsChangedCreateADDED_GROUND_SITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateADDED_GROUND_SITESVector(builder, data):
-    SCNAssetsChangedCreateADDED_GROUND_SITESVector(builder, data)
+    return SCNAssetsChangedCreateADDED_GROUND_SITESVector(builder, data)
 
 def SCNAssetsChangedAddREMOVED_SATELLITES(builder, REMOVED_SATELLITES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(REMOVED_SATELLITES), 0)
@@ -269,7 +269,7 @@ def SCNAssetsChangedCreateREMOVED_SATELLITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREMOVED_SATELLITESVector(builder, data):
-    SCNAssetsChangedCreateREMOVED_SATELLITESVector(builder, data)
+    return SCNAssetsChangedCreateREMOVED_SATELLITESVector(builder, data)
 
 def SCNAssetsChangedAddREMOVED_GROUND_SITES(builder, REMOVED_GROUND_SITES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(REMOVED_GROUND_SITES), 0)
@@ -287,7 +287,7 @@ def SCNAssetsChangedCreateREMOVED_GROUND_SITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREMOVED_GROUND_SITESVector(builder, data):
-    SCNAssetsChangedCreateREMOVED_GROUND_SITESVector(builder, data)
+    return SCNAssetsChangedCreateREMOVED_GROUND_SITESVector(builder, data)
 
 def SCNAssetsChangedAddSATELLITES(builder, SATELLITES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SATELLITES), 0)
@@ -305,7 +305,7 @@ def SCNAssetsChangedCreateSATELLITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSATELLITESVector(builder, data):
-    SCNAssetsChangedCreateSATELLITESVector(builder, data)
+    return SCNAssetsChangedCreateSATELLITESVector(builder, data)
 
 def SCNAssetsChangedAddGROUND_SITES(builder, GROUND_SITES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_SITES), 0)
@@ -323,7 +323,7 @@ def SCNAssetsChangedCreateGROUND_SITESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUND_SITESVector(builder, data):
-    SCNAssetsChangedCreateGROUND_SITESVector(builder, data)
+    return SCNAssetsChangedCreateGROUND_SITESVector(builder, data)
 
 def SCNAssetsChangedAddREFERENCES(builder, REFERENCES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCES), 0)
@@ -341,7 +341,7 @@ def SCNAssetsChangedCreateREFERENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFERENCESVector(builder, data):
-    SCNAssetsChangedCreateREFERENCESVector(builder, data)
+    return SCNAssetsChangedCreateREFERENCESVector(builder, data)
 
 def SCNAssetsChangedEnd(builder):
     return builder.EndObject()

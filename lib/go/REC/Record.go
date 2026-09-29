@@ -42,6 +42,25 @@ func (rcv *Record) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+// Field-encryption format 3 walk program of Record (see flatbuffers_encryption.go).
+var flatbuffersEncryptionProgramRecord = []int{
+	2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1,
+}
+
+// RecordEncryptBuffer encrypts, in place, the (encrypted) fields of a Record
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func RecordEncryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramRecord)
+}
+
+// RecordDecryptBuffer decrypts, in place, the (encrypted) fields of a Record
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func RecordDecryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramRecord)
+}
+
 func (rcv *Record) value_type() RecordType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {

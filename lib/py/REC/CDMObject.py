@@ -603,7 +603,7 @@ def CDMObjectCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    CDMObjectCreateCOVARIANCEVector(builder, data)
+    return CDMObjectCreateCOVARIANCEVector(builder, data)
 
 def CDMObjectEnd(builder):
     return builder.EndObject()

@@ -1094,7 +1094,7 @@ def RFOCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    RFOCreateTAGSVector(builder, data)
+    return RFOCreateTAGSVector(builder, data)
 
 def RFOEnd(builder):
     return builder.EndObject()

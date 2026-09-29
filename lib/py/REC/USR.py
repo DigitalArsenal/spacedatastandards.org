@@ -83,7 +83,7 @@ def USRCreateMESSAGE_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMESSAGE_TYPESVector(builder, data):
-    USRCreateMESSAGE_TYPESVector(builder, data)
+    return USRCreateMESSAGE_TYPESVector(builder, data)
 
 def USREnd(builder):
     return builder.EndObject()

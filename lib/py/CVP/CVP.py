@@ -821,7 +821,7 @@ def CVPCreateVERTEX_LONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_LONGITUDE_DEGVector(builder, data):
-    CVPCreateVERTEX_LONGITUDE_DEGVector(builder, data)
+    return CVPCreateVERTEX_LONGITUDE_DEGVector(builder, data)
 
 def CVPAddVERTEX_LATITUDE_DEG(builder, VERTEX_LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(VERTEX_LATITUDE_DEG), 0)
@@ -843,7 +843,7 @@ def CVPCreateVERTEX_LATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_LATITUDE_DEGVector(builder, data):
-    CVPCreateVERTEX_LATITUDE_DEGVector(builder, data)
+    return CVPCreateVERTEX_LATITUDE_DEGVector(builder, data)
 
 def CVPAddVERTEX_ALTITUDE_M(builder, VERTEX_ALTITUDE_M):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(VERTEX_ALTITUDE_M), 0)
@@ -865,7 +865,7 @@ def CVPCreateVERTEX_ALTITUDE_MVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_ALTITUDE_MVector(builder, data):
-    CVPCreateVERTEX_ALTITUDE_MVector(builder, data)
+    return CVPCreateVERTEX_ALTITUDE_MVector(builder, data)
 
 def CVPAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE):
     builder.PrependInt8Slot(18, ALTITUDE_REFERENCE, 0)
@@ -899,7 +899,7 @@ def CVPCreateRING_OFFSETSVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_OFFSETSVector(builder, data):
-    CVPCreateRING_OFFSETSVector(builder, data)
+    return CVPCreateRING_OFFSETSVector(builder, data)
 
 def CVPAddRING_POLYGON_INDEXES(builder, RING_POLYGON_INDEXES):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(RING_POLYGON_INDEXES), 0)
@@ -921,7 +921,7 @@ def CVPCreateRING_POLYGON_INDEXESVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_POLYGON_INDEXESVector(builder, data):
-    CVPCreateRING_POLYGON_INDEXESVector(builder, data)
+    return CVPCreateRING_POLYGON_INDEXESVector(builder, data)
 
 def CVPAddRING_ROLES(builder, RING_ROLES):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(RING_ROLES), 0)
@@ -943,7 +943,7 @@ def CVPCreateRING_ROLESVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_ROLESVector(builder, data):
-    CVPCreateRING_ROLESVector(builder, data)
+    return CVPCreateRING_ROLESVector(builder, data)
 
 def CVPAddPOLYGON_COUNT(builder, POLYGON_COUNT):
     builder.PrependUint32Slot(23, POLYGON_COUNT, 0)
@@ -971,7 +971,7 @@ def CVPCreatePOLYGON_LEVEL_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOLYGON_LEVEL_VALUESVector(builder, data):
-    CVPCreatePOLYGON_LEVEL_VALUESVector(builder, data)
+    return CVPCreatePOLYGON_LEVEL_VALUESVector(builder, data)
 
 def CVPAddPOLYGON_LEVEL_UNCERTAINTIES(builder, POLYGON_LEVEL_UNCERTAINTIES):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_LEVEL_UNCERTAINTIES), 0)
@@ -993,7 +993,7 @@ def CVPCreatePOLYGON_LEVEL_UNCERTAINTIESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOLYGON_LEVEL_UNCERTAINTIESVector(builder, data):
-    CVPCreatePOLYGON_LEVEL_UNCERTAINTIESVector(builder, data)
+    return CVPCreatePOLYGON_LEVEL_UNCERTAINTIESVector(builder, data)
 
 def CVPAddPOLYGON_AREA_KM2(builder, POLYGON_AREA_KM2):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_AREA_KM2), 0)
@@ -1015,7 +1015,7 @@ def CVPCreatePOLYGON_AREA_KM2Vector(builder, data):
     return builder.EndVector()
 
 def CreatePOLYGON_AREA_KM2Vector(builder, data):
-    CVPCreatePOLYGON_AREA_KM2Vector(builder, data)
+    return CVPCreatePOLYGON_AREA_KM2Vector(builder, data)
 
 def CVPAddVERTEX_POSITION_UNCERTAINTY_M(builder, VERTEX_POSITION_UNCERTAINTY_M):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(VERTEX_POSITION_UNCERTAINTY_M), 0)
@@ -1037,7 +1037,7 @@ def CVPCreateVERTEX_POSITION_UNCERTAINTY_MVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_POSITION_UNCERTAINTY_MVector(builder, data):
-    CVPCreateVERTEX_POSITION_UNCERTAINTY_MVector(builder, data)
+    return CVPCreateVERTEX_POSITION_UNCERTAINTY_MVector(builder, data)
 
 def CVPAddGRID_SCHEME(builder, GRID_SCHEME):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(GRID_SCHEME), 0)
@@ -1097,7 +1097,7 @@ def CVPCreateCONTRIBUTING_EMITTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRIBUTING_EMITTERSVector(builder, data):
-    CVPCreateCONTRIBUTING_EMITTERSVector(builder, data)
+    return CVPCreateCONTRIBUTING_EMITTERSVector(builder, data)
 
 def CVPAddRECEIVER_SET_ID(builder, RECEIVER_SET_ID):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVER_SET_ID), 0)
@@ -1121,7 +1121,7 @@ def CVPCreateRECEIVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECEIVERSVector(builder, data):
-    CVPCreateRECEIVERSVector(builder, data)
+    return CVPCreateRECEIVERSVector(builder, data)
 
 def CVPAddCONTRIBUTING_OBSTACLES(builder, CONTRIBUTING_OBSTACLES):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTING_OBSTACLES), 0)
@@ -1139,7 +1139,7 @@ def CVPCreateCONTRIBUTING_OBSTACLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRIBUTING_OBSTACLESVector(builder, data):
-    CVPCreateCONTRIBUTING_OBSTACLESVector(builder, data)
+    return CVPCreateCONTRIBUTING_OBSTACLESVector(builder, data)
 
 def CVPAddOBSTACLE_SET_ID(builder, OBSTACLE_SET_ID):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(OBSTACLE_SET_ID), 0)
@@ -1203,7 +1203,7 @@ def CVPCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    CVPCreateSIGNATUREVector(builder, data)
+    return CVPCreateSIGNATUREVector(builder, data)
 
 def CVPEnd(builder):
     return builder.EndObject()

@@ -122,7 +122,7 @@ def AGRSeriesCreateXVector(builder, data):
     return builder.EndVector()
 
 def CreateXVector(builder, data):
-    AGRSeriesCreateXVector(builder, data)
+    return AGRSeriesCreateXVector(builder, data)
 
 def AGRSeriesAddY(builder, Y):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(Y), 0)
@@ -144,7 +144,7 @@ def AGRSeriesCreateYVector(builder, data):
     return builder.EndVector()
 
 def CreateYVector(builder, data):
-    AGRSeriesCreateYVector(builder, data)
+    return AGRSeriesCreateYVector(builder, data)
 
 def AGRSeriesEnd(builder):
     return builder.EndObject()

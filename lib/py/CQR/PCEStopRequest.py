@@ -195,7 +195,7 @@ def PCEStopRequestCreateCONDITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONDITIONSVector(builder, data):
-    PCEStopRequestCreateCONDITIONSVector(builder, data)
+    return PCEStopRequestCreateCONDITIONSVector(builder, data)
 
 def PCEStopRequestAddDIRECTION(builder, DIRECTION):
     builder.PrependUint8Slot(3, DIRECTION, 1)
@@ -231,7 +231,7 @@ def PCEStopRequestCreateSYNCHRONIZED_OBJECT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSYNCHRONIZED_OBJECT_IDSVector(builder, data):
-    PCEStopRequestCreateSYNCHRONIZED_OBJECT_IDSVector(builder, data)
+    return PCEStopRequestCreateSYNCHRONIZED_OBJECT_IDSVector(builder, data)
 
 def PCEStopRequestAddREPORT_PARAMETERS(builder, REPORT_PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REPORT_PARAMETERS), 0)
@@ -249,7 +249,7 @@ def PCEStopRequestCreateREPORT_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREPORT_PARAMETERSVector(builder, data):
-    PCEStopRequestCreateREPORT_PARAMETERSVector(builder, data)
+    return PCEStopRequestCreateREPORT_PARAMETERSVector(builder, data)
 
 def PCEStopRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

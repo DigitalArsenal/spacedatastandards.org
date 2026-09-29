@@ -199,7 +199,7 @@ def MBLCreatecanonical_module_hashVector(builder, data):
     return builder.EndVector()
 
 def Createcanonical_module_hashVector(builder, data):
-    MBLCreatecanonical_module_hashVector(builder, data)
+    return MBLCreatecanonical_module_hashVector(builder, data)
 
 def MBLAddmanifest_hash(builder, manifest_hash):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(manifest_hash), 0)
@@ -221,7 +221,7 @@ def MBLCreatemanifest_hashVector(builder, data):
     return builder.EndVector()
 
 def Createmanifest_hashVector(builder, data):
-    MBLCreatemanifest_hashVector(builder, data)
+    return MBLCreatemanifest_hashVector(builder, data)
 
 def MBLAddmanifest_export_symbol(builder, manifest_export_symbol):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(manifest_export_symbol), 0)
@@ -251,7 +251,7 @@ def MBLCreateentriesVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateentriesVector(builder, data):
-    MBLCreateentriesVector(builder, data)
+    return MBLCreateentriesVector(builder, data)
 
 def MBLEnd(builder):
     return builder.EndObject()

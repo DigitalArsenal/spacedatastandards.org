@@ -190,7 +190,7 @@ def GCTDistanceFieldCreateORIGIN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateORIGIN_MVector(builder, data):
-    GCTDistanceFieldCreateORIGIN_MVector(builder, data)
+    return GCTDistanceFieldCreateORIGIN_MVector(builder, data)
 
 def GCTDistanceFieldAddSPAN_M(builder, SPAN_M):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SPAN_M), 0)
@@ -212,7 +212,7 @@ def GCTDistanceFieldCreateSPAN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSPAN_MVector(builder, data):
-    GCTDistanceFieldCreateSPAN_MVector(builder, data)
+    return GCTDistanceFieldCreateSPAN_MVector(builder, data)
 
 def GCTDistanceFieldAddDISTANCE_SCALE_M(builder, DISTANCE_SCALE_M):
     builder.PrependFloat32Slot(3, DISTANCE_SCALE_M, 0.0)
@@ -252,7 +252,7 @@ def GCTDistanceFieldCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    GCTDistanceFieldCreateDATAVector(builder, data)
+    return GCTDistanceFieldCreateDATAVector(builder, data)
 
 def GCTDistanceFieldAddCHUNK_CID(builder, CHUNK_CID):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CHUNK_CID), 0)

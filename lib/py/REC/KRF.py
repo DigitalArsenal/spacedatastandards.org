@@ -163,7 +163,7 @@ def KRFCreatePUBLIC_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreatePUBLIC_KEYVector(builder, data):
-    KRFCreatePUBLIC_KEYVector(builder, data)
+    return KRFCreatePUBLIC_KEYVector(builder, data)
 
 def KRFAddVERSION(builder, VERSION):
     builder.PrependUint32Slot(5, VERSION, 0)

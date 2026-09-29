@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Beam Contour
-public struct BMC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BMC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

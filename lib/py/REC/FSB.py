@@ -229,7 +229,7 @@ def FSBCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    FSBCreateDATAVector(builder, data)
+    return FSBCreateDATAVector(builder, data)
 
 def FSBAddSHA256(builder, SHA256):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SHA256), 0)
@@ -251,7 +251,7 @@ def FSBCreateSHA256Vector(builder, data):
     return builder.EndVector()
 
 def CreateSHA256Vector(builder, data):
-    FSBCreateSHA256Vector(builder, data)
+    return FSBCreateSHA256Vector(builder, data)
 
 def FSBEnd(builder):
     return builder.EndObject()

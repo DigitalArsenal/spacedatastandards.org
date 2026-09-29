@@ -61,6 +61,26 @@ class Record : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        // Field-encryption format 3 walk program of Record (see FlatbuffersEncryption).
+        private val FLATBUFFERS_ENCRYPTION_PROGRAM = intArrayOf(
+            2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1
+        )
+        /**
+         * Encrypts, in place, the (encrypted) fields of the Record buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun encryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
+        /**
+         * Decrypts, in place, the (encrypted) fields of the Record buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
         fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, standardOffset: Int) : Int {
             builder.startTable(3)
             addStandard(builder, standardOffset)

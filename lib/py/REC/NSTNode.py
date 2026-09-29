@@ -342,7 +342,7 @@ def NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIFORMAT_ADDRESSVector(builder, data):
-    NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data)
+    return NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data)
 
 def NSTNodeAddLAST_SEEN(builder, LAST_SEEN):
     builder.PrependInt64Slot(7, LAST_SEEN, 0)
@@ -450,7 +450,7 @@ def NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONNECTED_PEER_IDSVector(builder, data):
-    NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data)
+    return NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data)
 
 def NSTNodeAddSIGNING_PUBLIC_KEY(builder, SIGNING_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNING_PUBLIC_KEY), 0)

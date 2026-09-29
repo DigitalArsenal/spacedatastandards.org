@@ -224,7 +224,7 @@ def PPECreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    PPECreateCOMMENTVector(builder, data)
+    return PPECreateCOMMENTVector(builder, data)
 
 def PPEAddOBJECT(builder, OBJECT):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
@@ -284,7 +284,7 @@ def PPECreatePOSITION_RECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOSITION_RECORDSVector(builder, data):
-    PPECreatePOSITION_RECORDSVector(builder, data)
+    return PPECreatePOSITION_RECORDSVector(builder, data)
 
 def PPEAddORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ORBITAL_ELEMENT_RECORDS), 0)
@@ -302,7 +302,7 @@ def PPECreateORBITAL_ELEMENT_RECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateORBITAL_ELEMENT_RECORDSVector(builder, data):
-    PPECreateORBITAL_ELEMENT_RECORDSVector(builder, data)
+    return PPECreateORBITAL_ELEMENT_RECORDSVector(builder, data)
 
 def PPEAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_SOURCE), 0)

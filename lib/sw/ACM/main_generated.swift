@@ -50,7 +50,7 @@ public enum maneuverableFlag: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Attitude State Data
-public struct attitudeState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct attitudeState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -246,7 +246,7 @@ public struct attitudeState: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Attitude Physical Characteristics
-public struct attPhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct attPhysicalProperties: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -376,7 +376,7 @@ public struct attPhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Attitude Covariance
-public struct attCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct attCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -437,7 +437,7 @@ public struct attCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Attitude Maneuver
-public struct attManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct attManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -511,7 +511,7 @@ public struct attManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Attitude Comprehensive Message
-public struct ACM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ACM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

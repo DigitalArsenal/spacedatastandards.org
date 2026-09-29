@@ -473,7 +473,7 @@ def OODCreateMISSION_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMISSION_TYPESVector(builder, data):
-    OODCreateMISSION_TYPESVector(builder, data)
+    return OODCreateMISSION_TYPESVector(builder, data)
 
 def OODAddBUS_TYPE(builder, BUS_TYPE):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_TYPE), 0)
@@ -611,7 +611,7 @@ def OODCreateDEP_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEP_NAMESVector(builder, data):
-    OODCreateDEP_NAMESVector(builder, data)
+    return OODCreateDEP_NAMESVector(builder, data)
 
 def OODAddDEP_EST_MASSES(builder, DEP_EST_MASSES):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DEP_EST_MASSES), 0)
@@ -629,7 +629,7 @@ def OODCreateDEP_EST_MASSESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEP_EST_MASSESVector(builder, data):
-    OODCreateDEP_EST_MASSESVector(builder, data)
+    return OODCreateDEP_EST_MASSESVector(builder, data)
 
 def OODAddDEP_MASS_UNCS(builder, DEP_MASS_UNCS):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(DEP_MASS_UNCS), 0)
@@ -647,7 +647,7 @@ def OODCreateDEP_MASS_UNCSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEP_MASS_UNCSVector(builder, data):
-    OODCreateDEP_MASS_UNCSVector(builder, data)
+    return OODCreateDEP_MASS_UNCSVector(builder, data)
 
 def OODAddLAST_OB_SOURCE(builder, LAST_OB_SOURCE):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_SOURCE), 0)

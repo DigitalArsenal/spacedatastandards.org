@@ -9,27 +9,47 @@ np = import_numpy()
 
 # Key Material Frame
 class KMF(object):
-    __slots__ = ['_tab', '_encryption_ctx']
+    __slots__ = ['_tab']
 
     @classmethod
-    def GetRootAs(cls, buf, offset=0, encryption_ctx=None):
+    def GetRootAs(cls, buf, offset=0):
         n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
         x = KMF()
-        x.Init(buf, n + offset, encryption_ctx)
+        x.Init(buf, n + offset)
         return x
 
     @classmethod
-    def GetRootAsKMF(cls, buf, offset=0, encryption_ctx=None):
+    def GetRootAsKMF(cls, buf, offset=0):
         """This method is deprecated. Please switch to GetRootAs."""
-        return cls.GetRootAs(buf, offset, encryption_ctx)
+        return cls.GetRootAs(buf, offset)
     @classmethod
     def KMFBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
         return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x46", size_prefixed=size_prefixed)
 
     # KMF
-    def Init(self, buf, pos, encryption_ctx=None):
+    def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
-        self._encryption_ctx = encryption_ctx
+
+    # Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
+    _FLATBUFFERS_ENCRYPTION_PROGRAM = (
+        1, 2, 1, 2, 12, 1
+    )
+
+    @classmethod
+    def EncryptBuffer(cls, buf, key, record_index=0):
+        """Returns a copy of a KMF buffer with its (encrypted) fields
+        encrypted with field-encryption format 3 (key: 32 bytes;
+        record_index: unique per buffer under the key)."""
+        return FlatbuffersEncryption.crypt_buffer(
+            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
+
+    @classmethod
+    def DecryptBuffer(cls, buf, key, record_index=0):
+        """Returns a copy of a KMF buffer with its (encrypted) fields
+        decrypted with field-encryption format 3 (key: 32 bytes;
+        record_index: unique per buffer under the key)."""
+        return FlatbuffersEncryption.crypt_buffer(
+            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
 
     # Logical key identifier used across publication and grant records.
     # KMF
@@ -159,7 +179,7 @@ def KMFCreateKEY_BYTESVector(builder, data):
     return builder.EndVector()
 
 def CreateKEY_BYTESVector(builder, data):
-    KMFCreateKEY_BYTESVector(builder, data)
+    return KMFCreateKEY_BYTESVector(builder, data)
 
 def KMFAddVERSION(builder, VERSION):
     builder.PrependUint32Slot(5, VERSION, 0)

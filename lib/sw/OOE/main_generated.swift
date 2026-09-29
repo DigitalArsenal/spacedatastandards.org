@@ -44,7 +44,7 @@ public enum eventResult: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  On-Orbit Event
-public struct OOE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OOE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

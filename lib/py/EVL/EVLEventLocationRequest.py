@@ -286,7 +286,7 @@ def EVLEventLocationRequestCreateREPORT_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREPORT_PARAMETERSVector(builder, data):
-    EVLEventLocationRequestCreateREPORT_PARAMETERSVector(builder, data)
+    return EVLEventLocationRequestCreateREPORT_PARAMETERSVector(builder, data)
 
 def EVLEventLocationRequestAddECLIPSE_CONFIGURATION(builder, ECLIPSE_CONFIGURATION):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ECLIPSE_CONFIGURATION), 0)

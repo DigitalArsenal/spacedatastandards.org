@@ -48,7 +48,7 @@ public enum KDF: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Encryption Header containing all parameters needed for decryption
-public struct ENC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ENC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

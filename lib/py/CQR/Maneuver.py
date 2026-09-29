@@ -253,7 +253,7 @@ def ManeuverCreateMAN_UNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_UNITSVector(builder, data):
-    ManeuverCreateMAN_UNITSVector(builder, data)
+    return ManeuverCreateMAN_UNITSVector(builder, data)
 
 def ManeuverAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
@@ -271,7 +271,7 @@ def ManeuverCreateDATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATAVector(builder, data):
-    ManeuverCreateDATAVector(builder, data)
+    return ManeuverCreateDATAVector(builder, data)
 
 def ManeuverAddMAN_COMMENT(builder, MAN_COMMENT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_COMMENT), 0)
@@ -289,7 +289,7 @@ def ManeuverCreateMAN_COMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_COMMENTVector(builder, data):
-    ManeuverCreateMAN_COMMENTVector(builder, data)
+    return ManeuverCreateMAN_COMMENTVector(builder, data)
 
 def ManeuverEnd(builder):
     return builder.EndObject()

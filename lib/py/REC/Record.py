@@ -4,6 +4,7 @@
 
 import flatbuffers
 from flatbuffers.compat import import_numpy
+from .FlatbuffersEncryption import FlatbuffersEncryption
 np = import_numpy()
 
 # Individual record wrapper for any standard type
@@ -28,6 +29,27 @@ class Record(object):
     # Record
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Field-encryption format 3 walk program of Record (see FlatbuffersEncryption).
+    _FLATBUFFERS_ENCRYPTION_PROGRAM = (
+        2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1
+    )
+
+    @classmethod
+    def EncryptBuffer(cls, buf, key, record_index=0):
+        """Returns a copy of a Record buffer with its (encrypted) fields
+        encrypted with field-encryption format 3 (key: 32 bytes;
+        record_index: unique per buffer under the key)."""
+        return FlatbuffersEncryption.crypt_buffer(
+            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
+
+    @classmethod
+    def DecryptBuffer(cls, buf, key, record_index=0):
+        """Returns a copy of a Record buffer with its (encrypted) fields
+        decrypted with field-encryption format 3 (key: 32 bytes;
+        record_index: unique per buffer under the key)."""
+        return FlatbuffersEncryption.crypt_buffer(
+            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
 
     # Record
     def value_type(self):

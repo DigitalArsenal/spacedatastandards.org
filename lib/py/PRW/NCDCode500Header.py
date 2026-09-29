@@ -183,7 +183,7 @@ def NCDCode500HeaderCreateHEADER_WORDSVector(builder, data):
     return builder.EndVector()
 
 def CreateHEADER_WORDSVector(builder, data):
-    NCDCode500HeaderCreateHEADER_WORDSVector(builder, data)
+    return NCDCode500HeaderCreateHEADER_WORDSVector(builder, data)
 
 def NCDCode500HeaderEnd(builder):
     return builder.EndObject()

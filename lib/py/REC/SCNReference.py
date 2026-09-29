@@ -438,7 +438,7 @@ def SCNReferenceCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    SCNReferenceCreateSOURCESVector(builder, data)
+    return SCNReferenceCreateSOURCESVector(builder, data)
 
 def SCNReferenceAddDATA_MODES(builder, DATA_MODES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODES), 0)
@@ -456,7 +456,7 @@ def SCNReferenceCreateDATA_MODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATA_MODESVector(builder, data):
-    SCNReferenceCreateDATA_MODESVector(builder, data)
+    return SCNReferenceCreateDATA_MODESVector(builder, data)
 
 def SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENTS), 0)
@@ -474,7 +474,7 @@ def SCNReferenceCreateMEAN_ELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEAN_ELEMENTSVector(builder, data):
-    SCNReferenceCreateMEAN_ELEMENTSVector(builder, data)
+    return SCNReferenceCreateMEAN_ELEMENTSVector(builder, data)
 
 def SCNReferenceAddSTATE_VECTORS(builder, STATE_VECTORS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_VECTORS), 0)
@@ -492,7 +492,7 @@ def SCNReferenceCreateSTATE_VECTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_VECTORSVector(builder, data):
-    SCNReferenceCreateSTATE_VECTORSVector(builder, data)
+    return SCNReferenceCreateSTATE_VECTORSVector(builder, data)
 
 def SCNReferenceAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
@@ -510,7 +510,7 @@ def SCNReferenceCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    SCNReferenceCreateMANEUVERSVector(builder, data)
+    return SCNReferenceCreateMANEUVERSVector(builder, data)
 
 def SCNReferenceAddSITE(builder, SITE):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SITE), 0)
@@ -570,7 +570,7 @@ def SCNReferenceCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    SCNReferenceCreatePOINTSVector(builder, data)
+    return SCNReferenceCreatePOINTSVector(builder, data)
 
 def SCNReferenceAddVIEW_CONE(builder, VIEW_CONE):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_CONE), 0)

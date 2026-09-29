@@ -420,7 +420,7 @@ def SHCCreateDEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreateDEGREESVector(builder, data):
-    SHCCreateDEGREESVector(builder, data)
+    return SHCCreateDEGREESVector(builder, data)
 
 def SHCAddORDERS(builder, ORDERS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ORDERS), 0)
@@ -442,7 +442,7 @@ def SHCCreateORDERSVector(builder, data):
     return builder.EndVector()
 
 def CreateORDERSVector(builder, data):
-    SHCCreateORDERSVector(builder, data)
+    return SHCCreateORDERSVector(builder, data)
 
 def SHCAddC(builder, C):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(C), 0)
@@ -464,7 +464,7 @@ def SHCCreateCVector(builder, data):
     return builder.EndVector()
 
 def CreateCVector(builder, data):
-    SHCCreateCVector(builder, data)
+    return SHCCreateCVector(builder, data)
 
 def SHCAddS(builder, S):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(S), 0)
@@ -486,7 +486,7 @@ def SHCCreateSVector(builder, data):
     return builder.EndVector()
 
 def CreateSVector(builder, data):
-    SHCCreateSVector(builder, data)
+    return SHCCreateSVector(builder, data)
 
 def SHCAddC_SIGMA(builder, C_SIGMA):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(C_SIGMA), 0)
@@ -508,7 +508,7 @@ def SHCCreateC_SIGMAVector(builder, data):
     return builder.EndVector()
 
 def CreateC_SIGMAVector(builder, data):
-    SHCCreateC_SIGMAVector(builder, data)
+    return SHCCreateC_SIGMAVector(builder, data)
 
 def SHCAddS_SIGMA(builder, S_SIGMA):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(S_SIGMA), 0)
@@ -530,7 +530,7 @@ def SHCCreateS_SIGMAVector(builder, data):
     return builder.EndVector()
 
 def CreateS_SIGMAVector(builder, data):
-    SHCCreateS_SIGMAVector(builder, data)
+    return SHCCreateS_SIGMAVector(builder, data)
 
 def SHCAddVARIABLE_TERMS(builder, VARIABLE_TERMS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_TERMS), 0)
@@ -548,7 +548,7 @@ def SHCCreateVARIABLE_TERMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIABLE_TERMSVector(builder, data):
-    SHCCreateVARIABLE_TERMSVector(builder, data)
+    return SHCCreateVARIABLE_TERMSVector(builder, data)
 
 def SHCAddSOURCE(builder, SOURCE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)

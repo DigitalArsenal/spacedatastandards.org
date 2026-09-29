@@ -139,7 +139,7 @@ def ACWResultCreateWINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWINDOWSVector(builder, data):
-    ACWResultCreateWINDOWSVector(builder, data)
+    return ACWResultCreateWINDOWSVector(builder, data)
 
 def ACWResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)
@@ -169,7 +169,7 @@ def ACWResultCreateCONSTRAINT_LABELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTRAINT_LABELSVector(builder, data):
-    ACWResultCreateCONSTRAINT_LABELSVector(builder, data)
+    return ACWResultCreateCONSTRAINT_LABELSVector(builder, data)
 
 def ACWResultEnd(builder):
     return builder.EndObject()

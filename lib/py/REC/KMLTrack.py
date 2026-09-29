@@ -178,7 +178,7 @@ def KMLTrackCreateWHENVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWHENVector(builder, data):
-    KMLTrackCreateWHENVector(builder, data)
+    return KMLTrackCreateWHENVector(builder, data)
 
 def KMLTrackAddCOORDS(builder, COORDS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COORDS), 0)
@@ -196,7 +196,7 @@ def KMLTrackCreateCOORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOORDSVector(builder, data):
-    KMLTrackCreateCOORDSVector(builder, data)
+    return KMLTrackCreateCOORDSVector(builder, data)
 
 def KMLTrackAddANGLES(builder, ANGLES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLES), 0)
@@ -214,7 +214,7 @@ def KMLTrackCreateANGLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANGLESVector(builder, data):
-    KMLTrackCreateANGLESVector(builder, data)
+    return KMLTrackCreateANGLESVector(builder, data)
 
 def KMLTrackAddMODEL(builder, MODEL):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL), 0)

@@ -157,7 +157,7 @@ def PRWBatchResponseCreateFLAGSVector(builder, data):
     return builder.EndVector()
 
 def CreateFLAGSVector(builder, data):
-    PRWBatchResponseCreateFLAGSVector(builder, data)
+    return PRWBatchResponseCreateFLAGSVector(builder, data)
 
 def PRWBatchResponseAddERROR_CODE(builder, ERROR_CODE):
     builder.PrependInt32Slot(5, ERROR_CODE, 0)

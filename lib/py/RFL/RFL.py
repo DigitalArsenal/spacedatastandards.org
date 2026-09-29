@@ -1560,7 +1560,7 @@ def RFLCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    RFLCreateLINKSVector(builder, data)
+    return RFLCreateLINKSVector(builder, data)
 
 def RFLAddSAMPLE_COUNT(builder, SAMPLE_COUNT):
     builder.PrependUint32Slot(4, SAMPLE_COUNT, 0)
@@ -1588,7 +1588,7 @@ def RFLCreateSAMPLE_LINK_INDEXESVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_LINK_INDEXESVector(builder, data):
-    RFLCreateSAMPLE_LINK_INDEXESVector(builder, data)
+    return RFLCreateSAMPLE_LINK_INDEXESVector(builder, data)
 
 def RFLAddSAMPLE_EPOCHS(builder, SAMPLE_EPOCHS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_EPOCHS), 0)
@@ -1610,7 +1610,7 @@ def RFLCreateSAMPLE_EPOCHSVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_EPOCHSVector(builder, data):
-    RFLCreateSAMPLE_EPOCHSVector(builder, data)
+    return RFLCreateSAMPLE_EPOCHSVector(builder, data)
 
 def RFLAddTIME_SYSTEM(builder, TIME_SYSTEM):
     builder.PrependInt8Slot(7, TIME_SYSTEM, 11)
@@ -1638,7 +1638,7 @@ def RFLCreateACCESS_STATESVector(builder, data):
     return builder.EndVector()
 
 def CreateACCESS_STATESVector(builder, data):
-    RFLCreateACCESS_STATESVector(builder, data)
+    return RFLCreateACCESS_STATESVector(builder, data)
 
 def RFLAddRANGE_M(builder, RANGE_M):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_M), 0)
@@ -1660,7 +1660,7 @@ def RFLCreateRANGE_MVector(builder, data):
     return builder.EndVector()
 
 def CreateRANGE_MVector(builder, data):
-    RFLCreateRANGE_MVector(builder, data)
+    return RFLCreateRANGE_MVector(builder, data)
 
 def RFLAddRANGE_RATE_M_S(builder, RANGE_RATE_M_S):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_RATE_M_S), 0)
@@ -1682,7 +1682,7 @@ def RFLCreateRANGE_RATE_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateRANGE_RATE_M_SVector(builder, data):
-    RFLCreateRANGE_RATE_M_SVector(builder, data)
+    return RFLCreateRANGE_RATE_M_SVector(builder, data)
 
 def RFLAddAZIMUTH_DEG(builder, AZIMUTH_DEG):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(AZIMUTH_DEG), 0)
@@ -1704,7 +1704,7 @@ def RFLCreateAZIMUTH_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateAZIMUTH_DEGVector(builder, data):
-    RFLCreateAZIMUTH_DEGVector(builder, data)
+    return RFLCreateAZIMUTH_DEGVector(builder, data)
 
 def RFLAddELEVATION_DEG(builder, ELEVATION_DEG):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ELEVATION_DEG), 0)
@@ -1726,7 +1726,7 @@ def RFLCreateELEVATION_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateELEVATION_DEGVector(builder, data):
-    RFLCreateELEVATION_DEGVector(builder, data)
+    return RFLCreateELEVATION_DEGVector(builder, data)
 
 def RFLAddTRANSMIT_AZIMUTH_DEG(builder, TRANSMIT_AZIMUTH_DEG):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_AZIMUTH_DEG), 0)
@@ -1748,7 +1748,7 @@ def RFLCreateTRANSMIT_AZIMUTH_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateTRANSMIT_AZIMUTH_DEGVector(builder, data):
-    RFLCreateTRANSMIT_AZIMUTH_DEGVector(builder, data)
+    return RFLCreateTRANSMIT_AZIMUTH_DEGVector(builder, data)
 
 def RFLAddTRANSMIT_ELEVATION_DEG(builder, TRANSMIT_ELEVATION_DEG):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_ELEVATION_DEG), 0)
@@ -1770,7 +1770,7 @@ def RFLCreateTRANSMIT_ELEVATION_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateTRANSMIT_ELEVATION_DEGVector(builder, data):
-    RFLCreateTRANSMIT_ELEVATION_DEGVector(builder, data)
+    return RFLCreateTRANSMIT_ELEVATION_DEGVector(builder, data)
 
 def RFLAddDOPPLER_SHIFT_HZ(builder, DOPPLER_SHIFT_HZ):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DOPPLER_SHIFT_HZ), 0)
@@ -1792,7 +1792,7 @@ def RFLCreateDOPPLER_SHIFT_HZVector(builder, data):
     return builder.EndVector()
 
 def CreateDOPPLER_SHIFT_HZVector(builder, data):
-    RFLCreateDOPPLER_SHIFT_HZVector(builder, data)
+    return RFLCreateDOPPLER_SHIFT_HZVector(builder, data)
 
 def RFLAddDOPPLER_RATE_HZ_S(builder, DOPPLER_RATE_HZ_S):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(DOPPLER_RATE_HZ_S), 0)
@@ -1814,7 +1814,7 @@ def RFLCreateDOPPLER_RATE_HZ_SVector(builder, data):
     return builder.EndVector()
 
 def CreateDOPPLER_RATE_HZ_SVector(builder, data):
-    RFLCreateDOPPLER_RATE_HZ_SVector(builder, data)
+    return RFLCreateDOPPLER_RATE_HZ_SVector(builder, data)
 
 def RFLAddEIRP_DBW(builder, EIRP_DBW):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(EIRP_DBW), 0)
@@ -1836,7 +1836,7 @@ def RFLCreateEIRP_DBWVector(builder, data):
     return builder.EndVector()
 
 def CreateEIRP_DBWVector(builder, data):
-    RFLCreateEIRP_DBWVector(builder, data)
+    return RFLCreateEIRP_DBWVector(builder, data)
 
 def RFLAddTRANSMIT_ANTENNA_GAIN_DBI(builder, TRANSMIT_ANTENNA_GAIN_DBI):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_ANTENNA_GAIN_DBI), 0)
@@ -1858,7 +1858,7 @@ def RFLCreateTRANSMIT_ANTENNA_GAIN_DBIVector(builder, data):
     return builder.EndVector()
 
 def CreateTRANSMIT_ANTENNA_GAIN_DBIVector(builder, data):
-    RFLCreateTRANSMIT_ANTENNA_GAIN_DBIVector(builder, data)
+    return RFLCreateTRANSMIT_ANTENNA_GAIN_DBIVector(builder, data)
 
 def RFLAddRECEIVE_ANTENNA_GAIN_DBI(builder, RECEIVE_ANTENNA_GAIN_DBI):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_ANTENNA_GAIN_DBI), 0)
@@ -1880,7 +1880,7 @@ def RFLCreateRECEIVE_ANTENNA_GAIN_DBIVector(builder, data):
     return builder.EndVector()
 
 def CreateRECEIVE_ANTENNA_GAIN_DBIVector(builder, data):
-    RFLCreateRECEIVE_ANTENNA_GAIN_DBIVector(builder, data)
+    return RFLCreateRECEIVE_ANTENNA_GAIN_DBIVector(builder, data)
 
 def RFLAddFREE_SPACE_PATH_LOSS_DB(builder, FREE_SPACE_PATH_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(FREE_SPACE_PATH_LOSS_DB), 0)
@@ -1902,7 +1902,7 @@ def RFLCreateFREE_SPACE_PATH_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateFREE_SPACE_PATH_LOSS_DBVector(builder, data):
-    RFLCreateFREE_SPACE_PATH_LOSS_DBVector(builder, data)
+    return RFLCreateFREE_SPACE_PATH_LOSS_DBVector(builder, data)
 
 def RFLAddGASEOUS_ABSORPTION_LOSS_DB(builder, GASEOUS_ABSORPTION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(GASEOUS_ABSORPTION_LOSS_DB), 0)
@@ -1924,7 +1924,7 @@ def RFLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data):
-    RFLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data)
+    return RFLCreateGASEOUS_ABSORPTION_LOSS_DBVector(builder, data)
 
 def RFLAddRAIN_LOSS_DB(builder, RAIN_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(RAIN_LOSS_DB), 0)
@@ -1946,7 +1946,7 @@ def RFLCreateRAIN_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateRAIN_LOSS_DBVector(builder, data):
-    RFLCreateRAIN_LOSS_DBVector(builder, data)
+    return RFLCreateRAIN_LOSS_DBVector(builder, data)
 
 def RFLAddCLOUD_FOG_LOSS_DB(builder, CLOUD_FOG_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CLOUD_FOG_LOSS_DB), 0)
@@ -1968,7 +1968,7 @@ def RFLCreateCLOUD_FOG_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateCLOUD_FOG_LOSS_DBVector(builder, data):
-    RFLCreateCLOUD_FOG_LOSS_DBVector(builder, data)
+    return RFLCreateCLOUD_FOG_LOSS_DBVector(builder, data)
 
 def RFLAddSCINTILLATION_LOSS_DB(builder, SCINTILLATION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(SCINTILLATION_LOSS_DB), 0)
@@ -1990,7 +1990,7 @@ def RFLCreateSCINTILLATION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateSCINTILLATION_LOSS_DBVector(builder, data):
-    RFLCreateSCINTILLATION_LOSS_DBVector(builder, data)
+    return RFLCreateSCINTILLATION_LOSS_DBVector(builder, data)
 
 def RFLAddTERRAIN_DIFFRACTION_LOSS_DB(builder, TERRAIN_DIFFRACTION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(TERRAIN_DIFFRACTION_LOSS_DB), 0)
@@ -2012,7 +2012,7 @@ def RFLCreateTERRAIN_DIFFRACTION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateTERRAIN_DIFFRACTION_LOSS_DBVector(builder, data):
-    RFLCreateTERRAIN_DIFFRACTION_LOSS_DBVector(builder, data)
+    return RFLCreateTERRAIN_DIFFRACTION_LOSS_DBVector(builder, data)
 
 def RFLAddOBSTRUCTION_LOSS_DB(builder, OBSTRUCTION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OBSTRUCTION_LOSS_DB), 0)
@@ -2034,7 +2034,7 @@ def RFLCreateOBSTRUCTION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateOBSTRUCTION_LOSS_DBVector(builder, data):
-    RFLCreateOBSTRUCTION_LOSS_DBVector(builder, data)
+    return RFLCreateOBSTRUCTION_LOSS_DBVector(builder, data)
 
 def RFLAddPOLARIZATION_LOSS_DB(builder, POLARIZATION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION_LOSS_DB), 0)
@@ -2056,7 +2056,7 @@ def RFLCreatePOLARIZATION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreatePOLARIZATION_LOSS_DBVector(builder, data):
-    RFLCreatePOLARIZATION_LOSS_DBVector(builder, data)
+    return RFLCreatePOLARIZATION_LOSS_DBVector(builder, data)
 
 def RFLAddPOINTING_LOSS_DB(builder, POINTING_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(POINTING_LOSS_DB), 0)
@@ -2078,7 +2078,7 @@ def RFLCreatePOINTING_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreatePOINTING_LOSS_DBVector(builder, data):
-    RFLCreatePOINTING_LOSS_DBVector(builder, data)
+    return RFLCreatePOINTING_LOSS_DBVector(builder, data)
 
 def RFLAddIMPLEMENTATION_LOSS_DB(builder, IMPLEMENTATION_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(IMPLEMENTATION_LOSS_DB), 0)
@@ -2100,7 +2100,7 @@ def RFLCreateIMPLEMENTATION_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateIMPLEMENTATION_LOSS_DBVector(builder, data):
-    RFLCreateIMPLEMENTATION_LOSS_DBVector(builder, data)
+    return RFLCreateIMPLEMENTATION_LOSS_DBVector(builder, data)
 
 def RFLAddTOTAL_PATH_LOSS_DB(builder, TOTAL_PATH_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(TOTAL_PATH_LOSS_DB), 0)
@@ -2122,7 +2122,7 @@ def RFLCreateTOTAL_PATH_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateTOTAL_PATH_LOSS_DBVector(builder, data):
-    RFLCreateTOTAL_PATH_LOSS_DBVector(builder, data)
+    return RFLCreateTOTAL_PATH_LOSS_DBVector(builder, data)
 
 def RFLAddRECEIVED_POWER_DBW(builder, RECEIVED_POWER_DBW):
     builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVED_POWER_DBW), 0)
@@ -2144,7 +2144,7 @@ def RFLCreateRECEIVED_POWER_DBWVector(builder, data):
     return builder.EndVector()
 
 def CreateRECEIVED_POWER_DBWVector(builder, data):
-    RFLCreateRECEIVED_POWER_DBWVector(builder, data)
+    return RFLCreateRECEIVED_POWER_DBWVector(builder, data)
 
 def RFLAddSYSTEM_NOISE_TEMPERATURE_K(builder, SYSTEM_NOISE_TEMPERATURE_K):
     builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(SYSTEM_NOISE_TEMPERATURE_K), 0)
@@ -2166,7 +2166,7 @@ def RFLCreateSYSTEM_NOISE_TEMPERATURE_KVector(builder, data):
     return builder.EndVector()
 
 def CreateSYSTEM_NOISE_TEMPERATURE_KVector(builder, data):
-    RFLCreateSYSTEM_NOISE_TEMPERATURE_KVector(builder, data)
+    return RFLCreateSYSTEM_NOISE_TEMPERATURE_KVector(builder, data)
 
 def RFLAddGAIN_TO_NOISE_TEMPERATURE_DB_PER_K(builder, GAIN_TO_NOISE_TEMPERATURE_DB_PER_K):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(GAIN_TO_NOISE_TEMPERATURE_DB_PER_K), 0)
@@ -2188,7 +2188,7 @@ def RFLCreateGAIN_TO_NOISE_TEMPERATURE_DB_PER_KVector(builder, data):
     return builder.EndVector()
 
 def CreateGAIN_TO_NOISE_TEMPERATURE_DB_PER_KVector(builder, data):
-    RFLCreateGAIN_TO_NOISE_TEMPERATURE_DB_PER_KVector(builder, data)
+    return RFLCreateGAIN_TO_NOISE_TEMPERATURE_DB_PER_KVector(builder, data)
 
 def RFLAddCARRIER_TO_NOISE_DENSITY_DBHZ(builder, CARRIER_TO_NOISE_DENSITY_DBHZ):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(CARRIER_TO_NOISE_DENSITY_DBHZ), 0)
@@ -2210,7 +2210,7 @@ def RFLCreateCARRIER_TO_NOISE_DENSITY_DBHZVector(builder, data):
     return builder.EndVector()
 
 def CreateCARRIER_TO_NOISE_DENSITY_DBHZVector(builder, data):
-    RFLCreateCARRIER_TO_NOISE_DENSITY_DBHZVector(builder, data)
+    return RFLCreateCARRIER_TO_NOISE_DENSITY_DBHZVector(builder, data)
 
 def RFLAddCARRIER_TO_NOISE_DB(builder, CARRIER_TO_NOISE_DB):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(CARRIER_TO_NOISE_DB), 0)
@@ -2232,7 +2232,7 @@ def RFLCreateCARRIER_TO_NOISE_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateCARRIER_TO_NOISE_DBVector(builder, data):
-    RFLCreateCARRIER_TO_NOISE_DBVector(builder, data)
+    return RFLCreateCARRIER_TO_NOISE_DBVector(builder, data)
 
 def RFLAddENERGY_PER_BIT_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_BIT_TO_NOISE_DENSITY_DB):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(ENERGY_PER_BIT_TO_NOISE_DENSITY_DB), 0)
@@ -2254,7 +2254,7 @@ def RFLCreateENERGY_PER_BIT_TO_NOISE_DENSITY_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateENERGY_PER_BIT_TO_NOISE_DENSITY_DBVector(builder, data):
-    RFLCreateENERGY_PER_BIT_TO_NOISE_DENSITY_DBVector(builder, data)
+    return RFLCreateENERGY_PER_BIT_TO_NOISE_DENSITY_DBVector(builder, data)
 
 def RFLAddBIT_ERROR_RATE(builder, BIT_ERROR_RATE):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(BIT_ERROR_RATE), 0)
@@ -2276,7 +2276,7 @@ def RFLCreateBIT_ERROR_RATEVector(builder, data):
     return builder.EndVector()
 
 def CreateBIT_ERROR_RATEVector(builder, data):
-    RFLCreateBIT_ERROR_RATEVector(builder, data)
+    return RFLCreateBIT_ERROR_RATEVector(builder, data)
 
 def RFLAddLINK_MARGIN_DB(builder, LINK_MARGIN_DB):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_MARGIN_DB), 0)
@@ -2298,7 +2298,7 @@ def RFLCreateLINK_MARGIN_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateLINK_MARGIN_DBVector(builder, data):
-    RFLCreateLINK_MARGIN_DBVector(builder, data)
+    return RFLCreateLINK_MARGIN_DBVector(builder, data)
 
 def RFLAddCHANNEL_CAPACITY_BPS(builder, CHANNEL_CAPACITY_BPS):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(CHANNEL_CAPACITY_BPS), 0)
@@ -2320,7 +2320,7 @@ def RFLCreateCHANNEL_CAPACITY_BPSVector(builder, data):
     return builder.EndVector()
 
 def CreateCHANNEL_CAPACITY_BPSVector(builder, data):
-    RFLCreateCHANNEL_CAPACITY_BPSVector(builder, data)
+    return RFLCreateCHANNEL_CAPACITY_BPSVector(builder, data)
 
 def RFLAddINTERFERENCE_POWER_DBW(builder, INTERFERENCE_POWER_DBW):
     builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(INTERFERENCE_POWER_DBW), 0)
@@ -2342,7 +2342,7 @@ def RFLCreateINTERFERENCE_POWER_DBWVector(builder, data):
     return builder.EndVector()
 
 def CreateINTERFERENCE_POWER_DBWVector(builder, data):
-    RFLCreateINTERFERENCE_POWER_DBWVector(builder, data)
+    return RFLCreateINTERFERENCE_POWER_DBWVector(builder, data)
 
 def RFLAddCARRIER_TO_NOISE_PLUS_INTERFERENCE_DB(builder, CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB):
     builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB), 0)
@@ -2364,7 +2364,7 @@ def RFLCreateCARRIER_TO_NOISE_PLUS_INTERFERENCE_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateCARRIER_TO_NOISE_PLUS_INTERFERENCE_DBVector(builder, data):
-    RFLCreateCARRIER_TO_NOISE_PLUS_INTERFERENCE_DBVector(builder, data)
+    return RFLCreateCARRIER_TO_NOISE_PLUS_INTERFERENCE_DBVector(builder, data)
 
 def RFLAddSIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB(builder, SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB), 0)
@@ -2386,7 +2386,7 @@ def RFLCreateSIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBVector(builder, data):
-    RFLCreateSIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBVector(builder, data)
+    return RFLCreateSIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBVector(builder, data)
 
 def RFLAddINTERFERENCE_CONTRIBUTIONS(builder, INTERFERENCE_CONTRIBUTIONS):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(INTERFERENCE_CONTRIBUTIONS), 0)
@@ -2404,7 +2404,7 @@ def RFLCreateINTERFERENCE_CONTRIBUTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTERFERENCE_CONTRIBUTIONSVector(builder, data):
-    RFLCreateINTERFERENCE_CONTRIBUTIONSVector(builder, data)
+    return RFLCreateINTERFERENCE_CONTRIBUTIONSVector(builder, data)
 
 def RFLAddOBSTRUCTIONS(builder, OBSTRUCTIONS):
     builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(OBSTRUCTIONS), 0)
@@ -2422,7 +2422,7 @@ def RFLCreateOBSTRUCTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSTRUCTIONSVector(builder, data):
-    RFLCreateOBSTRUCTIONSVector(builder, data)
+    return RFLCreateOBSTRUCTIONSVector(builder, data)
 
 def RFLAddLIMITING_CONSTRAINTS(builder, LIMITING_CONSTRAINTS):
     builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(LIMITING_CONSTRAINTS), 0)
@@ -2444,7 +2444,7 @@ def RFLCreateLIMITING_CONSTRAINTSVector(builder, data):
     return builder.EndVector()
 
 def CreateLIMITING_CONSTRAINTSVector(builder, data):
-    RFLCreateLIMITING_CONSTRAINTSVector(builder, data)
+    return RFLCreateLIMITING_CONSTRAINTSVector(builder, data)
 
 def RFLAddLIMITING_CONSTRAINT_NOTE(builder, LIMITING_CONSTRAINT_NOTE):
     builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(LIMITING_CONSTRAINT_NOTE), 0)
@@ -2490,7 +2490,7 @@ def RFLCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RFLCreateSIGNATUREVector(builder, data)
+    return RFLCreateSIGNATUREVector(builder, data)
 
 def RFLAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -2512,7 +2512,7 @@ def RFLCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    RFLCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return RFLCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def RFLAddSELECTED_MODCOD_INDEX(builder, SELECTED_MODCOD_INDEX):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTED_MODCOD_INDEX), 0)
@@ -2534,7 +2534,7 @@ def RFLCreateSELECTED_MODCOD_INDEXVector(builder, data):
     return builder.EndVector()
 
 def CreateSELECTED_MODCOD_INDEXVector(builder, data):
-    RFLCreateSELECTED_MODCOD_INDEXVector(builder, data)
+    return RFLCreateSELECTED_MODCOD_INDEXVector(builder, data)
 
 def RFLAddSELECTED_MODCOD_VALID(builder, SELECTED_MODCOD_VALID):
     builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTED_MODCOD_VALID), 0)
@@ -2556,7 +2556,7 @@ def RFLCreateSELECTED_MODCOD_VALIDVector(builder, data):
     return builder.EndVector()
 
 def CreateSELECTED_MODCOD_VALIDVector(builder, data):
-    RFLCreateSELECTED_MODCOD_VALIDVector(builder, data)
+    return RFLCreateSELECTED_MODCOD_VALIDVector(builder, data)
 
 def RFLAddSPECTRAL_EFFICIENCY_BPS_HZ(builder, SPECTRAL_EFFICIENCY_BPS_HZ):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_EFFICIENCY_BPS_HZ), 0)
@@ -2578,7 +2578,7 @@ def RFLCreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data):
     return builder.EndVector()
 
 def CreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data):
-    RFLCreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data)
+    return RFLCreateSPECTRAL_EFFICIENCY_BPS_HZVector(builder, data)
 
 def RFLAddACHIEVED_DATA_RATE_BPS(builder, ACHIEVED_DATA_RATE_BPS):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(ACHIEVED_DATA_RATE_BPS), 0)
@@ -2600,7 +2600,7 @@ def RFLCreateACHIEVED_DATA_RATE_BPSVector(builder, data):
     return builder.EndVector()
 
 def CreateACHIEVED_DATA_RATE_BPSVector(builder, data):
-    RFLCreateACHIEVED_DATA_RATE_BPSVector(builder, data)
+    return RFLCreateACHIEVED_DATA_RATE_BPSVector(builder, data)
 
 def RFLAddACM_MARGIN_DB(builder, ACM_MARGIN_DB):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(ACM_MARGIN_DB), 0)
@@ -2622,7 +2622,7 @@ def RFLCreateACM_MARGIN_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateACM_MARGIN_DBVector(builder, data):
-    RFLCreateACM_MARGIN_DBVector(builder, data)
+    return RFLCreateACM_MARGIN_DBVector(builder, data)
 
 def RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB), 0)
@@ -2644,7 +2644,7 @@ def RFLCreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data):
-    RFLCreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data)
+    return RFLCreateENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVector(builder, data)
 
 def RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE):
     builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(BLOCK_ERROR_RATE), 0)
@@ -2666,7 +2666,7 @@ def RFLCreateBLOCK_ERROR_RATEVector(builder, data):
     return builder.EndVector()
 
 def CreateBLOCK_ERROR_RATEVector(builder, data):
-    RFLCreateBLOCK_ERROR_RATEVector(builder, data)
+    return RFLCreateBLOCK_ERROR_RATEVector(builder, data)
 
 def RFLEnd(builder):
     return builder.EndObject()

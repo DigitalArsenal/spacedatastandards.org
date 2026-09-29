@@ -154,7 +154,7 @@ def PLDCreateINSTRUMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINSTRUMENTSVector(builder, data):
-    PLDCreateINSTRUMENTSVector(builder, data)
+    return PLDCreateINSTRUMENTSVector(builder, data)
 
 def PLDEnd(builder):
     return builder.EndObject()

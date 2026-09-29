@@ -252,7 +252,7 @@ def SCVPackedRasterBandCreateFLOAT32_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateFLOAT32_VALUESVector(builder, data):
-    SCVPackedRasterBandCreateFLOAT32_VALUESVector(builder, data)
+    return SCVPackedRasterBandCreateFLOAT32_VALUESVector(builder, data)
 
 def SCVPackedRasterBandAddFLOAT64_VALUES(builder, FLOAT64_VALUES):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(FLOAT64_VALUES), 0)
@@ -274,7 +274,7 @@ def SCVPackedRasterBandCreateFLOAT64_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateFLOAT64_VALUESVector(builder, data):
-    SCVPackedRasterBandCreateFLOAT64_VALUESVector(builder, data)
+    return SCVPackedRasterBandCreateFLOAT64_VALUESVector(builder, data)
 
 def SCVPackedRasterBandAddUINT32_VALUES(builder, UINT32_VALUES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(UINT32_VALUES), 0)
@@ -296,7 +296,7 @@ def SCVPackedRasterBandCreateUINT32_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateUINT32_VALUESVector(builder, data):
-    SCVPackedRasterBandCreateUINT32_VALUESVector(builder, data)
+    return SCVPackedRasterBandCreateUINT32_VALUESVector(builder, data)
 
 def SCVPackedRasterBandEnd(builder):
     return builder.EndObject()

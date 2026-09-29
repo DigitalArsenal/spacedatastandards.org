@@ -429,7 +429,7 @@ def TMSCreateMODEL_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODEL_PARAMETERSVector(builder, data):
-    TMSCreateMODEL_PARAMETERSVector(builder, data)
+    return TMSCreateMODEL_PARAMETERSVector(builder, data)
 
 def TMSAddPROPAGATION_VALID_UNTIL(builder, PROPAGATION_VALID_UNTIL):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATION_VALID_UNTIL), 0)
@@ -501,7 +501,7 @@ def TMSCreateIDENTIFIERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateIDENTIFIERSVector(builder, data):
-    TMSCreateIDENTIFIERSVector(builder, data)
+    return TMSCreateIDENTIFIERSVector(builder, data)
 
 def TMSAddSOURCE(builder, SOURCE):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)

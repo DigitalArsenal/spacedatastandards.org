@@ -236,7 +236,7 @@ def GCTVariantCreateLEVELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLEVELSVector(builder, data):
-    GCTVariantCreateLEVELSVector(builder, data)
+    return GCTVariantCreateLEVELSVector(builder, data)
 
 def GCTVariantAddBOUNDS_MIN_M(builder, BOUNDS_MIN_M):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BOUNDS_MIN_M), 0)
@@ -258,7 +258,7 @@ def GCTVariantCreateBOUNDS_MIN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateBOUNDS_MIN_MVector(builder, data):
-    GCTVariantCreateBOUNDS_MIN_MVector(builder, data)
+    return GCTVariantCreateBOUNDS_MIN_MVector(builder, data)
 
 def GCTVariantAddBOUNDS_MAX_M(builder, BOUNDS_MAX_M):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BOUNDS_MAX_M), 0)
@@ -280,7 +280,7 @@ def GCTVariantCreateBOUNDS_MAX_MVector(builder, data):
     return builder.EndVector()
 
 def CreateBOUNDS_MAX_MVector(builder, data):
-    GCTVariantCreateBOUNDS_MAX_MVector(builder, data)
+    return GCTVariantCreateBOUNDS_MAX_MVector(builder, data)
 
 def GCTVariantAddMASS(builder, MASS):
     builder.PrependFloat64Slot(7, MASS, 0.0)

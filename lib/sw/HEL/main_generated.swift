@@ -42,7 +42,7 @@ public enum RotorFlags: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Helicopter Dynamics
-public struct HEL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct HEL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

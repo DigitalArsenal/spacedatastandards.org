@@ -109,7 +109,7 @@ def KMLLineStringCreateCOORDINATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOORDINATESVector(builder, data):
-    KMLLineStringCreateCOORDINATESVector(builder, data)
+    return KMLLineStringCreateCOORDINATESVector(builder, data)
 
 def KMLLineStringAddALTITUDE_MODE(builder, ALTITUDE_MODE):
     builder.PrependInt8Slot(1, ALTITUDE_MODE, 0)

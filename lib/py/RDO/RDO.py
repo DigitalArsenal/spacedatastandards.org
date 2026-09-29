@@ -786,7 +786,7 @@ def RDOCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    RDOCreateTAGSVector(builder, data)
+    return RDOCreateTAGSVector(builder, data)
 
 def RDOEnd(builder):
     return builder.EndObject()

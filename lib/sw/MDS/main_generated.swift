@@ -16,7 +16,7 @@ import FlatBuffers
 ///  i, and the arrival v-infinity of leg i is the INCOMING vector at encounter
 ///  i + 1. Carrying both vectors on the encounter they physically occur at
 ///  removes that off-by-one from every consumer.
-public struct MDSEncounter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MDSEncounter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -164,7 +164,7 @@ public struct MDSEncounter: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  One deep-space maneuver on a transfer leg.
-public struct MDSDeepSpaceManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MDSDeepSpaceManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -243,7 +243,7 @@ public struct MDSDeepSpaceManeuver: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  One candidate trajectory on the front.
-public struct MDSCandidate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MDSCandidate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -354,7 +354,7 @@ public struct MDSCandidate: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 ///  closest existing carrier for a single planned burn is OCM.Maneuver, whose
 ///  payload is untyped DATA:[string] with MAN_UNITS:[string] and which has no
 ///  v-infinity, turn angle, flyby periapsis radius, or C3.
-public struct MDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MDS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -38,7 +38,7 @@ public enum aouCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Orbit Track
-public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OBT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

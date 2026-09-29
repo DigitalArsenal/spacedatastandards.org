@@ -187,7 +187,7 @@ def PRWPropagationSampleCreateBURNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBURNSVector(builder, data):
-    PRWPropagationSampleCreateBURNSVector(builder, data)
+    return PRWPropagationSampleCreateBURNSVector(builder, data)
 
 def PRWPropagationSampleEnd(builder):
     return builder.EndObject()

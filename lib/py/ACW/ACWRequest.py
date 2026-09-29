@@ -288,7 +288,7 @@ def ACWRequestCreateGROUND_STATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUND_STATIONSVector(builder, data):
-    ACWRequestCreateGROUND_STATIONSVector(builder, data)
+    return ACWRequestCreateGROUND_STATIONSVector(builder, data)
 
 def ACWRequestAddSTATES(builder, STATES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
@@ -306,7 +306,7 @@ def ACWRequestCreateSTATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATESVector(builder, data):
-    ACWRequestCreateSTATESVector(builder, data)
+    return ACWRequestCreateSTATESVector(builder, data)
 
 def ACWRequestAddTARGET_STATION_ID(builder, TARGET_STATION_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_STATION_ID), 0)
@@ -342,7 +342,7 @@ def ACWRequestCreateELEVATION_MASKVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEVATION_MASKVector(builder, data):
-    ACWRequestCreateELEVATION_MASKVector(builder, data)
+    return ACWRequestCreateELEVATION_MASKVector(builder, data)
 
 def ACWRequestAddREFRACTION_MODEL(builder, REFRACTION_MODEL):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REFRACTION_MODEL), 0)
@@ -372,7 +372,7 @@ def ACWRequestCreateOBSERVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVERSVector(builder, data):
-    ACWRequestCreateOBSERVERSVector(builder, data)
+    return ACWRequestCreateOBSERVERSVector(builder, data)
 
 def ACWRequestAddEVALUATION_MODE(builder, EVALUATION_MODE):
     builder.PrependInt8Slot(10, EVALUATION_MODE, 0)
@@ -402,7 +402,7 @@ def ACWRequestCreateSUN_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSUN_STATESVector(builder, data):
-    ACWRequestCreateSUN_STATESVector(builder, data)
+    return ACWRequestCreateSUN_STATESVector(builder, data)
 
 def ACWRequestAddMOON_STATES(builder, MOON_STATES):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MOON_STATES), 0)
@@ -420,7 +420,7 @@ def ACWRequestCreateMOON_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMOON_STATESVector(builder, data):
-    ACWRequestCreateMOON_STATESVector(builder, data)
+    return ACWRequestCreateMOON_STATESVector(builder, data)
 
 def ACWRequestEnd(builder):
     return builder.EndObject()

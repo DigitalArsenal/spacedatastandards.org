@@ -187,7 +187,7 @@ def ProtectedDeliveryBindingCreateREQUIRED_SCOPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUIRED_SCOPESVector(builder, data):
-    ProtectedDeliveryBindingCreateREQUIRED_SCOPESVector(builder, data)
+    return ProtectedDeliveryBindingCreateREQUIRED_SCOPESVector(builder, data)
 
 def ProtectedDeliveryBindingAddGRANT_SCOPE(builder, GRANT_SCOPE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_SCOPE), 0)

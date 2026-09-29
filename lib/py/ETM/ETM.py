@@ -449,7 +449,7 @@ def ETMCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    ETMCreateRESERVEDVector(builder, data)
+    return ETMCreateRESERVEDVector(builder, data)
 
 def ETMEnd(builder):
     return builder.EndObject()

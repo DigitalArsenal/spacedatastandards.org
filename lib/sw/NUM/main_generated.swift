@@ -75,7 +75,7 @@ public enum numDiscretizeRoundDirection: Int8, FlatbuffersVectorInitializable, E
 
 
 ///  Request for one scalar numerical root-solving operation.
-public struct NUMRootSolveRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMRootSolveRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -148,7 +148,7 @@ public struct NUMRootSolveRequest: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Result of one scalar numerical root-solving operation.
-public struct NUMRootSolveResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMRootSolveResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -216,7 +216,7 @@ public struct NUMRootSolveResult: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Request for component-wise vector saturation.
-public struct NUMVectorSaturateRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMVectorSaturateRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -278,7 +278,7 @@ public struct NUMVectorSaturateRequest: FlatBufferTable, FlatbuffersVectorInitia
 }
 
 ///  Result of one component-wise vector saturation operation.
-public struct NUMVectorSaturateResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMVectorSaturateResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -337,7 +337,7 @@ public struct NUMVectorSaturateResult: FlatBufferTable, FlatbuffersVectorInitial
 }
 
 ///  Request for component-wise vector discretization.
-public struct NUMVectorDiscretizeRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMVectorDiscretizeRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -414,7 +414,7 @@ public struct NUMVectorDiscretizeRequest: FlatBufferTable, FlatbuffersVectorInit
 }
 
 ///  Result of one component-wise vector discretization operation.
-public struct NUMVectorDiscretizeResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMVectorDiscretizeResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -481,7 +481,7 @@ public struct NUMVectorDiscretizeResult: FlatBufferTable, FlatbuffersVectorIniti
 }
 
 ///  Request for one scalar interpolation operation.
-public struct NUMScalarInterpolationRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMScalarInterpolationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -610,7 +610,7 @@ public struct NUMScalarInterpolationRequest: FlatBufferTable, FlatbuffersVectorI
 }
 
 ///  Result of one scalar interpolation operation.
-public struct NUMScalarInterpolationResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMScalarInterpolationResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -668,7 +668,7 @@ public struct NUMScalarInterpolationResult: FlatBufferTable, FlatbuffersVectorIn
 }
 
 ///  Request for one first-order Gauss-Markov random sequence.
-public struct NUMGaussMarkovRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMGaussMarkovRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -773,7 +773,7 @@ public struct NUMGaussMarkovRequest: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Result of one first-order Gauss-Markov random sequence.
-public struct NUMGaussMarkovResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUMGaussMarkovResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -872,7 +872,7 @@ public struct NUMGaussMarkovResult: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  Numerical utility envelope.
-public struct NUM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NUM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

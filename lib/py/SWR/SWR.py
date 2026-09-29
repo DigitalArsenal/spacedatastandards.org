@@ -339,7 +339,7 @@ def SWRCreateWAVELENGTHSVector(builder, data):
     return builder.EndVector()
 
 def CreateWAVELENGTHSVector(builder, data):
-    SWRCreateWAVELENGTHSVector(builder, data)
+    return SWRCreateWAVELENGTHSVector(builder, data)
 
 def SWRAddABS_FLUXES(builder, ABS_FLUXES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ABS_FLUXES), 0)
@@ -361,7 +361,7 @@ def SWRCreateABS_FLUXESVector(builder, data):
     return builder.EndVector()
 
 def CreateABS_FLUXESVector(builder, data):
-    SWRCreateABS_FLUXESVector(builder, data)
+    return SWRCreateABS_FLUXESVector(builder, data)
 
 def SWRAddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RATIO_WAVELENGTHS), 0)
@@ -383,7 +383,7 @@ def SWRCreateRATIO_WAVELENGTHSVector(builder, data):
     return builder.EndVector()
 
 def CreateRATIO_WAVELENGTHSVector(builder, data):
-    SWRCreateRATIO_WAVELENGTHSVector(builder, data)
+    return SWRCreateRATIO_WAVELENGTHSVector(builder, data)
 
 def SWRAddFLUX_RATIOS(builder, FLUX_RATIOS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(FLUX_RATIOS), 0)
@@ -405,7 +405,7 @@ def SWRCreateFLUX_RATIOSVector(builder, data):
     return builder.EndVector()
 
 def CreateFLUX_RATIOSVector(builder, data):
-    SWRCreateFLUX_RATIOSVector(builder, data)
+    return SWRCreateFLUX_RATIOSVector(builder, data)
 
 def SWRAddTEMPERATURE(builder, TEMPERATURE):
     builder.PrependFloat64Slot(14, TEMPERATURE, 0.0)

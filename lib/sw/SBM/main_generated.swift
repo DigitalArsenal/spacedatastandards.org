@@ -61,7 +61,7 @@ public enum sbmFragmentOrigin: Int8, FlatbuffersVectorInitializable, Enum, Verif
 ///  Vector components are expressed in the parent SBM.REF_FRAME axes.
 ///  Position and velocity are the fragment's state at SBM.EPOCH, i.e. the
 ///  parent state plus the ejection delta-V, before any propagation.
-public struct sbmFragment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct sbmFragment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -212,7 +212,7 @@ public struct sbmFragment: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  This record describes an ON-ORBIT breakup. Atmospheric reentry breakup and
 ///  demise stay in $RDM/$REM; a business-loss classification of the event stays
 ///  in $OOE.
-public struct SBM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SBM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

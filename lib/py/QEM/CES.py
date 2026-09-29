@@ -246,7 +246,7 @@ def CESCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    CESCreateROWSVector(builder, data)
+    return CESCreateROWSVector(builder, data)
 
 def CESEnd(builder):
     return builder.EndObject()

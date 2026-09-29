@@ -147,7 +147,7 @@ def NUMVectorSaturateRequestCreateSTATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATEVector(builder, data):
-    NUMVectorSaturateRequestCreateSTATEVector(builder, data)
+    return NUMVectorSaturateRequestCreateSTATEVector(builder, data)
 
 def NUMVectorSaturateRequestAddLOWER_BOUNDS(builder, LOWER_BOUNDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LOWER_BOUNDS), 0)
@@ -169,7 +169,7 @@ def NUMVectorSaturateRequestCreateLOWER_BOUNDSVector(builder, data):
     return builder.EndVector()
 
 def CreateLOWER_BOUNDSVector(builder, data):
-    NUMVectorSaturateRequestCreateLOWER_BOUNDSVector(builder, data)
+    return NUMVectorSaturateRequestCreateLOWER_BOUNDSVector(builder, data)
 
 def NUMVectorSaturateRequestAddUPPER_BOUNDS(builder, UPPER_BOUNDS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(UPPER_BOUNDS), 0)
@@ -191,7 +191,7 @@ def NUMVectorSaturateRequestCreateUPPER_BOUNDSVector(builder, data):
     return builder.EndVector()
 
 def CreateUPPER_BOUNDSVector(builder, data):
-    NUMVectorSaturateRequestCreateUPPER_BOUNDSVector(builder, data)
+    return NUMVectorSaturateRequestCreateUPPER_BOUNDSVector(builder, data)
 
 def NUMVectorSaturateRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

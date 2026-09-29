@@ -208,7 +208,7 @@ def TRPCreateEVENT_SOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENT_SOURCESVector(builder, data):
-    TRPCreateEVENT_SOURCESVector(builder, data)
+    return TRPCreateEVENT_SOURCESVector(builder, data)
 
 def TRPAddACTIVE(builder, ACTIVE):
     builder.PrependBoolSlot(6, ACTIVE, 0)
@@ -254,7 +254,7 @@ def TRPCreateEVALUATOR_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateEVALUATOR_SIGNATUREVector(builder, data):
-    TRPCreateEVALUATOR_SIGNATUREVector(builder, data)
+    return TRPCreateEVALUATOR_SIGNATUREVector(builder, data)
 
 def TRPEnd(builder):
     return builder.EndObject()

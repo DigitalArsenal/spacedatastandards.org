@@ -92,7 +92,7 @@ def NSTCreateNODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNODESVector(builder, data):
-    NSTCreateNODESVector(builder, data)
+    return NSTCreateNODESVector(builder, data)
 
 def NSTAddGENERATED_AT(builder, GENERATED_AT):
     builder.PrependInt64Slot(1, GENERATED_AT, 0)

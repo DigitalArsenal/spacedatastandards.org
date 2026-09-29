@@ -240,7 +240,7 @@ def PMMTrustAnchorCreateBOND_ADDRESSESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBOND_ADDRESSESVector(builder, data):
-    PMMTrustAnchorCreateBOND_ADDRESSESVector(builder, data)
+    return PMMTrustAnchorCreateBOND_ADDRESSESVector(builder, data)
 
 def PMMTrustAnchorAddBOND_ATTESTATION_URL(builder, BOND_ATTESTATION_URL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(BOND_ATTESTATION_URL), 0)

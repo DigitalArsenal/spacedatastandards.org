@@ -119,7 +119,7 @@ def PCEParameterCatalogCreateENTRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRIESVector(builder, data):
-    PCEParameterCatalogCreateENTRIESVector(builder, data)
+    return PCEParameterCatalogCreateENTRIESVector(builder, data)
 
 def PCEParameterCatalogEnd(builder):
     return builder.EndObject()

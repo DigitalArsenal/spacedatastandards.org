@@ -371,7 +371,7 @@ def EPMCreateALTERNATE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_NAMESVector(builder, data):
-    EPMCreateALTERNATE_NAMESVector(builder, data)
+    return EPMCreateALTERNATE_NAMESVector(builder, data)
 
 def EPMAddEMAIL(builder, EMAIL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
@@ -401,7 +401,7 @@ def EPMCreateKEYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateKEYSVector(builder, data):
-    EPMCreateKEYSVector(builder, data)
+    return EPMCreateKEYSVector(builder, data)
 
 def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
@@ -419,7 +419,7 @@ def EPMCreateMULTIFORMAT_ADDRESSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIFORMAT_ADDRESSVector(builder, data):
-    EPMCreateMULTIFORMAT_ADDRESSVector(builder, data)
+    return EPMCreateMULTIFORMAT_ADDRESSVector(builder, data)
 
 def EPMAddSIGNATURE(builder, SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
@@ -449,7 +449,7 @@ def EPMCreateCHAIN_PROOFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHAIN_PROOFSVector(builder, data):
-    EPMCreateCHAIN_PROOFSVector(builder, data)
+    return EPMCreateCHAIN_PROOFSVector(builder, data)
 
 def EPMAddENTITY_TYPE(builder, ENTITY_TYPE):
     builder.PrependInt8Slot(18, ENTITY_TYPE, 0)
@@ -479,7 +479,7 @@ def EPMCreateDOMAIN_PROOFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDOMAIN_PROOFSVector(builder, data):
-    EPMCreateDOMAIN_PROOFSVector(builder, data)
+    return EPMCreateDOMAIN_PROOFSVector(builder, data)
 
 def EPMEnd(builder):
     return builder.EndObject()

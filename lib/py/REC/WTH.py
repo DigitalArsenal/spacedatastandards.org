@@ -642,7 +642,7 @@ def WTHCreateSIG_PWRSVector(builder, data):
     return builder.EndVector()
 
 def CreateSIG_PWRSVector(builder, data):
-    WTHCreateSIG_PWRSVector(builder, data)
+    return WTHCreateSIG_PWRSVector(builder, data)
 
 def WTHAddNOISE_LVLS(builder, NOISE_LVLS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_LVLS), 0)
@@ -664,7 +664,7 @@ def WTHCreateNOISE_LVLSVector(builder, data):
     return builder.EndVector()
 
 def CreateNOISE_LVLSVector(builder, data):
-    WTHCreateNOISE_LVLSVector(builder, data)
+    return WTHCreateNOISE_LVLSVector(builder, data)
 
 def WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_WIDTHS), 0)
@@ -686,7 +686,7 @@ def WTHCreateSPEC_WIDTHSVector(builder, data):
     return builder.EndVector()
 
 def CreateSPEC_WIDTHSVector(builder, data):
-    WTHCreateSPEC_WIDTHSVector(builder, data)
+    return WTHCreateSPEC_WIDTHSVector(builder, data)
 
 def WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_GUESS_AVGS), 0)
@@ -708,7 +708,7 @@ def WTHCreateFIRST_GUESS_AVGSVector(builder, data):
     return builder.EndVector()
 
 def CreateFIRST_GUESS_AVGSVector(builder, data):
-    WTHCreateFIRST_GUESS_AVGSVector(builder, data)
+    return WTHCreateFIRST_GUESS_AVGSVector(builder, data)
 
 def WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TD_AVG_SAMPLE_NUMS), 0)
@@ -730,7 +730,7 @@ def WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data):
     return builder.EndVector()
 
 def CreateTD_AVG_SAMPLE_NUMSVector(builder, data):
-    WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data)
+    return WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data)
 
 def WTHAddCO_INTEGS(builder, CO_INTEGS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CO_INTEGS), 0)
@@ -752,7 +752,7 @@ def WTHCreateCO_INTEGSVector(builder, data):
     return builder.EndVector()
 
 def CreateCO_INTEGSVector(builder, data):
-    WTHCreateCO_INTEGSVector(builder, data)
+    return WTHCreateCO_INTEGSVector(builder, data)
 
 def WTHAddSPEC_AVGS(builder, SPEC_AVGS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_AVGS), 0)
@@ -774,7 +774,7 @@ def WTHCreateSPEC_AVGSVector(builder, data):
     return builder.EndVector()
 
 def CreateSPEC_AVGSVector(builder, data):
-    WTHCreateSPEC_AVGSVector(builder, data)
+    return WTHCreateSPEC_AVGSVector(builder, data)
 
 def WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPULSE_PERIODS), 0)
@@ -796,7 +796,7 @@ def WTHCreateINTERPULSE_PERIODSVector(builder, data):
     return builder.EndVector()
 
 def CreateINTERPULSE_PERIODSVector(builder, data):
-    WTHCreateINTERPULSE_PERIODSVector(builder, data)
+    return WTHCreateINTERPULSE_PERIODSVector(builder, data)
 
 def WTHAddDOPP_VELS(builder, DOPP_VELS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DOPP_VELS), 0)
@@ -818,7 +818,7 @@ def WTHCreateDOPP_VELSVector(builder, data):
     return builder.EndVector()
 
 def CreateDOPP_VELSVector(builder, data):
-    WTHCreateDOPP_VELSVector(builder, data)
+    return WTHCreateDOPP_VELSVector(builder, data)
 
 def WTHAddCONS_RECS(builder, CONS_RECS):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(CONS_RECS), 0)
@@ -840,7 +840,7 @@ def WTHCreateCONS_RECSVector(builder, data):
     return builder.EndVector()
 
 def CreateCONS_RECSVector(builder, data):
-    WTHCreateCONS_RECSVector(builder, data)
+    return WTHCreateCONS_RECSVector(builder, data)
 
 def WTHAddSNRS(builder, SNRS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SNRS), 0)
@@ -862,7 +862,7 @@ def WTHCreateSNRSVector(builder, data):
     return builder.EndVector()
 
 def CreateSNRSVector(builder, data):
-    WTHCreateSNRSVector(builder, data)
+    return WTHCreateSNRSVector(builder, data)
 
 def WTHAddSIG_STRENGTH(builder, SIG_STRENGTH):
     builder.PrependFloat64Slot(23, SIG_STRENGTH, 0.0)
@@ -910,7 +910,7 @@ def WTHCreateLIGHT_DET_SENSORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLIGHT_DET_SENSORSVector(builder, data):
-    WTHCreateLIGHT_DET_SENSORSVector(builder, data)
+    return WTHCreateLIGHT_DET_SENSORSVector(builder, data)
 
 def WTHAddPOS_CONFIDENCE(builder, POS_CONFIDENCE):
     builder.PrependFloat64Slot(29, POS_CONFIDENCE, 0.0)
@@ -934,7 +934,7 @@ def WTHCreateSRC_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_TYPSVector(builder, data):
-    WTHCreateSRC_TYPSVector(builder, data)
+    return WTHCreateSRC_TYPSVector(builder, data)
 
 def WTHAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
@@ -952,7 +952,7 @@ def WTHCreateSRC_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_IDSVector(builder, data):
-    WTHCreateSRC_IDSVector(builder, data)
+    return WTHCreateSRC_IDSVector(builder, data)
 
 def WTHEnd(builder):
     return builder.EndObject()

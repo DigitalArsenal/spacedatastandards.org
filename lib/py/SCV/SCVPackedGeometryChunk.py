@@ -489,7 +489,7 @@ def SCVPackedGeometryChunkCreateMEMORY_REGIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMORY_REGIONSVector(builder, data):
-    SCVPackedGeometryChunkCreateMEMORY_REGIONSVector(builder, data)
+    return SCVPackedGeometryChunkCreateMEMORY_REGIONSVector(builder, data)
 
 def SCVPackedGeometryChunkAddPOSITIONS_REGION_ID(builder, POSITIONS_REGION_ID):
     builder.PrependUint32Slot(11, POSITIONS_REGION_ID, 0)
@@ -571,7 +571,7 @@ def SCVPackedGeometryChunkCreatePOSITIONSVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONSVector(builder, data):
-    SCVPackedGeometryChunkCreatePOSITIONSVector(builder, data)
+    return SCVPackedGeometryChunkCreatePOSITIONSVector(builder, data)
 
 def SCVPackedGeometryChunkAddNORMALS(builder, NORMALS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(NORMALS), 0)
@@ -593,7 +593,7 @@ def SCVPackedGeometryChunkCreateNORMALSVector(builder, data):
     return builder.EndVector()
 
 def CreateNORMALSVector(builder, data):
-    SCVPackedGeometryChunkCreateNORMALSVector(builder, data)
+    return SCVPackedGeometryChunkCreateNORMALSVector(builder, data)
 
 def SCVPackedGeometryChunkAddST(builder, ST):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(ST), 0)
@@ -615,7 +615,7 @@ def SCVPackedGeometryChunkCreateSTVector(builder, data):
     return builder.EndVector()
 
 def CreateSTVector(builder, data):
-    SCVPackedGeometryChunkCreateSTVector(builder, data)
+    return SCVPackedGeometryChunkCreateSTVector(builder, data)
 
 def SCVPackedGeometryChunkAddREVEAL_COORDS(builder, REVEAL_COORDS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(REVEAL_COORDS), 0)
@@ -637,7 +637,7 @@ def SCVPackedGeometryChunkCreateREVEAL_COORDSVector(builder, data):
     return builder.EndVector()
 
 def CreateREVEAL_COORDSVector(builder, data):
-    SCVPackedGeometryChunkCreateREVEAL_COORDSVector(builder, data)
+    return SCVPackedGeometryChunkCreateREVEAL_COORDSVector(builder, data)
 
 def SCVPackedGeometryChunkAddINDICES(builder, INDICES):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(INDICES), 0)
@@ -659,7 +659,7 @@ def SCVPackedGeometryChunkCreateINDICESVector(builder, data):
     return builder.EndVector()
 
 def CreateINDICESVector(builder, data):
-    SCVPackedGeometryChunkCreateINDICESVector(builder, data)
+    return SCVPackedGeometryChunkCreateINDICESVector(builder, data)
 
 def SCVPackedGeometryChunkAddSEGMENT_IDS(builder, SEGMENT_IDS):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_IDS), 0)
@@ -681,7 +681,7 @@ def SCVPackedGeometryChunkCreateSEGMENT_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_IDSVector(builder, data):
-    SCVPackedGeometryChunkCreateSEGMENT_IDSVector(builder, data)
+    return SCVPackedGeometryChunkCreateSEGMENT_IDSVector(builder, data)
 
 def SCVPackedGeometryChunkAddSENSOR_IDS(builder, SENSOR_IDS):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_IDS), 0)
@@ -703,7 +703,7 @@ def SCVPackedGeometryChunkCreateSENSOR_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_IDSVector(builder, data):
-    SCVPackedGeometryChunkCreateSENSOR_IDSVector(builder, data)
+    return SCVPackedGeometryChunkCreateSENSOR_IDSVector(builder, data)
 
 def SCVPackedGeometryChunkAddSEGMENTS(builder, SEGMENTS):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)
@@ -721,7 +721,7 @@ def SCVPackedGeometryChunkCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    SCVPackedGeometryChunkCreateSEGMENTSVector(builder, data)
+    return SCVPackedGeometryChunkCreateSEGMENTSVector(builder, data)
 
 def SCVPackedGeometryChunkEnd(builder):
     return builder.EndObject()

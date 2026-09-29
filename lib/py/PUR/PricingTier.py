@@ -158,7 +158,7 @@ def PricingTierCreateFEATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURESVector(builder, data):
-    PricingTierCreateFEATURESVector(builder, data)
+    return PricingTierCreateFEATURESVector(builder, data)
 
 def PricingTierAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST):
     builder.PrependUint32Slot(6, MAX_RECORDS_PER_REQUEST, 0)

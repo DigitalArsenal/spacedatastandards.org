@@ -91,7 +91,7 @@ def BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARGUMENT_ASSIGNMENTSVector(builder, data):
-    BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(builder, data)
+    return BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(builder, data)
 
 def BaseMetaCommandEnd(builder):
     return builder.EndObject()

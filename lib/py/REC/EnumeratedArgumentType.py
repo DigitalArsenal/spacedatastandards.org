@@ -145,7 +145,7 @@ def EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENUMERATION_LISTVector(builder, data):
-    EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data)
+    return EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data)
 
 def EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)

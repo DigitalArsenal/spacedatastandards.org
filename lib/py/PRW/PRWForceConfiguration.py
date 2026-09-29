@@ -312,7 +312,7 @@ def PRWForceConfigurationCreateTHIRD_BODY_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateTHIRD_BODY_IDSVector(builder, data):
-    PRWForceConfigurationCreateTHIRD_BODY_IDSVector(builder, data)
+    return PRWForceConfigurationCreateTHIRD_BODY_IDSVector(builder, data)
 
 def PRWForceConfigurationAddENABLE_SRP(builder, ENABLE_SRP):
     builder.PrependBoolSlot(13, ENABLE_SRP, 0)

@@ -115,7 +115,7 @@ def STAGECreateENGINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENGINESVector(builder, data):
-    STAGECreateENGINESVector(builder, data)
+    return STAGECreateENGINESVector(builder, data)
 
 def STAGEAddFUEL_TYPE(builder, FUEL_TYPE):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FUEL_TYPE), 0)

@@ -175,7 +175,7 @@ def MDSCreateOBJECTIVESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTIVESVector(builder, data):
-    MDSCreateOBJECTIVESVector(builder, data)
+    return MDSCreateOBJECTIVESVector(builder, data)
 
 def MDSAddCANDIDATES(builder, CANDIDATES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANDIDATES), 0)
@@ -193,7 +193,7 @@ def MDSCreateCANDIDATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCANDIDATESVector(builder, data):
-    MDSCreateCANDIDATESVector(builder, data)
+    return MDSCreateCANDIDATESVector(builder, data)
 
 def MDSAddSOLVER(builder, SOLVER):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOLVER), 0)

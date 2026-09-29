@@ -561,7 +561,7 @@ def SEOCreateSEN_POSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEN_POSVector(builder, data):
-    SEOCreateSEN_POSVector(builder, data)
+    return SEOCreateSEN_POSVector(builder, data)
 
 def SEOAddSEN_VEL(builder, SEN_VEL):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_VEL), 0)
@@ -583,7 +583,7 @@ def SEOCreateSEN_VELVector(builder, data):
     return builder.EndVector()
 
 def CreateSEN_VELVector(builder, data):
-    SEOCreateSEN_VELVector(builder, data)
+    return SEOCreateSEN_VELVector(builder, data)
 
 def SEOAddMEAS_TYPE(builder, MEAS_TYPE):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(MEAS_TYPE), 0)
@@ -635,7 +635,7 @@ def SEOCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    SEOCreateVALUESVector(builder, data)
+    return SEOCreateVALUESVector(builder, data)
 
 def SEOAddUNCERTAINTIES(builder, UNCERTAINTIES):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(UNCERTAINTIES), 0)
@@ -657,7 +657,7 @@ def SEOCreateUNCERTAINTIESVector(builder, data):
     return builder.EndVector()
 
 def CreateUNCERTAINTIESVector(builder, data):
-    SEOCreateUNCERTAINTIESVector(builder, data)
+    return SEOCreateUNCERTAINTIESVector(builder, data)
 
 def SEOAddUNITS(builder, UNITS):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
@@ -699,7 +699,7 @@ def SEOCreateSRC_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_TYPSVector(builder, data):
-    SEOCreateSRC_TYPSVector(builder, data)
+    return SEOCreateSRC_TYPSVector(builder, data)
 
 def SEOAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
@@ -717,7 +717,7 @@ def SEOCreateSRC_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_IDSVector(builder, data):
-    SEOCreateSRC_IDSVector(builder, data)
+    return SEOCreateSRC_IDSVector(builder, data)
 
 def SEOEnd(builder):
     return builder.EndObject()

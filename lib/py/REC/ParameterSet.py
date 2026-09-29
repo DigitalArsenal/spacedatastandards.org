@@ -77,7 +77,7 @@ def ParameterSetCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    ParameterSetCreatePARAMETERSVector(builder, data)
+    return ParameterSetCreatePARAMETERSVector(builder, data)
 
 def ParameterSetEnd(builder):
     return builder.EndObject()

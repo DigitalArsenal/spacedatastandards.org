@@ -38,7 +38,7 @@ public enum attRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Attitude Data Point
-public struct ATD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ATD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

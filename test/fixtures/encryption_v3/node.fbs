@@ -1,0 +1,48 @@
+// Field-encryption format 3 fixtures for the generated FlatbuffersEncryption
+// helpers. node.bin is node.json built by flatc; node_r0.bin and node_r1.bin
+// are node.bin encrypted by the C++ walker (EncryptBuffer, version 3) with the
+// key 00 01 .. 1f and record indexes 0 and 1. tests/encryption_test.cpp
+// checks them, and every language's helper must reproduce them.
+//
+// secret and pin hold the same plaintext in the root, its child, the first
+// element of children and the payload, so equal field slots appear in nested
+// tables, a vector of tables and a union member.
+
+namespace EncryptionV3;
+
+enum Level : byte { Low = 1, High = 2 }
+
+struct Vec3 {
+  x: float;
+  y: float;
+  z: float;
+}
+
+table Leaf {
+  secret: string (encrypted);
+  pin: uint (encrypted);
+}
+
+union Payload { Leaf }
+
+table Node {
+  name: string;
+  secret: string (encrypted);
+  pin: uint (encrypted);
+  flag: bool (encrypted);
+  level: Level = Low (encrypted);
+  count: short (encrypted);
+  total: long (encrypted);
+  ratio: double (encrypted);
+  position: Vec3 (encrypted);
+  bytes: [ubyte] (encrypted);
+  readings: [float] (encrypted);
+  points: [Vec3] (encrypted);
+  tags: [string] (encrypted);
+  child: Node;
+  children: [Node];
+  payload: Payload;
+  plain: uint;
+}
+
+root_type Node;

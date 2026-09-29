@@ -259,7 +259,7 @@ def KMLMultiGeometryCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    KMLMultiGeometryCreatePOINTSVector(builder, data)
+    return KMLMultiGeometryCreatePOINTSVector(builder, data)
 
 def KMLMultiGeometryAddLINE_STRINGS(builder, LINE_STRINGS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LINE_STRINGS), 0)
@@ -277,7 +277,7 @@ def KMLMultiGeometryCreateLINE_STRINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINE_STRINGSVector(builder, data):
-    KMLMultiGeometryCreateLINE_STRINGSVector(builder, data)
+    return KMLMultiGeometryCreateLINE_STRINGSVector(builder, data)
 
 def KMLMultiGeometryAddPOLYGONS(builder, POLYGONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGONS), 0)
@@ -295,7 +295,7 @@ def KMLMultiGeometryCreatePOLYGONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYGONSVector(builder, data):
-    KMLMultiGeometryCreatePOLYGONSVector(builder, data)
+    return KMLMultiGeometryCreatePOLYGONSVector(builder, data)
 
 def KMLMultiGeometryAddMULTI_GEOMETRIES(builder, MULTI_GEOMETRIES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_GEOMETRIES), 0)
@@ -313,7 +313,7 @@ def KMLMultiGeometryCreateMULTI_GEOMETRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTI_GEOMETRIESVector(builder, data):
-    KMLMultiGeometryCreateMULTI_GEOMETRIESVector(builder, data)
+    return KMLMultiGeometryCreateMULTI_GEOMETRIESVector(builder, data)
 
 def KMLMultiGeometryAddLINEAR_RINGS(builder, LINEAR_RINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINEAR_RINGS), 0)
@@ -331,7 +331,7 @@ def KMLMultiGeometryCreateLINEAR_RINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINEAR_RINGSVector(builder, data):
-    KMLMultiGeometryCreateLINEAR_RINGSVector(builder, data)
+    return KMLMultiGeometryCreateLINEAR_RINGSVector(builder, data)
 
 def KMLMultiGeometryAddMODELS(builder, MODELS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(MODELS), 0)
@@ -349,7 +349,7 @@ def KMLMultiGeometryCreateMODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODELSVector(builder, data):
-    KMLMultiGeometryCreateMODELSVector(builder, data)
+    return KMLMultiGeometryCreateMODELSVector(builder, data)
 
 def KMLMultiGeometryAddTRACKS(builder, TRACKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKS), 0)
@@ -367,7 +367,7 @@ def KMLMultiGeometryCreateTRACKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACKSVector(builder, data):
-    KMLMultiGeometryCreateTRACKSVector(builder, data)
+    return KMLMultiGeometryCreateTRACKSVector(builder, data)
 
 def KMLMultiGeometryAddMULTI_TRACKS(builder, MULTI_TRACKS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_TRACKS), 0)
@@ -385,7 +385,7 @@ def KMLMultiGeometryCreateMULTI_TRACKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTI_TRACKSVector(builder, data):
-    KMLMultiGeometryCreateMULTI_TRACKSVector(builder, data)
+    return KMLMultiGeometryCreateMULTI_TRACKSVector(builder, data)
 
 def KMLMultiGeometryEnd(builder):
     return builder.EndObject()

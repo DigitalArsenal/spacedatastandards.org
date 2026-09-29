@@ -30,7 +30,7 @@ public enum cltuPduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Command Link Transmission Unit Service (CCSDS 912.3-B-2)
-public struct CLT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CLT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

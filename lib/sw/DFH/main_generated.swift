@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  GEO Drift History Record
-public struct driftRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct driftRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -82,7 +82,7 @@ public struct driftRecord: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  GEO Drift History
-public struct DFH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DFH: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

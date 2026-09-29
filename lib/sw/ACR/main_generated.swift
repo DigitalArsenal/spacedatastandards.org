@@ -84,7 +84,7 @@ public enum GearState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Aircraft Dynamics
-public struct ACR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ACR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -171,7 +171,7 @@ def IntegerArgumentTypeCreateUNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNITSVector(builder, data):
-    IntegerArgumentTypeCreateUNITSVector(builder, data)
+    return IntegerArgumentTypeCreateUNITSVector(builder, data)
 
 def IntegerArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)

@@ -245,7 +245,7 @@ def AOFCreateINSERT_ZONEVector(builder, data):
     return builder.EndVector()
 
 def CreateINSERT_ZONEVector(builder, data):
-    AOFCreateINSERT_ZONEVector(builder, data)
+    return AOFCreateINSERT_ZONEVector(builder, data)
 
 def AOFAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
@@ -267,7 +267,7 @@ def AOFCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    AOFCreateDATAVector(builder, data)
+    return AOFCreateDATAVector(builder, data)
 
 def AOFAddOCF(builder, OCF):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OCF), 0)
@@ -289,7 +289,7 @@ def AOFCreateOCFVector(builder, data):
     return builder.EndVector()
 
 def CreateOCFVector(builder, data):
-    AOFCreateOCFVector(builder, data)
+    return AOFCreateOCFVector(builder, data)
 
 def AOFAddFECF(builder, FECF):
     builder.PrependUint16Slot(10, FECF, 0)

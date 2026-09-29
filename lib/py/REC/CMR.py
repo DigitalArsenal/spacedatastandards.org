@@ -237,7 +237,7 @@ def CMRCreateCONSTELLATION_ALIASESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTELLATION_ALIASESVector(builder, data):
-    CMRCreateCONSTELLATION_ALIASESVector(builder, data)
+    return CMRCreateCONSTELLATION_ALIASESVector(builder, data)
 
 def CMRAddOPERATOR_ID(builder, OPERATOR_ID):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ID), 0)
@@ -267,7 +267,7 @@ def CMRCreateOPERATOR_ALIASESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOPERATOR_ALIASESVector(builder, data):
-    CMRCreateOPERATOR_ALIASESVector(builder, data)
+    return CMRCreateOPERATOR_ALIASESVector(builder, data)
 
 def CMRAddSTATE(builder, STATE):
     builder.PrependInt8Slot(9, STATE, 0)
@@ -297,7 +297,7 @@ def CMRCreatePROVENANCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROVENANCEVector(builder, data):
-    CMRCreatePROVENANCEVector(builder, data)
+    return CMRCreatePROVENANCEVector(builder, data)
 
 def CMREnd(builder):
     return builder.EndObject()

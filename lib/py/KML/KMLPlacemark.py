@@ -445,7 +445,7 @@ def KMLPlacemarkCreateEXTENDED_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXTENDED_DATAVector(builder, data):
-    KMLPlacemarkCreateEXTENDED_DATAVector(builder, data)
+    return KMLPlacemarkCreateEXTENDED_DATAVector(builder, data)
 
 def KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_DATA), 0)

@@ -39,7 +39,7 @@ public enum irDetectionType: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Infrared Observation
-public struct IRO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IRO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

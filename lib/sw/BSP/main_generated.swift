@@ -27,7 +27,7 @@ public enum bspInterpolationStatus: Int8, FlatbuffersVectorInitializable, Enum, 
 
 
 ///  Three coordinate arrays sharing one time vector.
-public struct BSPVector3Series: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BSPVector3Series: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -89,7 +89,7 @@ public struct BSPVector3Series: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Request for one 3D B-spline interpolation.
-public struct BSPInterpolationRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BSPInterpolationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -212,7 +212,7 @@ public struct BSPInterpolationRequest: FlatBufferTable, FlatbuffersVectorInitial
 }
 
 ///  Result of one 3D B-spline interpolation.
-public struct BSPInterpolationResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BSPInterpolationResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -320,7 +320,7 @@ public struct BSPInterpolationResult: FlatBufferTable, FlatbuffersVectorInitiali
 }
 
 ///  B-spline interpolation envelope.
-public struct BSP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BSP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

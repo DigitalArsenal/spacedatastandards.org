@@ -217,7 +217,7 @@ def CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
-    CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+    return CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
 
 def CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
@@ -239,7 +239,7 @@ def CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTESIANVector(builder, data):
-    CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data)
+    return CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMPolylineAddWIDTH(builder, WIDTH):
     builder.PrependFloat64Slot(3, WIDTH, 0.0)

@@ -25,7 +25,7 @@ public enum doaCollectionMode: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Difference of Arrival Geolocation
-public struct DOA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DOA: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

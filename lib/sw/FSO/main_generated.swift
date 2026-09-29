@@ -55,7 +55,7 @@ public enum flatSqlNodeStatus: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 ///  One canonical SDS file-identifier to FlatSQL table binding. A configured
 ///  node rebuilds these bindings before replaying durable record bytes.
-public struct FSOTableBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FSOTableBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -105,7 +105,7 @@ public struct FSOTableBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
 ///  FSB frames so operations remain streamable and no host needs to interpret a
 ///  database payload. SCHEMA_IDL is canonical SDS/FlatBuffers IDL supplied to
 ///  the node for schema-derived table/index construction.
-public struct FSO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FSO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

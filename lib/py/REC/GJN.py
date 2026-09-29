@@ -89,7 +89,7 @@ def GJNCreateFEATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURESVector(builder, data):
-    GJNCreateFEATURESVector(builder, data)
+    return GJNCreateFEATURESVector(builder, data)
 
 def GJNAddBBOX(builder, BBOX):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)

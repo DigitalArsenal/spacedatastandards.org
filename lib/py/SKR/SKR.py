@@ -486,7 +486,7 @@ def SKRCreateHITSVector(builder, data):
     return builder.EndVector()
 
 def CreateHITSVector(builder, data):
-    SKRCreateHITSVector(builder, data)
+    return SKRCreateHITSVector(builder, data)
 
 def SKRAddBAND_IDS(builder, BAND_IDS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BAND_IDS), 0)
@@ -504,7 +504,7 @@ def SKRCreateBAND_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBAND_IDSVector(builder, data):
-    SKRCreateBAND_IDSVector(builder, data)
+    return SKRCreateBAND_IDSVector(builder, data)
 
 def SKRAddMAGNITUDES(builder, MAGNITUDES):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MAGNITUDES), 0)
@@ -526,7 +526,7 @@ def SKRCreateMAGNITUDESVector(builder, data):
     return builder.EndVector()
 
 def CreateMAGNITUDESVector(builder, data):
-    SKRCreateMAGNITUDESVector(builder, data)
+    return SKRCreateMAGNITUDESVector(builder, data)
 
 def SKRAddDERIVATIONS(builder, DERIVATIONS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVATIONS), 0)
@@ -548,7 +548,7 @@ def SKRCreateDERIVATIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateDERIVATIONSVector(builder, data):
-    SKRCreateDERIVATIONSVector(builder, data)
+    return SKRCreateDERIVATIONSVector(builder, data)
 
 def SKRAddMATCHED_DETECTIONS(builder, MATCHED_DETECTIONS):
     builder.PrependUint32Slot(16, MATCHED_DETECTIONS, 0)
@@ -576,7 +576,7 @@ def SKRCreateROTATIONVector(builder, data):
     return builder.EndVector()
 
 def CreateROTATIONVector(builder, data):
-    SKRCreateROTATIONVector(builder, data)
+    return SKRCreateROTATIONVector(builder, data)
 
 def SKRAddQUATERNION(builder, QUATERNION):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(QUATERNION), 0)
@@ -598,7 +598,7 @@ def SKRCreateQUATERNIONVector(builder, data):
     return builder.EndVector()
 
 def CreateQUATERNIONVector(builder, data):
-    SKRCreateQUATERNIONVector(builder, data)
+    return SKRCreateQUATERNIONVector(builder, data)
 
 def SKRAddRESIDUAL_RMS_ARCSEC(builder, RESIDUAL_RMS_ARCSEC):
     builder.PrependFloat64Slot(19, RESIDUAL_RMS_ARCSEC, float('nan'))
@@ -638,7 +638,7 @@ def SKRCreateMATCHED_ROWSVector(builder, data):
     return builder.EndVector()
 
 def CreateMATCHED_ROWSVector(builder, data):
-    SKRCreateMATCHED_ROWSVector(builder, data)
+    return SKRCreateMATCHED_ROWSVector(builder, data)
 
 def SKRAddOCCULTATIONS(builder, OCCULTATIONS):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(OCCULTATIONS), 0)
@@ -660,7 +660,7 @@ def SKRCreateOCCULTATIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateOCCULTATIONSVector(builder, data):
-    SKRCreateOCCULTATIONSVector(builder, data)
+    return SKRCreateOCCULTATIONSVector(builder, data)
 
 def SKRAddEXCLUSIONS(builder, EXCLUSIONS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(EXCLUSIONS), 0)
@@ -682,7 +682,7 @@ def SKRCreateEXCLUSIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateEXCLUSIONSVector(builder, data):
-    SKRCreateEXCLUSIONSVector(builder, data)
+    return SKRCreateEXCLUSIONSVector(builder, data)
 
 def SKREnd(builder):
     return builder.EndObject()

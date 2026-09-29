@@ -349,7 +349,7 @@ def SITCreateCENTER_POINT_GEOMETRYVector(builder, data):
     return builder.EndVector()
 
 def CreateCENTER_POINT_GEOMETRYVector(builder, data):
-    SITCreateCENTER_POINT_GEOMETRYVector(builder, data)
+    return SITCreateCENTER_POINT_GEOMETRYVector(builder, data)
 
 def SITAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
@@ -439,7 +439,7 @@ def SITCreateINTEGRATED_DEVICESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTEGRATED_DEVICESVector(builder, data):
-    SITCreateINTEGRATED_DEVICESVector(builder, data)
+    return SITCreateINTEGRATED_DEVICESVector(builder, data)
 
 def SITEnd(builder):
     return builder.EndObject()

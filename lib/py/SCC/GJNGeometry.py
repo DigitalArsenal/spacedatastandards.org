@@ -199,7 +199,7 @@ def GJNGeometryCreatePOSITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOSITIONSVector(builder, data):
-    GJNGeometryCreatePOSITIONSVector(builder, data)
+    return GJNGeometryCreatePOSITIONSVector(builder, data)
 
 def GJNGeometryAddRINGS(builder, RINGS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RINGS), 0)
@@ -217,7 +217,7 @@ def GJNGeometryCreateRINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRINGSVector(builder, data):
-    GJNGeometryCreateRINGSVector(builder, data)
+    return GJNGeometryCreateRINGSVector(builder, data)
 
 def GJNGeometryAddPOLYGON_RINGS(builder, POLYGON_RINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_RINGS), 0)
@@ -235,7 +235,7 @@ def GJNGeometryCreatePOLYGON_RINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYGON_RINGSVector(builder, data):
-    GJNGeometryCreatePOLYGON_RINGSVector(builder, data)
+    return GJNGeometryCreatePOLYGON_RINGSVector(builder, data)
 
 def GJNGeometryAddGEOMETRIES(builder, GEOMETRIES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRIES), 0)
@@ -253,7 +253,7 @@ def GJNGeometryCreateGEOMETRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGEOMETRIESVector(builder, data):
-    GJNGeometryCreateGEOMETRIESVector(builder, data)
+    return GJNGeometryCreateGEOMETRIESVector(builder, data)
 
 def GJNGeometryAddBBOX(builder, BBOX):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)

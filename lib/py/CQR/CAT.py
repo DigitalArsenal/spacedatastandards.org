@@ -422,7 +422,7 @@ def CATCreatePAYLOADSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAYLOADSVector(builder, data):
-    CATCreatePAYLOADSVector(builder, data)
+    return CATCreatePAYLOADSVector(builder, data)
 
 def CATAddBUS_ID(builder, BUS_ID):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_ID), 0)

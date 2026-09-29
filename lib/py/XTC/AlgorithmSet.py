@@ -103,7 +103,7 @@ def AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCUSTOM_ALGORITHMSVector(builder, data):
-    AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data)
+    return AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data)
 
 def AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MATH_ALGORITHMS), 0)
@@ -121,7 +121,7 @@ def AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMATH_ALGORITHMSVector(builder, data):
-    AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data)
+    return AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data)
 
 def AlgorithmSetEnd(builder):
     return builder.EndObject()

@@ -148,7 +148,7 @@ def SHWCompileRequestCreateSHADER_UNIFORMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSHADER_UNIFORMSVector(builder, data):
-    SHWCompileRequestCreateSHADER_UNIFORMSVector(builder, data)
+    return SHWCompileRequestCreateSHADER_UNIFORMSVector(builder, data)
 
 def SHWCompileRequestEnd(builder):
     return builder.EndObject()

@@ -616,7 +616,7 @@ def OMMCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    OMMCreateCOVARIANCEVector(builder, data)
+    return OMMCreateCOVARIANCEVector(builder, data)
 
 def OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     builder.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)

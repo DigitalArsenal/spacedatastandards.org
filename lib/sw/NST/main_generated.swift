@@ -19,7 +19,7 @@ import FlatBuffers
 ///  an operator, or seen on a live connection. A set carries every row the
 ///  emitting node currently admits and the emitting node's own row.
 ///  One known peer as reported by the emitting node.
-public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NSTNode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -261,7 +261,7 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Node Status Record - the set of peers a node reports.
-public struct NST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

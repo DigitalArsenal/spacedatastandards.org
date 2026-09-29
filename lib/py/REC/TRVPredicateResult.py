@@ -176,7 +176,7 @@ def TRVPredicateResultCreateBOND_EVIDENCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBOND_EVIDENCEVector(builder, data):
-    TRVPredicateResultCreateBOND_EVIDENCEVector(builder, data)
+    return TRVPredicateResultCreateBOND_EVIDENCEVector(builder, data)
 
 def TRVPredicateResultAddTRUSTER_IDS_MATCHED(builder, TRUSTER_IDS_MATCHED):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TRUSTER_IDS_MATCHED), 0)
@@ -194,7 +194,7 @@ def TRVPredicateResultCreateTRUSTER_IDS_MATCHEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRUSTER_IDS_MATCHEDVector(builder, data):
-    TRVPredicateResultCreateTRUSTER_IDS_MATCHEDVector(builder, data)
+    return TRVPredicateResultCreateTRUSTER_IDS_MATCHEDVector(builder, data)
 
 def TRVPredicateResultAddEVIDENCE_TEXT(builder, EVIDENCE_TEXT):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EVIDENCE_TEXT), 0)

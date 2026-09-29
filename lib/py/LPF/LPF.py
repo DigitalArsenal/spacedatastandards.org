@@ -319,7 +319,7 @@ def LPFCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
-    LPFCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
+    return LPFCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
 
 def LPFAddCHALLENGE_NONCE(builder, CHALLENGE_NONCE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CHALLENGE_NONCE), 0)
@@ -341,7 +341,7 @@ def LPFCreateCHALLENGE_NONCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCHALLENGE_NONCEVector(builder, data):
-    LPFCreateCHALLENGE_NONCEVector(builder, data)
+    return LPFCreateCHALLENGE_NONCEVector(builder, data)
 
 def LPFAddCHALLENGE_EXPIRES_AT(builder, CHALLENGE_EXPIRES_AT):
     builder.PrependUint64Slot(10, CHALLENGE_EXPIRES_AT, 0)
@@ -375,7 +375,7 @@ def LPFCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    LPFCreateSIGNATUREVector(builder, data)
+    return LPFCreateSIGNATUREVector(builder, data)
 
 def LPFAddSIGNING_PUBKEY(builder, SIGNING_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNING_PUBKEY), 0)
@@ -397,7 +397,7 @@ def LPFCreateSIGNING_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNING_PUBKEYVector(builder, data):
-    LPFCreateSIGNING_PUBKEYVector(builder, data)
+    return LPFCreateSIGNING_PUBKEYVector(builder, data)
 
 def LPFAddTIMESTAMP_MS(builder, TIMESTAMP_MS):
     builder.PrependUint64Slot(14, TIMESTAMP_MS, 0)

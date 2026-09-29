@@ -649,7 +649,7 @@ def TRSRequestCreateINVERSE_ENU_TRANSFORMVector(builder, data):
     return builder.EndVector()
 
 def CreateINVERSE_ENU_TRANSFORMVector(builder, data):
-    TRSRequestCreateINVERSE_ENU_TRANSFORMVector(builder, data)
+    return TRSRequestCreateINVERSE_ENU_TRANSFORMVector(builder, data)
 
 def TRSRequestAddTARGET_HEIGHT_M(builder, TARGET_HEIGHT_M):
     builder.PrependFloat64Slot(23, TARGET_HEIGHT_M, 0.0)
@@ -731,7 +731,7 @@ def TRSRequestCreateGRID_LONGITUDE_RADVector(builder, data):
     return builder.EndVector()
 
 def CreateGRID_LONGITUDE_RADVector(builder, data):
-    TRSRequestCreateGRID_LONGITUDE_RADVector(builder, data)
+    return TRSRequestCreateGRID_LONGITUDE_RADVector(builder, data)
 
 def TRSRequestAddGRID_LATITUDE_RAD(builder, GRID_LATITUDE_RAD):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(GRID_LATITUDE_RAD), 0)
@@ -753,7 +753,7 @@ def TRSRequestCreateGRID_LATITUDE_RADVector(builder, data):
     return builder.EndVector()
 
 def CreateGRID_LATITUDE_RADVector(builder, data):
-    TRSRequestCreateGRID_LATITUDE_RADVector(builder, data)
+    return TRSRequestCreateGRID_LATITUDE_RADVector(builder, data)
 
 def TRSRequestAddGROUND_HEIGHTS_M(builder, GROUND_HEIGHTS_M):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_HEIGHTS_M), 0)
@@ -775,7 +775,7 @@ def TRSRequestCreateGROUND_HEIGHTS_MVector(builder, data):
     return builder.EndVector()
 
 def CreateGROUND_HEIGHTS_MVector(builder, data):
-    TRSRequestCreateGROUND_HEIGHTS_MVector(builder, data)
+    return TRSRequestCreateGROUND_HEIGHTS_MVector(builder, data)
 
 def TRSRequestAddPROFILE_HEIGHTS_M(builder, PROFILE_HEIGHTS_M):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(PROFILE_HEIGHTS_M), 0)
@@ -797,7 +797,7 @@ def TRSRequestCreatePROFILE_HEIGHTS_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePROFILE_HEIGHTS_MVector(builder, data):
-    TRSRequestCreatePROFILE_HEIGHTS_MVector(builder, data)
+    return TRSRequestCreatePROFILE_HEIGHTS_MVector(builder, data)
 
 def TRSRequestAddPROFILE_SURFACE_Z_M(builder, PROFILE_SURFACE_Z_M):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(PROFILE_SURFACE_Z_M), 0)
@@ -819,7 +819,7 @@ def TRSRequestCreatePROFILE_SURFACE_Z_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePROFILE_SURFACE_Z_MVector(builder, data):
-    TRSRequestCreatePROFILE_SURFACE_Z_MVector(builder, data)
+    return TRSRequestCreatePROFILE_SURFACE_Z_MVector(builder, data)
 
 def TRSRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

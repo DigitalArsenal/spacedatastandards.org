@@ -158,7 +158,7 @@ def BPFRuntimeLockCreateALLOWED_DOMAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_DOMAINSVector(builder, data):
-    BPFRuntimeLockCreateALLOWED_DOMAINSVector(builder, data)
+    return BPFRuntimeLockCreateALLOWED_DOMAINSVector(builder, data)
 
 def BPFRuntimeLockAddALLOWED_TLDS(builder, ALLOWED_TLDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_TLDS), 0)
@@ -176,7 +176,7 @@ def BPFRuntimeLockCreateALLOWED_TLDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_TLDSVector(builder, data):
-    BPFRuntimeLockCreateALLOWED_TLDSVector(builder, data)
+    return BPFRuntimeLockCreateALLOWED_TLDSVector(builder, data)
 
 def BPFRuntimeLockAddDEV_DOMAINS(builder, DEV_DOMAINS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DEV_DOMAINS), 0)
@@ -194,7 +194,7 @@ def BPFRuntimeLockCreateDEV_DOMAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEV_DOMAINSVector(builder, data):
-    BPFRuntimeLockCreateDEV_DOMAINSVector(builder, data)
+    return BPFRuntimeLockCreateDEV_DOMAINSVector(builder, data)
 
 def BPFRuntimeLockAddTTL_DAYS(builder, TTL_DAYS):
     builder.PrependUint32Slot(3, TTL_DAYS, 180)

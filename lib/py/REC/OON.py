@@ -334,7 +334,7 @@ def OONCreateANTENNASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANTENNASVector(builder, data):
-    OONCreateANTENNASVector(builder, data)
+    return OONCreateANTENNASVector(builder, data)
 
 def OONAddBATTERIES(builder, BATTERIES):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BATTERIES), 0)
@@ -352,7 +352,7 @@ def OONCreateBATTERIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBATTERIESVector(builder, data):
-    OONCreateBATTERIESVector(builder, data)
+    return OONCreateBATTERIESVector(builder, data)
 
 def OONAddSOLAR_ARRAYS(builder, SOLAR_ARRAYS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_ARRAYS), 0)
@@ -370,7 +370,7 @@ def OONCreateSOLAR_ARRAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOLAR_ARRAYSVector(builder, data):
-    OONCreateSOLAR_ARRAYSVector(builder, data)
+    return OONCreateSOLAR_ARRAYSVector(builder, data)
 
 def OONAddTHRUSTERS(builder, THRUSTERS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(THRUSTERS), 0)
@@ -388,7 +388,7 @@ def OONCreateTHRUSTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTHRUSTERSVector(builder, data):
-    OONCreateTHRUSTERSVector(builder, data)
+    return OONCreateTHRUSTERSVector(builder, data)
 
 def OONAddONORBIT_DETAILS(builder, ONORBIT_DETAILS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ONORBIT_DETAILS), 0)
@@ -406,7 +406,7 @@ def OONCreateONORBIT_DETAILSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateONORBIT_DETAILSVector(builder, data):
-    OONCreateONORBIT_DETAILSVector(builder, data)
+    return OONCreateONORBIT_DETAILSVector(builder, data)
 
 def OONAddCOUNTRY_CODE(builder, COUNTRY_CODE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY_CODE), 0)
@@ -430,7 +430,7 @@ def OONCreateENTITY_COLLECTIONVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTITY_COLLECTIONVector(builder, data):
-    OONCreateENTITY_COLLECTIONVector(builder, data)
+    return OONCreateENTITY_COLLECTIONVector(builder, data)
 
 def OONEnd(builder):
     return builder.EndObject()

@@ -156,7 +156,7 @@ public enum KMLFlyToMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  KML coordinate (longitude, latitude, optional altitude)
-public struct KMLCoordinate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLCoordinate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -207,7 +207,7 @@ public struct KMLCoordinate: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  LookAt viewpoint
-public struct KMLLookAt: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLookAt: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -286,7 +286,7 @@ public struct KMLLookAt: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Camera viewpoint
-public struct KMLCamera: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLCamera: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -365,7 +365,7 @@ public struct KMLCamera: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Icon style
-public struct KMLIconStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLIconStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -460,7 +460,7 @@ public struct KMLIconStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Line style
-public struct KMLLineStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLineStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -542,7 +542,7 @@ public struct KMLLineStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Polygon style
-public struct KMLPolyStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPolyStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -603,7 +603,7 @@ public struct KMLPolyStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Label style
-public struct KMLLabelStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLabelStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -655,7 +655,7 @@ public struct KMLLabelStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Balloon style
-public struct KMLBalloonStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLBalloonStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -716,7 +716,7 @@ public struct KMLBalloonStyle: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Item icon for ListStyle
-public struct KMLItemIcon: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLItemIcon: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -762,7 +762,7 @@ public struct KMLItemIcon: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  List style
-public struct KMLListStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLListStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -821,7 +821,7 @@ public struct KMLListStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Style definition
-public struct KMLStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -901,7 +901,7 @@ public struct KMLStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Style map pair
-public struct KMLStyleMapPair: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLStyleMapPair: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -946,7 +946,7 @@ public struct KMLStyleMapPair: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Style map (normal/highlight pair)
-public struct KMLStyleMap: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLStyleMap: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -991,7 +991,7 @@ public struct KMLStyleMap: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Point geometry
-public struct KMLPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1043,7 +1043,7 @@ public struct KMLPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  LineString geometry
-public struct KMLLineString: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLineString: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1110,7 +1110,7 @@ public struct KMLLineString: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  LinearRing geometry
-public struct KMLLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLinearRing: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1170,7 +1170,7 @@ public struct KMLLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Polygon geometry
-public struct KMLPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPolygon: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1237,7 +1237,7 @@ public struct KMLPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Resource map alias for Model
-public struct KMLResourceMapAlias: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLResourceMapAlias: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1283,7 +1283,7 @@ public struct KMLResourceMapAlias: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  3D Model geometry
-public struct KMLModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1398,7 +1398,7 @@ public struct KMLModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  gx:Track — time-stamped position track
-public struct KMLTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1479,7 +1479,7 @@ public struct KMLTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  gx:MultiTrack
-public struct KMLMultiTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLMultiTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1531,7 +1531,7 @@ public struct KMLMultiTrack: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  MultiGeometry
-public struct KMLMultiGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLMultiGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1617,7 +1617,7 @@ public struct KMLMultiGeometry: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  TimeSpan
-public struct KMLTimeSpan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTimeSpan: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1663,7 +1663,7 @@ public struct KMLTimeSpan: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  TimeStamp
-public struct KMLTimeStamp: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTimeStamp: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1701,7 +1701,7 @@ public struct KMLTimeStamp: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Extended data key-value pair
-public struct KMLData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1755,7 +1755,7 @@ public struct KMLData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Schema simple field definition
-public struct KMLSimpleField: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLSimpleField: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1809,7 +1809,7 @@ public struct KMLSimpleField: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Schema definition
-public struct KMLSchema: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLSchema: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1862,7 +1862,7 @@ public struct KMLSchema: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Simple data value for SchemaData
-public struct KMLSimpleData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLSimpleData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1908,7 +1908,7 @@ public struct KMLSimpleData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Schema data reference
-public struct KMLSchemaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLSchemaData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1953,7 +1953,7 @@ public struct KMLSchemaData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  LatLonQuad — four corner coordinates for ground overlay
-public struct KMLLatLonQuad: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLatLonQuad: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1990,7 +1990,7 @@ public struct KMLLatLonQuad: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Region — Level of Detail bounding region
-public struct KMLRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLRegion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2034,7 +2034,7 @@ public struct KMLRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  LatLonAltBox for Region
-public struct KMLLatLonAltBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLatLonAltBox: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2113,7 +2113,7 @@ public struct KMLLatLonAltBox: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Level of Detail parameters
-public struct KMLLod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLod: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2171,7 +2171,7 @@ public struct KMLLod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 }
 
 ///  Full Link element
-public struct KMLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2260,7 +2260,7 @@ public struct KMLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  ViewVolume for PhotoOverlay
-public struct KMLViewVolume: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLViewVolume: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2325,7 +2325,7 @@ public struct KMLViewVolume: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  ImagePyramid for PhotoOverlay
-public struct KMLImagePyramid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLImagePyramid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2383,7 +2383,7 @@ public struct KMLImagePyramid: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Network link
-public struct KMLNetworkLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLNetworkLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2504,7 +2504,7 @@ public struct KMLNetworkLink: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Screen overlay
-public struct KMLScreenOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLScreenOverlay: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2700,7 +2700,7 @@ public struct KMLScreenOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Photo overlay
-public struct KMLPhotoOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPhotoOverlay: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2812,7 +2812,7 @@ public struct KMLPhotoOverlay: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Ground overlay
-public struct KMLGroundOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLGroundOverlay: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2968,7 +2968,7 @@ public struct KMLGroundOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Update element for NetworkLinkControl
-public struct KMLUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLUpdate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3030,7 +3030,7 @@ public struct KMLUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  NetworkLinkControl
-public struct KMLNetworkLinkControl: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLNetworkLinkControl: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3143,7 +3143,7 @@ public struct KMLNetworkLinkControl: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  gx:FlyTo tour primitive
-public struct KMLFlyTo: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLFlyTo: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3201,7 +3201,7 @@ public struct KMLFlyTo: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  gx:Wait tour primitive
-public struct KMLWait: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLWait: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3238,7 +3238,7 @@ public struct KMLWait: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  gx:AnimatedUpdate tour primitive
-public struct KMLAnimatedUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLAnimatedUpdate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3289,7 +3289,7 @@ public struct KMLAnimatedUpdate: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  gx:TourControl tour primitive
-public struct KMLTourControl: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTourControl: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3327,7 +3327,7 @@ public struct KMLTourControl: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  gx:SoundCue tour primitive
-public struct KMLSoundCue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLSoundCue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3372,7 +3372,7 @@ public struct KMLSoundCue: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Tour primitive (union-like)
-public struct KMLTourPrimitive: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTourPrimitive: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3437,7 +3437,7 @@ public struct KMLTourPrimitive: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  gx:Playlist
-public struct KMLPlaylist: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPlaylist: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3474,7 +3474,7 @@ public struct KMLPlaylist: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  gx:Tour
-public struct KMLTour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLTour: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3535,7 +3535,7 @@ public struct KMLTour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Placemark feature
-public struct KMLPlacemark: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLPlacemark: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3740,7 +3740,7 @@ public struct KMLPlacemark: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Folder container
-public struct KMLFolder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMLFolder: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3915,7 +3915,7 @@ public struct KMLFolder: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  KML Document
-public struct KML: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KML: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

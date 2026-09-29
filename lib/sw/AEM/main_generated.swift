@@ -38,7 +38,7 @@ import FlatBuffers
 ///  Q*_DOT 1/s; ANGLE_*, SPIN_*, NUTATION, NUTATION_PHASE, MOMENTUM_* deg;
 ///  ANGLE_*_DOT, ANGVEL_*, SPIN_ANGLE_VEL, NUTATION_VEL deg/s;
 ///  NUTATION_PER s.
-public struct attitudeDataLine: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct attitudeDataLine: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -264,7 +264,7 @@ public struct attitudeDataLine: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
-public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AEMSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -475,7 +475,7 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Attitude Ephemeris Message
-public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AEM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

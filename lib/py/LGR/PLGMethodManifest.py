@@ -148,7 +148,7 @@ def PLGMethodManifestCreateINPUT_PORTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINPUT_PORTSVector(builder, data):
-    PLGMethodManifestCreateINPUT_PORTSVector(builder, data)
+    return PLGMethodManifestCreateINPUT_PORTSVector(builder, data)
 
 def PLGMethodManifestAddOUTPUT_PORTS(builder, OUTPUT_PORTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT_PORTS), 0)
@@ -166,7 +166,7 @@ def PLGMethodManifestCreateOUTPUT_PORTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOUTPUT_PORTSVector(builder, data):
-    PLGMethodManifestCreateOUTPUT_PORTSVector(builder, data)
+    return PLGMethodManifestCreateOUTPUT_PORTSVector(builder, data)
 
 def PLGMethodManifestAddMAX_BATCH(builder, MAX_BATCH):
     builder.PrependUint32Slot(4, MAX_BATCH, 1)

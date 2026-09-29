@@ -1,0 +1,14 @@
+// A vector of unions (not every generator supports one, so it has its own
+// root). bag.bin is bag.json built by flatc; bag_r0.bin is bag.bin encrypted
+// by the C++ walker with the key 00 01 .. 1f and record index 0.
+
+include "node.fbs";
+
+namespace EncryptionV3;
+
+table Bag {
+  note: string (encrypted);
+  items: [Payload];
+}
+
+root_type Bag;

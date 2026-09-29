@@ -191,7 +191,7 @@ def RFMLocalAlignedConstrainedAxesCreateALIGNMENT_VECTORVector(builder, data):
     return builder.EndVector()
 
 def CreateALIGNMENT_VECTORVector(builder, data):
-    RFMLocalAlignedConstrainedAxesCreateALIGNMENT_VECTORVector(builder, data)
+    return RFMLocalAlignedConstrainedAxesCreateALIGNMENT_VECTORVector(builder, data)
 
 def RFMLocalAlignedConstrainedAxesAddALIGNMENT_REFERENCE_VECTOR(builder, ALIGNMENT_REFERENCE_VECTOR):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ALIGNMENT_REFERENCE_VECTOR), 0)
@@ -213,7 +213,7 @@ def RFMLocalAlignedConstrainedAxesCreateALIGNMENT_REFERENCE_VECTORVector(builder
     return builder.EndVector()
 
 def CreateALIGNMENT_REFERENCE_VECTORVector(builder, data):
-    RFMLocalAlignedConstrainedAxesCreateALIGNMENT_REFERENCE_VECTORVector(builder, data)
+    return RFMLocalAlignedConstrainedAxesCreateALIGNMENT_REFERENCE_VECTORVector(builder, data)
 
 def RFMLocalAlignedConstrainedAxesAddCONSTRAINT_VECTOR(builder, CONSTRAINT_VECTOR):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINT_VECTOR), 0)
@@ -235,7 +235,7 @@ def RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_VECTORVector(builder, data):
     return builder.EndVector()
 
 def CreateCONSTRAINT_VECTORVector(builder, data):
-    RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_VECTORVector(builder, data)
+    return RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_VECTORVector(builder, data)
 
 def RFMLocalAlignedConstrainedAxesAddCONSTRAINT_REFERENCE_VECTOR(builder, CONSTRAINT_REFERENCE_VECTOR):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINT_REFERENCE_VECTOR), 0)
@@ -257,7 +257,7 @@ def RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_REFERENCE_VECTORVector(builde
     return builder.EndVector()
 
 def CreateCONSTRAINT_REFERENCE_VECTORVector(builder, data):
-    RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_REFERENCE_VECTORVector(builder, data)
+    return RFMLocalAlignedConstrainedAxesCreateCONSTRAINT_REFERENCE_VECTORVector(builder, data)
 
 def RFMLocalAlignedConstrainedAxesEnd(builder):
     return builder.EndObject()

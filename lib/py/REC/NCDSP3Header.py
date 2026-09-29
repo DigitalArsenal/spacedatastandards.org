@@ -323,7 +323,7 @@ def NCDSP3HeaderCreateSATELLITE_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSATELLITE_IDSVector(builder, data):
-    NCDSP3HeaderCreateSATELLITE_IDSVector(builder, data)
+    return NCDSP3HeaderCreateSATELLITE_IDSVector(builder, data)
 
 def NCDSP3HeaderAddSATELLITE_ACCURACY_EXPONENTS(builder, SATELLITE_ACCURACY_EXPONENTS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SATELLITE_ACCURACY_EXPONENTS), 0)
@@ -345,7 +345,7 @@ def NCDSP3HeaderCreateSATELLITE_ACCURACY_EXPONENTSVector(builder, data):
     return builder.EndVector()
 
 def CreateSATELLITE_ACCURACY_EXPONENTSVector(builder, data):
-    NCDSP3HeaderCreateSATELLITE_ACCURACY_EXPONENTSVector(builder, data)
+    return NCDSP3HeaderCreateSATELLITE_ACCURACY_EXPONENTSVector(builder, data)
 
 def NCDSP3HeaderAddPOSITION_VELOCITY_BASE(builder, POSITION_VELOCITY_BASE):
     builder.PrependFloat64Slot(15, POSITION_VELOCITY_BASE, 0.0)
@@ -375,7 +375,7 @@ def NCDSP3HeaderCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    NCDSP3HeaderCreateCOMMENTVector(builder, data)
+    return NCDSP3HeaderCreateCOMMENTVector(builder, data)
 
 def NCDSP3HeaderEnd(builder):
     return builder.EndObject()

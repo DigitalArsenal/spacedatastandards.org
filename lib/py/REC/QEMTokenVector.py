@@ -159,7 +159,7 @@ def QEMTokenVectorCreateVECTOR_INT8Vector(builder, data):
     return builder.EndVector()
 
 def CreateVECTOR_INT8Vector(builder, data):
-    QEMTokenVectorCreateVECTOR_INT8Vector(builder, data)
+    return QEMTokenVectorCreateVECTOR_INT8Vector(builder, data)
 
 def QEMTokenVectorAddSCALE(builder, SCALE):
     builder.PrependFloat32Slot(3, SCALE, 0.0)
@@ -187,7 +187,7 @@ def QEMTokenVectorCreateVECTOR_FLOAT32Vector(builder, data):
     return builder.EndVector()
 
 def CreateVECTOR_FLOAT32Vector(builder, data):
-    QEMTokenVectorCreateVECTOR_FLOAT32Vector(builder, data)
+    return QEMTokenVectorCreateVECTOR_FLOAT32Vector(builder, data)
 
 def QEMTokenVectorAddIDF(builder, IDF):
     builder.PrependFloat32Slot(5, IDF, 0.0)

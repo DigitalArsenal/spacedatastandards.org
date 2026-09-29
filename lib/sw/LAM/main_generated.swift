@@ -56,7 +56,7 @@ public enum aouReportType: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Missile Track
-public struct MST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

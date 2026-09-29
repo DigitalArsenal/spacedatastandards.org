@@ -241,7 +241,7 @@ def PerturbationsCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    PerturbationsCreateCOMMENTVector(builder, data)
+    return PerturbationsCreateCOMMENTVector(builder, data)
 
 def PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
@@ -289,7 +289,7 @@ def PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateN_BODY_PERTURBATIONSVector(builder, data):
-    PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data)
+    return PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data)
 
 def PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OCEAN_TIDES_MODEL), 0)

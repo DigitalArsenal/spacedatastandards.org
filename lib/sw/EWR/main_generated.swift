@@ -111,7 +111,7 @@ public enum WaveformType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Electronic Warfare
-public struct EWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct EWR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

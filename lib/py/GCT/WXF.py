@@ -581,7 +581,7 @@ def WXFCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    WXFCreateVALUESVector(builder, data)
+    return WXFCreateVALUESVector(builder, data)
 
 def WXFAddCHUNK_CID(builder, CHUNK_CID):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(CHUNK_CID), 0)
@@ -611,7 +611,7 @@ def WXFCreateCHUNK_CODECSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHUNK_CODECSVector(builder, data):
-    WXFCreateCHUNK_CODECSVector(builder, data)
+    return WXFCreateCHUNK_CODECSVector(builder, data)
 
 def WXFAddCHUNK_BYTE_LENGTH(builder, CHUNK_BYTE_LENGTH):
     builder.PrependUint64Slot(28, CHUNK_BYTE_LENGTH, 0)

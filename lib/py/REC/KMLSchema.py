@@ -105,7 +105,7 @@ def KMLSchemaCreateSIMPLE_FIELDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSIMPLE_FIELDSVector(builder, data):
-    KMLSchemaCreateSIMPLE_FIELDSVector(builder, data)
+    return KMLSchemaCreateSIMPLE_FIELDSVector(builder, data)
 
 def KMLSchemaEnd(builder):
     return builder.EndObject()

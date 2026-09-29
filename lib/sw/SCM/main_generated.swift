@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Schema Standard Definition
-public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCHEMA_STANDARD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -109,7 +109,7 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Schema Manifest
-public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

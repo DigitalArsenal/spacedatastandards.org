@@ -117,7 +117,7 @@ public enum avlVerticalDatum: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  Required on every record: a redistributed volume whose dataset, epoch,
 ///  and licence are unstated is not publishable. Dataset identity is DATA;
 ///  the standard names no dataset, provider, or site.
-public struct AVLProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AVLProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -274,7 +274,7 @@ public struct AVLProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Airspace Volume
-public struct AVL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AVL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -186,7 +186,7 @@ def PIVResponseCreateOUTPUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOUTPUTSVector(builder, data):
-    PIVResponseCreateOUTPUTSVector(builder, data)
+    return PIVResponseCreateOUTPUTSVector(builder, data)
 
 def PIVResponseAddPAYLOAD_ARENA(builder, PAYLOAD_ARENA):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_ARENA), 0)
@@ -208,7 +208,7 @@ def PIVResponseCreatePAYLOAD_ARENAVector(builder, data):
     return builder.EndVector()
 
 def CreatePAYLOAD_ARENAVector(builder, data):
-    PIVResponseCreatePAYLOAD_ARENAVector(builder, data)
+    return PIVResponseCreatePAYLOAD_ARENAVector(builder, data)
 
 def PIVResponseAddERROR_CODE(builder, ERROR_CODE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ERROR_CODE), 0)

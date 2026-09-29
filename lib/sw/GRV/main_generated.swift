@@ -72,7 +72,7 @@ public enum CentralBody: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Gravity Models
-public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct GRV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

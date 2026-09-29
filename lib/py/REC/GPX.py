@@ -347,7 +347,7 @@ def GPXCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    GPXCreateLINKSVector(builder, data)
+    return GPXCreateLINKSVector(builder, data)
 
 def GPXAddTIME(builder, TIME):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TIME), 0)
@@ -401,7 +401,7 @@ def GPXCreateWAYPOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWAYPOINTSVector(builder, data):
-    GPXCreateWAYPOINTSVector(builder, data)
+    return GPXCreateWAYPOINTSVector(builder, data)
 
 def GPXAddROUTES(builder, ROUTES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ROUTES), 0)
@@ -419,7 +419,7 @@ def GPXCreateROUTESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROUTESVector(builder, data):
-    GPXCreateROUTESVector(builder, data)
+    return GPXCreateROUTESVector(builder, data)
 
 def GPXAddTRACKS(builder, TRACKS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKS), 0)
@@ -437,7 +437,7 @@ def GPXCreateTRACKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACKSVector(builder, data):
-    GPXCreateTRACKSVector(builder, data)
+    return GPXCreateTRACKSVector(builder, data)
 
 def GPXEnd(builder):
     return builder.EndObject()

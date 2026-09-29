@@ -77,7 +77,7 @@ def GJNPolygonRingsCreateRINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRINGSVector(builder, data):
-    GJNPolygonRingsCreateRINGSVector(builder, data)
+    return GJNPolygonRingsCreateRINGSVector(builder, data)
 
 def GJNPolygonRingsEnd(builder):
     return builder.EndObject()

@@ -230,7 +230,7 @@ def TRVCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    TRVCreateRESULTSVector(builder, data)
+    return TRVCreateRESULTSVector(builder, data)
 
 def TRVAddTRIGGER(builder, TRIGGER):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRIGGER), 0)
@@ -270,7 +270,7 @@ def TRVCreateEVALUATOR_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateEVALUATOR_SIGNATUREVector(builder, data):
-    TRVCreateEVALUATOR_SIGNATUREVector(builder, data)
+    return TRVCreateEVALUATOR_SIGNATUREVector(builder, data)
 
 def TRVEnd(builder):
     return builder.EndObject()

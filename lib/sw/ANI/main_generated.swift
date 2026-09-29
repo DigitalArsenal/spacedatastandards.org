@@ -28,7 +28,7 @@ public enum analyticProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Analytic Imagery Product
-public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ANI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

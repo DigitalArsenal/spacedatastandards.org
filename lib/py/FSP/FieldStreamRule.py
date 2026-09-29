@@ -148,7 +148,7 @@ def FieldStreamRuleCreateFIELD_ID_PATHVector(builder, data):
     return builder.EndVector()
 
 def CreateFIELD_ID_PATHVector(builder, data):
-    FieldStreamRuleCreateFIELD_ID_PATHVector(builder, data)
+    return FieldStreamRuleCreateFIELD_ID_PATHVector(builder, data)
 
 def FieldStreamRuleAddDECISION(builder, DECISION):
     builder.PrependInt8Slot(2, DECISION, 1)
@@ -172,7 +172,7 @@ def FieldStreamRuleCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    FieldStreamRuleCreateTAGSVector(builder, data)
+    return FieldStreamRuleCreateTAGSVector(builder, data)
 
 def FieldStreamRuleAddREQUIRED_ATTRIBUTES(builder, REQUIRED_ATTRIBUTES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_ATTRIBUTES), 0)
@@ -190,7 +190,7 @@ def FieldStreamRuleCreateREQUIRED_ATTRIBUTESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUIRED_ATTRIBUTESVector(builder, data):
-    FieldStreamRuleCreateREQUIRED_ATTRIBUTESVector(builder, data)
+    return FieldStreamRuleCreateREQUIRED_ATTRIBUTESVector(builder, data)
 
 def FieldStreamRuleAddKEY_ID(builder, KEY_ID):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ID), 0)

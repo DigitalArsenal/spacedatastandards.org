@@ -310,7 +310,7 @@ def MTICreateMISSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMISSIONSVector(builder, data):
-    MTICreateMISSIONSVector(builder, data)
+    return MTICreateMISSIONSVector(builder, data)
 
 def MTIAddDWELLS(builder, DWELLS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DWELLS), 0)
@@ -328,7 +328,7 @@ def MTICreateDWELLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDWELLSVector(builder, data):
-    MTICreateDWELLSVector(builder, data)
+    return MTICreateDWELLSVector(builder, data)
 
 def MTIAddHRRS(builder, HRRS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(HRRS), 0)
@@ -346,7 +346,7 @@ def MTICreateHRRSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHRRSVector(builder, data):
-    MTICreateHRRSVector(builder, data)
+    return MTICreateHRRSVector(builder, data)
 
 def MTIAddJOB_DEFS(builder, JOB_DEFS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_DEFS), 0)
@@ -364,7 +364,7 @@ def MTICreateJOB_DEFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateJOB_DEFSVector(builder, data):
-    MTICreateJOB_DEFSVector(builder, data)
+    return MTICreateJOB_DEFSVector(builder, data)
 
 def MTIAddFREE_TEXTS(builder, FREE_TEXTS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(FREE_TEXTS), 0)
@@ -382,7 +382,7 @@ def MTICreateFREE_TEXTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFREE_TEXTSVector(builder, data):
-    MTICreateFREE_TEXTSVector(builder, data)
+    return MTICreateFREE_TEXTSVector(builder, data)
 
 def MTIAddPLATFORM_LOCS(builder, PLATFORM_LOCS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_LOCS), 0)
@@ -400,7 +400,7 @@ def MTICreatePLATFORM_LOCSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLATFORM_LOCSVector(builder, data):
-    MTICreatePLATFORM_LOCSVector(builder, data)
+    return MTICreatePLATFORM_LOCSVector(builder, data)
 
 def MTIAddJOB_REQUESTS(builder, JOB_REQUESTS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_REQUESTS), 0)
@@ -418,7 +418,7 @@ def MTICreateJOB_REQUESTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateJOB_REQUESTSVector(builder, data):
-    MTICreateJOB_REQUESTSVector(builder, data)
+    return MTICreateJOB_REQUESTSVector(builder, data)
 
 def MTIEnd(builder):
     return builder.EndObject()

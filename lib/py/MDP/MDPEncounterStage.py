@@ -179,7 +179,7 @@ def MDPEncounterStageCreateALLOWED_BODY_NAIF_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateALLOWED_BODY_NAIF_IDSVector(builder, data):
-    MDPEncounterStageCreateALLOWED_BODY_NAIF_IDSVector(builder, data)
+    return MDPEncounterStageCreateALLOWED_BODY_NAIF_IDSVector(builder, data)
 
 def MDPEncounterStageAddALLOWED_BODY_NAMES(builder, ALLOWED_BODY_NAMES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_BODY_NAMES), 0)
@@ -197,7 +197,7 @@ def MDPEncounterStageCreateALLOWED_BODY_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_BODY_NAMESVector(builder, data):
-    MDPEncounterStageCreateALLOWED_BODY_NAMESVector(builder, data)
+    return MDPEncounterStageCreateALLOWED_BODY_NAMESVector(builder, data)
 
 def MDPEncounterStageAddEPOCH_WINDOW_START(builder, EPOCH_WINDOW_START):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_WINDOW_START), 0)

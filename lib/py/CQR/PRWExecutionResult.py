@@ -120,7 +120,7 @@ def PRWExecutionResultCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    PRWExecutionResultCreateSAMPLESVector(builder, data)
+    return PRWExecutionResultCreateSAMPLESVector(builder, data)
 
 def PRWExecutionResultAddELAPSED_SECONDS(builder, ELAPSED_SECONDS):
     builder.PrependFloat64Slot(2, ELAPSED_SECONDS, 0.0)

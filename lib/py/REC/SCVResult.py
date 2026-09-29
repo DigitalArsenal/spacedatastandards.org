@@ -264,7 +264,7 @@ def SCVResultCreateHISTOGRAMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHISTOGRAMSVector(builder, data):
-    SCVResultCreateHISTOGRAMSVector(builder, data)
+    return SCVResultCreateHISTOGRAMSVector(builder, data)
 
 def SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
@@ -282,7 +282,7 @@ def SCVResultCreateCONTRIBUTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRIBUTIONSVector(builder, data):
-    SCVResultCreateCONTRIBUTIONSVector(builder, data)
+    return SCVResultCreateCONTRIBUTIONSVector(builder, data)
 
 def SCVResultAddGEOMETRY(builder, GEOMETRY):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
@@ -324,7 +324,7 @@ def SCVResultCreateTARGET_RESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGET_RESULTSVector(builder, data):
-    SCVResultCreateTARGET_RESULTSVector(builder, data)
+    return SCVResultCreateTARGET_RESULTSVector(builder, data)
 
 def SCVResultEnd(builder):
     return builder.EndObject()

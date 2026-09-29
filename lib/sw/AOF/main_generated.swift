@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  AOS Transfer Frame (CCSDS 732.0-B-3)
-public struct AOF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AOF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

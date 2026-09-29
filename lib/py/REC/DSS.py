@@ -647,7 +647,7 @@ def DSSCreateVERIFIED_CHUNKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVERIFIED_CHUNKSVector(builder, data):
-    DSSCreateVERIFIED_CHUNKSVector(builder, data)
+    return DSSCreateVERIFIED_CHUNKSVector(builder, data)
 
 def DSSAddLAST_SYNCED_AT(builder, LAST_SYNCED_AT):
     builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_SYNCED_AT), 0)

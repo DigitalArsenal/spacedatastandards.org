@@ -145,7 +145,7 @@ def ROCCreateSTAGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTAGESVector(builder, data):
-    ROCCreateSTAGESVector(builder, data)
+    return ROCCreateSTAGESVector(builder, data)
 
 def ROCAddSUSTAINERS(builder, SUSTAINERS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINERS), 0)
@@ -163,7 +163,7 @@ def ROCCreateSUSTAINERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSUSTAINERSVector(builder, data):
-    ROCCreateSUSTAINERSVector(builder, data)
+    return ROCCreateSUSTAINERSVector(builder, data)
 
 def ROCEnd(builder):
     return builder.EndObject()

@@ -21,18 +21,37 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class KMF extends com.google.flatbuffers.Table {
-  private byte[] encryptionCtx;
-
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static KMF getRootAsKMF(ByteBuffer _bb) { return getRootAsKMF(_bb, new KMF()); }
   public static KMF getRootAsKMF(ByteBuffer _bb, KMF obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static KMF getRootAsKMF(ByteBuffer _bb, byte[] encryptionCtx) { return getRootAsKMF(_bb, new KMF(), encryptionCtx); }
-  public static KMF getRootAsKMF(ByteBuffer _bb, KMF obj, byte[] encryptionCtx) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb, encryptionCtx)); }
   public static boolean KMFBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$KMF"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public void __init(int _i, ByteBuffer _bb, byte[] _encryptionCtx) { __reset(_i, _bb); this.encryptionCtx = _encryptionCtx; }
   public KMF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
-  public KMF __assign(int _i, ByteBuffer _bb, byte[] _encryptionCtx) { __init(_i, _bb, _encryptionCtx); return this; }
+
+  // Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
+  private static final int[] FLATBUFFERS_ENCRYPTION_PROGRAM = {
+    1, 2, 1, 2, 12, 1
+  };
+  /**
+   * Encrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+   * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+   * an unsigned 32-bit value, unique per buffer under the key). Throws
+   * IllegalArgumentException, before any byte changes, for a bad key or a
+   * malformed buffer.
+   */
+  public static void encryptBuffer(ByteBuffer _bb, byte[] key, int recordIndex) {
+    FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM);
+  }
+  /**
+   * Decrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+   * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+   * an unsigned 32-bit value, unique per buffer under the key). Throws
+   * IllegalArgumentException, before any byte changes, for a bad key or a
+   * malformed buffer.
+   */
+  public static void decryptBuffer(ByteBuffer _bb, byte[] key, int recordIndex) {
+    FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM);
+  }
 
   /**
    * Logical key identifier used across publication and grant records.
