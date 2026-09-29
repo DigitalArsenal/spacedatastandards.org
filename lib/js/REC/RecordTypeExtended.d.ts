@@ -1,0 +1,13 @@
+/**
+ * WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+ * union RecordType holds at most 255 members (a FlatBuffers union tag is
+ * one byte). Every later standard gets an ordinal here, from 256, and its
+ * records carry it in Record.EXTENDED_TYPE with the record's own
+ * FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+ * Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+ * Guard:    node scripts/checkRecordTypeOrdinals.mjs
+ */
+export declare enum RecordTypeExtended {
+    NONE = 0
+}
+//# sourceMappingURL=RecordTypeExtended.d.ts.map

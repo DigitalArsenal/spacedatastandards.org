@@ -2102,13 +2102,49 @@ bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *
 template <bool B = false>
 bool VerifyRecordTypeVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
+/// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+/// union RecordType holds at most 255 members (a FlatBuffers union tag is
+/// one byte). Every later standard gets an ordinal here, from 256, and its
+/// records carry it in Record.EXTENDED_TYPE with the record's own
+/// FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+enum RecordTypeExtended : uint16_t {
+  RecordTypeExtended_NONE = 0,
+  RecordTypeExtended_MIN = RecordTypeExtended_NONE,
+  RecordTypeExtended_MAX = RecordTypeExtended_NONE
+};
+
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[1] {
+  static const RecordTypeExtended values[] = {
+    RecordTypeExtended_NONE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesRecordTypeExtended() {
+  static const char * const names[2] = {
+    "NONE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
+  if (::flatbuffers::IsOutRange(e, RecordTypeExtended_NONE, RecordTypeExtended_NONE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesRecordTypeExtended()[index];
+}
+
 /// Individual record wrapper for any standard type
 struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RecordBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VALUE_TYPE = 4,
     VT_VALUE = 6,
-    VT_STANDARD = 8
+    VT_STANDARD = 8,
+    VT_EXTENDED_TYPE = 10,
+    VT_EXTENDED_VALUE = 12
   };
   RecordType value_type() const {
     return static_cast<RecordType>(GetField<uint8_t>(VT_VALUE_TYPE, 0));
@@ -2884,6 +2920,17 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *standard() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
   }
+  /// Wide record type, for a standard numbered in RecordTypeExtended
+  /// (ordinals 256 and up) because union RecordType has no room for it.
+  /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+  RecordTypeExtended EXTENDED_TYPE() const {
+    return static_cast<RecordTypeExtended>(GetField<uint16_t>(VT_EXTENDED_TYPE, 0));
+  }
+  /// The record's root FlatBuffer, with its file identifier, when
+  /// EXTENDED_TYPE is set.
+  const ::flatbuffers::Vector<uint8_t> *EXTENDED_VALUE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_EXTENDED_VALUE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2892,6 +2939,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyRecordType(verifier, value(), value_type()) &&
            VerifyOffset(verifier, VT_STANDARD) &&
            verifier.VerifyString(standard()) &&
+           VerifyField<uint16_t>(verifier, VT_EXTENDED_TYPE, 2) &&
+           VerifyOffset(verifier, VT_EXTENDED_VALUE) &&
+           verifier.VerifyVector(EXTENDED_VALUE()) &&
            verifier.EndTable();
   }
 };
@@ -3925,6 +3975,12 @@ struct RecordBuilder {
   void add_standard(::flatbuffers::Offset<::flatbuffers::String> standard) {
     fbb_.AddOffset(Record::VT_STANDARD, standard);
   }
+  void add_EXTENDED_TYPE(RecordTypeExtended EXTENDED_TYPE) {
+    fbb_.AddElement<uint16_t>(Record::VT_EXTENDED_TYPE, static_cast<uint16_t>(EXTENDED_TYPE), 0);
+  }
+  void add_EXTENDED_VALUE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EXTENDED_VALUE) {
+    fbb_.AddOffset(Record::VT_EXTENDED_VALUE, EXTENDED_VALUE);
+  }
   explicit RecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3940,10 +3996,14 @@ inline ::flatbuffers::Offset<Record> CreateRecord(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> standard = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> standard = 0,
+    RecordTypeExtended EXTENDED_TYPE = RecordTypeExtended_NONE,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EXTENDED_VALUE = 0) {
   RecordBuilder builder_(_fbb);
+  builder_.add_EXTENDED_VALUE(EXTENDED_VALUE);
   builder_.add_standard(standard);
   builder_.add_value(value);
+  builder_.add_EXTENDED_TYPE(EXTENDED_TYPE);
   builder_.add_value_type(value_type);
   return builder_.Finish();
 }
@@ -3952,13 +4012,18 @@ inline ::flatbuffers::Offset<Record> CreateRecordDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    const char *standard = nullptr) {
+    const char *standard = nullptr,
+    RecordTypeExtended EXTENDED_TYPE = RecordTypeExtended_NONE,
+    const std::vector<uint8_t> *EXTENDED_VALUE = nullptr) {
   auto standard__ = standard ? _fbb.CreateString(standard) : 0;
+  auto EXTENDED_VALUE__ = EXTENDED_VALUE ? _fbb.CreateVector<uint8_t>(*EXTENDED_VALUE) : 0;
   return CreateRecord(
       _fbb,
       value_type,
       value,
-      standard__);
+      standard__,
+      EXTENDED_TYPE,
+      EXTENDED_VALUE__);
 }
 
 /// Collection of Standard Records

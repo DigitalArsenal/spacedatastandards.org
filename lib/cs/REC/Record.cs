@@ -301,22 +301,47 @@ public struct Record : IFlatbufferObject
   public ArraySegment<byte>? GetstandardBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetstandardArray() { return __p.__vector_as_array<byte>(8); }
+  /// Wide record type, for a standard numbered in RecordTypeExtended
+  /// (ordinals 256 and up) because union RecordType has no room for it.
+  /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+  public RecordTypeExtended EXTENDED_TYPE { get { int o = __p.__offset(10); return o != 0 ? (RecordTypeExtended)__p.bb.GetUshort(o + __p.bb_pos) : RecordTypeExtended.NONE; } }
+  /// The record's root FlatBuffer, with its file identifier, when
+  /// EXTENDED_TYPE is set.
+  public byte EXTENDED_VALUE(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int EXTENDED_VALUELength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEXTENDED_VALUEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetEXTENDED_VALUEBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetEXTENDED_VALUEArray() { return __p.__vector_as_array<byte>(12); }
 
   public static Offset<Record> CreateRecord(FlatBufferBuilder builder,
       RecordType value_type = RecordType.NONE,
       int valueOffset = 0,
-      StringOffset standardOffset = default(StringOffset)) {
-    builder.StartTable(3);
+      StringOffset standardOffset = default(StringOffset),
+      RecordTypeExtended EXTENDED_TYPE = RecordTypeExtended.NONE,
+      VectorOffset EXTENDED_VALUEOffset = default(VectorOffset)) {
+    builder.StartTable(5);
+    Record.AddEXTENDED_VALUE(builder, EXTENDED_VALUEOffset);
     Record.Addstandard(builder, standardOffset);
     Record.Addvalue(builder, valueOffset);
+    Record.AddEXTENDED_TYPE(builder, EXTENDED_TYPE);
     Record.Addvalue_type(builder, value_type);
     return Record.EndRecord(builder);
   }
 
-  public static void StartRecord(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartRecord(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void Addvalue_type(FlatBufferBuilder builder, RecordType value_type) { builder.AddByte(0, (byte)value_type, 0); }
   public static void Addvalue(FlatBufferBuilder builder, int valueOffset) { builder.AddOffset(1, valueOffset, 0); }
   public static void Addstandard(FlatBufferBuilder builder, StringOffset standardOffset) { builder.AddOffset(2, standardOffset.Value, 0); }
+  public static void AddEXTENDED_TYPE(FlatBufferBuilder builder, RecordTypeExtended EXTENDED_TYPE) { builder.AddUshort(3, (ushort)EXTENDED_TYPE, 0); }
+  public static void AddEXTENDED_VALUE(FlatBufferBuilder builder, VectorOffset EXTENDED_VALUEOffset) { builder.AddOffset(4, EXTENDED_VALUEOffset.Value, 0); }
+  public static VectorOffset CreateEXTENDED_VALUEVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_VALUEVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_VALUEVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_VALUEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEXTENDED_VALUEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<Record> EndRecord(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Record>(o);
@@ -1095,17 +1120,27 @@ public struct Record : IFlatbufferObject
         break;
     }
     _o.standard = this.standard;
+    _o.EXTENDED_TYPE = this.EXTENDED_TYPE;
+    _o.EXTENDED_VALUE = new List<byte>();
+    for (var _j = 0; _j < this.EXTENDED_VALUELength; ++_j) {_o.EXTENDED_VALUE.Add(this.EXTENDED_VALUE(_j));}
   }
   public static Offset<Record> Pack(FlatBufferBuilder builder, RecordT _o) {
     if (_o == null) return default(Offset<Record>);
     var _value_type = _o.value == null ? RecordType.NONE : _o.value.Type;
     var _value = _o.value == null ? 0 : RecordTypeUnion.Pack(builder, _o.value);
     var _standard = _o.standard == null ? default(StringOffset) : builder.CreateString(_o.standard);
+    var _EXTENDED_VALUE = default(VectorOffset);
+    if (_o.EXTENDED_VALUE != null) {
+      var __EXTENDED_VALUE = _o.EXTENDED_VALUE.ToArray();
+      _EXTENDED_VALUE = CreateEXTENDED_VALUEVector(builder, __EXTENDED_VALUE);
+    }
     return CreateRecord(
       builder,
       _value_type,
       _value,
-      _standard);
+      _standard,
+      _o.EXTENDED_TYPE,
+      _EXTENDED_VALUE);
   }
 }
 
@@ -1113,10 +1148,14 @@ public class RecordT
 {
   public RecordTypeUnion value { get; set; }
   public string standard { get; set; }
+  public RecordTypeExtended EXTENDED_TYPE { get; set; }
+  public List<byte> EXTENDED_VALUE { get; set; }
 
   public RecordT() {
     this.value = null;
     this.standard = null;
+    this.EXTENDED_TYPE = RecordTypeExtended.NONE;
+    this.EXTENDED_VALUE = null;
   }
 }
 
@@ -1129,6 +1168,8 @@ static public class RecordVerify
       && verifier.VerifyField(tablePos, 4 /*value_type*/, 1 /*RecordType*/, 1, false)
       && verifier.VerifyUnion(tablePos, 4, 6 /*value*/, RecordTypeVerify.Verify, false)
       && verifier.VerifyString(tablePos, 8 /*standard*/, false)
+      && verifier.VerifyField(tablePos, 10 /*EXTENDED_TYPE*/, 2 /*RecordTypeExtended*/, 2, false)
+      && verifier.VerifyVectorOfData(tablePos, 12 /*EXTENDED_VALUE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

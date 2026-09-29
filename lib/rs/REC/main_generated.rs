@@ -8723,6 +8723,104 @@ impl RecordTypeT {
 }
 
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 1] = [
+    RecordTypeExtended::NONE,
+];
+
+/// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+/// union RecordType holds at most 255 members (a FlatBuffers union tag is
+/// one byte). Every later standard gets an ordinal here, from 256, and its
+/// records carry it in Record.EXTENDED_TYPE with the record's own
+/// FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct RecordTypeExtended(pub u16);
+
+#[allow(non_upper_case_globals)]
+impl RecordTypeExtended {
+    pub const NONE: Self = Self(0);
+
+    pub const ENUM_MIN: u16 = 0;
+    pub const ENUM_MAX: u16 = 0;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for RecordTypeExtended {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RecordTypeExtended {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u16>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for RecordTypeExtended {
+    type Output = RecordTypeExtended;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u16>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for RecordTypeExtended {
+    type Scalar = u16;
+
+    #[inline]
+    fn to_little_endian(self) -> u16 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u16) -> Self {
+        let b = u16::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for RecordTypeExtended {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u16::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for RecordTypeExtended {}
+
 pub enum RecordOffset {}
 
 /// Individual record wrapper for any standard type
@@ -8744,6 +8842,8 @@ impl<'a> Record<'a> {
     pub const VT_VALUE_TYPE: ::flatbuffers::VOffsetT = 4;
     pub const VT_VALUE: ::flatbuffers::VOffsetT = 6;
     pub const VT_STANDARD: ::flatbuffers::VOffsetT = 8;
+    pub const VT_EXTENDED_TYPE: ::flatbuffers::VOffsetT = 10;
+    pub const VT_EXTENDED_VALUE: ::flatbuffers::VOffsetT = 12;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -8776,8 +8876,10 @@ impl<'a> Record<'a> {
         args: &'args RecordArgs<'args>
     ) -> ::flatbuffers::WIPOffset<Record<'bldr>> {
         let mut builder = RecordBuilder::new(_fbb);
+        if let Some(x) = args.EXTENDED_VALUE { builder.add_EXTENDED_VALUE(x); }
         if let Some(x) = args.standard { builder.add_standard(x); }
         if let Some(x) = args.value { builder.add_value(x); }
+        builder.add_EXTENDED_TYPE(args.EXTENDED_TYPE);
         builder.add_value_type(args.value_type);
         builder.finish()
     }
@@ -10060,9 +10162,15 @@ impl<'a> Record<'a> {
         let standard = self.standard().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let EXTENDED_TYPE = self.EXTENDED_TYPE();
+        let EXTENDED_VALUE = self.EXTENDED_VALUE().map(|x| {
+            x.into_iter().collect()
+        });
         RecordT {
             value,
             standard,
+            EXTENDED_TYPE,
+            EXTENDED_VALUE,
         }
     }
 
@@ -10090,6 +10198,27 @@ impl<'a> Record<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Record::VT_STANDARD, None)}
+    }
+
+    /// Wide record type, for a standard numbered in RecordTypeExtended
+    /// (ordinals 256 and up) because union RecordType has no room for it.
+    /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+    #[inline]
+    pub fn EXTENDED_TYPE(&self) -> RecordTypeExtended {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<RecordTypeExtended>(Record::VT_EXTENDED_TYPE, Some(RecordTypeExtended::NONE)).unwrap()}
+    }
+
+    /// The record's root FlatBuffer, with its file identifier, when
+    /// EXTENDED_TYPE is set.
+    #[inline]
+    pub fn EXTENDED_VALUE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(Record::VT_EXTENDED_VALUE, None)}
     }
 
     #[inline]
@@ -14169,6 +14298,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
                 }
             })?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("standard", Self::VT_STANDARD, false)?
+            .visit_field::<RecordTypeExtended>("EXTENDED_TYPE", Self::VT_EXTENDED_TYPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("EXTENDED_VALUE", Self::VT_EXTENDED_VALUE, false)?
             .finish();
         Ok(())
     }
@@ -14178,6 +14309,8 @@ pub struct RecordArgs<'a> {
     pub value_type: RecordType,
     pub value: Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>>,
     pub standard: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EXTENDED_TYPE: RecordTypeExtended,
+    pub EXTENDED_VALUE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 
 impl<'a> Default for RecordArgs<'a> {
@@ -14187,6 +14320,8 @@ impl<'a> Default for RecordArgs<'a> {
             value_type: RecordType::NONE,
             value: None,
             standard: None,
+            EXTENDED_TYPE: RecordTypeExtended::NONE,
+            EXTENDED_VALUE: None,
         }
     }
 }
@@ -14210,6 +14345,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RecordBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_standard(&mut self, standard: ::flatbuffers::WIPOffset<&'b  str>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Record::VT_STANDARD, standard);
+    }
+
+    #[inline]
+    pub fn add_EXTENDED_TYPE(&mut self, EXTENDED_TYPE: RecordTypeExtended) {
+        self.fbb_.push_slot::<RecordTypeExtended>(Record::VT_EXTENDED_TYPE, EXTENDED_TYPE, RecordTypeExtended::NONE);
+    }
+
+    #[inline]
+    pub fn add_EXTENDED_VALUE(&mut self, EXTENDED_VALUE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Record::VT_EXTENDED_VALUE, EXTENDED_VALUE);
     }
 
     #[inline]
@@ -16017,6 +16162,8 @@ impl ::core::fmt::Debug for Record<'_> {
             },
         };
         ds.field("standard", &self.standard());
+        ds.field("EXTENDED_TYPE", &self.EXTENDED_TYPE());
+        ds.field("EXTENDED_VALUE", &self.EXTENDED_VALUE());
         ds.finish()
     }
 }
@@ -16026,6 +16173,8 @@ impl ::core::fmt::Debug for Record<'_> {
 pub struct RecordT {
     pub value: RecordTypeT,
     pub standard: Option<alloc::string::String>,
+    pub EXTENDED_TYPE: RecordTypeExtended,
+    pub EXTENDED_VALUE: Option<alloc::vec::Vec<u8>>,
 }
 
 impl Default for RecordT {
@@ -16033,6 +16182,8 @@ impl Default for RecordT {
         Self {
             value: RecordTypeT::NONE,
             standard: None,
+            EXTENDED_TYPE: RecordTypeExtended::NONE,
+            EXTENDED_VALUE: None,
         }
     }
 }
@@ -16047,10 +16198,16 @@ impl RecordT {
         let standard = self.standard.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let EXTENDED_TYPE = self.EXTENDED_TYPE;
+        let EXTENDED_VALUE = self.EXTENDED_VALUE.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         Record::create(_fbb, &RecordArgs{
             value_type,
             value,
             standard,
+            EXTENDED_TYPE,
+            EXTENDED_VALUE,
         })
     }
 }

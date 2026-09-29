@@ -1,5 +1,5 @@
-// Hash: 91ef7c8a7a78c01481dd9f49d5f01857ecbbcc29e8cd54f9e80a5e4cda7d2164
-// Version: 1.44.76
+// Hash: f8a563561ba3dc5b4ce58a65436aaf10f3770a7ed9eab33ee31f66446f8376ec
+// Version: 1.44.77
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -337,12 +337,30 @@ union RecordType {
   SKQ, SKR
 }  // Union of all record types
 
+/// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+/// union RecordType holds at most 255 members (a FlatBuffers union tag is
+/// one byte). Every later standard gets an ordinal here, from 256, and its
+/// records carry it in Record.EXTENDED_TYPE with the record's own
+/// FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+enum RecordTypeExtended : ushort {
+  NONE = 0
+}  // Wide record types
+
 /// Individual record wrapper for any standard type
 table Record {
   /// The record data (union of all supported standards)
   value: RecordType;
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   standard: string;
+  /// Wide record type, for a standard numbered in RecordTypeExtended
+  /// (ordinals 256 and up) because union RecordType has no room for it.
+  /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+  EXTENDED_TYPE: RecordTypeExtended = NONE;
+  /// The record's root FlatBuffer, with its file identifier, when
+  /// EXTENDED_TYPE is set.
+  EXTENDED_VALUE: [ubyte];
 }
 
 /// Collection of Standard Records

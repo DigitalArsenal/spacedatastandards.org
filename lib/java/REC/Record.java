@@ -63,22 +63,47 @@ public final class Record extends com.google.flatbuffers.Table {
   public String standard() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer standardAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer standardInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Wide record type, for a standard numbered in RecordTypeExtended
+   * (ordinals 256 and up) because union RecordType has no room for it.
+   * value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+   */
+  public int EXTENDED_TYPE() { int o = __offset(10); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * The record's root FlatBuffer, with its file identifier, when
+   * EXTENDED_TYPE is set.
+   */
+  public int EXTENDED_VALUE(int j) { int o = __offset(12); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int EXTENDED_VALUELength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector extendedValueVector() { return extendedValueVector(new ByteVector()); }
+  public ByteVector extendedValueVector(ByteVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer EXTENDED_VALUEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer EXTENDED_VALUEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
 
   public static int createRecord(FlatBufferBuilder builder,
       byte value_type,
       int valueOffset,
-      int standardOffset) {
-    builder.startTable(3);
+      int standardOffset,
+      int EXTENDED_TYPE,
+      int EXTENDED_VALUEOffset) {
+    builder.startTable(5);
+    Record.addExtendedValue(builder, EXTENDED_VALUEOffset);
     Record.addStandard(builder, standardOffset);
     Record.addValue(builder, valueOffset);
+    Record.addExtendedType(builder, EXTENDED_TYPE);
     Record.addValueType(builder, value_type);
     return Record.endRecord(builder);
   }
 
-  public static void startRecord(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startRecord(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addValueType(FlatBufferBuilder builder, byte value_type) { builder.addByte(0, value_type, 0); }
   public static void addValue(FlatBufferBuilder builder, int valueOffset) { builder.addOffset(1, valueOffset, 0); }
   public static void addStandard(FlatBufferBuilder builder, int standardOffset) { builder.addOffset(2, standardOffset, 0); }
+  public static void addExtendedType(FlatBufferBuilder builder, int EXTENDED_TYPE) { builder.addShort(3, (short) EXTENDED_TYPE, (short) 0); }
+  public static void addExtendedValue(FlatBufferBuilder builder, int EXTENDED_VALUEOffset) { builder.addOffset(4, EXTENDED_VALUEOffset, 0); }
+  public static int createExtendedValueVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createExtendedValueVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startExtendedValueVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endRecord(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -25369,6 +25369,19 @@
         "SKR"
       ]
     },
+    "RecordTypeExtended": {
+      "type": "string",
+      "enum": [
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
     "LKS": {
       "type": "object",
       "description": "Link Status",
@@ -118649,6 +118662,28 @@
           "type": "string",
           "description": "Standard identifier (e.g., \"OMM\", \"CDM\", \"CAT\")",
           "x-flatbuffer-type": "string"
+        },
+        "EXTENDED_TYPE": {
+          "$ref": "#/definitions/RecordTypeExtended",
+          "description": "Wide record type, for a standard numbered in RecordTypeExtended\n(ordinals 256 and up) because union RecordType has no room for it.\nvalue is then NONE. Readers dispatch on standard or EXTENDED_TYPE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "EXTENDED_VALUE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The record's root FlatBuffer, with its file identifier, when\nEXTENDED_TYPE is set.",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "additionalProperties": false

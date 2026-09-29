@@ -193,6 +193,7 @@ import { RPC, RPCT } from './RPC.js';
 import { RPT, RPTT } from './RPT.js';
 import { RSD, RSDT } from './RSD.js';
 import { RecordType, unionToRecordType, unionListToRecordType } from './RecordType.js';
+import { RecordTypeExtended } from './RecordTypeExtended.js';
 import { SAR, SART } from './SAR.js';
 import { SBM, SBMT } from './SBM.js';
 import { SCC, SCCT } from './SCC.js';
@@ -305,8 +306,37 @@ standard(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Wide record type, for a standard numbered in RecordTypeExtended
+ * (ordinals 256 and up) because union RecordType has no room for it.
+ * value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+ */
+EXTENDED_TYPE():RecordTypeExtended {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : RecordTypeExtended.NONE;
+}
+
+/**
+ * The record's root FlatBuffer, with its file identifier, when
+ * EXTENDED_TYPE is set.
+ */
+EXTENDED_VALUE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+extendedValueLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+extendedValueArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startRecord(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(5);
 }
 
 static addValueType(builder:flatbuffers.Builder, value_type:RecordType) {
@@ -321,16 +351,38 @@ static addStandard(builder:flatbuffers.Builder, standardOffset:flatbuffers.Offse
   builder.addFieldOffset(2, standardOffset, 0);
 }
 
+static addExtendedType(builder:flatbuffers.Builder, EXTENDED_TYPE:RecordTypeExtended) {
+  builder.addFieldInt16(3, EXTENDED_TYPE, RecordTypeExtended.NONE);
+}
+
+static addExtendedValue(builder:flatbuffers.Builder, EXTENDED_VALUEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, EXTENDED_VALUEOffset, 0);
+}
+
+static createExtendedValueVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startExtendedValueVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createRecord(builder:flatbuffers.Builder, value_type:RecordType, valueOffset:flatbuffers.Offset, standardOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRecord(builder:flatbuffers.Builder, value_type:RecordType, valueOffset:flatbuffers.Offset, standardOffset:flatbuffers.Offset, EXTENDED_TYPE:RecordTypeExtended, EXTENDED_VALUEOffset:flatbuffers.Offset):flatbuffers.Offset {
   Record.startRecord(builder);
   Record.addValueType(builder, value_type);
   Record.addValue(builder, valueOffset);
   Record.addStandard(builder, standardOffset);
+  Record.addExtendedType(builder, EXTENDED_TYPE);
+  Record.addExtendedValue(builder, EXTENDED_VALUEOffset);
   return Record.endRecord(builder);
 }
 
@@ -342,7 +394,9 @@ unpack(): RecordT {
       if(temp === null) { return null; }
       return temp.unpack()
   })(),
-    this.standard()
+    this.standard(),
+    this.EXTENDED_TYPE(),
+    this.bb!.createScalarList<number>(this.EXTENDED_VALUE.bind(this), this.extendedValueLength())
   );
 }
 
@@ -355,6 +409,8 @@ unpackTo(_o: RecordT): void {
       return temp.unpack()
   })();
   _o.standard = this.standard();
+  _o.EXTENDED_TYPE = this.EXTENDED_TYPE();
+  _o.EXTENDED_VALUE = this.bb!.createScalarList<number>(this.EXTENDED_VALUE.bind(this), this.extendedValueLength());
 }
 }
 
@@ -362,18 +418,23 @@ export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public value_type: RecordType = RecordType.NONE,
   public value: ACIT|ACLT|ACMT|ACRT|ACTT|ACWT|AEMT|AGRT|ANIT|AOFT|APLT|APMT|APPT|ARMT|ASTT|ATDT|ATMT|AVLT|BALT|BEMT|BMCT|BOVT|BPFT|BSPT|BUST|CAQT|CATT|CCTT|CDMT|CEST|CFPT|CHNT|CLMT|CLTT|CMRT|CMST|CMTT|CNPT|COMT|COTT|CPST|CQRT|CRDT|CRMT|CSMT|CSOT|CTRT|CVGT|CVPT|CZMT|DFHT|DMGT|DOAT|DPMT|DSST|DTTT|EGPT|EMCT|EMET|ENCT|ENTT|ENVT|EOOT|EOPT|EPFT|EPMT|ESLT|ETMT|EVLT|EWRT|FCST|FPCT|FRMT|FSBT|FSMT|FSOT|FSPT|GCTT|GDIT|GELT|GEOT|GJNT|GNOT|GNPT|GPXT|GRVT|GSTT|GVHT|HELT|HFCT|HYPT|ICNT|IDMT|IONT|IQCT|IRMT|IROT|KMFT|KMLT|KRFT|LAMT|LCCT|LCFT|LCHT|LDMT|LGRT|LKST|LMOT|LMRT|LMST|LNDT|LNET|LPFT|LWKT|MBLT|MDPT|MDST|MEMT|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|NCDT|NDST|NSTT|NUMT|OBDT|OBTT|OCMT|ODRT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OPPT|OSMT|PAPT|PCET|PCFT|PGMT|PHBT|PHYT|PIVT|PKBT|PLDT|PLGT|PLKT|PMMT|PNLT|PNMT|PPET|PRGT|PRRT|PRWT|PSST|PURT|QEMT|QRPT|RAFT|RBKT|RCFT|RDMT|RDOT|REMT|REVT|RFBT|RFET|RFLT|RFMT|RFOT|RFST|ROCT|RPCT|RPTT|RSDT|SART|SBMT|SCCT|SCMT|SCNT|SCVT|SCXT|SDFT|SDLT|SDRT|SENT|SEOT|SEVT|SHCT|SHWT|SITT|SKIT|SKQT|SKRT|SKTT|SLPT|SNRT|SNWT|SOIT|SONT|SPPT|SPWT|SRIT|STFT|STOT|STRT|STVT|STXT|SUBT|SWRT|TABT|TBST|TCFT|TCTT|TDMT|TFNT|TIMT|TKGT|TMET|TMFT|TMST|TNRT|TPNT|TRET|TRHT|TRKT|TRNT|TRPT|TRST|TRVT|TXST|VAMT|VCFT|VCMT|VEPT|VSTT|WKST|WPNT|WTHT|WXFT|XTCT|null = null,
-  public standard: string|Uint8Array|null = null
+  public standard: string|Uint8Array|null = null,
+  public EXTENDED_TYPE: RecordTypeExtended = RecordTypeExtended.NONE,
+  public EXTENDED_VALUE: (number)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const value = builder.createObjectOffset(this.value);
   const standard = (this.standard !== null ? builder.createString(this.standard!) : 0);
+  const EXTENDED_VALUE = Record.createExtendedValueVector(builder, this.EXTENDED_VALUE);
 
   return Record.createRecord(builder,
     this.value_type,
     value,
-    standard
+    standard,
+    this.EXTENDED_TYPE,
+    EXTENDED_VALUE
   );
 }
 }

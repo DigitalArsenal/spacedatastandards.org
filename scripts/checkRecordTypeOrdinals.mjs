@@ -26,6 +26,12 @@
  * intentional append is recorded with `--update`, which refuses to run when the
  * diff is anything other than an append.
  *
+ * WIDE RECORD TYPES: a FlatBuffers union tag is one byte, so the union holds
+ * at most 255 members. Later standards are numbered in `enum
+ * RecordTypeExtended : ushort` from 256 (Record.EXTENDED_TYPE). The same law
+ * applies there: append-only, never moved, removed or reused; and no standard
+ * is in both lists.
+ *
  * Usage:
  *   node scripts/checkRecordTypeOrdinals.mjs            # verify (CI/build/test)
  *   node scripts/checkRecordTypeOrdinals.mjs --update   # record an append
@@ -40,6 +46,46 @@ const REPO_ROOT = path.resolve(HERE, "..");
 const SCHEMA_PATH = path.join(REPO_ROOT, "schema", "REC", "main.fbs");
 const BASELINE_PATH = path.join(REPO_ROOT, "schema", "REC", "RECORDTYPE_ORDINALS.json");
 const UNION_NAME = "RecordType";
+const UNION_CAPACITY = 255;
+const EXTENDED_FIRST = 256;
+
+/** Parse `enum RecordTypeExtended : ushort { NONE = 0, XYZ = 256, ... }`. */
+export function parseExtendedOrdinals(source) {
+  const match = source.match(/enum\s+RecordTypeExtended\s*:\s*ushort\s*\{([^}]*)\}/s);
+  const ordinals = {};
+  if (!match) return ordinals;
+  for (const rawEntry of match[1].split(",")) {
+    const entry = rawEntry.replace(/\/\/.*$/gm, "").trim();
+    if (!entry) continue;
+    const member = entry.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(\d+)$/);
+    if (!member) throw new Error(`RecordTypeExtended members need explicit ordinals: ${JSON.stringify(entry)}`);
+    if (member[1] === "NONE") continue;
+    if (ordinals[member[1]] !== undefined) throw new Error(`duplicate RecordTypeExtended member: ${member[1]}`);
+    ordinals[member[1]] = Number(member[2]);
+  }
+  return ordinals;
+}
+
+/** Capacity and disjointness rules that hold for any schema. */
+export function structuralViolations(union, extended) {
+  const lines = [];
+  const unionCount = Object.keys(union).length;
+  const unionMax = Object.values(union).reduce((max, value) => Math.max(max, value), 0);
+  if (unionCount > UNION_CAPACITY || unionMax > UNION_CAPACITY) {
+    lines.push(`  union ${UNION_NAME} has ${unionCount} members (highest ordinal ${unionMax}); a FlatBuffers union tag is one ` +
+      `byte, so it holds at most ${UNION_CAPACITY}. Later standards belong in enum RecordTypeExtended (scripts/createREC.mjs puts them there).`);
+  }
+  for (const [name, ordinal] of Object.entries(extended)) {
+    if (ordinal < EXTENDED_FIRST) lines.push(`  RecordTypeExtended member ${name}=${ordinal} is below ${EXTENDED_FIRST}; wide ordinals start after the union.`);
+    if (union[name] !== undefined) lines.push(`  ${name} is in both union ${UNION_NAME} and RecordTypeExtended.`);
+  }
+  const seen = new Map();
+  for (const [name, ordinal] of Object.entries(extended)) {
+    if (seen.has(ordinal)) lines.push(`  RecordTypeExtended ordinal ${ordinal} is shared by ${seen.get(ordinal)} and ${name}.`);
+    seen.set(ordinal, name);
+  }
+  return lines;
+}
 
 /**
  * Parse `union RecordType { ... }` into ordered members with their ordinals.
@@ -131,6 +177,14 @@ async function main() {
   ]);
 
   const current = parseUnionOrdinals(schemaSource);
+  const currentExtended = parseExtendedOrdinals(schemaSource);
+  const structural = structuralViolations(current, currentExtended);
+  if (structural.length > 0) {
+    console.error(`\nRECORD TYPE CAPACITY VIOLATION\n`);
+    for (const line of structural) console.error(line);
+    process.exitCode = 1;
+    return;
+  }
 
   if (baselineSource === null) {
     if (!update) {
@@ -139,7 +193,7 @@ async function main() {
           `Run: node scripts/checkRecordTypeOrdinals.mjs --update`,
       );
     }
-    await writeBaseline(current, []);
+    await writeBaseline(current, [], currentExtended);
     console.log(`Recorded new ${UNION_NAME} ordinal baseline (${Object.keys(current).length} members).`);
     return;
   }
@@ -147,7 +201,11 @@ async function main() {
   const baselineDoc = JSON.parse(baselineSource);
   const baseline = baselineDoc.ordinals ?? {};
   const diff = compare(baseline, current);
-  const violations = report(diff);
+  const extendedBaseline = baselineDoc.extended_ordinals ?? {};
+  const extendedDiff = compare(extendedBaseline, currentExtended);
+  if (extendedDiff.baselineMax < EXTENDED_FIRST) extendedDiff.baselineMax = EXTENDED_FIRST - 1;
+  for (const entry of extendedDiff.added) entry.appended = entry.ordinal > extendedDiff.baselineMax;
+  const violations = [...report(diff), ...report(extendedDiff).map((line) => line.replace(/union member/g, "RecordTypeExtended member"))];
 
   if (violations.length > 0) {
     console.error(
@@ -164,12 +222,14 @@ async function main() {
     return;
   }
 
-  if (diff.added.length === 0) {
-    console.log(`${UNION_NAME} ordinals unchanged (${Object.keys(current).length} members, frozen 1..${diff.baselineMax}).`);
+  if (diff.added.length === 0 && extendedDiff.added.length === 0) {
+    console.log(`${UNION_NAME} ordinals unchanged (${Object.keys(current).length} members, frozen 1..${diff.baselineMax}; ` +
+      `${Object.keys(currentExtended).length} wide record types).`);
+    if (update) await writeBaseline(current, baselineDoc.history ?? [], currentExtended);
     return;
   }
 
-  const appended = diff.added.map((entry) => `${entry.name}=${entry.ordinal}`);
+  const appended = [...diff.added, ...extendedDiff.added].map((entry) => `${entry.name}=${entry.ordinal}`);
   if (!update) {
     console.error(
       `\n${UNION_NAME} appended ${diff.added.length} member(s) not in the contract: ` +
@@ -181,12 +241,13 @@ async function main() {
     return;
   }
 
-  await writeBaseline(current, baselineDoc.history ?? []);
+  await writeBaseline(current, baselineDoc.history ?? [], currentExtended);
   console.log(`Recorded appended ${UNION_NAME} members: ${appended.join(", ")}.`);
 }
 
-async function writeBaseline(ordinals, history) {
+async function writeBaseline(ordinals, history, extended = {}) {
   const sorted = Object.entries(ordinals).sort((a, b) => a[1] - b[1]);
+  const sortedExtended = Object.entries(extended).sort((a, b) => a[1] - b[1]);
   const doc = {
     $comment:
       "WIRE CONTRACT -- DO NOT HAND-EDIT. Ordinals of union RecordType (schema/REC/main.fbs) " +
@@ -200,6 +261,10 @@ async function writeBaseline(ordinals, history) {
     member_count: sorted.length,
     history,
     ordinals: Object.fromEntries(sorted),
+    union_capacity: UNION_CAPACITY,
+    extended_enum: "RecordTypeExtended",
+    extended_note: "Wide record types (Record.EXTENDED_TYPE, ushort) for standards past the union's 255 ordinals; APPEND-ONLY FOREVER like the union.",
+    extended_ordinals: Object.fromEntries(sortedExtended),
   };
   await fs.writeFile(BASELINE_PATH, `${JSON.stringify(doc, null, 2)}\n`, "utf8");
 }

@@ -94,25 +94,68 @@ class Record extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Wide record type, for a standard numbered in RecordTypeExtended
+    /// (ordinals 256 and up) because union RecordType has no room for it.
+    /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+    /**
+     * @return ushort
+     */
+    public function getEXTENDED_TYPE()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : \RecordTypeExtended::NONE;
+    }
+
+    /// The record's root FlatBuffer, with its file identifier, when
+    /// EXTENDED_TYPE is set.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getEXTENDED_VALUE($j)
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEXTENDED_VALUELength()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEXTENDED_VALUEBytes()
+    {
+        return $this->__vector_as_bytes(12);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRecord(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Record
      */
-    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $standard)
+    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $standard, $EXTENDED_TYPE, $EXTENDED_VALUE)
     {
-        $builder->startObject(3);
+        $builder->startObject(5);
         self::addvalue_type($builder, $value_type);
         self::addvalue($builder, $value);
         self::addstandard($builder, $standard);
+        self::addEXTENDED_TYPE($builder, $EXTENDED_TYPE);
+        self::addEXTENDED_VALUE($builder, $EXTENDED_VALUE);
         $o = $builder->endObject();
         return $o;
     }
@@ -140,6 +183,50 @@ class Record extends Table
     public static function addstandard(FlatBufferBuilder $builder, $standard)
     {
         $builder->addOffsetX(2, $standard, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addEXTENDED_TYPE(FlatBufferBuilder $builder, $EXTENDED_TYPE)
+    {
+        $builder->addUshortX(3, $EXTENDED_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXTENDED_VALUE(FlatBufferBuilder $builder, $EXTENDED_VALUE)
+    {
+        $builder->addOffsetX(4, $EXTENDED_VALUE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEXTENDED_VALUEVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEXTENDED_VALUEVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

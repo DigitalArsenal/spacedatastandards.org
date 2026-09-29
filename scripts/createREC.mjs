@@ -1,7 +1,19 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
+import { fileURLToPath } from "node:url";
+
 import { SCHEMA_DIR, listSchemaDirectories } from "./schemaGraph.mjs";
+
+/**
+ * A FlatBuffers union's type tag is one byte (flatc BASE_TYPE_UTYPE, uint8 in
+ * every language), so union RecordType holds at most 255 members (0 is
+ * NONE). Standards past that are numbered in enum RecordTypeExtended (ushort,
+ * 256..65535) and carried in Record.EXTENDED_TYPE + EXTENDED_VALUE.
+ */
+export const UNION_CAPACITY = 255;
+export const EXTENDED_FIRST = 256;
+export const EXTENDED_LAST = 65535;
 
 function generateIncludes(schemaNames) {
   return schemaNames.map((schemaName) => `include "../${schemaName}/main.fbs";`);
@@ -29,6 +41,26 @@ const UNION_BANNER = [
   "/// which is the sole discriminator that has never shifted.",
 ];
 
+const EXTENDED_BANNER = [
+  "/// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.",
+  "/// union RecordType holds at most 255 members (a FlatBuffers union tag is",
+  "/// one byte). Every later standard gets an ordinal here, from 256, and its",
+  "/// records carry it in Record.EXTENDED_TYPE with the record's own",
+  "/// FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).",
+  "/// Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)",
+  "/// Guard:    node scripts/checkRecordTypeOrdinals.mjs",
+];
+
+function generateExtended(entries) {
+  return [
+    ...EXTENDED_BANNER,
+    "enum RecordTypeExtended : ushort {",
+    `  NONE = 0${entries.length ? "," : ""}`,
+    ...entries.map(([name, ordinal], index) => `  ${name} = ${ordinal}${index === entries.length - 1 ? "" : ","}`),
+    "}  // Wide record types",
+  ].join("\n");
+}
+
 function generateUnion(schemaNames) {
   const rows = [];
   for (let index = 0; index < schemaNames.length; index += 4) {
@@ -53,6 +85,42 @@ function parseRecordUnionSchemaNames(source) {
     .filter((entry) => /^[A-Z][A-Z0-9]{2}$/.test(entry));
 }
 
+export function parseExtendedOrdinals(source) {
+  const match = source.match(/enum\s+RecordTypeExtended\s*:\s*ushort\s*\{([^}]*)\}/s);
+  const ordinals = {};
+  if (!match) return ordinals;
+  for (const raw of match[1].split(",")) {
+    const entry = raw.replace(/\/\/.*$/gm, "").trim();
+    const member = entry.match(/^([A-Z][A-Z0-9]{2})\s*=\s*(\d+)$/);
+    if (member) ordinals[member[1]] = Number(member[2]);
+  }
+  return ordinals;
+}
+
+/**
+ * Keep every union member and every extended ordinal where it is; fill the
+ * union up to UNION_CAPACITY, then number the rest from the next extended
+ * ordinal. Standards already in the union never move to the extended list.
+ */
+export function planRecordTypes(schemaNames, unionMembers, extendedOrdinals) {
+  const names = new Set(schemaNames);
+  const union = unionMembers.filter((name) => names.has(name));
+  const extended = Object.entries(extendedOrdinals)
+    .filter(([name]) => names.has(name) && !union.includes(name))
+    .sort((a, b) => a[1] - b[1]);
+  let next = extended.reduce((max, [, ordinal]) => Math.max(max, ordinal + 1), EXTENDED_FIRST);
+  for (const name of schemaNames) {
+    if (union.includes(name) || extended.some(([known]) => known === name)) continue;
+    if (union.length < UNION_CAPACITY) {
+      union.push(name);
+    } else {
+      if (next > EXTENDED_LAST) throw new Error(`RecordTypeExtended is full at ${EXTENDED_LAST}`);
+      extended.push([name, next++]);
+    }
+  }
+  return { union, extended };
+}
+
 function stableRecordUnionOrder(schemaNames, original) {
   const schemaNameSet = new Set(schemaNames);
   const ordered = [];
@@ -74,8 +142,14 @@ async function main() {
   const recPath = path.join(SCHEMA_DIR, "REC", "main.fbs");
   const original = await fs.readFile(recPath, "utf8");
   const includes = generateIncludes(schemaNames).join("\n");
-  const recordUnionOrder = stableRecordUnionOrder(schemaNames, original);
+  const plan = planRecordTypes(
+    schemaNames,
+    stableRecordUnionOrder(schemaNames, original).filter((name) => parseRecordUnionSchemaNames(original).includes(name)),
+    parseExtendedOrdinals(original),
+  );
+  const recordUnionOrder = plan.union;
   const union = generateUnion(recordUnionOrder);
+  const extended = generateExtended(plan.extended);
 
   let updated = replaceSection(
     original,
@@ -87,14 +161,22 @@ async function main() {
     /(?:\/\/\/[^\n]*\n)*union\s+RecordType\s*\{[^}]+\}\s*\/\/\s*Union of all record types/s,
     union,
   );
+  const extendedPattern = /(?:\/\/\/[^\n]*\n)*enum\s+RecordTypeExtended\s*:\s*ushort\s*\{[^}]*\}\s*\/\/\s*Wide record types/s;
+  updated = extendedPattern.test(updated)
+    ? replaceSection(updated, extendedPattern, extended)
+    : updated.replace(/(\}\s*\/\/\s*Union of all record types)/, `$1\n\n${extended}`);
 
   if (updated !== original) {
     await fs.writeFile(recPath, updated, "utf8");
   }
-  console.log(`Updated REC union with ${recordUnionOrder.length} schema types.`);
+  console.log(`Updated REC union with ${recordUnionOrder.length} schema types` +
+    `${plan.extended.length ? ` and ${plan.extended.length} wide record types` : ""}.`);
 }
 
-main().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exitCode = 1;
-});
+const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  main().catch((error) => {
+    console.error(error.stack || error.message);
+    process.exitCode = 1;
+  });
+}

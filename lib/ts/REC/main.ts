@@ -1104,6 +1104,7 @@ export * from './RDO.js';
 export * from './REC.js';
 export * from './Record.js';
 export * from './RecordType.js';
+export * from './RecordTypeExtended.js';
 export * from './recurringChargeMethod.js';
 export * from './reentryDisposition.js';
 export * from './reentryImpact.js';

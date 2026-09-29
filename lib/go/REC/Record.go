@@ -110,8 +110,88 @@ func (rcv *Record) Standard() []byte {
 }
 
 /// Standard identifier (e.g., "OMM", "CDM", "CAT")
+/// Wide record type, for a standard numbered in RecordTypeExtended
+/// (ordinals 256 and up) because union RecordType has no room for it.
+/// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+func (rcv *Record) EXTENDED_TYPE() RecordTypeExtended {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return RecordTypeExtended(rcv._tab.GetUint16(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *Record) ExtendedType() RecordTypeExtended {
+	return rcv.EXTENDED_TYPE()
+}
+
+/// Wide record type, for a standard numbered in RecordTypeExtended
+/// (ordinals 256 and up) because union RecordType has no room for it.
+/// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+func (rcv *Record) MutateEXTENDED_TYPE(n RecordTypeExtended) bool {
+	return rcv._tab.MutateUint16Slot(10, uint16(n))
+}
+
+func (rcv *Record) MutateExtendedType(n RecordTypeExtended) bool {
+	return rcv.MutateEXTENDED_TYPE(n)
+}
+
+/// The record's root FlatBuffer, with its file identifier, when
+/// EXTENDED_TYPE is set.
+func (rcv *Record) EXTENDED_VALUE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *Record) ExtendedValue(j int) byte {
+	return rcv.EXTENDED_VALUE(j)
+}
+
+func (rcv *Record) EXTENDED_VALUELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Record) ExtendedValueLength() int {
+	return rcv.EXTENDED_VALUELength()
+}
+
+func (rcv *Record) EXTENDED_VALUEBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Record) ExtendedValueBytes() []byte {
+	return rcv.EXTENDED_VALUEBytes()
+}
+
+/// The record's root FlatBuffer, with its file identifier, when
+/// EXTENDED_TYPE is set.
+func (rcv *Record) MutateEXTENDED_VALUE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *Record) MutateExtendedValue(j int, n byte) bool {
+	return rcv.MutateEXTENDED_VALUE(j, n)
+}
+
 func RecordStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(5)
 }
 func RecordAddvalue_type(builder *flatbuffers.Builder, value_type RecordType) {
 	builder.PrependByteSlot(0, byte(value_type), 0)
@@ -130,6 +210,24 @@ func RecordAddstandard(builder *flatbuffers.Builder, standard flatbuffers.UOffse
 }
 func RecordAddStandard(builder *flatbuffers.Builder, standard flatbuffers.UOffsetT) {
 	RecordAddstandard(builder, standard)
+}
+func RecordAddEXTENDED_TYPE(builder *flatbuffers.Builder, EXTENDED_TYPE RecordTypeExtended) {
+	builder.PrependUint16Slot(3, uint16(EXTENDED_TYPE), 0)
+}
+func RecordAddExtendedType(builder *flatbuffers.Builder, EXTENDED_TYPE RecordTypeExtended) {
+	RecordAddEXTENDED_TYPE(builder, EXTENDED_TYPE)
+}
+func RecordAddEXTENDED_VALUE(builder *flatbuffers.Builder, EXTENDED_VALUE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EXTENDED_VALUE), 0)
+}
+func RecordAddExtendedValue(builder *flatbuffers.Builder, EXTENDED_VALUE flatbuffers.UOffsetT) {
+	RecordAddEXTENDED_VALUE(builder, EXTENDED_VALUE)
+}
+func RecordStartEXTENDED_VALUEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func RecordStartExtendedValueVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RecordStartEXTENDED_VALUEVector(builder, numElems)
 }
 func RecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

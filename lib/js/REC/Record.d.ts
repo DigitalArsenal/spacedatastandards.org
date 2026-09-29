@@ -188,6 +188,7 @@ import { RPCT } from './RPC.js';
 import { RPTT } from './RPT.js';
 import { RSDT } from './RSD.js';
 import { RecordType } from './RecordType.js';
+import { RecordTypeExtended } from './RecordTypeExtended.js';
 import { SART } from './SAR.js';
 import { SBMT } from './SBM.js';
 import { SCCT } from './SCC.js';
@@ -273,12 +274,29 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
      */
     standard(): string | null;
     standard(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Wide record type, for a standard numbered in RecordTypeExtended
+     * (ordinals 256 and up) because union RecordType has no room for it.
+     * value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+     */
+    EXTENDED_TYPE(): RecordTypeExtended;
+    /**
+     * The record's root FlatBuffer, with its file identifier, when
+     * EXTENDED_TYPE is set.
+     */
+    EXTENDED_VALUE(index: number): number | null;
+    extendedValueLength(): number;
+    extendedValueArray(): Uint8Array | null;
     static startRecord(builder: flatbuffers.Builder): void;
     static addValueType(builder: flatbuffers.Builder, value_type: RecordType): void;
     static addValue(builder: flatbuffers.Builder, valueOffset: flatbuffers.Offset): void;
     static addStandard(builder: flatbuffers.Builder, standardOffset: flatbuffers.Offset): void;
+    static addExtendedType(builder: flatbuffers.Builder, EXTENDED_TYPE: RecordTypeExtended): void;
+    static addExtendedValue(builder: flatbuffers.Builder, EXTENDED_VALUEOffset: flatbuffers.Offset): void;
+    static createExtendedValueVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startExtendedValueVector(builder: flatbuffers.Builder, numElems: number): void;
     static endRecord(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createRecord(builder: flatbuffers.Builder, value_type: RecordType, valueOffset: flatbuffers.Offset, standardOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRecord(builder: flatbuffers.Builder, value_type: RecordType, valueOffset: flatbuffers.Offset, standardOffset: flatbuffers.Offset, EXTENDED_TYPE: RecordTypeExtended, EXTENDED_VALUEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): RecordT;
     unpackTo(_o: RecordT): void;
 }
@@ -286,7 +304,9 @@ export declare class RecordT implements flatbuffers.IGeneratedObject {
     value_type: RecordType;
     value: ACIT | ACLT | ACMT | ACRT | ACTT | ACWT | AEMT | AGRT | ANIT | AOFT | APLT | APMT | APPT | ARMT | ASTT | ATDT | ATMT | AVLT | BALT | BEMT | BMCT | BOVT | BPFT | BSPT | BUST | CAQT | CATT | CCTT | CDMT | CEST | CFPT | CHNT | CLMT | CLTT | CMRT | CMST | CMTT | CNPT | COMT | COTT | CPST | CQRT | CRDT | CRMT | CSMT | CSOT | CTRT | CVGT | CVPT | CZMT | DFHT | DMGT | DOAT | DPMT | DSST | DTTT | EGPT | EMCT | EMET | ENCT | ENTT | ENVT | EOOT | EOPT | EPFT | EPMT | ESLT | ETMT | EVLT | EWRT | FCST | FPCT | FRMT | FSBT | FSMT | FSOT | FSPT | GCTT | GDIT | GELT | GEOT | GJNT | GNOT | GNPT | GPXT | GRVT | GSTT | GVHT | HELT | HFCT | HYPT | ICNT | IDMT | IONT | IQCT | IRMT | IROT | KMFT | KMLT | KRFT | LAMT | LCCT | LCFT | LCHT | LDMT | LGRT | LKST | LMOT | LMRT | LMST | LNDT | LNET | LPFT | LWKT | MBLT | MDPT | MDST | MEMT | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | NCDT | NDST | NSTT | NUMT | OBDT | OBTT | OCMT | ODRT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OPPT | OSMT | PAPT | PCET | PCFT | PGMT | PHBT | PHYT | PIVT | PKBT | PLDT | PLGT | PLKT | PMMT | PNLT | PNMT | PPET | PRGT | PRRT | PRWT | PSST | PURT | QEMT | QRPT | RAFT | RBKT | RCFT | RDMT | RDOT | REMT | REVT | RFBT | RFET | RFLT | RFMT | RFOT | RFST | ROCT | RPCT | RPTT | RSDT | SART | SBMT | SCCT | SCMT | SCNT | SCVT | SCXT | SDFT | SDLT | SDRT | SENT | SEOT | SEVT | SHCT | SHWT | SITT | SKIT | SKQT | SKRT | SKTT | SLPT | SNRT | SNWT | SOIT | SONT | SPPT | SPWT | SRIT | STFT | STOT | STRT | STVT | STXT | SUBT | SWRT | TABT | TBST | TCFT | TCTT | TDMT | TFNT | TIMT | TKGT | TMET | TMFT | TMST | TNRT | TPNT | TRET | TRHT | TRKT | TRNT | TRPT | TRST | TRVT | TXST | VAMT | VCFT | VCMT | VEPT | VSTT | WKST | WPNT | WTHT | WXFT | XTCT | null;
     standard: string | Uint8Array | null;
-    constructor(value_type?: RecordType, value?: ACIT | ACLT | ACMT | ACRT | ACTT | ACWT | AEMT | AGRT | ANIT | AOFT | APLT | APMT | APPT | ARMT | ASTT | ATDT | ATMT | AVLT | BALT | BEMT | BMCT | BOVT | BPFT | BSPT | BUST | CAQT | CATT | CCTT | CDMT | CEST | CFPT | CHNT | CLMT | CLTT | CMRT | CMST | CMTT | CNPT | COMT | COTT | CPST | CQRT | CRDT | CRMT | CSMT | CSOT | CTRT | CVGT | CVPT | CZMT | DFHT | DMGT | DOAT | DPMT | DSST | DTTT | EGPT | EMCT | EMET | ENCT | ENTT | ENVT | EOOT | EOPT | EPFT | EPMT | ESLT | ETMT | EVLT | EWRT | FCST | FPCT | FRMT | FSBT | FSMT | FSOT | FSPT | GCTT | GDIT | GELT | GEOT | GJNT | GNOT | GNPT | GPXT | GRVT | GSTT | GVHT | HELT | HFCT | HYPT | ICNT | IDMT | IONT | IQCT | IRMT | IROT | KMFT | KMLT | KRFT | LAMT | LCCT | LCFT | LCHT | LDMT | LGRT | LKST | LMOT | LMRT | LMST | LNDT | LNET | LPFT | LWKT | MBLT | MDPT | MDST | MEMT | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | NCDT | NDST | NSTT | NUMT | OBDT | OBTT | OCMT | ODRT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OPPT | OSMT | PAPT | PCET | PCFT | PGMT | PHBT | PHYT | PIVT | PKBT | PLDT | PLGT | PLKT | PMMT | PNLT | PNMT | PPET | PRGT | PRRT | PRWT | PSST | PURT | QEMT | QRPT | RAFT | RBKT | RCFT | RDMT | RDOT | REMT | REVT | RFBT | RFET | RFLT | RFMT | RFOT | RFST | ROCT | RPCT | RPTT | RSDT | SART | SBMT | SCCT | SCMT | SCNT | SCVT | SCXT | SDFT | SDLT | SDRT | SENT | SEOT | SEVT | SHCT | SHWT | SITT | SKIT | SKQT | SKRT | SKTT | SLPT | SNRT | SNWT | SOIT | SONT | SPPT | SPWT | SRIT | STFT | STOT | STRT | STVT | STXT | SUBT | SWRT | TABT | TBST | TCFT | TCTT | TDMT | TFNT | TIMT | TKGT | TMET | TMFT | TMST | TNRT | TPNT | TRET | TRHT | TRKT | TRNT | TRPT | TRST | TRVT | TXST | VAMT | VCFT | VCMT | VEPT | VSTT | WKST | WPNT | WTHT | WXFT | XTCT | null, standard?: string | Uint8Array | null);
+    EXTENDED_TYPE: RecordTypeExtended;
+    EXTENDED_VALUE: (number)[];
+    constructor(value_type?: RecordType, value?: ACIT | ACLT | ACMT | ACRT | ACTT | ACWT | AEMT | AGRT | ANIT | AOFT | APLT | APMT | APPT | ARMT | ASTT | ATDT | ATMT | AVLT | BALT | BEMT | BMCT | BOVT | BPFT | BSPT | BUST | CAQT | CATT | CCTT | CDMT | CEST | CFPT | CHNT | CLMT | CLTT | CMRT | CMST | CMTT | CNPT | COMT | COTT | CPST | CQRT | CRDT | CRMT | CSMT | CSOT | CTRT | CVGT | CVPT | CZMT | DFHT | DMGT | DOAT | DPMT | DSST | DTTT | EGPT | EMCT | EMET | ENCT | ENTT | ENVT | EOOT | EOPT | EPFT | EPMT | ESLT | ETMT | EVLT | EWRT | FCST | FPCT | FRMT | FSBT | FSMT | FSOT | FSPT | GCTT | GDIT | GELT | GEOT | GJNT | GNOT | GNPT | GPXT | GRVT | GSTT | GVHT | HELT | HFCT | HYPT | ICNT | IDMT | IONT | IQCT | IRMT | IROT | KMFT | KMLT | KRFT | LAMT | LCCT | LCFT | LCHT | LDMT | LGRT | LKST | LMOT | LMRT | LMST | LNDT | LNET | LPFT | LWKT | MBLT | MDPT | MDST | MEMT | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | NCDT | NDST | NSTT | NUMT | OBDT | OBTT | OCMT | ODRT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OPPT | OSMT | PAPT | PCET | PCFT | PGMT | PHBT | PHYT | PIVT | PKBT | PLDT | PLGT | PLKT | PMMT | PNLT | PNMT | PPET | PRGT | PRRT | PRWT | PSST | PURT | QEMT | QRPT | RAFT | RBKT | RCFT | RDMT | RDOT | REMT | REVT | RFBT | RFET | RFLT | RFMT | RFOT | RFST | ROCT | RPCT | RPTT | RSDT | SART | SBMT | SCCT | SCMT | SCNT | SCVT | SCXT | SDFT | SDLT | SDRT | SENT | SEOT | SEVT | SHCT | SHWT | SITT | SKIT | SKQT | SKRT | SKTT | SLPT | SNRT | SNWT | SOIT | SONT | SPPT | SPWT | SRIT | STFT | STOT | STRT | STVT | STXT | SUBT | SWRT | TABT | TBST | TCFT | TCTT | TDMT | TFNT | TIMT | TKGT | TMET | TMFT | TMST | TNRT | TPNT | TRET | TRHT | TRKT | TRNT | TRPT | TRST | TRVT | TXST | VAMT | VCFT | VCMT | VEPT | VSTT | WKST | WPNT | WTHT | WXFT | XTCT | null, standard?: string | Uint8Array | null, EXTENDED_TYPE?: RecordTypeExtended, EXTENDED_VALUE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

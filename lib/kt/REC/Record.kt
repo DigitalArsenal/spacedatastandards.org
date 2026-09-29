@@ -54,6 +54,34 @@ class Record : Table() {
         }
     val standardAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun standardInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Wide record type, for a standard numbered in RecordTypeExtended
+     * (ordinals 256 and up) because union RecordType has no room for it.
+     * value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+     */
+    val extendedType : UShort
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * The record's root FlatBuffer, with its file identifier, when
+     * EXTENDED_TYPE is set.
+     */
+    fun extendedValue(j: Int) : UByte {
+        val o = __offset(12)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val extendedValueLength : Int
+        get() {
+            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
+        }
+    val extendedValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun extendedValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRecord(_bb: ByteBuffer): Record = getRootAsRecord(_bb, Record())
@@ -81,17 +109,30 @@ class Record : Table() {
          * malformed buffer.
          */
         fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
-        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, standardOffset: Int) : Int {
-            builder.startTable(3)
+        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, standardOffset: Int, extendedType: UShort, extendedValueOffset: Int) : Int {
+            builder.startTable(5)
+            addEXTENDEDVALUE(builder, extendedValueOffset)
             addStandard(builder, standardOffset)
             addValue(builder, valueOffset)
+            addEXTENDEDTYPE(builder, extendedType)
             addValueType(builder, valueType)
             return endRecord(builder)
         }
-        fun startRecord(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startRecord(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addValueType(builder: FlatBufferBuilder, valueType: UByte) = builder.addByte(0, valueType.toByte(), 0)
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
         fun addStandard(builder: FlatBufferBuilder, standard: Int) = builder.addOffset(2, standard, 0)
+        fun addEXTENDEDTYPE(builder: FlatBufferBuilder, extendedType: UShort) = builder.addShort(3, extendedType.toShort(), 0)
+        fun addEXTENDEDVALUE(builder: FlatBufferBuilder, extendedValue: Int) = builder.addOffset(4, extendedValue, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createExtendedValueVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startExtendedValueVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

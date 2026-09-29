@@ -179,6 +179,20 @@ should dispatch on `Record.standard`, not on the ordinal.
 Guard: `npm run check:ordinals` (`scripts/checkRecordTypeOrdinals.mjs`), run by
 `build:flatbuffers`, `npm test` and the pre-commit hook.
 
+### Wide record types past the union's 255 ordinals
+
+A FlatBuffers union tag is one byte in every language, so `union RecordType`
+holds at most 255 members. When it is full, `createREC.mjs` numbers each new
+standard in `enum RecordTypeExtended : ushort`, from 256. Its records carry
+that number in `Record.EXTENDED_TYPE`, the record's own root FlatBuffer (with
+its file identifier) in `Record.EXTENDED_VALUE`, and `Record.value` stays
+`NONE`. The extended ordinals are wire data under the same law: append-only,
+never moved, removed or reused, recorded in `RECORDTYPE_ORDINALS.json`
+(`extended_ordinals`). The guard refuses a union past 255, a wide ordinal
+below 256, and a standard in both lists. Readers that dispatch on
+`Record.standard` need no change; readers that switch on the union must also
+handle `EXTENDED_TYPE`.
+
 ### Other rules
 
 - Field names are `UPPER_SNAKE_CASE`.

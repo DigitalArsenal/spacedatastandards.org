@@ -70471,6 +70471,12 @@
                         "SKR"
                     ]
                 },
+                "RecordTypeExtended": {
+                    "type": "string",
+                    "enum": [
+                        "NONE"
+                    ]
+                },
                 "LKS": {
                     "type": "object",
                     "description": "Link Status",
@@ -125660,6 +125666,19 @@
                         "standard": {
                             "type": "string",
                             "description": "Standard identifier (e.g., \"OMM\", \"CDM\", \"CAT\")"
+                        },
+                        "EXTENDED_TYPE": {
+                            "$ref": "#/definitions/RecordTypeExtended",
+                            "description": "Wide record type, for a standard numbered in RecordTypeExtended\n(ordinals 256 and up) because union RecordType has no room for it.\nvalue is then NONE. Readers dispatch on standard or EXTENDED_TYPE."
+                        },
+                        "EXTENDED_VALUE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The record's root FlatBuffer, with its file identifier, when\nEXTENDED_TYPE is set."
                         }
                     },
                     "additionalProperties": false
