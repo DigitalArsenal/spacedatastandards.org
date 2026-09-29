@@ -25,13 +25,24 @@ public struct ACWStateSample : IFlatbufferObject
   public double POSITION_Y_M { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Earth-fixed Z position, meters.
   public double POSITION_Z_M { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Earth-fixed velocity, meters per second. Required for range-rate,
+  /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+  public double VELOCITY_X_MPS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double VELOCITY_Y_MPS { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double VELOCITY_Z_MPS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<ACWStateSample> CreateACWStateSample(FlatBufferBuilder builder,
       double JULIAN_DATE_TT = 0.0,
       double POSITION_X_M = 0.0,
       double POSITION_Y_M = 0.0,
-      double POSITION_Z_M = 0.0) {
-    builder.StartTable(4);
+      double POSITION_Z_M = 0.0,
+      double VELOCITY_X_MPS = 0.0,
+      double VELOCITY_Y_MPS = 0.0,
+      double VELOCITY_Z_MPS = 0.0) {
+    builder.StartTable(7);
+    ACWStateSample.AddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS);
+    ACWStateSample.AddVELOCITY_Y_MPS(builder, VELOCITY_Y_MPS);
+    ACWStateSample.AddVELOCITY_X_MPS(builder, VELOCITY_X_MPS);
     ACWStateSample.AddPOSITION_Z_M(builder, POSITION_Z_M);
     ACWStateSample.AddPOSITION_Y_M(builder, POSITION_Y_M);
     ACWStateSample.AddPOSITION_X_M(builder, POSITION_X_M);
@@ -39,11 +50,14 @@ public struct ACWStateSample : IFlatbufferObject
     return ACWStateSample.EndACWStateSample(builder);
   }
 
-  public static void StartACWStateSample(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartACWStateSample(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddJULIAN_DATE_TT(FlatBufferBuilder builder, double JULIAN_DATE_TT) { builder.AddDouble(0, JULIAN_DATE_TT, 0.0); }
   public static void AddPOSITION_X_M(FlatBufferBuilder builder, double POSITION_X_M) { builder.AddDouble(1, POSITION_X_M, 0.0); }
   public static void AddPOSITION_Y_M(FlatBufferBuilder builder, double POSITION_Y_M) { builder.AddDouble(2, POSITION_Y_M, 0.0); }
   public static void AddPOSITION_Z_M(FlatBufferBuilder builder, double POSITION_Z_M) { builder.AddDouble(3, POSITION_Z_M, 0.0); }
+  public static void AddVELOCITY_X_MPS(FlatBufferBuilder builder, double VELOCITY_X_MPS) { builder.AddDouble(4, VELOCITY_X_MPS, 0.0); }
+  public static void AddVELOCITY_Y_MPS(FlatBufferBuilder builder, double VELOCITY_Y_MPS) { builder.AddDouble(5, VELOCITY_Y_MPS, 0.0); }
+  public static void AddVELOCITY_Z_MPS(FlatBufferBuilder builder, double VELOCITY_Z_MPS) { builder.AddDouble(6, VELOCITY_Z_MPS, 0.0); }
   public static Offset<ACWStateSample> EndACWStateSample(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWStateSample>(o);
@@ -58,6 +72,9 @@ public struct ACWStateSample : IFlatbufferObject
     _o.POSITION_X_M = this.POSITION_X_M;
     _o.POSITION_Y_M = this.POSITION_Y_M;
     _o.POSITION_Z_M = this.POSITION_Z_M;
+    _o.VELOCITY_X_MPS = this.VELOCITY_X_MPS;
+    _o.VELOCITY_Y_MPS = this.VELOCITY_Y_MPS;
+    _o.VELOCITY_Z_MPS = this.VELOCITY_Z_MPS;
   }
   public static Offset<ACWStateSample> Pack(FlatBufferBuilder builder, ACWStateSampleT _o) {
     if (_o == null) return default(Offset<ACWStateSample>);
@@ -66,7 +83,10 @@ public struct ACWStateSample : IFlatbufferObject
       _o.JULIAN_DATE_TT,
       _o.POSITION_X_M,
       _o.POSITION_Y_M,
-      _o.POSITION_Z_M);
+      _o.POSITION_Z_M,
+      _o.VELOCITY_X_MPS,
+      _o.VELOCITY_Y_MPS,
+      _o.VELOCITY_Z_MPS);
   }
 }
 
@@ -76,12 +96,18 @@ public class ACWStateSampleT
   public double POSITION_X_M { get; set; }
   public double POSITION_Y_M { get; set; }
   public double POSITION_Z_M { get; set; }
+  public double VELOCITY_X_MPS { get; set; }
+  public double VELOCITY_Y_MPS { get; set; }
+  public double VELOCITY_Z_MPS { get; set; }
 
   public ACWStateSampleT() {
     this.JULIAN_DATE_TT = 0.0;
     this.POSITION_X_M = 0.0;
     this.POSITION_Y_M = 0.0;
     this.POSITION_Z_M = 0.0;
+    this.VELOCITY_X_MPS = 0.0;
+    this.VELOCITY_Y_MPS = 0.0;
+    this.VELOCITY_Z_MPS = 0.0;
   }
 }
 
@@ -95,6 +121,9 @@ static public class ACWStateSampleVerify
       && verifier.VerifyField(tablePos, 6 /*POSITION_X_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*POSITION_Y_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*POSITION_Z_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*VELOCITY_X_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*VELOCITY_Y_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*VELOCITY_Z_MPS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

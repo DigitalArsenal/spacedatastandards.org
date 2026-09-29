@@ -59,8 +59,27 @@ POSITION_Z_M():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Earth-fixed velocity, meters per second. Required for range-rate,
+ * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+ */
+VELOCITY_X_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+VELOCITY_Y_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+VELOCITY_Z_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startACWStateSample(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(7);
 }
 
 static addJulianDateTt(builder:flatbuffers.Builder, JULIAN_DATE_TT:number) {
@@ -79,17 +98,32 @@ static addPositionZM(builder:flatbuffers.Builder, POSITION_Z_M:number) {
   builder.addFieldFloat64(3, POSITION_Z_M, 0.0);
 }
 
+static addVelocityXMps(builder:flatbuffers.Builder, VELOCITY_X_MPS:number) {
+  builder.addFieldFloat64(4, VELOCITY_X_MPS, 0.0);
+}
+
+static addVelocityYMps(builder:flatbuffers.Builder, VELOCITY_Y_MPS:number) {
+  builder.addFieldFloat64(5, VELOCITY_Y_MPS, 0.0);
+}
+
+static addVelocityZMps(builder:flatbuffers.Builder, VELOCITY_Z_MPS:number) {
+  builder.addFieldFloat64(6, VELOCITY_Z_MPS, 0.0);
+}
+
 static endACWStateSample(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWStateSample(builder:flatbuffers.Builder, JULIAN_DATE_TT:number, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number):flatbuffers.Offset {
+static createACWStateSample(builder:flatbuffers.Builder, JULIAN_DATE_TT:number, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number, VELOCITY_X_MPS:number, VELOCITY_Y_MPS:number, VELOCITY_Z_MPS:number):flatbuffers.Offset {
   ACWStateSample.startACWStateSample(builder);
   ACWStateSample.addJulianDateTt(builder, JULIAN_DATE_TT);
   ACWStateSample.addPositionXM(builder, POSITION_X_M);
   ACWStateSample.addPositionYM(builder, POSITION_Y_M);
   ACWStateSample.addPositionZM(builder, POSITION_Z_M);
+  ACWStateSample.addVelocityXMps(builder, VELOCITY_X_MPS);
+  ACWStateSample.addVelocityYMps(builder, VELOCITY_Y_MPS);
+  ACWStateSample.addVelocityZMps(builder, VELOCITY_Z_MPS);
   return ACWStateSample.endACWStateSample(builder);
 }
 
@@ -98,7 +132,10 @@ unpack(): ACWStateSampleT {
     this.JULIAN_DATE_TT(),
     this.POSITION_X_M(),
     this.POSITION_Y_M(),
-    this.POSITION_Z_M()
+    this.POSITION_Z_M(),
+    this.VELOCITY_X_MPS(),
+    this.VELOCITY_Y_MPS(),
+    this.VELOCITY_Z_MPS()
   );
 }
 
@@ -108,6 +145,9 @@ unpackTo(_o: ACWStateSampleT): void {
   _o.POSITION_X_M = this.POSITION_X_M();
   _o.POSITION_Y_M = this.POSITION_Y_M();
   _o.POSITION_Z_M = this.POSITION_Z_M();
+  _o.VELOCITY_X_MPS = this.VELOCITY_X_MPS();
+  _o.VELOCITY_Y_MPS = this.VELOCITY_Y_MPS();
+  _o.VELOCITY_Z_MPS = this.VELOCITY_Z_MPS();
 }
 }
 
@@ -116,7 +156,10 @@ constructor(
   public JULIAN_DATE_TT: number = 0.0,
   public POSITION_X_M: number = 0.0,
   public POSITION_Y_M: number = 0.0,
-  public POSITION_Z_M: number = 0.0
+  public POSITION_Z_M: number = 0.0,
+  public VELOCITY_X_MPS: number = 0.0,
+  public VELOCITY_Y_MPS: number = 0.0,
+  public VELOCITY_Z_MPS: number = 0.0
 ){}
 
 
@@ -125,7 +168,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.JULIAN_DATE_TT,
     this.POSITION_X_M,
     this.POSITION_Y_M,
-    this.POSITION_Z_M
+    this.POSITION_Z_M,
+    this.VELOCITY_X_MPS,
+    this.VELOCITY_Y_MPS,
+    this.VELOCITY_Z_MPS
   );
 }
 }

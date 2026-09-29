@@ -6,903 +6,386 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum acwOperationCode {
-  UNKNOWN(0),
-  COMPUTE_ACCESS_WINDOWS(1);
+enum DataType {
+  OBSERVED(0),
+  PREDICTED(1);
 
   final int value;
-  const acwOperationCode(this.value);
+  const DataType(this.value);
 
-  factory acwOperationCode.fromValue(int value) {
+  factory DataType.fromValue(int value) {
     switch (value) {
-      case 0: return acwOperationCode.UNKNOWN;
-      case 1: return acwOperationCode.COMPUTE_ACCESS_WINDOWS;
+      case 0: return DataType.OBSERVED;
+      case 1: return DataType.PREDICTED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static acwOperationCode? _createOrNull(int? value) =>
-      value == null ? null : acwOperationCode.fromValue(value);
+  static DataType? _createOrNull(int? value) =>
+      value == null ? null : DataType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<acwOperationCode> reader = _acwOperationCodeReader();
+  static const fb.Reader<DataType> reader = _DataTypeReader();
 }
 
-class _acwOperationCodeReader extends fb.Reader<acwOperationCode> {
-  const _acwOperationCodeReader();
+class _DataTypeReader extends fb.Reader<DataType> {
+  const _DataTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  acwOperationCode read(fb.BufferContext bc, int offset) =>
-      acwOperationCode.fromValue(const fb.Int8Reader().read(bc, offset));
+  DataType read(fb.BufferContext bc, int offset) =>
+      DataType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum acwResultStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_OPERATION(2);
-
-  final int value;
-  const acwResultStatus(this.value);
-
-  factory acwResultStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return acwResultStatus.OK;
-      case 1: return acwResultStatus.INVALID_INPUT;
-      case 2: return acwResultStatus.UNSUPPORTED_OPERATION;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static acwResultStatus? _createOrNull(int? value) =>
-      value == null ? null : acwResultStatus.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<acwResultStatus> reader = _acwResultStatusReader();
-}
-
-class _acwResultStatusReader extends fb.Reader<acwResultStatus> {
-  const _acwResultStatusReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  acwResultStatus read(fb.BufferContext bc, int offset) =>
-      acwResultStatus.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-enum acwRefractionModelKind {
-  NONE(0),
-  EARTH_STANDARD_ATMOSPHERE(1);
-
-  final int value;
-  const acwRefractionModelKind(this.value);
-
-  factory acwRefractionModelKind.fromValue(int value) {
-    switch (value) {
-      case 0: return acwRefractionModelKind.NONE;
-      case 1: return acwRefractionModelKind.EARTH_STANDARD_ATMOSPHERE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static acwRefractionModelKind? _createOrNull(int? value) =>
-      value == null ? null : acwRefractionModelKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<acwRefractionModelKind> reader = _acwRefractionModelKindReader();
-}
-
-class _acwRefractionModelKindReader extends fb.Reader<acwRefractionModelKind> {
-  const _acwRefractionModelKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  acwRefractionModelKind read(fb.BufferContext bc, int offset) =>
-      acwRefractionModelKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Kind of access constraint. Append only.
-enum acwConstraintKind {
+///  Published Earth-orientation series a row was taken from. Append new values
+///  only; never reorder or reuse existing values.
+enum eopSeries {
   UNSPECIFIED(0),
-  MIN_ELEVATION(1),
-  ELEVATION_MASK(2),
-  MAX_RANGE(3),
-  MIN_RANGE(4),
-  SUN_EXCLUSION(5),
-  MOON_EXCLUSION(6),
-  TARGET_LIGHTING(7),
-  LINE_OF_SIGHT(8),
-  BLACKOUT(9);
+  IERS_C04_14(1),
+  IERS_C04_20(2),
+  IERS_BULLETIN_A(3),
+  IERS_BULLETIN_B(4),
+  FINALS2000A(5),
+  OTHER(6);
 
   final int value;
-  const acwConstraintKind(this.value);
+  const eopSeries(this.value);
 
-  factory acwConstraintKind.fromValue(int value) {
+  factory eopSeries.fromValue(int value) {
     switch (value) {
-      case 0: return acwConstraintKind.UNSPECIFIED;
-      case 1: return acwConstraintKind.MIN_ELEVATION;
-      case 2: return acwConstraintKind.ELEVATION_MASK;
-      case 3: return acwConstraintKind.MAX_RANGE;
-      case 4: return acwConstraintKind.MIN_RANGE;
-      case 5: return acwConstraintKind.SUN_EXCLUSION;
-      case 6: return acwConstraintKind.MOON_EXCLUSION;
-      case 7: return acwConstraintKind.TARGET_LIGHTING;
-      case 8: return acwConstraintKind.LINE_OF_SIGHT;
-      case 9: return acwConstraintKind.BLACKOUT;
+      case 0: return eopSeries.UNSPECIFIED;
+      case 1: return eopSeries.IERS_C04_14;
+      case 2: return eopSeries.IERS_C04_20;
+      case 3: return eopSeries.IERS_BULLETIN_A;
+      case 4: return eopSeries.IERS_BULLETIN_B;
+      case 5: return eopSeries.FINALS2000A;
+      case 6: return eopSeries.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static acwConstraintKind? _createOrNull(int? value) =>
-      value == null ? null : acwConstraintKind.fromValue(value);
+  static eopSeries? _createOrNull(int? value) =>
+      value == null ? null : eopSeries.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 9;
-  static const fb.Reader<acwConstraintKind> reader = _acwConstraintKindReader();
+  static const int maxValue = 6;
+  static const fb.Reader<eopSeries> reader = _eopSeriesReader();
 }
 
-class _acwConstraintKindReader extends fb.Reader<acwConstraintKind> {
-  const _acwConstraintKindReader();
+class _eopSeriesReader extends fb.Reader<eopSeries> {
+  const _eopSeriesReader();
 
   @override
   int get size => 1;
 
   @override
-  acwConstraintKind read(fb.BufferContext bc, int offset) =>
-      acwConstraintKind.fromValue(const fb.Int8Reader().read(bc, offset));
+  eopSeries read(fb.BufferContext bc, int offset) =>
+      eopSeries.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  How the members of a constraint set combine.
-enum acwConstraintOperator {
-  ALL_OF(0),
-  ANY_OF(1);
+///  IAU precession-nutation model the celestial pole offsets are referenced to.
+///  Append new values only; never reorder or reuse existing values.
+enum iauPrecessionNutationModel {
+  UNSPECIFIED(0),
+  IAU_2000A(1),
+  IAU_2000B(2),
+  IAU_2006(3);
 
   final int value;
-  const acwConstraintOperator(this.value);
+  const iauPrecessionNutationModel(this.value);
 
-  factory acwConstraintOperator.fromValue(int value) {
+  factory iauPrecessionNutationModel.fromValue(int value) {
     switch (value) {
-      case 0: return acwConstraintOperator.ALL_OF;
-      case 1: return acwConstraintOperator.ANY_OF;
+      case 0: return iauPrecessionNutationModel.UNSPECIFIED;
+      case 1: return iauPrecessionNutationModel.IAU_2000A;
+      case 2: return iauPrecessionNutationModel.IAU_2000B;
+      case 3: return iauPrecessionNutationModel.IAU_2006;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static acwConstraintOperator? _createOrNull(int? value) =>
-      value == null ? null : acwConstraintOperator.fromValue(value);
+  static iauPrecessionNutationModel? _createOrNull(int? value) =>
+      value == null ? null : iauPrecessionNutationModel.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<acwConstraintOperator> reader = _acwConstraintOperatorReader();
+  static const int maxValue = 3;
+  static const fb.Reader<iauPrecessionNutationModel> reader = _iauPrecessionNutationModelReader();
 }
 
-class _acwConstraintOperatorReader extends fb.Reader<acwConstraintOperator> {
-  const _acwConstraintOperatorReader();
+class _iauPrecessionNutationModelReader extends fb.Reader<iauPrecessionNutationModel> {
+  const _iauPrecessionNutationModelReader();
 
   @override
   int get size => 1;
 
   @override
-  acwConstraintOperator read(fb.BufferContext bc, int offset) =>
-      acwConstraintOperator.fromValue(const fb.Int8Reader().read(bc, offset));
+  iauPrecessionNutationModel read(fb.BufferContext bc, int offset) =>
+      iauPrecessionNutationModel.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Whether windows are evaluated only at the supplied samples or refined to
-///  the epochs where the aggregate condition changes.
-enum acwEvaluationMode {
-  DISCRETE(0),
-  CONTINUOUS(1);
-
-  final int value;
-  const acwEvaluationMode(this.value);
-
-  factory acwEvaluationMode.fromValue(int value) {
-    switch (value) {
-      case 0: return acwEvaluationMode.DISCRETE;
-      case 1: return acwEvaluationMode.CONTINUOUS;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static acwEvaluationMode? _createOrNull(int? value) =>
-      value == null ? null : acwEvaluationMode.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<acwEvaluationMode> reader = _acwEvaluationModeReader();
-}
-
-class _acwEvaluationModeReader extends fb.Reader<acwEvaluationMode> {
-  const _acwEvaluationModeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  acwEvaluationMode read(fb.BufferContext bc, int offset) =>
-      acwEvaluationMode.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Illumination state of the target required by a TARGET_LIGHTING constraint.
-enum acwLightingCondition {
-  ANY(0),
-  SUNLIT(1),
-  PENUMBRA(2),
-  UMBRA(3),
-  NOT_UMBRA(4);
-
-  final int value;
-  const acwLightingCondition(this.value);
-
-  factory acwLightingCondition.fromValue(int value) {
-    switch (value) {
-      case 0: return acwLightingCondition.ANY;
-      case 1: return acwLightingCondition.SUNLIT;
-      case 2: return acwLightingCondition.PENUMBRA;
-      case 3: return acwLightingCondition.UMBRA;
-      case 4: return acwLightingCondition.NOT_UMBRA;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static acwLightingCondition? _createOrNull(int? value) =>
-      value == null ? null : acwLightingCondition.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<acwLightingCondition> reader = _acwLightingConditionReader();
-}
-
-class _acwLightingConditionReader extends fb.Reader<acwLightingCondition> {
-  const _acwLightingConditionReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  acwLightingCondition read(fb.BufferContext bc, int offset) =>
-      acwLightingCondition.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Target Cartesian state sample in an Earth-fixed frame.
-class ACWStateSample {
-  ACWStateSample._(this._bc, this._bcOffset);
-  factory ACWStateSample(List<int> bytes) {
+///  Earth Orientation Parameters
+class EOP {
+  EOP._(this._bc, this._bcOffset);
+  factory EOP(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<ACWStateSample> reader = _ACWStateSampleReader();
+  static const fb.Reader<EOP> reader = _EOPReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Sample epoch as Julian Date in TT.
-  double get JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get julianDateTt => JULIAN_DATE_TT;
-  ///  Earth-fixed X position, meters.
-  double get POSITION_X_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get positionXM => POSITION_X_M;
-  ///  Earth-fixed Y position, meters.
-  double get POSITION_Y_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get positionYM => POSITION_Y_M;
-  ///  Earth-fixed Z position, meters.
-  double get POSITION_Z_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get positionZM => POSITION_Z_M;
+  ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///   Modified Julian Date in UTC, e.g., 58119
+  int get MJD => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///   x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+  double get X_POLE_WANDER_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get xPoleWanderRadians => X_POLE_WANDER_RADIANS;
+  ///   y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+  double get Y_POLE_WANDER_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get yPoleWanderRadians => Y_POLE_WANDER_RADIANS;
+  ///   x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+  double get X_CELESTIAL_POLE_OFFSET_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get xCelestialPoleOffsetRadians => X_CELESTIAL_POLE_OFFSET_RADIANS;
+  ///   y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+  double get Y_CELESTIAL_POLE_OFFSET_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get yCelestialPoleOffsetRadians => Y_CELESTIAL_POLE_OFFSET_RADIANS;
+  ///   UT1 minus UTC in seconds, e.g., 0.2163567
+  double get UT1_MINUS_UTC_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get ut1MinusUtcSeconds => UT1_MINUS_UTC_SECONDS;
+  ///   TAI minus UTC in seconds, e.g., 37
+  int get TAI_MINUS_UTC_SECONDS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
+  ///   Correction to Length of Day in seconds, e.g., 8.094E-4
+  double get LENGTH_OF_DAY_CORRECTION_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get lengthOfDayCorrectionSeconds => LENGTH_OF_DAY_CORRECTION_SECONDS;
+  ///   Data type (O = Observed, P = Predicted)
+  DataType get DATA_TYPE => DataType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  DataType get dataType => DATA_TYPE;
+  ///  Published series this row was taken from. Rows from different series are
+  ///  NOT interchangeable at the microarcsecond level and must not be merged
+  ///  without recording which series each row came from.
+  eopSeries get SERIES => eopSeries.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  ///  Precession-nutation model the celestial pole offsets are expressed
+  ///  against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+  ///  (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+  ///  them correctly without knowing which model produced them.
+  iauPrecessionNutationModel get IAU_CONVENTION => iauPrecessionNutationModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  iauPrecessionNutationModel get iauConvention => IAU_CONVENTION;
+  ///  1-sigma uncertainty in x Pole Wander, radians.
+  double get X_POLE_WANDER_UNCERTAINTY_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get xPoleWanderUncertaintyRadians => X_POLE_WANDER_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty in y Pole Wander, radians.
+  double get Y_POLE_WANDER_UNCERTAINTY_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get yPoleWanderUncertaintyRadians => Y_POLE_WANDER_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty in the x Celestial Pole Offset, radians.
+  double get X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get xCelestialPoleOffsetUncertaintyRadians => X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty in the y Celestial Pole Offset, radians.
+  double get Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get yCelestialPoleOffsetUncertaintyRadians => Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty in UT1 minus UTC, seconds.
+  double get UT1_MINUS_UTC_UNCERTAINTY_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get ut1MinusUtcUncertaintySeconds => UT1_MINUS_UTC_UNCERTAINTY_SECONDS;
+  ///  1-sigma uncertainty in the Length of Day correction, seconds.
+  double get LENGTH_OF_DAY_UNCERTAINTY_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get lengthOfDayUncertaintySeconds => LENGTH_OF_DAY_UNCERTAINTY_SECONDS;
+  ///  x component of Pole Wander in radians, double precision. Authoritative
+  ///  over X_POLE_WANDER_RADIANS when present.
+  double get X_POLE_WANDER_RADIANS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get xPoleWanderRadiansHp => X_POLE_WANDER_RADIANS_HP;
+  ///  y component of Pole Wander in radians, double precision. Authoritative
+  ///  over Y_POLE_WANDER_RADIANS when present.
+  double get Y_POLE_WANDER_RADIANS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get yPoleWanderRadiansHp => Y_POLE_WANDER_RADIANS_HP;
+  ///  x component of the Celestial Pole Offset in radians, double precision.
+  ///  Authoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  double get X_CELESTIAL_POLE_OFFSET_RADIANS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get xCelestialPoleOffsetRadiansHp => X_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+  ///  y component of the Celestial Pole Offset in radians, double precision.
+  ///  Authoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.
+  double get Y_CELESTIAL_POLE_OFFSET_RADIANS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get yCelestialPoleOffsetRadiansHp => Y_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+  ///  UT1 minus UTC in seconds, double precision. Authoritative over
+  ///  UT1_MINUS_UTC_SECONDS when present.
+  double get UT1_MINUS_UTC_SECONDS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get ut1MinusUtcSecondsHp => UT1_MINUS_UTC_SECONDS_HP;
+  ///  Correction to Length of Day in seconds, double precision. Authoritative
+  ///  over LENGTH_OF_DAY_CORRECTION_SECONDS when present.
+  double get LENGTH_OF_DAY_CORRECTION_SECONDS_HP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get lengthOfDayCorrectionSecondsHp => LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
+  ///  Epoch of the data set this row was published in, ISO 8601 UTC. Identifies
+  ///  WHICH issue of the series a consumer is holding; two rows for the same
+  ///  MJD from different data-set epochs are different values, not duplicates.
+  String? get DATA_SET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get dataSetEpoch => DATA_SET_EPOCH;
+  ///  Content identifier of the complete published data set this row was taken
+  ///  from. Every frames consumer that must agree bit-for-bit records this so
+  ///  the source is provable rather than assumed.
+  String? get DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get dataSetCid => DATA_SET_CID;
+  ///  Nutation correction in longitude (dPsi) against the IAU 1980 model,
+  ///  radians, as published beside the CIP offsets by combined rapid-service
+  ///  series.
+  double get NUTATION_DPSI_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get nutationDpsiRadians => NUTATION_DPSI_RADIANS;
+  ///  Nutation correction in obliquity (dEps) against the IAU 1980 model,
+  ///  radians.
+  double get NUTATION_DEPS_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get nutationDepsRadians => NUTATION_DEPS_RADIANS;
+  ///  1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.
+  double get NUTATION_DPSI_UNCERTAINTY_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  double get nutationDpsiUncertaintyRadians => NUTATION_DPSI_UNCERTAINTY_RADIANS;
+  ///  1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
+  double get NUTATION_DEPS_UNCERTAINTY_RADIANS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get nutationDepsUncertaintyRadians => NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
   @override
   String toString() {
-    return 'ACWStateSample{julianDateTt: ${julianDateTt}, positionXM: ${positionXM}, positionYM: ${positionYM}, positionZM: ${positionZM}}';
+    return 'EOP{DATE: ${DATE}, MJD: ${MJD}, xPoleWanderRadians: ${xPoleWanderRadians}, yPoleWanderRadians: ${yPoleWanderRadians}, xCelestialPoleOffsetRadians: ${xCelestialPoleOffsetRadians}, yCelestialPoleOffsetRadians: ${yCelestialPoleOffsetRadians}, ut1MinusUtcSeconds: ${ut1MinusUtcSeconds}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, lengthOfDayCorrectionSeconds: ${lengthOfDayCorrectionSeconds}, dataType: ${dataType}, SERIES: ${SERIES}, iauConvention: ${iauConvention}, xPoleWanderUncertaintyRadians: ${xPoleWanderUncertaintyRadians}, yPoleWanderUncertaintyRadians: ${yPoleWanderUncertaintyRadians}, xCelestialPoleOffsetUncertaintyRadians: ${xCelestialPoleOffsetUncertaintyRadians}, yCelestialPoleOffsetUncertaintyRadians: ${yCelestialPoleOffsetUncertaintyRadians}, ut1MinusUtcUncertaintySeconds: ${ut1MinusUtcUncertaintySeconds}, lengthOfDayUncertaintySeconds: ${lengthOfDayUncertaintySeconds}, xPoleWanderRadiansHp: ${xPoleWanderRadiansHp}, yPoleWanderRadiansHp: ${yPoleWanderRadiansHp}, xCelestialPoleOffsetRadiansHp: ${xCelestialPoleOffsetRadiansHp}, yCelestialPoleOffsetRadiansHp: ${yCelestialPoleOffsetRadiansHp}, ut1MinusUtcSecondsHp: ${ut1MinusUtcSecondsHp}, lengthOfDayCorrectionSecondsHp: ${lengthOfDayCorrectionSecondsHp}, dataSetEpoch: ${dataSetEpoch}, dataSetCid: ${dataSetCid}, nutationDpsiRadians: ${nutationDpsiRadians}, nutationDepsRadians: ${nutationDepsRadians}, nutationDpsiUncertaintyRadians: ${nutationDpsiUncertaintyRadians}, nutationDepsUncertaintyRadians: ${nutationDepsUncertaintyRadians}}';
   }
 }
 
-class _ACWStateSampleReader extends fb.TableReader<ACWStateSample> {
-  const _ACWStateSampleReader();
+class _EOPReader extends fb.TableReader<EOP> {
+  const _EOPReader();
 
   @override
-  ACWStateSample createObject(fb.BufferContext bc, int offset) =>
-    ACWStateSample._(bc, offset);
+  EOP createObject(fb.BufferContext bc, int offset) =>
+    EOP._(bc, offset);
 }
 
-class ACWStateSampleBuilder {
-  ACWStateSampleBuilder(this.fbBuilder);
+class EOPBuilder {
+  EOPBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(30);
   }
 
-  int addJulianDateTt(double? JULIAN_DATE_TT) {
-    fbBuilder.addFloat64(0, JULIAN_DATE_TT);
-    return fbBuilder.offset;
-  }
-  int addPositionXM(double? POSITION_X_M) {
-    fbBuilder.addFloat64(1, POSITION_X_M);
-    return fbBuilder.offset;
-  }
-  int addPositionYM(double? POSITION_Y_M) {
-    fbBuilder.addFloat64(2, POSITION_Y_M);
-    return fbBuilder.offset;
-  }
-  int addPositionZM(double? POSITION_Z_M) {
-    fbBuilder.addFloat64(3, POSITION_Z_M);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
-  final double? _JULIAN_DATE_TT;
-  final double? _POSITION_X_M;
-  final double? _POSITION_Y_M;
-  final double? _POSITION_Z_M;
-
-  ACWStateSampleObjectBuilder({
-    double? JULIAN_DATE_TT,
-    double? julianDateTt,
-    double? POSITION_X_M,
-    double? positionXM,
-    double? POSITION_Y_M,
-    double? positionYM,
-    double? POSITION_Z_M,
-    double? positionZM,
-  })
-      : _JULIAN_DATE_TT = julianDateTt ?? JULIAN_DATE_TT,
-        _POSITION_X_M = positionXM ?? POSITION_X_M,
-        _POSITION_Y_M = positionYM ?? POSITION_Y_M,
-        _POSITION_Z_M = positionZM ?? POSITION_Z_M;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(4);
-    fbBuilder.addFloat64(0, _JULIAN_DATE_TT);
-    fbBuilder.addFloat64(1, _POSITION_X_M);
-    fbBuilder.addFloat64(2, _POSITION_Y_M);
-    fbBuilder.addFloat64(3, _POSITION_Z_M);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Azimuth-dependent minimum elevation mask point.
-class ACWElevationMaskPoint {
-  ACWElevationMaskPoint._(this._bc, this._bcOffset);
-  factory ACWElevationMaskPoint(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWElevationMaskPoint> reader = _ACWElevationMaskPointReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Azimuth, radians in the TopocentricFrame convention.
-  double get AZIMUTH_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get azimuthRad => AZIMUTH_RAD;
-  ///  Minimum visible elevation at the azimuth, radians.
-  double get ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get elevationRad => ELEVATION_RAD;
-
-  @override
-  String toString() {
-    return 'ACWElevationMaskPoint{azimuthRad: ${azimuthRad}, elevationRad: ${elevationRad}}';
-  }
-}
-
-class _ACWElevationMaskPointReader extends fb.TableReader<ACWElevationMaskPoint> {
-  const _ACWElevationMaskPointReader();
-
-  @override
-  ACWElevationMaskPoint createObject(fb.BufferContext bc, int offset) =>
-    ACWElevationMaskPoint._(bc, offset);
-}
-
-class ACWElevationMaskPointBuilder {
-  ACWElevationMaskPointBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addAzimuthRad(double? AZIMUTH_RAD) {
-    fbBuilder.addFloat64(0, AZIMUTH_RAD);
-    return fbBuilder.offset;
-  }
-  int addElevationRad(double? ELEVATION_RAD) {
-    fbBuilder.addFloat64(1, ELEVATION_RAD);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWElevationMaskPointObjectBuilder extends fb.ObjectBuilder {
-  final double? _AZIMUTH_RAD;
-  final double? _ELEVATION_RAD;
-
-  ACWElevationMaskPointObjectBuilder({
-    double? AZIMUTH_RAD,
-    double? azimuthRad,
-    double? ELEVATION_RAD,
-    double? elevationRad,
-  })
-      : _AZIMUTH_RAD = azimuthRad ?? AZIMUTH_RAD,
-        _ELEVATION_RAD = elevationRad ?? ELEVATION_RAD;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addFloat64(0, _AZIMUTH_RAD);
-    fbBuilder.addFloat64(1, _ELEVATION_RAD);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Atmospheric refraction model for apparent-elevation access checks.
-class ACWRefractionModel {
-  ACWRefractionModel._(this._bc, this._bcOffset);
-  factory ACWRefractionModel(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWRefractionModel> reader = _ACWRefractionModelReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  acwRefractionModelKind get MODEL_KIND => acwRefractionModelKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  acwRefractionModelKind get modelKind => MODEL_KIND;
-  ///  Local pressure in pascals.
-  double get PRESSURE_PA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 101000.0);
-  double get pressurePa => PRESSURE_PA;
-  ///  Local temperature in kelvin.
-  double get TEMPERATURE_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 283.0);
-  double get temperatureK => TEMPERATURE_K;
-
-  @override
-  String toString() {
-    return 'ACWRefractionModel{modelKind: ${modelKind}, pressurePa: ${pressurePa}, temperatureK: ${temperatureK}}';
-  }
-}
-
-class _ACWRefractionModelReader extends fb.TableReader<ACWRefractionModel> {
-  const _ACWRefractionModelReader();
-
-  @override
-  ACWRefractionModel createObject(fb.BufferContext bc, int offset) =>
-    ACWRefractionModel._(bc, offset);
-}
-
-class ACWRefractionModelBuilder {
-  ACWRefractionModelBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addModelKind(acwRefractionModelKind? MODEL_KIND) {
-    fbBuilder.addInt8(0, MODEL_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addPressurePa(double? PRESSURE_PA) {
-    fbBuilder.addFloat64(1, PRESSURE_PA);
-    return fbBuilder.offset;
-  }
-  int addTemperatureK(double? TEMPERATURE_K) {
-    fbBuilder.addFloat64(2, TEMPERATURE_K);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWRefractionModelObjectBuilder extends fb.ObjectBuilder {
-  final acwRefractionModelKind? _MODEL_KIND;
-  final double? _PRESSURE_PA;
-  final double? _TEMPERATURE_K;
-
-  ACWRefractionModelObjectBuilder({
-    acwRefractionModelKind? MODEL_KIND,
-    acwRefractionModelKind? modelKind,
-    double? PRESSURE_PA,
-    double? pressurePa,
-    double? TEMPERATURE_K,
-    double? temperatureK,
-  })
-      : _MODEL_KIND = modelKind ?? MODEL_KIND,
-        _PRESSURE_PA = pressurePa ?? PRESSURE_PA,
-        _TEMPERATURE_K = temperatureK ?? TEMPERATURE_K;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
-    fbBuilder.addInt8(0, _MODEL_KIND?.value);
-    fbBuilder.addFloat64(1, _PRESSURE_PA);
-    fbBuilder.addFloat64(2, _TEMPERATURE_K);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Ground-station blackout interval.
-class ACWBlackoutWindow {
-  ACWBlackoutWindow._(this._bc, this._bcOffset);
-  factory ACWBlackoutWindow(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWBlackoutWindow> reader = _ACWBlackoutWindowReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Interval start as Julian Date in TT.
-  double get START_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get startJulianDateTt => START_JULIAN_DATE_TT;
-  ///  Interval end as Julian Date in TT.
-  double get END_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get endJulianDateTt => END_JULIAN_DATE_TT;
-
-  @override
-  String toString() {
-    return 'ACWBlackoutWindow{startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}}';
-  }
-}
-
-class _ACWBlackoutWindowReader extends fb.TableReader<ACWBlackoutWindow> {
-  const _ACWBlackoutWindowReader();
-
-  @override
-  ACWBlackoutWindow createObject(fb.BufferContext bc, int offset) =>
-    ACWBlackoutWindow._(bc, offset);
-}
-
-class ACWBlackoutWindowBuilder {
-  ACWBlackoutWindowBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addStartJulianDateTt(double? START_JULIAN_DATE_TT) {
-    fbBuilder.addFloat64(0, START_JULIAN_DATE_TT);
-    return fbBuilder.offset;
-  }
-  int addEndJulianDateTt(double? END_JULIAN_DATE_TT) {
-    fbBuilder.addFloat64(1, END_JULIAN_DATE_TT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWBlackoutWindowObjectBuilder extends fb.ObjectBuilder {
-  final double? _START_JULIAN_DATE_TT;
-  final double? _END_JULIAN_DATE_TT;
-
-  ACWBlackoutWindowObjectBuilder({
-    double? START_JULIAN_DATE_TT,
-    double? startJulianDateTt,
-    double? END_JULIAN_DATE_TT,
-    double? endJulianDateTt,
-  })
-      : _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
-        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addFloat64(0, _START_JULIAN_DATE_TT);
-    fbBuilder.addFloat64(1, _END_JULIAN_DATE_TT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Ground-station geodetic definition and scheduling constraints.
-class ACWGroundStation {
-  ACWGroundStation._(this._bc, this._bcOffset);
-  factory ACWGroundStation(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWGroundStation> reader = _ACWGroundStationReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get stationId => STATION_ID;
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Geodetic latitude, radians.
-  double get LATITUDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get latitudeRad => LATITUDE_RAD;
-  ///  Geodetic longitude, radians.
-  double get LONGITUDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get longitudeRad => LONGITUDE_RAD;
-  ///  Height above the WGS-84 ellipsoid, meters.
-  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get altitudeM => ALTITUDE_M;
-  ///  Default minimum visible elevation, radians.
-  double get MIN_ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get minElevationRad => MIN_ELEVATION_RAD;
-  ///  Number of simultaneous contacts this station can schedule.
-  int get CHANNEL_CAPACITY => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get channelCapacity => CHANNEL_CAPACITY;
-  ///  Station-specific unavailable intervals.
-  List<ACWBlackoutWindow>? get BLACKOUT_WINDOWS => const fb.ListReader<ACWBlackoutWindow>(ACWBlackoutWindow.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  List<ACWBlackoutWindow>? get blackoutWindows => BLACKOUT_WINDOWS;
-
-  @override
-  String toString() {
-    return 'ACWGroundStation{stationId: ${stationId}, NAME: ${NAME}, latitudeRad: ${latitudeRad}, longitudeRad: ${longitudeRad}, altitudeM: ${altitudeM}, minElevationRad: ${minElevationRad}, channelCapacity: ${channelCapacity}, blackoutWindows: ${blackoutWindows}}';
-  }
-}
-
-class _ACWGroundStationReader extends fb.TableReader<ACWGroundStation> {
-  const _ACWGroundStationReader();
-
-  @override
-  ACWGroundStation createObject(fb.BufferContext bc, int offset) =>
-    ACWGroundStation._(bc, offset);
-}
-
-class ACWGroundStationBuilder {
-  ACWGroundStationBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addStationIdOffset(int? offset) {
+  int addDateOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addMjd(int? MJD) {
+    fbBuilder.addUint32(1, MJD);
     return fbBuilder.offset;
   }
-  int addLatitudeRad(double? LATITUDE_RAD) {
-    fbBuilder.addFloat64(2, LATITUDE_RAD);
+  int addXPoleWanderRadians(double? X_POLE_WANDER_RADIANS) {
+    fbBuilder.addFloat32(2, X_POLE_WANDER_RADIANS);
     return fbBuilder.offset;
   }
-  int addLongitudeRad(double? LONGITUDE_RAD) {
-    fbBuilder.addFloat64(3, LONGITUDE_RAD);
+  int addYPoleWanderRadians(double? Y_POLE_WANDER_RADIANS) {
+    fbBuilder.addFloat32(3, Y_POLE_WANDER_RADIANS);
     return fbBuilder.offset;
   }
-  int addAltitudeM(double? ALTITUDE_M) {
-    fbBuilder.addFloat64(4, ALTITUDE_M);
+  int addXCelestialPoleOffsetRadians(double? X_CELESTIAL_POLE_OFFSET_RADIANS) {
+    fbBuilder.addFloat32(4, X_CELESTIAL_POLE_OFFSET_RADIANS);
     return fbBuilder.offset;
   }
-  int addMinElevationRad(double? MIN_ELEVATION_RAD) {
-    fbBuilder.addFloat64(5, MIN_ELEVATION_RAD);
+  int addYCelestialPoleOffsetRadians(double? Y_CELESTIAL_POLE_OFFSET_RADIANS) {
+    fbBuilder.addFloat32(5, Y_CELESTIAL_POLE_OFFSET_RADIANS);
     return fbBuilder.offset;
   }
-  int addChannelCapacity(int? CHANNEL_CAPACITY) {
-    fbBuilder.addUint32(6, CHANNEL_CAPACITY);
+  int addUt1MinusUtcSeconds(double? UT1_MINUS_UTC_SECONDS) {
+    fbBuilder.addFloat32(6, UT1_MINUS_UTC_SECONDS);
     return fbBuilder.offset;
   }
-  int addBlackoutWindowsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addTaiMinusUtcSeconds(int? TAI_MINUS_UTC_SECONDS) {
+    fbBuilder.addUint16(7, TAI_MINUS_UTC_SECONDS);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
-  final String? _STATION_ID;
-  final String? _NAME;
-  final double? _LATITUDE_RAD;
-  final double? _LONGITUDE_RAD;
-  final double? _ALTITUDE_M;
-  final double? _MIN_ELEVATION_RAD;
-  final int? _CHANNEL_CAPACITY;
-  final List<ACWBlackoutWindowObjectBuilder>? _BLACKOUT_WINDOWS;
-
-  ACWGroundStationObjectBuilder({
-    String? STATION_ID,
-    String? stationId,
-    String? NAME,
-    double? LATITUDE_RAD,
-    double? latitudeRad,
-    double? LONGITUDE_RAD,
-    double? longitudeRad,
-    double? ALTITUDE_M,
-    double? altitudeM,
-    double? MIN_ELEVATION_RAD,
-    double? minElevationRad,
-    int? CHANNEL_CAPACITY,
-    int? channelCapacity,
-    List<ACWBlackoutWindowObjectBuilder>? BLACKOUT_WINDOWS,
-    List<ACWBlackoutWindowObjectBuilder>? blackoutWindows,
-  })
-      : _STATION_ID = stationId ?? STATION_ID,
-        _NAME = NAME,
-        _LATITUDE_RAD = latitudeRad ?? LATITUDE_RAD,
-        _LONGITUDE_RAD = longitudeRad ?? LONGITUDE_RAD,
-        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
-        _MIN_ELEVATION_RAD = minElevationRad ?? MIN_ELEVATION_RAD,
-        _CHANNEL_CAPACITY = channelCapacity ?? CHANNEL_CAPACITY,
-        _BLACKOUT_WINDOWS = blackoutWindows ?? BLACKOUT_WINDOWS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? STATION_IDOffset = _STATION_ID == null ? null
-        : fbBuilder.writeString(_STATION_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? BLACKOUT_WINDOWSOffset = _BLACKOUT_WINDOWS == null ? null
-        : fbBuilder.writeList(_BLACKOUT_WINDOWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, STATION_IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addFloat64(2, _LATITUDE_RAD);
-    fbBuilder.addFloat64(3, _LONGITUDE_RAD);
-    fbBuilder.addFloat64(4, _ALTITUDE_M);
-    fbBuilder.addFloat64(5, _MIN_ELEVATION_RAD);
-    fbBuilder.addUint32(6, _CHANNEL_CAPACITY);
-    fbBuilder.addOffset(7, BLACKOUT_WINDOWSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One access constraint. Fields not used by KIND are ignored.
-class ACWConstraint {
-  ACWConstraint._(this._bc, this._bcOffset);
-  factory ACWConstraint(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWConstraint> reader = _ACWConstraintReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  acwConstraintKind get KIND => acwConstraintKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Angular threshold, radians (MIN_ELEVATION, SUN_EXCLUSION, MOON_EXCLUSION).
-  double get THRESHOLD_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get thresholdRad => THRESHOLD_RAD;
-  ///  Range bounds, meters (MIN_RANGE, MAX_RANGE).
-  double get MIN_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get minRangeM => MIN_RANGE_M;
-  double get MAX_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get maxRangeM => MAX_RANGE_M;
-  ///  Required target lighting (TARGET_LIGHTING).
-  acwLightingCondition get LIGHTING => acwLightingCondition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  ///  Central-body radius offset for line-of-sight occultation, meters
-  ///  (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
-  double get OCCULTATION_ATMOSPHERE_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get occultationAtmosphereHeightM => OCCULTATION_ATMOSPHERE_HEIGHT_M;
-  ///  Azimuth-dependent mask (ELEVATION_MASK).
-  List<ACWElevationMaskPoint>? get MASK => const fb.ListReader<ACWElevationMaskPoint>(ACWElevationMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  ///  Producer label echoed in window attribution.
-  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-
-  @override
-  String toString() {
-    return 'ACWConstraint{KIND: ${KIND}, thresholdRad: ${thresholdRad}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, LIGHTING: ${LIGHTING}, occultationAtmosphereHeightM: ${occultationAtmosphereHeightM}, MASK: ${MASK}, LABEL: ${LABEL}}';
-  }
-}
-
-class _ACWConstraintReader extends fb.TableReader<ACWConstraint> {
-  const _ACWConstraintReader();
-
-  @override
-  ACWConstraint createObject(fb.BufferContext bc, int offset) =>
-    ACWConstraint._(bc, offset);
-}
-
-class ACWConstraintBuilder {
-  ACWConstraintBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addKind(acwConstraintKind? KIND) {
-    fbBuilder.addInt8(0, KIND?.value);
+  int addLengthOfDayCorrectionSeconds(double? LENGTH_OF_DAY_CORRECTION_SECONDS) {
+    fbBuilder.addFloat32(8, LENGTH_OF_DAY_CORRECTION_SECONDS);
     return fbBuilder.offset;
   }
-  int addThresholdRad(double? THRESHOLD_RAD) {
-    fbBuilder.addFloat64(1, THRESHOLD_RAD);
+  int addDataType(DataType? DATA_TYPE) {
+    fbBuilder.addInt8(9, DATA_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addMinRangeM(double? MIN_RANGE_M) {
-    fbBuilder.addFloat64(2, MIN_RANGE_M);
+  int addSeries(eopSeries? SERIES) {
+    fbBuilder.addUint8(10, SERIES?.value);
     return fbBuilder.offset;
   }
-  int addMaxRangeM(double? MAX_RANGE_M) {
-    fbBuilder.addFloat64(3, MAX_RANGE_M);
+  int addIauConvention(iauPrecessionNutationModel? IAU_CONVENTION) {
+    fbBuilder.addUint8(11, IAU_CONVENTION?.value);
     return fbBuilder.offset;
   }
-  int addLighting(acwLightingCondition? LIGHTING) {
-    fbBuilder.addInt8(4, LIGHTING?.value);
+  int addXPoleWanderUncertaintyRadians(double? X_POLE_WANDER_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat32(12, X_POLE_WANDER_UNCERTAINTY_RADIANS);
     return fbBuilder.offset;
   }
-  int addOccultationAtmosphereHeightM(double? OCCULTATION_ATMOSPHERE_HEIGHT_M) {
-    fbBuilder.addFloat64(5, OCCULTATION_ATMOSPHERE_HEIGHT_M);
+  int addYPoleWanderUncertaintyRadians(double? Y_POLE_WANDER_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat32(13, Y_POLE_WANDER_UNCERTAINTY_RADIANS);
     return fbBuilder.offset;
   }
-  int addMaskOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addXCelestialPoleOffsetUncertaintyRadians(double? X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat32(14, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
     return fbBuilder.offset;
   }
-  int addLabelOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addYCelestialPoleOffsetUncertaintyRadians(double? Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat32(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addUt1MinusUtcUncertaintySeconds(double? UT1_MINUS_UTC_UNCERTAINTY_SECONDS) {
+    fbBuilder.addFloat32(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addLengthOfDayUncertaintySeconds(double? LENGTH_OF_DAY_UNCERTAINTY_SECONDS) {
+    fbBuilder.addFloat32(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addXPoleWanderRadiansHp(double? X_POLE_WANDER_RADIANS_HP) {
+    fbBuilder.addFloat64(18, X_POLE_WANDER_RADIANS_HP);
+    return fbBuilder.offset;
+  }
+  int addYPoleWanderRadiansHp(double? Y_POLE_WANDER_RADIANS_HP) {
+    fbBuilder.addFloat64(19, Y_POLE_WANDER_RADIANS_HP);
+    return fbBuilder.offset;
+  }
+  int addXCelestialPoleOffsetRadiansHp(double? X_CELESTIAL_POLE_OFFSET_RADIANS_HP) {
+    fbBuilder.addFloat64(20, X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    return fbBuilder.offset;
+  }
+  int addYCelestialPoleOffsetRadiansHp(double? Y_CELESTIAL_POLE_OFFSET_RADIANS_HP) {
+    fbBuilder.addFloat64(21, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    return fbBuilder.offset;
+  }
+  int addUt1MinusUtcSecondsHp(double? UT1_MINUS_UTC_SECONDS_HP) {
+    fbBuilder.addFloat64(22, UT1_MINUS_UTC_SECONDS_HP);
+    return fbBuilder.offset;
+  }
+  int addLengthOfDayCorrectionSecondsHp(double? LENGTH_OF_DAY_CORRECTION_SECONDS_HP) {
+    fbBuilder.addFloat64(23, LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
+    return fbBuilder.offset;
+  }
+  int addDataSetEpochOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addDataSetCidOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addNutationDpsiRadians(double? NUTATION_DPSI_RADIANS) {
+    fbBuilder.addFloat64(26, NUTATION_DPSI_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDepsRadians(double? NUTATION_DEPS_RADIANS) {
+    fbBuilder.addFloat64(27, NUTATION_DEPS_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDpsiUncertaintyRadians(double? NUTATION_DPSI_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat64(28, NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    return fbBuilder.offset;
+  }
+  int addNutationDepsUncertaintyRadians(double? NUTATION_DEPS_UNCERTAINTY_RADIANS) {
+    fbBuilder.addFloat64(29, NUTATION_DEPS_UNCERTAINTY_RADIANS);
     return fbBuilder.offset;
   }
 
@@ -911,965 +394,168 @@ class ACWConstraintBuilder {
   }
 }
 
-class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
-  final acwConstraintKind? _KIND;
-  final double? _THRESHOLD_RAD;
-  final double? _MIN_RANGE_M;
-  final double? _MAX_RANGE_M;
-  final acwLightingCondition? _LIGHTING;
-  final double? _OCCULTATION_ATMOSPHERE_HEIGHT_M;
-  final List<ACWElevationMaskPointObjectBuilder>? _MASK;
-  final String? _LABEL;
+class EOPObjectBuilder extends fb.ObjectBuilder {
+  final String? _DATE;
+  final int? _MJD;
+  final double? _X_POLE_WANDER_RADIANS;
+  final double? _Y_POLE_WANDER_RADIANS;
+  final double? _X_CELESTIAL_POLE_OFFSET_RADIANS;
+  final double? _Y_CELESTIAL_POLE_OFFSET_RADIANS;
+  final double? _UT1_MINUS_UTC_SECONDS;
+  final int? _TAI_MINUS_UTC_SECONDS;
+  final double? _LENGTH_OF_DAY_CORRECTION_SECONDS;
+  final DataType? _DATA_TYPE;
+  final eopSeries? _SERIES;
+  final iauPrecessionNutationModel? _IAU_CONVENTION;
+  final double? _X_POLE_WANDER_UNCERTAINTY_RADIANS;
+  final double? _Y_POLE_WANDER_UNCERTAINTY_RADIANS;
+  final double? _X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+  final double? _Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+  final double? _UT1_MINUS_UTC_UNCERTAINTY_SECONDS;
+  final double? _LENGTH_OF_DAY_UNCERTAINTY_SECONDS;
+  final double? _X_POLE_WANDER_RADIANS_HP;
+  final double? _Y_POLE_WANDER_RADIANS_HP;
+  final double? _X_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+  final double? _Y_CELESTIAL_POLE_OFFSET_RADIANS_HP;
+  final double? _UT1_MINUS_UTC_SECONDS_HP;
+  final double? _LENGTH_OF_DAY_CORRECTION_SECONDS_HP;
+  final String? _DATA_SET_EPOCH;
+  final String? _DATA_SET_CID;
+  final double? _NUTATION_DPSI_RADIANS;
+  final double? _NUTATION_DEPS_RADIANS;
+  final double? _NUTATION_DPSI_UNCERTAINTY_RADIANS;
+  final double? _NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
-  ACWConstraintObjectBuilder({
-    acwConstraintKind? KIND,
-    double? THRESHOLD_RAD,
-    double? thresholdRad,
-    double? MIN_RANGE_M,
-    double? minRangeM,
-    double? MAX_RANGE_M,
-    double? maxRangeM,
-    acwLightingCondition? LIGHTING,
-    double? OCCULTATION_ATMOSPHERE_HEIGHT_M,
-    double? occultationAtmosphereHeightM,
-    List<ACWElevationMaskPointObjectBuilder>? MASK,
-    String? LABEL,
+  EOPObjectBuilder({
+    String? DATE,
+    int? MJD,
+    double? X_POLE_WANDER_RADIANS,
+    double? xPoleWanderRadians,
+    double? Y_POLE_WANDER_RADIANS,
+    double? yPoleWanderRadians,
+    double? X_CELESTIAL_POLE_OFFSET_RADIANS,
+    double? xCelestialPoleOffsetRadians,
+    double? Y_CELESTIAL_POLE_OFFSET_RADIANS,
+    double? yCelestialPoleOffsetRadians,
+    double? UT1_MINUS_UTC_SECONDS,
+    double? ut1MinusUtcSeconds,
+    int? TAI_MINUS_UTC_SECONDS,
+    int? taiMinusUtcSeconds,
+    double? LENGTH_OF_DAY_CORRECTION_SECONDS,
+    double? lengthOfDayCorrectionSeconds,
+    DataType? DATA_TYPE,
+    DataType? dataType,
+    eopSeries? SERIES,
+    iauPrecessionNutationModel? IAU_CONVENTION,
+    iauPrecessionNutationModel? iauConvention,
+    double? X_POLE_WANDER_UNCERTAINTY_RADIANS,
+    double? xPoleWanderUncertaintyRadians,
+    double? Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+    double? yPoleWanderUncertaintyRadians,
+    double? X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+    double? xCelestialPoleOffsetUncertaintyRadians,
+    double? Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+    double? yCelestialPoleOffsetUncertaintyRadians,
+    double? UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+    double? ut1MinusUtcUncertaintySeconds,
+    double? LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+    double? lengthOfDayUncertaintySeconds,
+    double? X_POLE_WANDER_RADIANS_HP,
+    double? xPoleWanderRadiansHp,
+    double? Y_POLE_WANDER_RADIANS_HP,
+    double? yPoleWanderRadiansHp,
+    double? X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+    double? xCelestialPoleOffsetRadiansHp,
+    double? Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+    double? yCelestialPoleOffsetRadiansHp,
+    double? UT1_MINUS_UTC_SECONDS_HP,
+    double? ut1MinusUtcSecondsHp,
+    double? LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+    double? lengthOfDayCorrectionSecondsHp,
+    String? DATA_SET_EPOCH,
+    String? dataSetEpoch,
+    String? DATA_SET_CID,
+    String? dataSetCid,
+    double? NUTATION_DPSI_RADIANS,
+    double? nutationDpsiRadians,
+    double? NUTATION_DEPS_RADIANS,
+    double? nutationDepsRadians,
+    double? NUTATION_DPSI_UNCERTAINTY_RADIANS,
+    double? nutationDpsiUncertaintyRadians,
+    double? NUTATION_DEPS_UNCERTAINTY_RADIANS,
+    double? nutationDepsUncertaintyRadians,
   })
-      : _KIND = KIND,
-        _THRESHOLD_RAD = thresholdRad ?? THRESHOLD_RAD,
-        _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
-        _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
-        _LIGHTING = LIGHTING,
-        _OCCULTATION_ATMOSPHERE_HEIGHT_M = occultationAtmosphereHeightM ?? OCCULTATION_ATMOSPHERE_HEIGHT_M,
-        _MASK = MASK,
-        _LABEL = LABEL;
+      : _DATE = DATE,
+        _MJD = MJD,
+        _X_POLE_WANDER_RADIANS = xPoleWanderRadians ?? X_POLE_WANDER_RADIANS,
+        _Y_POLE_WANDER_RADIANS = yPoleWanderRadians ?? Y_POLE_WANDER_RADIANS,
+        _X_CELESTIAL_POLE_OFFSET_RADIANS = xCelestialPoleOffsetRadians ?? X_CELESTIAL_POLE_OFFSET_RADIANS,
+        _Y_CELESTIAL_POLE_OFFSET_RADIANS = yCelestialPoleOffsetRadians ?? Y_CELESTIAL_POLE_OFFSET_RADIANS,
+        _UT1_MINUS_UTC_SECONDS = ut1MinusUtcSeconds ?? UT1_MINUS_UTC_SECONDS,
+        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
+        _LENGTH_OF_DAY_CORRECTION_SECONDS = lengthOfDayCorrectionSeconds ?? LENGTH_OF_DAY_CORRECTION_SECONDS,
+        _DATA_TYPE = dataType ?? DATA_TYPE,
+        _SERIES = SERIES,
+        _IAU_CONVENTION = iauConvention ?? IAU_CONVENTION,
+        _X_POLE_WANDER_UNCERTAINTY_RADIANS = xPoleWanderUncertaintyRadians ?? X_POLE_WANDER_UNCERTAINTY_RADIANS,
+        _Y_POLE_WANDER_UNCERTAINTY_RADIANS = yPoleWanderUncertaintyRadians ?? Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+        _X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = xCelestialPoleOffsetUncertaintyRadians ?? X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+        _Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = yCelestialPoleOffsetUncertaintyRadians ?? Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+        _UT1_MINUS_UTC_UNCERTAINTY_SECONDS = ut1MinusUtcUncertaintySeconds ?? UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+        _LENGTH_OF_DAY_UNCERTAINTY_SECONDS = lengthOfDayUncertaintySeconds ?? LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
+        _X_POLE_WANDER_RADIANS_HP = xPoleWanderRadiansHp ?? X_POLE_WANDER_RADIANS_HP,
+        _Y_POLE_WANDER_RADIANS_HP = yPoleWanderRadiansHp ?? Y_POLE_WANDER_RADIANS_HP,
+        _X_CELESTIAL_POLE_OFFSET_RADIANS_HP = xCelestialPoleOffsetRadiansHp ?? X_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+        _Y_CELESTIAL_POLE_OFFSET_RADIANS_HP = yCelestialPoleOffsetRadiansHp ?? Y_CELESTIAL_POLE_OFFSET_RADIANS_HP,
+        _UT1_MINUS_UTC_SECONDS_HP = ut1MinusUtcSecondsHp ?? UT1_MINUS_UTC_SECONDS_HP,
+        _LENGTH_OF_DAY_CORRECTION_SECONDS_HP = lengthOfDayCorrectionSecondsHp ?? LENGTH_OF_DAY_CORRECTION_SECONDS_HP,
+        _DATA_SET_EPOCH = dataSetEpoch ?? DATA_SET_EPOCH,
+        _DATA_SET_CID = dataSetCid ?? DATA_SET_CID,
+        _NUTATION_DPSI_RADIANS = nutationDpsiRadians ?? NUTATION_DPSI_RADIANS,
+        _NUTATION_DEPS_RADIANS = nutationDepsRadians ?? NUTATION_DEPS_RADIANS,
+        _NUTATION_DPSI_UNCERTAINTY_RADIANS = nutationDpsiUncertaintyRadians ?? NUTATION_DPSI_UNCERTAINTY_RADIANS,
+        _NUTATION_DEPS_UNCERTAINTY_RADIANS = nutationDepsUncertaintyRadians ?? NUTATION_DEPS_UNCERTAINTY_RADIANS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? MASKOffset = _MASK == null ? null
-        : fbBuilder.writeList(_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? LABELOffset = _LABEL == null ? null
-        : fbBuilder.writeString(_LABEL!);
-    fbBuilder.startTable(8);
-    fbBuilder.addInt8(0, _KIND?.value);
-    fbBuilder.addFloat64(1, _THRESHOLD_RAD);
-    fbBuilder.addFloat64(2, _MIN_RANGE_M);
-    fbBuilder.addFloat64(3, _MAX_RANGE_M);
-    fbBuilder.addInt8(4, _LIGHTING?.value);
-    fbBuilder.addFloat64(5, _OCCULTATION_ATMOSPHERE_HEIGHT_M);
-    fbBuilder.addOffset(6, MASKOffset);
-    fbBuilder.addOffset(7, LABELOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  A boolean composition of constraints and nested sets.
-class ACWConstraintSet {
-  ACWConstraintSet._(this._bc, this._bcOffset);
-  factory ACWConstraintSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWConstraintSet> reader = _ACWConstraintSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  acwConstraintOperator get OPERATOR => acwConstraintOperator.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  List<ACWConstraint>? get CONSTRAINTS => const fb.ListReader<ACWConstraint>(ACWConstraint.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Nested sets, combined with the same OPERATOR.
-  List<ACWConstraintSet>? get SETS => const fb.ListReader<ACWConstraintSet>(ACWConstraintSet.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'ACWConstraintSet{OPERATOR: ${OPERATOR}, CONSTRAINTS: ${CONSTRAINTS}, SETS: ${SETS}, LABEL: ${LABEL}}';
-  }
-}
-
-class _ACWConstraintSetReader extends fb.TableReader<ACWConstraintSet> {
-  const _ACWConstraintSetReader();
-
-  @override
-  ACWConstraintSet createObject(fb.BufferContext bc, int offset) =>
-    ACWConstraintSet._(bc, offset);
-}
-
-class ACWConstraintSetBuilder {
-  ACWConstraintSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addOperator(acwConstraintOperator? OPERATOR) {
-    fbBuilder.addInt8(0, OPERATOR?.value);
-    return fbBuilder.offset;
-  }
-  int addConstraintsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSetsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addLabelOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWConstraintSetObjectBuilder extends fb.ObjectBuilder {
-  final acwConstraintOperator? _OPERATOR;
-  final List<ACWConstraintObjectBuilder>? _CONSTRAINTS;
-  final List<ACWConstraintSetObjectBuilder>? _SETS;
-  final String? _LABEL;
-
-  ACWConstraintSetObjectBuilder({
-    acwConstraintOperator? OPERATOR,
-    List<ACWConstraintObjectBuilder>? CONSTRAINTS,
-    List<ACWConstraintSetObjectBuilder>? SETS,
-    String? LABEL,
-  })
-      : _OPERATOR = OPERATOR,
-        _CONSTRAINTS = CONSTRAINTS,
-        _SETS = SETS,
-        _LABEL = LABEL;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONSTRAINTSOffset = _CONSTRAINTS == null ? null
-        : fbBuilder.writeList(_CONSTRAINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SETSOffset = _SETS == null ? null
-        : fbBuilder.writeList(_SETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? LABELOffset = _LABEL == null ? null
-        : fbBuilder.writeString(_LABEL!);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _OPERATOR?.value);
-    fbBuilder.addOffset(1, CONSTRAINTSOffset);
-    fbBuilder.addOffset(2, SETSOffset);
-    fbBuilder.addOffset(3, LABELOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
-///  the same frame and time scale as ACWRequest.STATES.
-class ACWObserverTrajectory {
-  ACWObserverTrajectory._(this._bc, this._bcOffset);
-  factory ACWObserverTrajectory(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWObserverTrajectory> reader = _ACWObserverTrajectoryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get observerId => OBSERVER_ID;
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  List<ACWStateSample>? get STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Observer-specific unavailable intervals.
-  List<ACWBlackoutWindow>? get BLACKOUT_WINDOWS => const fb.ListReader<ACWBlackoutWindow>(ACWBlackoutWindow.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  List<ACWBlackoutWindow>? get blackoutWindows => BLACKOUT_WINDOWS;
-
-  @override
-  String toString() {
-    return 'ACWObserverTrajectory{observerId: ${observerId}, NAME: ${NAME}, STATES: ${STATES}, blackoutWindows: ${blackoutWindows}}';
-  }
-}
-
-class _ACWObserverTrajectoryReader extends fb.TableReader<ACWObserverTrajectory> {
-  const _ACWObserverTrajectoryReader();
-
-  @override
-  ACWObserverTrajectory createObject(fb.BufferContext bc, int offset) =>
-    ACWObserverTrajectory._(bc, offset);
-}
-
-class ACWObserverTrajectoryBuilder {
-  ACWObserverTrajectoryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addObserverIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addStatesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addBlackoutWindowsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWObserverTrajectoryObjectBuilder extends fb.ObjectBuilder {
-  final String? _OBSERVER_ID;
-  final String? _NAME;
-  final List<ACWStateSampleObjectBuilder>? _STATES;
-  final List<ACWBlackoutWindowObjectBuilder>? _BLACKOUT_WINDOWS;
-
-  ACWObserverTrajectoryObjectBuilder({
-    String? OBSERVER_ID,
-    String? observerId,
-    String? NAME,
-    List<ACWStateSampleObjectBuilder>? STATES,
-    List<ACWBlackoutWindowObjectBuilder>? BLACKOUT_WINDOWS,
-    List<ACWBlackoutWindowObjectBuilder>? blackoutWindows,
-  })
-      : _OBSERVER_ID = observerId ?? OBSERVER_ID,
-        _NAME = NAME,
-        _STATES = STATES,
-        _BLACKOUT_WINDOWS = blackoutWindows ?? BLACKOUT_WINDOWS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? OBSERVER_IDOffset = _OBSERVER_ID == null ? null
-        : fbBuilder.writeString(_OBSERVER_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? STATESOffset = _STATES == null ? null
-        : fbBuilder.writeList(_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BLACKOUT_WINDOWSOffset = _BLACKOUT_WINDOWS == null ? null
-        : fbBuilder.writeList(_BLACKOUT_WINDOWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, OBSERVER_IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, STATESOffset);
-    fbBuilder.addOffset(3, BLACKOUT_WINDOWSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One access-window compute request.
-class ACWRequest {
-  ACWRequest._(this._bc, this._bcOffset);
-  factory ACWRequest(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWRequest> reader = _ACWRequestReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  acwOperationCode get OPERATION => acwOperationCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Candidate ground stations.
-  List<ACWGroundStation>? get GROUND_STATIONS => const fb.ListReader<ACWGroundStation>(ACWGroundStation.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<ACWGroundStation>? get groundStations => GROUND_STATIONS;
-  ///  Pre-sampled target Earth-fixed Cartesian states.
-  List<ACWStateSample>? get STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Optional target station id. Empty means all stations when supported.
-  String? get TARGET_STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get targetStationId => TARGET_STATION_ID;
-  ///  Optional caller override for minimum elevation, radians.
-  double get MIN_ELEVATION_OVERRIDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get minElevationOverrideRad => MIN_ELEVATION_OVERRIDE_RAD;
-  ///  Optional trace/correlation identifier.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
-  ///  Optional azimuth-dependent minimum elevation mask.
-  List<ACWElevationMaskPoint>? get ELEVATION_MASK => const fb.ListReader<ACWElevationMaskPoint>(ACWElevationMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<ACWElevationMaskPoint>? get elevationMask => ELEVATION_MASK;
-  ///  Optional apparent-elevation refraction model.
-  ACWRefractionModel? get REFRACTION_MODEL => ACWRefractionModel.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  ACWRefractionModel? get refractionModel => REFRACTION_MODEL;
-  ///  Optional constraint composition. When absent the legacy behaviour holds:
-  ///  every ground station's MIN_ELEVATION_RAD (or the override) plus
-  ///  ELEVATION_MASK, all required.
-  ACWConstraintSet? get CONSTRAINTS => ACWConstraintSet.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  ///  Optional moving observers (satellite-to-satellite access). Each observer
-  ///  is evaluated against STATES like a ground station.
-  List<ACWObserverTrajectory>? get OBSERVERS => const fb.ListReader<ACWObserverTrajectory>(ACWObserverTrajectory.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Sample-only or root-refined window edges.
-  acwEvaluationMode get EVALUATION_MODE => acwEvaluationMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
-  acwEvaluationMode get evaluationMode => EVALUATION_MODE;
-  ///  Edge refinement tolerance for CONTINUOUS, seconds.
-  double get ROOT_TOLERANCE_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.1);
-  double get rootToleranceS => ROOT_TOLERANCE_S;
-  ///  Sun states in the STATES frame and time scale, required by
-  ///  SUN_EXCLUSION and TARGET_LIGHTING constraints; interpolated to sample epochs.
-  List<ACWStateSample>? get SUN_STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 28);
-  List<ACWStateSample>? get sunStates => SUN_STATES;
-  ///  Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
-  List<ACWStateSample>? get MOON_STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 30);
-  List<ACWStateSample>? get moonStates => MOON_STATES;
-
-  @override
-  String toString() {
-    return 'ACWRequest{OPERATION: ${OPERATION}, groundStations: ${groundStations}, STATES: ${STATES}, targetStationId: ${targetStationId}, minElevationOverrideRad: ${minElevationOverrideRad}, traceId: ${traceId}, elevationMask: ${elevationMask}, refractionModel: ${refractionModel}, CONSTRAINTS: ${CONSTRAINTS}, OBSERVERS: ${OBSERVERS}, evaluationMode: ${evaluationMode}, rootToleranceS: ${rootToleranceS}, sunStates: ${sunStates}, moonStates: ${moonStates}}';
-  }
-}
-
-class _ACWRequestReader extends fb.TableReader<ACWRequest> {
-  const _ACWRequestReader();
-
-  @override
-  ACWRequest createObject(fb.BufferContext bc, int offset) =>
-    ACWRequest._(bc, offset);
-}
-
-class ACWRequestBuilder {
-  ACWRequestBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(14);
-  }
-
-  int addOperation(acwOperationCode? OPERATION) {
-    fbBuilder.addInt8(0, OPERATION?.value);
-    return fbBuilder.offset;
-  }
-  int addGroundStationsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addStatesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addTargetStationIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addMinElevationOverrideRad(double? MIN_ELEVATION_OVERRIDE_RAD) {
-    fbBuilder.addFloat64(4, MIN_ELEVATION_OVERRIDE_RAD);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addElevationMaskOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addRefractionModelOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addConstraintsOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addObserversOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addEvaluationMode(acwEvaluationMode? EVALUATION_MODE) {
-    fbBuilder.addInt8(10, EVALUATION_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addRootToleranceS(double? ROOT_TOLERANCE_S) {
-    fbBuilder.addFloat64(11, ROOT_TOLERANCE_S);
-    return fbBuilder.offset;
-  }
-  int addSunStatesOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addMoonStatesOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWRequestObjectBuilder extends fb.ObjectBuilder {
-  final acwOperationCode? _OPERATION;
-  final List<ACWGroundStationObjectBuilder>? _GROUND_STATIONS;
-  final List<ACWStateSampleObjectBuilder>? _STATES;
-  final String? _TARGET_STATION_ID;
-  final double? _MIN_ELEVATION_OVERRIDE_RAD;
-  final String? _TRACE_ID;
-  final List<ACWElevationMaskPointObjectBuilder>? _ELEVATION_MASK;
-  final ACWRefractionModelObjectBuilder? _REFRACTION_MODEL;
-  final ACWConstraintSetObjectBuilder? _CONSTRAINTS;
-  final List<ACWObserverTrajectoryObjectBuilder>? _OBSERVERS;
-  final acwEvaluationMode? _EVALUATION_MODE;
-  final double? _ROOT_TOLERANCE_S;
-  final List<ACWStateSampleObjectBuilder>? _SUN_STATES;
-  final List<ACWStateSampleObjectBuilder>? _MOON_STATES;
-
-  ACWRequestObjectBuilder({
-    acwOperationCode? OPERATION,
-    List<ACWGroundStationObjectBuilder>? GROUND_STATIONS,
-    List<ACWGroundStationObjectBuilder>? groundStations,
-    List<ACWStateSampleObjectBuilder>? STATES,
-    String? TARGET_STATION_ID,
-    String? targetStationId,
-    double? MIN_ELEVATION_OVERRIDE_RAD,
-    double? minElevationOverrideRad,
-    String? TRACE_ID,
-    String? traceId,
-    List<ACWElevationMaskPointObjectBuilder>? ELEVATION_MASK,
-    List<ACWElevationMaskPointObjectBuilder>? elevationMask,
-    ACWRefractionModelObjectBuilder? REFRACTION_MODEL,
-    ACWRefractionModelObjectBuilder? refractionModel,
-    ACWConstraintSetObjectBuilder? CONSTRAINTS,
-    List<ACWObserverTrajectoryObjectBuilder>? OBSERVERS,
-    acwEvaluationMode? EVALUATION_MODE,
-    acwEvaluationMode? evaluationMode,
-    double? ROOT_TOLERANCE_S,
-    double? rootToleranceS,
-    List<ACWStateSampleObjectBuilder>? SUN_STATES,
-    List<ACWStateSampleObjectBuilder>? sunStates,
-    List<ACWStateSampleObjectBuilder>? MOON_STATES,
-    List<ACWStateSampleObjectBuilder>? moonStates,
-  })
-      : _OPERATION = OPERATION,
-        _GROUND_STATIONS = groundStations ?? GROUND_STATIONS,
-        _STATES = STATES,
-        _TARGET_STATION_ID = targetStationId ?? TARGET_STATION_ID,
-        _MIN_ELEVATION_OVERRIDE_RAD = minElevationOverrideRad ?? MIN_ELEVATION_OVERRIDE_RAD,
-        _TRACE_ID = traceId ?? TRACE_ID,
-        _ELEVATION_MASK = elevationMask ?? ELEVATION_MASK,
-        _REFRACTION_MODEL = refractionModel ?? REFRACTION_MODEL,
-        _CONSTRAINTS = CONSTRAINTS,
-        _OBSERVERS = OBSERVERS,
-        _EVALUATION_MODE = evaluationMode ?? EVALUATION_MODE,
-        _ROOT_TOLERANCE_S = rootToleranceS ?? ROOT_TOLERANCE_S,
-        _SUN_STATES = sunStates ?? SUN_STATES,
-        _MOON_STATES = moonStates ?? MOON_STATES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? GROUND_STATIONSOffset = _GROUND_STATIONS == null ? null
-        : fbBuilder.writeList(_GROUND_STATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? STATESOffset = _STATES == null ? null
-        : fbBuilder.writeList(_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TARGET_STATION_IDOffset = _TARGET_STATION_ID == null ? null
-        : fbBuilder.writeString(_TARGET_STATION_ID!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    final int? ELEVATION_MASKOffset = _ELEVATION_MASK == null ? null
-        : fbBuilder.writeList(_ELEVATION_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? REFRACTION_MODELOffset = _REFRACTION_MODEL?.getOrCreateOffset(fbBuilder);
-    final int? CONSTRAINTSOffset = _CONSTRAINTS?.getOrCreateOffset(fbBuilder);
-    final int? OBSERVERSOffset = _OBSERVERS == null ? null
-        : fbBuilder.writeList(_OBSERVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SUN_STATESOffset = _SUN_STATES == null ? null
-        : fbBuilder.writeList(_SUN_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? MOON_STATESOffset = _MOON_STATES == null ? null
-        : fbBuilder.writeList(_MOON_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(14);
-    fbBuilder.addInt8(0, _OPERATION?.value);
-    fbBuilder.addOffset(1, GROUND_STATIONSOffset);
-    fbBuilder.addOffset(2, STATESOffset);
-    fbBuilder.addOffset(3, TARGET_STATION_IDOffset);
-    fbBuilder.addFloat64(4, _MIN_ELEVATION_OVERRIDE_RAD);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    fbBuilder.addOffset(6, ELEVATION_MASKOffset);
-    fbBuilder.addOffset(7, REFRACTION_MODELOffset);
-    fbBuilder.addOffset(8, CONSTRAINTSOffset);
-    fbBuilder.addOffset(9, OBSERVERSOffset);
-    fbBuilder.addInt8(10, _EVALUATION_MODE?.value);
-    fbBuilder.addFloat64(11, _ROOT_TOLERANCE_S);
-    fbBuilder.addOffset(12, SUN_STATESOffset);
-    fbBuilder.addOffset(13, MOON_STATESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One computed access interval.
-class ACWAccessWindow {
-  ACWAccessWindow._(this._bc, this._bcOffset);
-  factory ACWAccessWindow(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWAccessWindow> reader = _ACWAccessWindowReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get stationId => STATION_ID;
-  ///  Access start as Julian Date in TT.
-  double get START_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get startJulianDateTt => START_JULIAN_DATE_TT;
-  ///  Access end as Julian Date in TT.
-  double get END_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get endJulianDateTt => END_JULIAN_DATE_TT;
-  ///  Maximum elevation sampled or interpolated during the pass, radians.
-  double get MAX_ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get maxElevationRad => MAX_ELEVATION_RAD;
-  ///  Number of visible input samples contributing to the window.
-  int get SAMPLE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get sampleCount => SAMPLE_COUNT;
-  ///  Observer id when the observer is an ACWObserverTrajectory; empty for a
-  ///  ground station (then STATION_ID names it).
-  String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get observerId => OBSERVER_ID;
-  ///  Index into the flattened, depth-first constraint list of the constraint
-  ///  whose transition opens the window; -1 when the window starts at the
-  ///  first sample.
-  int get START_LIMITING_CONSTRAINT_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, -1);
-  int get startLimitingConstraintIndex => START_LIMITING_CONSTRAINT_INDEX;
-  ///  Index of the constraint whose transition closes the window; -1 when the
-  ///  window ends at the last sample.
-  int get END_LIMITING_CONSTRAINT_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, -1);
-  int get endLimitingConstraintIndex => END_LIMITING_CONSTRAINT_INDEX;
-  ///  Labels of those constraints, when the producer set them.
-  String? get START_LIMITING_CONSTRAINT_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get startLimitingConstraintLabel => START_LIMITING_CONSTRAINT_LABEL;
-  String? get END_LIMITING_CONSTRAINT_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get endLimitingConstraintLabel => END_LIMITING_CONSTRAINT_LABEL;
-  ///  Range extrema over the window, meters.
-  double get MIN_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get minRangeM => MIN_RANGE_M;
-  double get MAX_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get maxRangeM => MAX_RANGE_M;
-  ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
-  bool get EDGES_REFINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
-  bool get edgesRefined => EDGES_REFINED;
-
-  @override
-  String toString() {
-    return 'ACWAccessWindow{stationId: ${stationId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, maxElevationRad: ${maxElevationRad}, sampleCount: ${sampleCount}, observerId: ${observerId}, startLimitingConstraintIndex: ${startLimitingConstraintIndex}, endLimitingConstraintIndex: ${endLimitingConstraintIndex}, startLimitingConstraintLabel: ${startLimitingConstraintLabel}, endLimitingConstraintLabel: ${endLimitingConstraintLabel}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, edgesRefined: ${edgesRefined}}';
-  }
-}
-
-class _ACWAccessWindowReader extends fb.TableReader<ACWAccessWindow> {
-  const _ACWAccessWindowReader();
-
-  @override
-  ACWAccessWindow createObject(fb.BufferContext bc, int offset) =>
-    ACWAccessWindow._(bc, offset);
-}
-
-class ACWAccessWindowBuilder {
-  ACWAccessWindowBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(13);
-  }
-
-  int addStationIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addStartJulianDateTt(double? START_JULIAN_DATE_TT) {
-    fbBuilder.addFloat64(1, START_JULIAN_DATE_TT);
-    return fbBuilder.offset;
-  }
-  int addEndJulianDateTt(double? END_JULIAN_DATE_TT) {
-    fbBuilder.addFloat64(2, END_JULIAN_DATE_TT);
-    return fbBuilder.offset;
-  }
-  int addMaxElevationRad(double? MAX_ELEVATION_RAD) {
-    fbBuilder.addFloat64(3, MAX_ELEVATION_RAD);
-    return fbBuilder.offset;
-  }
-  int addSampleCount(int? SAMPLE_COUNT) {
-    fbBuilder.addUint32(4, SAMPLE_COUNT);
-    return fbBuilder.offset;
-  }
-  int addObserverIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addStartLimitingConstraintIndex(int? START_LIMITING_CONSTRAINT_INDEX) {
-    fbBuilder.addInt32(6, START_LIMITING_CONSTRAINT_INDEX);
-    return fbBuilder.offset;
-  }
-  int addEndLimitingConstraintIndex(int? END_LIMITING_CONSTRAINT_INDEX) {
-    fbBuilder.addInt32(7, END_LIMITING_CONSTRAINT_INDEX);
-    return fbBuilder.offset;
-  }
-  int addStartLimitingConstraintLabelOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addEndLimitingConstraintLabelOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addMinRangeM(double? MIN_RANGE_M) {
-    fbBuilder.addFloat64(10, MIN_RANGE_M);
-    return fbBuilder.offset;
-  }
-  int addMaxRangeM(double? MAX_RANGE_M) {
-    fbBuilder.addFloat64(11, MAX_RANGE_M);
-    return fbBuilder.offset;
-  }
-  int addEdgesRefined(bool? EDGES_REFINED) {
-    fbBuilder.addBool(12, EDGES_REFINED);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
-  final String? _STATION_ID;
-  final double? _START_JULIAN_DATE_TT;
-  final double? _END_JULIAN_DATE_TT;
-  final double? _MAX_ELEVATION_RAD;
-  final int? _SAMPLE_COUNT;
-  final String? _OBSERVER_ID;
-  final int? _START_LIMITING_CONSTRAINT_INDEX;
-  final int? _END_LIMITING_CONSTRAINT_INDEX;
-  final String? _START_LIMITING_CONSTRAINT_LABEL;
-  final String? _END_LIMITING_CONSTRAINT_LABEL;
-  final double? _MIN_RANGE_M;
-  final double? _MAX_RANGE_M;
-  final bool? _EDGES_REFINED;
-
-  ACWAccessWindowObjectBuilder({
-    String? STATION_ID,
-    String? stationId,
-    double? START_JULIAN_DATE_TT,
-    double? startJulianDateTt,
-    double? END_JULIAN_DATE_TT,
-    double? endJulianDateTt,
-    double? MAX_ELEVATION_RAD,
-    double? maxElevationRad,
-    int? SAMPLE_COUNT,
-    int? sampleCount,
-    String? OBSERVER_ID,
-    String? observerId,
-    int? START_LIMITING_CONSTRAINT_INDEX,
-    int? startLimitingConstraintIndex,
-    int? END_LIMITING_CONSTRAINT_INDEX,
-    int? endLimitingConstraintIndex,
-    String? START_LIMITING_CONSTRAINT_LABEL,
-    String? startLimitingConstraintLabel,
-    String? END_LIMITING_CONSTRAINT_LABEL,
-    String? endLimitingConstraintLabel,
-    double? MIN_RANGE_M,
-    double? minRangeM,
-    double? MAX_RANGE_M,
-    double? maxRangeM,
-    bool? EDGES_REFINED,
-    bool? edgesRefined,
-  })
-      : _STATION_ID = stationId ?? STATION_ID,
-        _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
-        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT,
-        _MAX_ELEVATION_RAD = maxElevationRad ?? MAX_ELEVATION_RAD,
-        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT,
-        _OBSERVER_ID = observerId ?? OBSERVER_ID,
-        _START_LIMITING_CONSTRAINT_INDEX = startLimitingConstraintIndex ?? START_LIMITING_CONSTRAINT_INDEX,
-        _END_LIMITING_CONSTRAINT_INDEX = endLimitingConstraintIndex ?? END_LIMITING_CONSTRAINT_INDEX,
-        _START_LIMITING_CONSTRAINT_LABEL = startLimitingConstraintLabel ?? START_LIMITING_CONSTRAINT_LABEL,
-        _END_LIMITING_CONSTRAINT_LABEL = endLimitingConstraintLabel ?? END_LIMITING_CONSTRAINT_LABEL,
-        _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
-        _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
-        _EDGES_REFINED = edgesRefined ?? EDGES_REFINED;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? STATION_IDOffset = _STATION_ID == null ? null
-        : fbBuilder.writeString(_STATION_ID!);
-    final int? OBSERVER_IDOffset = _OBSERVER_ID == null ? null
-        : fbBuilder.writeString(_OBSERVER_ID!);
-    final int? START_LIMITING_CONSTRAINT_LABELOffset = _START_LIMITING_CONSTRAINT_LABEL == null ? null
-        : fbBuilder.writeString(_START_LIMITING_CONSTRAINT_LABEL!);
-    final int? END_LIMITING_CONSTRAINT_LABELOffset = _END_LIMITING_CONSTRAINT_LABEL == null ? null
-        : fbBuilder.writeString(_END_LIMITING_CONSTRAINT_LABEL!);
-    fbBuilder.startTable(13);
-    fbBuilder.addOffset(0, STATION_IDOffset);
-    fbBuilder.addFloat64(1, _START_JULIAN_DATE_TT);
-    fbBuilder.addFloat64(2, _END_JULIAN_DATE_TT);
-    fbBuilder.addFloat64(3, _MAX_ELEVATION_RAD);
-    fbBuilder.addUint32(4, _SAMPLE_COUNT);
-    fbBuilder.addOffset(5, OBSERVER_IDOffset);
-    fbBuilder.addInt32(6, _START_LIMITING_CONSTRAINT_INDEX);
-    fbBuilder.addInt32(7, _END_LIMITING_CONSTRAINT_INDEX);
-    fbBuilder.addOffset(8, START_LIMITING_CONSTRAINT_LABELOffset);
-    fbBuilder.addOffset(9, END_LIMITING_CONSTRAINT_LABELOffset);
-    fbBuilder.addFloat64(10, _MIN_RANGE_M);
-    fbBuilder.addFloat64(11, _MAX_RANGE_M);
-    fbBuilder.addBool(12, _EDGES_REFINED);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Result for one access-window compute request.
-class ACWResult {
-  ACWResult._(this._bc, this._bcOffset);
-  factory ACWResult(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACWResult> reader = _ACWResultReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  acwResultStatus get STATUS => acwResultStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get errorMessage => ERROR_MESSAGE;
-  List<ACWAccessWindow>? get WINDOWS => const fb.ListReader<ACWAccessWindow>(ACWAccessWindow.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Caller trace/correlation identifier copied from the request when present.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get traceId => TRACE_ID;
-  ///  Evaluation mode actually used.
-  acwEvaluationMode get EVALUATION_MODE => acwEvaluationMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  acwEvaluationMode get evaluationMode => EVALUATION_MODE;
-  ///  Flattened depth-first constraint list the window indices refer to.
-  List<String>? get CONSTRAINT_LABELS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<String>? get constraintLabels => CONSTRAINT_LABELS;
-
-  @override
-  String toString() {
-    return 'ACWResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, WINDOWS: ${WINDOWS}, traceId: ${traceId}, evaluationMode: ${evaluationMode}, constraintLabels: ${constraintLabels}}';
-  }
-}
-
-class _ACWResultReader extends fb.TableReader<ACWResult> {
-  const _ACWResultReader();
-
-  @override
-  ACWResult createObject(fb.BufferContext bc, int offset) =>
-    ACWResult._(bc, offset);
-}
-
-class ACWResultBuilder {
-  ACWResultBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addStatus(acwResultStatus? STATUS) {
-    fbBuilder.addInt8(0, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addWindowsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addEvaluationMode(acwEvaluationMode? EVALUATION_MODE) {
-    fbBuilder.addInt8(4, EVALUATION_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addConstraintLabelsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWResultObjectBuilder extends fb.ObjectBuilder {
-  final acwResultStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final List<ACWAccessWindowObjectBuilder>? _WINDOWS;
-  final String? _TRACE_ID;
-  final acwEvaluationMode? _EVALUATION_MODE;
-  final List<String>? _CONSTRAINT_LABELS;
-
-  ACWResultObjectBuilder({
-    acwResultStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    List<ACWAccessWindowObjectBuilder>? WINDOWS,
-    String? TRACE_ID,
-    String? traceId,
-    acwEvaluationMode? EVALUATION_MODE,
-    acwEvaluationMode? evaluationMode,
-    List<String>? CONSTRAINT_LABELS,
-    List<String>? constraintLabels,
-  })
-      : _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _WINDOWS = WINDOWS,
-        _TRACE_ID = traceId ?? TRACE_ID,
-        _EVALUATION_MODE = evaluationMode ?? EVALUATION_MODE,
-        _CONSTRAINT_LABELS = constraintLabels ?? CONSTRAINT_LABELS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? WINDOWSOffset = _WINDOWS == null ? null
-        : fbBuilder.writeList(_WINDOWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    final int? CONSTRAINT_LABELSOffset = _CONSTRAINT_LABELS == null ? null
-        : fbBuilder.writeList(_CONSTRAINT_LABELS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _STATUS?.value);
-    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(2, WINDOWSOffset);
-    fbBuilder.addOffset(3, TRACE_IDOffset);
-    fbBuilder.addInt8(4, _EVALUATION_MODE?.value);
-    fbBuilder.addOffset(5, CONSTRAINT_LABELSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Access-window analysis envelope.
-class ACW {
-  ACW._(this._bc, this._bcOffset);
-  factory ACW(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ACW> reader = _ACWReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ACWRequest? get REQUEST => ACWRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ACWResult? get RESULT => ACWResult.reader.vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'ACW{REQUEST: ${REQUEST}, RESULT: ${RESULT}}';
-  }
-}
-
-class _ACWReader extends fb.TableReader<ACW> {
-  const _ACWReader();
-
-  @override
-  ACW createObject(fb.BufferContext bc, int offset) =>
-    ACW._(bc, offset);
-}
-
-class ACWBuilder {
-  ACWBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addRequestOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addResultOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ACWObjectBuilder extends fb.ObjectBuilder {
-  final ACWRequestObjectBuilder? _REQUEST;
-  final ACWResultObjectBuilder? _RESULT;
-
-  ACWObjectBuilder({
-    ACWRequestObjectBuilder? REQUEST,
-    ACWResultObjectBuilder? RESULT,
-  })
-      : _REQUEST = REQUEST,
-        _RESULT = RESULT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? REQUESTOffset = _REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? RESULTOffset = _RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, REQUESTOffset);
-    fbBuilder.addOffset(1, RESULTOffset);
+    final int? DATEOffset = _DATE == null ? null
+        : fbBuilder.writeString(_DATE!);
+    final int? DATA_SET_EPOCHOffset = _DATA_SET_EPOCH == null ? null
+        : fbBuilder.writeString(_DATA_SET_EPOCH!);
+    final int? DATA_SET_CIDOffset = _DATA_SET_CID == null ? null
+        : fbBuilder.writeString(_DATA_SET_CID!);
+    fbBuilder.startTable(30);
+    fbBuilder.addOffset(0, DATEOffset);
+    fbBuilder.addUint32(1, _MJD);
+    fbBuilder.addFloat32(2, _X_POLE_WANDER_RADIANS);
+    fbBuilder.addFloat32(3, _Y_POLE_WANDER_RADIANS);
+    fbBuilder.addFloat32(4, _X_CELESTIAL_POLE_OFFSET_RADIANS);
+    fbBuilder.addFloat32(5, _Y_CELESTIAL_POLE_OFFSET_RADIANS);
+    fbBuilder.addFloat32(6, _UT1_MINUS_UTC_SECONDS);
+    fbBuilder.addUint16(7, _TAI_MINUS_UTC_SECONDS);
+    fbBuilder.addFloat32(8, _LENGTH_OF_DAY_CORRECTION_SECONDS);
+    fbBuilder.addInt8(9, _DATA_TYPE?.value);
+    fbBuilder.addUint8(10, _SERIES?.value);
+    fbBuilder.addUint8(11, _IAU_CONVENTION?.value);
+    fbBuilder.addFloat32(12, _X_POLE_WANDER_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat32(13, _Y_POLE_WANDER_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat32(14, _X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat32(15, _Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat32(16, _UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+    fbBuilder.addFloat32(17, _LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+    fbBuilder.addFloat64(18, _X_POLE_WANDER_RADIANS_HP);
+    fbBuilder.addFloat64(19, _Y_POLE_WANDER_RADIANS_HP);
+    fbBuilder.addFloat64(20, _X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    fbBuilder.addFloat64(21, _Y_CELESTIAL_POLE_OFFSET_RADIANS_HP);
+    fbBuilder.addFloat64(22, _UT1_MINUS_UTC_SECONDS_HP);
+    fbBuilder.addFloat64(23, _LENGTH_OF_DAY_CORRECTION_SECONDS_HP);
+    fbBuilder.addOffset(24, DATA_SET_EPOCHOffset);
+    fbBuilder.addOffset(25, DATA_SET_CIDOffset);
+    fbBuilder.addFloat64(26, _NUTATION_DPSI_RADIANS);
+    fbBuilder.addFloat64(27, _NUTATION_DEPS_RADIANS);
+    fbBuilder.addFloat64(28, _NUTATION_DPSI_UNCERTAINTY_RADIANS);
+    fbBuilder.addFloat64(29, _NUTATION_DEPS_UNCERTAINTY_RADIANS);
     return fbBuilder.endTable();
   }
 

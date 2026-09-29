@@ -8,5 +8,16 @@ class acwOperationCode private constructor() {
          * Compute access windows from pre-sampled target Cartesian states.
          */
         const val COMPUTE_ACCESS_WINDOWS: Byte = 1
+        /**
+         * Simulate sensor observations of TARGETS by SENSORS: schedule tracks
+         * inside the ACCESS windows (computed per sensor and target by
+         * COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
+         * measurement from the
+         * truth states with its MEMErrorModel noise and bias, apply the detection
+         * test, and add false alarms. The observations are emitted as separate
+         * $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
+         * records; the result lists the tracks.
+         */
+        const val SIMULATE_OBSERVATIONS: Byte = 2
     }
 }

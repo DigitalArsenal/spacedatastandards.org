@@ -53,6 +53,18 @@ public final class ACWResult extends com.google.flatbuffers.Table {
   public int CONSTRAINT_LABELSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public StringVector constraintLabelsVector() { return constraintLabelsVector(new StringVector()); }
   public StringVector constraintLabelsVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Tracks scheduled by SIMULATE_OBSERVATIONS.
+   */
+  public ACWTrack TRACKS(int j) { return TRACKS(new ACWTrack(), j); }
+  public ACWTrack TRACKS(ACWTrack obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRACKSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public ACWTrack.Vector tracksVector() { return tracksVector(new ACWTrack.Vector()); }
+  public ACWTrack.Vector tracksVector(ACWTrack.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Observations emitted, including false alarms.
+   */
+  public long OBSERVATION_COUNT() { int o = __offset(18); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createACWResult(FlatBufferBuilder builder,
       byte STATUS,
@@ -60,8 +72,12 @@ public final class ACWResult extends com.google.flatbuffers.Table {
       int WINDOWSOffset,
       int TRACE_IDOffset,
       byte EVALUATION_MODE,
-      int CONSTRAINT_LABELSOffset) {
-    builder.startTable(6);
+      int CONSTRAINT_LABELSOffset,
+      int TRACKSOffset,
+      long OBSERVATION_COUNT) {
+    builder.startTable(8);
+    ACWResult.addObservationCount(builder, OBSERVATION_COUNT);
+    ACWResult.addTracks(builder, TRACKSOffset);
     ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
     ACWResult.addTraceId(builder, TRACE_IDOffset);
     ACWResult.addWindows(builder, WINDOWSOffset);
@@ -71,7 +87,7 @@ public final class ACWResult extends com.google.flatbuffers.Table {
     return ACWResult.endACWResult(builder);
   }
 
-  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addErrorMessage(FlatBufferBuilder builder, int ERROR_MESSAGEOffset) { builder.addOffset(1, ERROR_MESSAGEOffset, 0); }
   public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(2, WINDOWSOffset, 0); }
@@ -82,6 +98,10 @@ public final class ACWResult extends com.google.flatbuffers.Table {
   public static void addConstraintLabels(FlatBufferBuilder builder, int CONSTRAINT_LABELSOffset) { builder.addOffset(5, CONSTRAINT_LABELSOffset, 0); }
   public static int createConstraintLabelsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startConstraintLabelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTracks(FlatBufferBuilder builder, int TRACKSOffset) { builder.addOffset(6, TRACKSOffset, 0); }
+  public static int createTracksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTracksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addObservationCount(FlatBufferBuilder builder, long OBSERVATION_COUNT) { builder.addInt(7, (int) OBSERVATION_COUNT, (int) 0L); }
   public static int endACWResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

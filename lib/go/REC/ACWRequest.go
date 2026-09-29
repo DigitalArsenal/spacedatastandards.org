@@ -400,8 +400,214 @@ func (rcv *ACWRequest) MoonStatesLength() int {
 }
 
 /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
+/// Targets to observe (SIMULATE_OBSERVATIONS).
+func (rcv *ACWRequest) TARGETS(obj *ACWTarget, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWTarget)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) Targets(obj *ACWTarget, j int) bool {
+	return rcv.TARGETS(obj, j)
+}
+
+func (rcv *ACWRequest) TARGETSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) TargetsLength() int {
+	return rcv.TARGETSLength()
+}
+
+/// Targets to observe (SIMULATE_OBSERVATIONS).
+/// Sensors that observe them (SIMULATE_OBSERVATIONS).
+func (rcv *ACWRequest) SENSORS(obj *ACWSensor, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWSensor)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) Sensors(obj *ACWSensor, j int) bool {
+	return rcv.SENSORS(obj, j)
+}
+
+func (rcv *ACWRequest) SENSORSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) SensorsLength() int {
+	return rcv.SENSORSLength()
+}
+
+/// Sensors that observe them (SIMULATE_OBSERVATIONS).
+/// Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+/// without an entry is never observed.
+func (rcv *ACWRequest) ACCESS(obj *ACWSensorAccess, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWSensorAccess)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) Access(obj *ACWSensorAccess, j int) bool {
+	return rcv.ACCESS(obj, j)
+}
+
+func (rcv *ACWRequest) ACCESSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) AccessLength() int {
+	return rcv.ACCESSLength()
+}
+
+/// Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+/// without an entry is never observed.
+/// Earth orientation parameters for celestial directions (right ascension
+/// and declination). When absent, polar motion, UT1-UTC and celestial pole
+/// offsets are zero.
+func (rcv *ACWRequest) EARTH_ORIENTATION(obj *EOP, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EOP)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) EarthOrientation(obj *EOP, j int) bool {
+	return rcv.EARTH_ORIENTATION(obj, j)
+}
+
+func (rcv *ACWRequest) EARTH_ORIENTATIONLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) EarthOrientationLength() int {
+	return rcv.EARTH_ORIENTATIONLength()
+}
+
+/// Earth orientation parameters for celestial directions (right ascension
+/// and declination). When absent, polar motion, UT1-UTC and celestial pole
+/// offsets are zero.
+/// Seed for measurement noise, biases and false alarms; one seed
+/// reproduces the same observations.
+func (rcv *ACWRequest) RANDOM_SEED() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) RandomSeed() uint64 {
+	return rcv.RANDOM_SEED()
+}
+
+/// Seed for measurement noise, biases and false alarms; one seed
+/// reproduces the same observations.
+func (rcv *ACWRequest) MutateRANDOM_SEED(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(40, n)
+}
+
+func (rcv *ACWRequest) MutateRandomSeed(n uint64) bool {
+	return rcv.MutateRANDOM_SEED(n)
+}
+
+/// Simulation span as Julian Dates in TT; 0 uses the span of the target
+/// states.
+func (rcv *ACWRequest) START_JULIAN_DATE_TT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWRequest) StartJulianDateTt() float64 {
+	return rcv.START_JULIAN_DATE_TT()
+}
+
+/// Simulation span as Julian Dates in TT; 0 uses the span of the target
+/// states.
+func (rcv *ACWRequest) MutateSTART_JULIAN_DATE_TT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *ACWRequest) MutateStartJulianDateTt(n float64) bool {
+	return rcv.MutateSTART_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWRequest) END_JULIAN_DATE_TT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWRequest) EndJulianDateTt() float64 {
+	return rcv.END_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWRequest) MutateEND_JULIAN_DATE_TT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *ACWRequest) MutateEndJulianDateTt(n float64) bool {
+	return rcv.MutateEND_JULIAN_DATE_TT(n)
+}
+
 func ACWRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(21)
 }
 func ACWRequestAddOPERATION(builder *flatbuffers.Builder, OPERATION acwOperationCode) {
 	builder.PrependInt8Slot(0, int8(OPERATION), 0)
@@ -522,6 +728,72 @@ func ACWRequestStartMOON_STATESVector(builder *flatbuffers.Builder, numElems int
 }
 func ACWRequestStartMoonStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACWRequestStartMOON_STATESVector(builder, numElems)
+}
+func ACWRequestAddTARGETS(builder *flatbuffers.Builder, TARGETS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TARGETS), 0)
+}
+func ACWRequestAddTargets(builder *flatbuffers.Builder, TARGETS flatbuffers.UOffsetT) {
+	ACWRequestAddTARGETS(builder, TARGETS)
+}
+func ACWRequestStartTARGETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartTargetsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartTARGETSVector(builder, numElems)
+}
+func ACWRequestAddSENSORS(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENSORS), 0)
+}
+func ACWRequestAddSensors(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
+	ACWRequestAddSENSORS(builder, SENSORS)
+}
+func ACWRequestStartSENSORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartSensorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartSENSORSVector(builder, numElems)
+}
+func ACWRequestAddACCESS(builder *flatbuffers.Builder, ACCESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ACCESS), 0)
+}
+func ACWRequestAddAccess(builder *flatbuffers.Builder, ACCESS flatbuffers.UOffsetT) {
+	ACWRequestAddACCESS(builder, ACCESS)
+}
+func ACWRequestStartACCESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartAccessVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartACCESSVector(builder, numElems)
+}
+func ACWRequestAddEARTH_ORIENTATION(builder *flatbuffers.Builder, EARTH_ORIENTATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(EARTH_ORIENTATION), 0)
+}
+func ACWRequestAddEarthOrientation(builder *flatbuffers.Builder, EARTH_ORIENTATION flatbuffers.UOffsetT) {
+	ACWRequestAddEARTH_ORIENTATION(builder, EARTH_ORIENTATION)
+}
+func ACWRequestStartEARTH_ORIENTATIONVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartEarthOrientationVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartEARTH_ORIENTATIONVector(builder, numElems)
+}
+func ACWRequestAddRANDOM_SEED(builder *flatbuffers.Builder, RANDOM_SEED uint64) {
+	builder.PrependUint64Slot(18, RANDOM_SEED, 0)
+}
+func ACWRequestAddRandomSeed(builder *flatbuffers.Builder, RANDOM_SEED uint64) {
+	ACWRequestAddRANDOM_SEED(builder, RANDOM_SEED)
+}
+func ACWRequestAddSTART_JULIAN_DATE_TT(builder *flatbuffers.Builder, START_JULIAN_DATE_TT float64) {
+	builder.PrependFloat64Slot(19, START_JULIAN_DATE_TT, 0.0)
+}
+func ACWRequestAddStartJulianDateTt(builder *flatbuffers.Builder, START_JULIAN_DATE_TT float64) {
+	ACWRequestAddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT)
+}
+func ACWRequestAddEND_JULIAN_DATE_TT(builder *flatbuffers.Builder, END_JULIAN_DATE_TT float64) {
+	builder.PrependFloat64Slot(20, END_JULIAN_DATE_TT, 0.0)
+}
+func ACWRequestAddEndJulianDateTt(builder *flatbuffers.Builder, END_JULIAN_DATE_TT float64) {
+	ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
 }
 func ACWRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

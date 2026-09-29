@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { ACWAccessWindow, ACWAccessWindowT } from './ACWAccessWindow.js';
+import { ACWTrack, ACWTrackT } from './ACWTrack.js';
 import { acwEvaluationMode } from './acwEvaluationMode.js';
 import { acwResultStatus } from './acwResultStatus.js';
 
@@ -85,8 +86,29 @@ constraintLabelsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Tracks scheduled by SIMULATE_OBSERVATIONS.
+ */
+TRACKS(index: number, obj?:ACWTrack):ACWTrack|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new ACWTrack()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+tracksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Observations emitted, including false alarms.
+ */
+OBSERVATION_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
 static startACWResult(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(8);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:acwResultStatus) {
@@ -137,12 +159,32 @@ static startConstraintLabelsVector(builder:flatbuffers.Builder, numElems:number)
   builder.startVector(4, numElems, 4);
 }
 
+static addTracks(builder:flatbuffers.Builder, TRACKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, TRACKSOffset, 0);
+}
+
+static createTracksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTracksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addObservationCount(builder:flatbuffers.Builder, OBSERVATION_COUNT:number) {
+  builder.addFieldInt32(7, OBSERVATION_COUNT, 0);
+}
+
 static endACWResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset, EVALUATION_MODE:acwEvaluationMode, CONSTRAINT_LABELSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset, EVALUATION_MODE:acwEvaluationMode, CONSTRAINT_LABELSOffset:flatbuffers.Offset, TRACKSOffset:flatbuffers.Offset, OBSERVATION_COUNT:number):flatbuffers.Offset {
   ACWResult.startACWResult(builder);
   ACWResult.addStatus(builder, STATUS);
   ACWResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
@@ -150,6 +192,8 @@ static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERRO
   ACWResult.addTraceId(builder, TRACE_IDOffset);
   ACWResult.addEvaluationMode(builder, EVALUATION_MODE);
   ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
+  ACWResult.addTracks(builder, TRACKSOffset);
+  ACWResult.addObservationCount(builder, OBSERVATION_COUNT);
   return ACWResult.endACWResult(builder);
 }
 
@@ -160,7 +204,9 @@ unpack(): ACWResultT {
     this.bb!.createObjList<ACWAccessWindow, ACWAccessWindowT>(this.WINDOWS.bind(this), this.windowsLength()),
     this.TRACE_ID(),
     this.EVALUATION_MODE(),
-    this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength())
+    this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength()),
+    this.bb!.createObjList<ACWTrack, ACWTrackT>(this.TRACKS.bind(this), this.tracksLength()),
+    this.OBSERVATION_COUNT()
   );
 }
 
@@ -172,6 +218,8 @@ unpackTo(_o: ACWResultT): void {
   _o.TRACE_ID = this.TRACE_ID();
   _o.EVALUATION_MODE = this.EVALUATION_MODE();
   _o.CONSTRAINT_LABELS = this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength());
+  _o.TRACKS = this.bb!.createObjList<ACWTrack, ACWTrackT>(this.TRACKS.bind(this), this.tracksLength());
+  _o.OBSERVATION_COUNT = this.OBSERVATION_COUNT();
 }
 }
 
@@ -182,7 +230,9 @@ constructor(
   public WINDOWS: (ACWAccessWindowT)[] = [],
   public TRACE_ID: string|Uint8Array|null = null,
   public EVALUATION_MODE: acwEvaluationMode = acwEvaluationMode.DISCRETE,
-  public CONSTRAINT_LABELS: (string)[] = []
+  public CONSTRAINT_LABELS: (string)[] = [],
+  public TRACKS: (ACWTrackT)[] = [],
+  public OBSERVATION_COUNT: number = 0
 ){}
 
 
@@ -191,6 +241,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const WINDOWS = ACWResult.createWindowsVector(builder, builder.createObjectOffsetList(this.WINDOWS));
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
   const CONSTRAINT_LABELS = ACWResult.createConstraintLabelsVector(builder, builder.createObjectOffsetList(this.CONSTRAINT_LABELS));
+  const TRACKS = ACWResult.createTracksVector(builder, builder.createObjectOffsetList(this.TRACKS));
 
   return ACWResult.createACWResult(builder,
     this.STATUS,
@@ -198,7 +249,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     WINDOWS,
     TRACE_ID,
     this.EVALUATION_MODE,
-    CONSTRAINT_LABELS
+    CONSTRAINT_LABELS,
+    TRACKS,
+    this.OBSERVATION_COUNT
   );
 }
 }

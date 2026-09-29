@@ -130,8 +130,72 @@ func (rcv *ACWStateSample) MutatePositionZM(n float64) bool {
 	return rcv.MutatePOSITION_Z_M(n)
 }
 
+/// Earth-fixed velocity, meters per second. Required for range-rate,
+/// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+func (rcv *ACWStateSample) VELOCITY_X_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWStateSample) VelocityXMps() float64 {
+	return rcv.VELOCITY_X_MPS()
+}
+
+/// Earth-fixed velocity, meters per second. Required for range-rate,
+/// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+func (rcv *ACWStateSample) MutateVELOCITY_X_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ACWStateSample) MutateVelocityXMps(n float64) bool {
+	return rcv.MutateVELOCITY_X_MPS(n)
+}
+
+func (rcv *ACWStateSample) VELOCITY_Y_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWStateSample) VelocityYMps() float64 {
+	return rcv.VELOCITY_Y_MPS()
+}
+
+func (rcv *ACWStateSample) MutateVELOCITY_Y_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *ACWStateSample) MutateVelocityYMps(n float64) bool {
+	return rcv.MutateVELOCITY_Y_MPS(n)
+}
+
+func (rcv *ACWStateSample) VELOCITY_Z_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWStateSample) VelocityZMps() float64 {
+	return rcv.VELOCITY_Z_MPS()
+}
+
+func (rcv *ACWStateSample) MutateVELOCITY_Z_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *ACWStateSample) MutateVelocityZMps(n float64) bool {
+	return rcv.MutateVELOCITY_Z_MPS(n)
+}
+
 func ACWStateSampleStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(7)
 }
 func ACWStateSampleAddJULIAN_DATE_TT(builder *flatbuffers.Builder, JULIAN_DATE_TT float64) {
 	builder.PrependFloat64Slot(0, JULIAN_DATE_TT, 0.0)
@@ -156,6 +220,24 @@ func ACWStateSampleAddPOSITION_Z_M(builder *flatbuffers.Builder, POSITION_Z_M fl
 }
 func ACWStateSampleAddPositionZM(builder *flatbuffers.Builder, POSITION_Z_M float64) {
 	ACWStateSampleAddPOSITION_Z_M(builder, POSITION_Z_M)
+}
+func ACWStateSampleAddVELOCITY_X_MPS(builder *flatbuffers.Builder, VELOCITY_X_MPS float64) {
+	builder.PrependFloat64Slot(4, VELOCITY_X_MPS, 0.0)
+}
+func ACWStateSampleAddVelocityXMps(builder *flatbuffers.Builder, VELOCITY_X_MPS float64) {
+	ACWStateSampleAddVELOCITY_X_MPS(builder, VELOCITY_X_MPS)
+}
+func ACWStateSampleAddVELOCITY_Y_MPS(builder *flatbuffers.Builder, VELOCITY_Y_MPS float64) {
+	builder.PrependFloat64Slot(5, VELOCITY_Y_MPS, 0.0)
+}
+func ACWStateSampleAddVelocityYMps(builder *flatbuffers.Builder, VELOCITY_Y_MPS float64) {
+	ACWStateSampleAddVELOCITY_Y_MPS(builder, VELOCITY_Y_MPS)
+}
+func ACWStateSampleAddVELOCITY_Z_MPS(builder *flatbuffers.Builder, VELOCITY_Z_MPS float64) {
+	builder.PrependFloat64Slot(6, VELOCITY_Z_MPS, 0.0)
+}
+func ACWStateSampleAddVelocityZMps(builder *flatbuffers.Builder, VELOCITY_Z_MPS float64) {
+	ACWStateSampleAddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS)
 }
 func ACWStateSampleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -40,6 +40,11 @@ public struct ACWResult : IFlatbufferObject
   /// Flattened depth-first constraint list the window indices refer to.
   public string CONSTRAINT_LABELS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int CONSTRAINT_LABELSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Tracks scheduled by SIMULATE_OBSERVATIONS.
+  public ACWTrack? TRACKS(int j) { int o = __p.__offset(16); return o != 0 ? (ACWTrack?)(new ACWTrack()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRACKSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Observations emitted, including false alarms.
+  public uint OBSERVATION_COUNT { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<ACWResult> CreateACWResult(FlatBufferBuilder builder,
       acwResultStatus STATUS = acwResultStatus.OK,
@@ -47,8 +52,12 @@ public struct ACWResult : IFlatbufferObject
       VectorOffset WINDOWSOffset = default(VectorOffset),
       StringOffset TRACE_IDOffset = default(StringOffset),
       acwEvaluationMode EVALUATION_MODE = acwEvaluationMode.DISCRETE,
-      VectorOffset CONSTRAINT_LABELSOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      VectorOffset CONSTRAINT_LABELSOffset = default(VectorOffset),
+      VectorOffset TRACKSOffset = default(VectorOffset),
+      uint OBSERVATION_COUNT = 0) {
+    builder.StartTable(8);
+    ACWResult.AddOBSERVATION_COUNT(builder, OBSERVATION_COUNT);
+    ACWResult.AddTRACKS(builder, TRACKSOffset);
     ACWResult.AddCONSTRAINT_LABELS(builder, CONSTRAINT_LABELSOffset);
     ACWResult.AddTRACE_ID(builder, TRACE_IDOffset);
     ACWResult.AddWINDOWS(builder, WINDOWSOffset);
@@ -58,7 +67,7 @@ public struct ACWResult : IFlatbufferObject
     return ACWResult.EndACWResult(builder);
   }
 
-  public static void StartACWResult(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartACWResult(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddSTATUS(FlatBufferBuilder builder, acwResultStatus STATUS) { builder.AddSbyte(0, (sbyte)STATUS, 0); }
   public static void AddERROR_MESSAGE(FlatBufferBuilder builder, StringOffset ERROR_MESSAGEOffset) { builder.AddOffset(1, ERROR_MESSAGEOffset.Value, 0); }
   public static void AddWINDOWS(FlatBufferBuilder builder, VectorOffset WINDOWSOffset) { builder.AddOffset(2, WINDOWSOffset.Value, 0); }
@@ -75,6 +84,13 @@ public struct ACWResult : IFlatbufferObject
   public static VectorOffset CreateCONSTRAINT_LABELSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCONSTRAINT_LABELSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCONSTRAINT_LABELSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTRACKS(FlatBufferBuilder builder, VectorOffset TRACKSOffset) { builder.AddOffset(6, TRACKSOffset.Value, 0); }
+  public static VectorOffset CreateTRACKSVector(FlatBufferBuilder builder, Offset<ACWTrack>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, Offset<ACWTrack>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWTrack>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWTrack>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTRACKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddOBSERVATION_COUNT(FlatBufferBuilder builder, uint OBSERVATION_COUNT) { builder.AddUint(7, OBSERVATION_COUNT, 0); }
   public static Offset<ACWResult> EndACWResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWResult>(o);
@@ -93,6 +109,9 @@ public struct ACWResult : IFlatbufferObject
     _o.EVALUATION_MODE = this.EVALUATION_MODE;
     _o.CONSTRAINT_LABELS = new List<string>();
     for (var _j = 0; _j < this.CONSTRAINT_LABELSLength; ++_j) {_o.CONSTRAINT_LABELS.Add(this.CONSTRAINT_LABELS(_j));}
+    _o.TRACKS = new List<ACWTrackT>();
+    for (var _j = 0; _j < this.TRACKSLength; ++_j) {_o.TRACKS.Add(this.TRACKS(_j).HasValue ? this.TRACKS(_j).Value.UnPack() : null);}
+    _o.OBSERVATION_COUNT = this.OBSERVATION_COUNT;
   }
   public static Offset<ACWResult> Pack(FlatBufferBuilder builder, ACWResultT _o) {
     if (_o == null) return default(Offset<ACWResult>);
@@ -110,6 +129,12 @@ public struct ACWResult : IFlatbufferObject
       for (var _j = 0; _j < __CONSTRAINT_LABELS.Length; ++_j) { __CONSTRAINT_LABELS[_j] = builder.CreateString(_o.CONSTRAINT_LABELS[_j]); }
       _CONSTRAINT_LABELS = CreateCONSTRAINT_LABELSVector(builder, __CONSTRAINT_LABELS);
     }
+    var _TRACKS = default(VectorOffset);
+    if (_o.TRACKS != null) {
+      var __TRACKS = new Offset<ACWTrack>[_o.TRACKS.Count];
+      for (var _j = 0; _j < __TRACKS.Length; ++_j) { __TRACKS[_j] = ACWTrack.Pack(builder, _o.TRACKS[_j]); }
+      _TRACKS = CreateTRACKSVector(builder, __TRACKS);
+    }
     return CreateACWResult(
       builder,
       _o.STATUS,
@@ -117,7 +142,9 @@ public struct ACWResult : IFlatbufferObject
       _WINDOWS,
       _TRACE_ID,
       _o.EVALUATION_MODE,
-      _CONSTRAINT_LABELS);
+      _CONSTRAINT_LABELS,
+      _TRACKS,
+      _o.OBSERVATION_COUNT);
   }
 }
 
@@ -129,6 +156,8 @@ public class ACWResultT
   public string TRACE_ID { get; set; }
   public acwEvaluationMode EVALUATION_MODE { get; set; }
   public List<string> CONSTRAINT_LABELS { get; set; }
+  public List<ACWTrackT> TRACKS { get; set; }
+  public uint OBSERVATION_COUNT { get; set; }
 
   public ACWResultT() {
     this.STATUS = acwResultStatus.OK;
@@ -137,6 +166,8 @@ public class ACWResultT
     this.TRACE_ID = null;
     this.EVALUATION_MODE = acwEvaluationMode.DISCRETE;
     this.CONSTRAINT_LABELS = null;
+    this.TRACKS = null;
+    this.OBSERVATION_COUNT = 0;
   }
 }
 
@@ -152,6 +183,8 @@ static public class ACWResultVerify
       && verifier.VerifyString(tablePos, 10 /*TRACE_ID*/, false)
       && verifier.VerifyField(tablePos, 12 /*EVALUATION_MODE*/, 1 /*acwEvaluationMode*/, 1, false)
       && verifier.VerifyVectorOfStrings(tablePos, 14 /*CONSTRAINT_LABELS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 16 /*TRACKS*/, ACWTrackVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 18 /*OBSERVATION_COUNT*/, 4 /*uint*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -61,6 +61,25 @@ class ACWStateSample : Table() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Earth-fixed velocity, meters per second. Required for range-rate,
+     * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+     */
+    val velocityXMps : Double
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val velocityYMps : Double
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val velocityZMps : Double
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWStateSample(_bb: ByteBuffer): ACWStateSample = getRootAsACWStateSample(_bb, ACWStateSample())
@@ -68,19 +87,25 @@ class ACWStateSample : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWStateSample(builder: FlatBufferBuilder, julianDateTt: Double, positionXM: Double, positionYM: Double, positionZM: Double) : Int {
-            builder.startTable(4)
+        fun createACWStateSample(builder: FlatBufferBuilder, julianDateTt: Double, positionXM: Double, positionYM: Double, positionZM: Double, velocityXMps: Double, velocityYMps: Double, velocityZMps: Double) : Int {
+            builder.startTable(7)
+            addVELOCITYZMPS(builder, velocityZMps)
+            addVELOCITYYMPS(builder, velocityYMps)
+            addVELOCITYXMPS(builder, velocityXMps)
             addPOSITIONZM(builder, positionZM)
             addPOSITIONYM(builder, positionYM)
             addPOSITIONXM(builder, positionXM)
             addJULIANDATETT(builder, julianDateTt)
             return endACWStateSample(builder)
         }
-        fun startACWStateSample(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startACWStateSample(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addJULIANDATETT(builder: FlatBufferBuilder, julianDateTt: Double) = builder.addDouble(0, julianDateTt, 0.0)
         fun addPOSITIONXM(builder: FlatBufferBuilder, positionXM: Double) = builder.addDouble(1, positionXM, 0.0)
         fun addPOSITIONYM(builder: FlatBufferBuilder, positionYM: Double) = builder.addDouble(2, positionYM, 0.0)
         fun addPOSITIONZM(builder: FlatBufferBuilder, positionZM: Double) = builder.addDouble(3, positionZM, 0.0)
+        fun addVELOCITYXMPS(builder: FlatBufferBuilder, velocityXMps: Double) = builder.addDouble(4, velocityXMps, 0.0)
+        fun addVELOCITYYMPS(builder: FlatBufferBuilder, velocityYMps: Double) = builder.addDouble(5, velocityYMps, 0.0)
+        fun addVELOCITYZMPS(builder: FlatBufferBuilder, velocityZMps: Double) = builder.addDouble(6, velocityZMps, 0.0)
         fun endACWStateSample(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

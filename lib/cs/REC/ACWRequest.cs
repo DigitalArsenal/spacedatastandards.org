@@ -66,6 +66,28 @@ public struct ACWRequest : IFlatbufferObject
   /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
   public ACWStateSample? MOON_STATES(int j) { int o = __p.__offset(30); return o != 0 ? (ACWStateSample?)(new ACWStateSample()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int MOON_STATESLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Targets to observe (SIMULATE_OBSERVATIONS).
+  public ACWTarget? TARGETS(int j) { int o = __p.__offset(32); return o != 0 ? (ACWTarget?)(new ACWTarget()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TARGETSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Sensors that observe them (SIMULATE_OBSERVATIONS).
+  public ACWSensor? SENSORS(int j) { int o = __p.__offset(34); return o != 0 ? (ACWSensor?)(new ACWSensor()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SENSORSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+  /// without an entry is never observed.
+  public ACWSensorAccess? ACCESS(int j) { int o = __p.__offset(36); return o != 0 ? (ACWSensorAccess?)(new ACWSensorAccess()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ACCESSLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Earth orientation parameters for celestial directions (right ascension
+  /// and declination). When absent, polar motion, UT1-UTC and celestial pole
+  /// offsets are zero.
+  public EOP? EARTH_ORIENTATION(int j) { int o = __p.__offset(38); return o != 0 ? (EOP?)(new EOP()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EARTH_ORIENTATIONLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Seed for measurement noise, biases and false alarms; one seed
+  /// reproduces the same observations.
+  public ulong RANDOM_SEED { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Simulation span as Julian Dates in TT; 0 uses the span of the target
+  /// states.
+  public double START_JULIAN_DATE_TT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double END_JULIAN_DATE_TT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<ACWRequest> CreateACWRequest(FlatBufferBuilder builder,
       acwOperationCode OPERATION = acwOperationCode.UNKNOWN,
@@ -81,10 +103,24 @@ public struct ACWRequest : IFlatbufferObject
       acwEvaluationMode EVALUATION_MODE = acwEvaluationMode.DISCRETE,
       double ROOT_TOLERANCE_S = 0.1,
       VectorOffset SUN_STATESOffset = default(VectorOffset),
-      VectorOffset MOON_STATESOffset = default(VectorOffset)) {
-    builder.StartTable(14);
+      VectorOffset MOON_STATESOffset = default(VectorOffset),
+      VectorOffset TARGETSOffset = default(VectorOffset),
+      VectorOffset SENSORSOffset = default(VectorOffset),
+      VectorOffset ACCESSOffset = default(VectorOffset),
+      VectorOffset EARTH_ORIENTATIONOffset = default(VectorOffset),
+      ulong RANDOM_SEED = 0,
+      double START_JULIAN_DATE_TT = 0.0,
+      double END_JULIAN_DATE_TT = 0.0) {
+    builder.StartTable(21);
+    ACWRequest.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
+    ACWRequest.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
+    ACWRequest.AddRANDOM_SEED(builder, RANDOM_SEED);
     ACWRequest.AddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S);
     ACWRequest.AddMIN_ELEVATION_OVERRIDE_RAD(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.AddEARTH_ORIENTATION(builder, EARTH_ORIENTATIONOffset);
+    ACWRequest.AddACCESS(builder, ACCESSOffset);
+    ACWRequest.AddSENSORS(builder, SENSORSOffset);
+    ACWRequest.AddTARGETS(builder, TARGETSOffset);
     ACWRequest.AddMOON_STATES(builder, MOON_STATESOffset);
     ACWRequest.AddSUN_STATES(builder, SUN_STATESOffset);
     ACWRequest.AddOBSERVERS(builder, OBSERVERSOffset);
@@ -100,7 +136,7 @@ public struct ACWRequest : IFlatbufferObject
     return ACWRequest.EndACWRequest(builder);
   }
 
-  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddOPERATION(FlatBufferBuilder builder, acwOperationCode OPERATION) { builder.AddSbyte(0, (sbyte)OPERATION, 0); }
   public static void AddGROUND_STATIONS(FlatBufferBuilder builder, VectorOffset GROUND_STATIONSOffset) { builder.AddOffset(1, GROUND_STATIONSOffset.Value, 0); }
   public static VectorOffset CreateGROUND_STATIONSVector(FlatBufferBuilder builder, Offset<ACWGroundStation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -145,6 +181,33 @@ public struct ACWRequest : IFlatbufferObject
   public static VectorOffset CreateMOON_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWStateSample>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMOON_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWStateSample>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMOON_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTARGETS(FlatBufferBuilder builder, VectorOffset TARGETSOffset) { builder.AddOffset(14, TARGETSOffset.Value, 0); }
+  public static VectorOffset CreateTARGETSVector(FlatBufferBuilder builder, Offset<ACWTarget>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTARGETSVectorBlock(FlatBufferBuilder builder, Offset<ACWTarget>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTARGETSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWTarget>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTARGETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWTarget>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTARGETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSENSORS(FlatBufferBuilder builder, VectorOffset SENSORSOffset) { builder.AddOffset(15, SENSORSOffset.Value, 0); }
+  public static VectorOffset CreateSENSORSVector(FlatBufferBuilder builder, Offset<ACWSensor>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, Offset<ACWSensor>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWSensor>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWSensor>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSENSORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddACCESS(FlatBufferBuilder builder, VectorOffset ACCESSOffset) { builder.AddOffset(16, ACCESSOffset.Value, 0); }
+  public static VectorOffset CreateACCESSVector(FlatBufferBuilder builder, Offset<ACWSensorAccess>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateACCESSVectorBlock(FlatBufferBuilder builder, Offset<ACWSensorAccess>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACCESSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWSensorAccess>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACCESSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWSensorAccess>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartACCESSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddEARTH_ORIENTATION(FlatBufferBuilder builder, VectorOffset EARTH_ORIENTATIONOffset) { builder.AddOffset(17, EARTH_ORIENTATIONOffset.Value, 0); }
+  public static VectorOffset CreateEARTH_ORIENTATIONVector(FlatBufferBuilder builder, Offset<EOP>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEARTH_ORIENTATIONVectorBlock(FlatBufferBuilder builder, Offset<EOP>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEARTH_ORIENTATIONVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EOP>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEARTH_ORIENTATIONVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EOP>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEARTH_ORIENTATIONVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddRANDOM_SEED(FlatBufferBuilder builder, ulong RANDOM_SEED) { builder.AddUlong(18, RANDOM_SEED, 0); }
+  public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(19, START_JULIAN_DATE_TT, 0.0); }
+  public static void AddEND_JULIAN_DATE_TT(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.AddDouble(20, END_JULIAN_DATE_TT, 0.0); }
   public static Offset<ACWRequest> EndACWRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWRequest>(o);
@@ -175,6 +238,17 @@ public struct ACWRequest : IFlatbufferObject
     for (var _j = 0; _j < this.SUN_STATESLength; ++_j) {_o.SUN_STATES.Add(this.SUN_STATES(_j).HasValue ? this.SUN_STATES(_j).Value.UnPack() : null);}
     _o.MOON_STATES = new List<ACWStateSampleT>();
     for (var _j = 0; _j < this.MOON_STATESLength; ++_j) {_o.MOON_STATES.Add(this.MOON_STATES(_j).HasValue ? this.MOON_STATES(_j).Value.UnPack() : null);}
+    _o.TARGETS = new List<ACWTargetT>();
+    for (var _j = 0; _j < this.TARGETSLength; ++_j) {_o.TARGETS.Add(this.TARGETS(_j).HasValue ? this.TARGETS(_j).Value.UnPack() : null);}
+    _o.SENSORS = new List<ACWSensorT>();
+    for (var _j = 0; _j < this.SENSORSLength; ++_j) {_o.SENSORS.Add(this.SENSORS(_j).HasValue ? this.SENSORS(_j).Value.UnPack() : null);}
+    _o.ACCESS = new List<ACWSensorAccessT>();
+    for (var _j = 0; _j < this.ACCESSLength; ++_j) {_o.ACCESS.Add(this.ACCESS(_j).HasValue ? this.ACCESS(_j).Value.UnPack() : null);}
+    _o.EARTH_ORIENTATION = new List<EOPT>();
+    for (var _j = 0; _j < this.EARTH_ORIENTATIONLength; ++_j) {_o.EARTH_ORIENTATION.Add(this.EARTH_ORIENTATION(_j).HasValue ? this.EARTH_ORIENTATION(_j).Value.UnPack() : null);}
+    _o.RANDOM_SEED = this.RANDOM_SEED;
+    _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT;
+    _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT;
   }
   public static Offset<ACWRequest> Pack(FlatBufferBuilder builder, ACWRequestT _o) {
     if (_o == null) return default(Offset<ACWRequest>);
@@ -218,6 +292,30 @@ public struct ACWRequest : IFlatbufferObject
       for (var _j = 0; _j < __MOON_STATES.Length; ++_j) { __MOON_STATES[_j] = ACWStateSample.Pack(builder, _o.MOON_STATES[_j]); }
       _MOON_STATES = CreateMOON_STATESVector(builder, __MOON_STATES);
     }
+    var _TARGETS = default(VectorOffset);
+    if (_o.TARGETS != null) {
+      var __TARGETS = new Offset<ACWTarget>[_o.TARGETS.Count];
+      for (var _j = 0; _j < __TARGETS.Length; ++_j) { __TARGETS[_j] = ACWTarget.Pack(builder, _o.TARGETS[_j]); }
+      _TARGETS = CreateTARGETSVector(builder, __TARGETS);
+    }
+    var _SENSORS = default(VectorOffset);
+    if (_o.SENSORS != null) {
+      var __SENSORS = new Offset<ACWSensor>[_o.SENSORS.Count];
+      for (var _j = 0; _j < __SENSORS.Length; ++_j) { __SENSORS[_j] = ACWSensor.Pack(builder, _o.SENSORS[_j]); }
+      _SENSORS = CreateSENSORSVector(builder, __SENSORS);
+    }
+    var _ACCESS = default(VectorOffset);
+    if (_o.ACCESS != null) {
+      var __ACCESS = new Offset<ACWSensorAccess>[_o.ACCESS.Count];
+      for (var _j = 0; _j < __ACCESS.Length; ++_j) { __ACCESS[_j] = ACWSensorAccess.Pack(builder, _o.ACCESS[_j]); }
+      _ACCESS = CreateACCESSVector(builder, __ACCESS);
+    }
+    var _EARTH_ORIENTATION = default(VectorOffset);
+    if (_o.EARTH_ORIENTATION != null) {
+      var __EARTH_ORIENTATION = new Offset<EOP>[_o.EARTH_ORIENTATION.Count];
+      for (var _j = 0; _j < __EARTH_ORIENTATION.Length; ++_j) { __EARTH_ORIENTATION[_j] = EOP.Pack(builder, _o.EARTH_ORIENTATION[_j]); }
+      _EARTH_ORIENTATION = CreateEARTH_ORIENTATIONVector(builder, __EARTH_ORIENTATION);
+    }
     return CreateACWRequest(
       builder,
       _o.OPERATION,
@@ -233,7 +331,14 @@ public struct ACWRequest : IFlatbufferObject
       _o.EVALUATION_MODE,
       _o.ROOT_TOLERANCE_S,
       _SUN_STATES,
-      _MOON_STATES);
+      _MOON_STATES,
+      _TARGETS,
+      _SENSORS,
+      _ACCESS,
+      _EARTH_ORIENTATION,
+      _o.RANDOM_SEED,
+      _o.START_JULIAN_DATE_TT,
+      _o.END_JULIAN_DATE_TT);
   }
 }
 
@@ -253,6 +358,13 @@ public class ACWRequestT
   public double ROOT_TOLERANCE_S { get; set; }
   public List<ACWStateSampleT> SUN_STATES { get; set; }
   public List<ACWStateSampleT> MOON_STATES { get; set; }
+  public List<ACWTargetT> TARGETS { get; set; }
+  public List<ACWSensorT> SENSORS { get; set; }
+  public List<ACWSensorAccessT> ACCESS { get; set; }
+  public List<EOPT> EARTH_ORIENTATION { get; set; }
+  public ulong RANDOM_SEED { get; set; }
+  public double START_JULIAN_DATE_TT { get; set; }
+  public double END_JULIAN_DATE_TT { get; set; }
 
   public ACWRequestT() {
     this.OPERATION = acwOperationCode.UNKNOWN;
@@ -269,6 +381,13 @@ public class ACWRequestT
     this.ROOT_TOLERANCE_S = 0.1;
     this.SUN_STATES = null;
     this.MOON_STATES = null;
+    this.TARGETS = null;
+    this.SENSORS = null;
+    this.ACCESS = null;
+    this.EARTH_ORIENTATION = null;
+    this.RANDOM_SEED = 0;
+    this.START_JULIAN_DATE_TT = 0.0;
+    this.END_JULIAN_DATE_TT = 0.0;
   }
 }
 
@@ -292,6 +411,13 @@ static public class ACWRequestVerify
       && verifier.VerifyField(tablePos, 26 /*ROOT_TOLERANCE_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 28 /*SUN_STATES*/, ACWStateSampleVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 30 /*MOON_STATES*/, ACWStateSampleVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 32 /*TARGETS*/, ACWTargetVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*SENSORS*/, ACWSensorVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 36 /*ACCESS*/, ACWSensorAccessVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*EARTH_ORIENTATION*/, EOPVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 40 /*RANDOM_SEED*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*START_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*END_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

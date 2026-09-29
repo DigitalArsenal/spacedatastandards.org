@@ -6,10 +6,20 @@ class acwOperationCode
     const UNKNOWN = 0;
     /// Compute access windows from pre-sampled target Cartesian states.
     const COMPUTE_ACCESS_WINDOWS = 1;
+    /// Simulate sensor observations of TARGETS by SENSORS: schedule tracks
+    /// inside the ACCESS windows (computed per sensor and target by
+    /// COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
+    /// measurement from the
+    /// truth states with its MEMErrorModel noise and bias, apply the detection
+    /// test, and add false alarms. The observations are emitted as separate
+    /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
+    /// records; the result lists the tracks.
+    const SIMULATE_OBSERVATIONS = 2;
 
     private static $names = array(
         acwOperationCode::UNKNOWN=>"UNKNOWN",
         acwOperationCode::COMPUTE_ACCESS_WINDOWS=>"COMPUTE_ACCESS_WINDOWS",
+        acwOperationCode::SIMULATE_OBSERVATIONS=>"SIMULATE_OBSERVATIONS",
     );
 
     public static function Name($e)

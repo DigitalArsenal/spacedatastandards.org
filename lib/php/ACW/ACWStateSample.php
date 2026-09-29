@@ -81,26 +81,58 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Earth-fixed velocity, meters per second. Required for range-rate,
+    /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+    /**
+     * @return double
+     */
+    public function getVELOCITY_X_MPS()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getVELOCITY_Y_MPS()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getVELOCITY_Z_MPS()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWStateSample(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWStateSample
      */
-    public static function createACWStateSample(FlatBufferBuilder $builder, $JULIAN_DATE_TT, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M)
+    public static function createACWStateSample(FlatBufferBuilder $builder, $JULIAN_DATE_TT, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M, $VELOCITY_X_MPS, $VELOCITY_Y_MPS, $VELOCITY_Z_MPS)
     {
-        $builder->startObject(4);
+        $builder->startObject(7);
         self::addJULIAN_DATE_TT($builder, $JULIAN_DATE_TT);
         self::addPOSITION_X_M($builder, $POSITION_X_M);
         self::addPOSITION_Y_M($builder, $POSITION_Y_M);
         self::addPOSITION_Z_M($builder, $POSITION_Z_M);
+        self::addVELOCITY_X_MPS($builder, $VELOCITY_X_MPS);
+        self::addVELOCITY_Y_MPS($builder, $VELOCITY_Y_MPS);
+        self::addVELOCITY_Z_MPS($builder, $VELOCITY_Z_MPS);
         $o = $builder->endObject();
         return $o;
     }
@@ -143,6 +175,36 @@ class ACWStateSample extends Table
     public static function addPOSITION_Z_M(FlatBufferBuilder $builder, $POSITION_Z_M)
     {
         $builder->addDoubleX(3, $POSITION_Z_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVELOCITY_X_MPS(FlatBufferBuilder $builder, $VELOCITY_X_MPS)
+    {
+        $builder->addDoubleX(4, $VELOCITY_X_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVELOCITY_Y_MPS(FlatBufferBuilder $builder, $VELOCITY_Y_MPS)
+    {
+        $builder->addDoubleX(5, $VELOCITY_Y_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVELOCITY_Z_MPS(FlatBufferBuilder $builder, $VELOCITY_Z_MPS)
+    {
+        $builder->addDoubleX(6, $VELOCITY_Z_MPS, 0.0);
     }
 
     /**

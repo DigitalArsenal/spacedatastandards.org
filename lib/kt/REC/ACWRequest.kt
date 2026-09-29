@@ -210,6 +210,96 @@ class ACWRequest : Table() {
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Targets to observe (SIMULATE_OBSERVATIONS).
+     */
+    fun targets(j: Int) : ACWTarget? = targets(ACWTarget(), j)
+    fun targets(obj: ACWTarget, j: Int) : ACWTarget? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val targetsLength : Int
+        get() {
+            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Sensors that observe them (SIMULATE_OBSERVATIONS).
+     */
+    fun sensors(j: Int) : ACWSensor? = sensors(ACWSensor(), j)
+    fun sensors(obj: ACWSensor, j: Int) : ACWSensor? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val sensorsLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+     * without an entry is never observed.
+     */
+    fun access(j: Int) : ACWSensorAccess? = access(ACWSensorAccess(), j)
+    fun access(obj: ACWSensorAccess, j: Int) : ACWSensorAccess? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val accessLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Earth orientation parameters for celestial directions (right ascension
+     * and declination). When absent, polar motion, UT1-UTC and celestial pole
+     * offsets are zero.
+     */
+    fun earthOrientation(j: Int) : EOP? = earthOrientation(EOP(), j)
+    fun earthOrientation(obj: EOP, j: Int) : EOP? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val earthOrientationLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Seed for measurement noise, biases and false alarms; one seed
+     * reproduces the same observations.
+     */
+    val randomSeed : ULong
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Simulation span as Julian Dates in TT; 0 uses the span of the target
+     * states.
+     */
+    val startJulianDateTt : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val endJulianDateTt : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWRequest(_bb: ByteBuffer): ACWRequest = getRootAsACWRequest(_bb, ACWRequest())
@@ -217,10 +307,17 @@ class ACWRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int) : Int {
-            builder.startTable(14)
+        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int, targetsOffset: Int, sensorsOffset: Int, accessOffset: Int, earthOrientationOffset: Int, randomSeed: ULong, startJulianDateTt: Double, endJulianDateTt: Double) : Int {
+            builder.startTable(21)
+            addENDJULIANDATETT(builder, endJulianDateTt)
+            addSTARTJULIANDATETT(builder, startJulianDateTt)
+            addRANDOMSEED(builder, randomSeed)
             addROOTTOLERANCES(builder, rootToleranceS)
             addMINELEVATIONOVERRIDERAD(builder, minElevationOverrideRad)
+            addEARTHORIENTATION(builder, earthOrientationOffset)
+            addACCESS(builder, accessOffset)
+            addSENSORS(builder, sensorsOffset)
+            addTARGETS(builder, targetsOffset)
             addMOONSTATES(builder, moonStatesOffset)
             addSUNSTATES(builder, sunStatesOffset)
             addOBSERVERS(builder, observersOffset)
@@ -235,7 +332,7 @@ class ACWRequest : Table() {
             addOPERATION(builder, operation)
             return endACWRequest(builder)
         }
-        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addOPERATION(builder: FlatBufferBuilder, operation: Byte) = builder.addByte(0, operation, 0)
         fun addGROUNDSTATIONS(builder: FlatBufferBuilder, groundStations: Int) = builder.addOffset(1, groundStations, 0)
         fun createGroundStationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -298,6 +395,45 @@ class ACWRequest : Table() {
             return builder.endVector()
         }
         fun startMoonStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTARGETS(builder: FlatBufferBuilder, targets: Int) = builder.addOffset(14, targets, 0)
+        fun createTargetsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTargetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSENSORS(builder: FlatBufferBuilder, sensors: Int) = builder.addOffset(15, sensors, 0)
+        fun createSensorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSensorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addACCESS(builder: FlatBufferBuilder, access: Int) = builder.addOffset(16, access, 0)
+        fun createAccessVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAccessVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addEARTHORIENTATION(builder: FlatBufferBuilder, earthOrientation: Int) = builder.addOffset(17, earthOrientation, 0)
+        fun createEarthOrientationVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEarthOrientationVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addRANDOMSEED(builder: FlatBufferBuilder, randomSeed: ULong) = builder.addLong(18, randomSeed.toLong(), 0)
+        fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(19, startJulianDateTt, 0.0)
+        fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(20, endJulianDateTt, 0.0)
         fun endACWRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

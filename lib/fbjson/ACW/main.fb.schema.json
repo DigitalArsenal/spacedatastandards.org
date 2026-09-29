@@ -1,11 +1,314 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "memMeasurementType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RANGE",
+        "RANGE_RATE",
+        "DOPPLER",
+        "AZIMUTH_ELEVATION",
+        "X_EAST_Y_NORTH",
+        "X_SOUTH_Y_EAST",
+        "RIGHT_ASCENSION_DECLINATION",
+        "POSITION_VECTOR",
+        "SEQUENTIAL_RANGE",
+        "PSEUDONOISE_RANGE",
+        "TIME_CORRELATED_PHASE",
+        "RELAY_RANGE",
+        "RELAY_DOPPLER",
+        "RELAY_DIFFERENCED_DOPPLER",
+        "BISTATIC_RANGE",
+        "SKIN_RANGE",
+        "CROSSLINK_RANGE",
+        "CROSSLINK_RANGE_RATE",
+        "LASER_RANGE",
+        "TIME_DIFFERENCE_OF_ARRIVAL",
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RANGE": {
+          "value": 1
+        },
+        "RANGE_RATE": {
+          "value": 2
+        },
+        "DOPPLER": {
+          "value": 3
+        },
+        "AZIMUTH_ELEVATION": {
+          "value": 4
+        },
+        "X_EAST_Y_NORTH": {
+          "value": 5
+        },
+        "X_SOUTH_Y_EAST": {
+          "value": 6
+        },
+        "RIGHT_ASCENSION_DECLINATION": {
+          "value": 7
+        },
+        "POSITION_VECTOR": {
+          "value": 8
+        },
+        "SEQUENTIAL_RANGE": {
+          "value": 9
+        },
+        "PSEUDONOISE_RANGE": {
+          "value": 10
+        },
+        "TIME_CORRELATED_PHASE": {
+          "value": 11
+        },
+        "RELAY_RANGE": {
+          "value": 12
+        },
+        "RELAY_DOPPLER": {
+          "value": 13
+        },
+        "RELAY_DIFFERENCED_DOPPLER": {
+          "value": 14
+        },
+        "BISTATIC_RANGE": {
+          "value": 15
+        },
+        "SKIN_RANGE": {
+          "value": 16
+        },
+        "CROSSLINK_RANGE": {
+          "value": 17
+        },
+        "CROSSLINK_RANGE_RATE": {
+          "value": 18
+        },
+        "LASER_RANGE": {
+          "value": 19
+        },
+        "TIME_DIFFERENCE_OF_ARRIVAL": {
+          "value": 20
+        },
+        "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+          "value": 21
+        }
+      }
+    },
+    "memEditingAction": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPT",
+        "REJECT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPT": {
+          "value": 1
+        },
+        "REJECT": {
+          "value": 2
+        }
+      }
+    },
+    "memEditingReason": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ACCEPTED",
+        "OUTSIDE_EPOCH_WINDOW",
+        "OUTSIDE_VALUE_WINDOW",
+        "SIGMA_THRESHOLD",
+        "INVALID_GEOMETRY",
+        "MISSING_MEDIA_INPUT",
+        "HARDWARE_UNAVAILABLE",
+        "DUPLICATE",
+        "PROVIDER_FLAGGED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ACCEPTED": {
+          "value": 1
+        },
+        "OUTSIDE_EPOCH_WINDOW": {
+          "value": 2
+        },
+        "OUTSIDE_VALUE_WINDOW": {
+          "value": 3
+        },
+        "SIGMA_THRESHOLD": {
+          "value": 4
+        },
+        "INVALID_GEOMETRY": {
+          "value": 5
+        },
+        "MISSING_MEDIA_INPUT": {
+          "value": 6
+        },
+        "HARDWARE_UNAVAILABLE": {
+          "value": 7
+        },
+        "DUPLICATE": {
+          "value": 8
+        },
+        "PROVIDER_FLAGGED": {
+          "value": 9
+        }
+      }
+    },
+    "memTroposphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "HOPFIELD_SAASTAMOINEN",
+        "MARINI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "HOPFIELD_SAASTAMOINEN": {
+          "value": 2
+        },
+        "MARINI": {
+          "value": 3
+        }
+      }
+    },
+    "memIonosphereModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "TOTAL_ELECTRON_CONTENT",
+        "REFERENCE_PROFILE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1
+        },
+        "TOTAL_ELECTRON_CONTENT": {
+          "value": 2
+        },
+        "REFERENCE_PROFILE": {
+          "value": 3
+        }
+      }
+    },
+    "DataType": {
+      "type": "string",
+      "enum": [
+        "OBSERVED",
+        "PREDICTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OBSERVED": {
+          "value": 0
+        },
+        "PREDICTED": {
+          "value": 1
+        }
+      }
+    },
+    "eopSeries": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "IERS_C04_14",
+        "IERS_C04_20",
+        "IERS_BULLETIN_A",
+        "IERS_BULLETIN_B",
+        "FINALS2000A",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "IERS_C04_14": {
+          "value": 1,
+          "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+        },
+        "IERS_C04_20": {
+          "value": 2,
+          "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+        },
+        "IERS_BULLETIN_A": {
+          "value": 3,
+          "description": "IERS Bulletin A rapid service / prediction."
+        },
+        "IERS_BULLETIN_B": {
+          "value": 4,
+          "description": "IERS Bulletin B."
+        },
+        "FINALS2000A": {
+          "value": 5,
+          "description": "USNO/IERS finals2000A combined rapid + prediction file."
+        },
+        "OTHER": {
+          "value": 6,
+          "description": "A series not covered above; identify it in a producer-defined way."
+        }
+      }
+    },
+    "iauPrecessionNutationModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "IAU_2000A",
+        "IAU_2000B",
+        "IAU_2006"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "IAU_2000A": {
+          "value": 1
+        },
+        "IAU_2000B": {
+          "value": 2
+        },
+        "IAU_2006": {
+          "value": 3
+        }
+      }
+    },
     "acwOperationCode": {
       "type": "string",
       "enum": [
         "UNKNOWN",
-        "COMPUTE_ACCESS_WINDOWS"
+        "COMPUTE_ACCESS_WINDOWS",
+        "SIMULATE_OBSERVATIONS"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -16,6 +319,10 @@
         "COMPUTE_ACCESS_WINDOWS": {
           "value": 1,
           "description": "Compute access windows from pre-sampled target Cartesian states."
+        },
+        "SIMULATE_OBSERVATIONS": {
+          "value": 2,
+          "description": "Simulate sensor observations of TARGETS by SENSORS: schedule tracks inside the ACCESS windows (computed per sensor and target by COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each measurement from the truth states with its MEMErrorModel noise and bias, apply the detection test, and add false alarms. The observations are emitted as separate $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF) records; the result lists the tracks."
         }
       }
     },
@@ -187,6 +494,591 @@
         }
       }
     },
+    "acwSensorPhenomenology": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RADAR",
+        "OPTICAL",
+        "PASSIVE_RF",
+        "LASER_RANGING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RADAR": {
+          "value": 1,
+          "description": "Monostatic radar: range, range rate, azimuth, elevation."
+        },
+        "OPTICAL": {
+          "value": 2,
+          "description": "Passive optical: right ascension and declination, magnitude."
+        },
+        "PASSIVE_RF": {
+          "value": 3,
+          "description": "Passive RF: angles and received frequency of a target's emitter."
+        },
+        "LASER_RANGING": {
+          "value": 4,
+          "description": "Satellite laser ranging: two-way range."
+        }
+      }
+    },
+    "MEMErrorModel": {
+      "type": "object",
+      "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+      "properties": {
+        "MODEL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MEASUREMENT_TYPE": {
+          "$ref": "#/definitions/memMeasurementType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RANGE": {
+              "value": 1
+            },
+            "RANGE_RATE": {
+              "value": 2
+            },
+            "DOPPLER": {
+              "value": 3
+            },
+            "AZIMUTH_ELEVATION": {
+              "value": 4
+            },
+            "X_EAST_Y_NORTH": {
+              "value": 5
+            },
+            "X_SOUTH_Y_EAST": {
+              "value": 6
+            },
+            "RIGHT_ASCENSION_DECLINATION": {
+              "value": 7
+            },
+            "POSITION_VECTOR": {
+              "value": 8
+            },
+            "SEQUENTIAL_RANGE": {
+              "value": 9
+            },
+            "PSEUDONOISE_RANGE": {
+              "value": 10
+            },
+            "TIME_CORRELATED_PHASE": {
+              "value": 11
+            },
+            "RELAY_RANGE": {
+              "value": 12
+            },
+            "RELAY_DOPPLER": {
+              "value": 13
+            },
+            "RELAY_DIFFERENCED_DOPPLER": {
+              "value": 14
+            },
+            "BISTATIC_RANGE": {
+              "value": 15
+            },
+            "SKIN_RANGE": {
+              "value": 16
+            },
+            "CROSSLINK_RANGE": {
+              "value": 17
+            },
+            "CROSSLINK_RANGE_RATE": {
+              "value": 18
+            },
+            "LASER_RANGE": {
+              "value": 19
+            },
+            "TIME_DIFFERENCE_OF_ARRIVAL": {
+              "value": 20
+            },
+            "FREQUENCY_DIFFERENCE_OF_ARRIVAL": {
+              "value": 21
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NOISE_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BIAS_SIGMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CORRELATION_TIME_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MINIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_ACCEPTED_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_EDIT_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCEPT_START_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCEPT_STOP_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TROPOSPHERE_MODEL": {
+          "$ref": "#/definitions/memTroposphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "HOPFIELD_SAASTAMOINEN": {
+              "value": 2
+            },
+            "MARINI": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "IONOSPHERE_MODEL": {
+          "$ref": "#/definitions/memIonosphereModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1
+            },
+            "TOTAL_ELECTRON_CONTENT": {
+              "value": 2
+            },
+            "REFERENCE_PROFILE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "APPLY_LIGHT_TIME": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "APPLY_BODY_ROTATION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "required": [
+        "MODEL_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMEditingDecision": {
+      "type": "object",
+      "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+      "properties": {
+        "OBSERVATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ACTION": {
+          "$ref": "#/definitions/memEditingAction",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPT": {
+              "value": 1
+            },
+            "REJECT": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REASON": {
+          "$ref": "#/definitions/memEditingReason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ACCEPTED": {
+              "value": 1
+            },
+            "OUTSIDE_EPOCH_WINDOW": {
+              "value": 2
+            },
+            "OUTSIDE_VALUE_WINDOW": {
+              "value": 3
+            },
+            "SIGMA_THRESHOLD": {
+              "value": 4
+            },
+            "INVALID_GEOMETRY": {
+              "value": 5
+            },
+            "MISSING_MEDIA_INPUT": {
+              "value": 6
+            },
+            "HARDWARE_UNAVAILABLE": {
+              "value": 7
+            },
+            "DUPLICATE": {
+              "value": 8
+            },
+            "PROVIDER_FLAGGED": {
+              "value": 9
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PREFIT_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMALIZED_RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ITERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "required": [
+        "OBSERVATION_ID"
+      ],
+      "additionalProperties": false
+    },
+    "MEMAttestation": {
+      "type": "object",
+      "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+      "properties": {
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "CANONICAL_JSON_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SIGNING_PUBLIC_KEY",
+        "SIGNATURE",
+        "CANONICAL_JSON_SIGNATURE"
+      ],
+      "additionalProperties": false
+    },
+    "MEM": {
+      "type": "object",
+      "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+      "properties": {
+        "ERROR_MODELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMErrorModel"
+          },
+          "x-flatbuffer-type": "[MEMErrorModel]"
+        },
+        "EDITING_LEDGER": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMEditingDecision"
+          },
+          "x-flatbuffer-type": "[MEMEditingDecision]"
+        },
+        "RANDOM_SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTATION": {
+          "$ref": "#/definitions/MEMAttestation",
+          "x-flatbuffer-type": "MEMAttestation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EOP": {
+      "type": "object",
+      "description": "Earth Orientation Parameters",
+      "properties": {
+        "DATE": {
+          "type": "string",
+          "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\"",
+          "x-flatbuffer-type": "string"
+        },
+        "MJD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Modified Julian Date in UTC, e.g., 58119",
+          "x-flatbuffer-type": "uint"
+        },
+        "X_POLE_WANDER_RADIANS": {
+          "type": "number",
+          "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_POLE_WANDER_RADIANS": {
+          "type": "number",
+          "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6",
+          "x-flatbuffer-type": "float"
+        },
+        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
+          "type": "number",
+          "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
+          "type": "number",
+          "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10",
+          "x-flatbuffer-type": "float"
+        },
+        "UT1_MINUS_UTC_SECONDS": {
+          "type": "number",
+          "description": "UT1 minus UTC in seconds, e.g., 0.2163567",
+          "x-flatbuffer-type": "float"
+        },
+        "TAI_MINUS_UTC_SECONDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "TAI minus UTC in seconds, e.g., 37",
+          "x-flatbuffer-type": "ushort"
+        },
+        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
+          "type": "number",
+          "description": "Correction to Length of Day in seconds, e.g., 8.094E-4",
+          "x-flatbuffer-type": "float"
+        },
+        "DATA_TYPE": {
+          "$ref": "#/definitions/DataType",
+          "description": "Data type (O = Observed, P = Predicted)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OBSERVED": {
+              "value": 0
+            },
+            "PREDICTED": {
+              "value": 1
+            }
+          }
+        },
+        "SERIES": {
+          "$ref": "#/definitions/eopSeries",
+          "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "IERS_C04_14": {
+              "value": 1,
+              "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+            },
+            "IERS_C04_20": {
+              "value": 2,
+              "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+            },
+            "IERS_BULLETIN_A": {
+              "value": 3,
+              "description": "IERS Bulletin A rapid service / prediction."
+            },
+            "IERS_BULLETIN_B": {
+              "value": 4,
+              "description": "IERS Bulletin B."
+            },
+            "FINALS2000A": {
+              "value": 5,
+              "description": "USNO/IERS finals2000A combined rapid + prediction file."
+            },
+            "OTHER": {
+              "value": 6,
+              "description": "A series not covered above; identify it in a producer-defined way."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "IAU_CONVENTION": {
+          "$ref": "#/definitions/iauPrecessionNutationModel",
+          "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "IAU_2000A": {
+              "value": 1
+            },
+            "IAU_2000B": {
+              "value": 2
+            },
+            "IAU_2006": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in x Pole Wander, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in y Pole Wander, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in UT1 minus UTC, seconds.",
+          "x-flatbuffer-type": "float"
+        },
+        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the Length of Day correction, seconds.",
+          "x-flatbuffer-type": "float"
+        },
+        "X_POLE_WANDER_RADIANS_HP": {
+          "type": "number",
+          "description": "x component of Pole Wander in radians, double precision. Authoritative\nover X_POLE_WANDER_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_POLE_WANDER_RADIANS_HP": {
+          "type": "number",
+          "description": "y component of Pole Wander in radians, double precision. Authoritative\nover Y_POLE_WANDER_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "X_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+          "type": "number",
+          "description": "x component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+          "type": "number",
+          "description": "y component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "UT1_MINUS_UTC_SECONDS_HP": {
+          "type": "number",
+          "description": "UT1 minus UTC in seconds, double precision. Authoritative over\nUT1_MINUS_UTC_SECONDS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "LENGTH_OF_DAY_CORRECTION_SECONDS_HP": {
+          "type": "number",
+          "description": "Correction to Length of Day in seconds, double precision. Authoritative\nover LENGTH_OF_DAY_CORRECTION_SECONDS when present.",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_SET_EPOCH": {
+          "type": "string",
+          "description": "Epoch of the data set this row was published in, ISO 8601 UTC. Identifies\nWHICH issue of the series a consumer is holding; two rows for the same\nMJD from different data-set epochs are different values, not duplicates.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_SET_CID": {
+          "type": "string",
+          "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed.",
+          "x-flatbuffer-type": "string"
+        },
+        "NUTATION_DPSI_RADIANS": {
+          "type": "number",
+          "description": "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DEPS_RADIANS": {
+          "type": "number",
+          "description": "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DPSI_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "ACWStateSample": {
       "type": "object",
       "description": "Target Cartesian state sample in an Earth-fixed frame.",
@@ -209,6 +1101,19 @@
         "POSITION_Z_M": {
           "type": "number",
           "description": "Earth-fixed Z position, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X_MPS": {
+          "type": "number",
+          "description": "Earth-fixed velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS).",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y_MPS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z_MPS": {
+          "type": "number",
           "x-flatbuffer-type": "double"
         }
       },
@@ -511,6 +1416,255 @@
       },
       "additionalProperties": false
     },
+    "ACWTargetSignature": {
+      "type": "object",
+      "description": "Observable signature of a simulated target.",
+      "properties": {
+        "RCS_M2": {
+          "type": "number",
+          "description": "Radar cross-section, square meters (RADAR).",
+          "x-flatbuffer-type": "double"
+        },
+        "DIAMETER_M": {
+          "type": "number",
+          "description": "Diameter, meters, and geometric albedo of the diffuse sphere that sets\nthe magnitude, in the band of EOO.MAG (OPTICAL).",
+          "x-flatbuffer-type": "double"
+        },
+        "GEOMETRIC_ALBEDO": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EMITTER_FREQUENCY_HZ": {
+          "type": "number",
+          "description": "Emitter carrier frequency, hertz, and EIRP toward the sensor, dBW\n(PASSIVE_RF). A frequency of 0 means the target does not emit.",
+          "x-flatbuffer-type": "double"
+        },
+        "EMITTER_EIRP_DBW": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWTarget": {
+      "type": "object",
+      "description": "One simulated target: truth states and signature.",
+      "properties": {
+        "TARGET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International designator.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "description": "Truth Earth-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES.",
+          "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "SIGNATURE": {
+          "$ref": "#/definitions/ACWTargetSignature",
+          "x-flatbuffer-type": "ACWTargetSignature"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWSensor": {
+      "type": "object",
+      "description": "A simulated sensor hosted by a ground station or an observer trajectory.",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HOST_ID": {
+          "type": "string",
+          "description": "ACWGroundStation.STATION_ID or ACWObserverTrajectory.OBSERVER_ID of the\nhost.",
+          "x-flatbuffer-type": "string"
+        },
+        "PHENOMENOLOGY": {
+          "$ref": "#/definitions/acwSensorPhenomenology",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADAR": {
+              "value": 1,
+              "description": "Monostatic radar: range, range rate, azimuth, elevation."
+            },
+            "OPTICAL": {
+              "value": 2,
+              "description": "Passive optical: right ascension and declination, magnitude."
+            },
+            "PASSIVE_RF": {
+              "value": 3,
+              "description": "Passive RF: angles and received frequency of a target's emitter."
+            },
+            "LASER_RANGING": {
+              "value": 4,
+              "description": "Satellite laser ranging: two-way range."
+            }
+          }
+        },
+        "ERROR_MODELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MEMErrorModel"
+          },
+          "description": "The measurements each observation carries, one error model per\nmeasurement type (noise, bias, bias uncertainty, correlation time,\nmedia and light-time options).",
+          "x-flatbuffer-type": "[MEMErrorModel]"
+        },
+        "CONSTRAINTS": {
+          "$ref": "#/definitions/ACWConstraintSet",
+          "description": "Visibility for this sensor, the constraints its ACCESS windows were\ncomputed with. When absent, ACWRequest.CONSTRAINTS apply.",
+          "x-flatbuffer-type": "ACWConstraintSet"
+        },
+        "OBSERVATION_INTERVAL_S": {
+          "type": "number",
+          "description": "Seconds between observations within a track.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACK_DURATION_S": {
+          "type": "number",
+          "description": "Longest track, seconds; 0 tracks the whole access window.",
+          "x-flatbuffer-type": "double"
+        },
+        "REVISIT_INTERVAL_S": {
+          "type": "number",
+          "description": "Shortest time between the end of one track of a target and the start\nof the next, seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_SIMULTANEOUS_TRACKS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Targets tracked at once.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "REFERENCE_SNR_DB": {
+          "type": "number",
+          "description": "RADAR: signal-to-noise ratio, dB, of a REFERENCE_RCS_M2 target at\nREFERENCE_RANGE_M; SNR scales with RCS and with range to the -4th power.",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_RCS_M2": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "DETECTION_THRESHOLD_DB": {
+          "type": "number",
+          "description": "RADAR and PASSIVE_RF: smallest detected signal-to-noise ratio, dB.",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVER_G_OVER_T_DB_PER_K": {
+          "type": "number",
+          "description": "PASSIVE_RF: receiver figure of merit, dB/K, and noise bandwidth, hertz.",
+          "x-flatbuffer-type": "double"
+        },
+        "RECEIVER_BANDWIDTH_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIMITING_MAGNITUDE": {
+          "type": "number",
+          "description": "OPTICAL: faintest magnitude detected, in the band of EOO.MAG; 0 applies\nno magnitude limit.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_HOST_SUN_ELEVATION_RAD": {
+          "type": "number",
+          "description": "OPTICAL: highest Sun elevation at the host for a detection, radians\n(ground-based darkness); requires SUN_STATES. Observations scheduled\nin brighter sky are lost.",
+          "x-flatbuffer-type": "double"
+        },
+        "FALSE_ALARM_RATE_PER_HOUR": {
+          "type": "number",
+          "description": "Uncorrelated detections per hour of tracking, reported with UCT set.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWSensorAccess": {
+      "type": "object",
+      "description": "Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWAccessWindow"
+          },
+          "x-flatbuffer-type": "[ACWAccessWindow]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWTrack": {
+      "type": "object",
+      "description": "One simulated track: a sensor's scheduled look at a target.",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SCHEDULED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Observations scheduled in the track.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DETECTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Observations that passed the detection test and were emitted.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LOSS_REASON": {
+          "type": "string",
+          "description": "Why scheduled observations were not detected (for example \"SNR\",\n\"MAGNITUDE\"); empty when all were.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "ACWRequest": {
       "type": "object",
       "description": "One access-window compute request.",
@@ -526,6 +1680,10 @@
             "COMPUTE_ACCESS_WINDOWS": {
               "value": 1,
               "description": "Compute access windows from pre-sampled target Cartesian states."
+            },
+            "SIMULATE_OBSERVATIONS": {
+              "value": 2,
+              "description": "Simulate sensor observations of TARGETS by SENSORS: schedule tracks inside the ACCESS windows (computed per sensor and target by COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each measurement from the truth states with its MEMErrorModel noise and bias, apply the detection test, and add false alarms. The observations are emitted as separate $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF) records; the result lists the tracks."
             }
           }
         },
@@ -623,6 +1781,54 @@
           },
           "description": "Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.",
           "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "TARGETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWTarget"
+          },
+          "description": "Targets to observe (SIMULATE_OBSERVATIONS).",
+          "x-flatbuffer-type": "[ACWTarget]"
+        },
+        "SENSORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWSensor"
+          },
+          "description": "Sensors that observe them (SIMULATE_OBSERVATIONS).",
+          "x-flatbuffer-type": "[ACWSensor]"
+        },
+        "ACCESS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWSensorAccess"
+          },
+          "description": "Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair\nwithout an entry is never observed.",
+          "x-flatbuffer-type": "[ACWSensorAccess]"
+        },
+        "EARTH_ORIENTATION": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EOP"
+          },
+          "description": "Earth orientation parameters for celestial directions (right ascension\nand declination). When absent, polar motion, UT1-UTC and celestial pole\noffsets are zero.",
+          "x-flatbuffer-type": "[EOP]"
+        },
+        "RANDOM_SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Seed for measurement noise, biases and false alarms; one seed\nreproduces the same observations.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Simulation span as Julian Dates in TT; 0 uses the span of the target\nstates.",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
@@ -766,6 +1972,21 @@
           },
           "description": "Flattened depth-first constraint list the window indices refer to.",
           "x-flatbuffer-type": "[string]"
+        },
+        "TRACKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWTrack"
+          },
+          "description": "Tracks scheduled by SIMULATE_OBSERVATIONS.",
+          "x-flatbuffer-type": "[ACWTrack]"
+        },
+        "OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Observations emitted, including false alarms.",
+          "x-flatbuffer-type": "uint32"
         }
       },
       "additionalProperties": false

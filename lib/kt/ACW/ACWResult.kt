@@ -95,6 +95,30 @@ class ACWResult : Table() {
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Tracks scheduled by SIMULATE_OBSERVATIONS.
+     */
+    fun tracks(j: Int) : ACWTrack? = tracks(ACWTrack(), j)
+    fun tracks(obj: ACWTrack, j: Int) : ACWTrack? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val tracksLength : Int
+        get() {
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Observations emitted, including false alarms.
+     */
+    val observationCount : UInt
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWResult(_bb: ByteBuffer): ACWResult = getRootAsACWResult(_bb, ACWResult())
@@ -102,8 +126,10 @@ class ACWResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int, evaluationMode: Byte, constraintLabelsOffset: Int) : Int {
-            builder.startTable(6)
+        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int, evaluationMode: Byte, constraintLabelsOffset: Int, tracksOffset: Int, observationCount: UInt) : Int {
+            builder.startTable(8)
+            addOBSERVATIONCOUNT(builder, observationCount)
+            addTRACKS(builder, tracksOffset)
             addCONSTRAINTLABELS(builder, constraintLabelsOffset)
             addTRACEID(builder, traceIdOffset)
             addWINDOWS(builder, windowsOffset)
@@ -112,7 +138,7 @@ class ACWResult : Table() {
             addSTATUS(builder, status)
             return endACWResult(builder)
         }
-        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addERRORMESSAGE(builder: FlatBufferBuilder, errorMessage: Int) = builder.addOffset(1, errorMessage, 0)
         fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(2, windows, 0)
@@ -135,6 +161,16 @@ class ACWResult : Table() {
             return builder.endVector()
         }
         fun startConstraintLabelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTRACKS(builder: FlatBufferBuilder, tracks: Int) = builder.addOffset(6, tracks, 0)
+        fun createTracksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTracksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addOBSERVATIONCOUNT(builder: FlatBufferBuilder, observationCount: UInt) = builder.addInt(7, observationCount.toInt(), 0)
         fun endACWResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

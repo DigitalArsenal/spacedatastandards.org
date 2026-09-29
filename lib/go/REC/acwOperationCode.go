@@ -10,16 +10,27 @@ const (
 	acwOperationCodeUNKNOWN                acwOperationCode = 0
 	/// Compute access windows from pre-sampled target Cartesian states.
 	acwOperationCodeCOMPUTE_ACCESS_WINDOWS acwOperationCode = 1
+	/// Simulate sensor observations of TARGETS by SENSORS: schedule tracks
+	/// inside the ACCESS windows (computed per sensor and target by
+	/// COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
+	/// measurement from the
+	/// truth states with its MEMErrorModel noise and bias, apply the detection
+	/// test, and add false alarms. The observations are emitted as separate
+	/// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
+	/// records; the result lists the tracks.
+	acwOperationCodeSIMULATE_OBSERVATIONS  acwOperationCode = 2
 )
 
 var EnumNamesacwOperationCode = map[acwOperationCode]string{
 	acwOperationCodeUNKNOWN:                "UNKNOWN",
 	acwOperationCodeCOMPUTE_ACCESS_WINDOWS: "COMPUTE_ACCESS_WINDOWS",
+	acwOperationCodeSIMULATE_OBSERVATIONS:  "SIMULATE_OBSERVATIONS",
 }
 
 var EnumValuesacwOperationCode = map[string]acwOperationCode{
 	"UNKNOWN":                acwOperationCodeUNKNOWN,
 	"COMPUTE_ACCESS_WINDOWS": acwOperationCodeCOMPUTE_ACCESS_WINDOWS,
+	"SIMULATE_OBSERVATIONS":  acwOperationCodeSIMULATE_OBSERVATIONS,
 }
 
 func (v acwOperationCode) String() string {

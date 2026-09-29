@@ -9,7 +9,11 @@ import { ACWElevationMaskPoint, ACWElevationMaskPointT } from './ACWElevationMas
 import { ACWGroundStation, ACWGroundStationT } from './ACWGroundStation.js';
 import { ACWObserverTrajectory, ACWObserverTrajectoryT } from './ACWObserverTrajectory.js';
 import { ACWRefractionModel, ACWRefractionModelT } from './ACWRefractionModel.js';
+import { ACWSensor, ACWSensorT } from './ACWSensor.js';
+import { ACWSensorAccess, ACWSensorAccessT } from './ACWSensorAccess.js';
 import { ACWStateSample, ACWStateSampleT } from './ACWStateSample.js';
+import { ACWTarget, ACWTargetT } from './ACWTarget.js';
+import { EOP, EOPT } from './EOP.js';
 import { acwEvaluationMode } from './acwEvaluationMode.js';
 import { acwOperationCode } from './acwOperationCode.js';
 
@@ -182,8 +186,86 @@ moonStatesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Targets to observe (SIMULATE_OBSERVATIONS).
+ */
+TARGETS(index: number, obj?:ACWTarget):ACWTarget|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new ACWTarget()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+targetsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sensors that observe them (SIMULATE_OBSERVATIONS).
+ */
+SENSORS(index: number, obj?:ACWSensor):ACWSensor|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new ACWSensor()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+sensorsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+ * without an entry is never observed.
+ */
+ACCESS(index: number, obj?:ACWSensorAccess):ACWSensorAccess|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new ACWSensorAccess()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+accessLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Earth orientation parameters for celestial directions (right ascension
+ * and declination). When absent, polar motion, UT1-UTC and celestial pole
+ * offsets are zero.
+ */
+EARTH_ORIENTATION(index: number, obj?:EOP):EOP|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new EOP()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+earthOrientationLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Seed for measurement noise, biases and false alarms; one seed
+ * reproduces the same observations.
+ */
+RANDOM_SEED():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Simulation span as Julian Dates in TT; 0 uses the span of the target
+ * states.
+ */
+START_JULIAN_DATE_TT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+END_JULIAN_DATE_TT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startACWRequest(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(21);
 }
 
 static addOperation(builder:flatbuffers.Builder, OPERATION:acwOperationCode) {
@@ -314,6 +396,82 @@ static startMoonStatesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addTargets(builder:flatbuffers.Builder, TARGETSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, TARGETSOffset, 0);
+}
+
+static createTargetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTargetsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSensors(builder:flatbuffers.Builder, SENSORSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, SENSORSOffset, 0);
+}
+
+static createSensorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSensorsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addAccess(builder:flatbuffers.Builder, ACCESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, ACCESSOffset, 0);
+}
+
+static createAccessVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAccessVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addEarthOrientation(builder:flatbuffers.Builder, EARTH_ORIENTATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, EARTH_ORIENTATIONOffset, 0);
+}
+
+static createEarthOrientationVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEarthOrientationVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addRandomSeed(builder:flatbuffers.Builder, RANDOM_SEED:bigint) {
+  builder.addFieldInt64(18, RANDOM_SEED, BigInt('0'));
+}
+
+static addStartJulianDateTt(builder:flatbuffers.Builder, START_JULIAN_DATE_TT:number) {
+  builder.addFieldFloat64(19, START_JULIAN_DATE_TT, 0.0);
+}
+
+static addEndJulianDateTt(builder:flatbuffers.Builder, END_JULIAN_DATE_TT:number) {
+  builder.addFieldFloat64(20, END_JULIAN_DATE_TT, 0.0);
+}
+
 static endACWRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -335,7 +493,14 @@ unpack(): ACWRequestT {
     this.EVALUATION_MODE(),
     this.ROOT_TOLERANCE_S(),
     this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.SUN_STATES.bind(this), this.sunStatesLength()),
-    this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.MOON_STATES.bind(this), this.moonStatesLength())
+    this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.MOON_STATES.bind(this), this.moonStatesLength()),
+    this.bb!.createObjList<ACWTarget, ACWTargetT>(this.TARGETS.bind(this), this.targetsLength()),
+    this.bb!.createObjList<ACWSensor, ACWSensorT>(this.SENSORS.bind(this), this.sensorsLength()),
+    this.bb!.createObjList<ACWSensorAccess, ACWSensorAccessT>(this.ACCESS.bind(this), this.accessLength()),
+    this.bb!.createObjList<EOP, EOPT>(this.EARTH_ORIENTATION.bind(this), this.earthOrientationLength()),
+    this.RANDOM_SEED(),
+    this.START_JULIAN_DATE_TT(),
+    this.END_JULIAN_DATE_TT()
   );
 }
 
@@ -355,6 +520,13 @@ unpackTo(_o: ACWRequestT): void {
   _o.ROOT_TOLERANCE_S = this.ROOT_TOLERANCE_S();
   _o.SUN_STATES = this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.SUN_STATES.bind(this), this.sunStatesLength());
   _o.MOON_STATES = this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.MOON_STATES.bind(this), this.moonStatesLength());
+  _o.TARGETS = this.bb!.createObjList<ACWTarget, ACWTargetT>(this.TARGETS.bind(this), this.targetsLength());
+  _o.SENSORS = this.bb!.createObjList<ACWSensor, ACWSensorT>(this.SENSORS.bind(this), this.sensorsLength());
+  _o.ACCESS = this.bb!.createObjList<ACWSensorAccess, ACWSensorAccessT>(this.ACCESS.bind(this), this.accessLength());
+  _o.EARTH_ORIENTATION = this.bb!.createObjList<EOP, EOPT>(this.EARTH_ORIENTATION.bind(this), this.earthOrientationLength());
+  _o.RANDOM_SEED = this.RANDOM_SEED();
+  _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT();
+  _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT();
 }
 }
 
@@ -373,7 +545,14 @@ constructor(
   public EVALUATION_MODE: acwEvaluationMode = acwEvaluationMode.DISCRETE,
   public ROOT_TOLERANCE_S: number = 0.1,
   public SUN_STATES: (ACWStateSampleT)[] = [],
-  public MOON_STATES: (ACWStateSampleT)[] = []
+  public MOON_STATES: (ACWStateSampleT)[] = [],
+  public TARGETS: (ACWTargetT)[] = [],
+  public SENSORS: (ACWSensorT)[] = [],
+  public ACCESS: (ACWSensorAccessT)[] = [],
+  public EARTH_ORIENTATION: (EOPT)[] = [],
+  public RANDOM_SEED: bigint = BigInt('0'),
+  public START_JULIAN_DATE_TT: number = 0.0,
+  public END_JULIAN_DATE_TT: number = 0.0
 ){}
 
 
@@ -388,6 +567,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBSERVERS = ACWRequest.createObserversVector(builder, builder.createObjectOffsetList(this.OBSERVERS));
   const SUN_STATES = ACWRequest.createSunStatesVector(builder, builder.createObjectOffsetList(this.SUN_STATES));
   const MOON_STATES = ACWRequest.createMoonStatesVector(builder, builder.createObjectOffsetList(this.MOON_STATES));
+  const TARGETS = ACWRequest.createTargetsVector(builder, builder.createObjectOffsetList(this.TARGETS));
+  const SENSORS = ACWRequest.createSensorsVector(builder, builder.createObjectOffsetList(this.SENSORS));
+  const ACCESS = ACWRequest.createAccessVector(builder, builder.createObjectOffsetList(this.ACCESS));
+  const EARTH_ORIENTATION = ACWRequest.createEarthOrientationVector(builder, builder.createObjectOffsetList(this.EARTH_ORIENTATION));
 
   ACWRequest.startACWRequest(builder);
   ACWRequest.addOperation(builder, this.OPERATION);
@@ -404,6 +587,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWRequest.addRootToleranceS(builder, this.ROOT_TOLERANCE_S);
   ACWRequest.addSunStates(builder, SUN_STATES);
   ACWRequest.addMoonStates(builder, MOON_STATES);
+  ACWRequest.addTargets(builder, TARGETS);
+  ACWRequest.addSensors(builder, SENSORS);
+  ACWRequest.addAccess(builder, ACCESS);
+  ACWRequest.addEarthOrientation(builder, EARTH_ORIENTATION);
+  ACWRequest.addRandomSeed(builder, this.RANDOM_SEED);
+  ACWRequest.addStartJulianDateTt(builder, this.START_JULIAN_DATE_TT);
+  ACWRequest.addEndJulianDateTt(builder, this.END_JULIAN_DATE_TT);
 
   return ACWRequest.endACWRequest(builder);
 }

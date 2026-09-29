@@ -112,28 +112,60 @@ class ACWResult extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Tracks scheduled by SIMULATE_OBSERVATIONS.
+    /**
+     * @returnVectorOffset
+     */
+    public function getTRACKS($j)
+    {
+        $o = $this->__offset(16);
+        $obj = new ACWTrack();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTRACKSLength()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Observations emitted, including false alarms.
+    /**
+     * @return uint
+     */
+    public function getOBSERVATION_COUNT()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWResult
      */
-    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID, $EVALUATION_MODE, $CONSTRAINT_LABELS)
+    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID, $EVALUATION_MODE, $CONSTRAINT_LABELS, $TRACKS, $OBSERVATION_COUNT)
     {
-        $builder->startObject(6);
+        $builder->startObject(8);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_MESSAGE($builder, $ERROR_MESSAGE);
         self::addWINDOWS($builder, $WINDOWS);
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addEVALUATION_MODE($builder, $EVALUATION_MODE);
         self::addCONSTRAINT_LABELS($builder, $CONSTRAINT_LABELS);
+        self::addTRACKS($builder, $TRACKS);
+        self::addOBSERVATION_COUNT($builder, $OBSERVATION_COUNT);
         $o = $builder->endObject();
         return $o;
     }
@@ -244,6 +276,50 @@ class ACWResult extends Table
     public static function startCONSTRAINT_LABELSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRACKS(FlatBufferBuilder $builder, $TRACKS)
+    {
+        $builder->addOffsetX(6, $TRACKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTRACKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTRACKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addOBSERVATION_COUNT(FlatBufferBuilder $builder, $OBSERVATION_COUNT)
+    {
+        $builder->addUintX(7, $OBSERVATION_COUNT, 0);
     }
 
     /**

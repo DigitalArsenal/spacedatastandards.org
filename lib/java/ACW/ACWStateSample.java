@@ -43,13 +43,26 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
    * Earth-fixed Z position, meters.
    */
   public double POSITION_Z_M() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Earth-fixed velocity, meters per second. Required for range-rate,
+   * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+   */
+  public double VELOCITY_X_MPS() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double VELOCITY_Y_MPS() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double VELOCITY_Z_MPS() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createACWStateSample(FlatBufferBuilder builder,
       double JULIAN_DATE_TT,
       double POSITION_X_M,
       double POSITION_Y_M,
-      double POSITION_Z_M) {
-    builder.startTable(4);
+      double POSITION_Z_M,
+      double VELOCITY_X_MPS,
+      double VELOCITY_Y_MPS,
+      double VELOCITY_Z_MPS) {
+    builder.startTable(7);
+    ACWStateSample.addVelocityZMps(builder, VELOCITY_Z_MPS);
+    ACWStateSample.addVelocityYMps(builder, VELOCITY_Y_MPS);
+    ACWStateSample.addVelocityXMps(builder, VELOCITY_X_MPS);
     ACWStateSample.addPositionZM(builder, POSITION_Z_M);
     ACWStateSample.addPositionYM(builder, POSITION_Y_M);
     ACWStateSample.addPositionXM(builder, POSITION_X_M);
@@ -57,11 +70,14 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
     return ACWStateSample.endACWStateSample(builder);
   }
 
-  public static void startACWStateSample(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startACWStateSample(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addJulianDateTt(FlatBufferBuilder builder, double JULIAN_DATE_TT) { builder.addDouble(0, JULIAN_DATE_TT, 0.0); }
   public static void addPositionXM(FlatBufferBuilder builder, double POSITION_X_M) { builder.addDouble(1, POSITION_X_M, 0.0); }
   public static void addPositionYM(FlatBufferBuilder builder, double POSITION_Y_M) { builder.addDouble(2, POSITION_Y_M, 0.0); }
   public static void addPositionZM(FlatBufferBuilder builder, double POSITION_Z_M) { builder.addDouble(3, POSITION_Z_M, 0.0); }
+  public static void addVelocityXMps(FlatBufferBuilder builder, double VELOCITY_X_MPS) { builder.addDouble(4, VELOCITY_X_MPS, 0.0); }
+  public static void addVelocityYMps(FlatBufferBuilder builder, double VELOCITY_Y_MPS) { builder.addDouble(5, VELOCITY_Y_MPS, 0.0); }
+  public static void addVelocityZMps(FlatBufferBuilder builder, double VELOCITY_Z_MPS) { builder.addDouble(6, VELOCITY_Z_MPS, 0.0); }
   public static int endACWStateSample(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

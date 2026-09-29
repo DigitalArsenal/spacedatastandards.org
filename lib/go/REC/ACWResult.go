@@ -168,8 +168,63 @@ func (rcv *ACWResult) ConstraintLabelsLength() int {
 }
 
 /// Flattened depth-first constraint list the window indices refer to.
+/// Tracks scheduled by SIMULATE_OBSERVATIONS.
+func (rcv *ACWResult) TRACKS(obj *ACWTrack, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWTrack)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWResult) Tracks(obj *ACWTrack, j int) bool {
+	return rcv.TRACKS(obj, j)
+}
+
+func (rcv *ACWResult) TRACKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWResult) TracksLength() int {
+	return rcv.TRACKSLength()
+}
+
+/// Tracks scheduled by SIMULATE_OBSERVATIONS.
+/// Observations emitted, including false alarms.
+func (rcv *ACWResult) OBSERVATION_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACWResult) ObservationCount() uint32 {
+	return rcv.OBSERVATION_COUNT()
+}
+
+/// Observations emitted, including false alarms.
+func (rcv *ACWResult) MutateOBSERVATION_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(18, n)
+}
+
+func (rcv *ACWResult) MutateObservationCount(n uint32) bool {
+	return rcv.MutateOBSERVATION_COUNT(n)
+}
+
 func ACWResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(8)
 }
 func ACWResultAddSTATUS(builder *flatbuffers.Builder, STATUS acwResultStatus) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -218,6 +273,24 @@ func ACWResultStartCONSTRAINT_LABELSVector(builder *flatbuffers.Builder, numElem
 }
 func ACWResultStartConstraintLabelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACWResultStartCONSTRAINT_LABELSVector(builder, numElems)
+}
+func ACWResultAddTRACKS(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRACKS), 0)
+}
+func ACWResultAddTracks(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
+	ACWResultAddTRACKS(builder, TRACKS)
+}
+func ACWResultStartTRACKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWResultStartTracksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWResultStartTRACKSVector(builder, numElems)
+}
+func ACWResultAddOBSERVATION_COUNT(builder *flatbuffers.Builder, OBSERVATION_COUNT uint32) {
+	builder.PrependUint32Slot(7, OBSERVATION_COUNT, 0)
+}
+func ACWResultAddObservationCount(builder *flatbuffers.Builder, OBSERVATION_COUNT uint32) {
+	ACWResultAddOBSERVATION_COUNT(builder, OBSERVATION_COUNT)
 }
 func ACWResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,12 +1,24 @@
-// Hash: 33f4fc2fced4355d0f1ac3a949aa8e1e92a2fec53249a51ca6180ea86d40be12
-// Version: 0.0.3
+// Hash: d33171d7d76fb9646f9d99a816eed6c1c2d0697115642445db78f0ad3777cd02
+// Version: 0.0.4
 // -----------------------------------END_HEADER
+include "../MEM/main.fbs";
+include "../EOP/main.fbs";
+
 // Access-window request/result records for ground-station visibility analysis.
 
 enum acwOperationCode : byte {
   UNKNOWN = 0,
   /// Compute access windows from pre-sampled target Cartesian states.
-  COMPUTE_ACCESS_WINDOWS = 1
+  COMPUTE_ACCESS_WINDOWS = 1,
+  /// Simulate sensor observations of TARGETS by SENSORS: schedule tracks
+  /// inside the ACCESS windows (computed per sensor and target by
+  /// COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
+  /// measurement from the
+  /// truth states with its MEMErrorModel noise and bias, apply the detection
+  /// test, and add false alarms. The observations are emitted as separate
+  /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
+  /// records; the result lists the tracks.
+  SIMULATE_OBSERVATIONS = 2
 }
 
 enum acwResultStatus : byte {
@@ -34,6 +46,11 @@ table ACWStateSample {
   POSITION_Y_M:double;
   /// Earth-fixed Z position, meters.
   POSITION_Z_M:double;
+  /// Earth-fixed velocity, meters per second. Required for range-rate,
+  /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
+  VELOCITY_X_MPS:double;
+  VELOCITY_Y_MPS:double;
+  VELOCITY_Z_MPS:double;
 }
 
 /// Azimuth-dependent minimum elevation mask point.
@@ -170,6 +187,105 @@ table ACWObserverTrajectory {
   BLACKOUT_WINDOWS:[ACWBlackoutWindow];
 }
 
+/// Sensing phenomenology of a simulated sensor.
+enum acwSensorPhenomenology : ubyte {
+  UNSPECIFIED = 0,
+  /// Monostatic radar: range, range rate, azimuth, elevation.
+  RADAR = 1,
+  /// Passive optical: right ascension and declination, magnitude.
+  OPTICAL = 2,
+  /// Passive RF: angles and received frequency of a target's emitter.
+  PASSIVE_RF = 3,
+  /// Satellite laser ranging: two-way range.
+  LASER_RANGING = 4
+}
+/// Observable signature of a simulated target.
+table ACWTargetSignature {
+  /// Radar cross-section, square meters (RADAR).
+  RCS_M2:double;
+  /// Diameter, meters, and geometric albedo of the diffuse sphere that sets
+  /// the magnitude, in the band of EOO.MAG (OPTICAL).
+  DIAMETER_M:double;
+  GEOMETRIC_ALBEDO:double;
+  /// Emitter carrier frequency, hertz, and EIRP toward the sensor, dBW
+  /// (PASSIVE_RF). A frequency of 0 means the target does not emit.
+  EMITTER_FREQUENCY_HZ:double;
+  EMITTER_EIRP_DBW:double;
+}
+/// One simulated target: truth states and signature.
+table ACWTarget {
+  TARGET_ID:string;
+  NORAD_CAT_ID:uint32;
+  /// International designator.
+  OBJECT_ID:string;
+  /// Truth Earth-fixed states with velocity, in the frame and time scale of
+  /// ACWRequest.STATES.
+  STATES:[ACWStateSample];
+  SIGNATURE:ACWTargetSignature;
+}
+/// A simulated sensor hosted by a ground station or an observer trajectory.
+table ACWSensor {
+  SENSOR_ID:string;
+  /// ACWGroundStation.STATION_ID or ACWObserverTrajectory.OBSERVER_ID of the
+  /// host.
+  HOST_ID:string;
+  PHENOMENOLOGY:acwSensorPhenomenology;
+  /// The measurements each observation carries, one error model per
+  /// measurement type (noise, bias, bias uncertainty, correlation time,
+  /// media and light-time options).
+  ERROR_MODELS:[MEMErrorModel];
+  /// Visibility for this sensor, the constraints its ACCESS windows were
+  /// computed with. When absent, ACWRequest.CONSTRAINTS apply.
+  CONSTRAINTS:ACWConstraintSet;
+  /// Seconds between observations within a track.
+  OBSERVATION_INTERVAL_S:double;
+  /// Longest track, seconds; 0 tracks the whole access window.
+  TRACK_DURATION_S:double;
+  /// Shortest time between the end of one track of a target and the start
+  /// of the next, seconds.
+  REVISIT_INTERVAL_S:double;
+  /// Targets tracked at once.
+  MAX_SIMULTANEOUS_TRACKS:uint32 = 1;
+  /// RADAR: signal-to-noise ratio, dB, of a REFERENCE_RCS_M2 target at
+  /// REFERENCE_RANGE_M; SNR scales with RCS and with range to the -4th power.
+  REFERENCE_SNR_DB:double;
+  REFERENCE_RANGE_M:double;
+  REFERENCE_RCS_M2:double = 1.0;
+  /// RADAR and PASSIVE_RF: smallest detected signal-to-noise ratio, dB.
+  DETECTION_THRESHOLD_DB:double;
+  /// PASSIVE_RF: receiver figure of merit, dB/K, and noise bandwidth, hertz.
+  RECEIVER_G_OVER_T_DB_PER_K:double;
+  RECEIVER_BANDWIDTH_HZ:double;
+  /// OPTICAL: faintest magnitude detected, in the band of EOO.MAG; 0 applies
+  /// no magnitude limit.
+  LIMITING_MAGNITUDE:double;
+  /// OPTICAL: highest Sun elevation at the host for a detection, radians
+  /// (ground-based darkness); requires SUN_STATES. Observations scheduled
+  /// in brighter sky are lost.
+  MAX_HOST_SUN_ELEVATION_RAD:double;
+  /// Uncorrelated detections per hour of tracking, reported with UCT set.
+  FALSE_ALARM_RATE_PER_HOUR:double;
+}
+/// Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).
+table ACWSensorAccess {
+  SENSOR_ID:string;
+  TARGET_ID:string;
+  WINDOWS:[ACWAccessWindow];
+}
+/// One simulated track: a sensor's scheduled look at a target.
+table ACWTrack {
+  SENSOR_ID:string;
+  TARGET_ID:string;
+  START_JULIAN_DATE_TT:double;
+  END_JULIAN_DATE_TT:double;
+  /// Observations scheduled in the track.
+  SCHEDULED_COUNT:uint32;
+  /// Observations that passed the detection test and were emitted.
+  DETECTED_COUNT:uint32;
+  /// Why scheduled observations were not detected (for example "SNR",
+  /// "MAGNITUDE"); empty when all were.
+  LOSS_REASON:string;
+}
 /// One access-window compute request.
 table ACWRequest {
   OPERATION:acwOperationCode;
@@ -203,6 +319,24 @@ table ACWRequest {
   SUN_STATES:[ACWStateSample];
   /// Moon states in the STATES frame and time scale, required by MOON_EXCLUSION.
   MOON_STATES:[ACWStateSample];
+  /// Targets to observe (SIMULATE_OBSERVATIONS).
+  TARGETS:[ACWTarget];
+  /// Sensors that observe them (SIMULATE_OBSERVATIONS).
+  SENSORS:[ACWSensor];
+  /// Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+  /// without an entry is never observed.
+  ACCESS:[ACWSensorAccess];
+  /// Earth orientation parameters for celestial directions (right ascension
+  /// and declination). When absent, polar motion, UT1-UTC and celestial pole
+  /// offsets are zero.
+  EARTH_ORIENTATION:[EOP];
+  /// Seed for measurement noise, biases and false alarms; one seed
+  /// reproduces the same observations.
+  RANDOM_SEED:uint64;
+  /// Simulation span as Julian Dates in TT; 0 uses the span of the target
+  /// states.
+  START_JULIAN_DATE_TT:double;
+  END_JULIAN_DATE_TT:double;
 }
 
 /// One computed access interval.
@@ -247,6 +381,10 @@ table ACWResult {
   EVALUATION_MODE:acwEvaluationMode;
   /// Flattened depth-first constraint list the window indices refer to.
   CONSTRAINT_LABELS:[string];
+  /// Tracks scheduled by SIMULATE_OBSERVATIONS.
+  TRACKS:[ACWTrack];
+  /// Observations emitted, including false alarms.
+  OBSERVATION_COUNT:uint32;
 }
 
 /// Access-window analysis envelope.

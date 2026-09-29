@@ -114,6 +114,52 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public int MOON_STATESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
   public ACWStateSample.Vector moonStatesVector() { return moonStatesVector(new ACWStateSample.Vector()); }
   public ACWStateSample.Vector moonStatesVector(ACWStateSample.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Targets to observe (SIMULATE_OBSERVATIONS).
+   */
+  public ACWTarget TARGETS(int j) { return TARGETS(new ACWTarget(), j); }
+  public ACWTarget TARGETS(ACWTarget obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TARGETSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public ACWTarget.Vector targetsVector() { return targetsVector(new ACWTarget.Vector()); }
+  public ACWTarget.Vector targetsVector(ACWTarget.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Sensors that observe them (SIMULATE_OBSERVATIONS).
+   */
+  public ACWSensor SENSORS(int j) { return SENSORS(new ACWSensor(), j); }
+  public ACWSensor SENSORS(ACWSensor obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SENSORSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public ACWSensor.Vector sensorsVector() { return sensorsVector(new ACWSensor.Vector()); }
+  public ACWSensor.Vector sensorsVector(ACWSensor.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+   * without an entry is never observed.
+   */
+  public ACWSensorAccess ACCESS(int j) { return ACCESS(new ACWSensorAccess(), j); }
+  public ACWSensorAccess ACCESS(ACWSensorAccess obj, int j) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ACCESSLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public ACWSensorAccess.Vector accessVector() { return accessVector(new ACWSensorAccess.Vector()); }
+  public ACWSensorAccess.Vector accessVector(ACWSensorAccess.Vector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Earth orientation parameters for celestial directions (right ascension
+   * and declination). When absent, polar motion, UT1-UTC and celestial pole
+   * offsets are zero.
+   */
+  public EOP EARTH_ORIENTATION(int j) { return EARTH_ORIENTATION(new EOP(), j); }
+  public EOP EARTH_ORIENTATION(EOP obj, int j) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EARTH_ORIENTATIONLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public EOP.Vector earthOrientationVector() { return earthOrientationVector(new EOP.Vector()); }
+  public EOP.Vector earthOrientationVector(EOP.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Seed for measurement noise, biases and false alarms; one seed
+   * reproduces the same observations.
+   */
+  public long RANDOM_SEED() { int o = __offset(40); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Simulation span as Julian Dates in TT; 0 uses the span of the target
+   * states.
+   */
+  public double START_JULIAN_DATE_TT() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double END_JULIAN_DATE_TT() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createACWRequest(FlatBufferBuilder builder,
       byte OPERATION,
@@ -129,10 +175,24 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
       byte EVALUATION_MODE,
       double ROOT_TOLERANCE_S,
       int SUN_STATESOffset,
-      int MOON_STATESOffset) {
-    builder.startTable(14);
+      int MOON_STATESOffset,
+      int TARGETSOffset,
+      int SENSORSOffset,
+      int ACCESSOffset,
+      int EARTH_ORIENTATIONOffset,
+      long RANDOM_SEED,
+      double START_JULIAN_DATE_TT,
+      double END_JULIAN_DATE_TT) {
+    builder.startTable(21);
+    ACWRequest.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
+    ACWRequest.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
+    ACWRequest.addRandomSeed(builder, RANDOM_SEED);
     ACWRequest.addRootToleranceS(builder, ROOT_TOLERANCE_S);
     ACWRequest.addMinElevationOverrideRad(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.addEarthOrientation(builder, EARTH_ORIENTATIONOffset);
+    ACWRequest.addAccess(builder, ACCESSOffset);
+    ACWRequest.addSensors(builder, SENSORSOffset);
+    ACWRequest.addTargets(builder, TARGETSOffset);
     ACWRequest.addMoonStates(builder, MOON_STATESOffset);
     ACWRequest.addSunStates(builder, SUN_STATESOffset);
     ACWRequest.addObservers(builder, OBSERVERSOffset);
@@ -148,7 +208,7 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
     return ACWRequest.endACWRequest(builder);
   }
 
-  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addOperation(FlatBufferBuilder builder, byte OPERATION) { builder.addByte(0, OPERATION, 0); }
   public static void addGroundStations(FlatBufferBuilder builder, int GROUND_STATIONSOffset) { builder.addOffset(1, GROUND_STATIONSOffset, 0); }
   public static int createGroundStationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -175,6 +235,21 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public static void addMoonStates(FlatBufferBuilder builder, int MOON_STATESOffset) { builder.addOffset(13, MOON_STATESOffset, 0); }
   public static int createMoonStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMoonStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTargets(FlatBufferBuilder builder, int TARGETSOffset) { builder.addOffset(14, TARGETSOffset, 0); }
+  public static int createTargetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTargetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSensors(FlatBufferBuilder builder, int SENSORSOffset) { builder.addOffset(15, SENSORSOffset, 0); }
+  public static int createSensorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSensorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAccess(FlatBufferBuilder builder, int ACCESSOffset) { builder.addOffset(16, ACCESSOffset, 0); }
+  public static int createAccessVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAccessVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEarthOrientation(FlatBufferBuilder builder, int EARTH_ORIENTATIONOffset) { builder.addOffset(17, EARTH_ORIENTATIONOffset, 0); }
+  public static int createEarthOrientationVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEarthOrientationVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addRandomSeed(FlatBufferBuilder builder, long RANDOM_SEED) { builder.addLong(18, RANDOM_SEED, 0L); }
+  public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(19, START_JULIAN_DATE_TT, 0.0); }
+  public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(20, END_JULIAN_DATE_TT, 0.0); }
   public static int endACWRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

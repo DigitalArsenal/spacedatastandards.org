@@ -234,22 +234,136 @@ class ACWRequest extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Targets to observe (SIMULATE_OBSERVATIONS).
+    /**
+     * @returnVectorOffset
+     */
+    public function getTARGETS($j)
+    {
+        $o = $this->__offset(32);
+        $obj = new ACWTarget();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTARGETSLength()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Sensors that observe them (SIMULATE_OBSERVATIONS).
+    /**
+     * @returnVectorOffset
+     */
+    public function getSENSORS($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new ACWSensor();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSENSORSLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair
+    /// without an entry is never observed.
+    /**
+     * @returnVectorOffset
+     */
+    public function getACCESS($j)
+    {
+        $o = $this->__offset(36);
+        $obj = new ACWSensorAccess();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getACCESSLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Earth orientation parameters for celestial directions (right ascension
+    /// and declination). When absent, polar motion, UT1-UTC and celestial pole
+    /// offsets are zero.
+    /**
+     * @returnVectorOffset
+     */
+    public function getEARTH_ORIENTATION($j)
+    {
+        $o = $this->__offset(38);
+        $obj = new EOP();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEARTH_ORIENTATIONLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Seed for measurement noise, biases and false alarms; one seed
+    /// reproduces the same observations.
+    /**
+     * @return ulong
+     */
+    public function getRANDOM_SEED()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Simulation span as Julian Dates in TT; 0 uses the span of the target
+    /// states.
+    /**
+     * @return double
+     */
+    public function getSTART_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getEND_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWRequest
      */
-    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES)
+    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES, $TARGETS, $SENSORS, $ACCESS, $EARTH_ORIENTATION, $RANDOM_SEED, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT)
     {
-        $builder->startObject(14);
+        $builder->startObject(21);
         self::addOPERATION($builder, $OPERATION);
         self::addGROUND_STATIONS($builder, $GROUND_STATIONS);
         self::addSTATES($builder, $STATES);
@@ -264,6 +378,13 @@ class ACWRequest extends Table
         self::addROOT_TOLERANCE_S($builder, $ROOT_TOLERANCE_S);
         self::addSUN_STATES($builder, $SUN_STATES);
         self::addMOON_STATES($builder, $MOON_STATES);
+        self::addTARGETS($builder, $TARGETS);
+        self::addSENSORS($builder, $SENSORS);
+        self::addACCESS($builder, $ACCESS);
+        self::addEARTH_ORIENTATION($builder, $EARTH_ORIENTATION);
+        self::addRANDOM_SEED($builder, $RANDOM_SEED);
+        self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
+        self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
         $o = $builder->endObject();
         return $o;
     }
@@ -550,6 +671,172 @@ class ACWRequest extends Table
     public static function startMOON_STATESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGETS(FlatBufferBuilder $builder, $TARGETS)
+    {
+        $builder->addOffsetX(14, $TARGETS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTARGETSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTARGETSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSENSORS(FlatBufferBuilder $builder, $SENSORS)
+    {
+        $builder->addOffsetX(15, $SENSORS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSENSORSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSENSORSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addACCESS(FlatBufferBuilder $builder, $ACCESS)
+    {
+        $builder->addOffsetX(16, $ACCESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createACCESSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startACCESSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEARTH_ORIENTATION(FlatBufferBuilder $builder, $EARTH_ORIENTATION)
+    {
+        $builder->addOffsetX(17, $EARTH_ORIENTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEARTH_ORIENTATIONVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEARTH_ORIENTATIONVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addRANDOM_SEED(FlatBufferBuilder $builder, $RANDOM_SEED)
+    {
+        $builder->addUlongX(18, $RANDOM_SEED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSTART_JULIAN_DATE_TT(FlatBufferBuilder $builder, $START_JULIAN_DATE_TT)
+    {
+        $builder->addDoubleX(19, $START_JULIAN_DATE_TT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEND_JULIAN_DATE_TT(FlatBufferBuilder $builder, $END_JULIAN_DATE_TT)
+    {
+        $builder->addDoubleX(20, $END_JULIAN_DATE_TT, 0.0);
     }
 
     /**

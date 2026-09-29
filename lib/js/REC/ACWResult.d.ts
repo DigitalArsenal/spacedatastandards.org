@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { ACWAccessWindow, ACWAccessWindowT } from './ACWAccessWindow.js';
+import { ACWTrack, ACWTrackT } from './ACWTrack.js';
 import { acwEvaluationMode } from './acwEvaluationMode.js';
 import { acwResultStatus } from './acwResultStatus.js';
 /**
@@ -31,6 +32,15 @@ export declare class ACWResult implements flatbuffers.IUnpackableObject<ACWResul
     CONSTRAINT_LABELS(index: number): string;
     CONSTRAINT_LABELS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     constraintLabelsLength(): number;
+    /**
+     * Tracks scheduled by SIMULATE_OBSERVATIONS.
+     */
+    TRACKS(index: number, obj?: ACWTrack): ACWTrack | null;
+    tracksLength(): number;
+    /**
+     * Observations emitted, including false alarms.
+     */
+    OBSERVATION_COUNT(): number;
     static startACWResult(builder: flatbuffers.Builder): void;
     static addStatus(builder: flatbuffers.Builder, STATUS: acwResultStatus): void;
     static addErrorMessage(builder: flatbuffers.Builder, ERROR_MESSAGEOffset: flatbuffers.Offset): void;
@@ -42,8 +52,12 @@ export declare class ACWResult implements flatbuffers.IUnpackableObject<ACWResul
     static addConstraintLabels(builder: flatbuffers.Builder, CONSTRAINT_LABELSOffset: flatbuffers.Offset): void;
     static createConstraintLabelsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startConstraintLabelsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTracks(builder: flatbuffers.Builder, TRACKSOffset: flatbuffers.Offset): void;
+    static createTracksVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTracksVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addObservationCount(builder: flatbuffers.Builder, OBSERVATION_COUNT: number): void;
     static endACWResult(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWResult(builder: flatbuffers.Builder, STATUS: acwResultStatus, ERROR_MESSAGEOffset: flatbuffers.Offset, WINDOWSOffset: flatbuffers.Offset, TRACE_IDOffset: flatbuffers.Offset, EVALUATION_MODE: acwEvaluationMode, CONSTRAINT_LABELSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createACWResult(builder: flatbuffers.Builder, STATUS: acwResultStatus, ERROR_MESSAGEOffset: flatbuffers.Offset, WINDOWSOffset: flatbuffers.Offset, TRACE_IDOffset: flatbuffers.Offset, EVALUATION_MODE: acwEvaluationMode, CONSTRAINT_LABELSOffset: flatbuffers.Offset, TRACKSOffset: flatbuffers.Offset, OBSERVATION_COUNT: number): flatbuffers.Offset;
     unpack(): ACWResultT;
     unpackTo(_o: ACWResultT): void;
 }
@@ -54,7 +68,9 @@ export declare class ACWResultT implements flatbuffers.IGeneratedObject {
     TRACE_ID: string | Uint8Array | null;
     EVALUATION_MODE: acwEvaluationMode;
     CONSTRAINT_LABELS: (string)[];
-    constructor(STATUS?: acwResultStatus, ERROR_MESSAGE?: string | Uint8Array | null, WINDOWS?: (ACWAccessWindowT)[], TRACE_ID?: string | Uint8Array | null, EVALUATION_MODE?: acwEvaluationMode, CONSTRAINT_LABELS?: (string)[]);
+    TRACKS: (ACWTrackT)[];
+    OBSERVATION_COUNT: number;
+    constructor(STATUS?: acwResultStatus, ERROR_MESSAGE?: string | Uint8Array | null, WINDOWS?: (ACWAccessWindowT)[], TRACE_ID?: string | Uint8Array | null, EVALUATION_MODE?: acwEvaluationMode, CONSTRAINT_LABELS?: (string)[], TRACKS?: (ACWTrackT)[], OBSERVATION_COUNT?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWResult.d.ts.map

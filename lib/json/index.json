@@ -63038,11 +63038,108 @@
                         "ExternalLink"
                     ]
                 },
+                "memMeasurementType": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RANGE",
+                        "RANGE_RATE",
+                        "DOPPLER",
+                        "AZIMUTH_ELEVATION",
+                        "X_EAST_Y_NORTH",
+                        "X_SOUTH_Y_EAST",
+                        "RIGHT_ASCENSION_DECLINATION",
+                        "POSITION_VECTOR",
+                        "SEQUENTIAL_RANGE",
+                        "PSEUDONOISE_RANGE",
+                        "TIME_CORRELATED_PHASE",
+                        "RELAY_RANGE",
+                        "RELAY_DOPPLER",
+                        "RELAY_DIFFERENCED_DOPPLER",
+                        "BISTATIC_RANGE",
+                        "SKIN_RANGE",
+                        "CROSSLINK_RANGE",
+                        "CROSSLINK_RANGE_RATE",
+                        "LASER_RANGE",
+                        "TIME_DIFFERENCE_OF_ARRIVAL",
+                        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+                    ]
+                },
+                "memEditingAction": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ACCEPT",
+                        "REJECT"
+                    ]
+                },
+                "memEditingReason": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ACCEPTED",
+                        "OUTSIDE_EPOCH_WINDOW",
+                        "OUTSIDE_VALUE_WINDOW",
+                        "SIGMA_THRESHOLD",
+                        "INVALID_GEOMETRY",
+                        "MISSING_MEDIA_INPUT",
+                        "HARDWARE_UNAVAILABLE",
+                        "DUPLICATE",
+                        "PROVIDER_FLAGGED"
+                    ]
+                },
+                "memTroposphereModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "HOPFIELD_SAASTAMOINEN",
+                        "MARINI"
+                    ]
+                },
+                "memIonosphereModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "TOTAL_ELECTRON_CONTENT",
+                        "REFERENCE_PROFILE"
+                    ]
+                },
+                "DataType": {
+                    "type": "string",
+                    "enum": [
+                        "OBSERVED",
+                        "PREDICTED"
+                    ]
+                },
+                "eopSeries": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IERS_C04_14",
+                        "IERS_C04_20",
+                        "IERS_BULLETIN_A",
+                        "IERS_BULLETIN_B",
+                        "FINALS2000A",
+                        "OTHER"
+                    ]
+                },
+                "iauPrecessionNutationModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IAU_2000A",
+                        "IAU_2000B",
+                        "IAU_2006"
+                    ]
+                },
                 "acwOperationCode": {
                     "type": "string",
                     "enum": [
                         "UNKNOWN",
-                        "COMPUTE_ACCESS_WINDOWS"
+                        "COMPUTE_ACCESS_WINDOWS",
+                        "SIMULATE_OBSERVATIONS"
                     ]
                 },
                 "acwResultStatus": {
@@ -63097,6 +63194,16 @@
                         "PENUMBRA",
                         "UMBRA",
                         "NOT_UMBRA"
+                    ]
+                },
+                "acwSensorPhenomenology": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RADAR",
+                        "OPTICAL",
+                        "PASSIVE_RF",
+                        "LASER_RANGING"
                     ]
                 },
                 "agrKind": {
@@ -65961,34 +66068,6 @@
                         "SINGLE"
                     ]
                 },
-                "DataType": {
-                    "type": "string",
-                    "enum": [
-                        "OBSERVED",
-                        "PREDICTED"
-                    ]
-                },
-                "eopSeries": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "IERS_C04_14",
-                        "IERS_C04_20",
-                        "IERS_BULLETIN_A",
-                        "IERS_BULLETIN_B",
-                        "FINALS2000A",
-                        "OTHER"
-                    ]
-                },
-                "iauPrecessionNutationModel": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "IAU_2000A",
-                        "IAU_2000B",
-                        "IAU_2006"
-                    ]
-                },
                 "epfLimitCategory": {
                     "type": "string",
                     "enum": [
@@ -67302,74 +67381,6 @@
                         "DEPARTURE",
                         "ARRIVAL",
                         "EITHER_END"
-                    ]
-                },
-                "memMeasurementType": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "RANGE",
-                        "RANGE_RATE",
-                        "DOPPLER",
-                        "AZIMUTH_ELEVATION",
-                        "X_EAST_Y_NORTH",
-                        "X_SOUTH_Y_EAST",
-                        "RIGHT_ASCENSION_DECLINATION",
-                        "POSITION_VECTOR",
-                        "SEQUENTIAL_RANGE",
-                        "PSEUDONOISE_RANGE",
-                        "TIME_CORRELATED_PHASE",
-                        "RELAY_RANGE",
-                        "RELAY_DOPPLER",
-                        "RELAY_DIFFERENCED_DOPPLER",
-                        "BISTATIC_RANGE",
-                        "SKIN_RANGE",
-                        "CROSSLINK_RANGE",
-                        "CROSSLINK_RANGE_RATE",
-                        "LASER_RANGE",
-                        "TIME_DIFFERENCE_OF_ARRIVAL",
-                        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
-                    ]
-                },
-                "memEditingAction": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "ACCEPT",
-                        "REJECT"
-                    ]
-                },
-                "memEditingReason": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "ACCEPTED",
-                        "OUTSIDE_EPOCH_WINDOW",
-                        "OUTSIDE_VALUE_WINDOW",
-                        "SIGMA_THRESHOLD",
-                        "INVALID_GEOMETRY",
-                        "MISSING_MEDIA_INPUT",
-                        "HARDWARE_UNAVAILABLE",
-                        "DUPLICATE",
-                        "PROVIDER_FLAGGED"
-                    ]
-                },
-                "memTroposphereModel": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "NONE",
-                        "HOPFIELD_SAASTAMOINEN",
-                        "MARINI"
-                    ]
-                },
-                "memIonosphereModel": {
-                    "type": "string",
-                    "enum": [
-                        "UNSPECIFIED",
-                        "NONE",
-                        "TOTAL_ELECTRON_CONTENT",
-                        "REFERENCE_PROFILE"
                     ]
                 },
                 "manifoldStatus": {
@@ -73602,6 +73613,286 @@
                     },
                     "additionalProperties": false
                 },
+                "MEMErrorModel": {
+                    "type": "object",
+                    "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+                    "properties": {
+                        "MODEL_ID": {
+                            "type": "string"
+                        },
+                        "MEASUREMENT_TYPE": {
+                            "$ref": "#/definitions/memMeasurementType"
+                        },
+                        "NOISE_SIGMA": {
+                            "type": "number"
+                        },
+                        "BIAS": {
+                            "type": "number"
+                        },
+                        "BIAS_SIGMA": {
+                            "type": "number"
+                        },
+                        "CORRELATION_TIME_SECONDS": {
+                            "type": "number"
+                        },
+                        "MINIMUM_ACCEPTED_VALUE": {
+                            "type": "number"
+                        },
+                        "MAXIMUM_ACCEPTED_VALUE": {
+                            "type": "number"
+                        },
+                        "SIGMA_EDIT_THRESHOLD": {
+                            "type": "number"
+                        },
+                        "ACCEPT_START_EPOCH": {
+                            "type": "string"
+                        },
+                        "ACCEPT_STOP_EPOCH": {
+                            "type": "string"
+                        },
+                        "TROPOSPHERE_MODEL": {
+                            "$ref": "#/definitions/memTroposphereModel"
+                        },
+                        "IONOSPHERE_MODEL": {
+                            "$ref": "#/definitions/memIonosphereModel"
+                        },
+                        "APPLY_LIGHT_TIME": {
+                            "type": "boolean"
+                        },
+                        "APPLY_BODY_ROTATION": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "MODEL_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEMEditingDecision": {
+                    "type": "object",
+                    "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+                    "properties": {
+                        "OBSERVATION_ID": {
+                            "type": "string"
+                        },
+                        "ACTION": {
+                            "$ref": "#/definitions/memEditingAction"
+                        },
+                        "REASON": {
+                            "$ref": "#/definitions/memEditingReason"
+                        },
+                        "PREFIT_RESIDUAL": {
+                            "type": "number"
+                        },
+                        "NORMALIZED_RESIDUAL": {
+                            "type": "number"
+                        },
+                        "ITERATION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "required": [
+                        "OBSERVATION_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEMAttestation": {
+                    "type": "object",
+                    "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+                    "properties": {
+                        "SIGNING_PUBLIC_KEY": {
+                            "type": "string"
+                        },
+                        "SIGNED_AT": {
+                            "type": "string"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        },
+                        "CANONICAL_JSON_SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "required": [
+                        "SIGNING_PUBLIC_KEY",
+                        "SIGNATURE",
+                        "CANONICAL_JSON_SIGNATURE"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEM": {
+                    "type": "object",
+                    "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+                    "properties": {
+                        "ERROR_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMErrorModel"
+                            }
+                        },
+                        "EDITING_LEDGER": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMEditingDecision"
+                            }
+                        },
+                        "RANDOM_SEED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        },
+                        "ATTESTATION": {
+                            "$ref": "#/definitions/MEMAttestation"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "EOP": {
+                    "type": "object",
+                    "description": "Earth Orientation Parameters",
+                    "properties": {
+                        "DATE": {
+                            "type": "string",
+                            "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\""
+                        },
+                        "MJD": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Modified Julian Date in UTC, e.g., 58119"
+                        },
+                        "X_POLE_WANDER_RADIANS": {
+                            "type": "number",
+                            "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7"
+                        },
+                        "Y_POLE_WANDER_RADIANS": {
+                            "type": "number",
+                            "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6"
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
+                            "type": "number",
+                            "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10"
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
+                            "type": "number",
+                            "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10"
+                        },
+                        "UT1_MINUS_UTC_SECONDS": {
+                            "type": "number",
+                            "description": "UT1 minus UTC in seconds, e.g., 0.2163567"
+                        },
+                        "TAI_MINUS_UTC_SECONDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "TAI minus UTC in seconds, e.g., 37"
+                        },
+                        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
+                            "type": "number",
+                            "description": "Correction to Length of Day in seconds, e.g., 8.094E-4"
+                        },
+                        "DATA_TYPE": {
+                            "$ref": "#/definitions/DataType",
+                            "description": "Data type (O = Observed, P = Predicted)"
+                        },
+                        "SERIES": {
+                            "$ref": "#/definitions/eopSeries",
+                            "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from."
+                        },
+                        "IAU_CONVENTION": {
+                            "$ref": "#/definitions/iauPrecessionNutationModel",
+                            "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them."
+                        },
+                        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in x Pole Wander, radians."
+                        },
+                        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in y Pole Wander, radians."
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians."
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians."
+                        },
+                        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UT1 minus UTC, seconds."
+                        },
+                        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the Length of Day correction, seconds."
+                        },
+                        "X_POLE_WANDER_RADIANS_HP": {
+                            "type": "number",
+                            "description": "x component of Pole Wander in radians, double precision. Authoritative\nover X_POLE_WANDER_RADIANS when present."
+                        },
+                        "Y_POLE_WANDER_RADIANS_HP": {
+                            "type": "number",
+                            "description": "y component of Pole Wander in radians, double precision. Authoritative\nover Y_POLE_WANDER_RADIANS when present."
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+                            "type": "number",
+                            "description": "x component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present."
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+                            "type": "number",
+                            "description": "y component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present."
+                        },
+                        "UT1_MINUS_UTC_SECONDS_HP": {
+                            "type": "number",
+                            "description": "UT1 minus UTC in seconds, double precision. Authoritative over\nUT1_MINUS_UTC_SECONDS when present."
+                        },
+                        "LENGTH_OF_DAY_CORRECTION_SECONDS_HP": {
+                            "type": "number",
+                            "description": "Correction to Length of Day in seconds, double precision. Authoritative\nover LENGTH_OF_DAY_CORRECTION_SECONDS when present."
+                        },
+                        "DATA_SET_EPOCH": {
+                            "type": "string",
+                            "description": "Epoch of the data set this row was published in, ISO 8601 UTC. Identifies\nWHICH issue of the series a consumer is holding; two rows for the same\nMJD from different data-set epochs are different values, not duplicates."
+                        },
+                        "DATA_SET_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed."
+                        },
+                        "NUTATION_DPSI_RADIANS": {
+                            "type": "number",
+                            "description": "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries."
+                        },
+                        "NUTATION_DEPS_RADIANS": {
+                            "type": "number",
+                            "description": "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians."
+                        },
+                        "NUTATION_DPSI_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians."
+                        },
+                        "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "ACWStateSample": {
                     "type": "object",
                     "description": "Target Cartesian state sample in an Earth-fixed frame.",
@@ -73621,6 +73912,16 @@
                         "POSITION_Z_M": {
                             "type": "number",
                             "description": "Earth-fixed Z position, meters."
+                        },
+                        "VELOCITY_X_MPS": {
+                            "type": "number",
+                            "description": "Earth-fixed velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
+                        },
+                        "VELOCITY_Y_MPS": {
+                            "type": "number"
+                        },
+                        "VELOCITY_Z_MPS": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -73807,6 +74108,193 @@
                     },
                     "additionalProperties": false
                 },
+                "ACWTargetSignature": {
+                    "type": "object",
+                    "description": "Observable signature of a simulated target.",
+                    "properties": {
+                        "RCS_M2": {
+                            "type": "number",
+                            "description": "Radar cross-section, square meters (RADAR)."
+                        },
+                        "DIAMETER_M": {
+                            "type": "number",
+                            "description": "Diameter, meters, and geometric albedo of the diffuse sphere that sets\nthe magnitude, in the band of EOO.MAG (OPTICAL)."
+                        },
+                        "GEOMETRIC_ALBEDO": {
+                            "type": "number"
+                        },
+                        "EMITTER_FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Emitter carrier frequency, hertz, and EIRP toward the sensor, dBW\n(PASSIVE_RF). A frequency of 0 means the target does not emit."
+                        },
+                        "EMITTER_EIRP_DBW": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWTarget": {
+                    "type": "object",
+                    "description": "One simulated target: truth states and signature.",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator."
+                        },
+                        "STATES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWStateSample"
+                            },
+                            "description": "Truth Earth-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
+                        },
+                        "SIGNATURE": {
+                            "$ref": "#/definitions/ACWTargetSignature"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWSensor": {
+                    "type": "object",
+                    "description": "A simulated sensor hosted by a ground station or an observer trajectory.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "HOST_ID": {
+                            "type": "string",
+                            "description": "ACWGroundStation.STATION_ID or ACWObserverTrajectory.OBSERVER_ID of the\nhost."
+                        },
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/acwSensorPhenomenology"
+                        },
+                        "ERROR_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMErrorModel"
+                            },
+                            "description": "The measurements each observation carries, one error model per\nmeasurement type (noise, bias, bias uncertainty, correlation time,\nmedia and light-time options)."
+                        },
+                        "CONSTRAINTS": {
+                            "$ref": "#/definitions/ACWConstraintSet",
+                            "description": "Visibility for this sensor, the constraints its ACCESS windows were\ncomputed with. When absent, ACWRequest.CONSTRAINTS apply."
+                        },
+                        "OBSERVATION_INTERVAL_S": {
+                            "type": "number",
+                            "description": "Seconds between observations within a track."
+                        },
+                        "TRACK_DURATION_S": {
+                            "type": "number",
+                            "description": "Longest track, seconds; 0 tracks the whole access window."
+                        },
+                        "REVISIT_INTERVAL_S": {
+                            "type": "number",
+                            "description": "Shortest time between the end of one track of a target and the start\nof the next, seconds."
+                        },
+                        "MAX_SIMULTANEOUS_TRACKS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Targets tracked at once."
+                        },
+                        "REFERENCE_SNR_DB": {
+                            "type": "number",
+                            "description": "RADAR: signal-to-noise ratio, dB, of a REFERENCE_RCS_M2 target at\nREFERENCE_RANGE_M; SNR scales with RCS and with range to the -4th power."
+                        },
+                        "REFERENCE_RANGE_M": {
+                            "type": "number"
+                        },
+                        "REFERENCE_RCS_M2": {
+                            "type": "number"
+                        },
+                        "DETECTION_THRESHOLD_DB": {
+                            "type": "number",
+                            "description": "RADAR and PASSIVE_RF: smallest detected signal-to-noise ratio, dB."
+                        },
+                        "RECEIVER_G_OVER_T_DB_PER_K": {
+                            "type": "number",
+                            "description": "PASSIVE_RF: receiver figure of merit, dB/K, and noise bandwidth, hertz."
+                        },
+                        "RECEIVER_BANDWIDTH_HZ": {
+                            "type": "number"
+                        },
+                        "LIMITING_MAGNITUDE": {
+                            "type": "number",
+                            "description": "OPTICAL: faintest magnitude detected, in the band of EOO.MAG; 0 applies\nno magnitude limit."
+                        },
+                        "MAX_HOST_SUN_ELEVATION_RAD": {
+                            "type": "number",
+                            "description": "OPTICAL: highest Sun elevation at the host for a detection, radians\n(ground-based darkness); requires SUN_STATES. Observations scheduled\nin brighter sky are lost."
+                        },
+                        "FALSE_ALARM_RATE_PER_HOUR": {
+                            "type": "number",
+                            "description": "Uncorrelated detections per hour of tracking, reported with UCT set."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWSensorAccess": {
+                    "type": "object",
+                    "description": "Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "WINDOWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWAccessWindow"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWTrack": {
+                    "type": "object",
+                    "description": "One simulated track: a sensor's scheduled look at a target.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number"
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number"
+                        },
+                        "SCHEDULED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations scheduled in the track."
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations that passed the detection test and were emitted."
+                        },
+                        "LOSS_REASON": {
+                            "type": "string",
+                            "description": "Why scheduled observations were not detected (for example \"SNR\",\n\"MAGNITUDE\"); empty when all were."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "ACWRequest": {
                     "type": "object",
                     "description": "One access-window compute request.",
@@ -73883,6 +74371,47 @@
                                 "$ref": "#/definitions/ACWStateSample"
                             },
                             "description": "Moon states in the STATES frame and time scale, required by MOON_EXCLUSION."
+                        },
+                        "TARGETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWTarget"
+                            },
+                            "description": "Targets to observe (SIMULATE_OBSERVATIONS)."
+                        },
+                        "SENSORS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWSensor"
+                            },
+                            "description": "Sensors that observe them (SIMULATE_OBSERVATIONS)."
+                        },
+                        "ACCESS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWSensorAccess"
+                            },
+                            "description": "Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair\nwithout an entry is never observed."
+                        },
+                        "EARTH_ORIENTATION": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EOP"
+                            },
+                            "description": "Earth orientation parameters for celestial directions (right ascension\nand declination). When absent, polar motion, UT1-UTC and celestial pole\noffsets are zero."
+                        },
+                        "RANDOM_SEED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Seed for measurement noise, biases and false alarms; one seed\nreproduces the same observations."
+                        },
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Simulation span as Julian Dates in TT; 0 uses the span of the target\nstates."
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -73979,6 +74508,19 @@
                                 "type": "string"
                             },
                             "description": "Flattened depth-first constraint list the window indices refer to."
+                        },
+                        "TRACKS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWTrack"
+                            },
+                            "description": "Tracks scheduled by SIMULATE_OBSERVATIONS."
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations emitted, including false alarms."
                         }
                     },
                     "additionalProperties": false
@@ -91460,137 +92002,6 @@
                     },
                     "additionalProperties": false
                 },
-                "EOP": {
-                    "type": "object",
-                    "description": "Earth Orientation Parameters",
-                    "properties": {
-                        "DATE": {
-                            "type": "string",
-                            "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\""
-                        },
-                        "MJD": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 4294967295,
-                            "description": "Modified Julian Date in UTC, e.g., 58119"
-                        },
-                        "X_POLE_WANDER_RADIANS": {
-                            "type": "number",
-                            "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7"
-                        },
-                        "Y_POLE_WANDER_RADIANS": {
-                            "type": "number",
-                            "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6"
-                        },
-                        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
-                            "type": "number",
-                            "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10"
-                        },
-                        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
-                            "type": "number",
-                            "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10"
-                        },
-                        "UT1_MINUS_UTC_SECONDS": {
-                            "type": "number",
-                            "description": "UT1 minus UTC in seconds, e.g., 0.2163567"
-                        },
-                        "TAI_MINUS_UTC_SECONDS": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 65535,
-                            "description": "TAI minus UTC in seconds, e.g., 37"
-                        },
-                        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
-                            "type": "number",
-                            "description": "Correction to Length of Day in seconds, e.g., 8.094E-4"
-                        },
-                        "DATA_TYPE": {
-                            "$ref": "#/definitions/DataType",
-                            "description": "Data type (O = Observed, P = Predicted)"
-                        },
-                        "SERIES": {
-                            "$ref": "#/definitions/eopSeries",
-                            "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from."
-                        },
-                        "IAU_CONVENTION": {
-                            "$ref": "#/definitions/iauPrecessionNutationModel",
-                            "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them."
-                        },
-                        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in x Pole Wander, radians."
-                        },
-                        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in y Pole Wander, radians."
-                        },
-                        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians."
-                        },
-                        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians."
-                        },
-                        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in UT1 minus UTC, seconds."
-                        },
-                        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty in the Length of Day correction, seconds."
-                        },
-                        "X_POLE_WANDER_RADIANS_HP": {
-                            "type": "number",
-                            "description": "x component of Pole Wander in radians, double precision. Authoritative\nover X_POLE_WANDER_RADIANS when present."
-                        },
-                        "Y_POLE_WANDER_RADIANS_HP": {
-                            "type": "number",
-                            "description": "y component of Pole Wander in radians, double precision. Authoritative\nover Y_POLE_WANDER_RADIANS when present."
-                        },
-                        "X_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
-                            "type": "number",
-                            "description": "x component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present."
-                        },
-                        "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
-                            "type": "number",
-                            "description": "y component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present."
-                        },
-                        "UT1_MINUS_UTC_SECONDS_HP": {
-                            "type": "number",
-                            "description": "UT1 minus UTC in seconds, double precision. Authoritative over\nUT1_MINUS_UTC_SECONDS when present."
-                        },
-                        "LENGTH_OF_DAY_CORRECTION_SECONDS_HP": {
-                            "type": "number",
-                            "description": "Correction to Length of Day in seconds, double precision. Authoritative\nover LENGTH_OF_DAY_CORRECTION_SECONDS when present."
-                        },
-                        "DATA_SET_EPOCH": {
-                            "type": "string",
-                            "description": "Epoch of the data set this row was published in, ISO 8601 UTC. Identifies\nWHICH issue of the series a consumer is holding; two rows for the same\nMJD from different data-set epochs are different values, not duplicates."
-                        },
-                        "DATA_SET_CID": {
-                            "type": "string",
-                            "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed."
-                        },
-                        "NUTATION_DPSI_RADIANS": {
-                            "type": "number",
-                            "description": "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries."
-                        },
-                        "NUTATION_DEPS_RADIANS": {
-                            "type": "number",
-                            "description": "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians."
-                        },
-                        "NUTATION_DPSI_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians."
-                        },
-                        "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
-                            "type": "number",
-                            "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "EPFContributor": {
                     "type": "object",
                     "description": "One source's contribution to one sample.",
@@ -101956,155 +102367,6 @@
                     "required": [
                         "SOLUTION_SET_ID"
                     ],
-                    "additionalProperties": false
-                },
-                "MEMErrorModel": {
-                    "type": "object",
-                    "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
-                    "properties": {
-                        "MODEL_ID": {
-                            "type": "string"
-                        },
-                        "MEASUREMENT_TYPE": {
-                            "$ref": "#/definitions/memMeasurementType"
-                        },
-                        "NOISE_SIGMA": {
-                            "type": "number"
-                        },
-                        "BIAS": {
-                            "type": "number"
-                        },
-                        "BIAS_SIGMA": {
-                            "type": "number"
-                        },
-                        "CORRELATION_TIME_SECONDS": {
-                            "type": "number"
-                        },
-                        "MINIMUM_ACCEPTED_VALUE": {
-                            "type": "number"
-                        },
-                        "MAXIMUM_ACCEPTED_VALUE": {
-                            "type": "number"
-                        },
-                        "SIGMA_EDIT_THRESHOLD": {
-                            "type": "number"
-                        },
-                        "ACCEPT_START_EPOCH": {
-                            "type": "string"
-                        },
-                        "ACCEPT_STOP_EPOCH": {
-                            "type": "string"
-                        },
-                        "TROPOSPHERE_MODEL": {
-                            "$ref": "#/definitions/memTroposphereModel"
-                        },
-                        "IONOSPHERE_MODEL": {
-                            "$ref": "#/definitions/memIonosphereModel"
-                        },
-                        "APPLY_LIGHT_TIME": {
-                            "type": "boolean"
-                        },
-                        "APPLY_BODY_ROTATION": {
-                            "type": "boolean"
-                        }
-                    },
-                    "required": [
-                        "MODEL_ID"
-                    ],
-                    "additionalProperties": false
-                },
-                "MEMEditingDecision": {
-                    "type": "object",
-                    "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
-                    "properties": {
-                        "OBSERVATION_ID": {
-                            "type": "string"
-                        },
-                        "ACTION": {
-                            "$ref": "#/definitions/memEditingAction"
-                        },
-                        "REASON": {
-                            "$ref": "#/definitions/memEditingReason"
-                        },
-                        "PREFIT_RESIDUAL": {
-                            "type": "number"
-                        },
-                        "NORMALIZED_RESIDUAL": {
-                            "type": "number"
-                        },
-                        "ITERATION": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 4294967295
-                        }
-                    },
-                    "required": [
-                        "OBSERVATION_ID"
-                    ],
-                    "additionalProperties": false
-                },
-                "MEMAttestation": {
-                    "type": "object",
-                    "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
-                    "properties": {
-                        "SIGNING_PUBLIC_KEY": {
-                            "type": "string"
-                        },
-                        "SIGNED_AT": {
-                            "type": "string"
-                        },
-                        "SIGNATURE": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            }
-                        },
-                        "CANONICAL_JSON_SIGNATURE": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            }
-                        }
-                    },
-                    "required": [
-                        "SIGNING_PUBLIC_KEY",
-                        "SIGNATURE",
-                        "CANONICAL_JSON_SIGNATURE"
-                    ],
-                    "additionalProperties": false
-                },
-                "MEM": {
-                    "type": "object",
-                    "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
-                    "properties": {
-                        "ERROR_MODELS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/MEMErrorModel"
-                            }
-                        },
-                        "EDITING_LEDGER": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/MEMEditingDecision"
-                            }
-                        },
-                        "RANDOM_SEED": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615
-                        },
-                        "TRACE_ID": {
-                            "type": "string"
-                        },
-                        "ATTESTATION": {
-                            "$ref": "#/definitions/MEMAttestation"
-                        }
-                    },
                     "additionalProperties": false
                 },
                 "MFE": {
@@ -187678,11 +187940,108 @@
         "ACW": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "memMeasurementType": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RANGE",
+                        "RANGE_RATE",
+                        "DOPPLER",
+                        "AZIMUTH_ELEVATION",
+                        "X_EAST_Y_NORTH",
+                        "X_SOUTH_Y_EAST",
+                        "RIGHT_ASCENSION_DECLINATION",
+                        "POSITION_VECTOR",
+                        "SEQUENTIAL_RANGE",
+                        "PSEUDONOISE_RANGE",
+                        "TIME_CORRELATED_PHASE",
+                        "RELAY_RANGE",
+                        "RELAY_DOPPLER",
+                        "RELAY_DIFFERENCED_DOPPLER",
+                        "BISTATIC_RANGE",
+                        "SKIN_RANGE",
+                        "CROSSLINK_RANGE",
+                        "CROSSLINK_RANGE_RATE",
+                        "LASER_RANGE",
+                        "TIME_DIFFERENCE_OF_ARRIVAL",
+                        "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+                    ]
+                },
+                "memEditingAction": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ACCEPT",
+                        "REJECT"
+                    ]
+                },
+                "memEditingReason": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ACCEPTED",
+                        "OUTSIDE_EPOCH_WINDOW",
+                        "OUTSIDE_VALUE_WINDOW",
+                        "SIGMA_THRESHOLD",
+                        "INVALID_GEOMETRY",
+                        "MISSING_MEDIA_INPUT",
+                        "HARDWARE_UNAVAILABLE",
+                        "DUPLICATE",
+                        "PROVIDER_FLAGGED"
+                    ]
+                },
+                "memTroposphereModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "HOPFIELD_SAASTAMOINEN",
+                        "MARINI"
+                    ]
+                },
+                "memIonosphereModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "TOTAL_ELECTRON_CONTENT",
+                        "REFERENCE_PROFILE"
+                    ]
+                },
+                "DataType": {
+                    "type": "string",
+                    "enum": [
+                        "OBSERVED",
+                        "PREDICTED"
+                    ]
+                },
+                "eopSeries": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IERS_C04_14",
+                        "IERS_C04_20",
+                        "IERS_BULLETIN_A",
+                        "IERS_BULLETIN_B",
+                        "FINALS2000A",
+                        "OTHER"
+                    ]
+                },
+                "iauPrecessionNutationModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IAU_2000A",
+                        "IAU_2000B",
+                        "IAU_2006"
+                    ]
+                },
                 "acwOperationCode": {
                     "type": "string",
                     "enum": [
                         "UNKNOWN",
-                        "COMPUTE_ACCESS_WINDOWS"
+                        "COMPUTE_ACCESS_WINDOWS",
+                        "SIMULATE_OBSERVATIONS"
                     ]
                 },
                 "acwResultStatus": {
@@ -187739,6 +188098,296 @@
                         "NOT_UMBRA"
                     ]
                 },
+                "acwSensorPhenomenology": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RADAR",
+                        "OPTICAL",
+                        "PASSIVE_RF",
+                        "LASER_RANGING"
+                    ]
+                },
+                "MEMErrorModel": {
+                    "type": "object",
+                    "description": "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+                    "properties": {
+                        "MODEL_ID": {
+                            "type": "string"
+                        },
+                        "MEASUREMENT_TYPE": {
+                            "$ref": "#/definitions/memMeasurementType"
+                        },
+                        "NOISE_SIGMA": {
+                            "type": "number"
+                        },
+                        "BIAS": {
+                            "type": "number"
+                        },
+                        "BIAS_SIGMA": {
+                            "type": "number"
+                        },
+                        "CORRELATION_TIME_SECONDS": {
+                            "type": "number"
+                        },
+                        "MINIMUM_ACCEPTED_VALUE": {
+                            "type": "number"
+                        },
+                        "MAXIMUM_ACCEPTED_VALUE": {
+                            "type": "number"
+                        },
+                        "SIGMA_EDIT_THRESHOLD": {
+                            "type": "number"
+                        },
+                        "ACCEPT_START_EPOCH": {
+                            "type": "string"
+                        },
+                        "ACCEPT_STOP_EPOCH": {
+                            "type": "string"
+                        },
+                        "TROPOSPHERE_MODEL": {
+                            "$ref": "#/definitions/memTroposphereModel"
+                        },
+                        "IONOSPHERE_MODEL": {
+                            "$ref": "#/definitions/memIonosphereModel"
+                        },
+                        "APPLY_LIGHT_TIME": {
+                            "type": "boolean"
+                        },
+                        "APPLY_BODY_ROTATION": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "MODEL_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEMEditingDecision": {
+                    "type": "object",
+                    "description": "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+                    "properties": {
+                        "OBSERVATION_ID": {
+                            "type": "string"
+                        },
+                        "ACTION": {
+                            "$ref": "#/definitions/memEditingAction"
+                        },
+                        "REASON": {
+                            "$ref": "#/definitions/memEditingReason"
+                        },
+                        "PREFIT_RESIDUAL": {
+                            "type": "number"
+                        },
+                        "NORMALIZED_RESIDUAL": {
+                            "type": "number"
+                        },
+                        "ITERATION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "required": [
+                        "OBSERVATION_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEMAttestation": {
+                    "type": "object",
+                    "description": "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+                    "properties": {
+                        "SIGNING_PUBLIC_KEY": {
+                            "type": "string"
+                        },
+                        "SIGNED_AT": {
+                            "type": "string"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        },
+                        "CANONICAL_JSON_SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "required": [
+                        "SIGNING_PUBLIC_KEY",
+                        "SIGNATURE",
+                        "CANONICAL_JSON_SIGNATURE"
+                    ],
+                    "additionalProperties": false
+                },
+                "MEM": {
+                    "type": "object",
+                    "description": "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+                    "properties": {
+                        "ERROR_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMErrorModel"
+                            }
+                        },
+                        "EDITING_LEDGER": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMEditingDecision"
+                            }
+                        },
+                        "RANDOM_SEED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        },
+                        "ATTESTATION": {
+                            "$ref": "#/definitions/MEMAttestation"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "EOP": {
+                    "type": "object",
+                    "description": "Earth Orientation Parameters",
+                    "properties": {
+                        "DATE": {
+                            "type": "string",
+                            "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\""
+                        },
+                        "MJD": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Modified Julian Date in UTC, e.g., 58119"
+                        },
+                        "X_POLE_WANDER_RADIANS": {
+                            "type": "number",
+                            "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7"
+                        },
+                        "Y_POLE_WANDER_RADIANS": {
+                            "type": "number",
+                            "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6"
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
+                            "type": "number",
+                            "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10"
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
+                            "type": "number",
+                            "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10"
+                        },
+                        "UT1_MINUS_UTC_SECONDS": {
+                            "type": "number",
+                            "description": "UT1 minus UTC in seconds, e.g., 0.2163567"
+                        },
+                        "TAI_MINUS_UTC_SECONDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "TAI minus UTC in seconds, e.g., 37"
+                        },
+                        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
+                            "type": "number",
+                            "description": "Correction to Length of Day in seconds, e.g., 8.094E-4"
+                        },
+                        "DATA_TYPE": {
+                            "$ref": "#/definitions/DataType",
+                            "description": "Data type (O = Observed, P = Predicted)"
+                        },
+                        "SERIES": {
+                            "$ref": "#/definitions/eopSeries",
+                            "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from."
+                        },
+                        "IAU_CONVENTION": {
+                            "$ref": "#/definitions/iauPrecessionNutationModel",
+                            "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them."
+                        },
+                        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in x Pole Wander, radians."
+                        },
+                        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in y Pole Wander, radians."
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians."
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians."
+                        },
+                        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UT1 minus UTC, seconds."
+                        },
+                        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the Length of Day correction, seconds."
+                        },
+                        "X_POLE_WANDER_RADIANS_HP": {
+                            "type": "number",
+                            "description": "x component of Pole Wander in radians, double precision. Authoritative\nover X_POLE_WANDER_RADIANS when present."
+                        },
+                        "Y_POLE_WANDER_RADIANS_HP": {
+                            "type": "number",
+                            "description": "y component of Pole Wander in radians, double precision. Authoritative\nover Y_POLE_WANDER_RADIANS when present."
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+                            "type": "number",
+                            "description": "x component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over X_CELESTIAL_POLE_OFFSET_RADIANS when present."
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_RADIANS_HP": {
+                            "type": "number",
+                            "description": "y component of the Celestial Pole Offset in radians, double precision.\nAuthoritative over Y_CELESTIAL_POLE_OFFSET_RADIANS when present."
+                        },
+                        "UT1_MINUS_UTC_SECONDS_HP": {
+                            "type": "number",
+                            "description": "UT1 minus UTC in seconds, double precision. Authoritative over\nUT1_MINUS_UTC_SECONDS when present."
+                        },
+                        "LENGTH_OF_DAY_CORRECTION_SECONDS_HP": {
+                            "type": "number",
+                            "description": "Correction to Length of Day in seconds, double precision. Authoritative\nover LENGTH_OF_DAY_CORRECTION_SECONDS when present."
+                        },
+                        "DATA_SET_EPOCH": {
+                            "type": "string",
+                            "description": "Epoch of the data set this row was published in, ISO 8601 UTC. Identifies\nWHICH issue of the series a consumer is holding; two rows for the same\nMJD from different data-set epochs are different values, not duplicates."
+                        },
+                        "DATA_SET_CID": {
+                            "type": "string",
+                            "description": "Content identifier of the complete published data set this row was taken\nfrom. Every frames consumer that must agree bit-for-bit records this so\nthe source is provable rather than assumed."
+                        },
+                        "NUTATION_DPSI_RADIANS": {
+                            "type": "number",
+                            "description": "Nutation correction in longitude (dPsi) against the IAU 1980 model,\nradians, as published beside the CIP offsets by combined rapid-service\nseries."
+                        },
+                        "NUTATION_DEPS_RADIANS": {
+                            "type": "number",
+                            "description": "Nutation correction in obliquity (dEps) against the IAU 1980 model,\nradians."
+                        },
+                        "NUTATION_DPSI_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty of NUTATION_DPSI_RADIANS, radians."
+                        },
+                        "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "ACWStateSample": {
                     "type": "object",
                     "description": "Target Cartesian state sample in an Earth-fixed frame.",
@@ -187758,6 +188407,16 @@
                         "POSITION_Z_M": {
                             "type": "number",
                             "description": "Earth-fixed Z position, meters."
+                        },
+                        "VELOCITY_X_MPS": {
+                            "type": "number",
+                            "description": "Earth-fixed velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
+                        },
+                        "VELOCITY_Y_MPS": {
+                            "type": "number"
+                        },
+                        "VELOCITY_Z_MPS": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -187944,6 +188603,193 @@
                     },
                     "additionalProperties": false
                 },
+                "ACWTargetSignature": {
+                    "type": "object",
+                    "description": "Observable signature of a simulated target.",
+                    "properties": {
+                        "RCS_M2": {
+                            "type": "number",
+                            "description": "Radar cross-section, square meters (RADAR)."
+                        },
+                        "DIAMETER_M": {
+                            "type": "number",
+                            "description": "Diameter, meters, and geometric albedo of the diffuse sphere that sets\nthe magnitude, in the band of EOO.MAG (OPTICAL)."
+                        },
+                        "GEOMETRIC_ALBEDO": {
+                            "type": "number"
+                        },
+                        "EMITTER_FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Emitter carrier frequency, hertz, and EIRP toward the sensor, dBW\n(PASSIVE_RF). A frequency of 0 means the target does not emit."
+                        },
+                        "EMITTER_EIRP_DBW": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWTarget": {
+                    "type": "object",
+                    "description": "One simulated target: truth states and signature.",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator."
+                        },
+                        "STATES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWStateSample"
+                            },
+                            "description": "Truth Earth-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
+                        },
+                        "SIGNATURE": {
+                            "$ref": "#/definitions/ACWTargetSignature"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWSensor": {
+                    "type": "object",
+                    "description": "A simulated sensor hosted by a ground station or an observer trajectory.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "HOST_ID": {
+                            "type": "string",
+                            "description": "ACWGroundStation.STATION_ID or ACWObserverTrajectory.OBSERVER_ID of the\nhost."
+                        },
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/acwSensorPhenomenology"
+                        },
+                        "ERROR_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MEMErrorModel"
+                            },
+                            "description": "The measurements each observation carries, one error model per\nmeasurement type (noise, bias, bias uncertainty, correlation time,\nmedia and light-time options)."
+                        },
+                        "CONSTRAINTS": {
+                            "$ref": "#/definitions/ACWConstraintSet",
+                            "description": "Visibility for this sensor, the constraints its ACCESS windows were\ncomputed with. When absent, ACWRequest.CONSTRAINTS apply."
+                        },
+                        "OBSERVATION_INTERVAL_S": {
+                            "type": "number",
+                            "description": "Seconds between observations within a track."
+                        },
+                        "TRACK_DURATION_S": {
+                            "type": "number",
+                            "description": "Longest track, seconds; 0 tracks the whole access window."
+                        },
+                        "REVISIT_INTERVAL_S": {
+                            "type": "number",
+                            "description": "Shortest time between the end of one track of a target and the start\nof the next, seconds."
+                        },
+                        "MAX_SIMULTANEOUS_TRACKS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Targets tracked at once."
+                        },
+                        "REFERENCE_SNR_DB": {
+                            "type": "number",
+                            "description": "RADAR: signal-to-noise ratio, dB, of a REFERENCE_RCS_M2 target at\nREFERENCE_RANGE_M; SNR scales with RCS and with range to the -4th power."
+                        },
+                        "REFERENCE_RANGE_M": {
+                            "type": "number"
+                        },
+                        "REFERENCE_RCS_M2": {
+                            "type": "number"
+                        },
+                        "DETECTION_THRESHOLD_DB": {
+                            "type": "number",
+                            "description": "RADAR and PASSIVE_RF: smallest detected signal-to-noise ratio, dB."
+                        },
+                        "RECEIVER_G_OVER_T_DB_PER_K": {
+                            "type": "number",
+                            "description": "PASSIVE_RF: receiver figure of merit, dB/K, and noise bandwidth, hertz."
+                        },
+                        "RECEIVER_BANDWIDTH_HZ": {
+                            "type": "number"
+                        },
+                        "LIMITING_MAGNITUDE": {
+                            "type": "number",
+                            "description": "OPTICAL: faintest magnitude detected, in the band of EOO.MAG; 0 applies\nno magnitude limit."
+                        },
+                        "MAX_HOST_SUN_ELEVATION_RAD": {
+                            "type": "number",
+                            "description": "OPTICAL: highest Sun elevation at the host for a detection, radians\n(ground-based darkness); requires SUN_STATES. Observations scheduled\nin brighter sky are lost."
+                        },
+                        "FALSE_ALARM_RATE_PER_HOUR": {
+                            "type": "number",
+                            "description": "Uncorrelated detections per hour of tracking, reported with UCT set."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWSensorAccess": {
+                    "type": "object",
+                    "description": "Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "WINDOWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWAccessWindow"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWTrack": {
+                    "type": "object",
+                    "description": "One simulated track: a sensor's scheduled look at a target.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string"
+                        },
+                        "TARGET_ID": {
+                            "type": "string"
+                        },
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number"
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number"
+                        },
+                        "SCHEDULED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations scheduled in the track."
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations that passed the detection test and were emitted."
+                        },
+                        "LOSS_REASON": {
+                            "type": "string",
+                            "description": "Why scheduled observations were not detected (for example \"SNR\",\n\"MAGNITUDE\"); empty when all were."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "ACWRequest": {
                     "type": "object",
                     "description": "One access-window compute request.",
@@ -188020,6 +188866,47 @@
                                 "$ref": "#/definitions/ACWStateSample"
                             },
                             "description": "Moon states in the STATES frame and time scale, required by MOON_EXCLUSION."
+                        },
+                        "TARGETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWTarget"
+                            },
+                            "description": "Targets to observe (SIMULATE_OBSERVATIONS)."
+                        },
+                        "SENSORS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWSensor"
+                            },
+                            "description": "Sensors that observe them (SIMULATE_OBSERVATIONS)."
+                        },
+                        "ACCESS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWSensorAccess"
+                            },
+                            "description": "Where each sensor can see each target (SIMULATE_OBSERVATIONS); a pair\nwithout an entry is never observed."
+                        },
+                        "EARTH_ORIENTATION": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EOP"
+                            },
+                            "description": "Earth orientation parameters for celestial directions (right ascension\nand declination). When absent, polar motion, UT1-UTC and celestial pole\noffsets are zero."
+                        },
+                        "RANDOM_SEED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Seed for measurement noise, biases and false alarms; one seed\nreproduces the same observations."
+                        },
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Simulation span as Julian Dates in TT; 0 uses the span of the target\nstates."
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -188116,6 +189003,19 @@
                                 "type": "string"
                             },
                             "description": "Flattened depth-first constraint list the window indices refer to."
+                        },
+                        "TRACKS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWTrack"
+                            },
+                            "description": "Tracks scheduled by SIMULATE_OBSERVATIONS."
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations emitted, including false alarms."
                         }
                     },
                     "additionalProperties": false
